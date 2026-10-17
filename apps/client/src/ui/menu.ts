@@ -53,7 +53,7 @@ export class Menu {
 
     this.handlers = handlers;
     this.root = el("div", { class: "panel menu" }, [
-      el("h1", { text: "Bomb Top" }),
+      el("h1", { text: "Bombtop" }),
       this.account,
       this.name,
       publicBtn,
