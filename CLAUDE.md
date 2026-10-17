@@ -21,14 +21,23 @@ All art, audio and names are original — never copy assets from existing games.
 ## Layout
 
 - `packages/shared` — game simulation + tests (Vitest)
-- `apps/client` — (todo) PixiJS PWA
+- `apps/client` — Vite + PixiJS client (local 2-player prototype; PWA todo)
 - `apps/server` — (todo) Colyseus server
 
 ## Commands
 
+- `pnpm dev` — client dev server (Vite)
 - `pnpm test` — all tests
 - `pnpm typecheck`
 - dev server log: `.agent/dev.log` (`pnpm dev 2>&1 | tee .agent/dev.log`)
+- In dev, the live match state is exposed as `window.__match` for debugging.
+
+## Gotchas
+
+- Some browser extensions swallow letter keys (R, Q seen) before the page sees them.
+  Never rely on a single letter key for essential actions; bomb keys also work.
+- Automated/background Chrome tabs throttle requestAnimationFrame (~1 fps), so the
+  game runs at ~5 ticks/s there (FixedStep caps catch-up). Not a game bug.
 
 ## Workflow
 
