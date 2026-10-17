@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type MatchState } from "@bombtopia/shared";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -76,7 +76,7 @@ export class Renderer {
    * Draws the match. `prev` holds player positions from the previous tick so
    * movement can be interpolated by `alpha` (0..1) between ticks.
    */
-  draw(s: MatchState, prev: Map<string, PlayerPos>, alpha: number): void {
+  draw(s: PublicView, prev: Map<string, PlayerPos>, alpha: number): void {
     const g = this.world.clear();
     const { width, height } = s.grid;
 

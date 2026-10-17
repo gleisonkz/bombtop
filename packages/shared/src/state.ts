@@ -166,13 +166,16 @@ export interface MatchState {
   items: Item[];
 }
 
-export function getTile(s: MatchState, x: number, y: number): Tile {
+/** Read-only helpers take just the fields they need, so they also work on network snapshots. */
+type WithGrid = Pick<MatchState, "grid">;
+
+export function getTile(s: WithGrid, x: number, y: number): Tile {
   const { width, height, tiles } = s.grid;
   if (x < 0 || y < 0 || x >= width || y >= height) return Tile.Wall;
   return tiles[y * width + x]!;
 }
 
-export function getFloor(s: MatchState, x: number, y: number): Floor {
+export function getFloor(s: WithGrid, x: number, y: number): Floor {
   const { width, height, floor } = s.grid;
   if (x < 0 || y < 0 || x >= width || y >= height) return Floor.Normal;
   return floor[y * width + x]!;
@@ -182,7 +185,7 @@ export function setTile(s: MatchState, x: number, y: number, tile: Tile): void {
   s.grid.tiles[y * s.grid.width + x] = tile;
 }
 
-export function hasFlame(s: MatchState, x: number, y: number): boolean {
+export function hasFlame(s: Pick<MatchState, "flames">, x: number, y: number): boolean {
   return s.flames.some((f) => f.x === x && f.y === y);
 }
 
@@ -204,6 +207,6 @@ export function placePlayerAt(s: MatchState, playerId: string, x: number, y: num
 }
 
 /** The grounded bomb on a tile (airborne and held bombs are not on any tile). */
-export function bombAt(s: MatchState, x: number, y: number): Bomb | undefined {
+export function bombAt(s: Pick<MatchState, "bombs">, x: number, y: number): Bomb | undefined {
   return s.bombs.find((b) => b.x === x && b.y === y && !b.air && !b.heldBy);
 }
