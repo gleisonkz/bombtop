@@ -53,6 +53,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       bombCapacity: START_BOMB_CAPACITY,
       fireRange: START_FIRE_RANGE,
       speed: BASE_SPEED,
+      facing: "down" as const,
     })),
     bombs: [],
     flames: [],

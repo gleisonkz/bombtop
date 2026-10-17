@@ -15,9 +15,14 @@ export interface Grid {
 
 export type Direction = "up" | "down" | "left" | "right" | null;
 
+export type Facing = Exclude<Direction, null>;
+
 export interface PlayerInput {
   dir: Direction;
+  /** Primary button: drop bomb. */
   bomb: boolean;
+  /** Secondary button: detonate / punch. */
+  action?: boolean;
 }
 
 export interface Player {
@@ -30,6 +35,7 @@ export interface Player {
   fireRange: number;
   /** Units moved per tick. */
   speed: number;
+  facing: Facing;
 }
 
 export interface Bomb {
