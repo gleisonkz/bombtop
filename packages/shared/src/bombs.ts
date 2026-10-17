@@ -1,5 +1,5 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
-import { bombAt, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
+import { bombAt, getTile, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
@@ -15,10 +15,8 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   return true;
 }
 
-/** Advances the simulation by one tick. */
-export function step(s: MatchState): void {
-  s.tick++;
-
+/** Ticks fuses and flames, resolving explosions and chain reactions. */
+export function updateBombs(s: MatchState): void {
   for (const f of s.flames) f.ttl--;
   s.flames = s.flames.filter((f) => f.ttl > 0);
 
@@ -26,11 +24,6 @@ export function step(s: MatchState): void {
   const queue = s.bombs.filter((b) => b.fuse <= 0);
   while (queue.length > 0) {
     explode(s, queue.shift()!, queue);
-  }
-
-  for (const p of s.players) {
-    const { x, y } = playerTile(p);
-    if (p.alive && hasFlame(s, x, y)) p.alive = false;
   }
 }
 
