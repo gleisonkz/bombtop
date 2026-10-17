@@ -6,7 +6,8 @@ import { tryKick } from "./kick";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { movePlayer } from "./movement";
 import { updatePressure } from "./pressure";
-import { hasFlame, playerTile, type MatchState, type PlayerInput } from "./state";
+import { driveCart, giveCart, revengeSwap } from "./revenge";
+import { playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
@@ -14,6 +15,10 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
 
   for (const p of s.players) {
     const input = inputs[p.id];
+    if (!p.alive) {
+      driveCart(s, p, input?.dir ?? null, input?.bomb ?? false);
+      continue;
+    }
     if (p.invuln > 0) p.invuln--;
     if (p.stun > 0) {
       p.stun--;
@@ -39,7 +44,10 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
 
   for (const p of s.players) {
     const { x, y } = playerTile(p);
-    if (hasFlame(s, x, y)) hurt(p);
+    const flame = s.flames.find((f) => f.x === x && f.y === y);
+    if (!flame || !hurt(p)) continue;
+    if (s.revenge) giveCart(s, p);
+    revengeSwap(s, p, flame.ownerId);
   }
 
   updateHeldBombs(s);

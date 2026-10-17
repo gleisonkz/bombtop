@@ -17,10 +17,12 @@ export interface MatchOptions {
   seed: number;
   playerIds: string[];
   blockDensity?: number;
+  /** Dead players ride revenge carts (default true). */
+  revenge?: boolean;
 }
 
 export function createMatch(opts: MatchOptions): MatchState {
-  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY } = opts;
+  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = true } = opts;
   if (playerIds.length > MAX_PLAYERS) {
     throw new Error(`At most ${MAX_PLAYERS} players per match`);
   }
@@ -45,6 +47,7 @@ export function createMatch(opts: MatchOptions): MatchState {
     tick: 0,
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
+    revenge,
     items: hideItems(tiles, width, seed),
     grid: { width, height, tiles },
     players: playerIds.map((id, i) => ({
@@ -66,6 +69,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       invuln: 0,
       jumpTicks: 0,
       dashTicks: 0,
+      cart: null,
     })),
     bombs: [],
     flames: [],

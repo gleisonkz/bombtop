@@ -59,6 +59,15 @@ export interface Player {
   jumpTicks: number;
   /** Ticks left in a dasher burst. */
   dashTicks: number;
+  /** Revenge cart a dead player rides along the border, or null. */
+  cart: Cart | null;
+}
+
+export interface Cart {
+  /** Index into perimeter(width, height). */
+  pos: number;
+  /** Ticks until the cart may move again. */
+  cooldown: number;
 }
 
 export type MountKind = "hopper" | "dasher" | "pusher";
@@ -122,6 +131,8 @@ export interface Flame {
   y: number;
   /** Ticks left until the flame disappears. */
   ttl: number;
+  /** Player whose bomb made this flame (for kill credit). */
+  ownerId?: string;
 }
 
 export interface MatchState {
@@ -130,6 +141,8 @@ export interface MatchState {
   rng: number;
   /** Sudden death: how many spiral tiles have been processed. */
   pressure: number;
+  /** Whether dead players get revenge carts. */
+  revenge: boolean;
   grid: Grid;
   players: Player[];
   bombs: Bomb[];

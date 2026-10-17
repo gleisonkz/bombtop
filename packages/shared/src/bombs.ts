@@ -53,7 +53,7 @@ export function detonateRemote(s: MatchState, playerId: string): boolean {
 function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
   if (!s.bombs.includes(bomb)) return;
   s.bombs = s.bombs.filter((b) => b !== bomb);
-  addFlame(s, bomb.x, bomb.y);
+  addFlame(s, bomb.x, bomb.y, bomb.ownerId);
   // Pierce flames run through blocks, items and bombs; only walls stop them.
   const pierce = bomb.type === "pierce";
 
@@ -63,7 +63,7 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
       const y = bomb.y + dy * i;
       const tile = getTile(s, x, y);
       if (tile === Tile.Wall) break;
-      addFlame(s, x, y);
+      addFlame(s, x, y, bomb.ownerId);
       if (tile === Tile.Block) {
         setTile(s, x, y, Tile.Empty);
         if (pierce) continue;
@@ -83,8 +83,12 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
   }
 }
 
-function addFlame(s: MatchState, x: number, y: number): void {
+function addFlame(s: MatchState, x: number, y: number, ownerId: string): void {
   const existing = s.flames.find((f) => f.x === x && f.y === y);
-  if (existing) existing.ttl = FLAME_TICKS;
-  else s.flames.push({ x, y, ttl: FLAME_TICKS });
+  if (existing) {
+    existing.ttl = FLAME_TICKS;
+    existing.ownerId = ownerId;
+  } else {
+    s.flames.push({ x, y, ttl: FLAME_TICKS, ownerId });
+  }
 }

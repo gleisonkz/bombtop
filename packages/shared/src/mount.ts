@@ -20,15 +20,19 @@ export function giveRandomMount(s: MatchState, p: Player): void {
   p.mount = MOUNTS[Math.floor(nextRandom(s) * MOUNTS.length)]!;
 }
 
-/** Applies a lethal hit: invulnerable riders shrug it off, mounted riders lose the mount. */
-export function hurt(p: Player): void {
-  if (!p.alive || p.invuln > 0) return;
+/**
+ * Applies a lethal hit: invulnerable players shrug it off, mounted riders
+ * lose the mount. Returns true if the player died.
+ */
+export function hurt(p: Player): boolean {
+  if (!p.alive || p.invuln > 0) return false;
   if (p.mount) {
     p.mount = null;
     p.invuln = INVULN_TICKS;
-    return;
+    return false;
   }
   p.alive = false;
+  return true;
 }
 
 /** The mount's special move on the action button. Returns false if nothing happened. */

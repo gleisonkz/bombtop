@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, getTile, perimeter, type MatchState } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -16,6 +16,7 @@ const COLORS = {
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
+  cart: 0x8d6e63,
   mounts: { hopper: 0x7bd389, dasher: 0xf28482, pusher: 0x84a59d },
   players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
   items: {
@@ -110,8 +111,18 @@ export class Renderer {
       g.circle(cx + 3, cy - 6, 1.5).fill(COLORS.fuse);
     }
 
+    const ring = perimeter(width, height);
     s.players.forEach((p, i) => {
-      if (!p.alive) return;
+      const color = COLORS.players[i % COLORS.players.length]!;
+      if (!p.alive) {
+        const t = p.cart && ring[p.cart.pos];
+        if (!t) return;
+        const cx = t.x * TILE_PX + TILE_PX / 2;
+        const cy = t.y * TILE_PX + TILE_PX / 2;
+        g.roundRect(cx - 7, cy - 1, 14, 7, 2).fill(COLORS.cart).stroke({ color: 0x000000, width: 1 });
+        g.circle(cx, cy - 3, 4).fill(color).stroke({ color: 0x000000, width: 1 });
+        return;
+      }
       const from = prev.get(p.id) ?? p;
       const ux = from.px + (p.px - from.px) * alpha;
       const uy = from.py + (p.py - from.py) * alpha;
@@ -123,7 +134,7 @@ export class Renderer {
         g.ellipse(cx, cy + 3, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
       const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
-      const body = cursedFlash ? COLORS.cursed : COLORS.players[i % COLORS.players.length]!;
+      const body = cursedFlash ? COLORS.cursed : color;
       g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });
       g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
       g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
