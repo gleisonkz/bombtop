@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -48,9 +48,16 @@ export class Renderer {
     style: { fill: 0xffffff, fontFamily: "monospace", fontSize: 12, align: "center", stroke: { color: 0, width: 4 } },
   });
 
+  private readonly clock = new Text({
+    text: "",
+    resolution: 4,
+    style: { fill: 0xffffff, fontFamily: "monospace", fontSize: 8, stroke: { color: 0, width: 2 } },
+  });
+
   constructor() {
     this.banner.anchor.set(0.5);
-    this.root.addChild(this.world, this.banner);
+    this.clock.anchor.set(0.5, 0);
+    this.root.addChild(this.world, this.banner, this.clock);
   }
 
   /**
@@ -123,6 +130,9 @@ export class Renderer {
     });
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
+    this.clock.position.set((width * TILE_PX) / 2, 3);
+    const left = Math.max(0, Math.ceil((ROUND_TICKS - s.tick) / TICK_RATE));
+    this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";
   }
 
   showBanner(text: string): void {

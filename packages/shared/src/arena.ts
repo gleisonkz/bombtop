@@ -44,6 +44,7 @@ export function createMatch(opts: MatchOptions): MatchState {
   return {
     tick: 0,
     rng: (seed ^ 0x85ebca6b) >>> 0,
+    pressure: 0,
     items: hideItems(tiles, width, seed),
     grid: { width, height, tiles },
     players: playerIds.map((id, i) => ({

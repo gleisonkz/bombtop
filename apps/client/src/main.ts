@@ -1,5 +1,5 @@
 import { Application } from "pixi.js";
-import { createMatch, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
+import { createMatch, matchResult, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
 import { ARROWS, KeyboardInput, WASD } from "./input/keyboard";
 import { FixedStep } from "./loop/fixed-step";
 import { Renderer, TILE_PX, type PlayerPos } from "./render/renderer";
@@ -47,11 +47,11 @@ function fit(): void {
 }
 
 function checkRoundEnd(): void {
-  const alive = match.players.filter((p) => p.alive);
-  if (alive.length > 1) return;
+  const result = matchResult(match);
+  if (!result.over) return;
   roundOver = true;
   roundOverAt = performance.now();
-  const winner = LOCAL_PLAYERS.find((p) => p.id === alive[0]?.id);
+  const winner = LOCAL_PLAYERS.find((p) => p.id === result.winnerId);
   renderer.showBanner(`${winner ? `${winner.name} venceu!` : "Empate!"}\n\nBomba ou R: nova partida`);
 }
 

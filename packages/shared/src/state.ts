@@ -128,6 +128,8 @@ export interface MatchState {
   tick: number;
   /** PRNG state for in-match randomness (see nextRandom). */
   rng: number;
+  /** Sudden death: how many spiral tiles have been processed. */
+  pressure: number;
   grid: Grid;
   players: Player[];
   bombs: Bomb[];

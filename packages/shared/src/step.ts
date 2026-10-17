@@ -5,6 +5,7 @@ import { collectItems } from "./items";
 import { tryKick } from "./kick";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { movePlayer } from "./movement";
+import { updatePressure } from "./pressure";
 import { hasFlame, playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
@@ -34,6 +35,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   updateCurses(s);
 
   updateBombs(s);
+  updatePressure(s);
 
   for (const p of s.players) {
     const { x, y } = playerTile(p);

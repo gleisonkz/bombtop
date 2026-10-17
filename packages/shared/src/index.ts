@@ -6,6 +6,7 @@ export * from "./bombs";
 export * from "./items";
 export * from "./kick";
 export * from "./mount";
+export * from "./pressure";
 export * from "./movement";
 export * from "./step";
 export * from "./curse";

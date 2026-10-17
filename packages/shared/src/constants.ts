@@ -54,6 +54,12 @@ export const JUMP_SPEED = (TILE * 2) / JUMP_TICKS;
 export const DASH_TICKS = 16;
 export const DASH_SPEED = BASE_SPEED * 3;
 
+/** Round length before sudden death starts. */
+export const ROUND_TICKS = 3 * 60 * TICK_RATE;
+
+/** Ticks between falling walls during sudden death. */
+export const PRESSURE_INTERVAL = 12;
+
 /** Units per tick a kicked bomb slides. */
 export const KICK_SPEED = BASE_SPEED * 2;
 
