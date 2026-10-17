@@ -1,5 +1,6 @@
 import { punch, updateHeldBombs, useGlove } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
+import { cursedDirection, updateCurses } from "./curse";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
 import { movePlayer } from "./movement";
@@ -15,16 +16,19 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       p.stun--;
       continue;
     }
+    if (p.curse?.kind === "diarrhea") placeBomb(s, p.id);
     if (!input) continue;
-    if (input.dir && p.alive) p.facing = input.dir;
+    const dir = cursedDirection(p, input.dir);
+    if (dir && p.alive) p.facing = dir;
     if (input.bomb && !useGlove(s, p)) placeBomb(s, p.id);
     if (input.action && !detonateRemote(s, p.id)) punch(s, p);
-    movePlayer(s, p, input.dir);
-    tryKick(s, p, input.dir);
+    movePlayer(s, p, dir);
+    tryKick(s, p, dir);
   }
 
   updateHeldBombs(s);
   collectItems(s);
+  updateCurses(s);
 
   updateBombs(s);
 

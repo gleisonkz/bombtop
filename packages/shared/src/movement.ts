@@ -1,4 +1,5 @@
 import { TILE } from "./constants";
+import { effectiveSpeed } from "./curse";
 import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
 function passable(s: MatchState, x: number, y: number): boolean {
@@ -29,7 +30,7 @@ export function movePlayer(s: MatchState, p: Player, dir: Direction): void {
   const tc = Math.floor(across / TILE);
   const offset = across - tileCenter(tc);
   const aheadFree = tileAt(ta + sign, tc);
-  let budget = p.speed;
+  let budget = effectiveSpeed(p);
 
   if (offset !== 0) {
     if (aheadFree) {

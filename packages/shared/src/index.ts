@@ -7,4 +7,5 @@ export * from "./items";
 export * from "./kick";
 export * from "./movement";
 export * from "./step";
-export { createRng } from "./rng";
+export * from "./curse";
+export { createRng, nextRandom } from "./rng";

@@ -1,5 +1,6 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
 import { updateAir } from "./air";
+import { effectiveRange } from "./curse";
 import { updateSlides } from "./kick";
 import { bombAt, getTile, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
@@ -7,13 +8,13 @@ const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
 export function placeBomb(s: MatchState, playerId: string): boolean {
   const p = s.players.find((p) => p.id === playerId);
-  if (!p || !p.alive) return false;
+  if (!p || !p.alive || p.curse?.kind === "constipation") return false;
   const { x, y } = playerTile(p);
   if (bombAt(s, x, y)) return false;
   const active = s.bombs.filter((b) => b.ownerId === playerId).length;
   if (active >= p.bombCapacity) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
   return true;
 }
 

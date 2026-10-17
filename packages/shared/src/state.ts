@@ -51,6 +51,14 @@ export interface Player {
   canGlove: boolean;
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
+  curse: Curse | null;
+}
+
+export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire";
+
+export interface Curse {
+  kind: CurseKind;
+  ticks: number;
 }
 
 export interface Bomb {
@@ -88,6 +96,7 @@ export enum ItemKind {
   Pierce = "pierce",
   Punch = "punch",
   Glove = "glove",
+  Skull = "skull",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
@@ -106,6 +115,8 @@ export interface Flame {
 
 export interface MatchState {
   tick: number;
+  /** PRNG state for in-match randomness (see nextRandom). */
+  rng: number;
   grid: Grid;
   players: Player[];
   bombs: Bomb[];

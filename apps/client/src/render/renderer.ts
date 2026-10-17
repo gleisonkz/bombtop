@@ -15,6 +15,7 @@ const COLORS = {
   fuse: 0xffd23f,
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
+  cursed: 0xb57bff,
   players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
   items: {
     [ItemKind.Fire]: 0xff7a1a,
@@ -25,6 +26,7 @@ const COLORS = {
     [ItemKind.Pierce]: 0x48cae4,
     [ItemKind.Punch]: 0xf4a261,
     [ItemKind.Glove]: 0xffffff,
+    [ItemKind.Skull]: 0x6a0dad,
   } satisfies Record<ItemKind, number>,
 };
 
@@ -106,7 +108,9 @@ export class Renderer {
       const cx = (ux / TILE) * TILE_PX;
       const cy = (uy / TILE) * TILE_PX;
       g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 });
-      g.circle(cx, cy - 1, 6).fill(COLORS.players[i % COLORS.players.length]!).stroke({ color: 0x000000, width: 1 });
+      const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
+      const body = cursedFlash ? COLORS.cursed : COLORS.players[i % COLORS.players.length]!;
+      g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });
       g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
       g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
     });
