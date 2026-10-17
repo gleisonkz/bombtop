@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeInput, sanitizeName } from "../src";
+import { inputSeq, sanitizeInput, sanitizeName } from "../src";
 
 describe("sanitizeInput", () => {
   it("passes valid input through", () => {
@@ -13,6 +13,18 @@ describe("sanitizeInput", () => {
   it("survives garbage", () => {
     for (const raw of [null, undefined, 42, "x", [], { dir: { up: true } }]) {
       expect(sanitizeInput(raw)).toEqual({ dir: null, bomb: false, action: false });
+    }
+  });
+});
+
+describe("inputSeq", () => {
+  it("reads the input sequence number", () => {
+    expect(inputSeq({ dir: null, seq: 42 })).toBe(42);
+  });
+
+  it("treats anything else as 0", () => {
+    for (const raw of [null, {}, { seq: -1 }, { seq: 1.5 }, { seq: "3" }, { seq: Number.MAX_VALUE }]) {
+      expect(inputSeq(raw)).toBe(0);
     }
   });
 });

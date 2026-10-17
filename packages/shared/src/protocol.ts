@@ -1,6 +1,7 @@
 import type { MatchResult } from "./pressure";
 import type { Direction, PlayerInput } from "./state";
 import type { StageId } from "./stage";
+import type { PublicView } from "./view";
 
 /** Room name registered on the server. */
 export const ROOM_NAME = "battle";
@@ -45,6 +46,23 @@ export function sanitizeInput(raw: unknown): PlayerInput {
   if (dir && DIRS.has(r.alt as Direction) && r.alt !== dir) input.alt = r.alt as Direction;
   return input;
 }
+
+/** Sequence number the client stamps on each input message (for prediction). */
+export function inputSeq(raw: unknown): number {
+  const seq = (raw as { seq?: unknown } | null)?.seq;
+  return Number.isSafeInteger(seq) && (seq as number) >= 0 ? (seq as number) : 0;
+}
+
+/**
+ * Per player: the last input message the server has applied, and for how many
+ * ticks. The owner's client replays its newer inputs on top of the snapshot.
+ */
+export interface InputAck {
+  seq: number;
+  ticks: number;
+}
+
+export type Snapshot = PublicView & { acks: Record<string, InputAck> };
 
 const MAX_NAME = 16;
 
