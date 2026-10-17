@@ -48,6 +48,7 @@ export interface Player {
   canKick: boolean;
   bombType: BombType;
   canPunch: boolean;
+  canGlove: boolean;
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
 }
@@ -66,6 +67,8 @@ export interface Bomb {
   offset: number;
   /** Set while flying (punched/thrown); airborne bombs sit on no tile and their fuse pauses. */
   air: AirState | null;
+  /** Id of the player carrying this bomb (glove), or null. Held bombs sit on no tile. */
+  heldBy: string | null;
 }
 
 export interface AirState {
@@ -84,6 +87,7 @@ export enum ItemKind {
   Remote = "remote",
   Pierce = "pierce",
   Punch = "punch",
+  Glove = "glove",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
@@ -140,7 +144,7 @@ export function placePlayerAt(s: MatchState, playerId: string, x: number, y: num
   p.py = tileCenter(y);
 }
 
-/** The grounded bomb on a tile (airborne bombs are not on any tile). */
+/** The grounded bomb on a tile (airborne and held bombs are not on any tile). */
 export function bombAt(s: MatchState, x: number, y: number): Bomb | undefined {
-  return s.bombs.find((b) => b.x === x && b.y === y && !b.air);
+  return s.bombs.find((b) => b.x === x && b.y === y && !b.air && !b.heldBy);
 }

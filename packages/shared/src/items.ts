@@ -9,6 +9,7 @@ const EFFECTS: Record<ItemKind, (p: Player) => void> = {
   [ItemKind.Remote]: (p) => (p.bombType = "remote"),
   [ItemKind.Pierce]: (p) => (p.bombType = "pierce"),
   [ItemKind.Punch]: (p) => (p.canPunch = true),
+  [ItemKind.Glove]: (p) => (p.canGlove = true),
 };
 
 /** Living players collect any exposed item on their tile. */

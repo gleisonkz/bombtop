@@ -1,4 +1,4 @@
-import { punch } from "./air";
+import { punch, updateHeldBombs, useGlove } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
@@ -17,12 +17,13 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     }
     if (!input) continue;
     if (input.dir && p.alive) p.facing = input.dir;
-    if (input.bomb) placeBomb(s, p.id);
+    if (input.bomb && !useGlove(s, p)) placeBomb(s, p.id);
     if (input.action && !detonateRemote(s, p.id)) punch(s, p);
     movePlayer(s, p, input.dir);
     tryKick(s, p, input.dir);
   }
 
+  updateHeldBombs(s);
   collectItems(s);
 
   updateBombs(s);
@@ -31,4 +32,6 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     const { x, y } = playerTile(p);
     if (p.alive && hasFlame(s, x, y)) p.alive = false;
   }
+
+  updateHeldBombs(s);
 }

@@ -24,6 +24,7 @@ const COLORS = {
     [ItemKind.Remote]: 0xe63946,
     [ItemKind.Pierce]: 0x48cae4,
     [ItemKind.Punch]: 0xf4a261,
+    [ItemKind.Glove]: 0xffffff,
   } satisfies Record<ItemKind, number>,
 };
 

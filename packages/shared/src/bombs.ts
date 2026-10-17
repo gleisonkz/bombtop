@@ -13,7 +13,7 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   const active = s.bombs.filter((b) => b.ownerId === playerId).length;
   if (active >= p.bombCapacity) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, type: p.bombType, slide: null, offset: 0, air: null });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
   return true;
 }
 
@@ -26,7 +26,7 @@ export function updateBombs(s: MatchState): void {
   updateAir(s);
 
   for (const b of s.bombs) {
-    if (!b.air && !isHeldByRemote(s, b)) b.fuse--;
+    if (!b.air && !b.heldBy && !isHeldByRemote(s, b)) b.fuse--;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0);
   while (queue.length > 0) {

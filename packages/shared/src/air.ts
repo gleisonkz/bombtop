@@ -17,6 +17,39 @@ export function punch(s: MatchState, p: Player): void {
   if (bomb) launch(bomb, p.facing);
 }
 
+/**
+ * Bomb button with the glove: throws the carried bomb, or lifts the bomb
+ * the player stands on. Returns false when neither applies (caller then
+ * places a bomb as usual).
+ */
+export function useGlove(s: MatchState, p: Player): boolean {
+  const held = s.bombs.find((b) => b.heldBy === p.id);
+  if (held) {
+    held.heldBy = null;
+    launch(held, p.facing);
+    return true;
+  }
+  if (!p.alive || !p.canGlove) return false;
+  const { x, y } = playerTile(p);
+  const bomb = bombAt(s, x, y);
+  if (!bomb) return false;
+  bomb.heldBy = p.id;
+  return true;
+}
+
+/** Carried bombs follow their holder; a dead holder drops them on the spot. */
+export function updateHeldBombs(s: MatchState): void {
+  for (const b of s.bombs) {
+    if (!b.heldBy) continue;
+    const holder = s.players.find((p) => p.id === b.heldBy);
+    if (!holder) continue;
+    const { x, y } = playerTile(holder);
+    b.x = x;
+    b.y = y;
+    if (!holder.alive) b.heldBy = null;
+  }
+}
+
 /** Moves one tile, wrapping around the border walls to the opposite side. */
 function hop(s: MatchState, b: Bomb, dir: Facing): void {
   const [dx, dy] = DIR_VECTORS[dir];
