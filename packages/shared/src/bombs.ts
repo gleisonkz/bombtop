@@ -1,4 +1,5 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
+import { updateSlides } from "./kick";
 import { bombAt, getTile, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
@@ -11,7 +12,7 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   const active = s.bombs.filter((b) => b.ownerId === playerId).length;
   if (active >= p.bombCapacity) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, slide: null, offset: 0 });
   return true;
 }
 
@@ -19,6 +20,8 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
 export function updateBombs(s: MatchState): void {
   for (const f of s.flames) f.ttl--;
   s.flames = s.flames.filter((f) => f.ttl > 0);
+
+  updateSlides(s);
 
   for (const b of s.bombs) b.fuse--;
   const queue = s.bombs.filter((b) => b.fuse <= 0);

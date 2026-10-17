@@ -17,6 +17,13 @@ export type Direction = "up" | "down" | "left" | "right" | null;
 
 export type Facing = Exclude<Direction, null>;
 
+export const DIR_VECTORS: Record<Facing, readonly [number, number]> = {
+  up: [0, -1],
+  down: [0, 1],
+  left: [-1, 0],
+  right: [1, 0],
+};
+
 export interface PlayerInput {
   dir: Direction;
   /** Primary button: drop bomb. */
@@ -36,6 +43,7 @@ export interface Player {
   /** Units moved per tick. */
   speed: number;
   facing: Facing;
+  canKick: boolean;
 }
 
 export interface Bomb {
@@ -45,12 +53,17 @@ export interface Bomb {
   /** Ticks left until explosion. */
   fuse: number;
   range: number;
+  /** Direction the bomb is sliding after a kick, or null when resting. */
+  slide: Facing | null;
+  /** Units travelled from (x,y) toward the next tile while sliding. */
+  offset: number;
 }
 
 export enum ItemKind {
   Fire = "fire",
   Bomb = "bomb",
   Speed = "speed",
+  Kick = "kick",
 }
 
 /** A power-up. Hidden while its tile is still a block. */

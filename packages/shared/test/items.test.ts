@@ -54,12 +54,12 @@ describe("item generation", () => {
     expect(a.items).not.toEqual(c.items);
   });
 
-  it("produces every basic power-up kind", () => {
+  it("produces every power-up kind", () => {
     const kinds = new Set<ItemKind>();
-    for (let seed = 1; seed <= 20; seed++) {
+    for (let seed = 1; seed <= 200; seed++) {
       for (const i of createMatch({ seed, playerIds: ids }).items) kinds.add(i.kind);
     }
-    expect(kinds).toEqual(new Set([ItemKind.Fire, ItemKind.Bomb, ItemKind.Speed]));
+    expect(kinds).toEqual(new Set(Object.values(ItemKind)));
   });
 
   it("has no items in an arena without blocks", () => {

@@ -1,12 +1,5 @@
 import { TILE } from "./constants";
-import { bombAt, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
-
-const VECTORS = {
-  up: [0, -1],
-  down: [0, 1],
-  left: [-1, 0],
-  right: [1, 0],
-} as const;
+import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
 function passable(s: MatchState, x: number, y: number): boolean {
   return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y);
@@ -23,7 +16,7 @@ function passable(s: MatchState, x: number, y: number): boolean {
  */
 export function movePlayer(s: MatchState, p: Player, dir: Direction): void {
   if (!dir || !p.alive) return;
-  const [dx, dy] = VECTORS[dir];
+  const [dx, dy] = DIR_VECTORS[dir];
   const horizontal = dx !== 0;
   const sign = horizontal ? dx : dy;
 

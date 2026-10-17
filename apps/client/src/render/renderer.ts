@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { FUSE_TICKS, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
+import { DIR_VECTORS, FUSE_TICKS, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -16,7 +16,12 @@ const COLORS = {
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
   players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
-  items: { [ItemKind.Fire]: 0xff7a1a, [ItemKind.Bomb]: 0x15151f, [ItemKind.Speed]: 0x3fd0ff },
+  items: {
+    [ItemKind.Fire]: 0xff7a1a,
+    [ItemKind.Bomb]: 0x15151f,
+    [ItemKind.Speed]: 0x3fd0ff,
+    [ItemKind.Kick]: 0x9b5de5,
+  } satisfies Record<ItemKind, number>,
 };
 
 export interface PlayerPos {
@@ -79,8 +84,10 @@ export class Renderer {
 
     for (const b of s.bombs) {
       const pulse = Math.sin(((FUSE_TICKS - b.fuse) / 60) * Math.PI * 4) * 0.8;
-      const cx = b.x * TILE_PX + TILE_PX / 2;
-      const cy = b.y * TILE_PX + TILE_PX / 2 + 1;
+      const [dx, dy] = b.slide ? DIR_VECTORS[b.slide] : [0, 0];
+      const slide = (b.offset / TILE) * TILE_PX;
+      const cx = b.x * TILE_PX + TILE_PX / 2 + dx * slide;
+      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * slide;
       g.circle(cx, cy, 6 + pulse).fill(COLORS.bomb);
       g.circle(cx + 3, cy - 6, 1.5).fill(COLORS.fuse);
     }

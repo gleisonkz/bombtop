@@ -5,6 +5,7 @@ const EFFECTS: Record<ItemKind, (p: Player) => void> = {
   [ItemKind.Fire]: (p) => (p.fireRange = Math.min(p.fireRange + 1, MAX_FIRE_RANGE)),
   [ItemKind.Bomb]: (p) => (p.bombCapacity = Math.min(p.bombCapacity + 1, MAX_BOMB_CAPACITY)),
   [ItemKind.Speed]: (p) => (p.speed = Math.min(p.speed + SPEED_STEP, MAX_SPEED)),
+  [ItemKind.Kick]: (p) => (p.canKick = true),
 };
 
 /** Living players collect any exposed item on their tile. */
