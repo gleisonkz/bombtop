@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KeyboardInput, WASD } from "../src/input/keyboard";
+import { KeyboardInput, mergeInputs, WASD } from "../src/input/keyboard";
 
 describe("KeyboardInput", () => {
   it("has no direction and no bomb by default", () => {
@@ -82,5 +82,20 @@ describe("KeyboardInput", () => {
     k.keyDown("ShiftLeft");
     k.keyUp("ShiftLeft");
     expect(k.sample().action).toBe(true);
+  });
+});
+
+describe("mergeInputs", () => {
+  it("takes the first held direction and ORs the buttons", () => {
+    expect(
+      mergeInputs([
+        { dir: null, bomb: false, action: true },
+        { dir: "up", bomb: true, action: false },
+      ]),
+    ).toEqual({ dir: "up", bomb: true, action: true });
+  });
+
+  it("is idle with no inputs", () => {
+    expect(mergeInputs([])).toEqual({ dir: null, bomb: false, action: false });
   });
 });

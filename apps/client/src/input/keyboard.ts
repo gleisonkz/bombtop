@@ -116,3 +116,12 @@ export class KeyboardInput {
     return BUTTONS.find((b) => this.bindings[b] === code);
   }
 }
+
+/** Combines several input sources: first held direction wins, buttons are OR-ed. */
+export function mergeInputs(inputs: PlayerInput[]): PlayerInput {
+  return {
+    dir: inputs.find((i) => i.dir)?.dir ?? null,
+    bomb: inputs.some((i) => i.bomb),
+    action: inputs.some((i) => i.action),
+  };
+}
