@@ -43,6 +43,11 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
         setTile(s, x, y, Tile.Empty);
         break;
       }
+      const item = s.items.find((it) => it.x === x && it.y === y);
+      if (item) {
+        s.items = s.items.filter((it) => it !== item);
+        break;
+      }
       const hit = bombAt(s, x, y);
       if (hit) {
         queue.push(hit);

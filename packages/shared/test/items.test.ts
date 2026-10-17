@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   BASE_SPEED,
   createMatch,
+  FLAME_TICKS,
   FUSE_TICKS,
   getTile,
+  hasFlame,
   ItemKind,
   MAX_BOMB_CAPACITY,
   MAX_FIRE_RANGE,
@@ -133,6 +135,32 @@ describe("picking up items", () => {
     s.items.push({ x: 3, y: 3, kind: ItemKind.Fire });
     placePlayerAt(s, "p1", 3, 3);
     step(s);
+    expect(s.items).toHaveLength(1);
+  });
+});
+
+describe("burning items", () => {
+  it("destroys an exposed item caught in an explosion and stops the flame there", () => {
+    const s = emptyMatch();
+    s.players[0]!.fireRange = 4;
+    s.items.push({ x: 7, y: 5, kind: ItemKind.Bomb });
+    placePlayerAt(s, "p1", 5, 5);
+    placeBomb(s, "p1");
+    placePlayerAt(s, "p1", 1, 1);
+    run(s, FUSE_TICKS);
+    expect(s.items).toEqual([]);
+    expect(hasFlame(s, 7, 5)).toBe(true);
+    expect(hasFlame(s, 8, 5)).toBe(false);
+  });
+
+  it("does not burn the item revealed by the same explosion, even as flames linger", () => {
+    const s = emptyMatch();
+    setTile(s, 6, 5, Tile.Block);
+    s.items.push({ x: 6, y: 5, kind: ItemKind.Speed });
+    placePlayerAt(s, "p1", 5, 5);
+    placeBomb(s, "p1");
+    placePlayerAt(s, "p1", 1, 1);
+    run(s, FUSE_TICKS + FLAME_TICKS);
     expect(s.items).toHaveLength(1);
   });
 });
