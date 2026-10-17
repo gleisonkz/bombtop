@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "@bombtopia/shared";
+import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "@bombtop/shared";
 import { BattleSession, RESULTS_TICKS } from "../src/session";
 
 function lobby(n: number) {

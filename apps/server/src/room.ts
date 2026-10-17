@@ -8,7 +8,7 @@ import {
   TICK_RATE,
   type PublicView,
   type RoomPhase,
-} from "@bombtopia/shared";
+} from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { BattleSession } from "./session";
 

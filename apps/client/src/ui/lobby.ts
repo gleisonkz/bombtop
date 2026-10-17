@@ -1,4 +1,4 @@
-import type { LobbyInfo } from "@bombtopia/shared";
+import type { LobbyInfo } from "@bombtop/shared";
 import { button, el } from "./dom";
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {

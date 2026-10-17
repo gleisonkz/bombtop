@@ -1,4 +1,4 @@
-import { createMatch, matchResult, STAGES, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
+import { createMatch, matchResult, STAGES, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtop/shared";
 import { GamepadInput, gamepadAt } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";

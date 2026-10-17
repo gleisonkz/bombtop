@@ -1,4 +1,4 @@
-import type { PublicView } from "@bombtopia/shared";
+import type { PublicView } from "@bombtop/shared";
 
 export interface Sample {
   from: PublicView;

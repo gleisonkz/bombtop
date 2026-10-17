@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { defineRoom, defineServer, type Server } from "@colyseus/core";
 import { WebSocketTransport } from "@colyseus/ws-transport";
 import { Client } from "@colyseus/sdk";
-import { C2S, ROOM_NAME, S2C, type LobbyInfo, type PublicView } from "@bombtopia/shared";
+import { C2S, ROOM_NAME, S2C, type LobbyInfo, type PublicView } from "@bombtop/shared";
 import { BattleRoom } from "../src/room";
 
 const PORT = 25670 + Math.floor(Math.random() * 1000);

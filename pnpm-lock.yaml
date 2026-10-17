@@ -14,7 +14,7 @@ importers:
 
   apps/client:
     dependencies:
-      '@bombtopia/shared':
+      '@bombtop/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@colyseus/sdk':
@@ -48,7 +48,7 @@ importers:
 
   apps/server:
     dependencies:
-      '@bombtopia/shared':
+      '@bombtop/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@colyseus/core':

@@ -8,7 +8,7 @@ import {
   type PlayerInput,
   type PublicView,
   type ResultMessage,
-} from "@bombtopia/shared";
+} from "@bombtop/shared";
 import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";

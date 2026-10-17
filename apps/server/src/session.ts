@@ -15,7 +15,7 @@ import {
   type PublicView,
   type RoomPhase,
   type StageId,
-} from "@bombtopia/shared";
+} from "@bombtop/shared";
 
 /** Ticks the results screen stays up before returning to the lobby. */
 export const RESULTS_TICKS = 4 * TICK_RATE;

@@ -9,7 +9,7 @@ export interface MenuHandlers {
   logout(): void;
 }
 
-const NAME_KEY = "bombtopia.name";
+const NAME_KEY = "bombtop.name";
 
 /** Main menu overlay. */
 export class Menu {
@@ -53,7 +53,7 @@ export class Menu {
 
     this.handlers = handlers;
     this.root = el("div", { class: "panel menu" }, [
-      el("h1", { text: "Bombtopia" }),
+      el("h1", { text: "Bomb Top" }),
       this.account,
       this.name,
       publicBtn,

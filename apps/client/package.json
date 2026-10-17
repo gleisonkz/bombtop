@@ -1,5 +1,5 @@
 {
-  "name": "@bombtopia/client",
+  "name": "@bombtop/client",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@bombtopia/shared": "workspace:*",
+    "@bombtop/shared": "workspace:*",
     "@colyseus/sdk": "^0.18.5",
     "@supabase/supabase-js": "^2.118.0",
     "pixi.js": "^8.22.0"

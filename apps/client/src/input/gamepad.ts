@@ -1,4 +1,4 @@
-import type { Direction, PlayerInput } from "@bombtopia/shared";
+import type { Direction, PlayerInput } from "@bombtop/shared";
 
 /** The subset of the Gamepad API we read (standard mapping). */
 export interface PadState {

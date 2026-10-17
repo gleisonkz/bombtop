@@ -1,4 +1,4 @@
-import type { Direction, PlayerInput } from "@bombtopia/shared";
+import type { Direction, PlayerInput } from "@bombtop/shared";
 
 export interface KeyBindings {
   up: string;

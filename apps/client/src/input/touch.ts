@@ -1,4 +1,4 @@
-import type { Direction, PlayerInput } from "@bombtopia/shared";
+import type { Direction, PlayerInput } from "@bombtop/shared";
 
 /** Maps a drag vector (pixels) to a direction using its dominant axis. */
 export function dirFromVector(dx: number, dy: number, deadZone: number): Direction {

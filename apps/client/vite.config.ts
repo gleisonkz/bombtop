@@ -19,8 +19,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icons/favicon-64.png", "icons/apple-touch-icon.png"],
       manifest: {
-        name: "Bombtopia",
-        short_name: "Bombtopia",
+        name: "Bomb Top",
+        short_name: "Bomb Top",
         description: "Batalha de bombas multiplayer no navegador, até 5 jogadores.",
         lang: "pt-BR",
         theme_color: "#1b1b2f",
