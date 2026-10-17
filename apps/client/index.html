@@ -47,6 +47,7 @@
       input[hidden] { display: none; }
       .hint { color: var(--muted); font-size: 13px; margin: 0; text-align: center; }
       .touch { position: fixed; inset: 0; z-index: 1; display: flex; touch-action: none; user-select: none; -webkit-user-select: none; }
+      body:has(.lobby:not([hidden])) .touch { display: none; } /* nothing to steer in the lobby */
       .touch[hidden] { display: none; }
       .stick-zone { flex: 1; position: relative; }
       .knob { position: fixed; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: #ffffff55; border: 3px solid #ffffffaa; pointer-events: none; }

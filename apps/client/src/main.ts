@@ -2,15 +2,17 @@ import { Application } from "pixi.js";
 import { LocalGame } from "./game/local-game";
 import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
+import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { Menu } from "./ui/menu";
-import { TouchControls } from "./ui/touch-controls";
+import { isTouchDevice, TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
-await app.init({ background: "#1b1b2f", antialias: false, roundPixels: true });
+// Render at the device's pixel density: the arena is vector drawn, so any scale stays sharp.
+await app.init({ background: "#1b1b2f", antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
 document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
@@ -23,9 +25,18 @@ function fit(width = arena.width, height = arena.height): void {
   arena = { width, height };
   const w = width * TILE_PX;
   const h = height * TILE_PX;
-  const scale = Math.max(1, Math.floor(Math.min(window.innerWidth / w, window.innerHeight / h)));
-  app.renderer.resize(w * scale, h * scale);
+  const scale = fitScale(window.innerWidth, window.innerHeight, w, h);
+  app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
   app.stage.scale.set(scale);
+}
+
+/** Phones: hide the browser bars and hold landscape. Must run inside a tap handler. */
+function goFullscreen(): void {
+  if (!isTouchDevice() || document.fullscreenElement) return;
+  document.documentElement
+    .requestFullscreen?.({ navigationUI: "hide" })
+    .then(() => (screen.orientation as ScreenOrientation & { lock?(o: string): Promise<void> }).lock?.("landscape"))
+    .catch(() => undefined); // unsupported (iOS Safari) or refused: keep playing windowed
 }
 
 const ui = document.getElementById("ui")!;
@@ -49,7 +60,10 @@ const ctx: ModeContext = {
 
 let online: OnlineGame | null = null;
 const lobby = new LobbyPanel(ui, {
-  start: () => online?.start(),
+  start: () => {
+    goFullscreen();
+    online?.start();
+  },
   leave: () => void online?.leave(),
 });
 
@@ -59,10 +73,12 @@ const menu = new Menu(ui, {
   login: () => void signInWithGoogle(),
   logout: () => void signOut(),
   local: () => {
+    goFullscreen();
     menu.hide();
     setMode(new LocalGame(ctx));
   },
   online: async (choice, name) => {
+    goFullscreen();
     menu.setBusy(true);
     try {
       const who = account ? { name: account.name, token: account.token } : { name };
