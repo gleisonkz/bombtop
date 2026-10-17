@@ -15,6 +15,7 @@
     "@colyseus/ws-transport": "^0.18.4"
   },
   "devDependencies": {
+    "@colyseus/sdk": "^0.18.5",
     "@types/node": "^22.10.0",
     "tsx": "^4.23.15",
     "typescript": "^5.6.3",

@@ -23,7 +23,6 @@ export const RESULTS_TICKS = 4 * TICK_RATE;
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
 export const SNAPSHOT_EVERY = 2;
 
-
 export interface TickOutput {
   snapshot?: PublicView;
   result?: MatchResult & { over: true };

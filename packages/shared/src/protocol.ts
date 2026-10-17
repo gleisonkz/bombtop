@@ -7,11 +7,15 @@ export const ROOM_NAME = "battle";
 
 export type RoomPhase = "lobby" | "playing" | "results";
 
-/** Client -> server message types. */
-export const C2S = { input: "input", start: "start" } as const;
+/**
+ * Client -> server message types. `sync` asks for the current lobby (and
+ * snapshot, mid-match): send it once message handlers are attached, since
+ * anything broadcast before that is dropped by the SDK.
+ */
+export const C2S = { input: "input", start: "start", sync: "sync" } as const;
 
 /** Server -> client message types. */
-export const S2C = { welcome: "welcome", lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
+export const S2C = { lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
 
 export interface LobbyMember {
   id: string;
@@ -26,11 +30,6 @@ export interface LobbyInfo {
   members: LobbyMember[];
   stage: StageId;
   /** Room id; doubles as the private-room code. */
-  code: string;
-}
-
-export interface Welcome {
-  you: string;
   code: string;
 }
 
