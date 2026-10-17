@@ -30,7 +30,10 @@ export class LocalGame implements GameMode {
     for (let i = 0; i < ticks && !this.roundOver; i++) {
       this.prev = new Map(this.match.players.map((p) => [p.id, { px: p.px, py: p.py }]));
       const inputs: Record<string, PlayerInput> = {};
-      for (const p of this.players) inputs[p.id] = mergeInputs([p.input.sample(), p.pad.sample()]);
+      for (const p of this.players) {
+        const extra = p.id === "p1" ? [this.ctx.touch.sample()] : [];
+        inputs[p.id] = mergeInputs([p.input.sample(), p.pad.sample(), ...extra]);
+      }
       step(this.match, inputs);
       this.checkRoundEnd();
     }

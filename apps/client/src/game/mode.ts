@@ -1,3 +1,4 @@
+import type { TouchInput } from "../input/touch";
 import type { Renderer } from "../render/renderer";
 
 /** Something the main loop can run: the local hot-seat game or an online match. */
@@ -14,6 +15,8 @@ export interface GameMode {
 
 export interface ModeContext {
   renderer: Renderer;
+  /** On-screen controls (idle on non-touch devices). */
+  touch: TouchInput;
   /** Resizes the canvas to fit an arena of the given size in tiles. */
   fit(width: number, height: number): void;
   /** Return to the main menu, optionally showing a message. */

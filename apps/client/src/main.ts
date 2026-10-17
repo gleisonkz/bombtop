@@ -5,6 +5,7 @@ import { OnlineGame } from "./game/online-game";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
 import { Menu } from "./ui/menu";
+import { TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
 await app.init({ background: "#1b1b2f", antialias: false, roundPixels: true });
@@ -25,15 +26,18 @@ function fit(width = arena.width, height = arena.height): void {
   app.stage.scale.set(scale);
 }
 
+const ui = document.getElementById("ui")!;
+const touch = new TouchControls(document.body);
+
 function setMode(next: GameMode | null): void {
   mode?.dispose();
   mode = next;
+  touch.setVisible(!!next);
 }
-
-const ui = document.getElementById("ui")!;
 
 const ctx: ModeContext = {
   renderer,
+  touch: touch.input,
   fit,
   exit: (message) => {
     setMode(null);
