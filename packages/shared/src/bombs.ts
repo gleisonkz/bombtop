@@ -47,6 +47,8 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
   if (!s.bombs.includes(bomb)) return;
   s.bombs = s.bombs.filter((b) => b !== bomb);
   addFlame(s, bomb.x, bomb.y);
+  // Pierce flames run through blocks, items and bombs; only walls stop them.
+  const pierce = bomb.type === "pierce";
 
   for (const [dx, dy] of DIRECTIONS) {
     for (let i = 1; i <= bomb.range; i++) {
@@ -57,17 +59,18 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
       addFlame(s, x, y);
       if (tile === Tile.Block) {
         setTile(s, x, y, Tile.Empty);
+        if (pierce) continue;
         break;
       }
       const item = s.items.find((it) => it.x === x && it.y === y);
       if (item) {
         s.items = s.items.filter((it) => it !== item);
-        break;
+        if (!pierce) break;
       }
       const hit = bombAt(s, x, y);
       if (hit) {
         queue.push(hit);
-        break;
+        if (!pierce) break;
       }
     }
   }

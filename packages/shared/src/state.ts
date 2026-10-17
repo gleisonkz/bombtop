@@ -69,6 +69,7 @@ export enum ItemKind {
   Speed = "speed",
   Kick = "kick",
   Remote = "remote",
+  Pierce = "pierce",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
