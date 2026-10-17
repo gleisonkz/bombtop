@@ -154,6 +154,18 @@ describe("snapshots", () => {
 });
 
 describe("stages", () => {
+  it("the lobby announces the stage of the next match", () => {
+    const s = lobby(2);
+    expect(s.lobbyInfo("X").stage).toBe("classic");
+    s.start("c1");
+    expect(s.lobbyInfo("X").stage).toBe("classic");
+    s.match!.players[1]!.alive = false;
+    s.match!.revenge = false;
+    s.tick();
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.lobbyInfo("X").stage).toBe("conveyor");
+  });
+
   it("rotate between rounds", () => {
     const s = lobby(2);
     const stages: string[] = [];

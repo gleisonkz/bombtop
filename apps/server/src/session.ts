@@ -87,14 +87,20 @@ export class BattleSession {
       phase: this.phase,
       hostId: this.hostId ?? null,
       members: this.members.map((m) => ({ ...m })),
-      stage: this.stage,
+      // In the lobby, show what is coming next; otherwise what is being played.
+      stage: this.phase === "lobby" ? this.nextStage : this.stage,
       code,
     };
   }
 
+  private get nextStage(): StageId {
+    return STAGES[this.round % STAGES.length]!;
+  }
+
   start(requesterId: string): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
-    this.stage = STAGES[this.round++ % STAGES.length]!;
+    this.stage = this.nextStage;
+    this.round++;
     const seed = this.opts.seed?.() ?? Math.floor(Math.random() * 2 ** 32);
     this.match = createMatch({
       seed,
