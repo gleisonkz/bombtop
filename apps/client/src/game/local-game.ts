@@ -1,5 +1,6 @@
 import { createMatch, matchResult, STAGES, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
-import { ARROWS, KeyboardInput, WASD } from "../input/keyboard";
+import { GamepadInput, gamepadAt } from "../input/gamepad";
+import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import type { PlayerPos } from "../render/renderer";
 import type { GameMode, ModeContext } from "./mode";
@@ -10,8 +11,8 @@ const RESTART_DELAY_MS = 1000;
 /** Local hot-seat game: two players on one keyboard, simulated in the browser. */
 export class LocalGame implements GameMode {
   private readonly players = [
-    { id: "p1", name: "Jogador 1", input: new KeyboardInput(WASD) },
-    { id: "p2", name: "Jogador 2", input: new KeyboardInput(ARROWS) },
+    { id: "p1", name: "Jogador 1", input: new KeyboardInput(WASD), pad: new GamepadInput(gamepadAt(0)) },
+    { id: "p2", name: "Jogador 2", input: new KeyboardInput(ARROWS), pad: new GamepadInput(gamepadAt(1)) },
   ];
   private match!: MatchState;
   private prev = new Map<string, PlayerPos>();
@@ -29,7 +30,7 @@ export class LocalGame implements GameMode {
     for (let i = 0; i < ticks && !this.roundOver; i++) {
       this.prev = new Map(this.match.players.map((p) => [p.id, { px: p.px, py: p.py }]));
       const inputs: Record<string, PlayerInput> = {};
-      for (const p of this.players) inputs[p.id] = p.input.sample();
+      for (const p of this.players) inputs[p.id] = mergeInputs([p.input.sample(), p.pad.sample()]);
       step(this.match, inputs);
       this.checkRoundEnd();
     }

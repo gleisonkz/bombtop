@@ -9,6 +9,7 @@ import {
   type PublicView,
   type ResultMessage,
 } from "@bombtopia/shared";
+import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
@@ -25,6 +26,7 @@ export const SERVER_URL: string =
 /** Online match: the server simulates, this client sends input and renders snapshots. */
 export class OnlineGame implements GameMode {
   private readonly inputs = [new KeyboardInput(WASD), new KeyboardInput(ARROWS)];
+  private readonly pad = new GamepadInput();
   private readonly buffer = new SnapshotBuffer(INTERP_DELAY_MS);
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private lastSent: PlayerInput = { dir: null, bomb: false, action: false };
@@ -85,7 +87,7 @@ export class OnlineGame implements GameMode {
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
-    const input = mergeInputs(this.inputs.map((k) => k.sample()));
+    const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample()]);
     if (input.dir === this.lastSent.dir && !input.bomb && !input.action) return;
     this.room.send(C2S.input, input);
     this.lastSent = input;
