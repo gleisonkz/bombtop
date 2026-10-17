@@ -8,10 +8,12 @@ import {
   type PlayerInput,
   type PublicView,
   type ResultMessage,
+  type Snapshot,
 } from "@bombtop/shared";
 import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
+import { Predictor } from "../net/prediction";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
 import type { OnlineChoice } from "../ui/menu";
@@ -23,13 +25,18 @@ const INTERP_DELAY_MS = 100;
 export const SERVER_URL: string =
   import.meta.env.VITE_SERVER_URL ?? `${location.protocol === "https:" ? "https" : "http"}://${location.hostname}:2567`;
 
-/** Online match: the server simulates, this client sends input and renders snapshots. */
+/**
+ * Online match: the server simulates and this client sends input. Other players
+ * are drawn from interpolated snapshots; our own player is predicted locally so
+ * it answers the controls right away.
+ */
 export class OnlineGame implements GameMode {
   private readonly inputs = [new KeyboardInput(WASD), new KeyboardInput(ARROWS)];
   private readonly pad = new GamepadInput();
   private readonly buffer = new SnapshotBuffer(INTERP_DELAY_MS);
   private readonly loop = new FixedStep(1000 / TICK_RATE);
-  private lastSent: PlayerInput = { dir: null, bomb: false, action: false };
+  private readonly predictor: Predictor;
+  private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
   private leaving = false;
 
@@ -55,14 +62,17 @@ export class OnlineGame implements GameMode {
     private readonly ctx: ModeContext,
     private readonly panel: LobbyPanel,
   ) {
+    this.predictor = new Predictor(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
+      if (info.phase === "playing" && this.lobby?.phase !== "playing") this.predictor.reset();
       this.lobby = info;
       panel.update(info, room.sessionId);
       if (info.phase === "playing") ctx.renderer.showBanner("");
     });
-    room.onMessage(S2C.snapshot, (snap: PublicView) => {
+    room.onMessage(S2C.snapshot, (snap: Snapshot) => {
       if (!this.buffer.latest) ctx.fit(snap.grid.width, snap.grid.height);
       this.buffer.push(snap, performance.now());
+      this.latest = snap;
       if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
     });
     room.onMessage(S2C.result, (result: ResultMessage) => {
@@ -87,15 +97,18 @@ export class OnlineGame implements GameMode {
     const sample = this.buffer.sample(nowMs);
     if (!sample) return;
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
-    this.ctx.renderer.draw(sample.to, prev, sample.alpha);
+    const me = this.latest && this.lobby?.phase === "playing" ? this.predictor.predict(this.latest) : null;
+    if (!me) return this.ctx.renderer.draw(sample.to, prev, sample.alpha);
+    prev.set(me.id, { px: me.px, py: me.py });
+    const players = sample.to.players.map((p) => (p.id === me.id ? me : p));
+    this.ctx.renderer.draw({ ...sample.to, players }, prev, sample.alpha);
   }
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
-    if (input.dir === this.lastSent.dir && input.alt === this.lastSent.alt && !input.bomb && !input.action) return;
-    this.room.send(C2S.input, input);
-    this.lastSent = input;
+    const seq = this.predictor.step(input);
+    if (seq !== null) this.room.send(C2S.input, { ...input, seq });
   }
 
   keyDown(code: string): boolean {
