@@ -1,3 +1,5 @@
+import { TILE } from "./constants";
+
 export enum Tile {
   Empty = 0,
   Wall = 1,
@@ -13,8 +15,9 @@ export interface Grid {
 
 export interface Player {
   id: string;
-  x: number;
-  y: number;
+  /** Center position in fixed-point units (see TILE). */
+  px: number;
+  py: number;
   alive: boolean;
   bombCapacity: number;
   fireRange: number;
@@ -56,6 +59,23 @@ export function setTile(s: MatchState, x: number, y: number, tile: Tile): void {
 
 export function hasFlame(s: MatchState, x: number, y: number): boolean {
   return s.flames.some((f) => f.x === x && f.y === y);
+}
+
+export function playerTile(p: Player): { x: number; y: number } {
+  return { x: Math.floor(p.px / TILE), y: Math.floor(p.py / TILE) };
+}
+
+/** Center of tile `t` in fixed-point units. */
+export function tileCenter(t: number): number {
+  return t * TILE + TILE / 2;
+}
+
+/** Teleports a player to the center of a tile. */
+export function placePlayerAt(s: MatchState, playerId: string, x: number, y: number): void {
+  const p = s.players.find((p) => p.id === playerId);
+  if (!p) throw new Error(`Unknown player ${playerId}`);
+  p.px = tileCenter(x);
+  p.py = tileCenter(y);
 }
 
 export function bombAt(s: MatchState, x: number, y: number): Bomb | undefined {

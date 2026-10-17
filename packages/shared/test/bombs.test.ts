@@ -6,6 +6,7 @@ import {
   getTile,
   hasFlame,
   placeBomb,
+  placePlayerAt,
   setTile,
   step,
   Tile,
@@ -17,9 +18,7 @@ function emptyMatch(ids = ["p1", "p2"]): MatchState {
 }
 
 function moveTo(s: MatchState, id: string, x: number, y: number) {
-  const p = s.players.find((p) => p.id === id)!;
-  p.x = x;
-  p.y = y;
+  placePlayerAt(s, id, x, y);
 }
 
 function run(s: MatchState, ticks: number) {

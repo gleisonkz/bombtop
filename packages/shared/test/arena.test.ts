@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, getTile, SPAWN_POINTS, Tile } from "../src";
+import { createMatch, getTile, playerTile, SPAWN_POINTS, Tile } from "../src";
 
 const ids = ["p1", "p2", "p3", "p4", "p5"];
 
@@ -40,7 +40,7 @@ describe("arena", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
     expect(s.players).toHaveLength(5);
     s.players.forEach((p, i) => {
-      expect({ x: p.x, y: p.y }).toEqual(SPAWN_POINTS[i]);
+      expect(playerTile(p)).toEqual(SPAWN_POINTS[i]);
       expect(p.alive).toBe(true);
     });
   });
@@ -52,7 +52,8 @@ describe("arena", () => {
   it("keeps spawn points and their neighbours free of blocks", () => {
     for (let seed = 1; seed <= 50; seed++) {
       const s = createMatch({ seed, playerIds: ids, blockDensity: 1 });
-      for (const p of s.players) {
+      for (const pl of s.players) {
+        const p = playerTile(pl);
         expect(getTile(s, p.x, p.y)).toBe(Tile.Empty);
         const free = [
           [p.x + 1, p.y],

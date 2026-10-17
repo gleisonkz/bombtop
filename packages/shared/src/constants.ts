@@ -9,6 +9,9 @@ export const FLAME_TICKS = Math.round(0.5 * TICK_RATE);
 
 export const MAX_PLAYERS = 5;
 
+/** Fixed-point units per tile (16px sprites x 16 subpixels). Positions are integers. */
+export const TILE = 256;
+
 export const DEFAULT_WIDTH = 13;
 export const DEFAULT_HEIGHT = 11;
 

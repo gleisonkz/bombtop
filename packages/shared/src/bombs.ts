@@ -1,16 +1,17 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
-import { bombAt, getTile, setTile, Tile, type Bomb, type MatchState } from "./state";
+import { bombAt, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
 export function placeBomb(s: MatchState, playerId: string): boolean {
   const p = s.players.find((p) => p.id === playerId);
   if (!p || !p.alive) return false;
-  if (bombAt(s, p.x, p.y)) return false;
+  const { x, y } = playerTile(p);
+  if (bombAt(s, x, y)) return false;
   const active = s.bombs.filter((b) => b.ownerId === playerId).length;
   if (active >= p.bombCapacity) return false;
 
-  s.bombs.push({ ownerId: playerId, x: p.x, y: p.y, fuse: FUSE_TICKS, range: p.fireRange });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange });
   return true;
 }
 
@@ -28,7 +29,8 @@ export function step(s: MatchState): void {
   }
 
   for (const p of s.players) {
-    if (p.alive && s.flames.some((f) => f.x === p.x && f.y === p.y)) p.alive = false;
+    const { x, y } = playerTile(p);
+    if (p.alive && hasFlame(s, x, y)) p.alive = false;
   }
 }
 

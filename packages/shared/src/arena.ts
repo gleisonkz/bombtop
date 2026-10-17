@@ -8,7 +8,7 @@ import {
   START_FIRE_RANGE,
 } from "./constants";
 import { createRng } from "./rng";
-import { Tile, type MatchState } from "./state";
+import { tileCenter, Tile, type MatchState } from "./state";
 
 export interface MatchOptions {
   seed: number;
@@ -43,8 +43,8 @@ export function createMatch(opts: MatchOptions): MatchState {
     grid: { width, height, tiles },
     players: playerIds.map((id, i) => ({
       id,
-      x: SPAWN_POINTS[i]!.x,
-      y: SPAWN_POINTS[i]!.y,
+      px: tileCenter(SPAWN_POINTS[i]!.x),
+      py: tileCenter(SPAWN_POINTS[i]!.y),
       alive: true,
       bombCapacity: START_BOMB_CAPACITY,
       fireRange: START_FIRE_RANGE,
