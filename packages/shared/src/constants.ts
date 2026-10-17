@@ -60,6 +60,9 @@ export const ROUND_TICKS = 3 * 60 * TICK_RATE;
 /** Ticks between falling walls during sudden death. */
 export const PRESSURE_INTERVAL = 12;
 
+/** Units per tick a conveyor belt moves whoever stands on it. */
+export const CONVEYOR_SPEED = BASE_SPEED / 2;
+
 /** Ticks a revenge cart takes to move one border tile. */
 export const CART_TICKS = 8;
 

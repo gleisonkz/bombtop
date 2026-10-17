@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, getTile, perimeter, type MatchState } from "@bombtopia/shared";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type MatchState } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -17,6 +17,10 @@ const COLORS = {
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
   cart: 0x8d6e63,
+  belt: 0x3a3f4b,
+  beltArrow: 0xffd23f,
+  warp: 0x240046,
+  warpCore: 0xc77dff,
   mounts: { hopper: 0x7bd389, dasher: 0xf28482, pusher: 0x84a59d },
   players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
   items: {
@@ -32,6 +36,13 @@ const COLORS = {
     [ItemKind.FullFire]: 0xffd23f,
     [ItemKind.Egg]: 0xfff3e0,
   } satisfies Record<ItemKind, number>,
+};
+
+const BELT_DIRS: Partial<Record<Floor, Facing>> = {
+  [Floor.ConveyorUp]: "up",
+  [Floor.ConveyorDown]: "down",
+  [Floor.ConveyorLeft]: "left",
+  [Floor.ConveyorRight]: "right",
 };
 
 export interface PlayerPos {
@@ -82,6 +93,7 @@ export class Renderer {
           g.rect(px + 1, py + 1, TILE_PX - 2, TILE_PX - 3).fill(COLORS.block);
         } else {
           g.rect(px, py, TILE_PX, TILE_PX).fill((x + y) % 2 ? COLORS.floorA : COLORS.floorB);
+          this.drawFloor(g, getFloor(s, x, y), px, py, s.tick);
         }
       }
     }
@@ -144,6 +156,31 @@ export class Renderer {
     this.clock.position.set((width * TILE_PX) / 2, 3);
     const left = Math.max(0, Math.ceil((ROUND_TICKS - s.tick) / TICK_RATE));
     this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";
+  }
+
+  private drawFloor(g: Graphics, floor: Floor, px: number, py: number, tick: number): void {
+    if (floor === Floor.Warp) {
+      const pulse = 1 + Math.sin(tick / 8) * 0.6;
+      g.circle(px + TILE_PX / 2, py + TILE_PX / 2, 6).fill(COLORS.warp);
+      g.circle(px + TILE_PX / 2, py + TILE_PX / 2, 3 + pulse).fill(COLORS.warpCore);
+      return;
+    }
+    const belt = BELT_DIRS[floor];
+    if (!belt) return;
+    const [dx, dy] = DIR_VECTORS[belt];
+    g.rect(px, py, TILE_PX, TILE_PX).fill(COLORS.belt);
+    // Chevrons scroll in the belt direction.
+    const shift = (tick / 2) % 8;
+    for (let k = -1; k < 2; k++) {
+      const o = k * 8 + shift;
+      const cx = px + TILE_PX / 2 + dx * o;
+      const cy = py + TILE_PX / 2 + dy * o;
+      if (cx < px || cx > px + TILE_PX || cy < py || cy > py + TILE_PX) continue;
+      g.moveTo(cx - dy * 4 - dx * 2, cy - dx * 4 - dy * 2)
+        .lineTo(cx + dx * 2, cy + dy * 2)
+        .lineTo(cx + dy * 4 - dx * 2, cy + dx * 4 - dy * 2)
+        .stroke({ color: COLORS.beltArrow, width: 1.5 });
+    }
   }
 
   showBanner(text: string): void {

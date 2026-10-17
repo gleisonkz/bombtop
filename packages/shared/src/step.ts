@@ -1,6 +1,7 @@
 import { punch, updateHeldBombs, useGlove } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
+import { applyFloor } from "./floor";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
@@ -35,6 +36,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     tryKick(s, p, dir);
   }
 
+  applyFloor(s);
   updateHeldBombs(s);
   collectItems(s);
   updateCurses(s);

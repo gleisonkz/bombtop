@@ -1,5 +1,5 @@
 import { Application } from "pixi.js";
-import { createMatch, matchResult, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
+import { createMatch, matchResult, STAGES, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtopia/shared";
 import { ARROWS, KeyboardInput, WASD } from "./input/keyboard";
 import { FixedStep } from "./loop/fixed-step";
 import { Renderer, TILE_PX, type PlayerPos } from "./render/renderer";
@@ -20,6 +20,7 @@ app.stage.addChild(renderer.root);
 let match: MatchState;
 let prev = new Map<string, PlayerPos>();
 let roundOver = false;
+let round = 0;
 let roundOverAt = 0;
 /** Ignore restart presses right after the round ends (players may still be mashing bomb). */
 const RESTART_DELAY_MS = 1000;
@@ -29,6 +30,7 @@ function newRound(): void {
   match = createMatch({
     seed: (Math.random() * 2 ** 32) >>> 0,
     playerIds: LOCAL_PLAYERS.map((p) => p.id),
+    stage: STAGES[round++ % STAGES.length]!,
   });
   prev = new Map();
   roundOver = false;

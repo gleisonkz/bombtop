@@ -8,6 +8,8 @@ export * from "./kick";
 export * from "./mount";
 export * from "./pressure";
 export * from "./revenge";
+export * from "./floor";
+export * from "./stage";
 export * from "./movement";
 export * from "./step";
 export * from "./curse";

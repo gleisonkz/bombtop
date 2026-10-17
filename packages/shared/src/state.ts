@@ -6,11 +6,25 @@ export enum Tile {
   Block = 2,
 }
 
+/** Floor features under a tile (stage gimmicks). */
+export enum Floor {
+  Normal = 0,
+  ConveyorUp = 1,
+  ConveyorDown = 2,
+  ConveyorLeft = 3,
+  ConveyorRight = 4,
+  Warp = 5,
+}
+
 export interface Grid {
   width: number;
   height: number;
   /** Row-major: index = y * width + x */
   tiles: Tile[];
+  /** Row-major floor features, parallel to `tiles`. */
+  floor: Floor[];
+  /** Warp tiles; warps[i] is paired with warps[i ^ 1]. */
+  warps: { x: number; y: number }[];
 }
 
 export type Direction = "up" | "down" | "left" | "right" | null;
@@ -61,6 +75,8 @@ export interface Player {
   dashTicks: number;
   /** Revenge cart a dead player rides along the border, or null. */
   cart: Cart | null;
+  /** Set after warping; cleared once the player leaves the warp tile. */
+  warpLock: boolean;
 }
 
 export interface Cart {
@@ -154,6 +170,12 @@ export function getTile(s: MatchState, x: number, y: number): Tile {
   const { width, height, tiles } = s.grid;
   if (x < 0 || y < 0 || x >= width || y >= height) return Tile.Wall;
   return tiles[y * width + x]!;
+}
+
+export function getFloor(s: MatchState, x: number, y: number): Floor {
+  const { width, height, floor } = s.grid;
+  if (x < 0 || y < 0 || x >= width || y >= height) return Floor.Normal;
+  return floor[y * width + x]!;
 }
 
 export function setTile(s: MatchState, x: number, y: number, tile: Tile): void {

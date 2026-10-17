@@ -11,6 +11,7 @@ import {
   START_FIRE_RANGE,
 } from "./constants";
 import { createRng } from "./rng";
+import { buildStage, type StageId } from "./stage";
 import { ItemKind, tileCenter, Tile, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
@@ -19,10 +20,11 @@ export interface MatchOptions {
   blockDensity?: number;
   /** Dead players ride revenge carts (default true). */
   revenge?: boolean;
+  stage?: StageId;
 }
 
 export function createMatch(opts: MatchOptions): MatchState {
-  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = true } = opts;
+  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = true, stage = "classic" } = opts;
   if (playerIds.length > MAX_PLAYERS) {
     throw new Error(`At most ${MAX_PLAYERS} players per match`);
   }
@@ -30,7 +32,8 @@ export function createMatch(opts: MatchOptions): MatchState {
   const width = DEFAULT_WIDTH;
   const height = DEFAULT_HEIGHT;
   const rng = createRng(seed);
-  const safe = safeTiles(width);
+  const layout = buildStage(stage, width, height);
+  const safe = new Set([...safeTiles(width), ...layout.keepClear]);
   const tiles: Tile[] = [];
 
   for (let y = 0; y < height; y++) {
@@ -49,7 +52,7 @@ export function createMatch(opts: MatchOptions): MatchState {
     pressure: 0,
     revenge,
     items: hideItems(tiles, width, seed),
-    grid: { width, height, tiles },
+    grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
     players: playerIds.map((id, i) => ({
       id,
       px: tileCenter(SPAWN_POINTS[i]!.x),
@@ -70,6 +73,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       jumpTicks: 0,
       dashTicks: 0,
       cart: null,
+      warpLock: false,
     })),
     bombs: [],
     flames: [],
