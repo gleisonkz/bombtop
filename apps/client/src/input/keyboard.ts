@@ -6,37 +6,75 @@ export interface KeyBindings {
   left: string;
   right: string;
   bomb: string;
+  action: string;
 }
 
-/** Bindings use KeyboardEvent.code, so they follow physical key positions. */
-export const WASD: KeyBindings = { up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD", bomb: "Space" };
+/**
+ * Bindings use KeyboardEvent.code, so they follow physical key positions.
+ * Buttons avoid letter keys: some browser extensions swallow them.
+ */
+export const WASD: KeyBindings = {
+  up: "KeyW",
+  down: "KeyS",
+  left: "KeyA",
+  right: "KeyD",
+  bomb: "Space",
+  action: "ShiftLeft",
+};
 export const ARROWS: KeyBindings = {
   up: "ArrowUp",
   down: "ArrowDown",
   left: "ArrowLeft",
   right: "ArrowRight",
   bomb: "Enter",
+  action: "ShiftRight",
 };
 
 type Dir = Exclude<Direction, null>;
+type Button = "bomb" | "action";
 const DIRS: Dir[] = ["up", "down", "left", "right"];
+const BUTTONS: Button[] = ["bomb", "action"];
+
+/** A button that reports one press per physical press, even if released before sampling. */
+class EdgeButton {
+  private held = false;
+  private pending = false;
+
+  down(): void {
+    if (!this.held) this.pending = true;
+    this.held = true;
+  }
+
+  up(): void {
+    this.held = false;
+  }
+
+  take(): boolean {
+    const pressed = this.pending;
+    this.pending = false;
+    return pressed;
+  }
+
+  reset(): void {
+    this.held = this.pending = false;
+  }
+}
 
 /**
  * Turns key events into one PlayerInput per tick.
- * Direction: most recently pressed held key wins. Bomb: once per press.
+ * Direction: most recently pressed held key wins. Buttons: once per press.
  */
 export class KeyboardInput {
   private held: Dir[] = [];
-  private bombHeld = false;
-  private bombPending = false;
+  private readonly buttons: Record<Button, EdgeButton> = { bomb: new EdgeButton(), action: new EdgeButton() };
 
   constructor(private readonly bindings: KeyBindings) {}
 
   /** Returns true when the key is bound (caller may preventDefault). */
   keyDown(code: string): boolean {
-    if (code === this.bindings.bomb) {
-      if (!this.bombHeld) this.bombPending = true;
-      this.bombHeld = true;
+    const button = this.buttonFor(code);
+    if (button) {
+      this.buttons[button].down();
       return true;
     }
     const dir = this.dirFor(code);
@@ -46,8 +84,9 @@ export class KeyboardInput {
   }
 
   keyUp(code: string): boolean {
-    if (code === this.bindings.bomb) {
-      this.bombHeld = false;
+    const button = this.buttonFor(code);
+    if (button) {
+      this.buttons[button].up();
       return true;
     }
     const dir = this.dirFor(code);
@@ -57,18 +96,23 @@ export class KeyboardInput {
   }
 
   sample(): PlayerInput {
-    const bomb = this.bombPending;
-    this.bombPending = false;
-    return { dir: this.held.at(-1) ?? null, bomb };
+    return {
+      dir: this.held.at(-1) ?? null,
+      bomb: this.buttons.bomb.take(),
+      action: this.buttons.action.take(),
+    };
   }
 
   reset(): void {
     this.held = [];
-    this.bombHeld = false;
-    this.bombPending = false;
+    for (const b of BUTTONS) this.buttons[b].reset();
   }
 
   private dirFor(code: string): Dir | undefined {
     return DIRS.find((d) => this.bindings[d] === code);
+  }
+
+  private buttonFor(code: string): Button | undefined {
+    return BUTTONS.find((b) => this.bindings[b] === code);
   }
 }

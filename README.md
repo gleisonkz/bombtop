@@ -8,6 +8,6 @@ pnpm test
 pnpm dev      # http://localhost:5173
 ```
 
-Controls (local prototype): Player 1 `WASD` + `Space`, Player 2 arrows + `Enter`.
+Controls (local prototype): Player 1 `WASD`, bomb `Space`, action `Left Shift`; Player 2 arrows, bomb `Enter`, action `Right Shift`.
 
 See `CLAUDE.md` for architecture decisions.

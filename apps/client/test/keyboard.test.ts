@@ -3,7 +3,7 @@ import { KeyboardInput, WASD } from "../src/input/keyboard";
 
 describe("KeyboardInput", () => {
   it("has no direction and no bomb by default", () => {
-    expect(new KeyboardInput(WASD).sample()).toEqual({ dir: null, bomb: false });
+    expect(new KeyboardInput(WASD).sample()).toEqual({ dir: null, bomb: false, action: false });
   });
 
   it("maps held keys to a direction", () => {
@@ -69,6 +69,18 @@ describe("KeyboardInput", () => {
     k.keyDown("KeyA");
     k.keyDown("Space");
     k.reset();
-    expect(k.sample()).toEqual({ dir: null, bomb: false });
+    expect(k.sample()).toEqual({ dir: null, bomb: false, action: false });
+  });
+
+  it("fires the action button once per press", () => {
+    const k = new KeyboardInput(WASD);
+    k.keyDown("ShiftLeft");
+    expect(k.sample().action).toBe(true);
+    k.keyDown("ShiftLeft");
+    expect(k.sample().action).toBe(false);
+    k.keyUp("ShiftLeft");
+    k.keyDown("ShiftLeft");
+    k.keyUp("ShiftLeft");
+    expect(k.sample().action).toBe(true);
   });
 });
