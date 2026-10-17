@@ -1,4 +1,5 @@
 export * from "./constants";
+export * from "./air";
 export * from "./state";
 export * from "./arena";
 export * from "./bombs";

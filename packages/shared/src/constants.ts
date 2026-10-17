@@ -25,7 +25,7 @@ export const DEFAULT_BLOCK_DENSITY = 0.75;
 export const ITEM_CHANCE = 0.35;
 
 /** Relative odds of each basic power-up when a block hides one. */
-export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2, kick: 1, remote: 1, pierce: 1 } as const;
+export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2, kick: 1, remote: 1, pierce: 1, punch: 1 } as const;
 
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;
@@ -39,6 +39,15 @@ export const MAX_SPEED = BASE_SPEED * 2;
 
 /** Units per tick a kicked bomb slides. */
 export const KICK_SPEED = BASE_SPEED * 2;
+
+/** Ticks an airborne bomb takes to cross one tile. */
+export const AIR_TICKS_PER_TILE = 6;
+
+/** Tiles a punched or thrown bomb travels before trying to land. */
+export const AIR_DISTANCE = 3;
+
+/** Ticks a player stays stunned after a bomb lands on them. */
+export const STUN_TICKS = TICK_RATE;
 
 /** Spawn tiles for the default 13x11 arena, in player order. */
 export const SPAWN_POINTS: readonly { x: number; y: number }[] = [

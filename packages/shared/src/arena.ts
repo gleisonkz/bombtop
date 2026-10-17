@@ -56,6 +56,8 @@ export function createMatch(opts: MatchOptions): MatchState {
       facing: "down" as const,
       canKick: false,
       bombType: "normal" as const,
+      canPunch: false,
+      stun: 0,
     })),
     bombs: [],
     flames: [],

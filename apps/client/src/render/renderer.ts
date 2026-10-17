@@ -1,5 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
-import { DIR_VECTORS, FUSE_TICKS, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ItemKind, TILE, Tile, getTile, type MatchState } from "@bombtopia/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -23,6 +23,7 @@ const COLORS = {
     [ItemKind.Kick]: 0x9b5de5,
     [ItemKind.Remote]: 0xe63946,
     [ItemKind.Pierce]: 0x48cae4,
+    [ItemKind.Punch]: 0xf4a261,
   } satisfies Record<ItemKind, number>,
 };
 
@@ -86,10 +87,12 @@ export class Renderer {
 
     for (const b of s.bombs) {
       const pulse = Math.sin(((FUSE_TICKS - b.fuse) / 60) * Math.PI * 4) * 0.8;
-      const [dx, dy] = b.slide ? DIR_VECTORS[b.slide] : [0, 0];
-      const slide = (b.offset / TILE) * TILE_PX;
-      const cx = b.x * TILE_PX + TILE_PX / 2 + dx * slide;
-      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * slide;
+      const moving = b.air?.dir ?? b.slide;
+      const [dx, dy] = moving ? DIR_VECTORS[moving] : [0, 0];
+      const t = b.air ? b.air.progress / AIR_TICKS_PER_TILE : b.offset / TILE;
+      const lift = b.air ? Math.sin(t * Math.PI) * 6 + 4 : 0; // hop arc while airborne
+      const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
+      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift;
       g.circle(cx, cy, 6 + pulse).fill(COLORS.bomb);
       g.circle(cx + 3, cy - 6, 1.5).fill(COLORS.fuse);
     }

@@ -1,3 +1,4 @@
+import { punch } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
@@ -10,10 +11,14 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
 
   for (const p of s.players) {
     const input = inputs[p.id];
+    if (p.stun > 0) {
+      p.stun--;
+      continue;
+    }
     if (!input) continue;
     if (input.dir && p.alive) p.facing = input.dir;
     if (input.bomb) placeBomb(s, p.id);
-    if (input.action) detonateRemote(s, p.id);
+    if (input.action && !detonateRemote(s, p.id)) punch(s, p);
     movePlayer(s, p, input.dir);
     tryKick(s, p, input.dir);
   }
