@@ -106,6 +106,10 @@ describe("picking up items", () => {
     expect(pickup(ItemKind.Speed).players[0]!.speed).toBe(BASE_SPEED + SPEED_STEP);
   });
 
+  it("full fire maxes the fire range at once", () => {
+    expect(pickup(ItemKind.FullFire).players[0]!.fireRange).toBe(MAX_FIRE_RANGE);
+  });
+
   it("caps every stat", () => {
     expect(pickup(ItemKind.Fire, 20).players[0]!.fireRange).toBe(MAX_FIRE_RANGE);
     expect(pickup(ItemKind.Bomb, 20).players[0]!.bombCapacity).toBe(MAX_BOMB_CAPACITY);

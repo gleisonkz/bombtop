@@ -27,6 +27,7 @@ const COLORS = {
     [ItemKind.Punch]: 0xf4a261,
     [ItemKind.Glove]: 0xffffff,
     [ItemKind.Skull]: 0x6a0dad,
+    [ItemKind.FullFire]: 0xffd23f,
   } satisfies Record<ItemKind, number>,
 };
 

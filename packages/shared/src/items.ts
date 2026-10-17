@@ -12,6 +12,7 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Punch]: (p) => (p.canPunch = true),
   [ItemKind.Glove]: (p) => (p.canGlove = true),
   [ItemKind.Skull]: (p, s) => applyRandomCurse(s, p),
+  [ItemKind.FullFire]: (p) => (p.fireRange = MAX_FIRE_RANGE),
 };
 
 /** Living players collect any exposed item on their tile. */

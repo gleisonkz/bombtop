@@ -97,6 +97,7 @@ export enum ItemKind {
   Punch = "punch",
   Glove = "glove",
   Skull = "skull",
+  FullFire = "fullFire",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
