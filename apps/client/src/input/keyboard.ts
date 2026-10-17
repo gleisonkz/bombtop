@@ -119,9 +119,12 @@ export class KeyboardInput {
 
 /** Combines several input sources: first held direction wins, buttons are OR-ed. */
 export function mergeInputs(inputs: PlayerInput[]): PlayerInput {
-  return {
-    dir: inputs.find((i) => i.dir)?.dir ?? null,
+  const steering = inputs.find((i) => i.dir);
+  const merged: PlayerInput = {
+    dir: steering?.dir ?? null,
     bomb: inputs.some((i) => i.bomb),
     action: inputs.some((i) => i.action),
   };
+  if (steering?.alt) merged.alt = steering.alt;
+  return merged;
 }

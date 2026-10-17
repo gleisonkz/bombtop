@@ -93,7 +93,7 @@ export class OnlineGame implements GameMode {
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
-    if (input.dir === this.lastSent.dir && !input.bomb && !input.action) return;
+    if (input.dir === this.lastSent.dir && input.alt === this.lastSent.alt && !input.bomb && !input.action) return;
     this.room.send(C2S.input, input);
     this.lastSent = input;
   }

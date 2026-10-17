@@ -1,4 +1,4 @@
-import { TouchInput } from "../input/touch";
+import { STICK_RADIUS, TouchInput } from "../input/touch";
 import { el } from "./dom";
 
 /** True on phones/tablets (primary pointer is a finger). */
@@ -25,9 +25,9 @@ export class TouchControls {
     });
     stick.addEventListener("pointermove", (e) => {
       this.input.stickMove(e.pointerId, e.clientX, e.clientY);
-      const origin = this.knob.dataset;
-      if (origin.pid !== String(e.pointerId)) return;
-      this.showKnob(Number(origin.ox), Number(origin.oy), e.clientX - Number(origin.ox), e.clientY - Number(origin.oy));
+      const origin = this.input.origin;
+      if (!origin || this.knob.dataset.pid !== String(e.pointerId)) return;
+      this.showKnob(origin.x, origin.y, e.clientX - origin.x, e.clientY - origin.y);
     });
     const end = (e: PointerEvent) => {
       this.input.stickEnd(e.pointerId);
@@ -64,8 +64,7 @@ export class TouchControls {
 
   private showKnob(ox: number, oy: number, dx: number, dy: number): void {
     const len = Math.hypot(dx, dy);
-    const k = len > 40 ? 40 / len : 1; // clamp the knob to the ring
-    Object.assign(this.knob.dataset, { ox: String(ox), oy: String(oy) });
+    const k = len > STICK_RADIUS ? STICK_RADIUS / len : 1; // clamp the knob to the ring
     this.knob.style.left = `${ox + dx * k}px`;
     this.knob.style.top = `${oy + dy * k}px`;
     this.knob.hidden = false;

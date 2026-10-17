@@ -95,6 +95,15 @@ describe("mergeInputs", () => {
     ).toEqual({ dir: "up", bomb: true, action: true });
   });
 
+  it("keeps the fallback direction of the source that steers", () => {
+    expect(
+      mergeInputs([
+        { dir: null, bomb: false },
+        { dir: "left", alt: "up", bomb: false },
+      ]),
+    ).toEqual({ dir: "left", alt: "up", bomb: false, action: false });
+  });
+
   it("is idle with no inputs", () => {
     expect(mergeInputs([])).toEqual({ dir: null, bomb: false, action: false });
   });
