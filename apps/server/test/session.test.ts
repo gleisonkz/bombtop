@@ -90,6 +90,18 @@ describe("playing", () => {
     expect(p.py).toBe(before + p.speed);
   });
 
+  it("acks the last applied input and how many ticks it has run", () => {
+    const s = playing();
+    s.setInput("c1", { dir: "right", bomb: false }, 7);
+    let snap;
+    for (let i = 0; i < 4; i++) snap = s.tick().snapshot ?? snap;
+    expect(snap!.acks.c1).toEqual({ seq: 7, ticks: 4 });
+    s.setInput("c1", { dir: null, bomb: false }, 8);
+    s.tick();
+    snap = s.tick().snapshot;
+    expect(snap!.acks.c1).toEqual({ seq: 8, ticks: 2 });
+  });
+
   it("does not lose a button press released before the tick", () => {
     const s = playing();
     s.setInput("c1", { dir: null, bomb: true });

@@ -3,6 +3,7 @@ import {
   C2S,
   MAX_PLAYERS,
   S2C,
+  inputSeq,
   sanitizeInput,
   sanitizeName,
   TICK_RATE,
@@ -36,7 +37,7 @@ export class BattleRoom extends Room {
     this.setPatchRate(null);
 
     this.onMessage(C2S.input, (client, message) => {
-      this.session.setInput(client.sessionId, sanitizeInput(message));
+      this.session.setInput(client.sessionId, sanitizeInput(message), inputSeq(message));
     });
     this.onMessage(C2S.sync, (client) => {
       client.send(S2C.lobby, this.session.lobbyInfo(this.roomId));

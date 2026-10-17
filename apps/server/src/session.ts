@@ -12,7 +12,7 @@ import {
   type MatchResult,
   type MatchState,
   type PlayerInput,
-  type PublicView,
+  type Snapshot,
   type RoomPhase,
   type StageId,
 } from "@bombtop/shared";
@@ -24,13 +24,16 @@ export const RESULTS_TICKS = 4 * TICK_RATE;
 export const SNAPSHOT_EVERY = 2;
 
 export interface TickOutput {
-  snapshot?: PublicView;
+  snapshot?: Snapshot;
   result?: MatchResult & { over: true };
 }
 
 interface InputBuffer {
   dir: Direction;
   alt: Direction;
+  /** Sequence number of the latest input message, and ticks it has been applied. */
+  seq: number;
+  ticks: number;
   /** Button presses seen since the last tick (so quick taps are never lost). */
   bomb: boolean;
   action: boolean;
@@ -114,14 +117,22 @@ export class BattleSession {
     return true;
   }
 
-  setInput(id: string, input: PlayerInput): void {
+  setInput(id: string, input: PlayerInput, seq = 0): void {
     if (!this.match?.players.some((p) => p.id === id)) return;
-    const buf = this.inputs.get(id) ?? { dir: null, alt: null, bomb: false, action: false };
+    const buf = this.inputs.get(id) ?? { dir: null, alt: null, bomb: false, action: false, seq: 0, ticks: 0 };
+    if (seq !== buf.seq) buf.ticks = 0;
+    buf.seq = seq;
     buf.dir = input.dir;
     buf.alt = input.alt ?? null;
     buf.bomb ||= input.bomb;
     buf.action ||= !!input.action;
     this.inputs.set(id, buf);
+  }
+
+  private snapshot(match: MatchState): Snapshot {
+    const acks: Snapshot["acks"] = {};
+    for (const [id, buf] of this.inputs) acks[id] = { seq: buf.seq, ticks: buf.ticks };
+    return { ...publicView(match), acks };
   }
 
   tick(): TickOutput {
@@ -138,6 +149,7 @@ export class BattleSession {
     for (const [id, buf] of this.inputs) {
       inputs[id] = { dir: buf.dir, alt: buf.alt, bomb: buf.bomb, action: buf.action };
       buf.bomb = buf.action = false;
+      buf.ticks++;
     }
     step(this.match, inputs);
 
@@ -150,7 +162,7 @@ export class BattleSession {
       this.phase = "results";
       this.resultsLeft = RESULTS_TICKS;
     }
-    if (result.over || this.match.tick % SNAPSHOT_EVERY === 0) out.snapshot = publicView(this.match);
+    if (result.over || this.match.tick % SNAPSHOT_EVERY === 0) out.snapshot = this.snapshot(this.match);
     return out;
   }
 }
