@@ -10,6 +10,7 @@ export * from "./pressure";
 export * from "./revenge";
 export * from "./floor";
 export * from "./stage";
+export * from "./view";
 export * from "./movement";
 export * from "./step";
 export * from "./curse";
