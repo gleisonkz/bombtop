@@ -15,6 +15,15 @@ function passable(s: MatchState, x: number, y: number): boolean {
  * and must be aligned to a lane before doing so. When off-center, it first
  * slides toward the lane it can actually enter.
  */
+/** Moves along `dir`, or along `alt` when `dir` makes no progress. Returns the direction used. */
+export function steer(s: MatchState, p: Player, dir: Direction, alt: Direction): Direction {
+  const { px, py } = p;
+  movePlayer(s, p, dir);
+  if (!alt || alt === dir || p.px !== px || p.py !== py) return dir;
+  movePlayer(s, p, alt);
+  return alt;
+}
+
 export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = effectiveSpeed(p)): void {
   if (!dir || !p.alive) return;
   const [dx, dy] = DIR_VECTORS[dir];

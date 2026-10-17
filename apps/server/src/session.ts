@@ -30,6 +30,7 @@ export interface TickOutput {
 
 interface InputBuffer {
   dir: Direction;
+  alt: Direction;
   /** Button presses seen since the last tick (so quick taps are never lost). */
   bomb: boolean;
   action: boolean;
@@ -115,8 +116,9 @@ export class BattleSession {
 
   setInput(id: string, input: PlayerInput): void {
     if (!this.match?.players.some((p) => p.id === id)) return;
-    const buf = this.inputs.get(id) ?? { dir: null, bomb: false, action: false };
+    const buf = this.inputs.get(id) ?? { dir: null, alt: null, bomb: false, action: false };
     buf.dir = input.dir;
+    buf.alt = input.alt ?? null;
     buf.bomb ||= input.bomb;
     buf.action ||= !!input.action;
     this.inputs.set(id, buf);
@@ -134,7 +136,7 @@ export class BattleSession {
 
     const inputs: Record<string, PlayerInput> = {};
     for (const [id, buf] of this.inputs) {
-      inputs[id] = { dir: buf.dir, bomb: buf.bomb, action: buf.action };
+      inputs[id] = { dir: buf.dir, alt: buf.alt, bomb: buf.bomb, action: buf.action };
       buf.bomb = buf.action = false;
     }
     step(this.match, inputs);

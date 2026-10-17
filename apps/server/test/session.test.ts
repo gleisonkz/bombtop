@@ -81,6 +81,15 @@ describe("playing", () => {
     expect(s.match!.players[0]!.px).toBe(before + 2 * s.match!.players[0]!.speed);
   });
 
+  it("passes the fallback direction of a diagonal through", () => {
+    const s = playing();
+    const p = s.match!.players[0]!;
+    const before = p.py;
+    s.setInput("c1", { dir: "left", alt: "down", bomb: false }); // left of the spawn is the border wall
+    s.tick();
+    expect(p.py).toBe(before + p.speed);
+  });
+
   it("does not lose a button press released before the tick", () => {
     const s = playing();
     s.setInput("c1", { dir: null, bomb: true });

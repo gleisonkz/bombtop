@@ -5,7 +5,7 @@ import { applyFloor } from "./floor";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
-import { movePlayer } from "./movement";
+import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
 import { playerTile, type MatchState, type PlayerInput } from "./state";
@@ -32,8 +32,9 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (dir && p.alive) p.facing = dir;
     if (input.bomb && !useGlove(s, p)) placeBomb(s, p.id);
     if (input.action) detonateRemote(s, p.id) || punch(s, p) || useMountAbility(s, p);
-    movePlayer(s, p, dir);
-    tryKick(s, p, dir);
+    const moved = steer(s, p, dir, cursedDirection(p, input.alt ?? null));
+    if (moved !== dir) p.facing = moved!;
+    tryKick(s, p, moved);
   }
 
   applyFloor(s);

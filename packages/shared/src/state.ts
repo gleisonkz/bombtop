@@ -42,6 +42,11 @@ export const DIR_VECTORS: Record<Facing, readonly [number, number]> = {
 
 export interface PlayerInput {
   dir: Direction;
+  /**
+   * Second held direction (diagonal on a stick or two keys): used while `dir`
+   * is blocked, so holding up+left walks up and turns left at the next opening.
+   */
+  alt?: Direction;
   /** Primary button: drop bomb. */
   bomb: boolean;
   /** Secondary button: detonate / punch. */

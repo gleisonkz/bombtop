@@ -41,7 +41,9 @@ const DIRS = new Set<Direction>(["up", "down", "left", "right"]);
 export function sanitizeInput(raw: unknown): PlayerInput {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const dir = DIRS.has(r.dir as Direction) ? (r.dir as Direction) : null;
-  return { dir, bomb: r.bomb === true, action: r.action === true };
+  const input: PlayerInput = { dir, bomb: r.bomb === true, action: r.action === true };
+  if (dir && DIRS.has(r.alt as Direction) && r.alt !== dir) input.alt = r.alt as Direction;
+  return input;
 }
 
 const MAX_NAME = 16;
