@@ -14,6 +14,7 @@ import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import { Predictor } from "../net/prediction";
+import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
 import type { OnlineChoice } from "../ui/menu";
@@ -22,8 +23,7 @@ import type { GameMode, ModeContext } from "./mode";
 /** Render this far in the past so two snapshots (30 Hz) usually bracket the frame. */
 const INTERP_DELAY_MS = 100;
 
-export const SERVER_URL: string =
-  import.meta.env.VITE_SERVER_URL ?? `${location.protocol === "https:" ? "https" : "http"}://${location.hostname}:2567`;
+export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, location.href);
 
 /**
  * Online match: the server simulates and this client sends input. Other players

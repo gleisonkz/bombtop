@@ -30,7 +30,7 @@ All art, audio and names are original — never copy assets from existing games.
 
 - `pnpm dev` — client (Vite) + game server (ws://localhost:2567) in parallel
 - `pnpm dev:client` / `pnpm dev:server` — one at a time
-- Client server URL: `VITE_SERVER_URL` (default `<page host>:2567`)
+- Client server URL: `VITE_SERVER_URL` (default `<page host>:2567`; a path like `/colyseus` uses the page origin + dev proxy, for tunnels)
 - `pnpm test` — all tests
 - `pnpm typecheck`
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
