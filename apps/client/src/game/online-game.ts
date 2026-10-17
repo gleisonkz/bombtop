@@ -33,9 +33,14 @@ export class OnlineGame implements GameMode {
   private lobby: LobbyInfo | null = null;
   private leaving = false;
 
-  static async connect(choice: OnlineChoice, name: string, ctx: ModeContext, panel: LobbyPanel): Promise<OnlineGame> {
+  static async connect(
+    choice: OnlineChoice,
+    who: { name: string; token?: string },
+    ctx: ModeContext,
+    panel: LobbyPanel,
+  ): Promise<OnlineGame> {
     const client = new Client(SERVER_URL);
-    const options = { name };
+    const options = who.token ? { name: who.name, token: who.token } : { name: who.name };
     const room =
       choice.kind === "public"
         ? await client.joinOrCreate(ROOM_NAME, options)

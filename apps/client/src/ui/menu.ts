@@ -5,6 +5,8 @@ export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "jo
 export interface MenuHandlers {
   local(): void;
   online(choice: OnlineChoice, name: string): void;
+  login(): void;
+  logout(): void;
 }
 
 const NAME_KEY = "bombtopia.name";
@@ -16,6 +18,9 @@ export class Menu {
   private readonly name: HTMLInputElement;
   private readonly code: HTMLInputElement;
   private readonly buttons: HTMLButtonElement[];
+  private readonly account = el("div", { class: "account" });
+
+  private readonly handlers: MenuHandlers;
 
   constructor(parent: HTMLElement, handlers: MenuHandlers) {
     this.name = el("input");
@@ -46,8 +51,10 @@ export class Menu {
     ];
     const [publicBtn, createBtn, joinBtn, localBtn] = this.buttons;
 
+    this.handlers = handlers;
     this.root = el("div", { class: "panel menu" }, [
       el("h1", { text: "Bombtopia" }),
+      this.account,
       this.name,
       publicBtn,
       createBtn,
@@ -61,6 +68,20 @@ export class Menu {
       }),
     ]);
     parent.appendChild(this.root);
+  }
+
+  /**
+   * Shows the Google login state. `available` is false when Supabase is not
+   * configured (guest-only build): the account row stays empty.
+   */
+  setAccount(account: { name: string } | null, available: boolean): void {
+    this.name.hidden = !!account;
+    if (!available) return this.account.replaceChildren();
+    this.account.replaceChildren(
+      ...(account
+        ? [el("span", { text: `Olá, ${account.name}` }), button("Sair", () => this.handlers.logout())]
+        : [button("Entrar com Google", () => this.handlers.login())]),
+    );
   }
 
   show(message = ""): void {

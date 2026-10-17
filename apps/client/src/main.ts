@@ -4,6 +4,7 @@ import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
+import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { Menu } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
 
@@ -51,7 +52,11 @@ const lobby = new LobbyPanel(ui, {
   leave: () => void online?.leave(),
 });
 
+let account: Account | null = null;
+
 const menu = new Menu(ui, {
+  login: () => void signInWithGoogle(),
+  logout: () => void signOut(),
   local: () => {
     menu.hide();
     setMode(new LocalGame(ctx));
@@ -59,7 +64,8 @@ const menu = new Menu(ui, {
   online: async (choice, name) => {
     menu.setBusy(true);
     try {
-      online = await OnlineGame.connect(choice, name, ctx, lobby);
+      const who = account ? { name: account.name, token: account.token } : { name };
+      online = await OnlineGame.connect(choice, who, ctx, lobby);
       menu.hide();
       setMode(online);
     } catch (err) {
@@ -71,6 +77,11 @@ const menu = new Menu(ui, {
       );
     }
   },
+});
+
+watchAccount((a) => {
+  account = a;
+  menu.setAccount(a, !!supabase);
 });
 
 app.ticker.add((ticker) => mode?.frame(ticker.deltaMS, performance.now()));
