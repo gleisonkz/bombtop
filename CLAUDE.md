@@ -21,19 +21,35 @@ All art, audio and names are original — never copy assets from existing games.
 ## Layout
 
 - `packages/shared` — game simulation + tests (Vitest)
-- `apps/client` — Vite + PixiJS client (local 2-player prototype; PWA todo)
-- `apps/server` — (todo) Colyseus server
+- `apps/client` — Vite + PixiJS client: menu, lobby, online play, local 2-player mode (PWA todo)
+- `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleSession` holds
+  all room logic (unit-tested); `BattleRoom` is a thin adapter (integration-tested over the network).
 
 ## Commands
 
-- `pnpm dev` — client dev server (Vite)
+- `pnpm dev` — client (Vite) + game server (ws://localhost:2567) in parallel
+- `pnpm dev:client` / `pnpm dev:server` — one at a time
+- Client server URL: `VITE_SERVER_URL` (default `<page host>:2567`)
 - `pnpm test` — all tests
 - `pnpm typecheck`
-- dev server log: `.agent/dev.log` (`pnpm dev 2>&1 | tee .agent/dev.log`)
-- In dev, the live match state is exposed as `window.__match` for debugging.
+- dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
+- In dev, the live state is exposed for debugging: `window.__match` (local game),
+  `window.__snapshot` (latest server snapshot, online).
+
+## Networking
+
+- Server-authoritative, 60 Hz sim; snapshots (`publicView`: no buried items, no PRNG state) at 30 Hz.
+- Client sends input only on change/button press; server buffers button taps between ticks.
+- Client renders snapshots 100 ms in the past, interpolated. No client-side prediction yet.
+- Clients must send `sync` after attaching message handlers: the SDK drops messages that
+  arrive before a handler exists.
 
 ## Gotchas
 
+- The `colyseus` meta-package pulls uWebSockets.js from git, which pnpm blocks; use
+  `@colyseus/core` + `@colyseus/ws-transport` instead.
+- Vite can cache a failed import if a file is created after the module importing it was saved;
+  restart the dev server if a just-created module "does not exist".
 - Some browser extensions swallow letter keys (R, Q seen) before the page sees them.
   Never rely on a single letter key for essential actions; bomb keys also work.
 - Automated/background Chrome tabs throttle requestAnimationFrame (~1 fps), so the

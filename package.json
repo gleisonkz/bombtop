@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm -C apps/client dev",
+    "dev": "pnpm -r --parallel --filter ./apps/** dev",
+    "dev:client": "pnpm -C apps/client dev",
+    "dev:server": "pnpm -C apps/server dev",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
   },
