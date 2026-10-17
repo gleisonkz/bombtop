@@ -1,9 +1,17 @@
-import { updateBombs } from "./bombs";
-import { hasFlame, playerTile, type MatchState } from "./state";
+import { placeBomb, updateBombs } from "./bombs";
+import { movePlayer } from "./movement";
+import { hasFlame, playerTile, type MatchState, type PlayerInput } from "./state";
 
-/** Advances the simulation by one tick. */
-export function step(s: MatchState): void {
+/** Advances the simulation by one tick, applying each player's input for this tick. */
+export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   s.tick++;
+
+  for (const p of s.players) {
+    const input = inputs[p.id];
+    if (!input) continue;
+    if (input.bomb) placeBomb(s, p.id);
+    movePlayer(s, p, input.dir);
+  }
 
   updateBombs(s);
 

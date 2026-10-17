@@ -13,6 +13,13 @@ export interface Grid {
   tiles: Tile[];
 }
 
+export type Direction = "up" | "down" | "left" | "right" | null;
+
+export interface PlayerInput {
+  dir: Direction;
+  bomb: boolean;
+}
+
 export interface Player {
   id: string;
   /** Center position in fixed-point units (see TILE). */
@@ -21,6 +28,8 @@ export interface Player {
   alive: boolean;
   bombCapacity: number;
   fireRange: number;
+  /** Units moved per tick. */
+  speed: number;
 }
 
 export interface Bomb {

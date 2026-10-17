@@ -1,4 +1,5 @@
 import {
+  BASE_SPEED,
   DEFAULT_BLOCK_DENSITY,
   DEFAULT_HEIGHT,
   DEFAULT_WIDTH,
@@ -48,6 +49,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       alive: true,
       bombCapacity: START_BOMB_CAPACITY,
       fireRange: START_FIRE_RANGE,
+      speed: BASE_SPEED,
     })),
     bombs: [],
     flames: [],

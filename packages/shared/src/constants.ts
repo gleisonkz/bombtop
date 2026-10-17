@@ -12,6 +12,9 @@ export const MAX_PLAYERS = 5;
 /** Fixed-point units per tile (16px sprites x 16 subpixels). Positions are integers. */
 export const TILE = 256;
 
+/** Movement per tick at base speed (units). 16 => 3.75 tiles/s at 60 ticks/s. */
+export const BASE_SPEED = 16;
+
 export const DEFAULT_WIDTH = 13;
 export const DEFAULT_HEIGHT = 11;
 
