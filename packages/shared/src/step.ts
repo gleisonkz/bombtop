@@ -1,4 +1,5 @@
 import { placeBomb, updateBombs } from "./bombs";
+import { collectItems } from "./items";
 import { movePlayer } from "./movement";
 import { hasFlame, playerTile, type MatchState, type PlayerInput } from "./state";
 
@@ -12,6 +13,8 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (input.bomb) placeBomb(s, p.id);
     movePlayer(s, p, input.dir);
   }
+
+  collectItems(s);
 
   updateBombs(s);
 

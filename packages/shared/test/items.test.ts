@@ -1,12 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
+  BASE_SPEED,
   createMatch,
   FUSE_TICKS,
   getTile,
   ItemKind,
+  MAX_BOMB_CAPACITY,
+  MAX_FIRE_RANGE,
+  MAX_SPEED,
   placeBomb,
   placePlayerAt,
   setTile,
+  SPEED_STEP,
   step,
   Tile,
   type MatchState,
@@ -71,5 +76,63 @@ describe("revealing items", () => {
     run(s, FUSE_TICKS);
     expect(getTile(s, 6, 5)).toBe(Tile.Empty);
     expect(s.items).toEqual([{ x: 6, y: 5, kind: ItemKind.Fire }]);
+  });
+});
+
+describe("picking up items", () => {
+  function pickup(kind: ItemKind, times = 1): MatchState {
+    const s = emptyMatch();
+    placePlayerAt(s, "p1", 3, 3);
+    for (let i = 0; i < times; i++) {
+      s.items.push({ x: 3, y: 3, kind });
+      step(s);
+    }
+    return s;
+  }
+
+  it("fire increases the fire range", () => {
+    const s = pickup(ItemKind.Fire);
+    expect(s.players[0]!.fireRange).toBe(2);
+    expect(s.items).toEqual([]);
+  });
+
+  it("bomb increases the bomb capacity", () => {
+    expect(pickup(ItemKind.Bomb).players[0]!.bombCapacity).toBe(2);
+  });
+
+  it("speed increases the movement speed", () => {
+    expect(pickup(ItemKind.Speed).players[0]!.speed).toBe(BASE_SPEED + SPEED_STEP);
+  });
+
+  it("caps every stat", () => {
+    expect(pickup(ItemKind.Fire, 20).players[0]!.fireRange).toBe(MAX_FIRE_RANGE);
+    expect(pickup(ItemKind.Bomb, 20).players[0]!.bombCapacity).toBe(MAX_BOMB_CAPACITY);
+    expect(pickup(ItemKind.Speed, 20).players[0]!.speed).toBe(MAX_SPEED);
+  });
+
+  it("is picked up by walking onto it", () => {
+    const s = emptyMatch();
+    s.items.push({ x: 3, y: 1, kind: ItemKind.Fire });
+    placePlayerAt(s, "p1", 1, 1);
+    for (let i = 0; i < 40; i++) step(s, { p1: { dir: "right", bomb: false } });
+    expect(s.players[0]!.fireRange).toBe(2);
+  });
+
+  it("is not picked up by dead players", () => {
+    const s = emptyMatch();
+    s.players[0]!.alive = false;
+    placePlayerAt(s, "p1", 3, 3);
+    s.items.push({ x: 3, y: 3, kind: ItemKind.Fire });
+    step(s);
+    expect(s.items).toHaveLength(1);
+  });
+
+  it("cannot be picked up while still hidden under a block", () => {
+    const s = emptyMatch();
+    setTile(s, 3, 3, Tile.Block);
+    s.items.push({ x: 3, y: 3, kind: ItemKind.Fire });
+    placePlayerAt(s, "p1", 3, 3);
+    step(s);
+    expect(s.items).toHaveLength(1);
   });
 });

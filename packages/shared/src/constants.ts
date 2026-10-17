@@ -30,6 +30,13 @@ export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2 } as const;
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;
 
+export const MAX_BOMB_CAPACITY = 8;
+export const MAX_FIRE_RANGE = 8;
+
+/** Speed gained per speed power-up (units per tick). */
+export const SPEED_STEP = 4;
+export const MAX_SPEED = BASE_SPEED * 2;
+
 /** Spawn tiles for the default 13x11 arena, in player order. */
 export const SPAWN_POINTS: readonly { x: number; y: number }[] = [
   { x: 1, y: 1 },
