@@ -9,7 +9,10 @@ import {
   type PublicView,
   type RoomPhase,
 } from "@bombtopia/shared";
+import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { BattleSession } from "./session";
+
+const authConfig = authConfigFromEnv();
 
 /** Seconds a dropped player has to reconnect before being removed. */
 const RECONNECT_SECONDS = 20;
@@ -17,6 +20,8 @@ const RECONNECT_SECONDS = 20;
 export interface BattleRoomOptions {
   private?: boolean;
   name?: string;
+  /** Supabase access token (Google login). */
+  token?: string;
 }
 
 /** Thin Colyseus adapter around BattleSession. State is sent as messages, not Schema. */
@@ -44,8 +49,17 @@ export class BattleRoom extends Room {
     this.setSimulationInterval(() => this.update(), 1000 / TICK_RATE);
   }
 
+  /**
+   * Verifies the Google login when present; the result is available as client.auth.
+   * Colyseus treats a falsy return as "unauthorized", so guests get a truthy marker.
+   */
+  async onAuth(_client: Client, options: BattleRoomOptions): Promise<AuthUser | { guest: true }> {
+    return (await authenticate(options?.token, authConfig)) ?? { guest: true };
+  }
+
   onJoin(client: Client, options: BattleRoomOptions) {
-    if (!this.session.join(client.sessionId, sanitizeName(options?.name))) {
+    const auth = client.auth as Partial<AuthUser> | undefined;
+    if (!this.session.join(client.sessionId, sanitizeName(auth?.name ?? options?.name))) {
       throw new Error("Sala cheia ou partida em andamento");
     }
     this.broadcastLobby();
