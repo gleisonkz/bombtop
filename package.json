@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "pnpm -C apps/client dev",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
   },
