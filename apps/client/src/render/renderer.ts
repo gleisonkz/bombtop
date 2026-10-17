@@ -112,6 +112,7 @@ export class Renderer {
     }
 
     for (const b of s.bombs) {
+      if (b.heldBy) continue; // drawn over its holder's head below
       const pulse = Math.sin(((FUSE_TICKS - b.fuse) / 60) * Math.PI * 4) * 0.8;
       const moving = b.air?.dir ?? b.slide;
       const [dx, dy] = moving ? DIR_VECTORS[moving] : [0, 0];
@@ -150,6 +151,10 @@ export class Renderer {
       g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });
       g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
       g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
+      if (s.bombs.some((b) => b.heldBy === p.id)) {
+        g.circle(cx, cy - 12, 5).fill(COLORS.bomb);
+        g.circle(cx + 3, cy - 17, 1.5).fill(COLORS.fuse);
+      }
     });
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
