@@ -20,6 +20,20 @@ describe("KeyboardInput", () => {
     expect(k.sample().dir).toBe("up");
   });
 
+  it("uses the earlier held direction as the diagonal fallback", () => {
+    const k = new KeyboardInput(WASD);
+    k.keyDown("KeyW");
+    k.keyDown("KeyA");
+    expect(k.sample()).toMatchObject({ dir: "left", alt: "up" });
+  });
+
+  it("has no fallback for opposite keys", () => {
+    const k = new KeyboardInput(WASD);
+    k.keyDown("KeyA");
+    k.keyDown("KeyD");
+    expect(k.sample().alt).toBeUndefined();
+  });
+
   it("falls back to a still-held direction on release", () => {
     const k = new KeyboardInput(WASD);
     k.keyDown("KeyD");

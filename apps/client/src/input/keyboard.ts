@@ -96,11 +96,13 @@ export class KeyboardInput {
   }
 
   sample(): PlayerInput {
-    return {
-      dir: this.held.at(-1) ?? null,
-      bomb: this.buttons.bomb.take(),
-      action: this.buttons.action.take(),
-    };
+    const dir = this.held.at(-1) ?? null;
+    const input: PlayerInput = { dir, bomb: this.buttons.bomb.take(), action: this.buttons.action.take() };
+    // Two perpendicular keys: walk along the earlier one until the newer one opens up.
+    const horizontal = (d: Dir) => d === "left" || d === "right";
+    const alt = this.held.findLast((d) => dir && horizontal(d) !== horizontal(dir));
+    if (alt) input.alt = alt;
+    return input;
   }
 
   reset(): void {
