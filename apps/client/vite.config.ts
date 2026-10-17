@@ -2,6 +2,18 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
+  server: {
+    // Lets a phone reach the dev build through a tunnel (ngrok) on a single origin:
+    // the game server is proxied under /colyseus (set VITE_SERVER_URL=<tunnel>/colyseus).
+    allowedHosts: [".ngrok-free.app", ".ngrok-free.dev", ".ngrok.app"],
+    proxy: {
+      "/colyseus": {
+        target: "http://localhost:2567",
+        ws: true,
+        rewrite: (path) => path.replace(/^\/colyseus/, ""),
+      },
+    },
+  },
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
