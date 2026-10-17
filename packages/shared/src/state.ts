@@ -41,6 +41,19 @@ export interface Bomb {
   range: number;
 }
 
+export enum ItemKind {
+  Fire = "fire",
+  Bomb = "bomb",
+  Speed = "speed",
+}
+
+/** A power-up. Hidden while its tile is still a block. */
+export interface Item {
+  x: number;
+  y: number;
+  kind: ItemKind;
+}
+
 export interface Flame {
   x: number;
   y: number;
@@ -54,6 +67,7 @@ export interface MatchState {
   players: Player[];
   bombs: Bomb[];
   flames: Flame[];
+  items: Item[];
 }
 
 export function getTile(s: MatchState, x: number, y: number): Tile {

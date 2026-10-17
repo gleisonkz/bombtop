@@ -21,6 +21,12 @@ export const DEFAULT_HEIGHT = 11;
 /** Chance (0..1) that a free tile starts with a destructible block. */
 export const DEFAULT_BLOCK_DENSITY = 0.75;
 
+/** Chance (0..1) that a block hides a power-up. */
+export const ITEM_CHANCE = 0.35;
+
+/** Relative odds of each basic power-up when a block hides one. */
+export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2 } as const;
+
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;
 

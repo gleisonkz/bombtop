@@ -3,13 +3,15 @@ import {
   DEFAULT_BLOCK_DENSITY,
   DEFAULT_HEIGHT,
   DEFAULT_WIDTH,
+  ITEM_CHANCE,
+  ITEM_WEIGHTS,
   MAX_PLAYERS,
   SPAWN_POINTS,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
 } from "./constants";
 import { createRng } from "./rng";
-import { tileCenter, Tile, type MatchState } from "./state";
+import { ItemKind, tileCenter, Tile, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
   seed: number;
@@ -41,6 +43,7 @@ export function createMatch(opts: MatchOptions): MatchState {
 
   return {
     tick: 0,
+    items: hideItems(tiles, width, seed),
     grid: { width, height, tiles },
     players: playerIds.map((id, i) => ({
       id,
@@ -65,4 +68,23 @@ function safeTiles(width: number): Set<number> {
     }
   }
   return safe;
+}
+
+/**
+ * Picks which blocks hide power-ups. Uses its own PRNG stream so adding item
+ * kinds never changes the block layout of a seed.
+ */
+function hideItems(tiles: Tile[], width: number, seed: number): Item[] {
+  const rng = createRng(seed ^ 0x9e3779b9);
+  const kinds = Object.entries(ITEM_WEIGHTS) as [ItemKind, number][];
+  const total = kinds.reduce((sum, [, w]) => sum + w, 0);
+  const items: Item[] = [];
+
+  tiles.forEach((tile, i) => {
+    if (tile !== Tile.Block || rng() >= ITEM_CHANCE) return;
+    let roll = rng() * total;
+    const kind = kinds.find(([, w]) => (roll -= w) < 0)?.[0] ?? kinds[0]![0];
+    items.push({ x: i % width, y: Math.floor(i / width), kind });
+  });
+  return items;
 }
