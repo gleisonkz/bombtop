@@ -12,7 +12,7 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   const active = s.bombs.filter((b) => b.ownerId === playerId).length;
   if (active >= p.bombCapacity) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, slide: null, offset: 0 });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: p.fireRange, type: p.bombType, slide: null, offset: 0 });
   return true;
 }
 
@@ -23,11 +23,24 @@ export function updateBombs(s: MatchState): void {
 
   updateSlides(s);
 
-  for (const b of s.bombs) b.fuse--;
+  for (const b of s.bombs) {
+    if (!isHeldByRemote(s, b)) b.fuse--;
+  }
   const queue = s.bombs.filter((b) => b.fuse <= 0);
   while (queue.length > 0) {
     explode(s, queue.shift()!, queue);
   }
+}
+
+/** Remote bombs wait for their owner's signal; if the owner dies they fall back to a normal fuse. */
+function isHeldByRemote(s: MatchState, b: Bomb): boolean {
+  return b.type === "remote" && !!s.players.find((p) => p.id === b.ownerId)?.alive;
+}
+
+/** Arms the player's oldest remote bomb to explode on this tick's bomb update. */
+export function detonateRemote(s: MatchState, playerId: string): void {
+  const bomb = s.bombs.find((b) => b.ownerId === playerId && b.type === "remote" && b.fuse > 0);
+  if (bomb) bomb.fuse = 0;
 }
 
 function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {

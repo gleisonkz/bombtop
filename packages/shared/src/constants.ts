@@ -25,7 +25,7 @@ export const DEFAULT_BLOCK_DENSITY = 0.75;
 export const ITEM_CHANCE = 0.35;
 
 /** Relative odds of each basic power-up when a block hides one. */
-export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2, kick: 1 } as const;
+export const ITEM_WEIGHTS = { fire: 4, bomb: 4, speed: 2, kick: 1, remote: 1 } as const;
 
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;

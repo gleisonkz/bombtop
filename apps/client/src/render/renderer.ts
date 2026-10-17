@@ -21,6 +21,7 @@ const COLORS = {
     [ItemKind.Bomb]: 0x15151f,
     [ItemKind.Speed]: 0x3fd0ff,
     [ItemKind.Kick]: 0x9b5de5,
+    [ItemKind.Remote]: 0xe63946,
   } satisfies Record<ItemKind, number>,
 };
 

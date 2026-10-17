@@ -1,4 +1,4 @@
-import { placeBomb, updateBombs } from "./bombs";
+import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { collectItems } from "./items";
 import { tryKick } from "./kick";
 import { movePlayer } from "./movement";
@@ -13,6 +13,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (!input) continue;
     if (input.dir && p.alive) p.facing = input.dir;
     if (input.bomb) placeBomb(s, p.id);
+    if (input.action) detonateRemote(s, p.id);
     movePlayer(s, p, input.dir);
     tryKick(s, p, input.dir);
   }

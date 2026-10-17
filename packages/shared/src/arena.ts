@@ -55,6 +55,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       speed: BASE_SPEED,
       facing: "down" as const,
       canKick: false,
+      bombType: "normal" as const,
     })),
     bombs: [],
     flames: [],
