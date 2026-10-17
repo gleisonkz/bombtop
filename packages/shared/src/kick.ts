@@ -16,7 +16,7 @@ import {
  * tile center, facing it) sends it sliding.
  */
 export function tryKick(s: MatchState, p: Player, dir: Direction): void {
-  if (!dir || !p.alive || !p.canKick) return;
+  if (!dir || !p.alive || !(p.canKick || p.mount === "pusher")) return;
   const { x, y } = playerTile(p);
   if (p.px !== tileCenter(x) || p.py !== tileCenter(y)) return;
   const [dx, dy] = DIR_VECTORS[dir];

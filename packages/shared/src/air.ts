@@ -8,13 +8,14 @@ export function launch(b: Bomb, dir: Facing): void {
   b.offset = 0;
 }
 
-/** Punches the grounded bomb on the tile the player is facing. */
-export function punch(s: MatchState, p: Player): void {
-  if (!p.alive || !p.canPunch) return;
+/** Punches the grounded bomb on the tile the player is facing. Returns false if there was none. */
+export function punch(s: MatchState, p: Player): boolean {
+  if (!p.alive || !p.canPunch) return false;
   const { x, y } = playerTile(p);
   const [dx, dy] = DIR_VECTORS[p.facing];
   const bomb = bombAt(s, x + dx, y + dy);
   if (bomb) launch(bomb, p.facing);
+  return !!bomb;
 }
 
 /**

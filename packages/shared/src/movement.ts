@@ -15,7 +15,7 @@ function passable(s: MatchState, x: number, y: number): boolean {
  * and must be aligned to a lane before doing so. When off-center, it first
  * slides toward the lane it can actually enter.
  */
-export function movePlayer(s: MatchState, p: Player, dir: Direction): void {
+export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = effectiveSpeed(p)): void {
   if (!dir || !p.alive) return;
   const [dx, dy] = DIR_VECTORS[dir];
   const horizontal = dx !== 0;
@@ -30,7 +30,7 @@ export function movePlayer(s: MatchState, p: Player, dir: Direction): void {
   const tc = Math.floor(across / TILE);
   const offset = across - tileCenter(tc);
   const aheadFree = tileAt(ta + sign, tc);
-  let budget = effectiveSpeed(p);
+  let budget = speed;
 
   if (offset !== 0) {
     if (aheadFree) {

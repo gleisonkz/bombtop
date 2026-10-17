@@ -16,6 +16,7 @@ const COLORS = {
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
+  mounts: { hopper: 0x7bd389, dasher: 0xf28482, pusher: 0x84a59d },
   players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
   items: {
     [ItemKind.Fire]: 0xff7a1a,
@@ -28,6 +29,7 @@ const COLORS = {
     [ItemKind.Glove]: 0xffffff,
     [ItemKind.Skull]: 0x6a0dad,
     [ItemKind.FullFire]: 0xffd23f,
+    [ItemKind.Egg]: 0xfff3e0,
   } satisfies Record<ItemKind, number>,
 };
 
@@ -108,7 +110,11 @@ export class Renderer {
       const uy = from.py + (p.py - from.py) * alpha;
       const cx = (ux / TILE) * TILE_PX;
       const cy = (uy / TILE) * TILE_PX;
+      if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
       g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 });
+      if (p.mount) {
+        g.ellipse(cx, cy + 3, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
+      }
       const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
       const body = cursedFlash ? COLORS.cursed : COLORS.players[i % COLORS.players.length]!;
       g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });

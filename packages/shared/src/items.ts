@@ -1,5 +1,6 @@
 import { MAX_BOMB_CAPACITY, MAX_FIRE_RANGE, MAX_SPEED, SPEED_STEP } from "./constants";
 import { applyRandomCurse } from "./curse";
+import { giveRandomMount } from "./mount";
 import { getTile, ItemKind, playerTile, Tile, type MatchState, type Player } from "./state";
 
 const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
@@ -13,6 +14,7 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Glove]: (p) => (p.canGlove = true),
   [ItemKind.Skull]: (p, s) => applyRandomCurse(s, p),
   [ItemKind.FullFire]: (p) => (p.fireRange = MAX_FIRE_RANGE),
+  [ItemKind.Egg]: (p, s) => giveRandomMount(s, p),
 };
 
 /** Living players collect any exposed item on their tile. */

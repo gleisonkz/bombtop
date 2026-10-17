@@ -52,7 +52,16 @@ export interface Player {
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
   curse: Curse | null;
+  mount: MountKind | null;
+  /** Ticks left of post-hit invulnerability. */
+  invuln: number;
+  /** Ticks left in a hopper jump (moving JUMP_SPEED per tick in `facing`). */
+  jumpTicks: number;
+  /** Ticks left in a dasher burst. */
+  dashTicks: number;
 }
+
+export type MountKind = "hopper" | "dasher" | "pusher";
 
 export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire";
 
@@ -98,6 +107,7 @@ export enum ItemKind {
   Glove = "glove",
   Skull = "skull",
   FullFire = "fullFire",
+  Egg = "egg",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
