@@ -7,21 +7,22 @@ All art, audio and names are original — never copy assets from existing games.
 
 - **Language:** TypeScript end-to-end, pnpm monorepo. No Rust/WASM (CPU is not the bottleneck; network is).
 - **Simulation:** `packages/shared` — pure, deterministic, fixed tick (`TICK_RATE`), integer/tile math, no I/O.
-  Runs authoritatively on the server and for prediction on the client.
+  Runs authoritatively on the server (and in the browser for local play).
 - **Players:** max 5 per match (`MAX_PLAYERS`), 13x11 arena. May grow later.
 - **Mode:** battle mode only (no story mode for now).
 - **Mechanics:** all classic ones are in scope — bombs, fire, speed, kick, punch, glove/throw,
   remote bomb, pierce bomb, skull/virus, mounts, revenge cart, stage gimmicks.
-- **Server:** Colyseus (Node), authoritative. Client predicts own movement, interpolates others.
-- **Client:** Vite + PixiJS + vite-plugin-pwa. Touch D-pad + gamepad + keyboard.
-- **Auth/data:** Supabase (Google login, profiles, ranking).
+- **Server:** Colyseus (Node), authoritative. Client interpolates snapshots (prediction: todo).
+- **Client:** Vite + PixiJS + vite-plugin-pwa. Touch joystick + gamepad + keyboard.
+- **Auth/data:** Supabase (Google login; profiles/ranking todo). Optional: unset = guest-only.
 - **Rooms:** public matchmaking + private rooms by code.
 - **Anti-cheat:** server authority; client only sends inputs.
 
 ## Layout
 
 - `packages/shared` — game simulation + tests (Vitest)
-- `apps/client` — Vite + PixiJS client: menu, lobby, online play, local 2-player mode (PWA todo)
+- `apps/client` — Vite + PixiJS PWA: menu, lobby, online play, local 2-player mode.
+  Inputs in `src/input` (keyboard, gamepad, touch) are pure and unit-tested; DOM/Pixi glue is not.
 - `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleSession` holds
   all room logic (unit-tested); `BattleRoom` is a thin adapter (integration-tested over the network).
 
@@ -35,6 +36,31 @@ All art, audio and names are original — never copy assets from existing games.
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
 - In dev, the live state is exposed for debugging: `window.__match` (local game),
   `window.__snapshot` (latest server snapshot, online).
+
+## Mechanics (all in `packages/shared/src`)
+
+| Item / feature | File | Notes |
+|---|---|---|
+| fire, bomb, speed, full fire | `items.ts` | caps: 8 fire, 8 bombs, 2x speed |
+| kick | `kick.ts` | push into a resting bomb; slides at 2x walk speed |
+| remote | `bombs.ts` | action detonates oldest; normal fuse if owner dies |
+| pierce | `bombs.ts` | flames run through blocks/items/bombs; walls stop them |
+| punch | `air.ts` | action launches bomb in front 3 tiles; wraps edges; bounces; stuns |
+| glove | `air.ts` | bomb on own bomb lifts it, press again throws |
+| skull | `curse.ts` | slow/fast/reverse/diarrhea/constipation/weakFire, 10s, contagious |
+| egg (mounts) | `mount.ts` | extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
+| sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |
+| revenge cart | `revenge.ts` | dead ride the border, throw bombs; a kill swaps them back in |
+| stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters) |
+
+Action button priority: detonate remote > punch > mount ability.
+
+## Environment
+
+- client (`apps/client/.env`): `VITE_SERVER_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- server (`apps/server/.env` / process env): `PORT`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `REQUIRE_AUTH`
+- The server verifies Google logins by calling Supabase `/auth/v1/user` (no JWT secret needed).
+  Colyseus rejects a falsy `onAuth` result, so guests get a `{ guest: true }` marker.
 
 ## Networking
 
@@ -57,4 +83,5 @@ All art, audio and names are original — never copy assets from existing games.
 
 ## Workflow
 
-TDD: write failing test in `packages/shared/test` first, then minimal code, then refactor.
+TDD: write the failing test first (`packages/shared/test`, `apps/*/test`), then minimal code,
+then refactor. Atomic commits: one logical change per commit, every commit green.
