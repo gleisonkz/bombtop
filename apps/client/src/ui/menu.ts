@@ -19,6 +19,7 @@ export class Menu {
   private readonly code: HTMLInputElement;
   private readonly buttons: HTMLButtonElement[];
   private readonly account = el("div", { class: "account" });
+  private readonly joinByCode: () => void;
 
   private readonly handlers: MenuHandlers;
 
@@ -36,11 +37,11 @@ export class Menu {
       storage.set(NAME_KEY, this.name.value.trim());
       handlers.online(choice, this.name.value);
     };
-    const joinByCode = () => {
+    const joinByCode = (this.joinByCode = () => {
       const code = this.code.value.trim();
       if (!code) return this.showError("Digite o código da sala.");
       go({ kind: "join", code });
-    };
+    });
     this.code.addEventListener("keydown", (e) => e.key === "Enter" && joinByCode());
 
     this.buttons = [
@@ -84,6 +85,26 @@ export class Menu {
     );
   }
 
+  /**
+   * Opened from an invite link: fill in the room code and join right away when
+   * we already know who is playing; otherwise ask only for the name.
+   */
+  acceptInvite(code: string, knownPlayer: boolean): void {
+    this.code.value = code;
+    if (knownPlayer) return this.joinByCode();
+    const [publicBtn, , joinBtn] = this.buttons;
+    publicBtn!.classList.remove("primary");
+    joinBtn!.textContent = "Entrar na sala";
+    joinBtn!.classList.add("primary");
+    this.showError("Você foi convidado! Digite seu nome e toque em Entrar na sala.");
+    this.error.className = "invite";
+    this.name.focus();
+  }
+
+  hasName(): boolean {
+    return this.name.value.trim() !== "";
+  }
+
   show(message = ""): void {
     this.root.hidden = false;
     this.setBusy(false);
@@ -99,6 +120,7 @@ export class Menu {
   }
 
   showError(message: string): void {
+    this.error.className = "error";
     this.error.textContent = message;
   }
 }

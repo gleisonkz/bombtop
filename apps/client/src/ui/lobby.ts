@@ -1,4 +1,5 @@
 import type { LobbyInfo } from "@bombtop/shared";
+import { inviteText, inviteUrl } from "../net/invite";
 import { button, el } from "./dom";
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
@@ -22,10 +23,10 @@ export class LobbyPanel {
 
   constructor(parent: HTMLElement, handlers: LobbyHandlers) {
     this.startBtn = button("Começar partida", handlers.start, "primary");
-    const copy = button("Copiar", () => void navigator.clipboard?.writeText(this.code.textContent ?? ""));
+    const invite = button("Convidar", () => void this.invite(invite), "primary");
     this.root = el("div", { class: "panel lobby" }, [
       el("h2", { text: "Sala" }),
-      el("div", { class: "row" }, [this.code, copy]),
+      el("div", { class: "row" }, [this.code, invite]),
       this.list,
       this.status,
       this.startBtn,
@@ -51,10 +52,24 @@ export class LobbyPanel {
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
     this.status.textContent = !enough
-      ? "Esperando mais jogadores… compartilhe o código."
+      ? "Esperando mais jogadores… toque em Convidar e mande o link."
       : isHost
         ? `Próxima fase: ${STAGE_NAMES[info.stage]}`
         : "Esperando o anfitrião começar…";
+  }
+
+  /** Native share sheet (WhatsApp etc.) on phones; copies the message elsewhere. */
+  private async invite(btn: HTMLButtonElement): Promise<void> {
+    const url = inviteUrl(location.href, this.code.textContent ?? "");
+    const text = inviteText(url);
+    try {
+      if (navigator.share) return await navigator.share({ title: "Bombtop", text });
+      await navigator.clipboard.writeText(text);
+      btn.textContent = "Link copiado!";
+      setTimeout(() => (btn.textContent = "Convidar"), 2000);
+    } catch {
+      /* share sheet dismissed */
+    }
   }
 
   hide(): void {

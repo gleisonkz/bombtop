@@ -4,6 +4,7 @@ import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
+import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { Menu } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
@@ -79,9 +80,15 @@ const menu = new Menu(ui, {
   },
 });
 
+let invite = codeFromUrl(location.href);
+if (invite) history.replaceState(null, "", withoutInvite(location.href));
+
 watchAccount((a) => {
   account = a;
   menu.setAccount(a, !!supabase);
+  // First answer tells whether we already know the player: then the link joins directly.
+  if (invite) menu.acceptInvite(invite, !!a || menu.hasName());
+  invite = null;
 });
 
 app.ticker.add((ticker) => mode?.frame(ticker.deltaMS, performance.now()));
