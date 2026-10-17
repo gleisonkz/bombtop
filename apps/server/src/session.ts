@@ -7,10 +7,13 @@ import {
   step,
   TICK_RATE,
   type Direction,
+  type LobbyInfo,
+  type LobbyMember,
   type MatchResult,
   type MatchState,
   type PlayerInput,
   type PublicView,
+  type RoomPhase,
   type StageId,
 } from "@bombtopia/shared";
 
@@ -20,13 +23,6 @@ export const RESULTS_TICKS = 4 * TICK_RATE;
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
 export const SNAPSHOT_EVERY = 2;
 
-export type Phase = "lobby" | "playing" | "results";
-
-export interface Member {
-  id: string;
-  name: string;
-  wins: number;
-}
 
 export interface TickOutput {
   snapshot?: PublicView;
@@ -51,8 +47,8 @@ export interface SessionOptions {
  * buffering. The Colyseus room is a thin adapter around this.
  */
 export class BattleSession {
-  phase: Phase = "lobby";
-  members: Member[] = [];
+  phase: RoomPhase = "lobby";
+  members: LobbyMember[] = [];
   match: MatchState | null = null;
   stage: StageId = STAGES[0]!;
   private round = 0;
@@ -68,7 +64,7 @@ export class BattleSession {
   join(id: string, name: string): boolean {
     if (this.phase !== "lobby" || this.members.length >= MAX_PLAYERS) return false;
     if (this.members.some((m) => m.id === id)) return true;
-    this.members.push({ id, name, wins: 0 });
+    this.members.push({ id, name, wins: 0, connected: true });
     return true;
   }
 
@@ -80,6 +76,21 @@ export class BattleSession {
       p.alive = false;
       p.cart = null;
     }
+  }
+
+  setConnected(id: string, connected: boolean): void {
+    const m = this.members.find((m) => m.id === id);
+    if (m) m.connected = connected;
+  }
+
+  lobbyInfo(code: string): LobbyInfo {
+    return {
+      phase: this.phase,
+      hostId: this.hostId ?? null,
+      members: this.members.map((m) => ({ ...m })),
+      stage: this.stage,
+      code,
+    };
   }
 
   start(requesterId: string): boolean {

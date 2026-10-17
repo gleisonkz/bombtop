@@ -42,6 +42,29 @@ describe("lobby", () => {
     expect(s.match!.players.map((p) => p.id)).toEqual(["c1", "c2"]);
   });
 
+  it("tracks temporarily disconnected members", () => {
+    const s = lobby(2);
+    expect(s.members[1]!.connected).toBe(true);
+    s.setConnected("c2", false);
+    expect(s.members[1]!.connected).toBe(false);
+    s.setConnected("c2", true);
+    expect(s.members[1]!.connected).toBe(true);
+  });
+
+  it("describes itself for the lobby screen", () => {
+    const s = lobby(2);
+    expect(s.lobbyInfo("ROOM1")).toEqual({
+      phase: "lobby",
+      hostId: "c1",
+      stage: "classic",
+      code: "ROOM1",
+      members: [
+        { id: "c1", name: "Player 1", wins: 0, connected: true },
+        { id: "c2", name: "Player 2", wins: 0, connected: true },
+      ],
+    });
+  });
+
   it("rejects joins during a match", () => {
     const s = playing();
     expect(s.join("late", "Late")).toBe(false);
