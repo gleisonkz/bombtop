@@ -1,6 +1,12 @@
 /** Simulation ticks per second. Every timer in the sim is expressed in ticks. */
 export const TICK_RATE = 60;
 
+/** Ticks between placing a bomb and its explosion. */
+export const FUSE_TICKS = 3 * TICK_RATE;
+
+/** Ticks a flame tile stays lethal. */
+export const FLAME_TICKS = Math.round(0.5 * TICK_RATE);
+
 export const MAX_PLAYERS = 5;
 
 export const DEFAULT_WIDTH = 13;

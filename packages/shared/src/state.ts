@@ -53,3 +53,11 @@ export function getTile(s: MatchState, x: number, y: number): Tile {
 export function setTile(s: MatchState, x: number, y: number, tile: Tile): void {
   s.grid.tiles[y * s.grid.width + x] = tile;
 }
+
+export function hasFlame(s: MatchState, x: number, y: number): boolean {
+  return s.flames.some((f) => f.x === x && f.y === y);
+}
+
+export function bombAt(s: MatchState, x: number, y: number): Bomb | undefined {
+  return s.bombs.find((b) => b.x === x && b.y === y);
+}
