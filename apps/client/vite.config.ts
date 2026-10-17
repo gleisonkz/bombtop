@@ -17,6 +17,8 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
+      // Serve the manifest and service worker in dev too, so the tunnel build can be installed on a phone.
+      devOptions: { enabled: true },
       includeAssets: ["icons/favicon-64.png", "icons/apple-touch-icon.png"],
       manifest: {
         name: "Bombtop",
