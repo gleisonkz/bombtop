@@ -58,6 +58,10 @@ All art, audio and names are original — never copy assets from existing games.
 
 Action button priority: detonate remote > punch > mount ability.
 
+Characters (looks only): `CHARACTERS` in `protocol.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
+saved in localStorage and sent on join; bots alternate. Arena: ninja = sprite sheet, bomb = `ui/art.ts` SVG
+rasterized per color/mood and animated in code (`mascotPose`/`mascotDeath` in `render/sprites.ts`).
+
 ## Environment
 
 - client (`apps/client/.env`): `VITE_SERVER_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
