@@ -22,7 +22,10 @@ const renderer = new Renderer();
 app.stage.addChild(renderer.root);
 // Sprite trial: ?sprite=ninja (default) | foozle | james | shapes
 const sprite = new URLSearchParams(location.search).get("sprite") ?? "ninja";
-if (sprite in SHEETS) void renderer.useSheet(SHEETS[sprite as SheetName]).catch((e) => console.error("sprite sheet", e));
+if (sprite in SHEETS) {
+  void renderer.useSheet(SHEETS[sprite as SheetName]).catch((e) => console.error("sprite sheet", e));
+  void renderer.useBombArt().catch((e) => console.error("bomb art", e));
+}
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;

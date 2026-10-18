@@ -1,4 +1,4 @@
-import type { Facing } from "@bombtop/shared";
+import type { BombType, Facing } from "@bombtop/shared";
 
 type Rgb = readonly [number, number, number];
 
@@ -102,6 +102,24 @@ export const SHEETS = {
 } satisfies Record<string, SheetLayout>;
 
 export type SheetName = keyof typeof SHEETS;
+
+/** Bomb art: one square cell per bomb type, side by side. */
+export const BOMBS = {
+  url: "sprites/bombs.png",
+  width: 96,
+  size: 32,
+  /** Cell pixel at the center of the bomb's body. */
+  anchorX: 16,
+  anchorY: 19,
+  scale: 0.55,
+  order: ["normal", "pierce", "remote"] satisfies BombType[],
+};
+
+/** Left edge of a bomb type's cell. */
+export const bombFrame = (type: BombType): number => BOMBS.order.indexOf(type) * BOMBS.size;
+
+/** Size multiplier of a bomb `ticks` after it was placed: a steady throb. */
+export const bombPulse = (ticks: number): number => 1 + Math.sin((ticks / 60) * Math.PI * 4) * 0.12;
 
 export interface FrameRect {
   x: number;

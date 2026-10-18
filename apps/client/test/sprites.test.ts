@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MotionTracker, SHEETS, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BOMBS, MotionTracker, SHEETS, bombFrame, bombPulse, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -149,5 +149,20 @@ describe("paintHues", () => {
     const px = new Uint8ClampedArray([40, 90, 200, 255]);
     paintHues(px, [180, 260], [245, 245, 245]);
     expect(Math.max(px[0]!, px[1]!, px[2]!) - Math.min(px[0]!, px[1]!, px[2]!)).toBeLessThan(12);
+  });
+});
+
+describe("bomb sheet", () => {
+  it("has one cell per bomb type, inside the sheet", () => {
+    const xs = (["normal", "pierce", "remote"] as const).map((t) => bombFrame(t));
+    expect(new Set(xs).size).toBe(3);
+    for (const x of xs) expect(x + BOMBS.size).toBeLessThanOrEqual(BOMBS.width);
+  });
+
+  it("pulses around its drawn size as the fuse burns", () => {
+    const sizes = Array.from({ length: 60 }, (_, t) => bombPulse(t));
+    expect(Math.max(...sizes)).toBeGreaterThan(1);
+    expect(Math.min(...sizes)).toBeLessThan(1);
+    expect(Math.max(...sizes)).toBeLessThan(1.2);
   });
 });

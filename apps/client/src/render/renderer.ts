@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { PLAYER_COLORS } from "../ui/art";
-import { MotionTracker, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, MotionTracker, bombFrame, bombPulse, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type BombType, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -89,6 +89,9 @@ export class Renderer {
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
   private skin: Skin | null = null;
+  /** One texture per bomb type, once the bomb art is loaded. */
+  private bombArt: Map<BombType, Texture> | null = null;
+  private readonly bombSprites: Sprite[] = [];
   private readonly motion = new MotionTracker();
   /** Where and when each player was last seen alive, to play their death there. */
   private readonly lastSeen = new Map<string, { cx: number; cy: number; deadAt: number | null }>();
@@ -114,6 +117,31 @@ export class Renderer {
   /** Draws players with a character sheet instead of shapes. */
   async useSheet(sheet: SheetLayout): Promise<void> {
     this.skin = await loadSkin(sheet);
+  }
+
+  /** Draws bombs with the bomb art instead of shapes. */
+  async useBombArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BOMBS.url}`);
+    base.source.scaleMode = "linear"; // shrunk pixel art aliases badly
+    this.bombArt = new Map(
+      BOMBS.order.map((type) => [type, new Texture({ source: base.source, frame: new Rectangle(bombFrame(type), 0, BOMBS.size, BOMBS.size) })]),
+    );
+  }
+
+  /** Places the `n`th bomb sprite of this frame, centered on (cx, cy). */
+  private placeBomb(n: number, type: BombType, cx: number, cy: number, size: number, z: number): void {
+    let sprite = this.bombSprites[n];
+    if (!sprite) {
+      sprite = new Sprite();
+      sprite.anchor.set(BOMBS.anchorX / BOMBS.size, BOMBS.anchorY / BOMBS.size);
+      this.bombSprites.push(sprite);
+      this.people.addChild(sprite);
+    }
+    sprite.texture = this.bombArt!.get(type)!;
+    sprite.position.set(cx, cy);
+    sprite.scale.set(BOMBS.scale * size);
+    sprite.zIndex = z;
+    sprite.visible = true;
   }
 
   private placeSprite(id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
@@ -162,6 +190,8 @@ export class Renderer {
     const g = this.world.clear();
     const top = this.overlay.clear();
     for (const sprite of this.sprites.values()) sprite.visible = false;
+    for (const sprite of this.bombSprites) sprite.visible = false;
+    let bombs = 0;
     const { width, height } = s.grid;
 
     for (let y = 0; y < height; y++) {
@@ -204,6 +234,10 @@ export class Renderer {
       const lift = b.air ? Math.sin(t * Math.PI) * 6 + 4 : 0; // hop arc while airborne
       const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
       const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift;
+      if (this.bombArt) {
+        this.placeBomb(bombs++, b.type, cx, cy, bombPulse(FUSE_TICKS - b.fuse), cy + lift - TILE_PX / 2); // behind whoever stands on it
+        continue;
+      }
       g.circle(cx, cy, 6 + pulse).fill(COLORS.bomb);
       g.circle(cx + 3, cy - 6, 1.5).fill(COLORS.fuse);
     }
@@ -233,7 +267,8 @@ export class Renderer {
         g.ellipse(cx, cy + 3, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
       const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
-      const carrying = s.bombs.some((b) => b.heldBy === p.id);
+      const held = s.bombs.find((b) => b.heldBy === p.id);
+      const carrying = !!held;
       let headroom = 12;
       if (this.skin) {
         const { sheet } = this.skin;
@@ -247,7 +282,8 @@ export class Renderer {
         g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
         g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
       }
-      if (carrying) {
+      if (held && this.bombArt) this.placeBomb(bombs++, held.type, cx, cy - headroom, 1, cy + 0.5); // over its holder
+      else if (carrying) {
         top.circle(cx, cy - headroom, 5).fill(COLORS.bomb);
         top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);
       }
