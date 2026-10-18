@@ -123,6 +123,7 @@ export class OnlineGame implements GameMode {
     const view = this.ghosts.apply(sample.to, nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
+    if (import.meta.env.DEV) Object.assign(window, { __me: me });
     prev.set(me.id, { px: me.px, py: me.py });
     const players = view.players.map((p) => (p.id === me.id ? me : p));
     this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
@@ -136,8 +137,9 @@ export class OnlineGame implements GameMode {
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
     if ((input.bomb || input.action) && this.playing()) this.actNow(input);
+    const t = this.predictor.clock;
     const seq = this.predictor.step(input);
-    if (seq !== null) this.room.send(C2S.input, { ...input, seq });
+    if (seq !== null) this.room.send(C2S.input, { ...input, seq, t });
   }
 
   /** Our own button press is heard (and a placed bomb drawn) at once; the server's echo is skipped. */

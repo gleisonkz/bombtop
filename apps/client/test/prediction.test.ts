@@ -19,6 +19,14 @@ describe("Predictor", () => {
     expect(p.step(input(null))).toBe(4);
   });
 
+  it("counts its ticks, so each sent input can carry the tick it was made on", () => {
+    const pr = new Predictor("p1");
+    expect(pr.clock).toBe(0);
+    pr.step({ dir: "right", bomb: false });
+    pr.step({ dir: "right", bomb: false });
+    expect(pr.clock).toBe(2);
+  });
+
   it("replays inputs the server has not applied yet on top of the snapshot", () => {
     const p = new Predictor("me");
     const snap = snapshot(); // server has seen nothing yet

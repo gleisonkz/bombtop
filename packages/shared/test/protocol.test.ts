@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { botLevel, inputSeq, sanitizeInput, sanitizeName } from "../src";
+import { botLevel, inputSeq, inputTick, sanitizeInput, sanitizeName } from "../src";
 
 describe("sanitizeInput", () => {
   it("passes valid input through", () => {
@@ -13,6 +13,18 @@ describe("sanitizeInput", () => {
   it("survives garbage", () => {
     for (const raw of [null, undefined, 42, "x", [], { dir: { up: true } }]) {
       expect(sanitizeInput(raw)).toEqual({ dir: null, bomb: false, action: false });
+    }
+  });
+});
+
+describe("inputTick", () => {
+  it("reads the client tick an input was made on", () => {
+    expect(inputTick({ dir: null, seq: 3, t: 1200 })).toBe(1200);
+  });
+
+  it("is undefined for old or malformed messages, so the server applies them at once", () => {
+    for (const raw of [null, {}, { t: -1 }, { t: 2.5 }, { t: "9" }, { t: Number.MAX_VALUE }]) {
+      expect(inputTick(raw), JSON.stringify(raw)).toBeUndefined();
     }
   });
 });

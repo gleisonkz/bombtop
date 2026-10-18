@@ -56,6 +56,12 @@ export function inputSeq(raw: unknown): number {
   return Number.isSafeInteger(seq) && (seq as number) >= 0 ? (seq as number) : 0;
 }
 
+/** Client tick the input was made on (lets the server keep the client's timing), if valid. */
+export function inputTick(raw: unknown): number | undefined {
+  const t = (raw as { t?: unknown } | null)?.t;
+  return Number.isSafeInteger(t) && (t as number) >= 0 ? (t as number) : undefined;
+}
+
 /**
  * Per player: the last input message the server has applied, and for how many
  * ticks. The owner's client replays its newer inputs on top of the snapshot.

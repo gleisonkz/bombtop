@@ -29,6 +29,11 @@ export class Predictor {
 
   constructor(private readonly me: string) {}
 
+  /** Ticks recorded so far: the next input is made on this tick. */
+  get clock(): number {
+    return this.tick;
+  }
+
   /** Records this tick's input. Returns the sequence number to send it with, or null when nothing changed. */
   step(input: PlayerInput): number | null {
     const alt = input.alt ?? null;

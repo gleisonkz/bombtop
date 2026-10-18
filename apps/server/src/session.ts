@@ -8,7 +8,6 @@ import {
   step,
   TICK_RATE,
   type BotLevel,
-  type Direction,
   type LobbyInfo,
   type LobbyMember,
   type MatchResult,
@@ -18,6 +17,7 @@ import {
   type RoomPhase,
   type StageId,
 } from "@bombtop/shared";
+import { InputQueue } from "./input-queue";
 
 /** Ticks the results screen stays up before returning to the lobby. */
 export const RESULTS_TICKS = 4 * TICK_RATE;
@@ -28,17 +28,6 @@ export const SNAPSHOT_EVERY = 2;
 export interface TickOutput {
   snapshot?: Snapshot;
   result?: MatchResult & { over: true };
-}
-
-interface InputBuffer {
-  dir: Direction;
-  alt: Direction;
-  /** Sequence number of the latest input message, and ticks it has been applied. */
-  seq: number;
-  ticks: number;
-  /** Button presses seen since the last tick (so quick taps are never lost). */
-  bomb: boolean;
-  action: boolean;
 }
 
 /** Names for computer players, in the order they join. */
@@ -61,7 +50,7 @@ export class BattleSession {
   stage: StageId = STAGES[0]!;
   private round = 0;
   private resultsLeft = 0;
-  private inputs = new Map<string, InputBuffer>();
+  private inputs = new Map<string, InputQueue>();
   private bots = new Map<string, Bot>();
   private botSeq = 0;
 
@@ -143,21 +132,17 @@ export class BattleSession {
     return true;
   }
 
-  setInput(id: string, input: PlayerInput, seq = 0): void {
+  /** An input from a player; `clientTick` (when sent) lets the server hold it exactly as long as the client did. */
+  setInput(id: string, input: PlayerInput, seq = 0, clientTick?: number): void {
     if (!this.match?.players.some((p) => p.id === id) || this.bots.has(id)) return;
-    const buf = this.inputs.get(id) ?? { dir: null, alt: null, bomb: false, action: false, seq: 0, ticks: 0 };
-    if (seq !== buf.seq) buf.ticks = 0;
-    buf.seq = seq;
-    buf.dir = input.dir;
-    buf.alt = input.alt ?? null;
-    buf.bomb ||= input.bomb;
-    buf.action ||= !!input.action;
-    this.inputs.set(id, buf);
+    const queue = this.inputs.get(id) ?? new InputQueue();
+    queue.push(input, seq, clientTick, this.match.tick);
+    this.inputs.set(id, queue);
   }
 
   private snapshot(match: MatchState): Snapshot {
     const acks: Snapshot["acks"] = {};
-    for (const [id, buf] of this.inputs) acks[id] = { seq: buf.seq, ticks: buf.ticks };
+    for (const [id, queue] of this.inputs) acks[id] = queue.ack;
     return { ...publicView(match), acks };
   }
 
@@ -172,11 +157,7 @@ export class BattleSession {
     if (this.phase !== "playing" || !this.match) return {};
 
     const inputs: Record<string, PlayerInput> = {};
-    for (const [id, buf] of this.inputs) {
-      inputs[id] = { dir: buf.dir, alt: buf.alt, bomb: buf.bomb, action: buf.action };
-      buf.bomb = buf.action = false;
-      buf.ticks++;
-    }
+    for (const [id, queue] of this.inputs) inputs[id] = queue.take(this.match.tick);
     for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match);
     step(this.match, inputs);
 

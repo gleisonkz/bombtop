@@ -102,6 +102,18 @@ describe("playing", () => {
     expect(snap!.acks.c1).toEqual({ seq: 8, ticks: 2 });
   });
 
+  it("moves a player exactly as far as their client held the key, though messages take different times to arrive", () => {
+    const s = playing();
+    const p = s.match!.players[0]!;
+    const before = p.px;
+    for (let i = 0; i < 3; i++) s.tick();
+    s.setInput("c1", { dir: "right", bomb: false }, 1, 0); // pressed on client tick 0, took 3 ticks to arrive
+    for (let i = 0; i < 3; i++) s.tick();
+    s.setInput("c1", { dir: null, bomb: false }, 2, 4); // released on client tick 4, took only 2
+    for (let i = 0; i < 6; i++) s.tick();
+    expect(p.px - before).toBeCloseTo(4 * p.speed);
+  });
+
   it("does not lose a button press released before the tick", () => {
     const s = playing();
     s.setInput("c1", { dir: null, bomb: true });
