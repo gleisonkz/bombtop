@@ -1,0 +1,29 @@
+# Render Blueprint: game server (Node, WebSocket) + client (static PWA).
+# The client is built with the server's public URL: set VITE_SERVER_URL to the
+# bombtop-server URL (https://<name>.onrender.com) when creating the Blueprint.
+services:
+  - type: web
+    name: bombtop-server
+    runtime: node
+    plan: free
+    buildCommand: npx --yes pnpm@12.11.2 install --frozen-lockfile
+    startCommand: apps/server/node_modules/.bin/tsx apps/server/src/index.ts
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+
+  - type: web
+    name: bombtop
+    runtime: static
+    buildCommand: npx --yes pnpm@12.11.2 install --frozen-lockfile && npx --yes pnpm@12.11.2 -C apps/client build
+    staticPublishPath: apps/client/dist
+    headers:
+      # Let the PWA pick up new deploys right away.
+      - path: /sw.js
+        name: Cache-Control
+        value: no-cache
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: VITE_SERVER_URL
+        sync: false
