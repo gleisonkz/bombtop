@@ -2,6 +2,8 @@ import { Room, type Client } from "@colyseus/core";
 import {
   botLevel,
   C2S,
+  characterId,
+  DEFAULT_CHARACTER,
   MAX_PLAYERS,
   S2C,
   inputSeq,
@@ -23,6 +25,7 @@ const RECONNECT_SECONDS = 20;
 export interface BattleRoomOptions {
   private?: boolean;
   name?: string;
+  character?: string;
   /** Supabase access token (Google login). */
   token?: string;
 }
@@ -53,6 +56,10 @@ export class BattleRoom extends Room {
       const id = (message as { id?: unknown } | null)?.id;
       if (typeof id === "string" && this.session.removeBot(client.sessionId, id)) this.seatsChanged();
     });
+    this.onMessage(C2S.character, (client, message) => {
+      const character = characterId(message);
+      if (character && this.session.setCharacter(client.sessionId, character)) this.broadcastLobby();
+    });
     this.onMessage(C2S.start, (client) => {
       if (this.session.start(client.sessionId)) this.syncPhase();
     });
@@ -70,7 +77,7 @@ export class BattleRoom extends Room {
 
   onJoin(client: Client, options: BattleRoomOptions) {
     const auth = client.auth as Partial<AuthUser> | undefined;
-    if (!this.session.join(client.sessionId, sanitizeName(auth?.name ?? options?.name))) {
+    if (!this.session.join(client.sessionId, sanitizeName(auth?.name ?? options?.name), characterId(options?.character) ?? DEFAULT_CHARACTER)) {
       throw new Error("Sala cheia ou partida em andamento");
     }
     this.broadcastLobby();

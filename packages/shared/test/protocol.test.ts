@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { botLevel, inputSeq, inputTick, sanitizeInput, sanitizeName } from "../src";
+import { botLevel, characterId, CHARACTERS, inputSeq, inputTick, sanitizeInput, sanitizeName } from "../src";
 
 describe("sanitizeInput", () => {
   it("passes valid input through", () => {
@@ -62,5 +62,15 @@ describe("botLevel", () => {
     expect(botLevel({ level: "hard" })).toBe("hard");
     expect(botLevel({ level: "godlike" })).toBeNull();
     expect(botLevel(null)).toBeNull();
+  });
+});
+
+describe("characterId", () => {
+  it("accepts only known characters, bare or in a message", () => {
+    expect(CHARACTERS).toEqual(["bomb", "ninja"]);
+    expect(characterId("ninja")).toBe("ninja");
+    expect(characterId({ character: "bomb" })).toBe("bomb");
+    expect(characterId({ character: "dragon" })).toBeNull();
+    expect(characterId(null)).toBeNull();
   });
 });

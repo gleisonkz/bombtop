@@ -14,16 +14,29 @@ export type RoomPhase = "lobby" | "playing" | "results";
  * snapshot, mid-match): send it once message handlers are attached, since
  * anything broadcast before that is dropped by the SDK.
  */
-export const C2S = { input: "input", start: "start", sync: "sync", addBot: "addBot", removeBot: "removeBot" } as const;
+export const C2S = {
+  input: "input",
+  start: "start",
+  sync: "sync",
+  addBot: "addBot",
+  removeBot: "removeBot",
+  character: "character",
+} as const;
 
 /** Server -> client message types. */
 export const S2C = { lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
+
+/** Playable characters (looks only: all play the same). */
+export const CHARACTERS = ["bomb", "ninja"] as const;
+export type CharacterId = (typeof CHARACTERS)[number];
+export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
 export interface LobbyMember {
   id: string;
   name: string;
   wins: number;
   connected: boolean;
+  character: CharacterId;
   /** Set for computer players: their difficulty. */
   bot?: BotLevel;
 }
@@ -85,4 +98,10 @@ export function sanitizeName(raw: unknown): string {
 export function botLevel(raw: unknown): BotLevel | null {
   const level = (raw && typeof raw === "object" ? (raw as Record<string, unknown>).level : raw) as BotLevel;
   return BOT_LEVELS.includes(level) ? level : null;
+}
+
+/** Character from an untrusted message (bare or `{ character }`), or null. */
+export function characterId(raw: unknown): CharacterId | null {
+  const id = (raw && typeof raw === "object" ? (raw as Record<string, unknown>).character : raw) as CharacterId;
+  return CHARACTERS.includes(id) ? id : null;
 }

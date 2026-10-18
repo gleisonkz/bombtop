@@ -42,7 +42,7 @@ describe("mascotSvg", () => {
 });
 
 describe("lobbySlots", () => {
-  const m = (id: string) => ({ id, name: id, wins: 0, connected: true });
+  const m = (id: string) => ({ id, name: id, wins: 0, connected: true, character: "bomb" as const });
 
   it("seats members in join order with their color, then empty seats up to the max", () => {
     const slots = lobbySlots([m("a"), m("b")], 5);
@@ -56,7 +56,7 @@ describe("lobbySlots", () => {
 });
 
 describe("seatClass", () => {
-  const m = { id: "a", name: "a", wins: 0, connected: true };
+  const m = { id: "a", name: "a", wins: 0, connected: true, character: "bomb" as const };
 
   it("marks your own seat and players who dropped", () => {
     expect(seatClass(m, "a")).toBe("seat me");

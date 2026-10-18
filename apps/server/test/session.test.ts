@@ -59,10 +59,21 @@ describe("lobby", () => {
       stage: "classic",
       code: "ROOM1",
       members: [
-        { id: "c1", name: "Player 1", wins: 0, connected: true },
-        { id: "c2", name: "Player 2", wins: 0, connected: true },
+        { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb" },
+        { id: "c2", name: "Player 2", wins: 0, connected: true, character: "bomb" },
       ],
     });
+  });
+
+  it("each player picks a character: the bomb unless chosen on joining, changeable in the lobby", () => {
+    const s = lobby(1);
+    s.join("c2", "Ninja", "ninja");
+    expect(s.members.map((m) => m.character)).toEqual(["bomb", "ninja"]);
+    expect(s.setCharacter("c1", "ninja")).toBe(true);
+    expect(s.members[0]!.character).toBe("ninja");
+    expect(s.setCharacter("nobody", "ninja")).toBe(false);
+    s.start("c1");
+    expect(s.setCharacter("c1", "bomb")).toBe(false); // locked mid-match
   });
 
   it("rejects joins during a match", () => {
@@ -229,6 +240,14 @@ describe("bots", () => {
     expect(s.addBot("c1", "easy")).toBe(false);
     const p = playing(2);
     expect(p.addBot("c1", "easy")).toBe(false);
+  });
+
+  it("mixes characters among bots, which nobody can repick", () => {
+    const s = lobby(1);
+    s.addBot("c1", "easy");
+    s.addBot("c1", "easy");
+    expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(2);
+    expect(s.setCharacter(s.members[1]!.id, "bomb")).toBe(false);
   });
 
   it("gives each bot its own name", () => {

@@ -7,7 +7,10 @@ import {
   STAGES,
   step,
   TICK_RATE,
+  CHARACTERS,
+  DEFAULT_CHARACTER,
   type BotLevel,
+  type CharacterId,
   type LobbyInfo,
   type LobbyMember,
   type MatchResult,
@@ -61,10 +64,18 @@ export class BattleSession {
     return this.members.find((m) => !m.bot)?.id;
   }
 
-  join(id: string, name: string): boolean {
+  join(id: string, name: string, character: CharacterId = DEFAULT_CHARACTER): boolean {
     if (this.phase !== "lobby" || this.members.length >= MAX_PLAYERS) return false;
     if (this.members.some((m) => m.id === id)) return true;
-    this.members.push({ id, name, wins: 0, connected: true });
+    this.members.push({ id, name, wins: 0, connected: true, character });
+    return true;
+  }
+
+  /** In the lobby, a person (not a bot) changes their character. */
+  setCharacter(id: string, character: CharacterId): boolean {
+    const m = this.members.find((m) => m.id === id && !m.bot);
+    if (this.phase !== "lobby" || !m) return false;
+    m.character = character;
     return true;
   }
 
@@ -83,7 +94,8 @@ export class BattleSession {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
     const taken = new Set(this.members.map((m) => m.name));
     const name = BOT_NAMES.find((n) => !taken.has(n)) ?? `Bot ${this.botSeq + 1}`;
-    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level });
+    const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
+    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character });
     return true;
   }
 
