@@ -1,0 +1,81 @@
+// Builds public/sfx/*.m4a from the original sound libraries (kept outside the repo).
+// usage: SFX_SRC=E:/sfx-src node scripts/build-sfx.mjs   (needs ffmpeg on PATH)
+//
+// Sources: Kenney packs (CC0, kenney.nl) and the Sonniss GDC 2026 Game Audio Bundle
+// (royalty-free, no attribution; may ship inside the game, not as a sound library).
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
+
+const SRC = process.env.SFX_SRC ?? "E:/sfx-src";
+const OUT = new URL("../public/sfx/", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");
+
+const K = (pack, file) => join(SRC, "kenney", `kenney_${pack}`, "Audio", file);
+const S = (lib, file) => join(SRC, "sonniss", "raw", lib, file);
+const CSD = (lib, file) => S(`Cinematic Sound Design - ${lib}`, file);
+const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
+const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
+
+/**
+ * name -> { src, len (s), layer?: { src, len, gain (dB), lowpass (Hz) } }
+ * Every clip is trimmed of leading silence, cut to `len`, faded out, mixed to mono
+ * and peak-normalized; per-sound loudness is set in code (SOUNDS in sound.ts).
+ */
+const RECIPE = {
+  place: { src: K("impact-sounds", "impactSoft_heavy_000.ogg"), len: 0.35 },
+  explode: {
+    src: ESM_AG("EXPLDsgn_Explosion Small Blast Enemy Death Crunchy Boom Cartoon Noisy Crash Impact Delay 03_ESM_AG.wav"),
+    len: 1.4,
+    layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 1.4, gain: -6, lowpass: 180 },
+  },
+  break: { src: K("impact-sounds", "impactPlank_medium_001.ogg"), len: 0.5 },
+  wall: { src: K("impact-sounds", "impactPlate_heavy_000.ogg"), len: 0.45 },
+  kick: { src: K("impact-sounds", "impactPunch_medium_000.ogg"), len: 0.4 },
+  throw: { src: ESM_AG("FGHTImpt_Combat Punch Impact Light Hit Delay Crunchy Vintage Quick Smack 05_ESM_AG.wav"), len: 0.7 },
+  pickup: { src: ESM_AG("DSGNStngr_Power Up Bright Positive Successful Light Saturation Crash Shimmer 05_ESM_AG.wav"), len: 1.2 },
+  curse: { src: CSD("System & UI Feedback Elements", "Interface Deny Low Fat Dark.wav"), len: 0.75 },
+  stun: { src: CSD("Cartoon Bloopers", "Cartoon Confused Dizzy.wav"), len: 1.2 },
+  death: { src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"), len: 1.8 },
+  mount: { src: CSD("UI Interaction Elements", "Accept Boing Crunch.wav"), len: 0.9 },
+  dismount: { src: CSD("Cartoon Impacts", "Cartoon Pops Random Sequence Reverb.wav"), len: 1.2 },
+  jump: { src: K("digital-audio", "phaseJump1.ogg"), len: 0.45 },
+  dash: { src: CSD("Colossal Impacts", "Woosh Debris.wav"), len: 0.9 },
+  warp: { src: K("digital-audio", "phaserUp1.ogg"), len: 0.5 },
+  hurry: { src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"), len: 2.5 },
+  start: { src: CSD("Hybrid Game & UI Elements", "Game Entry Happy Short.wav"), len: 0.9 },
+  win: { src: CSD("User Interface", "Button Arp Twinkle.wav"), len: 1.8 },
+  end: { src: CSD("User Interface", "Interface Plucks Happy.wav"), len: 0.85 },
+  click: { src: CSD("Interface & Infographics", "Interface Pop High Short.wav"), len: 0.4 },
+};
+
+const TRIM = "silenceremove=start_periods=1:start_threshold=-50dB";
+const shape = (len) => `${TRIM},atrim=0:${len},afade=t=out:st=${Math.max(0, len - Math.min(0.3, len / 3))}:d=${Math.min(0.3, len / 3)}`;
+
+function ffmpeg(args) {
+  return execFileSync("ffmpeg", ["-hide_banner", "-y", ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+}
+
+function filterFor({ len, layer }) {
+  const main = `[0:a]aformat=channel_layouts=mono,${shape(len)}[m]`;
+  if (!layer) return `${main};[m]anull[mix]`;
+  const sub = `[1:a]aformat=channel_layouts=mono,${shape(layer.len)},lowpass=f=${layer.lowpass},volume=${layer.gain}dB[l]`;
+  return `${main};${sub};[m][l]amix=inputs=2:duration=longest:normalize=0[mix]`;
+}
+
+/** Loudest sample of the mixed clip, in dBFS. */
+function peakDb(inputs, graph) {
+  const { stderr } = spawnSync("ffmpeg", ["-hide_banner", ...inputs, "-filter_complex", `${graph};[mix]volumedetect`, "-f", "null", "-"], {
+    encoding: "utf8",
+  });
+  return Number(/max_volume: (-?[\d.]+) dB/.exec(stderr)?.[1] ?? 0);
+}
+
+mkdirSync(OUT, { recursive: true });
+for (const [name, r] of Object.entries(RECIPE)) {
+  const inputs = ["-i", r.src, ...(r.layer ? ["-i", r.layer.src] : [])];
+  const graph = filterFor(r);
+  const max = peakDb(inputs, graph);
+  const gain = -1 - max;
+  ffmpeg([...inputs, "-filter_complex", `${graph};[mix]volume=${gain}dB,aresample=48000[out]`, "-map", "[out]", "-c:a", "aac", "-b:a", "96k", join(OUT, `${name}.m4a`)]);
+  console.log(`${name.padEnd(9)} peak ${max.toFixed(1)} dB -> ${gain >= 0 ? "+" : ""}${gain.toFixed(1)} dB`);
+}

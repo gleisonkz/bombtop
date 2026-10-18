@@ -37,8 +37,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Pixi chunks are large; precache everything the game needs to start offline (local mode).
-        globPatterns: ["**/*.{js,css,html,png,svg,woff2}"],
+        // Pixi chunks are large; precache everything the game needs (code, art, sounds) for fast starts.
+        globPatterns: ["**/*.{js,css,html,png,svg,woff2,m4a}"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
     }),
