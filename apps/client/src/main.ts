@@ -88,6 +88,8 @@ const lobby = new LobbyPanel(ui, {
     online?.start();
   },
   leave: () => void online?.leave(),
+  addBot: (level) => online?.addBot(level),
+  removeBot: (id) => online?.removeBot(id),
 });
 
 let account: Account | null = null;

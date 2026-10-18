@@ -5,6 +5,7 @@ import {
   S2C,
   TICK_RATE,
   TILE,
+  type BotLevel,
   type LobbyInfo,
   type PlayerInput,
   type PublicView,
@@ -102,6 +103,14 @@ export class OnlineGame implements GameMode {
 
   start(): void {
     this.room.send(C2S.start);
+  }
+
+  addBot(level: BotLevel): void {
+    this.room.send(C2S.addBot, { level });
+  }
+
+  removeBot(id: string): void {
+    this.room.send(C2S.removeBot, { id });
   }
 
   frame(deltaMs: number, nowMs: number): void {

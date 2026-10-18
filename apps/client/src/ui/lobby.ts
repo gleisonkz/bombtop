@@ -1,4 +1,4 @@
-import { MAX_PLAYERS, type LobbyInfo } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { mascot, MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
@@ -10,9 +10,13 @@ const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
   warp: "Teleportes",
 };
 
+export const LEVEL_NAMES: Record<BotLevel, string> = { easy: "Fácil", medium: "Médio", hard: "Difícil" };
+
 export interface LobbyHandlers {
   start(): void;
   leave(): void;
+  addBot(level: BotLevel): void;
+  removeBot(id: string): void;
 }
 
 /** Lobby overlay: room code and invite, a seat per player, and the host's start button. */
@@ -24,7 +28,10 @@ export class LobbyPanel {
   private readonly status = el("p", { class: "hint" });
   private readonly startBtn: HTMLButtonElement;
 
-  constructor(parent: HTMLElement, handlers: LobbyHandlers) {
+  constructor(
+    parent: HTMLElement,
+    private readonly handlers: LobbyHandlers,
+  ) {
     this.startBtn = button("Começar partida", handlers.start, "primary big");
     const invite = button("Convidar amigos", () => void this.invite(invite), "primary");
     const title = el("h2", { text: "Sala" });
@@ -48,27 +55,41 @@ export class LobbyPanel {
     this.root.hidden = info.phase !== "lobby";
     this.code.textContent = info.code;
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
+    const isHost = info.hostId === me;
     this.seats.replaceChildren(
       ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }) => {
+        if (!member && isHost) {
+          return el("div", { class: "seat empty add-bot" }, [
+            el("span", { class: "seat-sub", text: "+ Bot" }),
+            ...BOT_LEVELS.map((level) => button(LEVEL_NAMES[level], () => this.handlers.addBot(level), `mini ${level}`)),
+          ]);
+        }
         if (!member) {
           return el("div", { class: "seat empty" }, [mascot({ color: MASCOT_COLOR }), el("span", { class: "seat-sub", text: "Vaga livre" })]);
         }
         const you = member.id === me;
-        const cls = ["seat", you && "me", !member.connected && "away"].filter(Boolean).join(" ");
+        const cls = ["seat", you && "me", !member.connected && "away", member.bot && "bot"].filter(Boolean).join(" ");
+        const sub = member.bot
+          ? `🤖 ${LEVEL_NAMES[member.bot]} • ${member.wins} 🏆`
+          : member.connected
+            ? `${you ? "você • " : ""}${member.wins} 🏆`
+            : "reconectando…";
         return el("div", { class: cls }, [
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
-          mascot({ color, mood: !member.connected ? "sad" : you ? "wink" : "happy" }),
+          member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
+          mascot({ color, mood: !member.connected ? "sad" : you ? "wink" : member.bot === "hard" ? "wow" : "happy" }),
           el("span", { class: "seat-name", text: member.name }),
-          el("span", { class: "seat-sub", text: member.connected ? `${you ? "você • " : ""}${member.wins} 🏆` : "reconectando…" }),
+          el("span", { class: "seat-sub", text: sub }),
         ]);
       }),
     );
-    const isHost = info.hostId === me;
     const enough = info.members.length >= 2;
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
     this.status.textContent = !enough
-      ? "Chame a galera: toque em Convidar!"
+      ? isHost
+        ? "Convide a galera ou coloque bots nas vagas!"
+        : "Esperando mais jogadores…"
       : isHost
         ? "Todo mundo pronto? Bora!"
         : "Esperando o anfitrião começar…";
