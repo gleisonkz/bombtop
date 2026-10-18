@@ -34,7 +34,7 @@ All art, audio and names are original — never copy assets from existing games.
 - `pnpm test` — all tests
 - `pnpm typecheck`
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
-- phone testing (fixed URL, keeps an installed PWA working): `VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`)
+- phone testing (fixed URL, keeps an installed PWA working): `MSYS_NO_PATHCONV=1 VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`). In Git Bash, `MSYS_NO_PATHCONV=1` stops `/colyseus` from being rewritten to a Windows path.
 - In dev, the latest server snapshot is exposed for debugging: `window.__snapshot`.
 
 ## Mechanics (all in `packages/shared/src`)
