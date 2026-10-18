@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SHEETS, playerFrame, recolor } from "../src/render/sprites";
+import { MotionTracker, SHEETS, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -67,5 +67,30 @@ describe("recolor", () => {
     const px = new Uint8ClampedArray([82, 174, 35, 0]);
     recolor(px, [[82, 174, 35]], [0, 0, 255]);
     expect([...px]).toEqual([82, 174, 35, 0]);
+  });
+});
+
+describe("MotionTracker", () => {
+  it("is still until the position changes", () => {
+    const m = new MotionTracker();
+    expect(m.moving("a", 10, 10)).toBe(false);
+    expect(m.moving("a", 10, 10)).toBe(false);
+    expect(m.moving("a", 11, 10)).toBe(true);
+  });
+
+  it("keeps walking across frames where a snapshot has not moved it yet", () => {
+    const m = new MotionTracker(4);
+    m.moving("a", 0, 0);
+    m.moving("a", 1, 0);
+    for (let i = 0; i < 4; i++) expect(m.moving("a", 1, 0)).toBe(true);
+    expect(m.moving("a", 1, 0)).toBe(false);
+  });
+
+  it("tracks each player separately", () => {
+    const m = new MotionTracker();
+    m.moving("a", 0, 0);
+    m.moving("b", 0, 0);
+    expect(m.moving("a", 5, 0)).toBe(true);
+    expect(m.moving("b", 0, 0)).toBe(false);
   });
 });

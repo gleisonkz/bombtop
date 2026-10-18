@@ -1,6 +1,6 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { PLAYER_COLORS } from "../ui/art";
-import { playerFrame, recolor, type SheetLayout } from "./sprites";
+import { MotionTracker, playerFrame, recolor, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -87,6 +87,7 @@ export class Renderer {
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
   private skin: Skin | null = null;
+  private readonly motion = new MotionTracker();
   private readonly banner = new Text({
     text: "",
     resolution: 4, // stays crisp when the stage is scaled up
@@ -202,7 +203,7 @@ export class Renderer {
       let headroom = 12;
       if (this.skin) {
         const { sheet } = this.skin;
-        const moving = from.px !== p.px || from.py !== p.py;
+        const moving = this.motion.moving(p.id, ux, uy);
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, tick: s.tick });
         let sprite = this.sprites.get(p.id);
         if (!sprite) {

@@ -111,3 +111,29 @@ export function recolor(px: Uint8ClampedArray, from: readonly Rgb[], to: Rgb): v
     for (let ch = 0; ch < 3; ch++) px[i + ch] = to[ch]! * hit.k;
   }
 }
+
+/**
+ * Tells, frame by frame, whether each player is walking. A player counts as
+ * walking for `hold` frames after its drawn position last changed, so frames
+ * between two snapshots don't flash the idle pose.
+ */
+export class MotionTracker {
+  private readonly seen = new Map<string, { x: number; y: number; left: number }>();
+
+  constructor(private readonly hold = 8) {}
+
+  moving(id: string, x: number, y: number): boolean {
+    const last = this.seen.get(id);
+    if (!last) {
+      this.seen.set(id, { x, y, left: 0 });
+      return false;
+    }
+    if (last.x !== x || last.y !== y) {
+      Object.assign(last, { x, y, left: this.hold });
+      return true;
+    }
+    if (last.left === 0) return false;
+    last.left--;
+    return true;
+  }
+}
