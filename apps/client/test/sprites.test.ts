@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MotionTracker, SHEETS, playerFrame, recolor } from "../src/render/sprites";
+import { MotionTracker, SHEETS, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -92,5 +92,62 @@ describe("MotionTracker", () => {
     m.moving("b", 0, 0);
     expect(m.moving("a", 5, 0)).toBe(true);
     expect(m.moving("b", 0, 0)).toBe(false);
+  });
+});
+
+describe("ninja sheet", () => {
+  const ninja = SHEETS.ninja;
+  const at = (facing: "up" | "down" | "left" | "right", o: { moving?: boolean; stunned?: boolean; tick?: number } = {}) =>
+    playerFrame(ninja, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
+
+  it("walks with 6 frames in each direction, mirroring east for west", () => {
+    const xs = new Set<number>();
+    for (let tick = 0; tick < 120; tick++) xs.add(at("up", { moving: true, tick }).x);
+    expect(xs.size).toBe(6);
+    expect(at("left", { moving: true }).flip).toBe(true);
+    expect(at("right", { moving: true }).flip).toBe(false);
+  });
+
+  it("shows the hit reaction while stunned, whatever the facing", () => {
+    expect(at("up", { stunned: true }).y).toBe(ninja.stun!.row * ninja.frameH);
+    expect(at("left", { stunned: true }).flip).toBe(false);
+  });
+});
+
+describe("deathFrame", () => {
+  const ninja = SHEETS.ninja;
+  const last = ninja.death!.frames * ninja.ticksPerFrame;
+
+  it("plays the death row once, then the body is gone", () => {
+    expect(deathFrame(ninja, 0)).toEqual({ x: 0, y: ninja.death!.row * ninja.frameH, flip: false });
+    expect(deathFrame(ninja, last - 1)!.x).toBe((ninja.death!.frames - 1) * ninja.frameW);
+    expect(deathFrame(ninja, last + 30)).toBeNull();
+  });
+
+  it("has nothing to play on sheets without a death row", () => {
+    expect(deathFrame(SHEETS.james, 0)).toBeNull();
+  });
+});
+
+describe("paintHues", () => {
+  it("moves pixels in the hue range to the player's hue, keeping their shading", () => {
+    const px = new Uint8ClampedArray([
+      40, 90, 200, 255, // blue armor
+      10, 30, 80, 255, // dark blue
+      230, 190, 150, 255, // skin: untouched
+    ]);
+    paintHues(px, [180, 260], [232, 74, 74]);
+    const [r, g, b] = px.slice(0, 3);
+    expect(r!).toBeGreaterThan(g!);
+    expect(r!).toBeGreaterThan(b!);
+    const [dr] = px.slice(4, 7);
+    expect(dr!).toBeLessThan(r!); // dark stays darker
+    expect([...px.slice(8)]).toEqual([230, 190, 150, 255]);
+  });
+
+  it("turns them grey for an unsaturated player color", () => {
+    const px = new Uint8ClampedArray([40, 90, 200, 255]);
+    paintHues(px, [180, 260], [245, 245, 245]);
+    expect(Math.max(px[0]!, px[1]!, px[2]!) - Math.min(px[0]!, px[1]!, px[2]!)).toBeLessThan(12);
   });
 });

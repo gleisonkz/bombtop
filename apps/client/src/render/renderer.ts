@@ -1,6 +1,6 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { PLAYER_COLORS } from "../ui/art";
-import { MotionTracker, playerFrame, recolor, type SheetLayout } from "./sprites";
+import { MotionTracker, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -70,10 +70,12 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(img, 0, 0);
     const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
-    recolor(data.data, sheet.clothes, [(color >> 16) & 255, (color >> 8) & 255, color & 255]);
+    const rgb = [(color >> 16) & 255, (color >> 8) & 255, color & 255] as const;
+    if (sheet.clothes) recolor(data.data, sheet.clothes, rgb);
+    if (sheet.hues) paintHues(data.data, sheet.hues, rgb);
     ctx.putImageData(data, 0, 0);
     const tex = Texture.from(canvas);
-    tex.source.scaleMode = "nearest";
+    tex.source.scaleMode = (sheet.scale ?? 1) < 1 ? "linear" : "nearest"; // shrunk pixel art aliases badly
     return tex;
   });
   return { sheet, sources, frames: new Map() };
@@ -88,6 +90,8 @@ export class Renderer {
   private readonly sprites = new Map<string, Sprite>();
   private skin: Skin | null = null;
   private readonly motion = new MotionTracker();
+  /** Where and when each player was last seen alive, to play their death there. */
+  private readonly lastSeen = new Map<string, { cx: number; cy: number; deadAt: number | null }>();
   private readonly banner = new Text({
     text: "",
     resolution: 4, // stays crisp when the stage is scaled up
@@ -110,6 +114,34 @@ export class Renderer {
   /** Draws players with a character sheet instead of shapes. */
   async useSheet(sheet: SheetLayout): Promise<void> {
     this.skin = await loadSkin(sheet);
+  }
+
+  private placeSprite(id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
+    const skin = this.skin!;
+    const { sheet } = skin;
+    let sprite = this.sprites.get(id);
+    if (!sprite) {
+      sprite = new Sprite();
+      sprite.anchor.set(sheet.anchorX / sheet.frameW, sheet.anchorY / sheet.frameH);
+      this.sprites.set(id, sprite);
+      this.people.addChild(sprite);
+    }
+    const scale = sheet.scale ?? 1;
+    sprite.texture = this.frame(skin, player % COLORS.players.length, f.x, f.y);
+    sprite.position.set(cx, cy + 6);
+    sprite.scale.set(f.flip ? -scale : scale, scale);
+    sprite.tint = tint;
+    sprite.zIndex = cy;
+    sprite.visible = true;
+  }
+
+  /** Plays a just-killed player's death where they fell, once. */
+  private drawDeath(id: string, player: number, tick: number): void {
+    const seen = this.lastSeen.get(id);
+    if (!seen || !this.skin) return;
+    seen.deadAt ??= tick;
+    const f = deathFrame(this.skin.sheet, tick - seen.deadAt);
+    if (f) this.placeSprite(id, player, f, seen.cx, seen.cy, 0xffffff);
   }
 
   private frame(skin: Skin, player: number, x: number, y: number): Texture {
@@ -180,6 +212,7 @@ export class Renderer {
     s.players.forEach((p, i) => {
       const color = COLORS.players[i % COLORS.players.length]!;
       if (!p.alive) {
+        this.drawDeath(p.id, i, s.tick);
         const t = p.cart && ring[p.cart.pos];
         if (!t) return;
         const cx = t.x * TILE_PX + TILE_PX / 2;
@@ -193,6 +226,7 @@ export class Renderer {
       const uy = from.py + (p.py - from.py) * alpha;
       const cx = (ux / TILE) * TILE_PX;
       const cy = (uy / TILE) * TILE_PX;
+      this.lastSeen.set(p.id, { cx, cy, deadAt: null });
       if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
       g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 });
       if (p.mount) {
@@ -204,21 +238,9 @@ export class Renderer {
       if (this.skin) {
         const { sheet } = this.skin;
         const moving = this.motion.moving(p.id, ux, uy);
-        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, tick: s.tick });
-        let sprite = this.sprites.get(p.id);
-        if (!sprite) {
-          sprite = new Sprite();
-          sprite.anchor.set(sheet.anchorX / sheet.frameW, sheet.anchorY / sheet.frameH);
-          this.sprites.set(p.id, sprite);
-          this.people.addChild(sprite);
-        }
-        sprite.texture = this.frame(this.skin, i % COLORS.players.length, f.x, f.y);
-        sprite.position.set(cx, cy + 6);
-        sprite.scale.x = f.flip ? -1 : 1;
-        sprite.tint = cursedFlash ? COLORS.cursed : 0xffffff;
-        sprite.zIndex = cy;
-        sprite.visible = true;
-        headroom = sheet.bodyH;
+        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, tick: s.tick });
+        this.placeSprite(p.id, i, f, cx, cy, cursedFlash ? COLORS.cursed : 0xffffff);
+        headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else {
         const body = cursedFlash ? COLORS.cursed : color;
         g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });

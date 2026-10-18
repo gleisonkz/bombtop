@@ -20,8 +20,8 @@ document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
 app.stage.addChild(renderer.root);
-// Sprite trial: ?sprite=foozle (default) | james | shapes
-const sprite = new URLSearchParams(location.search).get("sprite") ?? "foozle";
+// Sprite trial: ?sprite=ninja (default) | foozle | james | shapes
+const sprite = new URLSearchParams(location.search).get("sprite") ?? "ninja";
 if (sprite in SHEETS) void renderer.useSheet(SHEETS[sprite as SheetName]).catch((e) => console.error("sprite sheet", e));
 
 let arena = { width: 13, height: 11 };

@@ -30,7 +30,15 @@ export interface SheetLayout {
   carryIdle?: Record<"down" | "up" | "side", Strip>;
   carryWalk?: Record<"down" | "up" | "side", Strip>;
   /** Clothing colors, repainted in each player's color (base shade first). */
-  clothes: Rgb[];
+  clothes?: Rgb[];
+  /** Or: a hue range (degrees) repainted in each player's color, for sheets without a fixed palette. */
+  hues?: readonly [number, number];
+  /** Hit reaction, shown facing the camera while stunned. */
+  stun?: Strip;
+  /** Played once when the player dies. */
+  death?: Strip;
+  /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
+  scale?: number;
 }
 
 const strips = (down: number, side: number, up: number, frames: number) => ({
@@ -73,6 +81,24 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
+  ninja: {
+    url: "sprites/ninja.png",
+    width: 448,
+    height: 512,
+    frameW: 64,
+    frameH: 64,
+    anchorX: 31,
+    anchorY: 51,
+    bodyH: 38,
+    ticksPerFrame: 7,
+    side: "right",
+    idle: strips(0, 1, 2, 1),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    hues: [185, 250],
+    scale: 0.55,
+  },
 } satisfies Record<string, SheetLayout>;
 
 export type SheetName = keyof typeof SHEETS;
@@ -86,13 +112,28 @@ export interface FrameRect {
 /** The sheet cell to draw for a player this tick. */
 export function playerFrame(
   sheet: SheetLayout,
-  { facing, moving, carrying, tick }: { facing: Facing; moving: boolean; carrying: boolean; tick: number },
+  { facing, moving, carrying, stunned, tick }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; tick: number },
 ): FrameRect {
+  if (stunned && sheet.stun) return cell(sheet, sheet.stun, Math.floor(tick / sheet.ticksPerFrame) % sheet.stun.frames);
   const view = facing === "left" || facing === "right" ? "side" : facing;
   const set = carrying && sheet.carryIdle ? (moving ? sheet.carryWalk! : sheet.carryIdle) : moving ? sheet.walk : sheet.idle;
   const strip = set[view];
   const col = Math.floor(tick / sheet.ticksPerFrame) % strip.frames;
   return { x: col * sheet.frameW, y: strip.row * sheet.frameH, flip: view === "side" && facing !== sheet.side };
+}
+
+const cell = (sheet: SheetLayout, strip: Strip, col: number): FrameRect => ({
+  x: col * sheet.frameW,
+  y: strip.row * sheet.frameH,
+  flip: false,
+});
+
+/** The death frame `ticks` after dying, or null once it has played (or the sheet has none). */
+export function deathFrame(sheet: SheetLayout, ticks: number): FrameRect | null {
+  const strip = sheet.death;
+  if (!strip) return null;
+  const col = Math.floor(ticks / sheet.ticksPerFrame);
+  return col < strip.frames ? cell(sheet, strip, col) : null;
 }
 
 const luma = ([r, g, b]: Rgb) => 0.299 * r + 0.587 * g + 0.114 * b;
@@ -135,5 +176,43 @@ export class MotionTracker {
     if (last.left === 0) return false;
     last.left--;
     return true;
+  }
+}
+
+function toHsl([r, g, b]: Rgb): [number, number, number] {
+  const [rr, gg, bb] = [r / 255, g / 255, b / 255];
+  const max = Math.max(rr, gg, bb);
+  const min = Math.min(rr, gg, bb);
+  const l = (max + min) / 2;
+  const d = max - min;
+  if (d === 0) return [0, 0, l];
+  const s = d / (1 - Math.abs(2 * l - 1));
+  const h = max === rr ? ((gg - bb) / d + 6) % 6 : max === gg ? (bb - rr) / d + 2 : (rr - gg) / d + 4;
+  return [h * 60, s, l];
+}
+
+function fromHsl(h: number, s: number, l: number): [number, number, number] {
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+}
+
+/**
+ * Repaints pixels whose hue lies in `range` (degrees) in the hue and saturation of
+ * `to`, in place, shifting lightness toward it so shading survives.
+ */
+export function paintHues(px: Uint8ClampedArray, range: readonly [number, number], to: Rgb): void {
+  const [th, ts, tl] = toHsl(to);
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] === 0) continue;
+    const [h, s, l] = toHsl([px[i]!, px[i + 1]!, px[i + 2]!]);
+    if (s < 0.2 || h < range[0] || h > range[1]) continue;
+    const lit = Math.min(1, Math.max(0, l + (tl - 0.5) * 0.6));
+    const [r, g, b] = fromHsl(th, s * ts, lit);
+    px[i] = r;
+    px[i + 1] = g;
+    px[i + 2] = b;
   }
 }
