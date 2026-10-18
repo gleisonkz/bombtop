@@ -1,4 +1,5 @@
 import { Container, Graphics, Text } from "pixi.js";
+import { PLAYER_COLORS } from "../ui/art";
 import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -22,7 +23,7 @@ const COLORS = {
   warp: 0x240046,
   warpCore: 0xc77dff,
   mounts: { hopper: 0x7bd389, dasher: 0xf28482, pusher: 0x84a59d },
-  players: [0xf5f5f5, 0x2b2b2b, 0xe84a4a, 0x3d7bf2, 0x45c25b],
+  players: PLAYER_COLORS.map((c) => parseInt(c.slice(1), 16)),
   items: {
     [ItemKind.Fire]: 0xff7a1a,
     [ItemKind.Bomb]: 0x15151f,
