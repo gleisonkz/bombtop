@@ -14,6 +14,10 @@ interface SoundSpec {
 
 const VOICE_WINDOW_MS = 120;
 
+/** Overall level of the game's sound, in dB. */
+export const MASTER_DB = -2;
+const MASTER_GAIN = 10 ** (MASTER_DB / 20);
+
 /** The mix. Files live in public/sfx (built by scripts/build-sfx.mjs). */
 export const SOUNDS: Record<SoundName, SoundSpec> = {
   place: { gain: 0.55, vary: 0.06, voices: 3 },
@@ -81,7 +85,7 @@ export class Sound {
     const spec = SOUNDS[name];
     if (this.muted || !this.allow(name, spec.voices)) return;
     const rate = 1 + (this.random() * 2 - 1) * spec.vary;
-    this.backend.play(name, { gain: spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    this.backend.play(name, { gain: MASTER_GAIN * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
   }
 
   /** Plays what happened in the arena (see soundCues). */

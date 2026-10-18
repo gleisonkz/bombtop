@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Sound, type AudioBackend } from "../src/audio/sound";
+import { MASTER_DB, SOUNDS, Sound, type AudioBackend } from "../src/audio/sound";
 
 /** Records what would reach the speakers. */
 function fakeBackend() {
@@ -45,6 +45,13 @@ describe("Sound", () => {
     for (let i = 0; i < 10; i++) s.play("place");
     expect(played.length).toBeLessThan(10);
     expect(played.length).toBeGreaterThan(0);
+  });
+
+  it("plays the whole mix MASTER_DB quieter", () => {
+    const { backend, played } = fakeBackend();
+    new Sound(backend, memoryStore()).play("click");
+    expect(MASTER_DB).toBe(-2);
+    expect(played[0]!.gain).toBeCloseTo(SOUNDS.click.gain * 10 ** (-2 / 20));
   });
 
   it("varies pitch a little so repeats do not sound robotic", () => {
