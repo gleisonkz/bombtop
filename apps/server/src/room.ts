@@ -5,6 +5,7 @@ import {
   MAX_PLAYERS,
   S2C,
   inputSeq,
+  inputTick,
   sanitizeInput,
   sanitizeName,
   TICK_RATE,
@@ -38,7 +39,7 @@ export class BattleRoom extends Room {
     this.setPatchRate(null);
 
     this.onMessage(C2S.input, (client, message) => {
-      this.session.setInput(client.sessionId, sanitizeInput(message), inputSeq(message));
+      this.session.setInput(client.sessionId, sanitizeInput(message), inputSeq(message), inputTick(message));
     });
     this.onMessage(C2S.sync, (client) => {
       client.send(S2C.lobby, this.session.lobbyInfo(this.roomId));
@@ -78,7 +79,9 @@ export class BattleRoom extends Room {
   onDrop(client: Client) {
     this.session.setConnected(client.sessionId, false);
     this.broadcastLobby();
-    this.allowReconnection(client, RECONNECT_SECONDS);
+    // Rejects at once when the client dropped mid-join or the room is closing:
+    // left unhandled, that rejection would take the whole server down.
+    this.allowReconnection(client, RECONNECT_SECONDS).catch(() => this.onLeave(client));
   }
 
   onReconnect(client: Client) {
