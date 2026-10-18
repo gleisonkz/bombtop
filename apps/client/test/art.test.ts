@@ -18,6 +18,15 @@ describe("mascotSvg", () => {
     expect(() => mascotSvg({ color: '"><script>' })).toThrow();
   });
 
+  it("groups the parts the lobby animates: body, eyes, each foot and the spark", () => {
+    for (const mood of ["happy", "wow", "sad", "wink"] as const) {
+      const svg = mascotSvg({ mood });
+      for (const part of ['class="body"', 'class="eyes"', 'class="foot left"', 'class="foot right"', 'class="spark"']) {
+        expect(svg, `${mood} ${part}`).toContain(part);
+      }
+    }
+  });
+
   it("matches the in-game player colors", () => {
     expect(PLAYER_COLORS).toHaveLength(5);
   });

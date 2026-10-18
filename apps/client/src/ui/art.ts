@@ -12,15 +12,20 @@ const EYE = (x: number) =>
   `<ellipse cx="${x}" cy="54" rx="7" ry="9" fill="#fff" stroke="#000" stroke-width="2.5"/>` +
   `<circle cx="${x + 2}" cy="56" r="3.6" fill="#111"/><circle cx="${x + 3.4}" cy="53.6" r="1.3" fill="#fff"/>`;
 
-const FACES: Record<Mood, string> = {
-  happy: `${EYE(38)}${EYE(58)}<path d="M38 70 Q48 80 58 70" fill="#7a1f2b" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>`,
-  wow: `${EYE(38)}${EYE(58)}<ellipse cx="48" cy="73" rx="5" ry="6" fill="#7a1f2b" stroke="#000" stroke-width="2.5"/>`,
-  sad:
-    `${EYE(38)}${EYE(58)}<path d="M31 43 L43 46 M65 43 L53 46" stroke="#000" stroke-width="3" stroke-linecap="round"/>` +
-    `<path d="M40 76 Q48 69 56 76" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>`,
-  wink:
-    `<path d="M32 55 Q38 50 44 55" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>${EYE(58)}` +
-    `<path d="M38 70 Q48 80 58 70" fill="#7a1f2b" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>`,
+const SMILE = `<path d="M38 70 Q48 80 58 70" fill="#7a1f2b" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>`;
+
+/** Each mood's eyes (blinked as one group) and mouth. */
+const FACES: Record<Mood, { eyes: string; mouth: string }> = {
+  happy: { eyes: EYE(38) + EYE(58), mouth: SMILE },
+  wow: { eyes: EYE(38) + EYE(58), mouth: `<ellipse cx="48" cy="73" rx="5" ry="6" fill="#7a1f2b" stroke="#000" stroke-width="2.5"/>` },
+  sad: {
+    eyes: `${EYE(38)}${EYE(58)}<path d="M31 43 L43 46 M65 43 L53 46" stroke="#000" stroke-width="3" stroke-linecap="round"/>`,
+    mouth: `<path d="M40 76 Q48 69 56 76" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>`,
+  },
+  wink: {
+    eyes: `<path d="M32 55 Q38 50 44 55" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>${EYE(58)}`,
+    mouth: SMILE,
+  },
 };
 
 /**
@@ -31,8 +36,9 @@ export function mascotSvg({ color = MASCOT_COLOR, mood = "happy" }: { color?: st
   if (!HEX.test(color)) throw new Error(`Not a hex color: ${color}`);
   return (
     `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">` +
-    `<ellipse cx="36" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
-    `<ellipse cx="62" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
+    `<ellipse class="foot left" cx="36" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
+    `<ellipse class="foot right" cx="62" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
+    `<g class="body">` +
     `<path d="M66 22 Q74 8 84 12" fill="none" stroke="#8a6a3c" stroke-width="4" stroke-linecap="round"/>` +
     `<g class="spark"><path d="M86 2 L88.5 9 L96 10 L90 14.5 L92 22 L86 17.5 L80 22 L82 14.5 L76 10 L83.5 9 Z" fill="#ffd23f" stroke="#ff7a1a" stroke-width="1.5" stroke-linejoin="round"/></g>` +
     `<rect x="58" y="20" width="14" height="12" rx="2" transform="rotate(25 65 26)" fill="#5b5f73" stroke="#000" stroke-width="2.5"/>` +
@@ -40,7 +46,9 @@ export function mascotSvg({ color = MASCOT_COLOR, mood = "happy" }: { color?: st
     `<ellipse cx="34" cy="42" rx="9" ry="6" transform="rotate(-35 34 42)" fill="#fff" opacity=".35"/>` +
     `<ellipse cx="29" cy="66" rx="5" ry="3" fill="#ff7aa2" opacity=".55"/>` +
     `<ellipse cx="67" cy="66" rx="5" ry="3" fill="#ff7aa2" opacity=".55"/>` +
-    FACES[mood] +
+    `<g class="eyes">${FACES[mood].eyes}</g>` +
+    FACES[mood].mouth +
+    `</g>` +
     `</svg>`
   );
 }
