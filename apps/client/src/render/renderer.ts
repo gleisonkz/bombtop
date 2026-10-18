@@ -1,5 +1,6 @@
-import { Container, Graphics, Text } from "pixi.js";
+import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { PLAYER_COLORS } from "../ui/art";
+import { playerFrame, recolor, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -51,10 +52,41 @@ export interface PlayerPos {
   py: number;
 }
 
-/** Placeholder renderer: flat shapes until real sprites exist. */
+/** A character sheet repainted once per player color. */
+interface Skin {
+  sheet: SheetLayout;
+  sources: Texture[];
+  frames: Map<string, Texture>;
+}
+
+/** Loads a sheet and repaints its clothes in each player color. */
+async function loadSkin(sheet: SheetLayout): Promise<Skin> {
+  const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${sheet.url}`);
+  const img = base.source.resource as CanvasImageSource;
+  const sources = COLORS.players.map((color) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = sheet.width;
+    canvas.height = sheet.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
+    const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
+    recolor(data.data, sheet.clothes, [(color >> 16) & 255, (color >> 8) & 255, color & 255]);
+    ctx.putImageData(data, 0, 0);
+    const tex = Texture.from(canvas);
+    tex.source.scaleMode = "nearest";
+    return tex;
+  });
+  return { sheet, sources, frames: new Map() };
+}
+
+/** Placeholder renderer: flat shapes, with sprite characters once a sheet is loaded. */
 export class Renderer {
   readonly root = new Container();
   private readonly world = new Graphics();
+  private readonly people = new Container();
+  private readonly overlay = new Graphics();
+  private readonly sprites = new Map<string, Sprite>();
+  private skin: Skin | null = null;
   private readonly banner = new Text({
     text: "",
     resolution: 4, // stays crisp when the stage is scaled up
@@ -70,7 +102,23 @@ export class Renderer {
   constructor() {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
-    this.root.addChild(this.world, this.banner, this.clock);
+    this.people.sortableChildren = true; // lower players overlap the ones above them
+    this.root.addChild(this.world, this.people, this.overlay, this.banner, this.clock);
+  }
+
+  /** Draws players with a character sheet instead of shapes. */
+  async useSheet(sheet: SheetLayout): Promise<void> {
+    this.skin = await loadSkin(sheet);
+  }
+
+  private frame(skin: Skin, player: number, x: number, y: number): Texture {
+    const key = `${player}:${x}:${y}`;
+    let tex = skin.frames.get(key);
+    if (!tex) {
+      tex = new Texture({ source: skin.sources[player]!.source, frame: new Rectangle(x, y, skin.sheet.frameW, skin.sheet.frameH) });
+      skin.frames.set(key, tex);
+    }
+    return tex;
   }
 
   /**
@@ -79,6 +127,8 @@ export class Renderer {
    */
   draw(s: PublicView, prev: Map<string, PlayerPos>, alpha: number): void {
     const g = this.world.clear();
+    const top = this.overlay.clear();
+    for (const sprite of this.sprites.values()) sprite.visible = false;
     const { width, height } = s.grid;
 
     for (let y = 0; y < height; y++) {
@@ -148,13 +198,35 @@ export class Renderer {
         g.ellipse(cx, cy + 3, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
       const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
-      const body = cursedFlash ? COLORS.cursed : color;
-      g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });
-      g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
-      g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
-      if (s.bombs.some((b) => b.heldBy === p.id)) {
-        g.circle(cx, cy - 12, 5).fill(COLORS.bomb);
-        g.circle(cx + 3, cy - 17, 1.5).fill(COLORS.fuse);
+      const carrying = s.bombs.some((b) => b.heldBy === p.id);
+      let headroom = 12;
+      if (this.skin) {
+        const { sheet } = this.skin;
+        const moving = from.px !== p.px || from.py !== p.py;
+        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, tick: s.tick });
+        let sprite = this.sprites.get(p.id);
+        if (!sprite) {
+          sprite = new Sprite();
+          sprite.anchor.set(sheet.anchorX / sheet.frameW, sheet.anchorY / sheet.frameH);
+          this.sprites.set(p.id, sprite);
+          this.people.addChild(sprite);
+        }
+        sprite.texture = this.frame(this.skin, i % COLORS.players.length, f.x, f.y);
+        sprite.position.set(cx, cy + 6);
+        sprite.scale.x = f.flip ? -1 : 1;
+        sprite.tint = cursedFlash ? COLORS.cursed : 0xffffff;
+        sprite.zIndex = cy;
+        sprite.visible = true;
+        headroom = sheet.bodyH;
+      } else {
+        const body = cursedFlash ? COLORS.cursed : color;
+        g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });
+        g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
+        g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
+      }
+      if (carrying) {
+        top.circle(cx, cy - headroom, 5).fill(COLORS.bomb);
+        top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);
       }
     });
 

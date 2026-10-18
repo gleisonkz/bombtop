@@ -5,6 +5,7 @@ import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
+import { SHEETS, type SheetName } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
@@ -19,6 +20,9 @@ document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
 app.stage.addChild(renderer.root);
+// Sprite trial: ?sprite=foozle (default) | james | shapes
+const sprite = new URLSearchParams(location.search).get("sprite") ?? "foozle";
+if (sprite in SHEETS) void renderer.useSheet(SHEETS[sprite as SheetName]).catch((e) => console.error("sprite sheet", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
