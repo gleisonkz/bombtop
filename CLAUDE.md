@@ -52,6 +52,7 @@ All art, audio and names are original — never copy assets from existing games.
 | sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |
 | revenge cart | `revenge.ts` | dead ride the border, throw bombs; a kill swaps them back in |
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters) |
+| Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
 
 Action button priority: detonate remote > punch > mount ability.
 
