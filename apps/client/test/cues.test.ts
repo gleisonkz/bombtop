@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
-import { soundCues } from "../src/audio/cues";
+import { Listener, soundCues } from "../src/audio/cues";
 
 function view(): PublicView {
   return publicView(createMatch({ seed: 1, playerIds: ["a", "b"], blockDensity: 0 }));
@@ -121,5 +121,26 @@ describe("soundCues", () => {
   it("hears sudden death starting", () => {
     const v = view();
     expect(names(v, later(v, (n) => (n.pressure = 1)))).toEqual(["hurry"]);
+  });
+});
+
+describe("Listener", () => {
+  it("hears each change once, as the drawn view moves forward", () => {
+    const l = new Listener();
+    const v = view();
+    const next = later(v, (n) => n.bombs.push(bomb(3, 1)));
+    expect(l.hear(v)).toEqual([]);
+    expect(l.hear(next).map((c) => c.name)).toEqual(["place"]);
+    expect(l.hear(next)).toEqual([]);
+  });
+
+  it("starts over, silently, when a new match begins", () => {
+    const l = new Listener();
+    const v = view();
+    v.tick = 500;
+    l.hear(v);
+    const fresh = view();
+    fresh.bombs.push(bomb(3, 1));
+    expect(l.hear(fresh)).toEqual([]);
   });
 });

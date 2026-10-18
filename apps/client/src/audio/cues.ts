@@ -97,3 +97,19 @@ export function soundCues(prev: View, next: View): Cue[] {
   if (!prev.pressure && next.pressure) cues.push({ name: "hurry", x: width / 2 });
   return cues;
 }
+
+/** Feeds soundCues with the views as they are drawn, so each change is heard once. */
+export class Listener {
+  private last: View | null = null;
+
+  hear(view: View): Cue[] {
+    const last = this.last;
+    if (!last || view.tick < last.tick) {
+      this.last = view; // first view, or a new match: nothing to compare with
+      return [];
+    }
+    if (view.tick === last.tick) return [];
+    this.last = view;
+    return soundCues(last, view);
+  }
+}
