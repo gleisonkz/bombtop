@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
-import { PLAYER_COLORS } from "../ui/art";
-import { BOMBS, MotionTracker, bombFrame, bombLook, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Bomb, type BombType, type Facing, type PublicView } from "@bombtop/shared";
+import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
+import { BOMBS, MASCOT, MotionTracker, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -81,6 +81,22 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
   return { sheet, sources, frames: new Map() };
 }
 
+/** Mascot pixels per SVG unit: drawn larger than shown so it stays smooth when the stage is scaled up. */
+const MASCOT_RES = 2;
+
+async function rasterize(svg: string): Promise<Texture> {
+  const img = new Image();
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  await img.decode();
+  const canvas = document.createElement("canvas");
+  canvas.width = MASCOT.width * MASCOT_RES;
+  canvas.height = MASCOT.height * MASCOT_RES;
+  canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const tex = Texture.from(canvas);
+  tex.source.scaleMode = "linear";
+  return tex;
+}
+
 /** Placeholder renderer: flat shapes, with sprite characters once a sheet is loaded. */
 export class Renderer {
   readonly root = new Container();
@@ -89,6 +105,9 @@ export class Renderer {
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
   private skin: Skin | null = null;
+  /** The mascot in each player color and mood (`${player}:${mood}`), once drawn. */
+  private mascots: Map<string, Texture> | null = null;
+  private characters = new Map<string, CharacterId>();
   /** One texture per bomb type, once the bomb art is loaded. */
   private bombArt: Map<BombType, Texture> | null = null;
   private readonly bombSprites: Sprite[] = [];
@@ -117,6 +136,25 @@ export class Renderer {
   /** Draws players with a character sheet instead of shapes. */
   async useSheet(sheet: SheetLayout): Promise<void> {
     this.skin = await loadSkin(sheet);
+  }
+
+  /** Draws the bomb mascot in every player color, for players who pick it. */
+  async useMascots(): Promise<void> {
+    const entries = await Promise.all(
+      PLAYER_COLORS.flatMap((color, player) =>
+        MASCOT.moods.map(async (mood) => [`${player}:${mood}`, await rasterize(mascotSvg({ color, mood }))] as const),
+      ),
+    );
+    this.mascots = new Map(entries);
+  }
+
+  /** Each player's character, from the lobby. */
+  setCharacters(characters: Map<string, CharacterId>): void {
+    this.characters = characters;
+  }
+
+  private character(id: string): CharacterId {
+    return this.characters.get(id) ?? DEFAULT_CHARACTER;
   }
 
   /** Draws bombs with the bomb art instead of shapes. */
@@ -155,28 +193,61 @@ export class Renderer {
   private placeSprite(id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
     const skin = this.skin!;
     const { sheet } = skin;
+    const sprite = this.sprite(id);
+    const scale = sheet.scale ?? 1;
+    sprite.texture = this.frame(skin, player % COLORS.players.length, f.x, f.y);
+    sprite.anchor.set(sheet.anchorX / sheet.frameW, sheet.anchorY / sheet.frameH);
+    sprite.position.set(cx, cy + 6);
+    sprite.scale.set(f.flip ? -scale : scale, scale);
+    sprite.rotation = 0;
+    sprite.alpha = 1;
+    sprite.tint = tint;
+    sprite.zIndex = cy;
+  }
+
+  private placeMascot(
+    id: string,
+    player: number,
+    cx: number,
+    cy: number,
+    look: { sx: number; sy: number; dy: number; rot?: number; flip?: boolean; alpha?: number; mood: Mood },
+    tint = 0xffffff,
+  ): void {
+    const sprite = this.sprite(id);
+    const scale = MASCOT.scale / MASCOT_RES;
+    sprite.texture = this.mascots!.get(`${player % COLORS.players.length}:${look.mood}`)!;
+    sprite.anchor.set(MASCOT.anchorX / MASCOT.width, MASCOT.anchorY / MASCOT.height);
+    sprite.position.set(cx, cy + 6 + look.dy);
+    sprite.scale.set(scale * look.sx * (look.flip ? -1 : 1), scale * look.sy);
+    sprite.rotation = look.rot ?? 0;
+    sprite.alpha = look.alpha ?? 1;
+    sprite.tint = tint;
+    sprite.zIndex = cy;
+  }
+
+  /** The player's sprite, shown this frame. */
+  private sprite(id: string): Sprite {
     let sprite = this.sprites.get(id);
     if (!sprite) {
       sprite = new Sprite();
-      sprite.anchor.set(sheet.anchorX / sheet.frameW, sheet.anchorY / sheet.frameH);
       this.sprites.set(id, sprite);
       this.people.addChild(sprite);
     }
-    const scale = sheet.scale ?? 1;
-    sprite.texture = this.frame(skin, player % COLORS.players.length, f.x, f.y);
-    sprite.position.set(cx, cy + 6);
-    sprite.scale.set(f.flip ? -scale : scale, scale);
-    sprite.tint = tint;
-    sprite.zIndex = cy;
     sprite.visible = true;
+    return sprite;
   }
 
   /** Plays a just-killed player's death where they fell, once. */
   private drawDeath(id: string, player: number, tick: number): void {
     const seen = this.lastSeen.get(id);
-    if (!seen || !this.skin) return;
+    if (!seen) return;
     seen.deadAt ??= tick;
-    const f = deathFrame(this.skin.sheet, tick - seen.deadAt);
+    if (this.character(id) === "bomb") {
+      const look = this.mascots && mascotDeath(tick - seen.deadAt);
+      if (look) this.placeMascot(id, player, seen.cx, seen.cy, look);
+      return;
+    }
+    const f = this.skin && deathFrame(this.skin.sheet, tick - seen.deadAt);
     if (f) this.placeSprite(id, player, f, seen.cx, seen.cy, 0xffffff);
   }
 
@@ -278,12 +349,18 @@ export class Renderer {
       const held = s.bombs.find((b) => b.heldBy === p.id);
       const carrying = !!held;
       let headroom = 12;
-      if (this.skin) {
+      const moving = this.motion.moving(p.id, ux, uy);
+      const tint = cursedFlash ? COLORS.cursed : 0xffffff;
+      const character = this.character(p.id);
+      if (character === "ninja" && this.skin) {
         const { sheet } = this.skin;
-        const moving = this.motion.moving(p.id, ux, uy);
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, tick: s.tick });
-        this.placeSprite(p.id, i, f, cx, cy, cursedFlash ? COLORS.cursed : 0xffffff);
+        this.placeSprite(p.id, i, f, cx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
+      } else if (character === "bomb" && this.mascots) {
+        const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick: s.tick });
+        this.placeMascot(p.id, i, cx, cy, look, tint);
+        headroom = MASCOT.bodyH * MASCOT.scale;
       } else {
         const body = cursedFlash ? COLORS.cursed : color;
         g.circle(cx, cy - 1, 6).fill(body).stroke({ color: 0x000000, width: 1 });

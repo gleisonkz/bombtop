@@ -170,6 +170,15 @@
       .seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px 10px; padding-top: 10px; }
       .seat { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px; padding: 10px 6px 8px; min-height: 120px; background: #00000030; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 4px 0 var(--ink); animation: pop 0.25s ease-out; min-width: 0; }
       .seat .mascot { width: 60px; height: 60px; }
+      /* The ninja: a frame of its sheet, scaled by --s, standing on the bottom of the mascot box. */
+      .mascot.ninja { position: relative; --s: 1.5; }
+      .mascot.ninja i { position: absolute; left: calc(50% - 31px * var(--s)); top: calc(100% - 51px * var(--s)); width: calc(64px * var(--s)); height: calc(64px * var(--s)); background: no-repeat 0 calc(-4 * 64px * var(--s)) / calc(448px * var(--s)) calc(512px * var(--s)); image-rendering: pixelated; animation: ninja-walk 0.7s steps(6) infinite; }
+      @keyframes ninja-walk { to { background-position-x: calc(-6 * 64px * var(--s)); } }
+      .seat.easy .mascot.ninja i { animation: none; background-position: 0 0; }
+      .seat.hard .mascot.ninja i { animation-duration: 0.35s; }
+      .picker { display: flex; gap: 4px; width: 100%; }
+      button.mini.pick { background: #ffffff22; color: var(--text); }
+      button.mini.pick.on { background: var(--accent); color: #15152a; }
       .seat.me { background: #ffd23f22; border-color: var(--accent); }
       .seat.empty { background: transparent; border: 3px dashed #ffffff26; box-shadow: none; color: var(--muted); animation: none; }
       .seat.empty .mascot { opacity: 0.18; filter: grayscale(1); }
@@ -198,10 +207,11 @@
         button.big { min-height: 46px; font-size: 20px; }
         .seat { min-height: 92px; padding: 8px 4px 6px; }
         .seat .mascot { width: 44px; height: 44px; }
+        .mascot.ninja { --s: 1.1; }
         .tagline, .menu .hint { display: none; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } }
-      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero .mascot, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after { animation: none; } }
+      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero .mascot, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.ninja i { animation: none; } }
 
       /* Sound toggle */
       .mute { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }

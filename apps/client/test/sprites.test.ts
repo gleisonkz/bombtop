@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FUSE_TICKS } from "@bombtop/shared";
-import { BOMBS, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BOMBS, MASCOT, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -193,5 +193,47 @@ describe("bomb sheet", () => {
       expect(on).toContain(false);
       expect(BOMBS.glow[type]).toBeDefined();
     }
+  });
+});
+
+describe("mascot in the arena", () => {
+  const pose = (o: { moving?: boolean; stunned?: boolean; facing?: "up" | "down" | "left" | "right"; tick?: number } = {}) =>
+    mascotPose({ moving: o.moving ?? false, stunned: o.stunned ?? false, facing: o.facing ?? "down", tick: o.tick ?? 0 });
+  const over = (o: Parameters<typeof pose>[0] = {}) => Array.from({ length: 60 }, (_, tick) => pose({ ...o, tick }));
+
+  it("breathes in place while standing, happy", () => {
+    const xs = over();
+    expect(xs.every((p) => p.dy === 0 && p.rot === 0 && p.mood === "happy")).toBe(true);
+    expect(Math.max(...xs.map((p) => p.sx))).toBeGreaterThan(1);
+    for (const p of xs) expect(Math.sign(p.sx - 1)).toBe(-Math.sign(p.sy - 1) || 0);
+  });
+
+  it("hops and waddles while walking", () => {
+    const xs = over({ moving: true });
+    expect(xs.every((p) => p.dy <= 0)).toBe(true);
+    expect(Math.min(...xs.map((p) => p.dy))).toBeLessThan(-1);
+    expect(Math.min(...xs.map((p) => p.rot))).toBeLessThan(0);
+    expect(Math.max(...xs.map((p) => p.rot))).toBeGreaterThan(0);
+  });
+
+  it("faces the way it walks", () => {
+    expect(pose({ facing: "left" }).flip).toBe(true);
+    expect(pose({ facing: "right" }).flip).toBe(false);
+  });
+
+  it("wobbles, wide-eyed, while stunned", () => {
+    const xs = over({ stunned: true, moving: true });
+    expect(xs.every((p) => p.mood === "wow")).toBe(true);
+    expect(new Set(xs.map((p) => Math.sign(p.rot))).size).toBeGreaterThan(1);
+  });
+
+  it("floats away and fades when killed, then is gone", () => {
+    const first = mascotDeath(0)!;
+    expect(first.alpha).toBe(1);
+    expect(first.mood).toBe("sad");
+    const late = mascotDeath(MASCOT.deathTicks - 1)!;
+    expect(late.alpha).toBeLessThan(0.2);
+    expect(late.dy).toBeLessThan(first.dy);
+    expect(mascotDeath(MASCOT.deathTicks)).toBeNull();
   });
 });

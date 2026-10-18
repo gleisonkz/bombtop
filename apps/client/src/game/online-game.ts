@@ -6,6 +6,7 @@ import {
   TICK_RATE,
   TILE,
   type BotLevel,
+  type CharacterId,
   type LobbyInfo,
   type PlayerInput,
   type PublicView,
@@ -50,12 +51,13 @@ export class OnlineGame implements GameMode {
 
   static async connect(
     choice: OnlineChoice,
-    who: { name: string; token?: string },
+    who: { name: string; token?: string; character: CharacterId },
     ctx: ModeContext,
     panel: LobbyPanel,
   ): Promise<OnlineGame> {
     const client = new Client(SERVER_URL);
-    const options = who.token ? { name: who.name, token: who.token } : { name: who.name };
+    const base = { name: who.name, character: who.character };
+    const options = who.token ? { ...base, token: who.token } : base;
     const room =
       choice.kind === "public"
         ? await client.joinOrCreate(ROOM_NAME, options)
@@ -79,6 +81,7 @@ export class OnlineGame implements GameMode {
         ctx.sound.play("start");
       }
       this.lobby = info;
+      ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
       panel.update(info, room.sessionId);
       if (info.phase === "playing") ctx.renderer.showBanner("");
     });
@@ -111,6 +114,10 @@ export class OnlineGame implements GameMode {
 
   removeBot(id: string): void {
     this.room.send(C2S.removeBot, { id });
+  }
+
+  pickCharacter(character: CharacterId): void {
+    this.room.send(C2S.character, { character });
   }
 
   frame(deltaMs: number, nowMs: number): void {

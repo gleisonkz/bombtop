@@ -1,11 +1,12 @@
 import "@fontsource/lilita-one/latin-400.css";
 import { Application } from "pixi.js";
+import { characterId, DEFAULT_CHARACTER } from "@bombtop/shared";
 import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
-import { SHEETS, type SheetName } from "./render/sprites";
+import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
@@ -20,12 +21,9 @@ document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
 app.stage.addChild(renderer.root);
-// Sprite trial: ?sprite=ninja (default) | foozle | james | shapes
-const sprite = new URLSearchParams(location.search).get("sprite") ?? "ninja";
-if (sprite in SHEETS) {
-  void renderer.useSheet(SHEETS[sprite as SheetName]).catch((e) => console.error("sprite sheet", e));
-  void renderer.useBombArt().catch((e) => console.error("bomb art", e));
-}
+void renderer.useSheet(SHEETS.ninja).catch((e) => console.error("sprite sheet", e));
+void renderer.useMascots().catch((e) => console.error("mascot", e));
+void renderer.useBombArt().catch((e) => console.error("bomb art", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
@@ -97,7 +95,15 @@ const lobby = new LobbyPanel(ui, {
   leave: () => void online?.leave(),
   addBot: (level) => online?.addBot(level),
   removeBot: (id) => online?.removeBot(id),
+  pickCharacter: (c) => {
+    storage.set(CHARACTER_KEY, c);
+    online?.pickCharacter(c);
+  },
 });
+
+/** The character picked last time, used when joining the next room. */
+const CHARACTER_KEY = "bombtop.character";
+const savedCharacter = () => characterId(storage.get(CHARACTER_KEY)) ?? DEFAULT_CHARACTER;
 
 let account: Account | null = null;
 
@@ -108,7 +114,8 @@ const menu = new Menu(ui, {
     goFullscreen();
     menu.setBusy(true);
     try {
-      const who = account ? { name: account.name, token: account.token } : { name };
+      const character = savedCharacter();
+      const who = account ? { name: account.name, token: account.token, character } : { name, character };
       online = await OnlineGame.connect(choice, who, ctx, lobby);
       menu.hide();
       setMode(online);

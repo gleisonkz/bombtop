@@ -1,4 +1,5 @@
 import { TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
+import type { Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
 
@@ -140,6 +141,41 @@ export function bombLook({ fuse, tick, type }: { fuse: number; tick: number; typ
     tint: urgent && Math.floor(tick / 4) % 2 === 0 ? 0xff7070 : 0xffffff,
     glow: type === "remote" ? Math.floor(tick / 20) % 2 === 0 : SPARK[Math.floor(tick / 3) % SPARK.length] === 1,
   };
+}
+
+/** The mascot (ui/art.ts SVG) as an arena character, rasterized at one pixel per SVG unit. */
+export const MASCOT = {
+  width: 100,
+  height: 108,
+  /** Between the feet. */
+  anchorX: 48,
+  anchorY: 104,
+  /** Drawn size: the body comes out a bit under a tile wide. */
+  scale: 0.21,
+  /** Height to hold a bomb over, in SVG units. */
+  bodyH: 100,
+  deathTicks: 40,
+  moods: ["happy", "wow", "sad"] satisfies Mood[],
+};
+
+/**
+ * How the mascot stands this tick: it breathes while idle, hops and waddles
+ * while walking, wobbles wide-eyed while stunned, and turns to face left/right.
+ */
+export function mascotPose({ moving, stunned, facing, tick }: { moving: boolean; stunned: boolean; facing: Facing; tick: number }) {
+  const t = (tick / TICK_RATE) * Math.PI * 2;
+  const flip = facing === "left";
+  if (stunned) return { sx: 1, sy: 1, dy: 0, rot: Math.sin(t * 4) * 0.3, flip, mood: "wow" as Mood };
+  if (moving) return { sx: 1, sy: 1, dy: -Math.abs(Math.sin(t * 2)) * 2.5, rot: Math.sin(t * 2) * 0.15, flip, mood: "happy" as Mood };
+  const breath = Math.sin(t * 1.5) * 0.04;
+  return { sx: 1 + breath, sy: 1 - breath, dy: 0, rot: 0, flip, mood: "happy" as Mood };
+}
+
+/** The mascot `ticks` after dying: it floats up, squashed and fading; null once gone. */
+export function mascotDeath(ticks: number) {
+  if (ticks >= MASCOT.deathTicks) return null;
+  const k = ticks / MASCOT.deathTicks;
+  return { alpha: 1 - k * k, sx: 1 + k * 0.3, sy: 1 - k * 0.3, dy: -k * 10, mood: "sad" as Mood };
 }
 
 export interface FrameRect {
