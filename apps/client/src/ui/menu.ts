@@ -1,3 +1,4 @@
+import { mascot } from "./art";
 import { button, el, storage } from "./dom";
 
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
@@ -44,25 +45,31 @@ export class Menu {
     this.code.addEventListener("keydown", (e) => e.key === "Enter" && joinByCode());
 
     this.buttons = [
-      button("Jogar online", () => go({ kind: "public" }), "primary"),
+      button("Jogar online", () => go({ kind: "public" }), "primary big"),
       button("Criar sala privada", () => go({ kind: "create" })),
       button("Entrar", joinByCode),
     ];
     const [publicBtn, createBtn, joinBtn] = this.buttons;
 
     this.handlers = handlers;
-    this.root = el("div", { class: "panel menu" }, [
-      el("h1", { text: "Bombtop" }),
-      this.account,
-      this.name,
-      publicBtn,
-      createBtn,
-      el("div", { class: "row" }, [this.code, joinBtn]),
-      this.error,
-      el("p", {
-        class: "hint",
-        text: "WASD ou setas • Espaço/Enter: bomba • Shift: ação",
-      }),
+    const logo = el("h1", { class: "logo", text: "BOMB" });
+    logo.append(el("span", { text: "TOP" }));
+    this.root = el("div", { class: "screen menu" }, [
+      el("div", { class: "hero" }, [
+        mascot(),
+        logo,
+        el("p", { class: "tagline", text: "Batalha de bombas com até 5 amigos" }),
+      ]),
+      el("div", { class: "card" }, [
+        this.account,
+        this.name,
+        publicBtn,
+        createBtn,
+        el("div", { class: "or", text: "ou entre com um código" }),
+        el("div", { class: "row" }, [this.code, joinBtn]),
+        this.error,
+        el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
+      ]),
     ]);
     parent.appendChild(this.root);
   }

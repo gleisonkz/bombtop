@@ -1,3 +1,4 @@
+import "@fontsource/lilita-one/latin-400.css";
 import { Application } from "pixi.js";
 import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
@@ -7,13 +8,13 @@ import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
-import { storage } from "./ui/dom";
+import { button, storage } from "./ui/dom";
 import { Menu } from "./ui/menu";
 import { isTouchDevice, TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
 // Render at the device's pixel density: the arena is vector drawn, so any scale stays sharp.
-await app.init({ background: "#1b1b2f", antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
+await app.init({ backgroundAlpha: 0, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
 document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
@@ -44,6 +45,21 @@ const sound = new Sound(new WebAudioBackend(import.meta.env.BASE_URL), storage);
 // Audio may only start from a user gesture: the first tap or key press turns it on.
 for (const type of ["pointerdown", "keydown"]) window.addEventListener(type, () => void sound.unlock(), { capture: true, once: true });
 document.addEventListener("click", (e) => (e.target as Element).closest?.("button") && sound.play("click"), { capture: true });
+
+const SPEAKER = '<path d="M3 9v6h4l5 4V5L7 9H3z" fill="#15152a"/>';
+const muteIcon = (muted: boolean) =>
+  `<svg viewBox="0 0 24 24" aria-hidden="true">${SPEAKER}${
+    muted
+      ? '<path d="M16 9l5 6M21 9l-5 6" stroke="#e84a4a" stroke-width="2.5" stroke-linecap="round"/>'
+      : '<path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#15152a" stroke-width="2.2" stroke-linecap="round"/>'
+  }</svg>`;
+const muteBtn = button("", () => showMute(sound.toggleMute()), "mute");
+function showMute(muted: boolean): void {
+  muteBtn.innerHTML = muteIcon(muted); // static markup
+  muteBtn.setAttribute("aria-label", muted ? "Ligar som" : "Desligar som");
+}
+showMute(sound.muted);
+document.body.appendChild(muteBtn);
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
