@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inputSeq, sanitizeInput, sanitizeName } from "../src";
+import { botLevel, inputSeq, sanitizeInput, sanitizeName } from "../src";
 
 describe("sanitizeInput", () => {
   it("passes valid input through", () => {
@@ -42,5 +42,13 @@ describe("sanitizeName", () => {
   it("falls back when empty or not a string", () => {
     expect(sanitizeName("   ")).toBe("Jogador");
     expect(sanitizeName(undefined)).toBe("Jogador");
+  });
+});
+
+describe("botLevel", () => {
+  it("accepts only known difficulties", () => {
+    expect(botLevel({ level: "hard" })).toBe("hard");
+    expect(botLevel({ level: "godlike" })).toBeNull();
+    expect(botLevel(null)).toBeNull();
   });
 });

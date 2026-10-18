@@ -1,5 +1,6 @@
 import { Room, type Client } from "@colyseus/core";
 import {
+  botLevel,
   C2S,
   MAX_PLAYERS,
   S2C,
@@ -42,6 +43,14 @@ export class BattleRoom extends Room {
     this.onMessage(C2S.sync, (client) => {
       client.send(S2C.lobby, this.session.lobbyInfo(this.roomId));
       if (this.session.phase !== "lobby" && this.lastSnapshot) client.send(S2C.snapshot, this.lastSnapshot);
+    });
+    this.onMessage(C2S.addBot, (client, message) => {
+      const level = botLevel(message);
+      if (level && this.session.addBot(client.sessionId, level)) this.seatsChanged();
+    });
+    this.onMessage(C2S.removeBot, (client, message: unknown) => {
+      const id = (message as { id?: unknown } | null)?.id;
+      if (typeof id === "string" && this.session.removeBot(client.sessionId, id)) this.seatsChanged();
     });
     this.onMessage(C2S.start, (client) => {
       if (this.session.start(client.sessionId)) this.syncPhase();
@@ -99,6 +108,13 @@ export class BattleRoom extends Room {
     this.lastPhase = phase;
     if (phase === "playing") void this.lock();
     if (phase === "lobby") void this.unlock();
+    this.broadcastLobby();
+  }
+
+  /** Bots take seats too: a full room stops taking people until a bot leaves. */
+  private seatsChanged() {
+    if (this.session.members.length >= MAX_PLAYERS) void this.lock();
+    else void this.unlock();
     this.broadcastLobby();
   }
 

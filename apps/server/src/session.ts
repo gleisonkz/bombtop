@@ -1,4 +1,5 @@
 import {
+  Bot,
   createMatch,
   matchResult,
   MAX_PLAYERS,
@@ -6,6 +7,7 @@ import {
   STAGES,
   step,
   TICK_RATE,
+  type BotLevel,
   type Direction,
   type LobbyInfo,
   type LobbyMember,
@@ -39,6 +41,9 @@ interface InputBuffer {
   action: boolean;
 }
 
+/** Names for computer players, in the order they join. */
+const BOT_NAMES = ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"];
+
 export interface SessionOptions {
   /** Seed source for new matches (injectable for tests). */
   seed?: () => number;
@@ -57,11 +62,14 @@ export class BattleSession {
   private round = 0;
   private resultsLeft = 0;
   private inputs = new Map<string, InputBuffer>();
+  private bots = new Map<string, Bot>();
+  private botSeq = 0;
 
   constructor(private readonly opts: SessionOptions = {}) {}
 
+  /** The first person in the room (bots never host). */
   get hostId(): string | undefined {
-    return this.members[0]?.id;
+    return this.members.find((m) => !m.bot)?.id;
   }
 
   join(id: string, name: string): boolean {
@@ -79,6 +87,23 @@ export class BattleSession {
       p.alive = false;
       p.cart = null;
     }
+  }
+
+  /** Host only, in the lobby: seats a computer player of the given level. */
+  addBot(requesterId: string, level: BotLevel): boolean {
+    if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
+    const taken = new Set(this.members.map((m) => m.name));
+    const name = BOT_NAMES.find((n) => !taken.has(n)) ?? `Bot ${this.botSeq + 1}`;
+    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level });
+    return true;
+  }
+
+  /** Host only, in the lobby: frees a bot's seat. */
+  removeBot(requesterId: string, botId: string): boolean {
+    if (this.phase !== "lobby" || requesterId !== this.hostId) return false;
+    if (!this.members.some((m) => m.id === botId && m.bot)) return false;
+    this.members = this.members.filter((m) => m.id !== botId);
+    return true;
   }
 
   setConnected(id: string, connected: boolean): void {
@@ -113,12 +138,13 @@ export class BattleSession {
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });
     this.inputs.clear();
+    this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot)]));
     this.phase = "playing";
     return true;
   }
 
   setInput(id: string, input: PlayerInput, seq = 0): void {
-    if (!this.match?.players.some((p) => p.id === id)) return;
+    if (!this.match?.players.some((p) => p.id === id) || this.bots.has(id)) return;
     const buf = this.inputs.get(id) ?? { dir: null, alt: null, bomb: false, action: false, seq: 0, ticks: 0 };
     if (seq !== buf.seq) buf.ticks = 0;
     buf.seq = seq;
@@ -151,6 +177,7 @@ export class BattleSession {
       buf.bomb = buf.action = false;
       buf.ticks++;
     }
+    for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match);
     step(this.match, inputs);
 
     const result = matchResult(this.match);

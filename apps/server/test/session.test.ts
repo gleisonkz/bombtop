@@ -201,3 +201,75 @@ describe("stages", () => {
     expect(new Set(stages).size).toBe(3);
   });
 });
+
+describe("bots", () => {
+  it("the host fills empty seats with bots of a chosen level", () => {
+    const s = lobby(1);
+    expect(s.addBot("c1", "hard")).toBe(true);
+    expect(s.members[1]).toMatchObject({ bot: "hard", connected: true, wins: 0 });
+    expect(s.members[1]!.name).not.toBe("");
+    expect(s.addBot("c2", "easy")).toBe(false); // not the host
+  });
+
+  it("never adds past the player limit or mid-match", () => {
+    const s = lobby(1);
+    for (let i = 1; i < MAX_PLAYERS; i++) expect(s.addBot("c1", "easy")).toBe(true);
+    expect(s.addBot("c1", "easy")).toBe(false);
+    const p = playing(2);
+    expect(p.addBot("c1", "easy")).toBe(false);
+  });
+
+  it("gives each bot its own name", () => {
+    const s = lobby(1);
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "medium");
+    expect(new Set(s.members.map((m) => m.name)).size).toBe(MAX_PLAYERS);
+  });
+
+  it("the host can take a bot out, but not a person", () => {
+    const s = lobby(2);
+    s.addBot("c1", "easy");
+    const bot = s.members[2]!.id;
+    expect(s.removeBot("c2", bot)).toBe(false);
+    expect(s.removeBot("c1", "c2")).toBe(false);
+    expect(s.removeBot("c1", bot)).toBe(true);
+    expect(s.members).toHaveLength(2);
+  });
+
+  it("one person and a bot are enough to start", () => {
+    const s = lobby(1);
+    s.addBot("c1", "medium");
+    expect(s.start("c1")).toBe(true);
+    expect(s.match!.players).toHaveLength(2);
+  });
+
+  it("bots never host", () => {
+    const s = lobby(1);
+    s.addBot("c1", "easy");
+    s.join("c2", "Late");
+    s.leave("c1");
+    expect(s.hostId).toBe("c2");
+    s.leave("c2");
+    expect(s.hostId).toBeUndefined();
+  });
+
+  it("bots play on their own once the match starts", () => {
+    const s = lobby(1);
+    s.addBot("c1", "hard");
+    s.start("c1");
+    const bot = s.match!.players[1]!;
+    const start = { px: bot.px, py: bot.py };
+    for (let i = 0; i < 120 && s.phase === "playing"; i++) s.tick();
+    const moved = bot.px !== start.px || bot.py !== start.py || s.match!.bombs.some((b) => b.ownerId === bot.id);
+    expect(moved).toBe(true);
+  });
+
+  it("ignores input sent in a bot's name", () => {
+    const s = lobby(1);
+    s.addBot("c1", "easy");
+    s.start("c1");
+    const bot = s.members[1]!.id;
+    s.setInput(bot, { dir: "down", bomb: true });
+    s.tick();
+    expect(s.match!.bombs.filter((b) => b.ownerId === bot)).toHaveLength(0);
+  });
+});

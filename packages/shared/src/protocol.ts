@@ -1,3 +1,4 @@
+import { BOT_LEVELS, type BotLevel } from "./bot";
 import type { MatchResult } from "./pressure";
 import type { Direction, PlayerInput } from "./state";
 import type { StageId } from "./stage";
@@ -13,7 +14,7 @@ export type RoomPhase = "lobby" | "playing" | "results";
  * snapshot, mid-match): send it once message handlers are attached, since
  * anything broadcast before that is dropped by the SDK.
  */
-export const C2S = { input: "input", start: "start", sync: "sync" } as const;
+export const C2S = { input: "input", start: "start", sync: "sync", addBot: "addBot", removeBot: "removeBot" } as const;
 
 /** Server -> client message types. */
 export const S2C = { lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
@@ -23,6 +24,8 @@ export interface LobbyMember {
   name: string;
   wins: number;
   connected: boolean;
+  /** Set for computer players: their difficulty. */
+  bot?: BotLevel;
 }
 
 export interface LobbyInfo {
@@ -70,4 +73,10 @@ const MAX_NAME = 16;
 export function sanitizeName(raw: unknown): string {
   const name = typeof raw === "string" ? raw.replace(/[\p{C}]/gu, "").trim().slice(0, MAX_NAME) : "";
   return name || "Jogador";
+}
+
+/** Difficulty from an untrusted addBot message, or null. */
+export function botLevel(raw: unknown): BotLevel | null {
+  const level = (raw && typeof raw === "object" ? (raw as Record<string, unknown>).level : raw) as BotLevel;
+  return BOT_LEVELS.includes(level) ? level : null;
 }
