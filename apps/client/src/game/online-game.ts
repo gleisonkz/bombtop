@@ -4,6 +4,7 @@ import {
   ROOM_NAME,
   S2C,
   TICK_RATE,
+  TILE,
   type LobbyInfo,
   type PlayerInput,
   type PublicView,
@@ -11,9 +12,11 @@ import {
   type Snapshot,
 } from "@bombtop/shared";
 import { Listener } from "../audio/cues";
+import { actionCues, EchoFilter } from "../audio/local-cues";
 import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
+import { GhostBombs } from "../net/ghost-bombs";
 import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
@@ -38,6 +41,8 @@ export class OnlineGame implements GameMode {
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
   private readonly listener = new Listener();
+  private readonly echo = new EchoFilter();
+  private readonly ghosts: GhostBombs;
   private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
   private leaving = false;
@@ -65,9 +70,11 @@ export class OnlineGame implements GameMode {
     private readonly panel: LobbyPanel,
   ) {
     this.predictor = new Predictor(room.sessionId);
+    this.ghosts = new GhostBombs(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
+        this.ghosts.clear();
         ctx.sound.play("start");
       }
       this.lobby = info;
@@ -102,20 +109,37 @@ export class OnlineGame implements GameMode {
 
     const sample = this.buffer.sample(nowMs);
     if (!sample) return;
-    this.ctx.sound.cues(this.listener.hear(sample.to), sample.to.grid.width);
+    this.ctx.sound.cues(this.echo.filter(this.listener.hear(sample.to), nowMs), sample.to.grid.width);
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
-    const me = this.latest && this.lobby?.phase === "playing" ? this.predictor.predict(this.latest) : null;
-    if (!me) return this.ctx.renderer.draw(sample.to, prev, sample.alpha);
+    const view = this.ghosts.apply(sample.to, nowMs);
+    const me = this.playing() ? this.predictor.predict(this.latest!) : null;
+    if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
     prev.set(me.id, { px: me.px, py: me.py });
-    const players = sample.to.players.map((p) => (p.id === me.id ? me : p));
-    this.ctx.renderer.draw({ ...sample.to, players }, prev, sample.alpha);
+    const players = view.players.map((p) => (p.id === me.id ? me : p));
+    this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
+  }
+
+  private playing(): boolean {
+    return !!this.latest && this.lobby?.phase === "playing";
   }
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
+    if ((input.bomb || input.action) && this.playing()) this.actNow(input);
     const seq = this.predictor.step(input);
     if (seq !== null) this.room.send(C2S.input, { ...input, seq });
+  }
+
+  /** Our own button press is heard (and a placed bomb drawn) at once; the server's echo is skipped. */
+  private actNow(input: PlayerInput): void {
+    const me = this.predictor.predict(this.latest!);
+    if (!me) return;
+    const now = performance.now();
+    const cues = actionCues(this.latest!, me, input);
+    for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now);
+    this.ctx.sound.cues(cues, this.latest!.grid.width);
+    this.echo.played(cues, now);
   }
 
   keyDown(code: string): boolean {
