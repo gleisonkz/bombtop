@@ -3,7 +3,6 @@ import { button, el, storage } from "./dom";
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
 
 export interface MenuHandlers {
-  local(): void;
   online(choice: OnlineChoice, name: string): void;
   login(): void;
   logout(): void;
@@ -48,9 +47,8 @@ export class Menu {
       button("Jogar online", () => go({ kind: "public" }), "primary"),
       button("Criar sala privada", () => go({ kind: "create" })),
       button("Entrar", joinByCode),
-      button("Jogo local (2 no teclado)", () => handlers.local()),
     ];
-    const [publicBtn, createBtn, joinBtn, localBtn] = this.buttons;
+    const [publicBtn, createBtn, joinBtn] = this.buttons;
 
     this.handlers = handlers;
     this.root = el("div", { class: "panel menu" }, [
@@ -60,8 +58,6 @@ export class Menu {
       publicBtn,
       createBtn,
       el("div", { class: "row" }, [this.code, joinBtn]),
-      el("hr"),
-      localBtn,
       this.error,
       el("p", {
         class: "hint",

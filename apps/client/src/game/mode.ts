@@ -1,7 +1,7 @@
 import type { TouchInput } from "../input/touch";
 import type { Renderer } from "../render/renderer";
 
-/** Something the main loop can run: the local hot-seat game or an online match. */
+/** Something the main loop can run: an online match. */
 export interface GameMode {
   /** Advance and draw one display frame. */
   frame(deltaMs: number, nowMs: number): void;

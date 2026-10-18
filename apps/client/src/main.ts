@@ -1,5 +1,4 @@
 import { Application } from "pixi.js";
-import { LocalGame } from "./game/local-game";
 import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { fitScale } from "./render/fit";
@@ -72,11 +71,6 @@ let account: Account | null = null;
 const menu = new Menu(ui, {
   login: () => void signInWithGoogle(),
   logout: () => void signOut(),
-  local: () => {
-    goFullscreen();
-    menu.hide();
-    setMode(new LocalGame(ctx));
-  },
   online: async (choice, name) => {
     goFullscreen();
     menu.setBusy(true);

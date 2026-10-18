@@ -7,7 +7,7 @@ All art, audio and names are original — never copy assets from existing games.
 
 - **Language:** TypeScript end-to-end, pnpm monorepo. No Rust/WASM (CPU is not the bottleneck; network is).
 - **Simulation:** `packages/shared` — pure, deterministic, fixed tick (`TICK_RATE`), integer/tile math, no I/O.
-  Runs authoritatively on the server (and in the browser for local play).
+  Runs authoritatively on the server (the client reuses it to predict its own player).
 - **Players:** max 5 per match (`MAX_PLAYERS`), 13x11 arena. May grow later.
 - **Mode:** battle mode only (no story mode for now).
 - **Mechanics:** all classic ones are in scope — bombs, fire, speed, kick, punch, glove/throw,
@@ -21,7 +21,7 @@ All art, audio and names are original — never copy assets from existing games.
 ## Layout
 
 - `packages/shared` — game simulation + tests (Vitest)
-- `apps/client` — Vite + PixiJS PWA: menu, lobby, online play, local 2-player mode.
+- `apps/client` — Vite + PixiJS PWA: menu, lobby, online play.
   Inputs in `src/input` (keyboard, gamepad, touch) are pure and unit-tested; DOM/Pixi glue is not.
 - `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleSession` holds
   all room logic (unit-tested); `BattleRoom` is a thin adapter (integration-tested over the network).
@@ -35,8 +35,7 @@ All art, audio and names are original — never copy assets from existing games.
 - `pnpm typecheck`
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
 - phone testing (fixed URL, keeps an installed PWA working): `VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`)
-- In dev, the live state is exposed for debugging: `window.__match` (local game),
-  `window.__snapshot` (latest server snapshot, online).
+- In dev, the latest server snapshot is exposed for debugging: `window.__snapshot`.
 
 ## Mechanics (all in `packages/shared/src`)
 

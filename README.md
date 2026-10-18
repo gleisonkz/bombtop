@@ -1,7 +1,6 @@
 # Bombtop
 
-Multiplayer arena bomb game for the browser (installable PWA). Up to 5 players online,
-or 2 on one keyboard locally. All art and names are original.
+Multiplayer arena bomb game for the browser (installable PWA). Up to 5 players online. All art and names are original.
 
 ```bash
 pnpm install
