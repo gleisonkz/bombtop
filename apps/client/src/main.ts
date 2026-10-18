@@ -1,4 +1,5 @@
 import { Application } from "pixi.js";
+import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
 import { OnlineGame } from "./game/online-game";
 import { fitScale } from "./render/fit";
@@ -6,6 +7,7 @@ import { Renderer, TILE_PX } from "./render/renderer";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
+import { storage } from "./ui/dom";
 import { Menu } from "./ui/menu";
 import { isTouchDevice, TouchControls } from "./ui/touch-controls";
 
@@ -38,6 +40,11 @@ function goFullscreen(): void {
     .catch(() => undefined); // unsupported (iOS Safari) or refused: keep playing windowed
 }
 
+const sound = new Sound(new WebAudioBackend(import.meta.env.BASE_URL), storage);
+// Audio may only start from a user gesture: the first tap or key press turns it on.
+for (const type of ["pointerdown", "keydown"]) window.addEventListener(type, () => void sound.unlock(), { capture: true, once: true });
+document.addEventListener("click", (e) => (e.target as Element).closest?.("button") && sound.play("click"), { capture: true });
+
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
 
@@ -49,6 +56,7 @@ function setMode(next: GameMode | null): void {
 
 const ctx: ModeContext = {
   renderer,
+  sound,
   touch: touch.input,
   fit,
   exit: (message) => {

@@ -10,6 +10,7 @@ import {
   type ResultMessage,
   type Snapshot,
 } from "@bombtop/shared";
+import { Listener } from "../audio/cues";
 import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
@@ -36,6 +37,7 @@ export class OnlineGame implements GameMode {
   private readonly buffer = new SnapshotBuffer(INTERP_DELAY_MS);
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
+  private readonly listener = new Listener();
   private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
   private leaving = false;
@@ -64,7 +66,10 @@ export class OnlineGame implements GameMode {
   ) {
     this.predictor = new Predictor(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
-      if (info.phase === "playing" && this.lobby?.phase !== "playing") this.predictor.reset();
+      if (info.phase === "playing" && this.lobby?.phase !== "playing") {
+        this.predictor.reset();
+        ctx.sound.play("start");
+      }
       this.lobby = info;
       panel.update(info, room.sessionId);
       if (info.phase === "playing") ctx.renderer.showBanner("");
@@ -78,6 +83,7 @@ export class OnlineGame implements GameMode {
     room.onMessage(S2C.result, (result: ResultMessage) => {
       const winner = this.lobby?.members.find((m) => m.id === result.winnerId);
       const you = result.winnerId === room.sessionId;
+      ctx.sound.play(you ? "win" : "end");
       ctx.renderer.showBanner(you ? "Você venceu!" : winner ? `${winner.name} venceu!` : "Empate!");
     });
     room.onLeave(() => {
@@ -96,6 +102,7 @@ export class OnlineGame implements GameMode {
 
     const sample = this.buffer.sample(nowMs);
     if (!sample) return;
+    this.ctx.sound.cues(this.listener.hear(sample.to), sample.to.grid.width);
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
     const me = this.latest && this.lobby?.phase === "playing" ? this.predictor.predict(this.latest) : null;
     if (!me) return this.ctx.renderer.draw(sample.to, prev, sample.alpha);

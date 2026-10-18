@@ -1,3 +1,4 @@
+import type { Sound } from "../audio/sound";
 import type { TouchInput } from "../input/touch";
 import type { Renderer } from "../render/renderer";
 
@@ -15,6 +16,7 @@ export interface GameMode {
 
 export interface ModeContext {
   renderer: Renderer;
+  sound: Sound;
   /** On-screen controls (idle on non-touch devices). */
   touch: TouchInput;
   /** Resizes the canvas to fit an arena of the given size in tiles. */
