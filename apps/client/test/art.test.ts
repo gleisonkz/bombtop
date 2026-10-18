@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mascotSvg, PLAYER_COLORS } from "../src/ui/art";
-import { lobbySlots } from "../src/ui/lobby-slots";
+import { lobbySlots, seatClass } from "../src/ui/lobby-slots";
 
 describe("mascotSvg", () => {
   it("draws the mascot in the given body color", () => {
@@ -27,6 +27,15 @@ describe("mascotSvg", () => {
     }
   });
 
+  it("has legs to walk on and pupils that look around", () => {
+    for (const mood of ["happy", "wow", "sad", "wink"] as const) {
+      const svg = mascotSvg({ mood });
+      for (const part of ['class="leg left"', 'class="leg right"', 'class="pupil"']) {
+        expect(svg, `${mood} ${part}`).toContain(part);
+      }
+    }
+  });
+
   it("matches the in-game player colors", () => {
     expect(PLAYER_COLORS).toHaveLength(5);
   });
@@ -43,5 +52,19 @@ describe("lobbySlots", () => {
 
   it("never shows more seats than members when the room is full", () => {
     expect(lobbySlots([m("a"), m("b"), m("c"), m("d"), m("e")], 5).every((s) => s.member)).toBe(true);
+  });
+});
+
+describe("seatClass", () => {
+  const m = { id: "a", name: "a", wins: 0, connected: true };
+
+  it("marks your own seat and players who dropped", () => {
+    expect(seatClass(m, "a")).toBe("seat me");
+    expect(seatClass({ ...m, connected: false }, "b")).toBe("seat away");
+  });
+
+  it("tags bots with their level so each one moves its own way", () => {
+    expect(seatClass({ ...m, bot: "easy" }, "b")).toBe("seat bot easy");
+    expect(seatClass({ ...m, bot: "hard" }, "b")).toBe("seat bot hard");
   });
 });

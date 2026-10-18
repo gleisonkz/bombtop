@@ -10,7 +10,12 @@ const HEX = /^#[0-9a-f]{3,8}$/i;
 
 const EYE = (x: number) =>
   `<ellipse cx="${x}" cy="54" rx="7" ry="9" fill="#fff" stroke="#000" stroke-width="2.5"/>` +
-  `<circle cx="${x + 2}" cy="56" r="3.6" fill="#111"/><circle cx="${x + 3.4}" cy="53.6" r="1.3" fill="#fff"/>`;
+  `<g class="pupil"><circle cx="${x + 2}" cy="56" r="3.6" fill="#111"/><circle cx="${x + 3.4}" cy="53.6" r="1.3" fill="#fff"/></g>`;
+
+/** A leg hanging from the hip at x, with its foot; drawn behind the body. */
+const LEG = (side: "left" | "right", x: number, foot: number) =>
+  `<g class="leg ${side}"><path d="M${x} 84 L${foot} 100" stroke="#000" stroke-width="5" stroke-linecap="round"/>` +
+  `<ellipse class="foot ${side}" cx="${foot}" cy="102" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/></g>`;
 
 const SMILE = `<path d="M38 70 Q48 80 58 70" fill="#7a1f2b" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>`;
 
@@ -35,9 +40,9 @@ const FACES: Record<Mood, { eyes: string; mouth: string }> = {
 export function mascotSvg({ color = MASCOT_COLOR, mood = "happy" }: { color?: string; mood?: Mood } = {}): string {
   if (!HEX.test(color)) throw new Error(`Not a hex color: ${color}`);
   return (
-    `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">` +
-    `<ellipse class="foot left" cx="36" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
-    `<ellipse class="foot right" cx="62" cy="94" rx="10" ry="5" fill="#ffb03a" stroke="#000" stroke-width="2.5"/>` +
+    `<svg viewBox="0 0 100 108" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">` +
+    LEG("left", 38, 35) +
+    LEG("right", 58, 61) +
     `<g class="body">` +
     `<path d="M66 22 Q74 8 84 12" fill="none" stroke="#8a6a3c" stroke-width="4" stroke-linecap="round"/>` +
     `<g class="spark"><path d="M86 2 L88.5 9 L96 10 L90 14.5 L92 22 L86 17.5 L80 22 L82 14.5 L76 10 L83.5 9 Z" fill="#ffd23f" stroke="#ff7a1a" stroke-width="1.5" stroke-linejoin="round"/></g>` +

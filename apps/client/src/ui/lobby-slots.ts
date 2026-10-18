@@ -13,3 +13,10 @@ export function lobbySlots(members: LobbyMember[], max: number): Slot[] {
     color: PLAYER_COLORS[i % PLAYER_COLORS.length]!,
   }));
 }
+
+/** CSS classes for a member's seat; bots carry their level, which picks how they move. */
+export function seatClass(member: LobbyMember, me: string): string {
+  return ["seat", member.id === me && "me", !member.connected && "away", member.bot && "bot", member.bot]
+    .filter(Boolean)
+    .join(" ");
+}

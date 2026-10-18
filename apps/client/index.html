@@ -64,16 +64,69 @@
       @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
       .eyes { transform-box: fill-box; transform-origin: center; animation: blink 4.2s infinite; }
       @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-      /* Lobby: each mascot strolls back and forth in its seat, hopping on its little feet. */
+      .pupil { animation: look 5s steps(1) infinite; }
+      @keyframes look {
+        0% { transform: translate(0, 0); }
+        22% { transform: translate(-4px, 0); }
+        40% { transform: translate(-4px, -2px); }
+        58% { transform: translate(1px, 1px); }
+        78% { transform: translate(-2px, 2px); }
+      }
+      /* Lobby: each mascot strolls back and forth in its seat, legs swinging, and now and then jumps. */
       .seat .mascot { animation: stroll 6s linear infinite; }
-      .seat .body, .seat .foot { transform-box: fill-box; transform-origin: center bottom; animation: hop 0.42s ease-in-out infinite alternate; }
-      .seat .foot.right { animation-delay: -0.42s; }
-      .seat:nth-child(2) .mascot, .seat:nth-child(2) .eyes { animation-delay: -1.7s; }
-      .seat:nth-child(3) .mascot, .seat:nth-child(3) .eyes { animation-delay: -3.1s; }
-      .seat:nth-child(4) .mascot, .seat:nth-child(4) .eyes { animation-delay: -4.4s; }
-      .seat:nth-child(5) .mascot, .seat:nth-child(5) .eyes { animation-delay: -0.8s; }
-      .seat.bot .body, .seat.bot .foot { animation-duration: 0.3s; }
-      .seat.empty .mascot, .seat.empty .body, .seat.empty .foot, .seat.away .mascot, .seat.away .body, .seat.away .foot { animation: none; }
+      .seat .mascot svg { transform-origin: 50% 100%; animation: jump 3.2s ease-out infinite; }
+      .seat .body { transform-box: fill-box; transform-origin: center bottom; animation: waddle 0.36s ease-in-out infinite alternate; }
+      .seat .leg { transform-box: fill-box; transform-origin: center top; animation: swing 0.36s ease-in-out infinite alternate; }
+      .seat .leg.right { animation-direction: alternate-reverse; }
+      .seat:nth-child(2) .mascot, .seat:nth-child(2) .mascot svg, .seat:nth-child(2) .eyes, .seat:nth-child(2) .pupil { animation-delay: -1.7s; }
+      .seat:nth-child(3) .mascot, .seat:nth-child(3) .mascot svg, .seat:nth-child(3) .eyes, .seat:nth-child(3) .pupil { animation-delay: -3.1s; }
+      .seat:nth-child(4) .mascot, .seat:nth-child(4) .mascot svg, .seat:nth-child(4) .eyes, .seat:nth-child(4) .pupil { animation-delay: -4.4s; }
+      .seat:nth-child(5) .mascot, .seat:nth-child(5) .mascot svg, .seat:nth-child(5) .eyes, .seat:nth-child(5) .pupil { animation-delay: -0.8s; }
+      /* Each bot level has its own personality. Fácil: a sleepy one that sways in place and dozes off. */
+      .seat.easy .mascot { animation: none; }
+      .seat.easy .mascot svg { animation: sway 3.6s ease-in-out infinite; }
+      .seat.easy .body { animation: breathe 1.8s ease-in-out infinite alternate; }
+      .seat.easy .leg { animation: dangle 1.8s ease-in-out infinite alternate; }
+      .seat.easy .eyes { animation: doze 6s ease-in-out infinite; }
+      .seat.easy::after { content: "z"; position: absolute; top: 12px; left: 62%; font-family: var(--display); font-size: 16px; color: var(--muted); animation: zzz 2.4s ease-out infinite; pointer-events: none; }
+      @keyframes sway { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+      @keyframes breathe { from { transform: scale(1, 1); } to { transform: scale(1.05, 0.95); } }
+      @keyframes dangle { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+      @keyframes doze { 0%, 30%, 100% { transform: scaleY(1); } 40%, 80% { transform: scaleY(0.25); } }
+      @keyframes zzz { from { transform: translate(0, 0) scale(0.6); opacity: 0; } 30% { opacity: 1; } to { transform: translate(14px, -18px) scale(1.2); opacity: 0; } }
+      /* Médio: a springy one that pogo-hops while it wanders, legs kicking out in the air. */
+      .seat.medium .mascot { animation-duration: 9s; }
+      .seat.medium .mascot svg { animation: pogo 0.8s cubic-bezier(0.3, 0, 0.3, 1) infinite; }
+      .seat.medium .body { animation: none; }
+      .seat.medium .leg.left { animation: kick-left 0.8s ease-in-out infinite; }
+      .seat.medium .leg.right { animation: kick-right 0.8s ease-in-out infinite; }
+      @keyframes pogo {
+        0%, 100% { transform: translateY(0) scale(1.14, 0.86); }
+        18% { transform: translateY(-4px) scale(0.96, 1.06); }
+        50% { transform: translateY(-20px) scale(0.94, 1.08); }
+        82% { transform: translateY(-2px) scale(1, 1); }
+      }
+      @keyframes kick-left { 0%, 20%, 80%, 100% { transform: rotate(0); } 50% { transform: rotate(28deg); } }
+      @keyframes kick-right { 0%, 20%, 80%, 100% { transform: rotate(0); } 50% { transform: rotate(-28deg); } }
+      /* Difícil: a wired one that dashes side to side, glowing, and backflips at each end. */
+      .seat.hard .mascot { animation: dash 3s cubic-bezier(0.7, 0, 0.3, 1) infinite; filter: drop-shadow(0 0 6px #ff5a3c99); }
+      .seat.hard .mascot svg { transform-origin: 50% 60%; animation: flip 3s ease-in-out infinite; }
+      .seat.hard .body, .seat.hard .leg { animation-duration: 0.16s; }
+      .seat.hard .spark { animation-duration: 0.12s; }
+      @keyframes dash {
+        0%, 12% { transform: translateX(-16px) scaleX(1); }
+        38%, 49.9% { transform: translateX(16px) scaleX(1); }
+        50%, 62% { transform: translateX(16px) scaleX(-1); }
+        88%, 99.9% { transform: translateX(-16px) scaleX(-1); }
+        100% { transform: translateX(-16px) scaleX(1); }
+      }
+      @keyframes flip {
+        0%, 38%, 50%, 88%, 100% { transform: translateY(0) rotate(0) scale(1, 1); }
+        40%, 90% { transform: translateY(0) rotate(0) scale(1.15, 0.85); }
+        44%, 94% { transform: translateY(-26px) rotate(-180deg) scale(0.95, 1.05); }
+        48%, 98% { transform: translateY(0) rotate(-360deg) scale(1.1, 0.9); }
+      }
+      .seat.empty *, .seat.away .mascot, .seat.away .mascot * { animation: none; }
       @keyframes stroll {
         0% { transform: translateX(-12px); }
         35%, 49.9% { transform: translateX(12px); }
@@ -81,7 +134,15 @@
         85%, 99.9% { transform: translateX(-12px) scaleX(-1); }
         100% { transform: translateX(-12px); }
       }
-      @keyframes hop { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+      @keyframes waddle { from { transform: translateY(0) rotate(-5deg); } to { transform: translateY(-5px) rotate(5deg); } }
+      @keyframes swing { from { transform: rotate(-22deg); } to { transform: rotate(22deg); } }
+      @keyframes jump {
+        0%, 70%, 100% { transform: translateY(0) scale(1, 1); }
+        74% { transform: translateY(0) scale(1.15, 0.85); }
+        82% { transform: translateY(-22px) scale(0.9, 1.12); }
+        90% { transform: translateY(0) scale(1.15, 0.85); }
+        95% { transform: translateY(0) scale(1, 1); }
+      }
       @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
       /* Menu */
@@ -140,7 +201,7 @@
         .tagline, .menu .hint { display: none; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } }
-      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .hero .mascot, .seat, .seat .mascot, .seat .body, .seat .foot { animation: none; } }
+      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero .mascot, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after { animation: none; } }
 
       /* Sound toggle */
       .mute { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }

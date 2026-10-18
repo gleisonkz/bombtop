@@ -2,7 +2,7 @@ import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type LobbyInfo } from "@bombtop
 import { inviteText, inviteUrl } from "../net/invite";
 import { mascot, MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
-import { lobbySlots } from "./lobby-slots";
+import { lobbySlots, seatClass } from "./lobby-slots";
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
   classic: "Clássica",
@@ -68,7 +68,7 @@ export class LobbyPanel {
           return el("div", { class: "seat empty" }, [mascot({ color: MASCOT_COLOR }), el("span", { class: "seat-sub", text: "Vaga livre" })]);
         }
         const you = member.id === me;
-        const cls = ["seat", you && "me", !member.connected && "away", member.bot && "bot"].filter(Boolean).join(" ");
+        const cls = seatClass(member, me);
         const sub = member.bot
           ? `🤖 ${LEVEL_NAMES[member.bot]} • ${member.wins} 🏆`
           : member.connected
