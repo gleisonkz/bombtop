@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BOMBS, MotionTracker, SHEETS, bombFrame, bombPulse, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { FUSE_TICKS } from "@bombtop/shared";
+import { BOMBS, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -159,10 +160,38 @@ describe("bomb sheet", () => {
     for (const x of xs) expect(x + BOMBS.size).toBeLessThanOrEqual(BOMBS.width);
   });
 
-  it("pulses around its drawn size as the fuse burns", () => {
-    const sizes = Array.from({ length: 60 }, (_, t) => bombPulse(t));
-    expect(Math.max(...sizes)).toBeGreaterThan(1);
-    expect(Math.min(...sizes)).toBeLessThan(1);
-    expect(Math.max(...sizes)).toBeLessThan(1.2);
+  const look = (fuse: number, tick: number, type: "normal" | "pierce" | "remote" = "normal") => bombLook({ fuse, tick, type });
+  const flips = (fuse: number) => {
+    let n = 0;
+    for (let t = 1; t < 120; t++) if (Math.sign(look(fuse, t).sx - 1) !== Math.sign(look(fuse, t - 1).sx - 1)) n++;
+    return n;
+  };
+
+  it("breathes: wider while flatter, and back", () => {
+    const xs = Array.from({ length: 60 }, (_, t) => look(FUSE_TICKS, t));
+    expect(Math.max(...xs.map((l) => l.sx))).toBeGreaterThan(1);
+    expect(Math.min(...xs.map((l) => l.sx))).toBeLessThan(1);
+    for (const l of xs) expect(Math.sign(l.sx - 1)).toBe(-Math.sign(l.sy - 1) || 0);
+  });
+
+  it("breathes faster and flashes red in its last second", () => {
+    expect(flips(30)).toBeGreaterThan(flips(FUSE_TICKS));
+    const calm = Array.from({ length: 60 }, (_, t) => look(FUSE_TICKS, t).tint);
+    expect(new Set(calm)).toEqual(new Set([0xffffff]));
+    const late = Array.from({ length: 60 }, (_, t) => look(30, t).tint);
+    expect(new Set(late).size).toBe(2);
+  });
+
+  it("keeps breathing while a remote bomb waits with its fuse on hold", () => {
+    expect(look(FUSE_TICKS, 7, "remote").sx).not.toBe(look(FUSE_TICKS, 0, "remote").sx);
+  });
+
+  it("flickers the fuse spark (or the remote light)", () => {
+    for (const type of ["normal", "remote"] as const) {
+      const on = Array.from({ length: 60 }, (_, t) => look(FUSE_TICKS, t, type).glow);
+      expect(on).toContain(true);
+      expect(on).toContain(false);
+      expect(BOMBS.glow[type]).toBeDefined();
+    }
   });
 });

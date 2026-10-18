@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { PLAYER_COLORS } from "../ui/art";
-import { BOMBS, MotionTracker, bombFrame, bombPulse, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type BombType, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, MotionTracker, bombFrame, bombLook, deathFrame, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Bomb, type BombType, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -128,8 +128,8 @@ export class Renderer {
     );
   }
 
-  /** Places the `n`th bomb sprite of this frame, centered on (cx, cy). */
-  private placeBomb(n: number, type: BombType, cx: number, cy: number, size: number, z: number): void {
+  /** Places the `n`th bomb sprite of this frame, centered on (cx, cy), with its spark on `glow`. */
+  private placeBomb(n: number, b: Bomb, tick: number, cx: number, cy: number, z: number, glow: Graphics): void {
     let sprite = this.bombSprites[n];
     if (!sprite) {
       sprite = new Sprite();
@@ -137,11 +137,19 @@ export class Renderer {
       this.bombSprites.push(sprite);
       this.people.addChild(sprite);
     }
-    sprite.texture = this.bombArt!.get(type)!;
+    const look = bombLook({ fuse: b.fuse, tick, type: b.type });
+    sprite.texture = this.bombArt!.get(b.type)!;
     sprite.position.set(cx, cy);
-    sprite.scale.set(BOMBS.scale * size);
+    sprite.scale.set(BOMBS.scale * look.sx, BOMBS.scale * look.sy);
+    sprite.tint = look.tint;
     sprite.zIndex = z;
     sprite.visible = true;
+    if (!look.glow) return;
+    const spark = BOMBS.glow[b.type];
+    const gx = cx + (spark.x - BOMBS.anchorX) * BOMBS.scale * look.sx;
+    const gy = cy + (spark.y - BOMBS.anchorY) * BOMBS.scale * look.sy;
+    glow.circle(gx, gy, 2.4).fill({ color: spark.color, alpha: 0.35 });
+    glow.circle(gx, gy, 1.1).fill({ color: 0xffffff, alpha: 0.9 });
   }
 
   private placeSprite(id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
@@ -235,7 +243,7 @@ export class Renderer {
       const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
       const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift;
       if (this.bombArt) {
-        this.placeBomb(bombs++, b.type, cx, cy, bombPulse(FUSE_TICKS - b.fuse), cy + lift - TILE_PX / 2); // behind whoever stands on it
+        this.placeBomb(bombs++, b, s.tick, cx, cy, cy + lift - TILE_PX / 2, top); // behind whoever stands on it
         continue;
       }
       g.circle(cx, cy, 6 + pulse).fill(COLORS.bomb);
@@ -282,7 +290,7 @@ export class Renderer {
         g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
         g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
       }
-      if (held && this.bombArt) this.placeBomb(bombs++, held.type, cx, cy - headroom, 1, cy + 0.5); // over its holder
+      if (held && this.bombArt) this.placeBomb(bombs++, held, s.tick, cx, cy - headroom, cy + 0.5, top); // over its holder
       else if (carrying) {
         top.circle(cx, cy - headroom, 5).fill(COLORS.bomb);
         top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);

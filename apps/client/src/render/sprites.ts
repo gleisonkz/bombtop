@@ -1,4 +1,4 @@
-import type { BombType, Facing } from "@bombtop/shared";
+import { TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
 
 type Rgb = readonly [number, number, number];
 
@@ -113,13 +113,34 @@ export const BOMBS = {
   anchorY: 19,
   scale: 0.55,
   order: ["normal", "pierce", "remote"] satisfies BombType[],
+  /** Cell pixel of the fuse spark (or the remote's light) and its glow color. */
+  glow: {
+    normal: { x: 25, y: 3, color: 0xffd23f },
+    pierce: { x: 16, y: 5, color: 0xffd23f },
+    remote: { x: 15.5, y: 2.5, color: 0xff3b3b },
+  } satisfies Record<BombType, { x: number; y: number; color: number }>,
 };
 
 /** Left edge of a bomb type's cell. */
 export const bombFrame = (type: BombType): number => BOMBS.order.indexOf(type) * BOMBS.size;
 
-/** Size multiplier of a bomb `ticks` after it was placed: a steady throb. */
-export const bombPulse = (ticks: number): number => 1 + Math.sin((ticks / 60) * Math.PI * 4) * 0.12;
+const SPARK = [1, 1, 0, 1, 0, 1, 1, 1, 0]; // irregular, like a burning fuse
+
+/**
+ * How a bomb looks this tick: it breathes (squash and stretch), faster and
+ * flashing red in its last second, while its spark (or remote light) flickers.
+ * Timed by the match clock, so a remote bomb on hold still breathes.
+ */
+export function bombLook({ fuse, tick, type }: { fuse: number; tick: number; type: BombType }) {
+  const urgent = fuse <= TICK_RATE;
+  const breath = Math.sin((tick / TICK_RATE) * Math.PI * 2 * (urgent ? 5 : 2)) * 0.1;
+  return {
+    sx: 1 + breath,
+    sy: 1 - breath,
+    tint: urgent && Math.floor(tick / 4) % 2 === 0 ? 0xff7070 : 0xffffff,
+    glow: type === "remote" ? Math.floor(tick / 20) % 2 === 0 : SPARK[Math.floor(tick / 3) % SPARK.length] === 1,
+  };
+}
 
 export interface FrameRect {
   x: number;
