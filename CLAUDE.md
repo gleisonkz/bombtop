@@ -92,3 +92,6 @@ rasterized per color/mood and animated in code (`mascotPose`/`mascotDeath` in `r
 
 TDD: write the failing test first (`packages/shared/test`, `apps/*/test`), then minimal code,
 then refactor. Atomic commits: one logical change per commit, every commit green.
+
+Work directly on `main` (no feature branches for now) and push to `origin/main`: every push to `main`
+auto-deploys both Render services (server and static client), so keep `main` green.
