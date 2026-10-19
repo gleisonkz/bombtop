@@ -2,6 +2,7 @@ import { Client, type Room } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
 import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
+import { carryOn } from "../net/carry-on";
 import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
 import {
   C2S,
@@ -167,7 +168,7 @@ export class OnlineGame implements GameMode {
     const sample = this.buffer.sample(nowMs);
     if (!sample) return this.hud?.show();
     if (this.hud) {
-      this.hud.stats.frame(deltaMs, sample.alpha > 1, this.buffer.delayMs);
+      this.hud.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
       this.hud.show();
     }
     const world = this.world();
@@ -178,7 +179,9 @@ export class OnlineGame implements GameMode {
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
     // Other players come from the (past) sample; bombs, flames and the arena from the world ahead.
     const { bombs, flames, grid, items, blasts } = world;
-    const mixed = { ...sample.to, bombs, flames, grid, items, blasts };
+    // While the next snapshot is late, walking players keep walking instead of freezing.
+    const others = carryOn(sample.from, sample.to, sample.pastMs);
+    const mixed = { ...others, bombs, flames, grid, items, blasts };
     let view = this.blastGhosts.apply(this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (me) {
