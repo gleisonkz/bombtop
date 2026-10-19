@@ -74,6 +74,7 @@ export class Menu {
     const showGuide = (on: boolean) => {
       card.hidden = on;
       guide.hidden = !on;
+      this.root.classList.toggle("guiding", on);
     };
     guide.hidden = true;
     this.root = el("div", { class: "screen menu" }, [

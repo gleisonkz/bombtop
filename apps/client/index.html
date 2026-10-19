@@ -165,7 +165,7 @@
       .guide-list li { display: flex; gap: 12px; align-items: center; }
       .guide-list strong { font-family: var(--display); font-weight: 400; font-size: 17px; }
       .guide-list p { margin: 2px 0 0; color: var(--muted); font-size: 13px; line-height: 1.3; }
-      .guide-icon { flex: none; width: 48px; height: 48px; background-position: calc(var(--cell) * -48px) 0; image-rendering: pixelated; }
+      .guide-icon { --px: 48px; flex: none; width: var(--px); height: var(--px); background-size: calc(var(--px) * var(--cols)) calc(var(--px) * var(--rows)); background-position: calc(var(--cell) * var(--px) * -1) 0; image-rendering: pixelated; }
       .or { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
       .or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed #ffffff22; }
 
@@ -208,6 +208,16 @@
         .menu { grid-template-columns: 1fr minmax(300px, 380px); justify-items: stretch; gap: clamp(16px, 4vw, 48px); }
         .lobby { grid-template-columns: minmax(250px, 320px) 1fr; align-items: start; padding-right: 56px; } /* clear of the sound button */
         .seats { grid-template-columns: repeat(3, 1fr); }
+      }
+      /* Desktop: the item guide takes the whole width, in two columns */
+      @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
+        .menu.guiding .hero { display: none; }
+        .menu.guiding .guide { grid-column: 1 / -1; width: 100%; padding: 20px 24px; }
+        .guide-list { grid-template-columns: 1fr 1fr; gap: 14px 28px; max-height: none; }
+        .guide-icon { --px: 64px; }
+        .guide-list strong { font-size: 19px; }
+        .guide-list p { font-size: 14px; }
+        .guide > button { justify-self: center; min-width: 240px; }
       }
       @media (max-height: 460px) {
         .screen { gap: 12px; padding-top: 10px; }

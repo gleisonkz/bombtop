@@ -44,6 +44,8 @@ export function itemGuide(close: () => void): HTMLElement {
       const icon = el("span", { class: "guide-icon" });
       icon.style.backgroundImage = sheet;
       icon.style.setProperty("--cell", `${item.cell / ITEMS.size}`);
+      icon.style.setProperty("--cols", `${ITEMS.order.length}`);
+      icon.style.setProperty("--rows", `${ITEMS.frames}`);
       return el("li", {}, [icon, el("div", {}, [el("strong", { text: item.name }), el("p", { text: item.text })])]);
     }),
   );
