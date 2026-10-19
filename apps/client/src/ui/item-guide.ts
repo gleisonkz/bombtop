@@ -4,7 +4,7 @@ import { button, el } from "./dom";
 
 const INFO: Record<ItemKind, { name: string; text: string }> = {
   [ItemKind.Bomb]: { name: "Bomba extra", text: "Mais uma bomba no chão ao mesmo tempo (até 8)." },
-  [ItemKind.Fire]: { name: "Fogo", text: "A explosão alcança um tile a mais (até 8)." },
+  [ItemKind.Fire]: { name: "Fogo", text: "A explosão vai uma casa mais longe (até 8)." },
   [ItemKind.FullFire]: { name: "Fogo máximo", text: "A explosão vai direto para o alcance máximo." },
   [ItemKind.Speed]: { name: "Velocidade", text: "Anda mais rápido (até o dobro)." },
   [ItemKind.Kick]: { name: "Chute", text: "Ande contra uma bomba para chutá-la: ela desliza até bater em algo." },
@@ -15,7 +15,7 @@ const INFO: Record<ItemKind, { name: string; text: string }> = {
   [ItemKind.Pierce]: { name: "Bomba perfurante", text: "O fogo atravessa blocos, itens e bombas; só as paredes param." },
   [ItemKind.Punch]: {
     name: "Soco",
-    text: "Aperte ação de frente para uma bomba: ela voa 3 tiles e atordoa quem acertar.",
+    text: "Aperte ação de frente para uma bomba: ela voa 3 casas e atordoa quem acertar.",
   },
   [ItemKind.Glove]: {
     name: "Luva",
