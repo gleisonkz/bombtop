@@ -107,6 +107,7 @@ const touch = new TouchControls(document.body);
 function setMode(next: GameMode | null, controls = !!next): void {
   mode?.dispose();
   mode = next;
+  renderer.hide(); // the last frame of the previous mode must not linger behind menus
   touch.setVisible(controls);
 }
 

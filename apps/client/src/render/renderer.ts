@@ -398,7 +398,13 @@ export class Renderer {
    * Draws the match. `prev` holds player positions from the previous tick so
    * movement can be interpolated by `alpha` (0..1) between ticks.
    */
+  /** Clears the stage until the next draw (leaving a match or the demo). */
+  hide(): void {
+    this.root.visible = false;
+  }
+
   draw(s: PublicView, prev: Map<string, PlayerPos>, alpha: number): void {
+    this.root.visible = true;
     const g = this.world.clear();
     const top = this.overlay.clear();
     for (const sprite of this.sprites.values()) sprite.visible = false;
