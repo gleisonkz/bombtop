@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -329,5 +329,34 @@ describe("item art", () => {
   it("the glint sweeps through every shine frame", () => {
     const frames = new Set(Array.from({ length: 4 * TICK_RATE }, (_, tick) => itemFrame(tick, 1, 1)));
     expect([...frames].sort()).toEqual(Array.from({ length: ITEMS.frames }, (_, i) => i));
+  });
+});
+
+describe("tile art", () => {
+  const w = 15;
+  const h = 13;
+
+  it("the border, inner pillars and blocks each get their own art", () => {
+    expect(tileCell(Tile.Wall, 0, 5, w, h)).toBe(TILES.cells.border);
+    expect(tileCell(Tile.Wall, 7, h - 1, w, h)).toBe(TILES.cells.border);
+    expect(tileCell(Tile.Wall, 2, 2, w, h)).toBe(TILES.cells.pillar);
+    expect(tileCell(Tile.Block, 3, 1, w, h)).toBe(TILES.cells.block);
+  });
+
+  it("grass alternates two shades like a lawn, with the odd flower patch", () => {
+    const a = tileCell(Tile.Empty, 1, 1, w, h);
+    const b = tileCell(Tile.Empty, 2, 1, w, h);
+    expect(TILES.cells.grassA).toContain(a);
+    expect(TILES.cells.grassB).toContain(b);
+    const cells = new Set<number>();
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if ((x + y) % 2 === 0) cells.add(tileCell(Tile.Empty, x, y, w, h));
+    expect(cells.size).toBeGreaterThan(1); // some variety
+    expect(tileCell(Tile.Empty, 5, 5, w, h)).toBe(tileCell(Tile.Empty, 5, 5, w, h)); // stable
+  });
+
+  it("walls and blocks cast a shadow on the floor below them", () => {
+    expect(castsShadow(Tile.Wall)).toBe(true);
+    expect(castsShadow(Tile.Block)).toBe(true);
+    expect(castsShadow(Tile.Empty)).toBe(false);
   });
 });

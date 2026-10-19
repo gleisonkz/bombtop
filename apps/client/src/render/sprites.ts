@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, ItemKind, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -212,6 +212,29 @@ export function flameFrame(ttl: number): number {
   const age = 1 - ttl / FLAME_TICKS;
   return Math.min(FLAMES.frames - 1, Math.max(0, Math.floor(age * FLAMES.frames)));
 }
+
+/** Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade. */
+export const TILES = {
+  url: "sprites/tiles.png",
+  size: 32,
+  /** Drawn size: one cell per tile. */
+  scale: 0.5,
+  cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8 },
+};
+
+/** Which cell a tile shows. Grass variants are picked by a hash of the position, so they stay put. */
+export function tileCell(tile: Tile, x: number, y: number, width: number, height: number): number {
+  const { cells } = TILES;
+  if (tile === Tile.Block) return cells.block;
+  if (tile === Tile.Wall) return x === 0 || y === 0 || x === width - 1 || y === height - 1 ? cells.border : cells.pillar;
+  const shade = (x + y) % 2 === 0 ? cells.grassA : cells.grassB;
+  const hash = ((x * 73856093) ^ (y * 19349663)) >>> 0;
+  const roll = hash % 100;
+  return shade[roll < 72 ? 0 : roll < 86 ? 1 : 2]!;
+}
+
+/** Walls and blocks stand up from the floor and shade the tile below them. */
+export const castsShadow = (tile: Tile): boolean => tile === Tile.Wall || tile === Tile.Block;
 
 /** Power-up art (scripts/build-items.py): one column per item, rows = plain, then a glint sweeping across. */
 export const ITEMS = {

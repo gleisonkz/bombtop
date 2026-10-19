@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, ITEMS, MASCOT, itemCell, itemFrame, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -106,6 +106,9 @@ export class Renderer {
   /** Flames sit on the floor, under players and bombs. */
   private readonly flameLayer = new Container();
   private readonly itemLayer = new Container();
+  private readonly tileLayer = new Container();
+  private tileArt: Texture[] | null = null;
+  private readonly tileSprites: Sprite[] = [];
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
@@ -143,7 +146,7 @@ export class Renderer {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.world, this.itemLayer, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.world, this.itemLayer, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
   }
 
   /** Draws players with a character sheet instead of shapes. */
@@ -177,6 +180,35 @@ export class Renderer {
     const row = (r: number) =>
       Array.from({ length: FLAMES.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * FLAMES.size, r * FLAMES.size, FLAMES.size, FLAMES.size) }));
     this.flameArt = { center: row(FLAMES.rows.center), mid: row(FLAMES.rows.mid), end: row(FLAMES.rows.end) };
+  }
+
+  /** Draws the arena (grass, blocks, walls) with the tile art instead of flat colors. */
+  async useTileArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${TILES.url}`);
+    base.source.scaleMode = "linear"; // drawn at half size
+    const count = base.width / TILES.size;
+    this.tileArt = Array.from({ length: count }, (_, i) => new Texture({ source: base.source, frame: new Rectangle(i * TILES.size, 0, TILES.size, TILES.size) }));
+  }
+
+  private drawTiles(s: PublicView): void {
+    const art = this.tileArt!;
+    const { width, height } = s.grid;
+    for (const sprite of this.tileSprites) sprite.visible = false;
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const i = y * width + x;
+        let sprite = this.tileSprites[i];
+        if (!sprite) {
+          sprite = new Sprite();
+          sprite.scale.set(TILES.scale);
+          this.tileSprites[i] = sprite;
+          this.tileLayer.addChild(sprite);
+        }
+        sprite.texture = art[tileCell(getTile(s, x, y), x, y, width, height)]!;
+        sprite.position.set(x * TILE_PX, y * TILE_PX);
+        sprite.visible = true;
+      }
+    }
   }
 
   /** Draws power-ups as plates with icons (and a glint now and then) instead of dots. */
@@ -360,12 +392,17 @@ export class Renderer {
     let bombs = 0;
     const { width, height } = s.grid;
 
+    if (this.tileArt) this.drawTiles(s);
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const px = x * TILE_PX;
         const py = y * TILE_PX;
         const tile = getTile(s, x, y);
-        if (tile === Tile.Wall) {
+        if (this.tileArt) {
+          if (tile !== Tile.Empty) continue;
+          this.drawFloor(g, getFloor(s, x, y), px, py, s.tick);
+          if (y > 0 && castsShadow(getTile(s, x, y - 1))) g.rect(px, py, TILE_PX, 3).fill({ color: 0x000000, alpha: 0.28 });
+        } else if (tile === Tile.Wall) {
           g.rect(px, py, TILE_PX, TILE_PX).fill(COLORS.wall);
           g.rect(px, py, TILE_PX, 4).fill(COLORS.wallTop);
         } else if (tile === Tile.Block) {

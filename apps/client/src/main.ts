@@ -28,6 +28,7 @@ void renderer.useMascots().catch((e) => console.error("mascot", e));
 void renderer.useBombArt().catch((e) => console.error("bomb art", e));
 void renderer.useFlameArt().catch((e) => console.error("flame art", e));
 void renderer.useItemArt().catch((e) => console.error("item art", e));
+void renderer.useTileArt().catch((e) => console.error("tile art", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
