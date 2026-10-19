@@ -160,6 +160,12 @@
       .account:empty { display: none; }
       .account > button { min-height: 38px; font-size: 15px; padding: 6px 12px; }
       .account > button:only-child { flex: 1; }
+      .guide h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 26px; text-align: center; }
+      .guide-list { list-style: none; margin: 0; padding: 0 4px 0 0; display: grid; gap: 8px; max-height: min(60vh, 520px); overflow: auto; }
+      .guide-list li { display: flex; gap: 12px; align-items: center; }
+      .guide-list strong { font-family: var(--display); font-weight: 400; font-size: 17px; }
+      .guide-list p { margin: 2px 0 0; color: var(--muted); font-size: 13px; line-height: 1.3; }
+      .guide-icon { flex: none; width: 48px; height: 48px; background-position: calc(var(--cell) * -48px) 0; image-rendering: pixelated; }
       .or { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
       .or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed #ffffff22; }
 

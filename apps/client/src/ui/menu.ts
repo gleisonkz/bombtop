@@ -1,5 +1,6 @@
 import { mascot } from "./art";
 import { connectingText } from "./connecting";
+import { itemGuide } from "./item-guide";
 import { button, el, storage } from "./dom";
 
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
@@ -57,23 +58,32 @@ export class Menu {
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
     logo.append(el("span", { text: "TOP" }));
+    const card = el("div", { class: "card" }, [
+      this.account,
+      this.name,
+      publicBtn,
+      createBtn,
+      el("div", { class: "or", text: "ou entre com um código" }),
+      el("div", { class: "row" }, [this.code, joinBtn]),
+      this.status,
+      this.error,
+      button("Ver itens", () => showGuide(true), "ghost"),
+      el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
+    ]);
+    const guide = itemGuide(() => showGuide(false));
+    const showGuide = (on: boolean) => {
+      card.hidden = on;
+      guide.hidden = !on;
+    };
+    guide.hidden = true;
     this.root = el("div", { class: "screen menu" }, [
       el("div", { class: "hero" }, [
         mascot(),
         logo,
         el("p", { class: "tagline", text: "Batalha de bombas com até 5 amigos" }),
       ]),
-      el("div", { class: "card" }, [
-        this.account,
-        this.name,
-        publicBtn,
-        createBtn,
-        el("div", { class: "or", text: "ou entre com um código" }),
-        el("div", { class: "row" }, [this.code, joinBtn]),
-        this.status,
-        this.error,
-        el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
-      ]),
+      card,
+      guide,
     ]);
     parent.appendChild(this.root);
   }
