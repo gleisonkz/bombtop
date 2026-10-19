@@ -8,6 +8,28 @@ export class NetStats {
   private late = 0;
   private delay = 0;
   private shown = { fps: 0, late: 0 };
+  private lastArrival: number | null = null;
+  private worstGap = 0;
+
+  /** A snapshot arrived. */
+  arrival(nowMs: number): void {
+    if (this.lastArrival !== null) this.worstGap = Math.max(this.worstGap, nowMs - this.lastArrival);
+    this.lastArrival = nowMs;
+  }
+
+  /** What goes to the server's log; starts the worst-gap window over. */
+  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; ua: string } {
+    const out = {
+      ...(this.ping === null ? {} : { ping: this.ping }),
+      delay: Math.round(this.delay),
+      fps: this.shown.fps,
+      late: this.shown.late,
+      gap: Math.round(this.worstGap),
+      ua,
+    };
+    this.worstGap = 0;
+    return out;
+  }
 
   /** One drawn frame: `late` when it was drawn past the newest snapshot. */
   frame(deltaMs: number, late: boolean, delayMs: number): void {

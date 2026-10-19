@@ -133,7 +133,14 @@ export class OnlineGame implements GameMode {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
     });
     const hud = this.hud;
-    if (hud) this.pinger = setInterval(() => room.ping((ms) => (hud.stats.ping = ms)), 1000);
+    if (hud) {
+      let n = 0;
+      this.pinger = setInterval(() => {
+        room.ping((ms) => (hud.stats.ping = ms));
+        // Every 5 s the numbers go to the server's log, so nobody has to send screenshots.
+        if (++n % 5 === 0) room.send(C2S.stats, hud.stats.report(navigator.userAgent));
+      }, 1000);
+    }
     // Handlers are attached: ask for the current state (earlier broadcasts were dropped).
     room.send(C2S.sync);
   }
@@ -253,6 +260,7 @@ export class OnlineGame implements GameMode {
   private received(snap: Snapshot): void {
     if (!this.buffer.latest) this.ctx.fit(snap.grid.width, snap.grid.height);
     const now = performance.now();
+    this.hud?.stats.arrival(now);
     this.delay.observe(now);
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
