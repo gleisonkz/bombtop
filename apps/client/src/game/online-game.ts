@@ -1,4 +1,5 @@
 import { Client, type Room } from "@colyseus/sdk";
+import { resultSound } from "../audio/sound";
 import {
   C2S,
   ROOM_NAME,
@@ -97,7 +98,7 @@ export class OnlineGame implements GameMode {
     room.onMessage(S2C.result, (result: ResultMessage) => {
       const winner = this.lobby?.members.find((m) => m.id === result.winnerId);
       const you = result.winnerId === room.sessionId;
-      ctx.sound.play(you ? "win" : "end");
+      ctx.sound.play(resultSound(result.winnerId, room.sessionId));
       ctx.renderer.showBanner(you ? "Você venceu!" : winner ? `${winner.name} venceu!` : "Empate!");
     });
     room.onLeave(() => {

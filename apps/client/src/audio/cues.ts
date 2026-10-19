@@ -1,4 +1,4 @@
-import { FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 
 export type CueName =
   | "place"
@@ -16,6 +16,8 @@ export type CueName =
   | "jump"
   | "dash"
   | "warp"
+  | "ice"
+  | "freeze"
   | "hurry";
 
 export interface Cue {
@@ -26,7 +28,7 @@ export interface Cue {
   size?: number;
 }
 
-type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "pressure">;
+type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "blasts" | "pressure">;
 
 const key = (x: number, y: number) => `${x},${y}`;
 const bombKey = (b: Bomb) => `${b.ownerId}@${key(b.x, b.y)}`;
@@ -75,6 +77,8 @@ export function soundCues(prev: View, next: View): Cue[] {
     if (!items.has(k) && !flames.has(k) && i.kind !== ItemKind.Skull) cues.push({ name: "pickup", x: mid(i.x) });
   }
 
+  for (const b of next.blasts) if (b.ttl >= BLAST_TICKS - elapsed) cues.push({ name: "ice", x: mid(b.x) });
+
   for (const p of next.players) {
     const was = prev.players.find((q) => q.id === p.id);
     if (!was) continue;
@@ -92,6 +96,7 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("jump", !was.jumpTicks && p.jumpTicks);
     hear("warp", !was.warpLock && p.warpLock);
     hear("dash", !was.dashTicks && p.dashTicks);
+    hear("freeze", !was.frozen && p.frozen);
   }
 
   if (!prev.pressure && next.pressure) cues.push({ name: "hurry", x: width / 2 });

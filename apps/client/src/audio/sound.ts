@@ -1,7 +1,7 @@
 import type { Cue, CueName } from "./cues";
 import { explosionGain, panFor, VoiceLimiter } from "./mixer";
 
-export type SoundName = CueName | "start" | "win" | "end" | "click";
+export type SoundName = CueName | "start" | "win" | "lose" | "draw" | "end" | "click";
 
 interface SoundSpec {
   /** Linear volume (files are peak-normalized; this sets the mix). */
@@ -35,12 +35,21 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   jump: { gain: 0.4, vary: 0.06, voices: 2 },
   dash: { gain: 0.45, vary: 0.06, voices: 2 },
   warp: { gain: 0.45, vary: 0.04, voices: 2 },
+  ice: { gain: 0.55, vary: 0.04, voices: 2 },
+  freeze: { gain: 0.6, vary: 0.04, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
   start: { gain: 0.6, vary: 0, voices: 1 },
   win: { gain: 0.6, vary: 0, voices: 1 },
+  lose: { gain: 0.55, vary: 0, voices: 1 },
+  draw: { gain: 0.55, vary: 0, voices: 1 },
   end: { gain: 0.55, vary: 0, voices: 1 },
   click: { gain: 0.35, vary: 0.04, voices: 2 },
 };
+
+/** What the end of an online match sounds like to `me`: a null winner is a tie. */
+export function resultSound(winnerId: string | null, me: string): SoundName {
+  return winnerId === null ? "draw" : winnerId === me ? "win" : "lose";
+}
 
 /** Where sounds actually go; WebAudioBackend in the browser, a fake in tests. */
 export interface AudioBackend {

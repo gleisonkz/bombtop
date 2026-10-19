@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { Listener, soundCues } from "../src/audio/cues";
 
 function view(): PublicView {
@@ -116,6 +116,23 @@ describe("soundCues", () => {
       b!.dashTicks = 16;
     });
     expect(names(v, next)).toEqual(["mount", "jump", "warp", "dash"]);
+  });
+
+  it("hears an ice blast cast, at the caster, and the player it freezes", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2 });
+      n.players[1]!.frozen = 300;
+    });
+    expect(soundCues(v, next)).toEqual([
+      { name: "ice", x: 2.5 },
+      { name: "freeze", x: next.players[1]!.px / TILE },
+    ]);
+    const after = later(next, (n) => {
+      n.blasts[0]!.ttl -= 2;
+      n.players[1]!.frozen -= 2;
+    });
+    expect(names(next, after)).toEqual([]);
   });
 
   it("hears sudden death starting", () => {

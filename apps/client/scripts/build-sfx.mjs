@@ -1,7 +1,7 @@
 // Builds public/sfx/*.m4a from the original sound libraries (kept outside the repo).
 // usage: SFX_SRC=E:/sfx-src node scripts/build-sfx.mjs   (needs ffmpeg on PATH)
 //
-// Sources: Kenney packs (CC0, kenney.nl) and the Sonniss GDC 2026 Game Audio Bundle
+// Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -11,13 +11,15 @@ const SRC = process.env.SFX_SRC ?? "E:/sfx-src";
 const OUT = new URL("../public/sfx/", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");
 
 const K = (pack, file) => join(SRC, "kenney", `kenney_${pack}`, "Audio", file);
+const VOICE = (file) => K("voiceover-pack-fighter", file);
+const JINGLE = (file) => K("music-jingles", join("8-Bit jingles", file));
 const S = (lib, file) => join(SRC, "sonniss", "raw", lib, file);
 const CSD = (lib, file) => S(`Cinematic Sound Design - ${lib}`, file);
 const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
 const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
 
 /**
- * name -> { src, len (s), layer?: { src, len, gain (dB), lowpass (Hz) } }
+ * name -> { src, len (s), layer?: { src, len, gain (dB), lowpass? (Hz), at? (s, delay) } }
  * Every clip is trimmed of leading silence, cut to `len`, faded out, mixed to mono
  * and peak-normalized; per-sound loudness is set in code (SOUNDS in sound.ts).
  */
@@ -41,9 +43,27 @@ const RECIPE = {
   jump: { src: K("digital-audio", "phaseJump1.ogg"), len: 0.45 },
   dash: { src: CSD("Colossal Impacts", "Woosh Debris.wav"), len: 0.9 },
   warp: { src: K("digital-audio", "phaserUp1.ogg"), len: 0.5 },
-  hurry: { src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"), len: 2.5 },
-  start: { src: CSD("Hybrid Game & UI Elements", "Game Entry Happy Short.wav"), len: 0.9 },
-  win: { src: CSD("User Interface", "Button Arp Twinkle.wav"), len: 1.8 },
+  // the ninja's special: a shimmer building up, a crystal ting as the beam leaves the hands
+  ice: {
+    src: K("sci-fi-sounds", "forceField_000.ogg"),
+    len: 0.8,
+    layer: { src: K("impact-sounds", "impactGlass_light_000.ogg"), len: 0.6, gain: -2, at: 0.3 },
+  },
+  freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
+  hurry: {
+    src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),
+    len: 2.5,
+    layer: { src: VOICE("sudden_death.ogg"), len: 1.5, gain: 2, at: 0.3 },
+  },
+  start: {
+    src: VOICE("fight.ogg"),
+    len: 1.0,
+    layer: { src: CSD("Hybrid Game & UI Elements", "Game Entry Happy Short.wav"), len: 0.9, gain: -8 },
+  },
+  // the announcer, then a jingle: rising for a win, falling for a loss, level for a tie
+  win: { src: VOICE("you_win.ogg"), len: 1.3, layer: { src: JINGLE("jingles_NES12.ogg"), len: 0.9, gain: -3, at: 1.15 } },
+  lose: { src: VOICE("you_lose.ogg"), len: 1.4, layer: { src: JINGLE("jingles_NES11.ogg"), len: 0.9, gain: -3, at: 1.3 } },
+  draw: { src: VOICE("it's_a_tie.ogg"), len: 1.4, layer: { src: JINGLE("jingles_NES13.ogg"), len: 1.0, gain: -3, at: 1.3 } },
   end: { src: CSD("User Interface", "Interface Plucks Happy.wav"), len: 0.85 },
   click: { src: CSD("Interface & Infographics", "Interface Pop High Short.wav"), len: 0.4 },
 };
@@ -58,7 +78,9 @@ function ffmpeg(args) {
 function filterFor({ len, layer }) {
   const main = `[0:a]aformat=channel_layouts=mono,${shape(len)}[m]`;
   if (!layer) return `${main};[m]anull[mix]`;
-  const sub = `[1:a]aformat=channel_layouts=mono,${shape(layer.len)},lowpass=f=${layer.lowpass},volume=${layer.gain}dB[l]`;
+  const lowpass = layer.lowpass ? `,lowpass=f=${layer.lowpass}` : "";
+  const delay = layer.at ? `,adelay=${Math.round(layer.at * 1000)}` : "";
+  const sub = `[1:a]aformat=channel_layouts=mono,${shape(layer.len)}${lowpass},volume=${layer.gain}dB${delay}[l]`;
   return `${main};${sub};[m][l]amix=inputs=2:duration=longest:normalize=0[mix]`;
 }
 

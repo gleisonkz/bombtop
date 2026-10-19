@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MASTER_DB, SOUNDS, Sound, type AudioBackend } from "../src/audio/sound";
+import { MASTER_DB, SOUNDS, Sound, resultSound, type AudioBackend } from "../src/audio/sound";
 
 /** Records what would reach the speakers. */
 function fakeBackend() {
@@ -97,5 +97,14 @@ describe("Sound", () => {
     await s.unlock();
     await s.unlock();
     expect(unlocks()).toBe(1);
+  });
+});
+
+describe("resultSound", () => {
+  it("cheers the winner, consoles the others and calls a tie", () => {
+    expect(resultSound("me", "me")).toBe("win");
+    expect(resultSound("rival", "me")).toBe("lose");
+    expect(resultSound(null, "me")).toBe("draw");
+    expect(["win", "lose", "draw"].every((n) => n in SOUNDS)).toBe(true);
   });
 });
