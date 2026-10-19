@@ -1,228 +1,239 @@
-"""Bomb mascot sprite sheet in pixel art: 32x32 frames, rows = SHEETS.bomber in render/sprites.ts:
-0-2 idle (front, side, back), 3-5 walk (front, side, back), 6 stunned, 7 death.
-The body is painted in BODY (base, shade, deep, light), which the game repaints in each
-player's color; outline, face, feet, cap and fuse keep their colors. The side view faces right.
-Usage: python build-bomber.py public/sprites/bomber.png preview.png  (needs Pillow)"""
-import math, sys
-from PIL import Image
+"""Bomb mascot sprite sheet (SHEETS.bomber in render/sprites.ts): rows 0-2 idle (front, side, back),
+3-5 walk, 6 stunned, 7 death. 128x128 frames drawn at 4x and scaled down, so edges are smooth and
+shading is soft. Designed on a 32-unit grid (1 unit = 4 px).
+The body is violet (hue ~255), which the game repaints in each player's color by hue;
+everything else is neutral or warm so it keeps its color.
+Usage: python build-bomber.py public/sprites/bomber.png preview.png  (needs Pillow, numpy)"""
+import math, random, sys
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
 
-N, COLS, ROWS = 32, 6, 8
-OUT = (20, 20, 32, 255)
-BASE, SHADE, DEEP, LIGHT = (64, 64, 128, 255), (46, 46, 98, 255), (32, 32, 70, 255), (112, 112, 184, 255)
-SHINE = (228, 232, 255, 255)
-FOOT, FOOT_D, FOOT_FAR = (255, 176, 58, 255), (214, 124, 30, 255), (200, 120, 34, 255)
-CAP, CAP_D, CAP_L = (91, 95, 115, 255), (60, 63, 80, 255), (150, 155, 175, 255)
-FUSE = (150, 112, 62, 255)
+U = 4          # px per design unit in the final frame
+SS = 4         # supersampling
+F = 32 * U     # frame size
+D = F * SS     # drawing size
+K = U * SS     # drawing px per unit
+COLS, ROWS = 6, 8
+
+INK = (26, 26, 26, 255)
+BODY_DEEP, BODY, BODY_LIGHT = np.array([40, 32, 92.0]), np.array([78, 64, 160.0]), np.array([140, 126, 220.0])
+FOOT, FOOT_SHADE, FOOT_FAR = (255, 178, 60, 255), (220, 120, 28, 255), (205, 128, 40, 255)
+CAP, CAP_LIGHT, CAP_DARK = (112, 112, 112, 255), (170, 170, 170, 255), (72, 72, 72, 255)
+FUSE = (150, 108, 58, 255)
 YELLOW, ORANGE, WHITE = (255, 214, 63, 255), (255, 122, 26, 255), (255, 255, 255, 255)
-PUPIL, MOUTH, CHEEK = (17, 17, 17, 255), (122, 31, 43, 255), (255, 128, 166, 255)
-SMOKE = [(120, 120, 132, 255), (160, 160, 172, 255), (200, 200, 210, 255)]
-LIGHT_DIR = (-0.5, -0.65, 0.58)
+PUPIL, MOUTH, CHEEK = (20, 20, 20, 255), (130, 30, 44, 255), (255, 120, 160, 150)
+LIGHT_DIR = np.array([-0.5, -0.65, 0.58])
+LIGHT_DIR = LIGHT_DIR / np.linalg.norm(LIGHT_DIR)
+
+def u(v):
+    return v * K
+
+def box(cx, cy, rx, ry):
+    return [u(cx - rx), u(cy - ry), u(cx + rx), u(cy + ry)]
+
+def smooth(a, b, t):
+    t = np.clip((t - a) / (b - a), 0, 1)
+    return t * t * (3 - 2 * t)
 
 class Frame:
     def __init__(self):
-        self.img = Image.new("RGBA", (N, N))
-        self.px = self.img.load()
+        self.img = Image.new("RGBA", (D, D))
+        self.d = ImageDraw.Draw(self.img)
 
-    def put(self, x, y, c):
-        if 0 <= x < N and 0 <= y < N:
-            self.px[int(x), int(y)] = c
+    def ellipse(self, cx, cy, rx, ry, fill, outline=0.0):
+        if outline:
+            self.d.ellipse(box(cx, cy, rx + outline, ry + outline), fill=INK)
+        self.d.ellipse(box(cx, cy, rx, ry), fill=fill)
 
-    def get(self, x, y):
-        return self.px[x, y] if 0 <= x < N and 0 <= y < N else (0, 0, 0, 0)
+    def layer(self, rgba):
+        self.img.alpha_composite(rgba)
 
-    def outline(self, mask):
-        """Ink around a set of pixels (where nothing is drawn yet)."""
-        for (x, y) in list(mask):
-            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                q = (x + dx, y + dy)
-                if q not in mask and self.get(*q)[3] == 0:
-                    self.put(*q, OUT)
+    def done(self):
+        return self.img.resize((F, F), Image.LANCZOS)
 
-def ellipse(cx, cy, rx, ry):
-    return {(x, y) for y in range(N) for x in range(N) if ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1}
+def foot(f, cx, cy, color=FOOT):
+    f.ellipse(cx, cy, 3.3, 1.9, color, 0.55)
+    if color == FOOT:  # lit top, shaded sole
+        f.d.chord(box(cx, cy, 3.3, 1.9), 20, 160, fill=FOOT_SHADE)
+        f.d.ellipse(box(cx - 0.9, cy - 0.7, 1.2, 0.5), fill=(255, 220, 150, 255))
 
-def shaded_body(f, cx, cy, rx, ry, flash=False):
-    """The round body lit from the top left in four tones, with a shine spot."""
-    ln = math.sqrt(sum(v * v for v in LIGHT_DIR))
-    L = [v / ln for v in LIGHT_DIR]
-    pts = ellipse(cx, cy, rx, ry)
-    for (x, y) in pts:
-        nx, ny = (x + 0.5 - cx) / rx, (y + 0.5 - cy) / ry
-        nz = math.sqrt(max(0.0, 1 - nx * nx - ny * ny))
-        lam = nx * L[0] + ny * L[1] + nz * L[2]
-        c = LIGHT if lam > 0.88 else BASE if lam > 0.52 else SHADE if lam > 0.22 else DEEP
-        f.put(x, y, WHITE if flash else c)
-    if not flash:
-        sx, sy = int(cx - rx * 0.62), int(cy - ry * 0.7)
-        for x, y in ((sx, sy), (sx + 1, sy), (sx, sy + 1)):
-            f.put(x, y, SHINE)
-    f.outline(pts)
-    return pts
-
-def foot(f, cx, y, color=FOOT):
-    pts = ellipse(cx, y, 3.2, 1.8)
-    for (x, yy) in pts:
-        f.put(x, yy, color if yy < y else FOOT_D if color == FOOT else color)
-    f.outline(pts)
+def body(f, cx, cy, rx, ry, flash=False):
+    """Round body: ink rim, soft cel shading lit from the top left, glossy highlight."""
+    f.ellipse(cx, cy, rx, ry, INK, 0.7)
+    ys, xs = np.mgrid[0:D, 0:D]
+    nx = ((xs + 0.5) / K - cx) / rx
+    ny = ((ys + 0.5) / K - cy) / ry
+    r2 = nx * nx + ny * ny
+    inside = r2 <= 1
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lam = nx * LIGHT_DIR[0] + ny * LIGHT_DIR[1] + nz * LIGHT_DIR[2]
+    a = smooth(0.12, 0.42, lam)[..., None]
+    b = smooth(0.78, 0.97, lam)[..., None]
+    col = BODY_DEEP * (1 - a) + BODY * a
+    col = col * (1 - b) + BODY_LIGHT * b
+    # bounce light along the bottom rim
+    rim = (smooth(0.75, 1.0, np.sqrt(r2)) * smooth(0.2, 0.8, ny))[..., None]
+    col = col * (1 - rim * 0.35) + np.array([110, 96, 190.0]) * rim * 0.35
+    if flash:
+        col[:] = 255
+    out = np.zeros((D, D, 4), np.uint8)
+    out[..., :3] = np.clip(col, 0, 255).astype(np.uint8)
+    out[..., 3] = inside * 255
+    f.layer(Image.fromarray(out, "RGBA"))
+    if not flash:  # gloss: a soft oval and a bright dot
+        g = Image.new("RGBA", (D, D))
+        gd = ImageDraw.Draw(g)
+        gd.ellipse(box(cx - rx * 0.42, cy - ry * 0.52, rx * 0.26, ry * 0.17), fill=(255, 255, 255, 120))
+        g = g.rotate(28, center=(u(cx - rx * 0.42), u(cy - ry * 0.52)), resample=Image.BICUBIC)
+        g = g.filter(ImageFilter.GaussianBlur(K * 0.25))
+        f.layer(g)
+        f.d.ellipse(box(cx - rx * 0.55, cy - ry * 0.62, 0.55, 0.55), fill=WHITE)
 
 def cap_and_fuse(f, top, mirror, frame):
-    """Gray cap on the top right (left when seen from behind), a fuse and a flickering spark."""
-    m = (lambda x: 31 - x) if mirror else (lambda x: x)
-    cap = {(x, y) for x in range(19, 23) for y in range(top - 3, top + 1)}
-    for (x, y) in cap:
-        f.put(m(x), y, CAP_L if y == top - 3 else CAP_D if x == 22 else CAP)
-    f.outline({(m(x), y) for (x, y) in cap})
-    for x, y in ((21, top - 4), (22, top - 5), (23, top - 6), (24, top - 6)):
-        f.put(m(x), y, FUSE)
-    sx, sy = 26, top - 7
-    if frame % 2 == 0:
-        for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)):
-            f.put(m(sx + dx), sy + dy, YELLOW)
-        f.put(m(sx), sy, WHITE)
-    else:
-        for dx, dy in ((0, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)):
-            f.put(m(sx + dx), sy + dy, ORANGE)
-        f.put(m(sx), sy, YELLOW)
+    m = (lambda x: 32 - x) if mirror else (lambda x: x)
+    # fuse: a curve from the cap to the spark
+    pts = [(m(21.0 + t * 4.5), top - 3.5 - math.sin(t * math.pi * 0.8) * 2.6) for t in np.linspace(0, 1, 12)]
+    f.d.line([(u(x), u(y)) for x, y in pts], fill=INK, width=int(K * 1.4), joint="curve")
+    f.d.line([(u(x), u(y)) for x, y in pts], fill=FUSE, width=int(K * 0.75), joint="curve")
+    # cap
+    x0, x1 = sorted((m(18.6), m(23.4)))
+    f.d.rounded_rectangle([u(x0 - 0.6), u(top - 3.6), u(x1 + 0.6), u(top + 1.2)], radius=K * 1.0, fill=INK)
+    f.d.rounded_rectangle([u(x0), u(top - 3.0), u(x1), u(top + 0.6)], radius=K * 0.6, fill=CAP)
+    f.d.rounded_rectangle([u(x0 + 0.4), u(top - 2.7), u(x1 - 0.4), u(top - 1.9)], radius=K * 0.3, fill=CAP_LIGHT)
+    # spark: a star with a glow, flickering between two shapes
+    sx, sy = pts[-1]
+    glow = Image.new("RGBA", (D, D))
+    ImageDraw.Draw(glow).ellipse(box(sx, sy, 2.6, 2.6), fill=(255, 200, 60, 110))
+    f.layer(glow.filter(ImageFilter.GaussianBlur(K * 0.8)))
+    rot = 0 if frame % 2 == 0 else math.pi / 5
+    r_out, r_in = (2.2, 0.9) if frame % 2 == 0 else (1.8, 0.8)
+    star = [(u(sx + math.cos(rot + i * math.pi / 5 - math.pi / 2) * (r_out if i % 2 == 0 else r_in)),
+             u(sy + math.sin(rot + i * math.pi / 5 - math.pi / 2) * (r_out if i % 2 == 0 else r_in))) for i in range(10)]
+    f.d.polygon(star, fill=YELLOW, outline=ORANGE, width=int(K * 0.3))
+    f.d.ellipse(box(sx, sy, 0.6, 0.6), fill=WHITE)
 
-def eye(f, x, y, pupil_x, w=4):
-    """A rounded white eye (w x 5, corners cut) with a 2x3 pupil starting at column `pupil_x`."""
-    for dx in range(w):
-        for dy in range(5):
-            if (dx in (0, w - 1)) and dy in (0, 4):
-                continue
-            f.put(x + dx, y + dy, WHITE)
-    for dx in range(2):
-        for dy in range(1, 4):
-            f.put(pupil_x + dx, y + dy, PUPIL)
+def eye(f, cx, cy, look=0.0, rx=1.7, ry=2.4):
+    f.ellipse(cx, cy, rx, ry, WHITE, 0.4)
+    f.ellipse(cx + look, cy + 0.5, rx * 0.62, ry * 0.6, PUPIL)
+    f.d.ellipse(box(cx + look + 0.35, cy - 0.15, 0.38, 0.38), fill=WHITE)
 
-def x_eye(f, x, y):
-    for d in range(3):
-        f.put(x + d, y + d, PUPIL)
-        f.put(x + 2 - d, y + d, PUPIL)
+def x_eye(f, cx, cy):
+    w = int(K * 0.6)
+    f.d.line([u(cx - 1.4), u(cy - 1.4), u(cx + 1.4), u(cy + 1.4)], fill=INK, width=w)
+    f.d.line([u(cx + 1.4), u(cy - 1.4), u(cx - 1.4), u(cy + 1.4)], fill=INK, width=w)
 
-def dizzy_eye(f, x, y):
-    for dx, dy in ((0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (1, 2), (0, 2), (0, 1)):
-        f.put(x + dx, y + dy, WHITE)
-    f.put(x + 1, y + 1, PUPIL)
-    f.put(x + 2, y + 2, PUPIL)
+def dizzy_eye(f, cx, cy, frame):
+    f.ellipse(cx, cy, 1.8, 2.2, WHITE, 0.4)
+    pts = [(u(cx + math.cos(t + frame) * t * 0.22), u(cy + math.sin(t + frame) * t * 0.26)) for t in np.linspace(0, 4 * math.pi, 40)]
+    f.d.line(pts, fill=INK, width=int(K * 0.35))
 
-def front_face(f, cy, mood="happy"):
+def cheeks(f, xs, cy):
+    c = Image.new("RGBA", (D, D))
+    cd = ImageDraw.Draw(c)
+    for x in xs:
+        cd.ellipse(box(x, cy + 2.6, 1.6, 0.9), fill=CHEEK)
+    f.layer(c.filter(ImageFilter.GaussianBlur(K * 0.2)))
+
+def front_face(f, cy, mood, frame):
     if mood == "dead":
-        x_eye(f, 10, cy - 3)
-        x_eye(f, 19, cy - 3)
+        x_eye(f, 12, cy - 1.5)
+        x_eye(f, 20, cy - 1.5)
     elif mood == "dizzy":
-        dizzy_eye(f, 10, cy - 3)
-        dizzy_eye(f, 19, cy - 3)
+        dizzy_eye(f, 12, cy - 1.5, frame)
+        dizzy_eye(f, 20, cy - 1.5, frame)
     else:
-        eye(f, 10, cy - 4, 11)
-        eye(f, 18, cy - 4, 19)
-    for x in (8, 9):
-        f.put(x, cy + 2, CHEEK)
-    for x in (22, 23):
-        f.put(x, cy + 2, CHEEK)
+        eye(f, 12, cy - 1.5, 0.3)
+        eye(f, 20, cy - 1.5, -0.3)
+    cheeks(f, (8.6, 23.4), cy)
     if mood in ("dead", "dizzy"):
-        for x, y in ((14, cy + 4), (15, cy + 3), (16, cy + 4), (17, cy + 3)):
-            f.put(x, y, MOUTH)
+        pts = [(u(13.5 + i * 0.5), u(cy + 4.2 + (0.5 if i % 2 else -0.3))) for i in range(11)]
+        f.d.line(pts, fill=MOUTH, width=int(K * 0.55), joint="curve")
     else:
-        for x, y in ((13, cy + 3), (14, cy + 4), (15, cy + 4), (16, cy + 4), (17, cy + 4), (18, cy + 3)):
-            f.put(x, y, MOUTH)
-        f.put(15, cy + 5, MOUTH)
-        f.put(16, cy + 5, MOUTH)
+        f.d.chord([u(13.2), u(cy + 1.6), u(18.8), u(cy + 5.8)], 0, 180, fill=INK)
+        f.d.chord([u(13.7), u(cy + 2.0), u(18.3), u(cy + 5.2)], 0, 180, fill=MOUTH)
+        f.d.ellipse(box(16, cy + 4.4, 1.2, 0.6), fill=(240, 110, 120, 255))  # tongue
 
 def side_face(f, cy):
-    eye(f, 17, cy - 4, 19)
-    for dy in range(1, 4):  # far eye peeking past the curve
-        f.put(23, cy - 4 + dy, WHITE)
-    f.put(24, cy - 3, PUPIL)
-    f.put(24, cy - 2, PUPIL)
-    f.put(19, cy + 2, CHEEK)
-    f.put(20, cy + 2, CHEEK)
-    for x, y in ((20, cy + 4), (21, cy + 4), (22, cy + 3)):
-        f.put(x, y, MOUTH)
+    eye(f, 19.5, cy - 1.5, 0.7)
+    eye(f, 24.4, cy - 1.5, 0.4, rx=1.0, ry=2.2)  # far eye, foreshortened
+    cheeks(f, (21.5,), cy)
+    f.d.chord([u(20.6), u(cy + 1.8), u(25.2), u(cy + 5.4)], 0, 180, fill=INK)
+    f.d.chord([u(21.0), u(cy + 2.2), u(24.8), u(cy + 4.9)], 0, 180, fill=MOUTH)
 
-def mascot(view, step=0, squash=0, frame=0, mood="happy", shift=0, flash=False):
-    """One pose. step: 0..3 walk phase (1 and 3 lift a foot and bob the body up)."""
+def mascot(view, step=0, squash=0, frame=0, mood="happy", shift=0.0, flash=False):
     f = Frame()
     lifted = step % 2 == 1
-    bob = -1 if lifted else 0
-    cx, cy = 16 + shift, 17 + bob + squash
-    rx, ry = 9.6 + squash * 0.4, 9.6 - squash * 0.6
+    cx, cy = 16 + shift, 17 + (-1 if lifted else 0) + squash * 0.8
+    rx, ry = 9.8 + squash * 0.4, 9.8 - squash * 0.6
     if view == "side":
-        # far foot first (darker), near foot after the body
-        far = {0: (12, 28), 1: (17, 26), 2: (20, 28), 3: (16, 28)}[step]
-        near = {0: (20, 28), 1: (16, 28), 2: (12, 28), 3: (17, 26)}[step]
+        far = {0: (12, 28.3), 1: (17, 26.5), 2: (20, 28.3), 3: (16, 28.3)}[step]
+        near = {0: (20, 28.3), 1: (16, 28.3), 2: (12, 28.3), 3: (17, 26.5)}[step]
         foot(f, far[0] + shift, far[1], FOOT_FAR)
     else:
-        lf = {0: (11, 28), 1: (11, 26), 2: (12, 28), 3: (11, 28)}[step]
-        rf = {0: (21, 28), 1: (21, 28), 2: (20, 28), 3: (21, 26)}[step]
+        lf = {0: (11.5, 28.3), 1: (11.5, 26.5), 2: (12.5, 28.3), 3: (11.5, 28.3)}[step]
+        rf = {0: (20.5, 28.3), 1: (20.5, 28.3), 2: (19.5, 28.3), 3: (20.5, 26.5)}[step]
         foot(f, lf[0] + shift, lf[1])
         foot(f, rf[0] + shift, rf[1])
-    shaded_body(f, cx, cy, rx, ry, flash)
+    cap_and_fuse(f, cy - ry + 1, view == "back", frame)
+    body(f, cx, cy, rx, ry, flash)
     if view == "side":
         foot(f, near[0] + shift, near[1])
-    cap_and_fuse(f, int(cy - ry) + 1, view == "back", frame)
-    if not flash or mood == "dead":
-        if view == "front":
-            front_face(f, int(cy), mood)
-        elif view == "side":
-            side_face(f, int(cy))
-    return f.img
+    if view == "front":
+        front_face(f, cy, mood, frame)
+    elif view == "side":
+        side_face(f, cy)
+    return f
 
 def stunned(frame):
-    img = mascot("front", 0, 0, frame, "dizzy", shift=[-1, 0, 1, 0][frame])
-    f = Frame()
-    f.img = img
-    f.px = img.load()
-    for i in range(3):  # stars circling over the head
+    f = mascot("front", 0, 0, frame, "dizzy", shift=[-0.8, 0, 0.8, 0][frame])
+    for i in range(3):
         a = frame * math.pi / 2 + i * 2 * math.pi / 3
-        x, y = 16 + math.cos(a) * 8, 4 + math.sin(a) * 2.5
-        for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)):
-            if f.get(int(x + dx), int(y + dy))[3] == 0:
-                f.put(x + dx, y + dy, YELLOW if (dx, dy) != (0, 0) else WHITE)
-    return img
+        x, y = 16 + math.cos(a) * 8.5, 4.2 + math.sin(a) * 2.4
+        star = [(u(x + math.cos(j * math.pi / 5 - math.pi / 2) * (1.5 if j % 2 == 0 else 0.6)),
+                 u(y + math.sin(j * math.pi / 5 - math.pi / 2) * (1.5 if j % 2 == 0 else 0.6))) for j in range(10)]
+        f.d.polygon(star, fill=YELLOW, outline=ORANGE, width=int(K * 0.25))
+    return f.done()
 
 def smoke(radius, density, seed):
-    import random
     r = random.Random(seed)
-    f = Frame()
-    for _ in range(int(40 * density)):
-        a, d = r.uniform(0, 2 * math.pi), r.uniform(0, radius)
-        x, y = 16 + math.cos(a) * d, 18 + math.sin(a) * d * 0.8
-        s = r.choice((1, 1, 2))
-        c = SMOKE[min(2, int(d / radius * 3))]
-        for dx in range(s):
-            for dy in range(s):
-                f.put(x + dx, y + dy, c)
-    for _ in range(int(6 * density)):  # sparks
-        a, d = r.uniform(0, 2 * math.pi), r.uniform(radius * 0.6, radius * 1.3)
-        f.put(16 + math.cos(a) * d, 18 + math.sin(a) * d, r.choice((YELLOW, ORANGE)))
-    return f.img
+    img = Image.new("RGBA", (D, D))
+    d = ImageDraw.Draw(img)
+    for _ in range(int(26 * density)):
+        a, dist = r.uniform(0, 2 * math.pi), r.uniform(0, radius)
+        x, y = 16 + math.cos(a) * dist, 18 + math.sin(a) * dist * 0.8
+        s = r.uniform(1.6, 3.4) * (0.6 + density * 0.5)
+        g = int(120 + dist / radius * 90)
+        d.ellipse(box(x, y, s, s), fill=(g, g, g + 10, int(200 * min(1, density + 0.3))))
+    for _ in range(int(8 * density)):
+        a, dist = r.uniform(0, 2 * math.pi), r.uniform(radius * 0.6, radius * 1.3)
+        x, y = 16 + math.cos(a) * dist, 18 + math.sin(a) * dist
+        d.ellipse(box(x, y, 0.5, 0.5), fill=r.choice((YELLOW, ORANGE)))
+    return img.filter(ImageFilter.GaussianBlur(K * 0.15)).resize((F, F), Image.LANCZOS)
 
 def main():
-    sheet = Image.new("RGBA", (N * COLS, N * ROWS))
-    def place(img, col, row):
-        sheet.alpha_composite(img, (col * N, row * N))
+    sheet = Image.new("RGBA", (F * COLS, F * ROWS))
+    put = lambda img, c, r: sheet.alpha_composite(img, (c * F, r * F))
     for r, view in enumerate(["front", "side", "back"]):
-        for c, squash in enumerate([0, 0, 1, 1]):  # idle: breathing
-            place(mascot(view, 0, squash, c), c, r)
-        for c in range(4):  # walk
-            place(mascot(view, c, 0, c), c, r + 3)
+        for c, squash in enumerate([0, 0, 1, 1]):
+            put(mascot(view, 0, squash, c).done(), c, r)
+        for c in range(4):
+            put(mascot(view, c, 0, c).done(), c, r + 3)
     for c in range(4):
-        place(stunned(c), c, 6)
+        put(stunned(c), c, 6)
     death = [
-        mascot("front", 0, 0, 0, "dead", flash=True),
-        mascot("front", 0, 1, 1, "dead"),
-        mascot("front", 0, -1, 0, "dead"),
+        mascot("front", 0, 0, 0, "dead", flash=True).done(),
+        mascot("front", 0, 1, 1, "dead").done(),
+        mascot("front", 0, -1, 0, "dead").done(),
         smoke(9, 1.0, 1),
         smoke(11, 0.6, 2),
         smoke(12, 0.25, 3),
     ]
     for c, img in enumerate(death):
-        place(img, c, 7)
+        put(img, c, 7)
     sheet.save(sys.argv[1])
     if len(sys.argv) > 2:
         prev = Image.new("RGBA", sheet.size, (47, 107, 58, 255))
         prev.alpha_composite(sheet)
-        prev.resize((sheet.width * 4, sheet.height * 4), Image.NEAREST).save(sys.argv[2])
+        prev.save(sys.argv[2])
 
 main()

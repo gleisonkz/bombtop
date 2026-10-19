@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, TILES, TILES_HD, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -381,8 +381,8 @@ describe("bomber sheet", () => {
     expect(playerFrame(sheet, { facing: "up", moving: true, carrying: false, tick: 0 }).y).toBe(sheet.walk.up.row * sheet.frameH);
   });
 
-  it("repaints the body in the player's color, shading kept", () => {
-    expect(sheet.clothes).toHaveLength(4);
+  it("repaints the violet body in the player's color, by hue", () => {
+    expect(sheet.hues).toEqual([225, 285]);
   });
 
   it("plays its death once, then is gone", () => {
@@ -391,21 +391,39 @@ describe("bomber sheet", () => {
   });
 });
 
-describe("HD art (trial)", () => {
-  it("the HD bomber has the pixel bomber's rows, 4x bigger and drawn 4x smaller", () => {
-    const px = SHEETS.bomber;
-    const hd = SHEETS.bomberHd;
-    expect(hd.frameW).toBe(px.frameW * 4);
-    expect(hd.width).toBe(px.width * 4);
-    expect(hd.walk).toEqual(px.walk);
-    expect(hd.death).toEqual(px.death);
-    expect(hd.anchorY).toBe(px.anchorY * 4);
-    expect(hd.scale).toBeCloseTo(px.scale / 4);
-    expect(hd.hues).toBeDefined();
+describe("HD art", () => {
+  it("is drawn at the same size on the stage as the old pixel art", () => {
+    expect(TILES.size * TILES.scale).toBe(16);
+    expect(FLAMES.size * FLAMES.scale).toBe(16);
+    expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
+    expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
+    expect(SHEETS.bomber.frameW * SHEETS.bomber.scale).toBeCloseTo(32 * 0.7);
+    expect(SHEETS.ninja.frameW * SHEETS.ninja.scale).toBeCloseTo(64 * 0.55);
+  });
+});
+
+describe("shadeHues", () => {
+  const px = (...cs: [number, number, number][]) => new Uint8ClampedArray(cs.flatMap((c) => [...c, 255]));
+
+  it("paints the base shade exactly in the player's color, darker shades darker", () => {
+    const data = px([78, 64, 160], [39, 32, 80]);
+    shadeHues(data, [225, 285], [78, 64, 160], [232, 74, 74]);
+    expect([...data.slice(0, 3)]).toEqual([232, 74, 74]);
+    expect(data[4]!).toBeLessThan(140);
+    expect(data[4]!).toBeGreaterThan(90);
   });
 
-  it("HD tiles keep the cell order, drawn to the same size", () => {
-    expect(TILES_HD.cells).toEqual(TILES.cells);
-    expect(TILES_HD.size * TILES_HD.scale).toBe(TILES.size * TILES.scale);
+  it("lightens past the base toward white instead of clipping", () => {
+    const data = px([156, 128, 255]);
+    shadeHues(data, [225, 285], [78, 64, 160], [232, 74, 74]);
+    expect(data[1]!).toBeGreaterThan(74);
+    expect(data[0]!).toBeLessThanOrEqual(255);
+  });
+
+  it("leaves other colors alone (feet, cap, eyes)", () => {
+    const data = px([255, 178, 60], [112, 112, 112], [255, 255, 255]);
+    const before = [...data];
+    shadeHues(data, [225, 285], [78, 64, 160], [232, 74, 74]);
+    expect([...data]).toEqual(before);
   });
 });

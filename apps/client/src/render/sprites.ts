@@ -34,6 +34,8 @@ export interface SheetLayout {
   clothes?: Rgb[];
   /** Or: a hue range (degrees) repainted in each player's color, for sheets without a fixed palette. */
   hues?: readonly [number, number];
+  /** With `hues`: the body's base shade, which becomes exactly the player color (see shadeHues). */
+  hueBase?: Rgb;
   /** Hit reaction, shown facing the camera while stunned. */
   stun?: Strip;
   /** Played once when the player dies. */
@@ -84,15 +86,16 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
+  /** PixelLab art (sprites/ninja.png), smoothed to 2x by scripts/upscale-pixel-art.py. */
   ninja: {
-    url: "sprites/ninja.png",
-    width: 576,
-    height: 704,
-    frameW: 64,
-    frameH: 64,
-    anchorX: 31,
-    anchorY: 51,
-    bodyH: 38,
+    url: "sprites/ninja-hd.png",
+    width: 1152,
+    height: 1408,
+    frameW: 128,
+    frameH: 128,
+    anchorX: 62,
+    anchorY: 102,
+    bodyH: 76,
     ticksPerFrame: 7,
     side: "right",
     idle: strips(0, 1, 2, 1),
@@ -101,30 +104,11 @@ export const SHEETS = {
     death: { row: 7, frames: 7 },
     cast: strips(8, 9, 10, 9),
     hues: [185, 250],
-    scale: 0.55,
+    scale: 0.275,
   },
-  /** The bomb mascot in pixel art (scripts/build-bomber.py). */
+  /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
     url: "sprites/bomber.png",
-    width: 192,
-    height: 256,
-    frameW: 32,
-    frameH: 32,
-    anchorX: 16,
-    anchorY: 30,
-    bodyH: 26,
-    ticksPerFrame: 8,
-    side: "right",
-    idle: strips(0, 1, 2, 4),
-    walk: strips(3, 4, 5, 4),
-    stun: { row: 6, frames: 4 },
-    death: { row: 7, frames: 6 },
-    clothes: [[64, 64, 128], [46, 46, 98], [32, 32, 70], [112, 112, 184]],
-    scale: 0.7,
-  },
-  /** Trial: the bomb mascot in HD (scripts/build-bomber-hd.py), same rows; violet body repainted by hue. */
-  bomberHd: {
-    url: "sprites/bomber-hd.png",
     width: 768,
     height: 1024,
     frameW: 128,
@@ -139,27 +123,28 @@ export const SHEETS = {
     stun: { row: 6, frames: 4 },
     death: { row: 7, frames: 6 },
     hues: [225, 285],
+    hueBase: [78, 64, 160],
     scale: 0.175,
   },
 } satisfies Record<string, SheetLayout>;
 
 export type SheetName = keyof typeof SHEETS;
 
-/** Bomb art: one square cell per bomb type, side by side. */
+/** Bomb art (scripts/build-bombs-hd.py): one square cell per bomb type, side by side, on a 32-unit grid at 4 px per unit. */
 export const BOMBS = {
   url: "sprites/bombs.png",
-  width: 96,
-  size: 32,
+  width: 384,
+  size: 128,
   /** Cell pixel at the center of the bomb's body. */
-  anchorX: 16,
-  anchorY: 19,
-  scale: 0.55,
+  anchorX: 64,
+  anchorY: 76,
+  scale: 0.1375,
   order: ["normal", "pierce", "remote"] satisfies BombType[],
   /** Cell pixel of the fuse spark (or the remote's light) and its glow color. */
   glow: {
-    normal: { x: 25, y: 3, color: 0xffd23f },
-    pierce: { x: 16, y: 5, color: 0xffd23f },
-    remote: { x: 15.5, y: 2.5, color: 0xff3b3b },
+    normal: { x: 100, y: 17, color: 0xffd23f },
+    pierce: { x: 64, y: 20, color: 0xffd23f },
+    remote: { x: 62, y: 10, color: 0xff3b3b },
   } satisfies Record<BombType, { x: number; y: number; color: number }>,
 };
 
@@ -233,11 +218,11 @@ export function mascotDeath(ticks: number) {
 /** Explosion flames: rows of square cells per piece, one column per stage of the flame's life. */
 export const FLAMES = {
   url: "sprites/flames.png",
-  size: 32,
+  size: 128,
   frames: 5,
   rows: { center: 0, mid: 1, end: 2 },
   /** Drawn size: one cell per tile. */
-  scale: 0.5,
+  scale: 0.125,
 };
 
 export type FlamePiece = { kind: keyof typeof FLAMES.rows; rot: number };
@@ -265,14 +250,11 @@ export function flameFrame(ttl: number): number {
 /** Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade. */
 export const TILES = {
   url: "sprites/tiles.png",
-  size: 32,
+  size: 128,
   /** Drawn size: one cell per tile. */
-  scale: 0.5,
+  scale: 0.125,
   cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8 },
 };
-
-/** Trial: the same tiles in HD (scripts/build-tiles-hd.py). */
-export const TILES_HD = { ...TILES, url: "sprites/tiles-hd.png", size: 128, scale: 0.125 };
 
 /** Which cell a tile shows. Grass variants are picked by a hash of the position, so they stay put. */
 export function tileCell(tile: Tile, x: number, y: number, width: number, height: number): number {
@@ -291,10 +273,10 @@ export const castsShadow = (tile: Tile): boolean => tile === Tile.Wall || tile =
 /** Power-up art (scripts/build-items.py): one column per item, rows = plain, then a glint sweeping across. */
 export const ITEMS = {
   url: "sprites/items.png",
-  size: 48,
+  size: 192,
   frames: 4,
   /** Drawn a little smaller than a tile, so the floor shows around it. */
-  scale: 0.29,
+  scale: 0.0725,
   order: [
     ItemKind.Bomb,
     ItemKind.Fire,
@@ -402,6 +384,26 @@ export function recolor(px: Uint8ClampedArray, from: readonly Rgb[], to: Rgb): v
     const hit = shades.find(({ c }) => c[0] === px[i] && c[1] === px[i + 1] && c[2] === px[i + 2]);
     if (!hit) continue;
     for (let ch = 0; ch < 3; ch++) px[i + ch] = to[ch]! * hit.k;
+  }
+}
+
+/**
+ * Repaints pixels whose hue lies in `range` (degrees) in `to`, by brightness relative to
+ * `base`: the base shade becomes `to` exactly, darker shades darker, lighter ones toward white.
+ * For smooth (anti-aliased, gradient) art, where exact palette matching can't work.
+ */
+export function shadeHues(px: Uint8ClampedArray, range: readonly [number, number], base: Rgb, to: Rgb): void {
+  const ref = luma(base);
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] === 0) continue;
+    const c: Rgb = [px[i]!, px[i + 1]!, px[i + 2]!];
+    const [h, s] = toHsl(c);
+    if (s < 0.2 || h < range[0] || h > range[1]) continue;
+    const k = luma(c) / ref;
+    for (let ch = 0; ch < 3; ch++) {
+      const v = to[ch]!;
+      px[i + ch] = k <= 1 ? v * k : v + (255 - v) * Math.min(1, (k - 1) * 0.8);
+    }
   }
 }
 

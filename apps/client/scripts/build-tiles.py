@@ -1,242 +1,192 @@
-"""Arena tile sheet: one row of 32x32 cells, order = TILES.cells in render/sprites.ts:
-grass A (plain, flowers, pebbles), grass B (same, darker shade), block, pillar, border.
-Grass noise is periodic over the cell so neighbouring tiles join seamlessly. Blocks and
-walls are drawn in a 3/4 view: a lit top face over a shaded front face.
-Usage: python build-tiles.py public/sprites/tiles.png preview.png  (needs Pillow)"""
+"""Arena tiles (TILES in render/sprites.ts): grass A (plain, flowers, pebbles), grass B (darker),
+block, pillar, border; 128x128, computed as smooth shaders on a 32-unit design grid at 2x and
+scaled down. Grass noise wraps every
+tile so neighbours join seamlessly.
+Usage: python build-tiles.py public/sprites/tiles.png preview.png  (needs Pillow, numpy)"""
 import math, random, sys
-from PIL import Image
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
 
-N = 32
+OUT = 128
+SS = 2
+N = OUT * SS              # computed size
+K = N / 32                # px per design unit
 
-def clamp(v):
-    return max(0, min(255, int(v)))
+ys, xs = np.mgrid[0:N, 0:N]
+UX = (xs + 0.5) / K       # design-unit coordinates, 0..32
+UY = (ys + 0.5) / K
 
-def tint(c, k):
-    return (clamp(c[0] * k), clamp(c[1] * k), clamp(c[2] * k), 255)
-
-def mix(a, b, t):
-    return tuple(clamp(a[i] + (b[i] - a[i]) * t) for i in range(3)) + (255,)
-
-# --- periodic value noise (wraps every N pixels) --------------------------------
-
-def lattice(seed, period):
-    r = random.Random(seed)
-    return [[r.random() for _ in range(period)] for _ in range(period)]
-
-def smooth(t):
+def smooth(a, b, t):
+    t = np.clip((t - a) / (b - a), 0, 1)
     return t * t * (3 - 2 * t)
 
-def value(grid, x, y, period):
-    cell = N / period
-    gx, gy = x / cell, y / cell
-    x0, y0 = int(gx) % period, int(gy) % period
-    x1, y1 = (x0 + 1) % period, (y0 + 1) % period
-    tx, ty = smooth(gx - int(gx)), smooth(gy - int(gy))
-    a = grid[y0][x0] + (grid[y0][x1] - grid[y0][x0]) * tx
-    b = grid[y1][x0] + (grid[y1][x1] - grid[y1][x0]) * tx
-    return a + (b - a) * ty
+def mix(a, b, t):
+    t = np.asarray(t, float)
+    if t.ndim == 2:
+        t = t[..., None]
+    return a * (1 - t) + b * t
 
-def fbm(seed, x, y):
-    total, amp, norm = 0.0, 1.0, 0.0
-    for i, period in enumerate((4, 8, 16)):
-        total += value(LATTICES[(seed, period)], x, y, period) * amp
-        norm += amp
-        amp *= 0.5
-    return total / norm
+def periodic_noise(seed, cells, x=UX, y=UY):
+    """Smooth value noise repeating every 32 units."""
+    r = np.random.default_rng(seed)
+    g = r.random((cells, cells))
+    fx, fy = x / 32 * cells, y / 32 * cells
+    x0, y0 = np.floor(fx).astype(int) % cells, np.floor(fy).astype(int) % cells
+    x1, y1 = (x0 + 1) % cells, (y0 + 1) % cells
+    tx, ty = fx - np.floor(fx), fy - np.floor(fy)
+    tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
+    a = g[y0, x0] * (1 - tx) + g[y0, x1] * tx
+    b = g[y1, x0] * (1 - tx) + g[y1, x1] * tx
+    return a * (1 - ty) + b * ty
 
-LATTICES = {(s, p): lattice(s * 31 + p, p) for s in range(8) for p in (4, 8, 16)}
+def fbm(seed, x=UX, y=UY):
+    return (periodic_noise(seed, 4, x, y) + periodic_noise(seed + 1, 8, x, y) * 0.5 + periodic_noise(seed + 2, 16, x, y) * 0.25 + periodic_noise(seed + 3, 32, x, y) * 0.125) / 1.875
 
-# --- grass ------------------------------------------------------------------------
+def to_img(col, alpha=None):
+    a = np.full(col.shape[:2], 255.0) if alpha is None else alpha
+    arr = np.dstack([np.clip(col, 0, 255), np.clip(a, 0, 255)]).astype(np.uint8)
+    return Image.fromarray(arr, "RGBA")
 
-GRASS = [(34, 88, 44), (46, 112, 54), (60, 136, 64), (84, 162, 80), (120, 190, 98)]
+def finish(img):
+    return img.resize((OUT, OUT), Image.LANCZOS)
+
+def C(*rgb):
+    return np.array(rgb, float)
+
+# --- grass -------------------------------------------------------------------------------
 
 def grass(shade, variant):
-    """Lawn tile: mottled tones, short blades with lit tips; variant 1 adds flowers, 2 pebbles and a tuft."""
     k = 1.0 if shade == 0 else 0.86
-    pal = [tint(c, k) for c in GRASS]
-    img = Image.new("RGBA", (N, N))
-    px = img.load()
-    for y in range(N):
-        for x in range(N):
-            n = fbm(shade, x, y) * 0.75 + fbm(shade + 2, x * 2 % N, y * 2 % N) * 0.25
-            i = 1 if n < 0.42 else 2 if n < 0.6 else 3 if n < 0.72 else 2
-            px[x, y] = pal[i]
+    dark, mid, light = C(30, 84, 40) * k, C(52, 124, 58) * k, C(86, 164, 80) * k
+    n = fbm(shade * 10) * 0.7 + fbm(shade * 10 + 5) * 0.3
+    col = mix(dark, mid, smooth(0.25, 0.5, n))
+    col = mix(col, light, smooth(0.58, 0.8, n) * 0.8)
+    # fine streaks, like mown lawn
+    streak = periodic_noise(shade * 10 + 7, 32, UX * 0.5, UY * 4 % 32)
+    col = col * (0.94 + streak[..., None] * 0.1)
+    img = to_img(col)
+    d = ImageDraw.Draw(img)
     r = random.Random(100 + shade * 10 + variant)
-    for _ in range(26):  # blades: dark root, lit tip; wrap so edges stay seamless
-        x, y = r.randrange(N), r.randrange(N)
-        h = r.choice((2, 2, 3))
-        lean = r.choice((-1, 0, 0, 1))
-        for j in range(h):
-            xx, yy = (x + (lean if j == h - 1 else 0)) % N, (y - j) % N
-            px[xx, yy] = pal[0] if j == 0 else pal[4] if j == h - 1 else pal[3]
+    for _ in range(46):  # blades with a lit tip, wrapped at the edges
+        x, y = r.uniform(0, 32), r.uniform(0, 32)
+        h, lean = r.uniform(1.6, 3.2), r.uniform(-0.8, 0.8)
+        for ox in (-32, 0, 32):
+            for oy in (-32, 0, 32):
+                bx, by = (x + ox) * K, (y + oy) * K
+                tip = (bx + lean * K, by - h * K)
+                d.line([(bx, by), tip], fill=tuple(int(v) for v in dark * 0.9) + (255,), width=max(1, int(K * 0.45)))
+                d.line([((bx + tip[0]) / 2, (by + tip[1]) / 2), tip], fill=tuple(int(v) for v in light * 1.1) + (255,), width=max(1, int(K * 0.3)))
     if variant == 1:  # flowers
         for _ in range(3):
-            fx, fy = r.randrange(5, N - 5), r.randrange(5, N - 5)
+            fx, fy = r.uniform(5, 27), r.uniform(5, 27)
             petal = r.choice(((250, 250, 245), (255, 214, 80), (240, 150, 200)))
-            for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)):
-                px[fx + dx, fy + dy] = petal + (255,)
-            px[fx, fy] = (250, 180, 40, 255) if petal[1] != 214 else (200, 90, 30, 255)
-            px[fx + 1, fy + 2] = pal[0]  # shadow under the flower
-            px[fx, fy + 2] = pal[1]
-    if variant == 2:  # pebbles and a tuft
-        for _ in range(2):
-            sx, sy = r.randrange(4, N - 6), r.randrange(4, N - 5)
-            w = r.choice((3, 4))
-            for dx in range(w):
-                px[sx + dx, sy] = (150, 150, 140, 255)
-                px[sx + dx, sy + 1] = (118, 118, 112, 255)
-            px[sx, sy] = (196, 196, 184, 255)
-            for dx in range(w):
-                px[sx + dx, sy + 2] = pal[0]
-        tx, ty = r.randrange(6, N - 6), r.randrange(8, N - 3)
-        for dx, h in ((-2, 3), (-1, 5), (0, 6), (1, 4), (2, 3)):
-            for j in range(h):
-                px[tx + dx, ty - j] = pal[0] if j == 0 else pal[4] if j == h - 1 else pal[3] if j > h // 2 else pal[2]
-    return img
+            d.ellipse([(fx - 1.2) * K, (fy + 0.8) * K, (fx + 1.6) * K, (fy + 1.8) * K], fill=tuple(int(v) for v in dark) + (160,))
+            for a in range(5):
+                px, py = fx + math.cos(a * 1.2566) * 0.9, fy + math.sin(a * 1.2566) * 0.9
+                d.ellipse([(px - 0.7) * K, (py - 0.7) * K, (px + 0.7) * K, (py + 0.7) * K], fill=petal + (255,))
+            d.ellipse([(fx - 0.5) * K, (fy - 0.5) * K, (fx + 0.5) * K, (fy + 0.5) * K], fill=(240, 160, 40, 255))
+    if variant == 2:  # pebbles
+        for _ in range(3):
+            sx, sy, w = r.uniform(4, 26), r.uniform(4, 26), r.uniform(1.4, 2.4)
+            d.ellipse([(sx - w) * K, (sy - w * 0.4) * K, (sx + w * 1.1) * K, (sy + w * 0.9) * K], fill=tuple(int(v) for v in dark) + (180,))
+            d.ellipse([(sx - w) * K, (sy - w * 0.7) * K, (sx + w) * K, (sy + w * 0.6) * K], fill=(150, 148, 140, 255))
+            d.ellipse([(sx - w * 0.6) * K, (sy - w * 0.55) * K, (sx + w * 0.1) * K, (sy - w * 0.05) * K], fill=(200, 198, 188, 255))
+    return finish(img)
 
-# --- block (breakable bricks) --------------------------------------------------------
+# --- block: breakable bricks -----------------------------------------------------------------
 
 def block():
-    """Breakable brick block: sandy lit top, staggered brick courses on the front, chips and cracks."""
-    img = Image.new("RGBA", (N, N))
-    px = img.load()
-    r = random.Random(7)
-    top_c, brick, mortar = (222, 160, 104), (176, 86, 50), (84, 46, 36)
     TOP = 8
-    for y in range(N):
-        for x in range(N):
-            if y < TOP:
-                n = fbm(4, x, y)
-                c = tint(top_c, 0.9 + n * 0.25)
-                if y == 0 or x == 0:
-                    c = mix(c, (255, 236, 200), 0.5)
-                if y == TOP - 1:
-                    c = tint(top_c, 0.72)
-                px[x, y] = c
-            else:
-                px[x, y] = mortar + (255,)
-    # brick courses on the front face
-    course = 6
-    for row, y0 in enumerate(range(TOP, N, course)):
-        offset = 0 if row % 2 == 0 else 8
-        for bx in range(-16, N, 16):
-            x0 = bx + offset
-            tone = 0.88 + r.random() * 0.24
-            for y in range(y0, min(N, y0 + course - 1)):
-                for x in range(max(0, x0 + 1), min(N, x0 + 16)):
-                    n = fbm(5, x, y)
-                    c = tint(brick, tone * (0.9 + n * 0.22))
-                    if y == y0:
-                        c = mix(c, (255, 200, 160), 0.35)  # lit top edge of each brick
-                    elif y == y0 + course - 2:
-                        c = tint(c, 0.78)
-                    if x == x0 + 1:
-                        c = mix(c, (255, 200, 160), 0.2)
-                    px[x, y] = c
-    # speckle and chips
-    for _ in range(18):
-        x, y = r.randrange(1, N - 1), r.randrange(TOP + 1, N - 1)
-        if px[x, y][:3] != mortar:
-            px[x, y] = tint(px[x, y], r.choice((0.7, 1.2)))
-    for cx, cy, steps in ((22, 10, 5), (6, 22, 4)):  # cracks
-        x, y = cx, cy
-        for _ in range(steps):
-            px[x, y] = mortar + (255,)
-            x += r.choice((-1, 0, 1))
-            y += 1
-    # outline: dark sides and bottom so neighbouring blocks read apart
-    for y in range(N):
-        px[N - 1, y] = tint(px[N - 1, y], 0.6)
-    for x in range(N):
-        px[x, N - 1] = (60, 30, 24, 255)
-    return img
+    top_c, brick, mortar = C(222, 160, 104), C(176, 86, 50), C(84, 46, 36)
+    n = fbm(40)
+    col = np.zeros((N, N, 3))
+    top = UY < TOP
+    tcol = top_c * (0.88 + n[..., None] * 0.25)
+    edge = smooth(1.2, 0.0, np.minimum(UX, UY))[..., None]           # lit rim, top and left
+    tcol = mix(tcol, C(255, 238, 205), edge * 0.6)
+    tcol = mix(tcol, top_c * 0.7, smooth(TOP - 1.2, TOP, UY)[..., None])  # front edge
+    col[top] = tcol[top]
+    # brick courses: 6 units tall, staggered by 8
+    fy = UY - TOP
+    row = np.floor(fy / 6)
+    ly = fy - row * 6
+    ox = np.where(row % 2 == 0, 0, 8)
+    bx = (UX + ox) % 16
+    bid = (np.floor((UX + ox) / 16) * 7 + row * 13) % 5
+    tone = 0.86 + bid[..., None] * 0.06
+    bcol = brick * tone * (0.9 + fbm(41)[..., None] * 0.22)
+    bcol = mix(bcol, C(255, 196, 160), smooth(1.4, 0.2, ly)[..., None] * 0.4)    # lit top of each brick
+    bcol = mix(bcol, bcol * 0.7, smooth(4.2, 5.4, ly)[..., None])              # shaded bottom
+    bcol = mix(bcol, C(255, 196, 160), smooth(1.0, 0.0, bx - 0.6)[..., None] * 0.2)
+    m = np.maximum(smooth(0.75, 0.35, ly - 5.25 + 0.0) * (ly > 5.0), smooth(0.7, 0.3, bx))
+    m = np.maximum(m, (ly > 5.4).astype(float))
+    fcol = mix(bcol, mortar * (0.9 + n[..., None] * 0.2), m[..., None])
+    col[~top] = fcol[~top]
+    col = mix(col, col * 0.62, smooth(30.8, 32, UX)[..., None])  # right side in shade
+    col = mix(col, C(60, 30, 24), smooth(31.0, 32, UY)[..., None])
+    img = to_img(col)
+    d = ImageDraw.Draw(img)
+    for pts in (((22, 10), (21.4, 12), (22.6, 13.5), (21.8, 15.5)), ((6, 22), (6.8, 24), (6.1, 25.6))):  # cracks
+        d.line([(x * K, y * K) for x, y in pts], fill=tuple(int(v) for v in mortar) + (255,), width=int(K * 0.5), joint="curve")
+    return finish(img)
 
-# --- pillar (unbreakable inner wall) ---------------------------------------------------
+# --- pillar: unbreakable stone ----------------------------------------------------------------
 
 def pillar():
-    """Stone pillar: beveled lit top with a carved inset, shaded front face below."""
-    img = Image.new("RGBA", (N, N))
-    px = img.load()
-    stone = (138, 146, 170)
     TOP = 22
-    for y in range(N):
-        for x in range(N):
-            n = fbm(6, x, y)
-            if y < TOP:
-                c = tint(stone, 0.92 + n * 0.22)
-                if y <= 1 or x <= 1:
-                    c = mix(c, (235, 240, 255), 0.55 if (y == 0 or x == 0) else 0.3)
-                elif x >= N - 2 or y >= TOP - 2:
-                    c = tint(c, 0.78 if (x == N - 2 or y == TOP - 2) else 0.66)
-                # carved inset: dark groove top-left, lit edge bottom-right
-                if 7 <= x <= 24 and 5 <= y <= 16:
-                    if x == 7 or y == 5:
-                        c = tint(stone, 0.6)
-                    elif x == 24 or y == 16:
-                        c = mix(tint(stone, 1.0), (235, 240, 255), 0.35)
-                    else:
-                        c = tint(stone, 0.86 + n * 0.16)
-                px[x, y] = c
-            else:
-                c = tint(stone, (0.62 + n * 0.14) * (1 - (y - TOP) * 0.015))
-                if x in (10, 21) and y < N - 2:
-                    c = tint(c, 0.85)  # block joints on the front
-                if y == TOP:
-                    c = tint(stone, 0.5)
-                px[x, y] = c
-    for x in range(N):
-        px[x, N - 1] = (34, 36, 50, 255)
-    r = random.Random(3)
-    for _ in range(14):  # pits
-        x, y = r.randrange(3, N - 3), r.randrange(3, TOP - 3)
-        if not (7 <= x <= 24 and 5 <= y <= 16):
-            px[x, y] = tint(stone, 0.7)
-            px[x + 1, y + 1] = mix(stone, (235, 240, 255), 0.3)
-    return img
+    stone = C(138, 146, 170)
+    n = fbm(60)
+    grain = fbm(63, UX * 2 % 32, UY * 2 % 32)
+    col = np.zeros((N, N, 3))
+    top = UY < TOP
+    t = stone * (0.9 + n[..., None] * 0.18 + grain[..., None] * 0.08)
+    # bevel: light from the top left, shade to the bottom right
+    lit = smooth(2.2, 0.0, np.minimum(UX, UY))
+    dark = smooth(29.8, 32, UX) + smooth(TOP - 2.2, TOP, UY)
+    t = mix(t, C(236, 240, 255), lit[..., None] * 0.55)
+    t = mix(t, stone * 0.62, np.clip(dark, 0, 1)[..., None])
+    # carved inset
+    ix = (UX > 7) & (UX < 25) & (UY > 5) & (UY < 17)
+    groove = ix & ((UX < 7.9) | (UY < 5.9))
+    rim = ix & ((UX > 24.1) | (UY > 16.1))
+    t[ix] = (stone * (0.84 + n[..., None] * 0.14))[ix]
+    t[groove] = stone * 0.58
+    t[rim] = mix(stone, C(236, 240, 255), 0.35)
+    col[top] = t[top]
+    f = stone * (0.6 + n[..., None] * 0.12) * (1 - (UY[..., None] - TOP) * 0.012)
+    joint = (np.abs(UX - 10.5) < 0.35) | (np.abs(UX - 21.5) < 0.35)
+    f[joint] *= 0.82
+    f = mix(f, stone * 0.45, smooth(TOP + 0.9, TOP, UY)[..., None])
+    f = mix(f, C(34, 36, 50), smooth(31.0, 32, UY)[..., None])
+    col[~top] = f[~top]
+    return finish(to_img(col))
 
-# --- border (outer wall) -----------------------------------------------------------------
+# --- border: outer stone wall -----------------------------------------------------------------
 
 def border():
-    """Outer wall: big staggered stone blocks with a lit cap."""
-    img = Image.new("RGBA", (N, N))
-    px = img.load()
-    stone, mortar = (104, 110, 136), (44, 46, 64)
-    r = random.Random(11)
-    for y in range(N):
-        for x in range(N):
-            px[x, y] = mortar + (255,)
-    course = 16
-    for row, y0 in enumerate(range(0, N, course)):
-        offset = 0 if row % 2 == 0 else 10
-        for bx in range(-20, N + 20, 20):
-            x0 = bx + offset
-            tone = 0.86 + r.random() * 0.24
-            for y in range(y0 + 1, y0 + course):
-                for x in range(max(0, x0 + 1), min(N, x0 + 20)):
-                    n = fbm(7, x, y)
-                    c = tint(stone, tone * (0.88 + n * 0.24))
-                    if y <= y0 + 2:
-                        c = mix(c, (220, 228, 255), 0.4 if y == y0 + 1 else 0.2)
-                    elif x == x0 + 1:
-                        c = mix(c, (220, 228, 255), 0.18)
-                    elif y >= y0 + course - 2 or x >= x0 + 18:
-                        c = tint(c, 0.72)
-                    px[x, y] = c
-    for _ in range(16):
-        x, y = r.randrange(1, N - 1), r.randrange(1, N - 1)
-        if px[x, y][:3] != mortar:
-            px[x, y] = tint(px[x, y], r.choice((0.72, 1.18)))
-    return img
+    stone, mortar = C(104, 110, 136), C(44, 46, 64)
+    n = fbm(80)
+    row = np.floor(UY / 16)
+    ly = UY - row * 16
+    ox = np.where(row % 2 == 0, 0, 10)
+    lx = (UX + ox) % 20
+    bid = (np.floor((UX + ox) / 20) * 5 + row * 3) % 4
+    s = stone * (0.86 + bid[..., None] * 0.07) * (0.88 + n[..., None] * 0.22)
+    s = mix(s, C(220, 228, 255), (smooth(2.6, 0.6, ly) * 0.4 + smooth(1.6, 0.5, lx) * 0.18)[..., None])
+    s = mix(s, s * 0.68, np.clip(smooth(13.6, 15.4, ly) + smooth(17.6, 19.4, lx), 0, 1)[..., None])
+    m = np.maximum(smooth(0.9, 0.4, ly), smooth(0.9, 0.4, lx))
+    col = mix(s, mortar, m[..., None])
+    return finish(to_img(col))
 
 def main():
     cells = [grass(0, 0), grass(0, 1), grass(0, 2), grass(1, 0), grass(1, 1), grass(1, 2), block(), pillar(), border()]
-    sheet = Image.new("RGBA", (N * len(cells), N))
+    sheet = Image.new("RGBA", (OUT * len(cells), OUT))
     for i, c in enumerate(cells):
-        sheet.paste(c, (i * N, 0))
+        sheet.paste(c, (i * OUT, 0))
     sheet.save(sys.argv[1])
-    if len(sys.argv) > 2:  # preview: a small arena corner, scaled up
+    if len(sys.argv) > 2:
         W, H = 9, 7
-        prev = Image.new("RGBA", (W * N, H * N))
+        prev = Image.new("RGBA", (W * OUT, H * OUT))
         for y in range(H):
             for x in range(W):
                 if x == 0 or y == 0:
@@ -246,13 +196,8 @@ def main():
                 elif (x * 7 + y * 3) % 5 == 0:
                     c = 6
                 else:
-                    base = 0 if (x + y) % 2 == 0 else 3
-                    c = base + [0, 0, 0, 1, 2][(x * 5 + y * 11) % 5]
-                prev.paste(cells[c], (x * N, y * N))
-                above = 8 if y == 1 else 7 if (x % 2 == 0 and (y - 1) % 2 == 0 and y > 1) else 6 if (y > 1 and (x * 7 + (y - 1) * 3) % 5 == 0) else -1
-                if c < 6 and above >= 6:
-                    sh = Image.new("RGBA", (N, 6), (0, 0, 0, 70))
-                    prev.alpha_composite(sh, (x * N, y * N))
-        prev.resize((prev.width * 3, prev.height * 3), Image.NEAREST).save(sys.argv[2])
+                    c = (0 if (x + y) % 2 == 0 else 3) + [0, 0, 0, 1, 2][(x * 5 + y * 11) % 5]
+                prev.paste(cells[c], (x * OUT, y * OUT))
+        prev.resize((prev.width // 2, prev.height // 2), Image.LANCZOS).save(sys.argv[2])
 
 main()

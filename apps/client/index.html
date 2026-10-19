@@ -173,7 +173,7 @@
       .guide-text { margin: 0; line-height: 1.4; }
       .guide-tips-title { font-family: var(--display); font-weight: 400; font-size: 16px; color: var(--accent); }
       .guide-tips { margin: 0; padding-left: 20px; color: var(--muted); display: grid; gap: 4px; line-height: 1.35; }
-      .guide-icon { --px: 40px; flex: none; width: var(--px); height: var(--px); background-size: calc(var(--px) * var(--cols)) calc(var(--px) * var(--rows)); background-position: calc(var(--cell) * var(--px) * -1) 0; image-rendering: pixelated; }
+      .guide-icon { --px: 40px; flex: none; width: var(--px); height: var(--px); background-size: calc(var(--px) * var(--cols)) calc(var(--px) * var(--rows)); background-position: calc(var(--cell) * var(--px) * -1) 0; }
       .guide-icon.big { --px: 56px; }
       .or { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
       .or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed #ffffff22; }
@@ -190,7 +190,7 @@
       .seat .mascot { width: 60px; height: 60px; }
       /* A character from its sheet: one row played in CSS, scaled by --s, standing on the bottom of the box. */
       .mascot.sheet { position: relative; --k: 2.7; }
-      .mascot.sheet i { position: absolute; left: calc(50% - var(--ax) * var(--s)); top: calc(100% - var(--ay) * var(--s)); width: calc(var(--fw) * var(--s)); height: calc(var(--fh) * var(--s)); background: no-repeat 0 calc(var(--row) * var(--fh) * -1 * var(--s)) / calc(var(--sw) * var(--s)) calc(var(--sh) * var(--s)); image-rendering: pixelated; animation: sheet-play var(--dur) steps(var(--frames)) infinite; }
+      .mascot.sheet i { position: absolute; left: calc(50% - var(--ax) * var(--s)); top: calc(100% - var(--ay) * var(--s)); width: calc(var(--fw) * var(--s)); height: calc(var(--fh) * var(--s)); background: no-repeat 0 calc(var(--row) * var(--fh) * -1 * var(--s)) / calc(var(--sw) * var(--s)) calc(var(--sh) * var(--s)); animation: sheet-play var(--dur) steps(var(--frames)) infinite; }
       @keyframes sheet-play { to { background-position-x: calc(var(--frames) * var(--fw) * -1 * var(--s)); } }
       .seat.hard .mascot.sheet i { animation-duration: calc(var(--dur) / 2); }
       .hero .mascot.sheet { --k: 8; }

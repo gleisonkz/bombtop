@@ -1,5 +1,5 @@
 import { TICK_RATE, type CharacterId } from "@bombtop/shared";
-import { paintHues, recolor, SHEETS, type SheetLayout } from "../render/sprites";
+import { paintHues, recolor, shadeHues, SHEETS, type SheetLayout } from "../render/sprites";
 
 /** The sheet each character is drawn from, in the arena and in the menus. */
 export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja };
@@ -31,7 +31,8 @@ function sheetUrl(sheet: SheetLayout, color: string): Promise<string> {
       const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
       const rgb = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) as [number, number, number];
       if (sheet.clothes) recolor(data.data, sheet.clothes, rgb);
-      if (sheet.hues) paintHues(data.data, sheet.hues, rgb);
+      if (sheet.hues && sheet.hueBase) shadeHues(data.data, sheet.hues, sheet.hueBase, rgb);
+    else if (sheet.hues) paintHues(data.data, sheet.hues, rgb);
       ctx.putImageData(data, 0, 0);
       return canvas.toDataURL();
     })();

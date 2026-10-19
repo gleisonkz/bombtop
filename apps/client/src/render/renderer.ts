@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -74,7 +74,8 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
     const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
     const rgb = [(color >> 16) & 255, (color >> 8) & 255, color & 255] as const;
     if (sheet.clothes) recolor(data.data, sheet.clothes, rgb);
-    if (sheet.hues) paintHues(data.data, sheet.hues, rgb);
+    if (sheet.hues && sheet.hueBase) shadeHues(data.data, sheet.hues, sheet.hueBase, rgb);
+    else if (sheet.hues) paintHues(data.data, sheet.hues, rgb);
     ctx.putImageData(data, 0, 0);
     const tex = Texture.from(canvas);
     tex.source.scaleMode = (sheet.scale ?? 1) < 1 ? "linear" : "nearest"; // shrunk pixel art aliases badly

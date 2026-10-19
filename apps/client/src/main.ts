@@ -7,7 +7,7 @@ import { DemoGame } from "./game/demo-game";
 import { OnlineGame, SERVER_URL } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
-import { SHEETS, TILES, TILES_HD } from "./render/sprites";
+import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
@@ -24,14 +24,12 @@ const renderer = new Renderer();
 app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 void renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e));
-// Trial: `?hd` swaps in the high-resolution bomb and tiles.
-const hd = new URLSearchParams(location.search).has("hd");
-void renderer.useSheet("bomb", hd ? SHEETS.bomberHd : SHEETS.bomber).catch((e) => console.error("bomber sheet", e));
+void renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e));
 void renderer.useMascots().catch((e) => console.error("mascot", e));
 void renderer.useBombArt().catch((e) => console.error("bomb art", e));
 void renderer.useFlameArt().catch((e) => console.error("flame art", e));
 void renderer.useItemArt().catch((e) => console.error("item art", e));
-void renderer.useTileArt(hd ? TILES_HD : TILES).catch((e) => console.error("tile art", e));
+void renderer.useTileArt().catch((e) => console.error("tile art", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
