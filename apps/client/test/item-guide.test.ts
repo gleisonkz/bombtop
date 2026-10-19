@@ -16,6 +16,10 @@ describe("item guide", () => {
     }
   });
 
+  it("gives tips for every item", () => {
+    for (const i of ITEM_GUIDE) expect(i.tips.length, i.kind).toBeGreaterThanOrEqual(2);
+  });
+
   it("points at the item's cell on the sheet", () => {
     expect(ITEM_GUIDE[2]!.cell).toBe(2 * ITEMS.size);
   });

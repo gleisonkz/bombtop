@@ -1,6 +1,7 @@
 import { MASCOT_COLOR } from "./art";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
+import { ItemPreview } from "./item-preview";
 import { button, el, storage } from "./dom";
 import { characterArt } from "./sheet-art";
 
@@ -76,11 +77,17 @@ export class Menu {
       ]),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
     ]);
-    const guide = itemGuide(() => showGuide(false));
+    const preview = new ItemPreview();
+    const { root: guide, open: openGuide } = itemGuide({
+      close: () => showGuide(false),
+      show: (kind, stage) => void preview.play(kind, stage).catch((e) => console.error("item preview", e)),
+    });
     const showGuide = (on: boolean) => {
       card.hidden = on;
       guide.hidden = !on;
       this.root.classList.toggle("guiding", on);
+      if (on) openGuide();
+      else preview.pause();
     };
     guide.hidden = true;
     this.root = el("div", { class: "screen menu" }, [
