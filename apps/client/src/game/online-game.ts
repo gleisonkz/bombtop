@@ -1,6 +1,7 @@
 import { Client, type Room } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
 import { AdaptiveDelay } from "../net/adaptive-delay";
+import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
 import {
   C2S,
@@ -60,6 +61,9 @@ export class OnlineGame implements GameMode {
   private pinger: ReturnType<typeof setInterval> | undefined;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
+  /** Our ice blast and the items we walk onto, shown before the server confirms them. */
+  private readonly blastGhosts: GhostBlasts;
+  private pickups = new GhostPickups();
   private readonly kicks = new KickPrediction();
   private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
@@ -96,10 +100,12 @@ export class OnlineGame implements GameMode {
   ) {
     this.predictor = new Predictor(room.sessionId);
     this.ghosts = new GhostBombs(room.sessionId);
+    this.blastGhosts = new GhostBlasts(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
         this.ghosts.clear();
+        this.pickups = new GhostPickups();
         this.kicks.clear();
         ctx.sound.play("start");
       }
@@ -166,8 +172,15 @@ export class OnlineGame implements GameMode {
     // Other players come from the (past) sample; bombs, flames and the arena from the world ahead.
     const { bombs, flames, grid, items, blasts } = world;
     const mixed = { ...sample.to, bombs, flames, grid, items, blasts };
-    const view = this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs);
+    let view = this.blastGhosts.apply(this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
+    if (me) {
+      // Walking onto an item takes it (and plays its sound) now, not a round trip later.
+      const got = this.pickups.check(view, me, nowMs);
+      this.ctx.sound.cues(got, width);
+      this.echo.played(got, nowMs);
+    }
+    view = this.pickups.apply(view, nowMs);
     if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
     if (import.meta.env.DEV) Object.assign(window, { __me: me });
     prev.set(me.id, { px: me.px, py: me.py });
@@ -196,7 +209,7 @@ export class OnlineGame implements GameMode {
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
-    if ((input.bomb || input.action) && this.playing()) this.actNow(input);
+    if ((input.bomb || input.action || input.special) && this.playing()) this.actNow(input);
     const t = this.predictor.clock;
     const seq = this.predictor.step(input);
     if (seq !== null) this.room.send(C2S.input, { ...input, seq, t });
@@ -210,8 +223,12 @@ export class OnlineGame implements GameMode {
     const me = this.predictor.predict(this.latest!);
     if (!me) return;
     const now = performance.now();
-    const cues = actionCues(this.latest!, me, input);
+    // A blast we already predicted is still recharging on the server's side: don't cast it twice.
+    const casting = this.blastGhosts.active(now);
+    const cues = actionCues(this.latest!, me, input).filter((c) => c.name !== "ice" || !casting);
     for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now);
+    const blast = cues.some((c) => c.name === "ice") ? predictBlast(this.latest!, me) : null;
+    if (blast) this.blastGhosts.add(blast, now);
     this.ctx.sound.cues(cues, this.latest!.grid.width);
     this.echo.played(cues, now);
   }

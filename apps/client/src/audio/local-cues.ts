@@ -1,8 +1,8 @@
-import { detonateRemote, placeBomb, punch, useGlove, useMountAbility, type MatchState, type Player, type PlayerInput, type PublicView } from "@bombtop/shared";
+import { detonateRemote, placeBomb, punch, useGlove, useMountAbility, useSpecial, type MatchState, type Player, type PlayerInput, type PublicView } from "@bombtop/shared";
 import { soundCues, type Cue, type CueName } from "./cues";
 
 /** Sounds of our own button presses, played before the server confirms them. */
-const OWN: ReadonlySet<CueName> = new Set(["place", "throw", "jump", "dash"]);
+const OWN: ReadonlySet<CueName> = new Set(["place", "throw", "jump", "dash", "ice"]);
 
 /**
  * What our own button press sounds like, worked out with the same rules the
@@ -15,6 +15,7 @@ export function actionCues(view: PublicView, me: Player, input: PlayerInput): Cu
   const p = after.players[0]!;
   if (input.bomb && !useGlove(after, p)) placeBomb(after, p.id);
   if (input.action) detonateRemote(after, p.id) || punch(after, p) || useMountAbility(after, p);
+  if (input.special) useSpecial(after, p);
   return soundCues(before, after).filter((c) => OWN.has(c.name));
 }
 
