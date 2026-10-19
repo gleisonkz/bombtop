@@ -66,6 +66,13 @@ describe("InputQueue", () => {
     expect(bombs.indexOf(true)).toBe(5); // client tick 4 + 4-tick delay = server tick 8
   });
 
+  it("fires a special press once, like a bomb", () => {
+    const q = new InputQueue();
+    q.push({ dir: null, bomb: false, special: true }, 1, undefined, 0);
+    expect(q.take(0).special).toBe(true);
+    expect(q.take(1).special).toBeFalsy();
+  });
+
   it("acks the latest input it has applied and for how long", () => {
     const q = new InputQueue();
     q.push(go("up"), 4, 10, 12);

@@ -26,6 +26,7 @@ export class InputQueue {
   private alt: Direction = null;
   private bomb = false;
   private action = false;
+  private special = false;
   private seq = 0;
   private ticks = 0;
 
@@ -64,11 +65,13 @@ export class InputQueue {
       this.alt = input.alt ?? null;
       this.bomb ||= input.bomb;
       this.action ||= !!input.action;
+      this.special ||= !!input.special;
       if (seq !== this.seq) this.ticks = 0;
       this.seq = seq;
     }
     const out: PlayerInput = { dir: this.dir, alt: this.alt, bomb: this.bomb, action: this.action };
-    this.bomb = this.action = false;
+    if (this.special) out.special = true;
+    this.bomb = this.action = this.special = false;
     this.ticks++;
     return out;
   }
