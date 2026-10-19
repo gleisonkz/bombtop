@@ -16,6 +16,12 @@ describe("character previews", () => {
     expect(previewPose(s, "dizzy").row).toBe(s.stun.row);
   });
 
+  it("plays a sheet's own lobby pose when it has one", () => {
+    const s = SHEETS.ninja;
+    expect(previewPose(s, "walk").row).toBe(s.lobby!.row);
+    expect(previewPose(s, "walk").frames).toBe(s.lobby!.frames);
+  });
+
   it("falls back to idle when a sheet has no stun row", () => {
     const { stun: _, ...plain } = SHEETS.bomber;
     expect(previewPose(plain, "dizzy").row).toBe(plain.idle.down.row);

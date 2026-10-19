@@ -113,6 +113,30 @@ describe("ninja sheet", () => {
     expect(at("up", { stunned: true }).y).toBe(ninja.stun!.row * ninja.frameH);
     expect(at("left", { stunned: true }).flip).toBe(false);
   });
+
+  it("breathes slowly while standing, not at walking pace", () => {
+    const frames = (moving: boolean) => {
+      let changes = 0;
+      for (let tick = 1; tick < 120; tick++) if (at("down", { moving, tick }).x !== at("down", { moving, tick: tick - 1 }).x) changes++;
+      return changes;
+    };
+    expect(frames(false)).toBeGreaterThan(0);
+    expect(frames(false)).toBeLessThan(frames(true) / 2);
+  });
+
+  it("holds the bomb overhead: carry rows while carrying", () => {
+    const carry = (moving: boolean) => playerFrame(ninja, { facing: "down", moving, carrying: true, tick: 0 }).y;
+    expect(carry(false)).toBe(ninja.carryIdle!.down.row * ninja.frameH);
+    expect(carry(true)).toBe(ninja.carryWalk!.down.row * ninja.frameH);
+  });
+
+  it("every row fits inside the image", () => {
+    const strips = [ninja.idle, ninja.walk, ninja.cast!, ninja.carryIdle!, ninja.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, ninja.stun!, ninja.death!, ninja.lobby!]) {
+      expect((s.row + 1) * ninja.frameH).toBeLessThanOrEqual(ninja.height);
+      expect(s.frames * ninja.frameW).toBeLessThanOrEqual(ninja.width);
+    }
+  });
 });
 
 describe("deathFrame", () => {
@@ -398,7 +422,7 @@ describe("HD art", () => {
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.frameW * SHEETS.bomber.scale).toBeCloseTo(32 * 0.7);
-    expect(SHEETS.ninja.frameW * SHEETS.ninja.scale).toBeCloseTo(64 * 0.55);
+    expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(38 * 0.55, 0); // the ninja stands as tall as before
   });
 });
 

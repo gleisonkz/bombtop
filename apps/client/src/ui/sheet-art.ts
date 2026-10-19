@@ -6,10 +6,11 @@ export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS
 
 export type PreviewState = "walk" | "idle" | "dizzy";
 
-/** Which row a preview plays and how fast: the same timing as in the arena. */
+/** Which row a preview plays and how fast: the sheet's lobby pose when it has one, else walking; arena timing. */
 export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number } {
-  const strip = state === "walk" ? sheet.walk.down : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
-  return { row: strip.row, frames: strip.frames, seconds: (strip.frames * sheet.ticksPerFrame) / TICK_RATE };
+  const strip = state === "walk" ? (sheet.lobby ?? sheet.walk.down) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
+  const per = state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
+  return { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
 }
 
 const painted = new Map<string, Promise<string>>();

@@ -23,6 +23,8 @@ export interface SheetLayout {
   bodyH: number;
   /** Ticks each walk frame stays on screen. */
   ticksPerFrame: number;
+  /** Ticks each idle frame stays on screen, when standing breathes slower than walking. */
+  idleTicksPerFrame?: number;
   /** The sheet draws one side; the other one is mirrored. */
   side: "left" | "right";
   idle: Record<"down" | "up" | "side", Strip>;
@@ -40,6 +42,8 @@ export interface SheetLayout {
   stun?: Strip;
   /** Played once when the player dies. */
   death?: Strip;
+  /** A pose for the menus (lobby seats), facing the camera. */
+  lobby?: Strip;
   /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
   cast?: Record<"down" | "up" | "side", Strip>;
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
@@ -86,25 +90,29 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
-  /** PixelLab art (sprites/ninja.png), smoothed to 2x by scripts/upscale-pixel-art.py. */
+  /** The ninja, made in PixelLab at 128px (scripts/build-ninja-sheet.py lays out its frames). */
   ninja: {
-    url: "sprites/ninja-hd.png",
-    width: 1152,
-    height: 1408,
-    frameW: 128,
-    frameH: 128,
-    anchorX: 62,
-    anchorY: 102,
-    bodyH: 76,
+    url: "sprites/ninja.png",
+    width: 1008,
+    height: 1944,
+    frameW: 112,
+    frameH: 108,
+    anchorX: 56,
+    anchorY: 106,
+    bodyH: 100,
     ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
     side: "right",
-    idle: strips(0, 1, 2, 1),
+    idle: strips(0, 1, 2, 4),
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
-    death: { row: 7, frames: 7 },
+    death: { row: 7, frames: 8 },
     cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
     hues: [185, 250],
-    scale: 0.275,
+    scale: 0.21,
   },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
@@ -352,7 +360,8 @@ export function playerFrame(
   if (sheet.cast && castCol >= 0 && castCol < sheet.cast[view].frames) return { ...cell(sheet, sheet.cast[view], castCol), flip };
   const set = carrying && sheet.carryIdle ? (moving ? sheet.carryWalk! : sheet.carryIdle) : moving ? sheet.walk : sheet.idle;
   const strip = set[view];
-  const col = Math.floor(tick / sheet.ticksPerFrame) % strip.frames;
+  const per = !moving && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
+  const col = Math.floor(tick / per) % strip.frames;
   return { x: col * sheet.frameW, y: strip.row * sheet.frameH, flip };
 }
 

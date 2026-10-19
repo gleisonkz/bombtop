@@ -9,6 +9,11 @@ Trial character sheets. Both are CC0 (public domain, no attribution required).
   rows: idle S/E/N, walk S/E/N (6 frames), hit (6), death (7), ice-blast cast S/E/N (9); 64px cells.
   `ninja-hd.png` is the same sheet smoothed to 2x (128px cells) by `scripts/upscale-pixel-art.py`.
 
+## ninja.png
+
+The project's own character, made in PixelLab (pixellab.ai) for Bombtop at 128px (character "Ice ninja HD"
+and its "Carry" state). Frames laid out by `scripts/build-ninja-sheet.py`; rows = `SHEETS.ninja`.
+
 ## Generated art
 
 Own art for this project, drawn in code by the scripts in `apps/client/scripts` (no source images),
