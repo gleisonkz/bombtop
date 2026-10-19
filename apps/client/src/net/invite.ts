@@ -1,5 +1,6 @@
-/** Query param that carries the room code in an invite link. */
+/** Room pages live at /sala/<code>; old invite links carried it as ?sala=<code>. */
 const PARAM = "sala";
+const ROUTE = /^\/sala\/([^/]+)\/?$/;
 /** Colyseus room ids: short url-safe strings. */
 const CODE = /^[A-Za-z0-9_-]{1,32}$/;
 
@@ -8,19 +9,21 @@ export function inviteUrl(pageHref: string, code: string): string {
   const url = new URL(pageHref);
   url.search = "";
   url.hash = "";
-  url.searchParams.set(PARAM, code);
+  url.pathname = `/${PARAM}/${code}`;
   return url.toString();
 }
 
 /** Room code from an invite link, or null when there is none (or it is junk). */
 export function codeFromUrl(href: string): string | null {
-  const code = new URL(href).searchParams.get(PARAM);
+  const url = new URL(href);
+  const code = ROUTE.exec(url.pathname)?.[1] ?? url.searchParams.get(PARAM);
   return code && CODE.test(code) ? code : null;
 }
 
-/** The same address without the invite, so a reload does not rejoin. */
+/** The same address without the room: back to the menu. */
 export function withoutInvite(href: string): string {
   const url = new URL(href);
+  if (ROUTE.test(url.pathname)) url.pathname = "/";
   url.searchParams.delete(PARAM);
   return url.toString();
 }

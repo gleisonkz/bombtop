@@ -57,8 +57,14 @@ export class OnlineGame implements GameMode {
     who: { name: string; token?: string; character: CharacterId },
     ctx: ModeContext,
     panel: LobbyPanel,
+    /** Reconnection token of this tab's old seat in the room being joined (after a reload). */
+    seat: string | null = null,
   ): Promise<OnlineGame> {
     const client = new Client(SERVER_URL);
+    if (seat && choice.kind === "join") {
+      const back = await client.reconnect(seat).catch(() => null);
+      if (back) return new OnlineGame(back, ctx, panel);
+    }
     const base = { name: who.name, character: who.character };
     const options = who.token ? { ...base, token: who.token } : base;
     const room =
@@ -181,6 +187,16 @@ export class OnlineGame implements GameMode {
 
   blur(): void {
     for (const k of this.inputs) k.reset();
+  }
+
+  /** Token to take this seat back after a reload. */
+  get seatToken(): string {
+    return this.room.reconnectionToken;
+  }
+
+  /** The room's code, as typed to join it and shown in invite links. */
+  get code(): string {
+    return this.room.roomId;
   }
 
   async leave(): Promise<void> {

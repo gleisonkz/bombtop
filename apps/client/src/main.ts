@@ -9,7 +9,9 @@ import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
-import { codeFromUrl, withoutInvite } from "./net/invite";
+import { codeFromUrl } from "./net/invite";
+import { browserAddress, RoomRoute } from "./net/room-route";
+import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { button, el, storage } from "./ui/dom";
 import { Menu } from "./ui/menu";
@@ -111,12 +113,19 @@ function setMode(next: GameMode | null, controls = !!next): void {
   touch.setVisible(controls);
 }
 
+// The room lives in the address (/sala/CODE) while the player is in it.
+const route = new RoomRoute(browserAddress);
+// This tab's seat, so a reload takes it back.
+const seats = new SeatMemory(tabStore);
+
 const ctx: ModeContext = {
   renderer,
   sound,
   touch: touch.input,
   fit,
   exit: (message) => {
+    route.left();
+    seats.forget();
     setMode(null);
     menu.show(message);
   },
@@ -159,11 +168,16 @@ const menu = new Menu(ui, {
     try {
       const character = savedCharacter();
       const who = account ? { name: account.name, token: account.token, character } : { name, character };
-      online = await OnlineGame.connect(choice, who, ctx, lobby);
+      const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
+      online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
+      route.entered(online.code);
+      seats.remember(online.code, online.seatToken);
       menu.hide();
       setMode(online);
     } catch (err) {
       console.error(err);
+      route.left();
+      seats.forget();
       menu.show(
         choice.kind === "join"
           ? "Não foi possível entrar: confira o código (a sala pode estar cheia ou em partida)."
@@ -173,8 +187,12 @@ const menu = new Menu(ui, {
   },
 });
 
+// An invite link, or a reload inside a room: join it.
 let invite = codeFromUrl(location.href);
-if (invite) history.replaceState(null, "", withoutInvite(location.href));
+// Back button while in a room: leave it.
+window.addEventListener("popstate", () => {
+  if (route.wentBack()) void online?.leave();
+});
 
 watchAccount((a) => {
   account = a;

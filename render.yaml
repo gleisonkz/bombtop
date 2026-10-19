@@ -17,6 +17,11 @@ services:
     runtime: static
     buildCommand: npx --yes pnpm@12.11.2 install --frozen-lockfile && npx --yes pnpm@12.11.2 -C apps/client build
     staticPublishPath: apps/client/dist
+    routes:
+      # Room pages (/sala/<code>) are the same single-page app.
+      - type: rewrite
+        source: /sala/*
+        destination: /index.html
     headers:
       # Let the PWA pick up new deploys right away.
       - path: /sw.js
