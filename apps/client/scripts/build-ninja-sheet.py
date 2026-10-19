@@ -11,7 +11,7 @@ from PIL import Image
 # (sheet row name, animation folder, direction, frames)
 ROWS = [
     ("idle.down", "idle-s3", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
-    ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walkn3", "north", 6),
+    ("walk.down", "skel", "south", 6), ("walk.side", "skel", "east", 6), ("walk.up", "skel", "north", 6),
     ("stun", "hit3", "south", 6),
     ("death", "death3", "south", 8),
     ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),

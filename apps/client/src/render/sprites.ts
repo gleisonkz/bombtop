@@ -94,9 +94,9 @@ export const SHEETS = {
   ninja: {
     url: "sprites/ninja.png",
     width: 1008,
-    height: 1944,
+    height: 1998,
     frameW: 112,
-    frameH: 108,
+    frameH: 111,
     /** The body's middle (the katana hilt sticks out on one side, so not the cell's middle). */
     anchorX: 55,
     anchorY: 106,
