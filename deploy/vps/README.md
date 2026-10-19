@@ -8,6 +8,9 @@ Public URL: `wss://187-127-63-110.sslip.io` (Caddy terminates TLS, proxies to `1
   reinstalls the server's deps, reinstalls these unit files and the Caddyfile, and restarts.
   So a push to `main` reaches the server within ~1-2 minutes.
 - Logs: `journalctl -u bombtop -f`, deploys: `journalctl -u bombtop-update`.
+- Connection reports from players who opened the game with `?debug` (every 5 s: ping, render delay,
+  fps, frames without a snapshot, worst gap between snapshots, user agent):
+  `/opt/bombtop/logs/net-YYYY-MM-DD.jsonl`, one JSON line each (`LOG_DIR` in `bombtop.service`).
 - Access: `ssh -i ~/.ssh/bombtop_vps root@187.127.63.110` (key only).
 
 One-time setup (already done): Node 24 in /usr/local, `apt install git caddy ufw`, ufw allows

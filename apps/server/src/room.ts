@@ -16,6 +16,10 @@ import {
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { BattleSession } from "./session";
 import { SnapshotStream } from "./snapshot-stream";
+import { NetLog, netReport } from "./net-log";
+
+/** ?debug clients' connection reports, read over SSH (deploy/vps/README.md). */
+const netLog = new NetLog(process.env.LOG_DIR ?? "logs");
 
 const authConfig = authConfigFromEnv();
 
@@ -62,6 +66,16 @@ export class BattleRoom extends Room {
     this.onMessage(C2S.character, (client, message) => {
       const character = characterId(message);
       if (character && this.session.setCharacter(client.sessionId, character)) this.broadcastLobby();
+    });
+    this.onMessage(C2S.stats, (client, message) => {
+      const report = netReport(message);
+      if (!report || !netLog.allow(client.sessionId)) return;
+      const player = this.session.lobbyInfo(this.roomId).members.find((m) => m.id === client.sessionId)?.name ?? "?";
+      try {
+        netLog.write({ room: this.roomId, player }, report);
+      } catch (err) {
+        console.warn("[bombtop] net log", err);
+      }
     });
     this.onMessage(C2S.start, (client) => {
       if (this.session.start(client.sessionId)) this.syncPhase();

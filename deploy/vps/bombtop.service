@@ -8,6 +8,7 @@ User=bombtop
 WorkingDirectory=/opt/bombtop/app
 Environment=NODE_ENV=production
 Environment=PORT=2567
+Environment=LOG_DIR=/opt/bombtop/logs
 ExecStart=/opt/bombtop/app/apps/server/node_modules/.bin/tsx apps/server/src/index.ts
 Restart=always
 RestartSec=2

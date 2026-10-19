@@ -21,6 +21,8 @@ export const C2S = {
   addBot: "addBot",
   removeBot: "removeBot",
   character: "character",
+  /** Connection measurements from a ?debug client, logged on the server. */
+  stats: "stats",
 } as const;
 
 /** Server -> client message types. */
