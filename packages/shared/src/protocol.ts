@@ -24,7 +24,7 @@ export const C2S = {
 } as const;
 
 /** Server -> client message types. */
-export const S2C = { lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
+export const S2C = { lobby: "lobby", snapshot: "snapshot", delta: "delta", result: "result" } as const;
 
 export interface LobbyMember {
   id: string;
