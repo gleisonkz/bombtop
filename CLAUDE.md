@@ -56,6 +56,8 @@ All art, audio and names are original — never copy assets from existing games.
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters) |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
 
+| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Bomb: none yet |
+
 Action button priority: detonate remote > punch > mount ability.
 
 Characters (looks only): `CHARACTERS` in `protocol.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
