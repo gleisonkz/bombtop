@@ -1,5 +1,5 @@
 """Explosion flame sheet: rows center / mid / end, FRAMES columns of 32x32.
-# Usage: python build-flames.py public/sprites/flames.png preview.png  (needs Pillow)
+Usage: python build-flames.py public/sprites/flames.png preview.png  (needs Pillow)
 Mid and end point right (end tip on the right); the renderer rotates them.
 Edges are periodic in x so neighbouring tiles join seamlessly."""
 import math, sys
