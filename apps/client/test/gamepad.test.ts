@@ -36,4 +36,13 @@ describe("GamepadInput", () => {
     state = pad([2]);
     expect(g.sample().action).toBe(false); // B and X are one logical button: still held, no new press
   });
+
+  it("Y is the special button, once per press", () => {
+    let state = pad([3]);
+    const g = new GamepadInput(() => state);
+    expect(g.sample().special).toBe(true);
+    expect(g.sample().special).toBeFalsy();
+    state = pad([]);
+    expect(g.sample().special).toBeFalsy();
+  });
 });

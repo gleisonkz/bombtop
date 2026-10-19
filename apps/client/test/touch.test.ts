@@ -74,4 +74,11 @@ describe("TouchInput", () => {
     t.reset();
     expect(t.sample()).toEqual({ dir: null, bomb: false, action: false });
   });
+
+  it("the special button fires once per tap", () => {
+    const t = new TouchInput();
+    t.press("special");
+    expect(t.sample().special).toBe(true);
+    expect(t.sample().special).toBeFalsy();
+  });
 });

@@ -7,11 +7,12 @@ export interface KeyBindings {
   right: string;
   bomb: string;
   action: string;
+  special: string;
 }
 
 /**
  * Bindings use KeyboardEvent.code, so they follow physical key positions.
- * Buttons avoid letter keys: some browser extensions swallow them.
+ * Bomb and action avoid letter keys: some browser extensions swallow them.
  */
 export const WASD: KeyBindings = {
   up: "KeyW",
@@ -20,6 +21,7 @@ export const WASD: KeyBindings = {
   right: "KeyD",
   bomb: "Space",
   action: "ShiftLeft",
+  special: "KeyE",
 };
 export const ARROWS: KeyBindings = {
   up: "ArrowUp",
@@ -28,12 +30,13 @@ export const ARROWS: KeyBindings = {
   right: "ArrowRight",
   bomb: "Enter",
   action: "ShiftRight",
+  special: "ControlRight",
 };
 
 type Dir = Exclude<Direction, null>;
-type Button = "bomb" | "action";
+type Button = "bomb" | "action" | "special";
 const DIRS: Dir[] = ["up", "down", "left", "right"];
-const BUTTONS: Button[] = ["bomb", "action"];
+const BUTTONS: Button[] = ["bomb", "action", "special"];
 
 /** A button that reports one press per physical press, even if released before sampling. */
 class EdgeButton {
@@ -66,7 +69,7 @@ class EdgeButton {
  */
 export class KeyboardInput {
   private held: Dir[] = [];
-  private readonly buttons: Record<Button, EdgeButton> = { bomb: new EdgeButton(), action: new EdgeButton() };
+  private readonly buttons: Record<Button, EdgeButton> = { bomb: new EdgeButton(), action: new EdgeButton(), special: new EdgeButton() };
 
   constructor(private readonly bindings: KeyBindings) {}
 
@@ -98,6 +101,7 @@ export class KeyboardInput {
   sample(): PlayerInput {
     const dir = this.held.at(-1) ?? null;
     const input: PlayerInput = { dir, bomb: this.buttons.bomb.take(), action: this.buttons.action.take() };
+    if (this.buttons.special.take()) input.special = true;
     // Two perpendicular keys: walk along the earlier one until the newer one opens up.
     const horizontal = (d: Dir) => d === "left" || d === "right";
     const alt = this.held.findLast((d) => dir && horizontal(d) !== horizontal(dir));
@@ -128,5 +132,6 @@ export function mergeInputs(inputs: PlayerInput[]): PlayerInput {
     action: inputs.some((i) => i.action),
   };
   if (steering?.alt) merged.alt = steering.alt;
+  if (inputs.some((i) => i.special)) merged.special = true;
   return merged;
 }

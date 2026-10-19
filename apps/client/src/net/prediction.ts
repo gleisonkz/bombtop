@@ -39,7 +39,7 @@ export class Predictor {
     const alt = input.alt ?? null;
     const last = this.log.at(-1);
     let sent: number | null = null;
-    if (!last || last.dir !== input.dir || last.alt !== alt || input.bomb || input.action) {
+    if (!last || last.dir !== input.dir || last.alt !== alt || input.bomb || input.action || input.special) {
       sent = ++this.seq;
       this.log.push({ seq: sent, dir: input.dir, alt, tick: this.tick });
     }
@@ -62,7 +62,7 @@ export class Predictor {
     if (keep > 0) this.log = this.log.slice(keep);
 
     const p = structuredClone(found);
-    if (!p.alive || p.stun > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
+    if (!p.alive || p.stun > 0 || p.frozen > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
 
     const state = { ...snap, players: [p], rng: 0 } as MatchState;
     this.log.forEach((e, i) => {

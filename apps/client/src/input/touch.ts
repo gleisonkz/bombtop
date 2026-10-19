@@ -39,7 +39,7 @@ function steerFromVector(dx: number, dy: number, deadZone: number, prev: Steer):
 /** Virtual joystick (follows one finger from where it touched down) plus two tap buttons. */
 export class TouchInput {
   private stick: ({ id: number; ox: number; oy: number } & Steer) | null = null;
-  private pending = { bomb: false, action: false };
+  private pending: { bomb: boolean; action: boolean; special?: true } = { bomb: false, action: false };
 
   constructor(private readonly deadZone = 12) {}
 
@@ -68,7 +68,7 @@ export class TouchInput {
     if (this.stick?.id === id) this.stick = null;
   }
 
-  press(button: "bomb" | "action"): void {
+  press(button: "bomb" | "action" | "special"): void {
     this.pending[button] = true;
   }
 

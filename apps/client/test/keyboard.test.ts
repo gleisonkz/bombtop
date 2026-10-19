@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KeyboardInput, mergeInputs, WASD } from "../src/input/keyboard";
+import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../src/input/keyboard";
 
 describe("KeyboardInput", () => {
   it("has no direction and no bomb by default", () => {
@@ -96,6 +96,23 @@ describe("KeyboardInput", () => {
     k.keyDown("ShiftLeft");
     k.keyUp("ShiftLeft");
     expect(k.sample().action).toBe(true);
+  });
+});
+
+describe("special button", () => {
+  it("fires once per press, on E (left player) or right Ctrl (right player)", () => {
+    const left = new KeyboardInput(WASD);
+    left.keyDown("KeyE");
+    expect(left.sample().special).toBe(true);
+    expect(left.sample().special).toBeFalsy();
+    const right = new KeyboardInput(ARROWS);
+    expect(right.keyDown("ControlRight")).toBe(true);
+    expect(right.sample().special).toBe(true);
+  });
+
+  it("merges like the other buttons", () => {
+    expect(mergeInputs([{ dir: null, bomb: false }, { dir: null, bomb: false, special: true }]).special).toBe(true);
+    expect(mergeInputs([{ dir: null, bomb: false }]).special).toBeUndefined();
   });
 });
 

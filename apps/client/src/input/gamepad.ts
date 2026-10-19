@@ -15,6 +15,7 @@ const DPAD: [number, Exclude<Direction, null>][] = [
 ];
 const BOMB_BUTTONS = [0]; // A / Cross
 const ACTION_BUTTONS = [1, 2]; // B / Circle, X / Square
+const SPECIAL_BUTTONS = [3]; // Y / Triangle
 
 /** The n-th connected gamepad from the browser, if any. */
 export function gamepadAt(n: number): () => PadState | null {
@@ -24,26 +25,30 @@ export function gamepadAt(n: number): () => PadState | null {
   };
 }
 
-/** Polls a gamepad once per tick: d-pad or left stick to move, A = bomb, B/X = action. */
+/** Polls a gamepad once per tick: d-pad or left stick to move, A = bomb, B/X = action, Y = special. */
 export class GamepadInput {
   private bombHeld = false;
   private actionHeld = false;
+  private specialHeld = false;
 
   constructor(private readonly read: () => PadState | null = gamepadAt(0)) {}
 
   sample(): PlayerInput {
     const pad = this.read();
     if (!pad) {
-      this.bombHeld = this.actionHeld = false;
+      this.bombHeld = this.actionHeld = this.specialHeld = false;
       return { dir: null, bomb: false, action: false };
     }
     const down = (ids: number[]) => ids.some((i) => pad.buttons[i]?.pressed);
 
     const bombNow = down(BOMB_BUTTONS);
     const actionNow = down(ACTION_BUTTONS);
-    const input = { dir: direction(pad), bomb: bombNow && !this.bombHeld, action: actionNow && !this.actionHeld };
+    const specialNow = down(SPECIAL_BUTTONS);
+    const input: PlayerInput = { dir: direction(pad), bomb: bombNow && !this.bombHeld, action: actionNow && !this.actionHeld };
+    if (specialNow && !this.specialHeld) input.special = true;
     this.bombHeld = bombNow;
     this.actionHeld = actionNow;
+    this.specialHeld = specialNow;
     return input;
   }
 }

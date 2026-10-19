@@ -17,6 +17,7 @@ describe("Predictor", () => {
     expect(p.step(input("right", { bomb: true }))).toBe(2);
     expect(p.step(input("right", { alt: "down" }))).toBe(3);
     expect(p.step(input(null))).toBe(4);
+    expect(p.step(input(null, { special: true }))).toBe(5);
   });
 
   it("counts its ticks, so each sent input can carry the tick it was made on", () => {
@@ -74,6 +75,15 @@ describe("Predictor", () => {
     const p = new Predictor("me");
     const snap = snapshot();
     snap.players[0]!.stun = 10;
+    p.step(input("right"));
+    expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
+  });
+
+  it("does not move a frozen player", () => {
+    const p = new Predictor("me");
+    const snap = snapshot();
+    snap.players[0]!.frozen = 100;
+    p.step(input("right"));
     p.step(input("right"));
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
   });
