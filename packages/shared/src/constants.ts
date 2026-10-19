@@ -84,7 +84,7 @@ export const FREEZE_TICKS = 5 * TICK_RATE;
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
 /** Ticks a blast stays on screen. */
-export const BLAST_TICKS = 24;
+export const BLAST_TICKS = 36;
 
 /** Spawn tiles for the default 13x11 arena, in player order. */
 export const SPAWN_POINTS: readonly { x: number; y: number }[] = [

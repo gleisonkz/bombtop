@@ -1,4 +1,4 @@
-import { TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
 import type { Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -38,6 +38,8 @@ export interface SheetLayout {
   stun?: Strip;
   /** Played once when the player dies. */
   death?: Strip;
+  /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
+  cast?: Record<"down" | "up" | "side", Strip>;
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
   scale?: number;
 }
@@ -84,8 +86,8 @@ export const SHEETS = {
   },
   ninja: {
     url: "sprites/ninja.png",
-    width: 448,
-    height: 512,
+    width: 576,
+    height: 704,
     frameW: 64,
     frameH: 64,
     anchorX: 31,
@@ -97,6 +99,7 @@ export const SHEETS = {
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 7 },
+    cast: strips(8, 9, 10, 9),
     hues: [185, 250],
     scale: 0.55,
   },
@@ -178,6 +181,28 @@ export function mascotDeath(ticks: number) {
   return { alpha: 1 - k * k, sx: 1 + k * 0.3, sy: 1 - k * 0.3, dy: -k * 10, mood: "sad" as Mood };
 }
 
+/** Ticks each cast frame stays on screen: the cast lasts as long as its blast. */
+export const CAST_TICKS_PER_FRAME = 4;
+
+/** Ticks into the cast when the hands thrust forward and the beam shows. */
+export const BEAM_DELAY = 20;
+
+/** Opacity of a blast's beam `ticks` after the cast began. */
+export function beamAlpha(ticks: number): number {
+  if (ticks < BEAM_DELAY) return 0;
+  return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
+}
+
+/**
+ * How a frozen player looks: tinted icy inside a block of ice, which flickers
+ * in its last second as it melts. Null when not frozen.
+ */
+export function frozenLook(frozen: number, tick: number): { tint: number; block: boolean } | null {
+  if (frozen <= 0) return null;
+  const melting = frozen <= TICK_RATE;
+  return { tint: 0x9fdcff, block: !melting || Math.floor(tick / 4) % 2 === 0 };
+}
+
 export interface FrameRect {
   x: number;
   y: number;
@@ -187,14 +212,24 @@ export interface FrameRect {
 /** The sheet cell to draw for a player this tick. */
 export function playerFrame(
   sheet: SheetLayout,
-  { facing, moving, carrying, stunned, tick }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; tick: number },
+  {
+    facing,
+    moving,
+    carrying,
+    stunned,
+    casting,
+    tick,
+  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; tick: number },
 ): FrameRect {
   if (stunned && sheet.stun) return cell(sheet, sheet.stun, Math.floor(tick / sheet.ticksPerFrame) % sheet.stun.frames);
   const view = facing === "left" || facing === "right" ? "side" : facing;
+  const flip = view === "side" && facing !== sheet.side;
+  const castCol = casting === undefined ? -1 : Math.floor(casting / CAST_TICKS_PER_FRAME);
+  if (sheet.cast && castCol >= 0 && castCol < sheet.cast[view].frames) return { ...cell(sheet, sheet.cast[view], castCol), flip };
   const set = carrying && sheet.carryIdle ? (moving ? sheet.carryWalk! : sheet.carryIdle) : moving ? sheet.walk : sheet.idle;
   const strip = set[view];
   const col = Math.floor(tick / sheet.ticksPerFrame) % strip.frames;
-  return { x: col * sheet.frameW, y: strip.row * sheet.frameH, flip: view === "side" && facing !== sheet.side };
+  return { x: col * sheet.frameW, y: strip.row * sheet.frameH, flip };
 }
 
 const cell = (sheet: SheetLayout, strip: Strip, col: number): FrameRect => ({

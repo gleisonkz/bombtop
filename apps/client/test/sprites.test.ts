@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { FUSE_TICKS } from "@bombtop/shared";
-import { BOMBS, MASCOT, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BLAST_TICKS, FREEZE_TICKS, FUSE_TICKS } from "@bombtop/shared";
+import { BEAM_DELAY, BOMBS, CAST_TICKS_PER_FRAME, MASCOT, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -235,5 +235,41 @@ describe("mascot in the arena", () => {
     expect(late.alpha).toBeLessThan(0.2);
     expect(late.dy).toBeLessThan(first.dy);
     expect(mascotDeath(MASCOT.deathTicks)).toBeNull();
+  });
+});
+
+describe("ice blast visuals", () => {
+  const ninja = SHEETS.ninja;
+  const cast = ninja.cast!;
+  const frame = (facing: "up" | "down" | "left" | "right", casting: number) =>
+    playerFrame(ninja, { facing, moving: true, carrying: false, casting, tick: 0 });
+
+  it("plays the cast row for the facing direction, mirroring east for west", () => {
+    expect(frame("down", 0).y).toBe(cast.down.row * ninja.frameH);
+    expect(frame("up", 0).y).toBe(cast.up.row * ninja.frameH);
+    expect(frame("left", 0)).toMatchObject({ y: cast.side.row * ninja.frameH, flip: true });
+    const last = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME - 1);
+    expect(last.x).toBe((cast.down.frames - 1) * ninja.frameW);
+    expect(last.x + ninja.frameW).toBeLessThanOrEqual(ninja.width);
+  });
+
+  it("goes back to walking once the cast is over", () => {
+    const after = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME);
+    expect(after.y).toBe(ninja.walk.down.row * ninja.frameH);
+  });
+
+  it("the beam appears when the hands thrust forward and fades out", () => {
+    expect(beamAlpha(0)).toBe(0);
+    expect(beamAlpha(BEAM_DELAY)).toBeGreaterThan(0.8);
+    expect(beamAlpha(BLAST_TICKS - 1)).toBeLessThan(beamAlpha(BEAM_DELAY));
+  });
+
+  it("frozen players turn icy, and the ice flickers in its last second", () => {
+    expect(frozenLook(0, 0)).toBeNull();
+    const solid = Array.from({ length: 30 }, (_, t) => frozenLook(FREEZE_TICKS, t)!);
+    expect(new Set(solid.map((l) => l.block))).toEqual(new Set([true]));
+    expect(solid[0]!.tint).not.toBe(0xffffff);
+    const melting = Array.from({ length: 30 }, (_, t) => frozenLook(30, t)!.block);
+    expect(new Set(melting)).toEqual(new Set([true, false]));
   });
 });

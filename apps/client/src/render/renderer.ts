@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
-import { BOMBS, MASCOT, MotionTracker, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, MASCOT, MotionTracker, beamAlpha, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -18,6 +18,7 @@ const COLORS = {
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
+  ice: 0x7fd8ff,
   cart: 0x8d6e63,
   belt: 0x3a3f4b,
   beltArrow: 0xffd23f,
@@ -350,15 +351,19 @@ export class Renderer {
       const carrying = !!held;
       let headroom = 12;
       const moving = this.motion.moving(p.id, ux, uy);
-      const tint = cursedFlash ? COLORS.cursed : 0xffffff;
+      const ice = frozenLook(p.frozen, s.tick);
+      const tint = ice ? ice.tint : cursedFlash ? COLORS.cursed : 0xffffff;
+      const tick = ice ? 0 : s.tick; // frozen stiff
+      const blast = s.blasts.find((b) => b.ownerId === p.id);
       const character = this.character(p.id);
       if (character === "ninja" && this.skin) {
         const { sheet } = this.skin;
-        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, tick: s.tick });
+        const casting = blast && BLAST_TICKS - blast.ttl;
+        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, tick });
         this.placeSprite(p.id, i, f, cx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
-        const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick: s.tick });
+        const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });
         this.placeMascot(p.id, i, cx, cy, look, tint);
         headroom = MASCOT.bodyH * MASCOT.scale;
       } else {
@@ -372,12 +377,44 @@ export class Renderer {
         top.circle(cx, cy - headroom, 5).fill(COLORS.bomb);
         top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);
       }
+      if (ice?.block) {
+        top.roundRect(cx - 7, cy - headroom - 1, 14, headroom + 8, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
+        top.moveTo(cx - 4, cy - headroom + 2).lineTo(cx - 1, cy - headroom + 5).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
+      }
+      // A spark over a ninja whose special is ready.
+      if (character === "ninja" && p.specialCooldown === 0 && !ice) {
+        const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
+        top.circle(cx + 6, cy - headroom, r + 1).fill({ color: COLORS.ice, alpha: 0.5 });
+        top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
+      }
     });
+
+    for (const b of s.blasts) this.drawBlast(top, b);
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
     this.clock.position.set((width * TILE_PX) / 2, 3);
     const left = Math.max(0, Math.ceil((ROUND_TICKS - s.tick) / TICK_RATE));
     this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";
+  }
+
+  /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
+  private drawBlast(g: Graphics, b: Blast): void {
+    const alpha = beamAlpha(BLAST_TICKS - b.ttl);
+    if (alpha <= 0 || b.length === 0) return;
+    const [dx, dy] = DIR_VECTORS[b.dir];
+    const center = (t: number) => t * TILE_PX + TILE_PX / 2;
+    const x0 = center(b.x) + dx * 6;
+    const y0 = center(b.y) + dy * 6;
+    const x1 = center(b.x + dx * b.length);
+    const y1 = center(b.y + dy * b.length);
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.ice, width: 6, alpha: alpha * 0.6, cap: "round" });
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: 0xffffff, width: 2, alpha, cap: "round" });
+    for (let i = 1; i <= b.length; i++) {
+      const sx = center(b.x + dx * i) + dy * (i % 2 ? 3 : -3);
+      const sy = center(b.y + dy * i) + dx * (i % 2 ? 3 : -3);
+      g.poly([sx, sy - 2.5, sx + 1.5, sy, sx, sy + 2.5, sx - 1.5, sy]).fill({ color: 0xffffff, alpha });
+    }
+    g.circle(x1, y1, 5).fill({ color: COLORS.ice, alpha: alpha * 0.5 });
   }
 
   private drawFloor(g: Graphics, floor: Floor, px: number, py: number, tick: number): void {
