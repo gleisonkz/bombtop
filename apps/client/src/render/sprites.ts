@@ -93,12 +93,12 @@ export const SHEETS = {
   /** The ninja, made in PixelLab at 128px (scripts/build-ninja-sheet.py lays out its frames). */
   ninja: {
     url: "sprites/ninja.png",
-    width: 1008,
-    height: 1998,
-    frameW: 112,
-    frameH: 111,
+    width: 1152,
+    height: 2142,
+    frameW: 128,
+    frameH: 119,
     /** The body's middle (the katana hilt sticks out on one side, so not the cell's middle). */
-    anchorX: 55,
+    anchorX: 63,
     anchorY: 106,
     bodyH: 100,
     ticksPerFrame: 7,

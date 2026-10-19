@@ -12,7 +12,7 @@ Trial character sheets. Both are CC0 (public domain, no attribution required).
 ## ninja.png
 
 The project's own character, made in PixelLab (pixellab.ai) for Bombtop at 128px (character "Ice ninja HD"
-and its "Carry" state). Frames laid out by `scripts/build-ninja-sheet.py`; rows = `SHEETS.ninja`.
+and its "Carry" state). Frames laid out by `scripts/build-ninja-sheet.py`; rows = `SHEETS.ninja`. Ice cast: skeleton-posed body plus ice effects drawn by `scripts/build-ninja-cast.py`.
 
 ## Generated art
 

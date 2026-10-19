@@ -14,7 +14,7 @@ ROWS = [
     ("walk.down", "skel", "south", 6), ("walk.side", "skel", "east", 6), ("walk.up", "skel", "north", 6),
     ("stun", "hit3", "south", 6),
     ("death", "death3", "south", 8),
-    ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+    ("cast.down", "castice", "south", 9), ("cast.side", "castice", "east", 9), ("cast.up", "castice", "north", 9),
     ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
     ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
     ("lobby", "lobby-seal", "south", 8),
