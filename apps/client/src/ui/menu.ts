@@ -7,6 +7,8 @@ export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "jo
 
 export interface MenuHandlers {
   online(choice: OnlineChoice, name: string): void;
+  /** Watch bots play each other. */
+  demo(): void;
   login(): void;
   logout(): void;
 }
@@ -67,7 +69,10 @@ export class Menu {
       el("div", { class: "row" }, [this.code, joinBtn]),
       this.status,
       this.error,
-      button("Ver itens", () => showGuide(true), "ghost"),
+      el("div", { class: "row extras" }, [
+        button("Ver itens", () => showGuide(true), "ghost"),
+        button("Assistir demo", () => handlers.demo(), "ghost"),
+      ]),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
     ]);
     const guide = itemGuide(() => showGuide(false));

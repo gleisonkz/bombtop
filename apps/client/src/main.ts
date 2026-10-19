@@ -3,6 +3,7 @@ import { Application } from "pixi.js";
 import { characterId, DEFAULT_CHARACTER } from "@bombtop/shared";
 import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
+import { DemoGame } from "./game/demo-game";
 import { OnlineGame, SERVER_URL } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
@@ -72,10 +73,10 @@ document.body.appendChild(muteBtn);
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
 
-function setMode(next: GameMode | null): void {
+function setMode(next: GameMode | null, controls = !!next): void {
   mode?.dispose();
   mode = next;
-  touch.setVisible(!!next);
+  touch.setVisible(controls);
 }
 
 const ctx: ModeContext = {
@@ -115,6 +116,10 @@ fetch(SERVER_URL, { mode: "no-cors" }).catch(() => {});
 
 const menu = new Menu(ui, {
   login: () => void signInWithGoogle(),
+  demo: () => {
+    menu.hide();
+    setMode(new DemoGame(ctx), false);
+  },
   logout: () => void signOut(),
   online: async (choice, name) => {
     goFullscreen();
