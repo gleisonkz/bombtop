@@ -1,9 +1,9 @@
 import { BOT_LEVELS, CHARACTERS, MAX_PLAYERS, type BotLevel, type CharacterId, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
-import { mascot, MASCOT_COLOR } from "./art";
+import { MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
 import { lobbySlots, seatClass } from "./lobby-slots";
-import { ninja } from "./ninja";
+import { characterArt } from "./sheet-art";
 
 const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja" };
 
@@ -69,7 +69,7 @@ export class LobbyPanel {
           ]);
         }
         if (!member) {
-          return el("div", { class: "seat empty" }, [mascot({ color: MASCOT_COLOR }), el("span", { class: "seat-sub", text: "Vaga livre" })]);
+          return el("div", { class: "seat empty" }, [characterArt("bomb", MASCOT_COLOR, "idle"), el("span", { class: "seat-sub", text: "Vaga livre" })]);
         }
         const you = member.id === me;
         const cls = seatClass(member, me);
@@ -81,9 +81,7 @@ export class LobbyPanel {
         return el("div", { class: cls }, [
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
-          member.character === "ninja"
-            ? ninja(color)
-            : mascot({ color, mood: !member.connected ? "sad" : you ? "wink" : member.bot === "hard" ? "wow" : "happy" }),
+          characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
           you

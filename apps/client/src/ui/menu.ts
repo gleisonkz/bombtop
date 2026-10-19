@@ -1,7 +1,8 @@
-import { mascot } from "./art";
+import { MASCOT_COLOR } from "./art";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { button, el, storage } from "./dom";
+import { characterArt } from "./sheet-art";
 
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
 
@@ -84,7 +85,7 @@ export class Menu {
     guide.hidden = true;
     this.root = el("div", { class: "screen menu" }, [
       el("div", { class: "hero" }, [
-        mascot(),
+        characterArt("bomb", MASCOT_COLOR, "idle"),
         logo,
         el("p", { class: "tagline", text: "Batalha de bombas com até 5 amigos" }),
       ]),
