@@ -39,6 +39,35 @@ describe("Sound", () => {
     expect(played).toHaveLength(0);
   });
 
+  it("scales everything by the volume, kept between visits", () => {
+    const store = memoryStore();
+    const { backend, played } = fakeBackend();
+    const s = new Sound(backend, store);
+    expect(s.volume).toBe(1);
+    s.play("click");
+    s.setVolume(0.25);
+    s.play("click");
+    expect(played[1]!.gain).toBeCloseTo(played[0]!.gain * 0.25);
+    expect(new Sound(backend, store).volume).toBe(0.25);
+  });
+
+  it("clamps the volume and treats zero as silence", () => {
+    const { backend, played } = fakeBackend();
+    const s = new Sound(backend, memoryStore());
+    s.setVolume(7);
+    expect(s.volume).toBe(1);
+    s.setVolume(-1);
+    expect(s.volume).toBe(0);
+    s.play("click");
+    expect(played).toHaveLength(0);
+  });
+
+  it("ignores a broken stored volume", () => {
+    const store = memoryStore();
+    store.set("bombtop.volume", "loud");
+    expect(new Sound(fakeBackend().backend, store).volume).toBe(1);
+  });
+
   it("drops copies past the voice limit", () => {
     const { backend, played } = fakeBackend();
     const s = new Sound(backend, memoryStore());

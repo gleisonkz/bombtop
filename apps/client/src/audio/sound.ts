@@ -56,11 +56,14 @@ interface Store {
 }
 
 const MUTE_KEY = "bombtop.muted";
+const VOLUME_KEY = "bombtop.volume";
 
 /** Game sound: what to play, how loud and where; the backend does the audio. */
 export class Sound {
   private unlocking: Promise<void> | null = null;
   muted: boolean;
+  /** 0..1, applied on top of the mix. */
+  volume: number;
 
   constructor(
     private readonly backend: AudioBackend,
@@ -68,6 +71,13 @@ export class Sound {
     private readonly random: () => number = Math.random,
   ) {
     this.muted = store.get(MUTE_KEY) === "1";
+    const saved = Number(store.get(VOLUME_KEY) ?? "1");
+    this.volume = Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 1;
+  }
+
+  setVolume(v: number): void {
+    this.volume = Math.min(1, Math.max(0, v));
+    this.store.set(VOLUME_KEY, String(this.volume));
   }
 
   /** Browsers only allow audio after a tap or key press: call from one. */
@@ -83,9 +93,9 @@ export class Sound {
 
   play(name: SoundName, o: { pan?: number; gain?: number } = {}): void {
     const spec = SOUNDS[name];
-    if (this.muted || !this.allow(name, spec.voices)) return;
+    if (this.muted || this.volume === 0 || !this.allow(name, spec.voices)) return;
     const rate = 1 + (this.random() * 2 - 1) * spec.vary;
-    this.backend.play(name, { gain: MASTER_GAIN * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
   }
 
   /** Plays what happened in the arena (see soundCues). */

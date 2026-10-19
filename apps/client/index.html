@@ -235,7 +235,12 @@
       /* Sound toggle */
       .extras > button { flex: 1; }
       .demo-leave { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; font-size: 15px; min-height: 40px; padding: 6px 14px; }
-      .mute { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }
+      .sound { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; display: grid; justify-items: end; gap: 8px; }
+      .sound-panel { background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; width: 200px; }
+      .sound-panel span { font-family: var(--display); font-size: 15px; }
+      .sound-panel input[type="range"] { width: 100%; min-height: 0; padding: 0; border: 0; accent-color: var(--accent); background: transparent; }
+      .sound-panel button { font-size: 15px; min-height: 38px; padding: 6px 10px; }
+      .mute { width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }
       .mute svg { width: 22px; height: 22px; }
 
       /* Touch controls */

@@ -11,7 +11,7 @@ import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl, withoutInvite } from "./net/invite";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
-import { button, storage } from "./ui/dom";
+import { button, el, storage } from "./ui/dom";
 import { Menu } from "./ui/menu";
 import { isTouchDevice, TouchControls } from "./ui/touch-controls";
 
@@ -63,13 +63,42 @@ const muteIcon = (muted: boolean) =>
       ? '<path d="M16 9l5 6M21 9l-5 6" stroke="#e84a4a" stroke-width="2.5" stroke-linecap="round"/>'
       : '<path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#15152a" stroke-width="2.2" stroke-linecap="round"/>'
   }</svg>`;
-const muteBtn = button("", () => showMute(sound.toggleMute()), "mute");
-function showMute(muted: boolean): void {
-  muteBtn.innerHTML = muteIcon(muted); // static markup
-  muteBtn.setAttribute("aria-label", muted ? "Ligar som" : "Desligar som");
+// Speaker button: opens a small panel with the volume slider and mute.
+const silent = () => sound.muted || sound.volume === 0;
+const muteBtn = button("", () => {
+  soundPanel.hidden = !soundPanel.hidden;
+}, "mute");
+const volume = el("input");
+volume.type = "range";
+volume.min = "0";
+volume.max = "100";
+volume.value = String(Math.round(sound.volume * 100));
+volume.setAttribute("aria-label", "Volume");
+volume.addEventListener("input", () => {
+  sound.setVolume(Number(volume.value) / 100);
+  if (sound.muted && sound.volume > 0) sound.toggleMute(); // moving the slider means "I want sound"
+  showMute();
+});
+volume.addEventListener("change", () => {
+  sound.play("click");
+  volume.blur(); // the game ignores keys typed into inputs: give the keyboard back
+});
+const muteToggle = button("", () => {
+  sound.toggleMute();
+  showMute();
+}, "ghost");
+const soundPanel = el("div", { class: "sound-panel" }, [el("span", { text: "Volume" }), volume, muteToggle]);
+soundPanel.hidden = true;
+document.addEventListener("pointerdown", (e) => {
+  if (!soundPanel.hidden && !(e.target as Element).closest?.(".sound")) soundPanel.hidden = true;
+});
+function showMute(): void {
+  muteBtn.innerHTML = muteIcon(silent()); // static markup
+  muteBtn.setAttribute("aria-label", "Som");
+  muteToggle.textContent = sound.muted ? "Ligar som" : "Sem som";
 }
-showMute(sound.muted);
-document.body.appendChild(muteBtn);
+showMute();
+document.body.appendChild(el("div", { class: "sound" }, [muteBtn, soundPanel]));
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
