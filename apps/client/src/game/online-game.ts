@@ -1,5 +1,6 @@
 import { Client, type Room } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
+import { AdaptiveDelay } from "../net/adaptive-delay";
 import {
   C2S,
   ROOM_NAME,
@@ -28,9 +29,6 @@ import type { LobbyPanel } from "../ui/lobby";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
 
-/** Render this far in the past so two snapshots (30 Hz) usually bracket the frame. */
-const INTERP_DELAY_MS = 100;
-
 export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, location.href);
 
 /**
@@ -41,7 +39,9 @@ export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, loc
 export class OnlineGame implements GameMode {
   private readonly inputs = [new KeyboardInput(WASD), new KeyboardInput(ARROWS)];
   private readonly pad = new GamepadInput();
-  private readonly buffer = new SnapshotBuffer(INTERP_DELAY_MS);
+  /** Render delay for snapshots, as short as the connection allows. */
+  private readonly delay = new AdaptiveDelay();
+  private readonly buffer = new SnapshotBuffer(this.delay.ms);
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
   private readonly listener = new Listener();
@@ -97,7 +97,10 @@ export class OnlineGame implements GameMode {
     });
     room.onMessage(S2C.snapshot, (snap: Snapshot) => {
       if (!this.buffer.latest) ctx.fit(snap.grid.width, snap.grid.height);
-      this.buffer.push(snap, performance.now());
+      const now = performance.now();
+      this.delay.observe(now);
+      this.buffer.delayMs = this.delay.ms;
+      this.buffer.push(snap, now);
       this.latest = snap;
       if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
     });

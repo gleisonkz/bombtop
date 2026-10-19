@@ -21,7 +21,8 @@ export class SnapshotBuffer {
   private entries: Entry[] = [];
 
   constructor(
-    private readonly delayMs: number,
+    /** How far in the past to render; may change as the connection is measured. */
+    public delayMs: number,
     private readonly capacity = 32,
   ) {}
 
