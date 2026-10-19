@@ -110,6 +110,7 @@ export class Renderer {
   private readonly itemLayer = new Container();
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
+  private tileScale = TILES.scale;
   private readonly tileSprites: Sprite[] = [];
   private readonly people = new Container();
   private readonly overlay = new Graphics();
@@ -191,11 +192,12 @@ export class Renderer {
   }
 
   /** Draws the arena (grass, blocks, walls) with the tile art instead of flat colors. */
-  async useTileArt(): Promise<void> {
-    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${TILES.url}`);
-    base.source.scaleMode = "linear"; // drawn at half size
-    const count = base.width / TILES.size;
-    this.tileArt = Array.from({ length: count }, (_, i) => new Texture({ source: base.source, frame: new Rectangle(i * TILES.size, 0, TILES.size, TILES.size) }));
+  async useTileArt(layout: typeof TILES = TILES): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${layout.url}`);
+    base.source.scaleMode = "linear"; // drawn smaller than the art
+    const count = base.width / layout.size;
+    this.tileScale = layout.scale;
+    this.tileArt = Array.from({ length: count }, (_, i) => new Texture({ source: base.source, frame: new Rectangle(i * layout.size, 0, layout.size, layout.size) }));
   }
 
   private drawTiles(s: PublicView): void {
@@ -208,11 +210,11 @@ export class Renderer {
         let sprite = this.tileSprites[i];
         if (!sprite) {
           sprite = new Sprite();
-          sprite.scale.set(TILES.scale);
           this.tileSprites[i] = sprite;
           this.tileLayer.addChild(sprite);
         }
         sprite.texture = art[tileCell(getTile(s, x, y), x, y, width, height)]!;
+        sprite.scale.set(this.tileScale);
         sprite.position.set(x * TILE_PX, y * TILE_PX);
         sprite.visible = true;
       }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BEAM_DELAY, BOMBS, ITEMS, TILES, TILES_HD, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -388,5 +388,24 @@ describe("bomber sheet", () => {
   it("plays its death once, then is gone", () => {
     expect(deathFrame(sheet, 0)).not.toBeNull();
     expect(deathFrame(sheet, sheet.death.frames * sheet.ticksPerFrame)).toBeNull();
+  });
+});
+
+describe("HD art (trial)", () => {
+  it("the HD bomber has the pixel bomber's rows, 4x bigger and drawn 4x smaller", () => {
+    const px = SHEETS.bomber;
+    const hd = SHEETS.bomberHd;
+    expect(hd.frameW).toBe(px.frameW * 4);
+    expect(hd.width).toBe(px.width * 4);
+    expect(hd.walk).toEqual(px.walk);
+    expect(hd.death).toEqual(px.death);
+    expect(hd.anchorY).toBe(px.anchorY * 4);
+    expect(hd.scale).toBeCloseTo(px.scale / 4);
+    expect(hd.hues).toBeDefined();
+  });
+
+  it("HD tiles keep the cell order, drawn to the same size", () => {
+    expect(TILES_HD.cells).toEqual(TILES.cells);
+    expect(TILES_HD.size * TILES_HD.scale).toBe(TILES.size * TILES.scale);
   });
 });

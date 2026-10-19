@@ -122,6 +122,25 @@ export const SHEETS = {
     clothes: [[64, 64, 128], [46, 46, 98], [32, 32, 70], [112, 112, 184]],
     scale: 0.7,
   },
+  /** Trial: the bomb mascot in HD (scripts/build-bomber-hd.py), same rows; violet body repainted by hue. */
+  bomberHd: {
+    url: "sprites/bomber-hd.png",
+    width: 768,
+    height: 1024,
+    frameW: 128,
+    frameH: 128,
+    anchorX: 64,
+    anchorY: 120,
+    bodyH: 104,
+    ticksPerFrame: 8,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 4),
+    stun: { row: 6, frames: 4 },
+    death: { row: 7, frames: 6 },
+    hues: [225, 285],
+    scale: 0.175,
+  },
 } satisfies Record<string, SheetLayout>;
 
 export type SheetName = keyof typeof SHEETS;
@@ -251,6 +270,9 @@ export const TILES = {
   scale: 0.5,
   cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8 },
 };
+
+/** Trial: the same tiles in HD (scripts/build-tiles-hd.py). */
+export const TILES_HD = { ...TILES, url: "sprites/tiles-hd.png", size: 128, scale: 0.125 };
 
 /** Which cell a tile shows. Grass variants are picked by a hash of the position, so they stay put. */
 export function tileCell(tile: Tile, x: number, y: number, width: number, height: number): number {
