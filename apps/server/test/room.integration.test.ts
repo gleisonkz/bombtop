@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { defineRoom, defineServer, type Server } from "@colyseus/core";
 import { WebSocketTransport } from "@colyseus/ws-transport";
-import { Client } from "@colyseus/sdk";
-import { C2S, ROOM_NAME, S2C, type LobbyInfo, type PublicView } from "@bombtop/shared";
+import { Client, type Room } from "@colyseus/sdk";
+import { C2S, DeltaReceiver, ROOM_NAME, S2C, type LobbyInfo, type Patch, type PublicView } from "@bombtop/shared";
 import { BattleRoom } from "../src/room";
 
 const PORT = 25670 + Math.floor(Math.random() * 1000);
@@ -36,6 +36,28 @@ function next<T>(room: { onMessage: (t: string, cb: (m: T) => void) => () => voi
   });
 }
 
+/** Resolves with the first view, rebuilt from whole snapshots and differences, matching `pred`; counts the differences. */
+function view(room: Room, base: PublicView, pred: (v: PublicView) => boolean) {
+  const r = new DeltaReceiver<PublicView>();
+  r.full(base);
+  let deltas = 0;
+  return new Promise<{ view: PublicView; deltas: number }>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout waiting for a view")), 4000);
+    const check = (v: PublicView | null) => {
+      if (!v || !pred(v)) return;
+      clearTimeout(timer);
+      offFull();
+      offDelta();
+      resolve({ view: v, deltas });
+    };
+    const offFull = room.onMessage(S2C.snapshot, (s: PublicView) => check(r.full(s)));
+    const offDelta = room.onMessage(S2C.delta, (p: Patch) => {
+      deltas++;
+      check(r.delta(p));
+    });
+  });
+}
+
 describe("BattleRoom over the network", () => {
   it("two players join a public room, the host starts, both receive snapshots", async () => {
     const a = await client().joinOrCreate(ROOM_NAME, { name: "Ana" });
@@ -57,9 +79,12 @@ describe("BattleRoom over the network", () => {
 
     // Input travels to the simulation.
     const startX = sa.players[0]!.px;
+    // Input travels to the simulation; the move arrives as small differences, not whole snapshots.
+    const moved = view(b, sb, (v) => v.players[0]!.px > startX);
     a.send(C2S.input, { dir: "right", bomb: false });
-    const moved = await next<PublicView>(b, S2C.snapshot, (s) => s.players[0]!.px > startX);
-    expect(moved.players[0]!.px).toBeGreaterThan(startX);
+    const { view: seen, deltas } = await moved;
+    expect(seen.players[0]!.px).toBeGreaterThan(startX);
+    expect(deltas).toBeGreaterThan(0);
 
     await a.leave();
     await b.leave();

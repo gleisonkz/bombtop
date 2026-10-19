@@ -11,11 +11,11 @@ import {
   sanitizeInput,
   sanitizeName,
   TICK_RATE,
-  type PublicView,
   type RoomPhase,
 } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { BattleSession } from "./session";
+import { SnapshotStream } from "./snapshot-stream";
 
 const authConfig = authConfigFromEnv();
 
@@ -35,7 +35,8 @@ export class BattleRoom extends Room {
   maxClients = MAX_PLAYERS;
   private session = new BattleSession();
   private lastPhase: RoomPhase = "lobby";
-  private lastSnapshot: PublicView | null = null;
+  /** Whole snapshots now and then, differences in between. */
+  private stream = new SnapshotStream();
 
   async onCreate(options: BattleRoomOptions) {
     if (options?.private) await this.setPrivate(true);
@@ -46,7 +47,9 @@ export class BattleRoom extends Room {
     });
     this.onMessage(C2S.sync, (client) => {
       client.send(S2C.lobby, this.session.lobbyInfo(this.roomId));
-      if (this.session.phase !== "lobby" && this.lastSnapshot) client.send(S2C.snapshot, this.lastSnapshot);
+      // The base the next difference is made against.
+      const last = this.stream.last;
+      if (this.session.phase !== "lobby" && last) client.send(S2C.snapshot, last);
     });
     this.onMessage(C2S.addBot, (client, message) => {
       const level = botLevel(message);
@@ -104,8 +107,9 @@ export class BattleRoom extends Room {
   private update() {
     const out = this.session.tick();
     if (out.snapshot) {
-      this.lastSnapshot = out.snapshot;
-      this.broadcast(S2C.snapshot, out.snapshot);
+      const sent = this.stream.next(out.snapshot);
+      if ("full" in sent) this.broadcast(S2C.snapshot, sent.full);
+      else this.broadcast(S2C.delta, sent.delta);
     }
     if (out.result) this.broadcast(S2C.result, out.result);
     this.syncPhase();
