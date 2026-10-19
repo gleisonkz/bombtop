@@ -29,6 +29,13 @@ def feet(im):
     return bb[3] if bb else im.height
 
 
+def body_middle(im):
+    """Middle of the body's widest solid columns: thin parts (the katana hilt) don't pull it off center."""
+    a = im.getchannel("A").load()
+    cols = [x for x in range(im.width) if sum(1 for y in range(im.height) if a[x, y] > 128) > 6]
+    return (cols[0] + cols[-1] + 1) / 2
+
+
 def main():
     src, out = Path(sys.argv[1]), Path(sys.argv[2])
     rows = []
@@ -65,7 +72,7 @@ def main():
     bb = stand.getchannel("A").getbbox()
     info = {
         "width": sheet.width, "height": sheet.height, "frameW": cw, "frameH": ch,
-        "anchorX": cw // 2, "anchorY": int(BASE * 0.75) - top, "bodyH": bb[3] - bb[1],
+        "anchorX": body_middle(stand), "anchorY": int(BASE * 0.75) - top, "bodyH": bb[3] - bb[1],
         "rows": {name: i for i, (name, _) in enumerate(rows)},
     }
     print(json.dumps(info))

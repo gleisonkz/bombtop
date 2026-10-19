@@ -97,7 +97,8 @@ export const SHEETS = {
     height: 1944,
     frameW: 112,
     frameH: 108,
-    anchorX: 56,
+    /** The body's middle (the katana hilt sticks out on one side, so not the cell's middle). */
+    anchorX: 55,
     anchorY: 106,
     bodyH: 100,
     ticksPerFrame: 7,
