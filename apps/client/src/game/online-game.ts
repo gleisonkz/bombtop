@@ -16,6 +16,8 @@ import {
   type PublicView,
   type ResultMessage,
   type Snapshot,
+  type Patch,
+  DeltaReceiver,
 } from "@bombtop/shared";
 import { Listener, type CueName } from "../audio/cues";
 import { actionCues, EchoFilter } from "../audio/local-cues";
@@ -114,14 +116,12 @@ export class OnlineGame implements GameMode {
       panel.update(info, room.sessionId);
       if (info.phase === "playing") ctx.renderer.showBanner("");
     });
-    room.onMessage(S2C.snapshot, (snap: Snapshot) => {
-      if (!this.buffer.latest) ctx.fit(snap.grid.width, snap.grid.height);
-      const now = performance.now();
-      this.delay.observe(now);
-      this.buffer.delayMs = this.delay.ms;
-      this.buffer.push(snap, now);
-      this.latest = snap;
-      if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
+    // Whole snapshots now and then; in between, only what changed.
+    const snapshots = new DeltaReceiver<Snapshot>();
+    room.onMessage(S2C.snapshot, (snap: Snapshot) => this.received(snapshots.full(snap)));
+    room.onMessage(S2C.delta, (d: Patch) => {
+      const snap = snapshots.delta(d);
+      if (snap) this.received(snap);
     });
     room.onMessage(S2C.result, (result: ResultMessage) => {
       const winner = this.lobby?.members.find((m) => m.id === result.winnerId);
@@ -247,6 +247,17 @@ export class OnlineGame implements GameMode {
 
   blur(): void {
     for (const k of this.inputs) k.reset();
+  }
+
+  /** A snapshot arrived (whole or rebuilt from a difference). */
+  private received(snap: Snapshot): void {
+    if (!this.buffer.latest) this.ctx.fit(snap.grid.width, snap.grid.height);
+    const now = performance.now();
+    this.delay.observe(now);
+    this.buffer.delayMs = this.delay.ms;
+    this.buffer.push(snap, now);
+    this.latest = snap;
+    if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
   }
 
   /** Token to take this seat back after a reload. */
