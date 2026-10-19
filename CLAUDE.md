@@ -34,7 +34,7 @@ All art, audio and names are original — never copy assets from existing games.
 - `pnpm test` — all tests
 - `pnpm typecheck`
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
-- phone testing (fixed URL, keeps an installed PWA working): `MSYS_NO_PATHCONV=1 VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`). In Git Bash, `MSYS_NO_PATHCONV=1` stops `/colyseus` from being rewritten to a Windows path.
+- phone testing (fixed URL, keeps an installed PWA working): `MSYS_NO_PATHCONV=1 PWA_DEV=1 VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`). In Git Bash, `MSYS_NO_PATHCONV=1` stops `/colyseus` from being rewritten to a Windows path. `PWA_DEV=1` turns the service worker on in dev (only for this; plain `pnpm dev` runs without it so pages never go stale).
 - In dev, the latest server snapshot is exposed for debugging: `window.__snapshot`; the renderer as `window.__renderer`
   (leave to the menu, then `__renderer.draw(snapshot, new Map(), 1)` to inspect a still frame).
 - Deploy: Render Blueprint `render.yaml` (server = Node web service, client = static site built with

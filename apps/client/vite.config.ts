@@ -17,8 +17,9 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
-      // Serve the manifest and service worker in dev too, so the tunnel build can be installed on a phone.
-      devOptions: { enabled: true },
+      // In dev the service worker only runs for phone testing (PWA_DEV=1, so the tunnel build can be
+      // installed): elsewhere it would keep serving stale pages after every change.
+      devOptions: { enabled: process.env.PWA_DEV === "1" },
       includeAssets: ["icons/favicon-64.png", "icons/apple-touch-icon.png"],
       manifest: {
         name: "Bombtop",
