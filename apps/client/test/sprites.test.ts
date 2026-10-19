@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FREEZE_TICKS, FUSE_TICKS } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, CAST_TICKS_PER_FRAME, MASCOT, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS } from "@bombtop/shared";
+import { BEAM_DELAY, BOMBS, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -271,5 +271,37 @@ describe("ice blast visuals", () => {
     expect(solid[0]!.tint).not.toBe(0xffffff);
     const melting = Array.from({ length: 30 }, (_, t) => frozenLook(30, t)!.block);
     expect(new Set(melting)).toEqual(new Set([true, false]));
+  });
+});
+
+describe("explosion flames", () => {
+  const at = (tiles: [number, number][]) => (x: number, y: number) => tiles.some(([tx, ty]) => tx === x && ty === y);
+  // A cross of range 2 around (5,5).
+  const cross = at([[5, 5], [4, 5], [3, 5], [6, 5], [7, 5], [5, 4], [5, 3], [5, 6], [5, 7]]);
+  const Q = Math.PI / 2;
+
+  it("puts the fireball where arms meet or where a flame stands alone", () => {
+    expect(flamePiece(cross, 5, 5)).toEqual({ kind: "center", rot: 0 });
+    expect(flamePiece(at([[1, 1]]), 1, 1)).toEqual({ kind: "center", rot: 0 });
+  });
+
+  it("runs arms through the middle tiles, turned for vertical ones", () => {
+    expect(flamePiece(cross, 4, 5)).toEqual({ kind: "mid", rot: 0 });
+    expect(flamePiece(cross, 5, 4)).toEqual({ kind: "mid", rot: Q });
+  });
+
+  it("caps each arm with a tip that faces away from the blast", () => {
+    expect(flamePiece(cross, 7, 5)).toEqual({ kind: "end", rot: 0 }); // joins on its left
+    expect(flamePiece(cross, 3, 5)).toEqual({ kind: "end", rot: 2 * Q });
+    expect(flamePiece(cross, 5, 7)).toEqual({ kind: "end", rot: Q }); // joins above
+    expect(flamePiece(cross, 5, 3)).toEqual({ kind: "end", rot: -Q });
+  });
+
+  it("flares up, burns, then dies down over the flame's life", () => {
+    const frames = Array.from({ length: FLAME_TICKS }, (_, i) => flameFrame(FLAME_TICKS - i));
+    expect(frames[0]).toBe(0);
+    expect(frames.at(-1)).toBe(FLAMES.frames - 1);
+    expect([...frames].sort((a, b) => a - b)).toEqual(frames);
+    expect(new Set(frames).size).toBe(FLAMES.frames);
   });
 });

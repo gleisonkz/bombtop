@@ -21,9 +21,11 @@ document.getElementById("app")!.appendChild(app.canvas);
 
 const renderer = new Renderer();
 app.stage.addChild(renderer.root);
+if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 void renderer.useSheet(SHEETS.ninja).catch((e) => console.error("sprite sheet", e));
 void renderer.useMascots().catch((e) => console.error("mascot", e));
 void renderer.useBombArt().catch((e) => console.error("bomb art", e));
+void renderer.useFlameArt().catch((e) => console.error("flame art", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;

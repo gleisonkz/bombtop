@@ -1,4 +1,4 @@
-import { BLAST_TICKS, TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
 import type { Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -179,6 +179,38 @@ export function mascotDeath(ticks: number) {
   if (ticks >= MASCOT.deathTicks) return null;
   const k = ticks / MASCOT.deathTicks;
   return { alpha: 1 - k * k, sx: 1 + k * 0.3, sy: 1 - k * 0.3, dy: -k * 10, mood: "sad" as Mood };
+}
+
+/** Explosion flames: rows of square cells per piece, one column per stage of the flame's life. */
+export const FLAMES = {
+  url: "sprites/flames.png",
+  size: 32,
+  frames: 5,
+  rows: { center: 0, mid: 1, end: 2 },
+  /** Drawn size: one cell per tile. */
+  scale: 0.5,
+};
+
+export type FlamePiece = { kind: keyof typeof FLAMES.rows; rot: number };
+
+/**
+ * Which piece a flame tile shows, from its burning neighbours: the fireball where
+ * arms meet (or a lone flame), arm segments between, and a tip at each arm's end.
+ * Mid and end cells point right with the join on the left; `rot` turns them.
+ */
+export function flamePiece(burning: (x: number, y: number) => boolean, x: number, y: number): FlamePiece {
+  const [l, r, u, d] = [burning(x - 1, y), burning(x + 1, y), burning(x, y - 1), burning(x, y + 1)];
+  const q = Math.PI / 2;
+  if ((l || r) === (u || d)) return { kind: "center", rot: 0 };
+  if (l && r) return { kind: "mid", rot: 0 };
+  if (u && d) return { kind: "mid", rot: q };
+  return { kind: "end", rot: l ? 0 : r ? 2 * q : u ? q : -q };
+}
+
+/** Column of a flame `ttl` ticks from going out: flare, burn, die down. */
+export function flameFrame(ttl: number): number {
+  const age = 1 - ttl / FLAME_TICKS;
+  return Math.min(FLAMES.frames - 1, Math.max(0, Math.floor(age * FLAMES.frames)));
 }
 
 /** Ticks each cast frame stays on screen: the cast lasts as long as its blast. */

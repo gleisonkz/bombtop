@@ -1,6 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
-import { BOMBS, MASCOT, MotionTracker, beamAlpha, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { Fx } from "./fx";
+import { BOMBS, FLAMES, MASCOT, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -102,6 +103,8 @@ async function rasterize(svg: string): Promise<Texture> {
 export class Renderer {
   readonly root = new Container();
   private readonly world = new Graphics();
+  /** Flames sit on the floor, under players and bombs. */
+  private readonly flameLayer = new Container();
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
@@ -112,6 +115,12 @@ export class Renderer {
   /** One texture per bomb type, once the bomb art is loaded. */
   private bombArt: Map<BombType, Texture> | null = null;
   private readonly bombSprites: Sprite[] = [];
+  /** Flame textures by piece, one per stage of the flame's life, once loaded. */
+  private flameArt: Record<FlamePiece["kind"], Texture[]> | null = null;
+  private readonly flameSprites: Sprite[] = [];
+  private readonly fx = new Fx(TILE_PX);
+  /** Tiles as last drawn, to tell which flames just blew up a block. */
+  private lastTiles: readonly Tile[] = [];
   private readonly motion = new MotionTracker();
   /** Where and when each player was last seen alive, to play their death there. */
   private readonly lastSeen = new Map<string, { cx: number; cy: number; deadAt: number | null }>();
@@ -131,7 +140,7 @@ export class Renderer {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.world, this.people, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.world, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
   }
 
   /** Draws players with a character sheet instead of shapes. */
@@ -159,6 +168,47 @@ export class Renderer {
   }
 
   /** Draws bombs with the bomb art instead of shapes. */
+  async useFlameArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${FLAMES.url}`);
+    base.source.scaleMode = "linear"; // drawn at half size
+    const row = (r: number) =>
+      Array.from({ length: FLAMES.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * FLAMES.size, r * FLAMES.size, FLAMES.size, FLAMES.size) }));
+    this.flameArt = { center: row(FLAMES.rows.center), mid: row(FLAMES.rows.mid), end: row(FLAMES.rows.end) };
+  }
+
+  /** Draws flames as art pieces (fireball, arms, tips) picked from their neighbours. */
+  private drawFlames(flames: PublicView["flames"]): void {
+    for (const sprite of this.flameSprites) sprite.visible = false;
+    const art = this.flameArt!;
+    const lit = new Set(flames.map((f) => `${f.x},${f.y}`));
+    const burning = (x: number, y: number) => lit.has(`${x},${y}`);
+    flames.forEach((f, i) => {
+      let sprite = this.flameSprites[i];
+      if (!sprite) {
+        sprite = new Sprite();
+        sprite.anchor.set(0.5);
+        sprite.scale.set(FLAMES.scale);
+        this.flameSprites.push(sprite);
+        this.flameLayer.addChild(sprite);
+      }
+      const piece = flamePiece(burning, f.x, f.y);
+      sprite.texture = art[piece.kind][flameFrame(f.ttl)]!;
+      sprite.rotation = piece.rot;
+      sprite.position.set((f.x + 0.5) * TILE_PX, (f.y + 0.5) * TILE_PX);
+      sprite.visible = true;
+    });
+  }
+
+  /** Sparks, debris and smoke over everything. */
+  private drawParticles(g: Graphics): void {
+    for (const p of this.fx.particles) {
+      const k = p.age / p.life;
+      if (p.kind === "smoke") g.circle(p.x, p.y, p.size * (1 + k)).fill({ color: p.color, alpha: 0.35 * (1 - k) });
+      else if (p.kind === "debris") g.rect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size).fill({ color: p.color, alpha: 1 - k * k });
+      else g.circle(p.x, p.y, p.size * (1 - k * 0.6)).fill({ color: p.color, alpha: 1 - k });
+    }
+  }
+
   async useBombArt(): Promise<void> {
     const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BOMBS.url}`);
     base.source.scaleMode = "linear"; // shrunk pixel art aliases badly
@@ -300,10 +350,16 @@ export class Renderer {
       g.circle(cx, cy, 4).fill(COLORS.items[item.kind]);
     }
 
-    for (const f of s.flames) {
-      g.rect(f.x * TILE_PX, f.y * TILE_PX, TILE_PX, TILE_PX).fill(COLORS.flame);
-      g.rect(f.x * TILE_PX + 4, f.y * TILE_PX + 4, TILE_PX - 8, TILE_PX - 8).fill(COLORS.flameCore);
+    if (this.flameArt) this.drawFlames(s.flames);
+    else {
+      for (const f of s.flames) {
+        g.rect(f.x * TILE_PX, f.y * TILE_PX, TILE_PX, TILE_PX).fill(COLORS.flame);
+        g.rect(f.x * TILE_PX + 4, f.y * TILE_PX + 4, TILE_PX - 8, TILE_PX - 8).fill(COLORS.flameCore);
+      }
     }
+    const before = this.lastTiles;
+    this.fx.observe(s.flames, (x, y) => before[y * width + x] === Tile.Block, s.tick);
+    this.lastTiles = [...s.grid.tiles];
 
     for (const b of s.bombs) {
       if (b.heldBy) continue; // drawn over its holder's head below
@@ -390,6 +446,9 @@ export class Renderer {
     });
 
     for (const b of s.blasts) this.drawBlast(top, b);
+    this.drawParticles(top);
+    const shake = this.fx.shake;
+    this.root.position.set(Math.sin(s.tick * 2.3) * shake, Math.cos(s.tick * 3.1) * shake);
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
     this.clock.position.set((width * TILE_PX) / 2, 3);
