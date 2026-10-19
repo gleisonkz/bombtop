@@ -1,4 +1,5 @@
 import { mascot } from "./art";
+import { connectingText } from "./connecting";
 import { button, el, storage } from "./dom";
 
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
@@ -15,6 +16,8 @@ const NAME_KEY = "bombtop.name";
 export class Menu {
   private readonly root: HTMLElement;
   private readonly error = el("p", { class: "error" });
+  private readonly status = el("p", { class: "status" });
+  private statusTimer: ReturnType<typeof setInterval> | undefined;
   private readonly name: HTMLInputElement;
   private readonly code: HTMLInputElement;
   private readonly buttons: HTMLButtonElement[];
@@ -67,6 +70,7 @@ export class Menu {
         createBtn,
         el("div", { class: "or", text: "ou entre com um código" }),
         el("div", { class: "row" }, [this.code, joinBtn]),
+        this.status,
         this.error,
         el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
       ]),
@@ -116,10 +120,20 @@ export class Menu {
 
   hide(): void {
     this.root.hidden = true;
+    this.setBusy(false);
   }
 
+  /** While busy the buttons are off and a spinner tells how the connection is going. */
   setBusy(busy: boolean): void {
     for (const b of this.buttons) b.disabled = busy;
+    clearInterval(this.statusTimer);
+    this.status.textContent = "";
+    if (!busy) return;
+    this.showError("");
+    const since = performance.now();
+    const update = () => (this.status.textContent = connectingText(performance.now() - since));
+    update();
+    this.statusTimer = setInterval(update, 500);
   }
 
   showError(message: string): void {

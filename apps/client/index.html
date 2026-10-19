@@ -54,7 +54,10 @@
       button.ghost { background: transparent; color: var(--muted); border-color: #ffffff33; box-shadow: none; }
       button:disabled { opacity: 0.45; cursor: default; }
       .error { color: var(--danger); margin: 0; font-size: 14px; text-align: center; }
-      .error:empty, .invite:empty { display: none; }
+      .error:empty, .invite:empty, .status:empty { display: none; }
+      .status { color: var(--accent); margin: 0; font-size: 14px; font-weight: 700; text-align: center; display: flex; gap: 8px; align-items: center; justify-content: center; }
+      .status::before { content: ""; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 3px solid currentColor; border-right-color: transparent; animation: spin 0.8s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
       .invite { color: var(--accent); margin: 0; text-align: center; font-weight: 700; }
       .hint { color: var(--muted); font-size: 13px; margin: 0; text-align: center; }
       .mascot { display: inline-block; line-height: 0; }

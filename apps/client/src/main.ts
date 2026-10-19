@@ -3,7 +3,7 @@ import { Application } from "pixi.js";
 import { characterId, DEFAULT_CHARACTER } from "@bombtop/shared";
 import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
-import { OnlineGame } from "./game/online-game";
+import { OnlineGame, SERVER_URL } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
@@ -108,6 +108,9 @@ const CHARACTER_KEY = "bombtop.character";
 const savedCharacter = () => characterId(storage.get(CHARACTER_KEY)) ?? DEFAULT_CHARACTER;
 
 let account: Account | null = null;
+
+// The free server sleeps when idle: poke it now so it is awake by the time the player clicks.
+fetch(SERVER_URL, { mode: "no-cors" }).catch(() => {});
 
 const menu = new Menu(ui, {
   login: () => void signInWithGoogle(),
