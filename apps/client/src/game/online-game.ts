@@ -27,6 +27,7 @@ import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
+import { debugNet, NetHud } from "../ui/net-hud";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
 
@@ -54,6 +55,9 @@ export class OnlineGame implements GameMode {
   /** Tick the world is drawn at: the latest snapshot plus our lead; never goes back. */
   private worldTick = 0;
   private ahead: { from: Snapshot; n: number; view: PublicView } | null = null;
+  /** Connection readout (?debug), with its ping timer. */
+  private readonly hud = debugNet() ? new NetHud() : null;
+  private pinger: ReturnType<typeof setInterval> | undefined;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
   private readonly kicks = new KickPrediction();
@@ -122,6 +126,8 @@ export class OnlineGame implements GameMode {
     room.onLeave(() => {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
     });
+    const hud = this.hud;
+    if (hud) this.pinger = setInterval(() => room.ping((ms) => (hud.stats.ping = ms)), 1000);
     // Handlers are attached: ask for the current state (earlier broadcasts were dropped).
     room.send(C2S.sync);
   }
@@ -146,7 +152,11 @@ export class OnlineGame implements GameMode {
     for (let i = this.loop.advance(deltaMs); i > 0; i--) this.sendInput();
 
     const sample = this.buffer.sample(nowMs);
-    if (!sample) return;
+    if (!sample) return this.hud?.show();
+    if (this.hud) {
+      this.hud.stats.frame(deltaMs, sample.alpha > 1, this.buffer.delayMs);
+      this.hud.show();
+    }
     const world = this.world();
     const width = sample.to.grid.width;
     const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
@@ -239,6 +249,8 @@ export class OnlineGame implements GameMode {
   }
 
   dispose(): void {
+    clearInterval(this.pinger);
+    this.hud?.dispose();
     this.panel.hide();
     this.ctx.renderer.showBanner("");
     if (!this.leaving) {
