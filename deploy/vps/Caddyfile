@@ -1,0 +1,4 @@
+# TLS (Let's Encrypt) in front of the game server. sslip.io resolves to the IP in the name.
+187-127-63-110.sslip.io {
+	reverse_proxy 127.0.0.1:2567
+}

@@ -1,0 +1,6 @@
+[Unit]
+Description=Deploy the latest bombtop main
+
+[Service]
+Type=oneshot
+ExecStart=/opt/bombtop/app/deploy/vps/update.sh

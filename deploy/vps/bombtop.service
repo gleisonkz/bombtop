@@ -1,0 +1,21 @@
+[Unit]
+Description=Bombtop game server (Colyseus)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=bombtop
+WorkingDirectory=/opt/bombtop/app
+Environment=NODE_ENV=production
+Environment=PORT=2567
+ExecStart=/opt/bombtop/app/apps/server/node_modules/.bin/tsx apps/server/src/index.ts
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/bombtop
+
+[Install]
+WantedBy=multi-user.target
