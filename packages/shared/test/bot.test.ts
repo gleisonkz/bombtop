@@ -94,3 +94,27 @@ describe("Bot levels", () => {
     expect(thinkTicks("hard")).toBeLessThanOrEqual(thinkTicks("easy"));
   });
 });
+
+describe("bot movement", () => {
+  it("does not dither back and forth across a tile edge", () => {
+    for (const seed of [7, 11, 12345]) {
+      const ids = ["b1", "b2", "b3", "b4"];
+      const s = createMatch({ seed, playerIds: ids });
+      const bots = ids.map((id) => new Bot(id, "hard"));
+      const last = new Map<string, { px: number; py: number; dx: number; dy: number }>();
+      const reversals = new Map<string, number>();
+      for (let t = 0; t < 20 * TICK_RATE; t++) {
+        step(s, Object.fromEntries(bots.map((b) => [b.id, b.input(s)])));
+        for (const p of s.players) {
+          const l = last.get(p.id);
+          const dx = l ? Math.sign(p.px - l.px) : 0;
+          const dy = l ? Math.sign(p.py - l.py) : 0;
+          if (p.alive && l && ((dx && dx === -l.dx) || (dy && dy === -l.dy))) reversals.set(p.id, (reversals.get(p.id) ?? 0) + 1);
+          last.set(p.id, { px: p.px, py: p.py, dx, dy });
+        }
+      }
+      // Turning back now and then is fine (a bomb shows up); every few ticks is not.
+      for (const id of ids) expect(reversals.get(id) ?? 0, `seed ${seed} ${id}`).toBeLessThan(25);
+    }
+  });
+});

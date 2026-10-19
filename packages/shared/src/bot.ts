@@ -65,6 +65,8 @@ export class Bot {
   private readonly tune: Tuning;
   private goal: { x: number; y: number } | null = null;
   private nextThink = 0;
+  /** Last direction sent and where we were then: a step under way. */
+  private stride: { dir: Facing; px: number; py: number } | null = null;
 
   constructor(
     readonly id: string,
@@ -75,6 +77,13 @@ export class Bot {
 
   /** This tick's input. */
   input(s: MatchState): PlayerInput {
+    const out = this.choose(s);
+    const p = s.players.find((q) => q.id === this.id);
+    this.stride = out.dir && p ? { dir: out.dir, px: p.px, py: p.py } : null;
+    return out;
+  }
+
+  private choose(s: MatchState): PlayerInput {
     const p = s.players.find((q) => q.id === this.id);
     if (!p || !p.alive || p.stun > 0 || p.jumpTicks > 0 || p.dashTicks > 0) return { dir: null, bomb: false };
     const here = playerTile(p);
@@ -88,6 +97,10 @@ export class Bot {
       const out = escape.find((n) => safe(n.x, n.y)) ?? latestToBurn(escape, danger, k);
       return { dir: out ? heading(p, out.first.x, out.first.y) : null, bomb: false };
     }
+
+    // Finish a step before rethinking: plans made halfway, from whichever tile we happen to
+    // be on, flip at every tile edge and the bot dithers back and forth across it.
+    if (this.striding(s, p, here, safe)) return { dir: this.stride!.dir, bomb: false };
 
     // Everything else only walks through tiles that are safe for good.
     const nodes = reach(s, p, danger, this.tune.margin, true);
@@ -105,6 +118,19 @@ export class Bot {
       return { dir: heading(p, here.x, here.y), bomb: false }; // settle on the center: turns are free from there
     }
     return { dir: heading(p, route.first.x, route.first.y), bomb: false };
+  }
+
+  /** Whether a step under way still has a safe, free tile center ahead to reach. */
+  private striding(s: MatchState, p: Player, here: { x: number; y: number }, safe: (x: number, y: number) => boolean): boolean {
+    const st = this.stride;
+    if (!st || (st.px === p.px && st.py === p.py)) return false; // no step, or blocked
+    const [dx, dy] = DIR_VECTORS[st.dir];
+    const ahead = dx ? (tileCenter(here.x) - p.px) * dx : (tileCenter(here.y) - p.py) * dy;
+    if (ahead > 0) return true; // still short of this tile's center
+    if (ahead === 0) return false; // on the center: free to turn
+    const x = here.x + dx;
+    const y = here.y + dy;
+    return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y) && safe(x, y);
   }
 
   /** A thought: bomb or detonate now, or pick where to go. Returns an input to send right away, if any. */
@@ -156,7 +182,7 @@ export class Bot {
     let best: Node | undefined;
     let bestDist = Infinity;
     for (const n of nodes) {
-      if (n.steps === 0 || !safe(n.x, n.y)) continue;
+      if (!safe(n.x, n.y)) continue; // where we stand counts too: no point pacing between two tiles
       const d = Math.min(...rivals.map((r) => Math.abs(r.x - n.x) + Math.abs(r.y - n.y)));
       if (d < bestDist || (d === bestDist && best && n.steps < best.steps)) {
         best = n;
@@ -277,7 +303,8 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
 /** With no safe tile in reach, the tile that burns last (a chain may still spare it). */
 function latestToBurn(nodes: Node[], danger: Danger, k: (x: number, y: number) => number): Node | undefined {
   let best: Node | undefined;
-  for (const n of nodes) if (n.steps > 0 && (!best || danger.get(k(n.x, n.y))! > danger.get(k(best.x, best.y))!)) best = n;
+  // The tile we stand on counts too: otherwise two neighbours each send us to the other.
+  for (const n of nodes) if (!best || danger.get(k(n.x, n.y))! > danger.get(k(best.x, best.y))!) best = n;
   return best;
 }
 
