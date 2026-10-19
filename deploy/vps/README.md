@@ -7,6 +7,9 @@ Public URL: `wss://187-127-63-110.sslip.io` (Caddy terminates TLS, proxies to `1
 - `bombtop-update.timer` runs `update.sh` every minute: when `origin/main` moved, it pulls,
   reinstalls the server's deps, reinstalls these unit files and the Caddyfile, and restarts.
   So a push to `main` reaches the server within ~1-2 minutes.
+- `bombtop-net.service` runs `net-tune.sh` at boot (and on each deploy): TCP retransmits after 50 ms
+  instead of 200 ms and thin streams back off linearly, so a packet lost on a phone's Wi-Fi
+  stalls the game for less.
 - Logs: `journalctl -u bombtop -f`, deploys: `journalctl -u bombtop-update`.
 - Connection reports from players who opened the game with `?debug` (every 5 s: ping, render delay,
   fps, frames without a snapshot, worst gap between snapshots, user agent):

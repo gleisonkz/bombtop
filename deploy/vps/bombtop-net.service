@@ -1,0 +1,12 @@
+[Unit]
+Description=TCP tuning for the bombtop game server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/bombtop/app/deploy/vps/net-tune.sh
+
+[Install]
+WantedBy=multi-user.target
