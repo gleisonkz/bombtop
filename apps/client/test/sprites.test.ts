@@ -208,17 +208,19 @@ describe("mascot in the arena", () => {
     for (const p of xs) expect(Math.sign(p.sx - 1)).toBe(-Math.sign(p.sy - 1) || 0);
   });
 
-  it("hops and waddles while walking", () => {
+  it("walks through four steps with a little bounce", () => {
     const xs = over({ moving: true });
+    expect(new Set(xs.map((p) => p.step))).toEqual(new Set([0, 1, 2, 3]));
     expect(xs.every((p) => p.dy <= 0)).toBe(true);
-    expect(Math.min(...xs.map((p) => p.dy))).toBeLessThan(-1);
-    expect(Math.min(...xs.map((p) => p.rot))).toBeLessThan(0);
-    expect(Math.max(...xs.map((p) => p.rot))).toBeGreaterThan(0);
+    expect(Math.min(...xs.map((p) => p.dy))).toBeLessThan(-0.5);
+    expect(over().every((p) => p.step === 0)).toBe(true);
   });
 
-  it("faces the way it walks", () => {
-    expect(pose({ facing: "left" }).flip).toBe(true);
-    expect(pose({ facing: "right" }).flip).toBe(false);
+  it("shows its face going down, its back going up, its side going left or right", () => {
+    expect(pose({ facing: "down" })).toMatchObject({ view: "front", flip: false });
+    expect(pose({ facing: "up" })).toMatchObject({ view: "back", flip: false });
+    expect(pose({ facing: "right" })).toMatchObject({ view: "side", flip: false });
+    expect(pose({ facing: "left" })).toMatchObject({ view: "side", flip: true });
   });
 
   it("wobbles, wide-eyed, while stunned", () => {

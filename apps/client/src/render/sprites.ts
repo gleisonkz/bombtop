@@ -1,5 +1,5 @@
 import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
-import type { Mood } from "../ui/art";
+import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
 
@@ -161,17 +161,28 @@ export const MASCOT = {
   moods: ["happy", "wow", "sad"] satisfies Mood[],
 };
 
+/** Ticks per walk step: two steps cross a tile at base speed. */
+export const MASCOT_STEP_TICKS = 8;
+
+const VIEWS: Record<Facing, MascotView> = { down: "front", up: "back", left: "side", right: "side" };
+
 /**
- * How the mascot stands this tick: it breathes while idle, hops and waddles
- * while walking, wobbles wide-eyed while stunned, and turns to face left/right.
+ * How the mascot stands this tick: it breathes while idle, steps its feet (bobbing
+ * on the lifted steps) while walking, wobbles wide-eyed facing us while stunned, and
+ * shows its face, back or side by where it is going (the side mirrored for left).
  */
 export function mascotPose({ moving, stunned, facing, tick }: { moving: boolean; stunned: boolean; facing: Facing; tick: number }) {
   const t = (tick / TICK_RATE) * Math.PI * 2;
+  const view = VIEWS[facing];
   const flip = facing === "left";
-  if (stunned) return { sx: 1, sy: 1, dy: 0, rot: Math.sin(t * 4) * 0.3, flip, mood: "wow" as Mood };
-  if (moving) return { sx: 1, sy: 1, dy: -Math.abs(Math.sin(t * 2)) * 2.5, rot: Math.sin(t * 2) * 0.15, flip, mood: "happy" as Mood };
+  if (stunned) return { sx: 1, sy: 1, dy: 0, rot: Math.sin(t * 4) * 0.3, flip: false, view: "front" as MascotView, step: 0, mood: "wow" as Mood };
+  if (moving) {
+    const step = Math.floor(tick / MASCOT_STEP_TICKS) % 4;
+    const lifted = step % 2 === 1;
+    return { sx: 1, sy: 1, dy: lifted ? -1.2 : 0, rot: lifted ? (step === 1 ? -0.04 : 0.04) : 0, flip, view, step, mood: "happy" as Mood };
+  }
   const breath = Math.sin(t * 1.5) * 0.04;
-  return { sx: 1 + breath, sy: 1 - breath, dy: 0, rot: 0, flip, mood: "happy" as Mood };
+  return { sx: 1 + breath, sy: 1 - breath, dy: 0, rot: 0, flip, view, step: 0, mood: "happy" as Mood };
 }
 
 /** The mascot `ticks` after dying: it floats up, squashed and fading; null once gone. */

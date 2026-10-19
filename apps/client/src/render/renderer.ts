@@ -1,5 +1,5 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
-import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
+import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
 import { BOMBS, FLAMES, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
@@ -86,6 +86,8 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
 /** Mascot pixels per SVG unit: drawn larger than shown so it stays smooth when the stage is scaled up. */
 const MASCOT_RES = 2;
 
+const mascotKey = (player: number, mood: Mood, view: MascotView, step: number) => `${player}:${mood}:${view}:${step}`;
+
 async function rasterize(svg: string): Promise<Texture> {
   const img = new Image();
   img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -154,11 +156,17 @@ export class Renderer {
     this.skin = await loadSkin(sheet);
   }
 
-  /** Draws the bomb mascot in every player color, for players who pick it. */
+  /**
+   * Draws the bomb mascot in every player color, for players who pick it: each view
+   * walking (4 steps, happy), plus the stunned and sad faces where they show.
+   */
   async useMascots(): Promise<void> {
+    const looks: { mood: Mood; view: MascotView; step: number }[] = [];
+    for (const view of ["front", "back", "side"] as const) for (let step = 0; step < 4; step++) looks.push({ mood: "happy", view, step });
+    for (const mood of MASCOT.moods) if (mood !== "happy") for (const view of ["front", "side"] as const) looks.push({ mood, view, step: 0 });
     const entries = await Promise.all(
       PLAYER_COLORS.flatMap((color, player) =>
-        MASCOT.moods.map(async (mood) => [`${player}:${mood}`, await rasterize(mascotSvg({ color, mood }))] as const),
+        looks.map(async (l) => [mascotKey(player, l.mood, l.view, l.step), await rasterize(mascotSvg({ color, ...l }))] as const),
       ),
     );
     this.mascots = new Map(entries);
@@ -329,12 +337,15 @@ export class Renderer {
     player: number,
     cx: number,
     cy: number,
-    look: { sx: number; sy: number; dy: number; rot?: number; flip?: boolean; alpha?: number; mood: Mood },
+    look: { sx: number; sy: number; dy: number; rot?: number; flip?: boolean; alpha?: number; mood: Mood; view?: MascotView; step?: number },
     tint = 0xffffff,
   ): void {
     const sprite = this.sprite(id);
     const scale = MASCOT.scale / MASCOT_RES;
-    sprite.texture = this.mascots!.get(`${player % COLORS.players.length}:${look.mood}`)!;
+    const color = player % COLORS.players.length;
+    sprite.texture =
+      this.mascots!.get(mascotKey(color, look.mood, look.view ?? "front", look.step ?? 0)) ??
+      this.mascots!.get(mascotKey(color, look.mood, "front", 0))!;
     sprite.anchor.set(MASCOT.anchorX / MASCOT.width, MASCOT.anchorY / MASCOT.height);
     sprite.position.set(cx, cy + 6 + look.dy);
     sprite.scale.set(scale * look.sx * (look.flip ? -1 : 1), scale * look.sy);

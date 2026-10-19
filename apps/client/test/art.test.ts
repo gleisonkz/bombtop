@@ -36,6 +36,23 @@ describe("mascotSvg", () => {
     }
   });
 
+  it("turns around: front with a face, back without, side with the face on the right", () => {
+    const front = mascotSvg({ view: "front" });
+    const back = mascotSvg({ view: "back" });
+    const side = mascotSvg({ view: "side" });
+    expect(front).toBe(mascotSvg());
+    expect(back).not.toContain('class="eyes"');
+    expect(side).toContain('class="eyes"');
+    expect(new Set([front, back, side]).size).toBe(3);
+  });
+
+  it("steps its feet through a 4-frame walk in every view", () => {
+    for (const view of ["front", "back", "side"] as const) {
+      const steps = [0, 1, 2, 3].map((step) => mascotSvg({ view, step }));
+      expect(new Set(steps).size, view).toBe(4);
+    }
+  });
+
   it("matches the in-game player colors", () => {
     expect(PLAYER_COLORS).toHaveLength(5);
   });
