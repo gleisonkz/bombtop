@@ -180,13 +180,11 @@
       .seat { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px; padding: 10px 6px 8px; min-height: 120px; background: #00000030; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 4px 0 var(--ink); animation: pop 0.25s ease-out; min-width: 0; }
       .seat .mascot { width: 60px; height: 60px; }
       /* A character from its sheet: one row played in CSS, scaled by --s, standing on the bottom of the box. */
-      .mascot.sheet { position: relative; --s: 3; }
-      .mascot.sheet.ninja { --s: 1.5; }
+      .mascot.sheet { position: relative; --k: 2.7; }
       .mascot.sheet i { position: absolute; left: calc(50% - var(--ax) * var(--s)); top: calc(100% - var(--ay) * var(--s)); width: calc(var(--fw) * var(--s)); height: calc(var(--fh) * var(--s)); background: no-repeat 0 calc(var(--row) * var(--fh) * -1 * var(--s)) / calc(var(--sw) * var(--s)) calc(var(--sh) * var(--s)); image-rendering: pixelated; animation: sheet-play var(--dur) steps(var(--frames)) infinite; }
       @keyframes sheet-play { to { background-position-x: calc(var(--frames) * var(--fw) * -1 * var(--s)); } }
       .seat.hard .mascot.sheet i { animation-duration: calc(var(--dur) / 2); }
-      .hero .mascot.sheet { --s: 6; }
-      .hero .mascot.sheet.ninja { --s: 3; }
+      .hero .mascot.sheet { --k: 8; }
       .picker { display: flex; gap: 4px; width: 100%; }
       button.mini.pick { background: #ffffff22; color: var(--text); }
       button.mini.pick.on { background: var(--accent); color: #15152a; }
@@ -211,6 +209,17 @@
         .lobby { grid-template-columns: minmax(250px, 320px) 1fr; align-items: start; padding-right: 56px; } /* clear of the sound button */
         .seats { grid-template-columns: repeat(3, 1fr); }
       }
+      /* Desktop: a wide room, all five seats in a row, big characters */
+      @media (orientation: landscape) and (min-width: 1100px) and (min-height: 640px) {
+        .screen.lobby { width: min(1500px, 100%); grid-template-columns: minmax(300px, 360px) 1fr; gap: 28px; }
+        .seats { grid-template-columns: repeat(5, 1fr); gap: 16px; padding-top: 0; }
+        .seat { min-height: 340px; padding: 18px 10px 14px; gap: 8px; align-content: end; }
+        .seat .mascot { width: 170px; height: 190px; }
+        .seat .mascot.sheet { --k: 7; }
+        .seat-name { font-size: 20px; }
+        .seat.add-bot { align-content: center; }
+        .seat.add-bot button { width: 100%; }
+      }
       /* Desktop: the item guide takes the whole width, in two columns */
       @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
         .menu.guiding .hero { display: none; }
@@ -228,9 +237,8 @@
         button.big { min-height: 46px; font-size: 20px; }
         .seat { min-height: 92px; padding: 8px 4px 6px; }
         .seat .mascot { width: 44px; height: 44px; }
-        .mascot.sheet { --s: 2.2; }
-        .mascot.sheet.ninja { --s: 1.1; }
-        .hero .mascot.sheet { --s: 3; }
+        .mascot.sheet { --k: 2; }
+        .hero .mascot.sheet { --k: 4; }
         .tagline, .menu .hint { display: none; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } }

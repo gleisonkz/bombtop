@@ -60,6 +60,8 @@ export function characterArt(character: CharacterId, color: string, state: Previ
     "--row": `${pose.row}`,
     "--frames": `${pose.frames}`,
     "--dur": `${pose.seconds}s`,
+    // Same size relative to each other as in the arena; each box zooms with --k.
+    "--s": `calc(var(--k) * ${sheet.scale ?? 1})`,
   };
   for (const [k, v] of Object.entries(vars)) sprite.style.setProperty(k, v);
   span.appendChild(sprite);
