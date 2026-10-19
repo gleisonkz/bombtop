@@ -62,7 +62,7 @@ Action button priority: detonate remote > punch > mount ability.
 
 Characters (looks only): `CHARACTERS` in `protocol.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
-ninja from PixelLab (smoothed by `scripts/upscale-pixel-art.py`), bomb from `scripts/build-bomber.py`.
+drawn by `scripts/build-ninja.py` and `scripts/build-bomber.py` in the same chibi HD style.
 Art is HD: everything else (bombs, items, flames, tiles) is also drawn by scripts in `apps/client/scripts`
 (see `public/sprites/LICENSES.md`); rerun a script to change its art.
 

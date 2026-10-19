@@ -101,10 +101,10 @@ describe("ninja sheet", () => {
   const at = (facing: "up" | "down" | "left" | "right", o: { moving?: boolean; stunned?: boolean; tick?: number } = {}) =>
     playerFrame(ninja, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
 
-  it("walks with 6 frames in each direction, mirroring east for west", () => {
+  it("walks with 4 frames in each direction (like the bomb), mirroring east for west", () => {
     const xs = new Set<number>();
     for (let tick = 0; tick < 120; tick++) xs.add(at("up", { moving: true, tick }).x);
-    expect(xs.size).toBe(6);
+    expect(xs.size).toBe(4);
     expect(at("left", { moving: true }).flip).toBe(true);
     expect(at("right", { moving: true }).flip).toBe(false);
   });
@@ -398,7 +398,7 @@ describe("HD art", () => {
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.frameW * SHEETS.bomber.scale).toBeCloseTo(32 * 0.7);
-    expect(SHEETS.ninja.frameW * SHEETS.ninja.scale).toBeCloseTo(64 * 0.55);
+    expect(SHEETS.ninja.frameW * SHEETS.ninja.scale).toBe(SHEETS.bomber.frameW * SHEETS.bomber.scale); // same build, same size
   });
 });
 
