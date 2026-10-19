@@ -24,11 +24,21 @@ describe("SnapshotBuffer", () => {
     expect(s.alpha).toBeCloseTo(0.5);
   });
 
-  it("holds the newest snapshot when packets are late", () => {
+  it("runs a little past the newest snapshot when the next one is late, instead of freezing", () => {
     const b = new SnapshotBuffer(100);
     b.push(snap(1), 1000);
     b.push(snap(2), 1040);
-    expect(b.sample(5000)).toEqual({ from: snap(2), to: snap(2), alpha: 0 });
+    const s = b.sample(1150)!; // render time 1050: 10 ms past the newest
+    expect(s.from).toEqual(snap(1));
+    expect(s.to).toEqual(snap(2));
+    expect(s.alpha).toBeCloseTo(1.25);
+  });
+
+  it("goes no further than half a snapshot past the newest", () => {
+    const b = new SnapshotBuffer(100);
+    b.push(snap(1), 1000);
+    b.push(snap(2), 1040);
+    expect(b.sample(5000)!.alpha).toBe(1.5);
   });
 
   it("starts from the oldest snapshot when render time is before it", () => {

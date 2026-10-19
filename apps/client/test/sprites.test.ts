@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -449,5 +449,20 @@ describe("shadeHues", () => {
     const before = [...data];
     shadeHues(data, [225, 285], [78, 64, 160], [232, 74, 74]);
     expect([...data]).toEqual(before);
+  });
+});
+
+describe("between", () => {
+  const from = { px: 1000, py: 500 };
+  it("interpolates a player between two snapshots", () => {
+    expect(between(from, { px: 1100, py: 500 }, 0.5)).toEqual({ px: 1050, py: 500 });
+  });
+
+  it("carries a walk on a little past the newest snapshot", () => {
+    expect(between(from, { px: 1100, py: 500 }, 1.5)).toEqual({ px: 1150, py: 500 });
+  });
+
+  it("never carries a teleport (warp, respawn) past where it landed", () => {
+    expect(between(from, { px: 1000 + 3 * TILE, py: 500 }, 1.5)).toEqual({ px: 1000 + 3 * TILE, py: 500 });
   });
 });

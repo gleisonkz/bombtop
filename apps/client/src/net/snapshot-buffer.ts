@@ -7,6 +7,9 @@ export interface Sample {
   alpha: number;
 }
 
+/** Furthest past the newest snapshot to carry movement on, in snapshot gaps (alpha). */
+const MAX_EXTRAPOLATION = 1.5;
+
 interface Entry {
   snap: PublicView;
   at: number;
@@ -58,6 +61,12 @@ export class SnapshotBuffer {
       }
     }
     const newest = this.entries.at(-1)!;
+    const before = this.entries.at(-2);
+    if (t > newest.at && before) {
+      // The next snapshot is late: keep going the same way a little rather than freeze, then jump.
+      const alpha = (t - before.at) / Math.max(1, newest.at - before.at);
+      return { from: before.snap, to: newest.snap, alpha: Math.min(MAX_EXTRAPOLATION, alpha) };
+    }
     const edge = t > newest.at ? newest : first;
     return { from: edge.snap, to: edge.snap, alpha: 0 };
   }

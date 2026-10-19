@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -479,4 +479,20 @@ export function paintHues(px: Uint8ClampedArray, range: readonly [number, number
     px[i + 1] = g;
     px[i + 2] = b;
   }
+}
+
+interface Pos {
+  px: number;
+  py: number;
+}
+
+/**
+ * Where to draw a player `alpha` of the way from one snapshot to the next. Past 1
+ * (the next snapshot is late) a walk carries on; a jump of a tile or more between
+ * snapshots is a teleport and stays where it landed.
+ */
+export function between(from: Pos, to: Pos, alpha: number): Pos {
+  const jumped = Math.abs(to.px - from.px) + Math.abs(to.py - from.py) >= TILE;
+  const a = alpha > 1 && jumped ? 1 : alpha;
+  return { px: from.px + (to.px - from.px) * a, py: from.py + (to.py - from.py) * a };
 }

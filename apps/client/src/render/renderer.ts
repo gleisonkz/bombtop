@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -485,9 +485,7 @@ export class Renderer {
         g.circle(cx, cy - 3, 4).fill(color).stroke({ color: 0x000000, width: 1 });
         return;
       }
-      const from = prev.get(p.id) ?? p;
-      const ux = from.px + (p.px - from.px) * alpha;
-      const uy = from.py + (p.py - from.py) * alpha;
+      const { px: ux, py: uy } = between(prev.get(p.id) ?? p, p, alpha);
       const cx = (ux / TILE) * TILE_PX;
       const cy = (uy / TILE) * TILE_PX;
       this.lastSeen.set(p.id, { cx, cy, deadAt: null });

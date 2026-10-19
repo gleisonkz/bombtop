@@ -29,6 +29,19 @@ describe("AdaptiveDelay", () => {
     expect(jittery).toBeLessThanOrEqual(150);
   });
 
+  it("remembers rare stalls (mobile networks) and keeps room for the next one", () => {
+    // every ~3 s one snapshot comes 120 ms after the last, then a burst catches up
+    const ms = feed(new AdaptiveDelay(), [120, 2, ...Array<number>(88).fill(33)], 900);
+    expect(ms).toBeGreaterThanOrEqual(95);
+  });
+
+  it("shrinks again once the connection has been steady for a while", () => {
+    const d = new AdaptiveDelay();
+    const t = 10 * (120 + 2 + 88 * 33); // where the stalls left off
+    feed(d, [120, 2, ...Array<number>(88).fill(33)], 900);
+    expect(feed(d, [33], 1500, t)).toBeLessThan(60);
+  });
+
   it("never goes past its bounds", () => {
     expect(feed(new AdaptiveDelay(), [400], 300)).toBe(150);
     expect(feed(new AdaptiveDelay(), [1], 3000)).toBe(40);
