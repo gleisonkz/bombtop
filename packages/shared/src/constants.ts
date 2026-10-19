@@ -78,6 +78,14 @@ export const AIR_DISTANCE = 3;
 /** Ticks a player stays stunned after a bomb lands on them. */
 export const STUN_TICKS = TICK_RATE;
 
+/** Ninja ice blast: reach in tiles, how long it freezes, and its recharge. */
+export const ICE_RANGE = 4;
+export const FREEZE_TICKS = 5 * TICK_RATE;
+export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
+
+/** Ticks a blast stays on screen. */
+export const BLAST_TICKS = 24;
+
 /** Spawn tiles for the default 13x11 arena, in player order. */
 export const SPAWN_POINTS: readonly { x: number; y: number }[] = [
   { x: 1, y: 1 },

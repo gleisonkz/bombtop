@@ -8,11 +8,14 @@ import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
+import { updateBlasts, useSpecial } from "./special";
 import { playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   s.tick++;
+  // Thawed before anyone acts, so a freeze lasts the same whoever moved first.
+  for (const p of s.players) if (p.frozen > 0) p.frozen--;
 
   for (const p of s.players) {
     const input = inputs[p.id];
@@ -21,10 +24,12 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (p.invuln > 0) p.invuln--;
+    if (p.specialCooldown > 0) p.specialCooldown--;
     if (p.stun > 0) {
       p.stun--;
       continue;
     }
+    if (p.frozen > 0) continue;
     if (updateMountMove(s, p)) continue;
     if (p.curse?.kind === "diarrhea") placeBomb(s, p.id);
     if (!input) continue;
@@ -32,11 +37,13 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (dir && p.alive) p.facing = dir;
     if (input.bomb && !useGlove(s, p)) placeBomb(s, p.id);
     if (input.action) detonateRemote(s, p.id) || punch(s, p) || useMountAbility(s, p);
+    if (input.special) useSpecial(s, p);
     const moved = steer(s, p, dir, cursedDirection(p, input.alt ?? null));
     if (moved !== dir) p.facing = moved!;
     tryKick(s, p, moved);
   }
 
+  updateBlasts(s);
   applyFloor(s);
   updateHeldBombs(s);
   collectItems(s);

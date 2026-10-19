@@ -17,3 +17,4 @@ export * from "./step";
 export * from "./curse";
 export { createRng, nextRandom } from "./rng";
 export { Bot, BOT_LEVELS, botInput, type BotLevel } from "./bot";
+export * from "./special";

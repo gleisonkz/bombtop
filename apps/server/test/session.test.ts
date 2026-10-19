@@ -76,6 +76,13 @@ describe("lobby", () => {
     expect(s.setCharacter("c1", "bomb")).toBe(false); // locked mid-match
   });
 
+  it("plays each member as the character they picked", () => {
+    const s = lobby(2);
+    s.setCharacter("c2", "ninja");
+    s.start("c1");
+    expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "ninja"]);
+  });
+
   it("rejects joins during a match", () => {
     const s = playing();
     expect(s.join("late", "Late")).toBe(false);

@@ -135,6 +135,7 @@ export class BattleSession {
     this.match = createMatch({
       seed,
       playerIds: this.members.map((m) => m.id),
+      characters: Object.fromEntries(this.members.map((m) => [m.id, m.character])),
       stage: this.stage,
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });

@@ -1,6 +1,6 @@
 import { BOT_LEVELS, type BotLevel } from "./bot";
 import type { MatchResult } from "./pressure";
-import type { Direction, PlayerInput } from "./state";
+import { CHARACTERS, type CharacterId, type Direction, type PlayerInput } from "./state";
 import type { StageId } from "./stage";
 import type { PublicView } from "./view";
 
@@ -25,11 +25,6 @@ export const C2S = {
 
 /** Server -> client message types. */
 export const S2C = { lobby: "lobby", snapshot: "snapshot", result: "result" } as const;
-
-/** Playable characters (looks only: all play the same). */
-export const CHARACTERS = ["bomb", "ninja"] as const;
-export type CharacterId = (typeof CHARACTERS)[number];
-export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
 export interface LobbyMember {
   id: string;
@@ -59,6 +54,7 @@ export function sanitizeInput(raw: unknown): PlayerInput {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const dir = DIRS.has(r.dir as Direction) ? (r.dir as Direction) : null;
   const input: PlayerInput = { dir, bomb: r.bomb === true, action: r.action === true };
+  if (r.special === true) input.special = true;
   if (dir && DIRS.has(r.alt as Direction) && r.alt !== dir) input.alt = r.alt as Direction;
   return input;
 }

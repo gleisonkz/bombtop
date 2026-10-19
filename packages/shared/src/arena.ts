@@ -12,7 +12,7 @@ import {
 } from "./constants";
 import { createRng } from "./rng";
 import { buildStage, type StageId } from "./stage";
-import { ItemKind, tileCenter, Tile, type Item, type MatchState } from "./state";
+import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
   seed: number;
@@ -21,6 +21,8 @@ export interface MatchOptions {
   /** Dead players ride revenge carts (default true). */
   revenge?: boolean;
   stage?: StageId;
+  /** Each player's character (default: the bomb). */
+  characters?: Record<string, CharacterId>;
 }
 
 export function createMatch(opts: MatchOptions): MatchState {
@@ -67,6 +69,9 @@ export function createMatch(opts: MatchOptions): MatchState {
       canPunch: false,
       canGlove: false,
       stun: 0,
+      character: opts.characters?.[id] ?? DEFAULT_CHARACTER,
+      frozen: 0,
+      specialCooldown: 0,
       curse: null,
       mount: null,
       invuln: 0,
@@ -77,6 +82,7 @@ export function createMatch(opts: MatchOptions): MatchState {
     })),
     bombs: [],
     flames: [],
+    blasts: [],
   };
 }
 

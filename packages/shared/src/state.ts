@@ -33,6 +33,11 @@ export type Facing = Exclude<Direction, null>;
 
 export type BombType = "normal" | "remote" | "pierce";
 
+/** Playable characters: each has its own look and special. */
+export const CHARACTERS = ["bomb", "ninja"] as const;
+export type CharacterId = (typeof CHARACTERS)[number];
+export const DEFAULT_CHARACTER: CharacterId = "bomb";
+
 export const DIR_VECTORS: Record<Facing, readonly [number, number]> = {
   up: [0, -1],
   down: [0, 1],
@@ -51,6 +56,8 @@ export interface PlayerInput {
   bomb: boolean;
   /** Secondary button: detonate / punch. */
   action?: boolean;
+  /** Special button: the character's own move (ninja: ice blast). */
+  special?: boolean;
 }
 
 export interface Player {
@@ -70,6 +77,11 @@ export interface Player {
   canGlove: boolean;
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
+  character: CharacterId;
+  /** Ticks left frozen by an ice blast (no movement or actions; flames still kill). */
+  frozen: number;
+  /** Ticks until the special can be used again. */
+  specialCooldown: number;
   curse: Curse | null;
   mount: MountKind | null;
   /** Ticks left of post-hit invulnerability. */
@@ -156,6 +168,17 @@ export interface Flame {
   ownerId?: string;
 }
 
+/** A special's shot, kept a few ticks so clients can draw it. */
+export interface Blast {
+  ownerId: string;
+  /** Caster's tile; the blast covers `length` tiles from the next one in `dir`. */
+  x: number;
+  y: number;
+  dir: Facing;
+  length: number;
+  ttl: number;
+}
+
 export interface MatchState {
   tick: number;
   /** PRNG state for in-match randomness (see nextRandom). */
@@ -169,6 +192,7 @@ export interface MatchState {
   bombs: Bomb[];
   flames: Flame[];
   items: Item[];
+  blasts: Blast[];
 }
 
 /** Read-only helpers take just the fields they need, so they also work on network snapshots. */
