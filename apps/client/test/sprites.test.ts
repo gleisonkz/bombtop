@@ -362,3 +362,31 @@ describe("tile art", () => {
     expect(castsShadow(Tile.Empty)).toBe(false);
   });
 });
+
+describe("bomber sheet", () => {
+  const sheet = SHEETS.bomber;
+
+  it("fits every strip inside the image", () => {
+    const strips = [...Object.values(sheet.idle), ...Object.values(sheet.walk), sheet.stun, sheet.death];
+    for (const s of strips) {
+      expect((s.row + 1) * sheet.frameH).toBeLessThanOrEqual(sheet.height);
+      expect(s.frames * sheet.frameW).toBeLessThanOrEqual(sheet.width);
+    }
+  });
+
+  it("walks through 4 steps per view, mirroring right for left", () => {
+    const cols = new Set(Array.from({ length: 64 }, (_, tick) => playerFrame(sheet, { facing: "down", moving: true, carrying: false, tick }).x));
+    expect(cols.size).toBe(4);
+    expect(playerFrame(sheet, { facing: "left", moving: true, carrying: false, tick: 0 }).flip).toBe(true);
+    expect(playerFrame(sheet, { facing: "up", moving: true, carrying: false, tick: 0 }).y).toBe(sheet.walk.up.row * sheet.frameH);
+  });
+
+  it("repaints the body in the player's color, shading kept", () => {
+    expect(sheet.clothes).toHaveLength(4);
+  });
+
+  it("plays its death once, then is gone", () => {
+    expect(deathFrame(sheet, 0)).not.toBeNull();
+    expect(deathFrame(sheet, sheet.death.frames * sheet.ticksPerFrame)).toBeNull();
+  });
+});

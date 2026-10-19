@@ -61,8 +61,8 @@ All art, audio and names are original — never copy assets from existing games.
 Action button priority: detonate remote > punch > mount ability.
 
 Characters (looks only): `CHARACTERS` in `protocol.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
-saved in localStorage and sent on join; bots alternate. Arena: ninja = sprite sheet, bomb = `ui/art.ts` SVG
-rasterized per color/mood and animated in code (`mascotPose`/`mascotDeath` in `render/sprites.ts`).
+saved in localStorage and sent on join; bots alternate. Arena: both use sprite sheets (`SHEETS` in `render/sprites.ts`; ninja from PixelLab, bomb from
+`apps/client/scripts/build-bomber.py`). The bomb's `ui/art.ts` SVG is the lobby/menu art and the fallback while the sheet loads.
 
 ## Environment
 

@@ -114,7 +114,7 @@ export class Renderer {
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
-  private skin: Skin | null = null;
+  private readonly skins = new Map<CharacterId, Skin>();
   /** The mascot in each player color and mood (`${player}:${mood}`), once drawn. */
   private mascots: Map<string, Texture> | null = null;
   private characters = new Map<string, CharacterId>();
@@ -151,9 +151,9 @@ export class Renderer {
     this.root.addChild(this.tileLayer, this.world, this.itemLayer, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
   }
 
-  /** Draws players with a character sheet instead of shapes. */
-  async useSheet(sheet: SheetLayout): Promise<void> {
-    this.skin = await loadSkin(sheet);
+  /** Draws a character's players with a sheet instead of shapes. */
+  async useSheet(character: CharacterId, sheet: SheetLayout): Promise<void> {
+    this.skins.set(character, await loadSkin(sheet));
   }
 
   /**
@@ -317,8 +317,7 @@ export class Renderer {
     glow.circle(gx, gy, 1.1).fill({ color: 0xffffff, alpha: 0.9 });
   }
 
-  private placeSprite(id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
-    const skin = this.skin!;
+  private placeSprite(skin: Skin, id: string, player: number, f: FrameRect, cx: number, cy: number, tint: number): void {
     const { sheet } = skin;
     const sprite = this.sprite(id);
     const scale = sheet.scale ?? 1;
@@ -372,13 +371,14 @@ export class Renderer {
     const seen = this.lastSeen.get(id);
     if (!seen) return;
     seen.deadAt ??= tick;
-    if (this.character(id) === "bomb") {
+    const skin = this.skins.get(this.character(id));
+    if (!skin && this.character(id) === "bomb") {
       const look = this.mascots && mascotDeath(tick - seen.deadAt);
       if (look) this.placeMascot(id, player, seen.cx, seen.cy, look);
       return;
     }
-    const f = this.skin && deathFrame(this.skin.sheet, tick - seen.deadAt);
-    if (f) this.placeSprite(id, player, f, seen.cx, seen.cy, 0xffffff);
+    const f = skin && deathFrame(skin.sheet, tick - seen.deadAt);
+    if (f) this.placeSprite(skin, id, player, f, seen.cx, seen.cy, 0xffffff);
   }
 
   private frame(skin: Skin, player: number, x: number, y: number): Texture {
@@ -497,11 +497,12 @@ export class Renderer {
       const tick = ice ? 0 : s.tick; // frozen stiff
       const blast = s.blasts.find((b) => b.ownerId === p.id);
       const character = this.character(p.id);
-      if (character === "ninja" && this.skin) {
-        const { sheet } = this.skin;
+      const skin = this.skins.get(character);
+      if (skin) {
+        const { sheet } = skin;
         const casting = blast && BLAST_TICKS - blast.ttl;
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, tick });
-        this.placeSprite(p.id, i, f, cx, cy, tint);
+        this.placeSprite(skin, p.id, i, f, cx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });

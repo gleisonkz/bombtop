@@ -103,6 +103,25 @@ export const SHEETS = {
     hues: [185, 250],
     scale: 0.55,
   },
+  /** The bomb mascot in pixel art (scripts/build-bomber.py). */
+  bomber: {
+    url: "sprites/bomber.png",
+    width: 192,
+    height: 256,
+    frameW: 32,
+    frameH: 32,
+    anchorX: 16,
+    anchorY: 30,
+    bodyH: 26,
+    ticksPerFrame: 8,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 4),
+    stun: { row: 6, frames: 4 },
+    death: { row: 7, frames: 6 },
+    clothes: [[64, 64, 128], [46, 46, 98], [32, 32, 70], [112, 112, 184]],
+    scale: 0.7,
+  },
 } satisfies Record<string, SheetLayout>;
 
 export type SheetName = keyof typeof SHEETS;
