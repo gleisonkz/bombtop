@@ -19,6 +19,7 @@ import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import { GhostBombs } from "../net/ghost-bombs";
+import { KickPrediction } from "../net/kick-prediction";
 import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
@@ -45,6 +46,7 @@ export class OnlineGame implements GameMode {
   private readonly listener = new Listener();
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
+  private readonly kicks = new KickPrediction();
   private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
   private leaving = false;
@@ -78,6 +80,7 @@ export class OnlineGame implements GameMode {
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
         this.ghosts.clear();
+        this.kicks.clear();
         ctx.sound.play("start");
       }
       this.lobby = info;
@@ -127,7 +130,7 @@ export class OnlineGame implements GameMode {
     if (!sample) return;
     this.ctx.sound.cues(this.echo.filter(this.listener.hear(sample.to), nowMs), sample.to.grid.width);
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
-    const view = this.ghosts.apply(sample.to, nowMs);
+    const view = this.kicks.apply(this.ghosts.apply(sample.to, nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
     if (import.meta.env.DEV) Object.assign(window, { __me: me });
@@ -147,6 +150,9 @@ export class OnlineGame implements GameMode {
     const t = this.predictor.clock;
     const seq = this.predictor.step(input);
     if (seq !== null) this.room.send(C2S.input, { ...input, seq, t });
+    // Walking into a bomb kicks it now on our screen, not a round trip later.
+    const me = this.playing() ? this.predictor.predict(this.latest!) : null;
+    if (me) this.kicks.check(this.latest!, me, input.dir, performance.now());
   }
 
   /** Our own button press is heard (and a placed bomb drawn) at once; the server's echo is skipped. */
