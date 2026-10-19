@@ -52,6 +52,14 @@ export class Predictor {
     this.log = [];
   }
 
+  /** Ticks we run ahead of `snap`: the inputs the server has not applied yet. */
+  lead(snap: Snapshot): number {
+    const ack = snap.acks[this.me] ?? { seq: 0, ticks: 0 };
+    const first = this.log.find((e) => e.seq >= ack.seq);
+    if (!first) return 0;
+    return this.tick - first.tick - (first.seq === ack.seq ? ack.ticks : 0);
+  }
+
   /** The local player as it should look now, or null when it is not in the match. */
   predict(snap: Snapshot): Player | null {
     const found = snap.players.find((p) => p.id === this.me);

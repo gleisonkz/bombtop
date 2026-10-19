@@ -48,6 +48,14 @@ describe("Predictor", () => {
     expect(p.predict(snap)!.px).toBe(start.px + 3 * start.speed);
   });
 
+  it("tells how many ticks it runs ahead of the snapshot", () => {
+    const p = new Predictor("me");
+    expect(p.lead(snapshot())).toBe(0);
+    for (let i = 0; i < 5; i++) p.step(input("right"));
+    expect(p.lead(snapshot())).toBe(5);
+    expect(p.lead(snapshot({ me: { seq: 1, ticks: 2 } }))).toBe(3);
+  });
+
   it("follows later inputs in order, through the diagonal fallback", () => {
     const p = new Predictor("me");
     const snap = snapshot({ me: { seq: 1, ticks: 1 } });

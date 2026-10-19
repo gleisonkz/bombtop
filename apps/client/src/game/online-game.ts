@@ -1,6 +1,7 @@
 import { Client, type Room } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
 import { AdaptiveDelay } from "../net/adaptive-delay";
+import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
 import {
   C2S,
   ROOM_NAME,
@@ -15,7 +16,7 @@ import {
   type ResultMessage,
   type Snapshot,
 } from "@bombtop/shared";
-import { Listener } from "../audio/cues";
+import { Listener, type CueName } from "../audio/cues";
 import { actionCues, EchoFilter } from "../audio/local-cues";
 import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
@@ -28,6 +29,9 @@ import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
+
+/** Sounds of the world ahead: heard when they are drawn, not when the late snapshot shows them. */
+const WORLD_CUES = new Set<CueName>(["explode", "break", "wall"]);
 
 export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, location.href);
 
@@ -45,6 +49,11 @@ export class OnlineGame implements GameMode {
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
   private readonly listener = new Listener();
+  /** Hears the world run ahead (explosions, blocks, walls), in step with what is drawn. */
+  private readonly worldListener = new Listener();
+  /** Tick the world is drawn at: the latest snapshot plus our lead; never goes back. */
+  private worldTick = 0;
+  private ahead: { from: Snapshot; n: number; view: PublicView } | null = null;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
   private readonly kicks = new KickPrediction();
@@ -138,15 +147,36 @@ export class OnlineGame implements GameMode {
 
     const sample = this.buffer.sample(nowMs);
     if (!sample) return;
-    this.ctx.sound.cues(this.echo.filter(this.listener.hear(sample.to), nowMs), sample.to.grid.width);
+    const world = this.world();
+    const width = sample.to.grid.width;
+    const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
+    this.ctx.sound.cues(this.echo.filter(heard, nowMs), width);
+    this.ctx.sound.cues(this.worldListener.hear(world).filter((c) => WORLD_CUES.has(c.name)), width);
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
-    const view = this.kicks.apply(this.ghosts.apply(sample.to, nowMs), nowMs);
+    // Other players come from the (past) sample; bombs, flames and the arena from the world ahead.
+    const { bombs, flames, grid, items, blasts } = world;
+    const mixed = { ...sample.to, bombs, flames, grid, items, blasts };
+    const view = this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
     if (import.meta.env.DEV) Object.assign(window, { __me: me });
     prev.set(me.id, { px: me.px, py: me.py });
     const players = view.players.map((p) => (p.id === me.id ? me : p));
     this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
+  }
+
+  /**
+   * The latest snapshot run forward to the time our predicted player lives in,
+   * so a bomb blows on our screen when it really does, not a round trip later.
+   */
+  private world(): PublicView {
+    const latest = this.latest!;
+    if (latest.tick < this.worldTick - MAX_AHEAD * 2) this.worldTick = 0; // new match
+    const lead = this.playing() ? this.predictor.lead(latest) : 0;
+    this.worldTick = Math.min(latest.tick + MAX_AHEAD, Math.max(this.worldTick, latest.tick + lead));
+    const n = this.worldTick - latest.tick;
+    if (this.ahead?.from !== latest || this.ahead.n !== n) this.ahead = { from: latest, n, view: aheadOf(latest, n) };
+    return this.ahead.view;
   }
 
   private playing(): boolean {
