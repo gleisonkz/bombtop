@@ -84,15 +84,14 @@ export class LobbyPanel {
           characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
-          you
-            ? el(
-                "div",
-                { class: "picker" },
-                CHARACTERS.map((c) =>
-                  button(CHARACTER_NAMES[c], () => this.handlers.pickCharacter(c), `mini pick${c === member.character ? " on" : ""}`),
-                ),
-              )
-            : null,
+          // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
+          el(
+            "div",
+            { class: you ? "picker" : "picker spacer" },
+            CHARACTERS.map((c) =>
+              button(CHARACTER_NAMES[c], () => you && this.handlers.pickCharacter(c), `mini pick${c === member.character ? " on" : ""}`),
+            ),
+          ),
         ]);
       }),
     );

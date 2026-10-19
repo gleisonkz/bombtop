@@ -192,9 +192,11 @@
       .mascot.sheet { position: relative; --k: 2.7; }
       .mascot.sheet i { position: absolute; left: calc(50% - var(--ax) * var(--s)); top: calc(100% - var(--ay) * var(--s)); width: calc(var(--fw) * var(--s)); height: calc(var(--fh) * var(--s)); background: no-repeat 0 calc(var(--row) * var(--fh) * -1 * var(--s)) / calc(var(--sw) * var(--s)) calc(var(--sh) * var(--s)); animation: sheet-play var(--dur) steps(var(--frames)) infinite; }
       @keyframes sheet-play { to { background-position-x: calc(var(--frames) * var(--fw) * -1 * var(--s)); } }
-      .seat.hard .mascot.sheet i { animation-duration: calc(var(--dur) / 2); }
+      /* Sheet characters animate themselves: the seat keeps them in place (the old mascot strolled around). */
+      .seat .mascot.sheet, .seat.easy .mascot.sheet, .seat.medium .mascot.sheet, .seat.hard .mascot.sheet { animation: none; }
       .hero .mascot.sheet { --k: 8; }
       .picker { display: flex; gap: 4px; width: 100%; }
+      .picker.spacer { visibility: hidden; }
       button.mini.pick { background: #ffffff22; color: var(--text); }
       button.mini.pick.on { background: var(--accent); color: #15152a; }
       .seat.me { background: #ffd23f22; border-color: var(--accent); }
