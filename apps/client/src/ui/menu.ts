@@ -2,6 +2,7 @@ import { MASCOT_COLOR } from "./art";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
+import { freshReload, toggleDebug, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt } from "./sheet-art";
 
@@ -59,6 +60,12 @@ export class Menu {
     ];
     const [publicBtn, createBtn, joinBtn] = this.buttons;
 
+    // Debug mode: a connection readout in game, also logged on the server for us to read.
+    const debugLabel = (on: boolean) => `Modo debug: ${on ? "ligado" : "desligado"}`;
+    const debugBtn = button(debugLabel(debugOn(location.search, storage)), () => {
+      debugBtn.textContent = debugLabel(toggleDebug(storage));
+    }, "mini");
+
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
     logo.append(el("span", { text: "TOP" }));
@@ -76,6 +83,8 @@ export class Menu {
         button("Assistir demo", () => handlers.demo(), "ghost"),
       ]),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
+      el("div", { class: "row dev" }, [debugBtn, button("Atualizar jogo", () => void freshReload(), "mini")]),
+      el("p", { class: "hint version", text: versionLabel(__APP_VERSION__) }),
     ]);
     const preview = new ItemPreview();
     const { root: guide, open: openGuide } = itemGuide({

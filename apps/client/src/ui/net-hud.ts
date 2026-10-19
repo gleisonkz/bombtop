@@ -1,4 +1,5 @@
-import { el } from "./dom";
+import { debugOn } from "./dev-tools";
+import { el, storage } from "./dom";
 
 /** A second's worth of what the connection looked like on this screen. */
 export class NetStats {
@@ -67,4 +68,4 @@ export class NetHud {
   }
 }
 
-export const debugNet = (): boolean => new URLSearchParams(location.search).has("debug");
+export const debugNet = (): boolean => debugOn(location.search, storage);

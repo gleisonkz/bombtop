@@ -1,7 +1,19 @@
 import { defineConfig } from "vite";
+import { execSync } from "node:child_process";
 import { VitePWA } from "vite-plugin-pwa";
 
+/** The commit being built (Render sets RENDER_GIT_COMMIT), shown in the menu. */
+function appVersion(): string {
+  if (process.env.RENDER_GIT_COMMIT) return process.env.RENDER_GIT_COMMIT;
+  try {
+    return execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim();
+  } catch {
+    return "dev";
+  }
+}
+
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(appVersion()) },
   server: {
     // Lets a phone reach the dev build through a tunnel (ngrok) on a single origin:
     // the game server is proxied under /colyseus (set VITE_SERVER_URL=/colyseus).
