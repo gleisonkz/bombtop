@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, MASCOT, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, ITEMS, MASCOT, itemCell, itemFrame, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -105,6 +105,7 @@ export class Renderer {
   private readonly world = new Graphics();
   /** Flames sit on the floor, under players and bombs. */
   private readonly flameLayer = new Container();
+  private readonly itemLayer = new Container();
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
@@ -118,6 +119,8 @@ export class Renderer {
   /** Flame textures by piece, one per stage of the flame's life, once loaded. */
   private flameArt: Record<FlamePiece["kind"], Texture[]> | null = null;
   private readonly flameSprites: Sprite[] = [];
+  private itemArt: Map<ItemKind, Texture[]> | null = null;
+  private readonly itemSprites: Sprite[] = [];
   private readonly fx = new Fx(TILE_PX);
   /** Tiles as last drawn, to tell which flames just blew up a block. */
   private lastTiles: readonly Tile[] = [];
@@ -140,7 +143,7 @@ export class Renderer {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.world, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.world, this.itemLayer, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
   }
 
   /** Draws players with a character sheet instead of shapes. */
@@ -174,6 +177,39 @@ export class Renderer {
     const row = (r: number) =>
       Array.from({ length: FLAMES.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * FLAMES.size, r * FLAMES.size, FLAMES.size, FLAMES.size) }));
     this.flameArt = { center: row(FLAMES.rows.center), mid: row(FLAMES.rows.mid), end: row(FLAMES.rows.end) };
+  }
+
+  /** Draws power-ups as plates with icons (and a glint now and then) instead of dots. */
+  async useItemArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${ITEMS.url}`);
+    base.source.scaleMode = "linear"; // drawn at under a third of its size
+    this.itemArt = new Map(
+      ITEMS.order.map((kind) => [
+        kind,
+        Array.from({ length: ITEMS.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(itemCell(kind), f * ITEMS.size, ITEMS.size, ITEMS.size) })),
+      ]),
+    );
+  }
+
+  private drawItems(items: PublicView["items"], tick: number, visible: (x: number, y: number) => boolean): void {
+    for (const sprite of this.itemSprites) sprite.visible = false;
+    const art = this.itemArt!;
+    let n = 0;
+    for (const item of items) {
+      if (!visible(item.x, item.y)) continue;
+      let sprite = this.itemSprites[n];
+      if (!sprite) {
+        sprite = new Sprite();
+        sprite.anchor.set(0.5);
+        sprite.scale.set(ITEMS.scale);
+        this.itemSprites.push(sprite);
+        this.itemLayer.addChild(sprite);
+      }
+      n++;
+      sprite.texture = art.get(item.kind)![itemFrame(tick, item.x, item.y)]!;
+      sprite.position.set((item.x + 0.5) * TILE_PX, (item.y + 0.5) * TILE_PX);
+      sprite.visible = true;
+    }
   }
 
   /** Draws flames as art pieces (fireball, arms, tips) picked from their neighbours. */
@@ -342,7 +378,8 @@ export class Renderer {
       }
     }
 
-    for (const item of s.items) {
+    if (this.itemArt) this.drawItems(s.items, s.tick, (x, y) => getTile(s, x, y) === Tile.Empty);
+    else for (const item of s.items) {
       if (getTile(s, item.x, item.y) !== Tile.Empty) continue;
       const cx = item.x * TILE_PX + TILE_PX / 2;
       const cy = item.y * TILE_PX + TILE_PX / 2;

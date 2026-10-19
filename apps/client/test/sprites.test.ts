@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE } from "@bombtop/shared";
+import { BEAM_DELAY, BOMBS, ITEMS, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -303,5 +303,31 @@ describe("explosion flames", () => {
     expect(frames.at(-1)).toBe(FLAMES.frames - 1);
     expect([...frames].sort((a, b) => a - b)).toEqual(frames);
     expect(new Set(frames).size).toBe(FLAMES.frames);
+  });
+});
+
+describe("item art", () => {
+  it("has a cell for every item kind", () => {
+    expect([...ITEMS.order].sort()).toEqual(Object.values(ItemKind).sort());
+    expect(itemCell(ITEMS.order[3]!)).toBe(3 * ITEMS.size);
+  });
+
+  it("is drawn a bit smaller than its tile", () => {
+    expect(ITEMS.size * ITEMS.scale).toBeLessThan(16);
+    expect(ITEMS.size * ITEMS.scale).toBeGreaterThan(12);
+  });
+
+  it("glints now and then, not all items at once", () => {
+    const glints = (x: number, y: number) =>
+      Array.from({ length: 4 * TICK_RATE }, (_, tick) => itemFrame(tick, x, y)).filter((f) => f > 0).length;
+    expect(glints(3, 3)).toBeGreaterThan(0);
+    expect(glints(3, 3)).toBeLessThan(TICK_RATE);
+    const same = Array.from({ length: 4 * TICK_RATE }, (_, tick) => itemFrame(tick, 3, 3) === itemFrame(tick, 4, 3));
+    expect(same.every(Boolean)).toBe(false);
+  });
+
+  it("the glint sweeps through every shine frame", () => {
+    const frames = new Set(Array.from({ length: 4 * TICK_RATE }, (_, tick) => itemFrame(tick, 1, 1)));
+    expect([...frames].sort()).toEqual(Array.from({ length: ITEMS.frames }, (_, i) => i));
   });
 });

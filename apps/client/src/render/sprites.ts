@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, ItemKind, type BombType, type Facing } from "@bombtop/shared";
 import type { Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -211,6 +211,41 @@ export function flamePiece(burning: (x: number, y: number) => boolean, x: number
 export function flameFrame(ttl: number): number {
   const age = 1 - ttl / FLAME_TICKS;
   return Math.min(FLAMES.frames - 1, Math.max(0, Math.floor(age * FLAMES.frames)));
+}
+
+/** Power-up art (scripts/build-items.py): one column per item, rows = plain, then a glint sweeping across. */
+export const ITEMS = {
+  url: "sprites/items.png",
+  size: 48,
+  frames: 4,
+  /** Drawn a little smaller than a tile, so the floor shows around it. */
+  scale: 0.29,
+  order: [
+    ItemKind.Bomb,
+    ItemKind.Fire,
+    ItemKind.FullFire,
+    ItemKind.Speed,
+    ItemKind.Kick,
+    ItemKind.Remote,
+    ItemKind.Pierce,
+    ItemKind.Punch,
+    ItemKind.Glove,
+    ItemKind.Skull,
+    ItemKind.Egg,
+  ] satisfies ItemKind[],
+};
+
+/** Left edge of an item's column. */
+export const itemCell = (kind: ItemKind): number => ITEMS.order.indexOf(kind) * ITEMS.size;
+
+const GLINT_EVERY = 3 * TICK_RATE;
+const GLINT_TICKS_PER_FRAME = 4;
+
+/** Row an item shows: plain most of the time, with a glint every few seconds, staggered by tile. */
+export function itemFrame(tick: number, x: number, y: number): number {
+  const t = (tick + x * 23 + y * 41) % GLINT_EVERY;
+  const f = Math.floor(t / GLINT_TICKS_PER_FRAME) + 1;
+  return f < ITEMS.frames ? f : 0;
 }
 
 /** Ticks each cast frame stays on screen: the cast lasts as long as its blast. */

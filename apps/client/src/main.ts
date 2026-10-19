@@ -26,6 +26,7 @@ void renderer.useSheet(SHEETS.ninja).catch((e) => console.error("sprite sheet", 
 void renderer.useMascots().catch((e) => console.error("mascot", e));
 void renderer.useBombArt().catch((e) => console.error("bomb art", e));
 void renderer.useFlameArt().catch((e) => console.error("flame art", e));
+void renderer.useItemArt().catch((e) => console.error("item art", e));
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
