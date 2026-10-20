@@ -11,6 +11,7 @@ function fakeAddress(start = "https://x.app/"): Address & { entries: string[] } 
     },
     push: (url) => void entries.push(url),
     replace: (url) => void (entries[entries.length - 1] = url),
+    back: () => void entries.pop(),
   };
 }
 

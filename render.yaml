@@ -22,6 +22,10 @@ services:
       - type: rewrite
         source: /sala/*
         destination: /index.html
+      # So is the item guide.
+      - type: rewrite
+        source: /itens
+        destination: /index.html
     headers:
       # Let the PWA pick up new deploys right away.
       - path: /sw.js

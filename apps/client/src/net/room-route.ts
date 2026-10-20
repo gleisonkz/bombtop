@@ -5,6 +5,8 @@ export interface Address {
   readonly href: string;
   push(url: string): void;
   replace(url: string): void;
+  /** Steps back one history entry (the back button). */
+  back(): void;
 }
 
 /**
@@ -38,4 +40,5 @@ export const browserAddress: Address = {
   },
   push: (url) => history.pushState(null, "", url),
   replace: (url) => history.replaceState(null, "", url),
+  back: () => history.back(),
 };

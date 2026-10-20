@@ -12,6 +12,8 @@ export interface MenuHandlers {
   online(choice: OnlineChoice, name: string): void;
   /** Watch bots play each other. */
   demo(): void;
+  /** The item guide was opened or closed from its buttons. */
+  guide(open: boolean): void;
   login(): void;
   logout(): void;
 }
@@ -29,6 +31,8 @@ export class Menu {
   private readonly buttons: HTMLButtonElement[];
   private readonly account = el("div", { class: "account" });
   private readonly joinByCode: () => void;
+  /** Shows the item guide instead of the menu card, or the card again. */
+  readonly showGuide: (on: boolean) => void;
 
   private readonly handlers: MenuHandlers;
 
@@ -79,7 +83,7 @@ export class Menu {
       this.status,
       this.error,
       el("div", { class: "row extras" }, [
-        button("Ver itens", () => showGuide(true), "ghost"),
+        button("Ver itens", () => handlers.guide(true), "ghost"),
         button("Assistir demo", () => handlers.demo(), "ghost"),
       ]),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
@@ -88,10 +92,10 @@ export class Menu {
     ]);
     const preview = new ItemPreview();
     const { root: guide, open: openGuide } = itemGuide({
-      close: () => showGuide(false),
+      close: () => handlers.guide(false),
       show: (kind, stage) => void preview.play(kind, stage).catch((e) => console.error("item preview", e)),
     });
-    const showGuide = (on: boolean) => {
+    this.showGuide = (on: boolean) => {
       card.hidden = on;
       guide.hidden = !on;
       this.root.classList.toggle("guiding", on);

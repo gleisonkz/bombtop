@@ -10,6 +10,7 @@ import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { codeFromUrl } from "./net/invite";
+import { GuideRoute } from "./net/guide-route";
 import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
@@ -115,6 +116,8 @@ function setMode(next: GameMode | null, controls = !!next): void {
 
 // The room lives in the address (/sala/CODE) while the player is in it.
 const route = new RoomRoute(browserAddress);
+// So does the item guide (/itens), opened from the menu.
+const guideRoute = new GuideRoute(browserAddress);
 // This tab's seat, so a reload takes it back.
 const seats = new SeatMemory(tabStore);
 
@@ -162,6 +165,11 @@ const menu = new Menu(ui, {
     setMode(new DemoGame(ctx), false);
   },
   logout: () => void signOut(),
+  guide: (open) => {
+    if (open) guideRoute.opened();
+    else guideRoute.closed();
+    menu.showGuide(open);
+  },
   online: async (choice, name) => {
     goFullscreen();
     menu.setBusy(true);
@@ -192,7 +200,9 @@ let invite = codeFromUrl(location.href);
 // Back button while in a room: leave it.
 window.addEventListener("popstate", () => {
   if (route.wentBack()) void online?.leave();
+  else menu.showGuide(guideRoute.isOpen());
 });
+if (guideRoute.isOpen()) menu.showGuide(true);
 
 watchAccount((a) => {
   account = a;

@@ -15,7 +15,7 @@ All art, audio and names are original — never copy assets from existing games.
 - **Server:** Colyseus (Node), authoritative. Client interpolates snapshots (prediction: todo).
 - **Client:** Vite + PixiJS + vite-plugin-pwa. Touch joystick + gamepad + keyboard.
 - **Auth/data:** Supabase (Google login; profiles/ranking todo). Optional: unset = guest-only.
-- **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work.
+- **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in `render.yaml`).
 - **Anti-cheat:** server authority; client only sends inputs.
 
 ## Layout
