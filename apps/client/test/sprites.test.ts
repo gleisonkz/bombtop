@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, SHIELD_GROW_TICKS, shieldLook, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, SHIELD_GROW_TICKS, shieldLook, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -460,6 +460,23 @@ describe("shadeHues", () => {
     const before = [...data];
     shadeHues(data, [225, 285], [78, 64, 160], [232, 74, 74]);
     expect([...data]).toEqual(before);
+  });
+});
+
+describe("paintSheet", () => {
+  const navy = SHEETS.captain.hueBase;
+  const px = () => new Uint8ClampedArray([...navy, 255, 255, 255, 255, 255]);
+
+  it("repaints a character's clothes in the player's color", () => {
+    const data = px();
+    paintSheet(data, SHEETS.captain, [232, 74, 74]);
+    expect([...data.slice(0, 3)]).toEqual([232, 74, 74]);
+  });
+
+  it("keeps the captain's own navy for the white player, whose color is already all over his art", () => {
+    const data = px();
+    paintSheet(data, SHEETS.captain, [245, 245, 245]);
+    expect([...data.slice(0, 3)]).toEqual([...navy]);
   });
 });
 

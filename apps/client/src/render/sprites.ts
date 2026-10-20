@@ -38,6 +38,8 @@ export interface SheetLayout {
   hues?: readonly [number, number];
   /** With `hues`: the body's base shade, which becomes exactly the player color (see shadeHues). */
   hueBase?: Rgb;
+  /** Player colors the art already uses all over: those players keep the sheet's own colors instead. */
+  keepFor?: readonly Rgb[];
   /** Hit reaction, shown facing the camera while stunned. */
   stun?: Strip;
   /** Played once when the player dies. */
@@ -140,6 +142,8 @@ export const SHEETS = {
     /** The navy suit and helmet (the carried bomb's blue-black stays). */
     hues: [200, 232],
     hueBase: [35, 56, 92],
+    /** White would melt his suit into his stars, stripes and shield: that player keeps the navy. */
+    keepFor: [[245, 245, 245]],
     scale: 0.17,
   },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
@@ -437,6 +441,14 @@ export function deathFrame(sheet: SheetLayout, ticks: number): FrameRect | null 
   if (!strip) return null;
   const col = Math.floor(ticks / sheet.ticksPerFrame);
   return col < strip.frames ? cell(sheet, strip, col) : null;
+}
+
+/** Repaints a sheet's clothes (by palette or by hue) in a player's color, in place. */
+export function paintSheet(px: Uint8ClampedArray, sheet: SheetLayout, to: Rgb): void {
+  if (sheet.keepFor?.some((c) => c.every((v, i) => v === to[i]))) return;
+  if (sheet.clothes) recolor(px, sheet.clothes, to);
+  if (sheet.hues && sheet.hueBase) shadeHues(px, sheet.hues, sheet.hueBase, to);
+  else if (sheet.hues) paintHues(px, sheet.hues, to);
 }
 
 const luma = ([r, g, b]: Rgb) => 0.299 * r + 0.587 * g + 0.114 * b;
