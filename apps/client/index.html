@@ -268,7 +268,7 @@
         .seat .mascot { width: 44px; height: 44px; }
         .mascot.sheet { --k: 2; }
         .hero .mascot.sheet { --k: 4; }
-        .tagline, .menu .hint { display: none; }
+        .tagline, .menu .hint:not(.version) { display: none; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } }
       @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero .mascot, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.sheet i { animation: none; } }
