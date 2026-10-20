@@ -33,12 +33,18 @@ export interface TickOutput {
   result?: MatchResult & { over: true };
 }
 
-/** Names for computer players, in the order they join. */
-const BOT_NAMES = ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"];
+/** Names for computer players, by the character they play; each bot draws one not taken yet. */
+export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
+  bomb: ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"],
+  ninja: ["Hanzo", "Kenji", "Ryu", "Kage", "Hayate", "Shiro", "Akira", "Yuki"],
+  captain: ["Capitão Bravo", "Capitão Trovão", "Capitão Estrela", "Capitão Valente", "Capitão Águia", "Capitão Brasil", "Capitão Escudo", "Capitão Liberdade"],
+};
 
 export interface SessionOptions {
   /** Seed source for new matches (injectable for tests). */
   seed?: () => number;
+  /** Random number in [0, 1) for bot names (injectable for tests). */
+  random?: () => number;
   blockDensity?: number;
 }
 
@@ -93,8 +99,9 @@ export class BattleSession {
   addBot(requesterId: string, level: BotLevel): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
     const taken = new Set(this.members.map((m) => m.name));
-    const name = BOT_NAMES.find((n) => !taken.has(n)) ?? `Bot ${this.botSeq + 1}`;
     const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
+    const free = BOT_NAMES[character].filter((n) => !taken.has(n));
+    const name = free[Math.floor((this.opts.random ?? Math.random)() * free.length)] ?? `Bot ${this.botSeq + 1}`;
     this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character });
     return true;
   }

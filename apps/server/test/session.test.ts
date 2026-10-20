@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "@bombtop/shared";
-import { BattleSession, RESULTS_TICKS } from "../src/session";
+import { BattleSession, BOT_NAMES, RESULTS_TICKS } from "../src/session";
 
 function lobby(n: number) {
   const s = new BattleSession({ seed: () => 1, blockDensity: 0 });
@@ -261,6 +261,27 @@ describe("bots", () => {
     const s = lobby(1);
     for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "medium");
     expect(new Set(s.members.map((m) => m.name)).size).toBe(MAX_PLAYERS);
+  });
+
+  it("names each bot after its character: a ninja name, Capitão something, a fuse word for the mascot", () => {
+    const s = lobby(1);
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
+    for (const m of s.members.slice(1)) {
+      if (m.character === "ninja") expect(BOT_NAMES.ninja).toContain(m.name);
+      if (m.character === "captain") expect(m.name).toMatch(/^Capitão \S/);
+      if (m.character === "bomb") expect(BOT_NAMES.bomb).toContain(m.name);
+    }
+    expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(3);
+  });
+
+  it("picks the bot names at random", () => {
+    const names = (r: number) => {
+      const s = new BattleSession({ seed: () => 1, random: () => r });
+      s.join("c1", "P1");
+      s.addBot("c1", "easy");
+      return s.members[1]!.name;
+    };
+    expect(names(0)).not.toBe(names(0.99));
   });
 
   it("the host can take a bot out, but not a person", () => {
