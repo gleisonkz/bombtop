@@ -62,6 +62,20 @@ describe("item generation", () => {
     expect(kinds).toEqual(new Set(Object.values(ItemKind)));
   });
 
+  it("hides enough bombs and fire for a full room: over one of each per player", () => {
+    const five = ["a", "b", "c", "d", "e"];
+    const count = { bomb: 0, fire: 0 };
+    const N = 200;
+    for (let seed = 1; seed <= N; seed++) {
+      for (const i of createMatch({ seed, playerIds: five }).items) {
+        if (i.kind === ItemKind.Bomb) count.bomb++;
+        if (i.kind === ItemKind.Fire) count.fire++;
+      }
+    }
+    expect(count.bomb / N / five.length).toBeGreaterThan(1.2);
+    expect(count.fire / N / five.length).toBeGreaterThan(1.2);
+  });
+
   it("has no items in an arena without blocks", () => {
     expect(emptyMatch().items).toEqual([]);
   });
