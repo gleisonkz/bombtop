@@ -97,6 +97,10 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
 
 ## Workflow
 
+Screen design (menu, lobby, results, guide, HUD, overlays) is always done for every form factor:
+desktop, tablet/iPad upright and sideways, phone upright and sideways (little height). Check each
+viewport in the browser (devtools emulation) before committing.
+
 TDD: write the failing test first (`packages/shared/test`, `apps/*/test`), then minimal code,
 then refactor. Atomic commits: one logical change per commit, every commit green.
 
