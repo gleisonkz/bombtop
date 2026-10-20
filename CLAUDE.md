@@ -56,7 +56,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | egg (mounts) | `mount.ts` | extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
 | sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |
 | revenge cart | `revenge.ts` | dead ride the border, throw bombs; a kill swaps them back in |
-| stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters) |
+| stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters). Only classic is in the rotation (`STAGES`) for now |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
 | specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Bomb: none yet |
 

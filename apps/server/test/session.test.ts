@@ -214,10 +214,10 @@ describe("stages", () => {
     s.match!.revenge = false;
     s.tick();
     for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
-    expect(s.lobbyInfo("X").stage).toBe("conveyor");
+    expect(s.lobbyInfo("X").stage).toBe("classic");
   });
 
-  it("rotate between rounds", () => {
+  it("are always the classic one, round after round (belts and warps are out of the rotation)", () => {
     const s = lobby(2);
     const stages: string[] = [];
     for (let r = 0; r < 3; r++) {
@@ -228,7 +228,7 @@ describe("stages", () => {
       s.tick();
       for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
     }
-    expect(new Set(stages).size).toBe(3);
+    expect(stages).toEqual(["classic", "classic", "classic"]);
   });
 });
 
