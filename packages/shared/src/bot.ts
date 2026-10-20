@@ -308,11 +308,16 @@ function latestToBurn(nodes: Node[], danger: Danger, k: (x: number, y: number) =
   return best;
 }
 
-/** Direction toward tile (x, y), or toward its center when already on it. */
-function heading(p: Player, x: number, y: number): Facing | null {
+/**
+ * Direction toward tile (x, y), or toward its center when already on it. Closer than one
+ * step counts as there: at speeds that don't divide half a tile the center can't be landed
+ * on, and aiming at it overshoots back and forth (turning lines the player up anyway).
+ */
+export function heading(p: Player, x: number, y: number): Facing | null {
   const cx = tileCenter(x) - p.px;
   const cy = tileCenter(y) - p.py;
-  if (cx === 0 && cy === 0) return null;
+  const step = effectiveSpeed(p);
+  if (Math.abs(cx) < step && Math.abs(cy) < step) return null;
   return Math.abs(cx) >= Math.abs(cy) ? (cx > 0 ? "right" : "left") : cy > 0 ? "down" : "up";
 }
 

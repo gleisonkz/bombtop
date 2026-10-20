@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Bot, BOT_LEVELS, botInput, createMatch, FUSE_TICKS, ItemKind, step, Tile, TICK_RATE, type MatchState } from "../src";
+import { Bot, BOT_LEVELS, botInput, heading, createMatch, FUSE_TICKS, ItemKind, step, Tile, TICK_RATE, type MatchState } from "../src";
 import { center, emptyMatch, player } from "./helpers";
 
 /** Runs the match with `bots` driven by the AI and everyone else idle. */
@@ -96,6 +96,19 @@ describe("Bot levels", () => {
 });
 
 describe("bot movement", () => {
+  it("stops heading for its own tile's center once it is less than a step away (odd speeds overshoot it)", () => {
+    const s = emptyMatch();
+    const me = player(s);
+    me.speed = 20; // 128 (half a tile) is no multiple of it: the center can't be landed on
+    me.py = center(1) - 8;
+    expect(heading(me, 1, 1)).toBeNull();
+    me.py = center(1) + 12;
+    expect(heading(me, 1, 1)).toBeNull();
+    me.py = center(1) - 30;
+    expect(heading(me, 1, 1)).toBe("down");
+    expect(heading(me, 1, 2)).toBe("down"); // a neighbour is always far enough
+  });
+
   it("does not dither back and forth across a tile edge", () => {
     for (const seed of [7, 11, 12345]) {
       const ids = ["b1", "b2", "b3", "b4"];
