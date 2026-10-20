@@ -1,7 +1,7 @@
 # Bombtop
 
 Browser (PWA) multiplayer arena bomb game, inspired by the classic 16-bit battle mode.
-All art, audio and names are original — never copy assets from existing games.
+Non-commercial fan project: characters may be fan art of existing franchises (e.g. Captain America).
 
 ## Decisions
 
