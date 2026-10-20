@@ -3,8 +3,8 @@
 //
 // Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
-// Freesound (CC0 only), the HQ preview of each: death cry = "nooo1.wav" by christerljung,
-// https://freesound.org/people/christerljung/sounds/345933/ (saved as freesound/345933_1770836-hq.mp3).
+// Freesound (CC0 only), the HQ preview of each: death cry = "Cartoon Scream 1.wav" by tonsil5,
+// https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3).
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -44,7 +44,7 @@ const RECIPE = {
   death: {
     src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"),
     len: 1.8,
-    layer: { src: FS("345933_1770836-hq.mp3"), len: 1.3, gain: -6 },
+    layer: { src: FS("416840_8247784-hq.mp3"), len: 1.2, gain: -6 },
   },
   mount: { src: CSD("UI Interaction Elements", "Accept Boing Crunch.wav"), len: 0.9 },
   dismount: { src: CSD("Cartoon Impacts", "Cartoon Pops Random Sequence Reverb.wav"), len: 1.2 },
