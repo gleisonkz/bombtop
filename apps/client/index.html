@@ -148,18 +148,65 @@
       }
       @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-      /* Menu */
-      .menu { grid-template-columns: 1fr; justify-items: center; }
-      .hero { display: grid; justify-items: center; gap: 4px; text-align: center; }
-      .hero .mascot { width: clamp(96px, 34vmin, 220px); aspect-ratio: 1; animation: bob 2.4s ease-in-out infinite; filter: drop-shadow(0 8px 0 #0006); }
-      .logo { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 11vmin, 80px); line-height: 0.95; color: var(--accent); letter-spacing: 1px; -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ink); }
+      /* Menu: a title screen. Light rays turn behind the cast and the logo, embers drift up, the play button glows.
+         Phones upright stack the hero over the card; wider screens put them side by side. */
+      .menu { grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; gap: 14px; min-height: 100%; } /* the full height, so the rays fade out before its clipped edges */
+      .menu-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        background: radial-gradient(ellipse 70% 50% at 50% 110%, #ff7a1a33, transparent 70%), radial-gradient(ellipse 60% 60% at 50% 0%, #6a3fc044, transparent 70%); }
+      .menu-bg i { position: absolute; bottom: -12px; left: var(--x); width: 6px; height: 6px; border-radius: 1px; background: #ffd23f; box-shadow: 0 0 8px #ff7a1a; transform: rotate(45deg); opacity: 0; animation: ember var(--t) linear var(--d) infinite; }
+      .menu-bg i:nth-child(3n) { background: #ff7a1a; width: 4px; height: 4px; }
+      .menu-bg i:nth-child(4n) { background: #fff3b0; }
+      @keyframes ember { 0% { transform: translate(0, 0) rotate(45deg); opacity: 0; } 10% { opacity: 0.9; } 70% { opacity: 0.6; } 100% { transform: translate(40px, -105vh) rotate(405deg); opacity: 0; } }
+
+      .hero { position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; isolation: isolate; }
+      .hero::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 34%; width: 100%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+        background: repeating-conic-gradient(from 0deg, #ffd23f1f 0 10deg, transparent 10deg 24deg); mask: radial-gradient(circle closest-side, #000 25%, transparent 100%); -webkit-mask: radial-gradient(circle closest-side, #000 25%, transparent 100%); animation: spin 40s linear infinite; }
+      .hero::after { content: ""; position: absolute; z-index: -1; left: 50%; top: 34%; width: 70%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, #ffb34755, transparent 65%); }
+      .cast { display: flex; align-items: flex-end; justify-content: center; position: relative; padding-bottom: 6px; }
+      .cast::after { content: ""; position: absolute; left: 6%; right: 6%; bottom: 0; height: 18px; border-radius: 50%; background: radial-gradient(ellipse, #000a, transparent 70%); z-index: -1; }
+      .cast-member { display: block; line-height: 0; }
+      .cast .mascot.sheet { display: block; position: relative; width: 70px; height: 76px; --k: 2.8; }
+      .cast .far .mascot.sheet { width: 54px; height: 60px; --k: 2.1; filter: brightness(0.85); }
+      .cast .star .mascot.sheet { width: 120px; height: 118px; --k: 4.6; filter: drop-shadow(0 6px 0 #0006); }
+      .cast .near { margin-inline: -10px; }
+      .cast .far.left { margin-right: -6px; } .cast .far.right { margin-left: -6px; }
+      .cast .star { z-index: 1; animation: bob 2.4s ease-in-out infinite; }
+      .logo { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(54px, 15vw, 76px); line-height: 0.9; color: var(--accent); letter-spacing: 2px; -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; rotate: -3deg;
+        text-shadow: 0 6px 0 var(--ink), 0 0 28px #ffb34766; animation: logo-in 0.7s cubic-bezier(0.2, 1.7, 0.4, 1) both; }
       .logo span { color: var(--fire); }
-      .tagline { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
-      .menu .card { width: min(380px, 100%); }
+      @keyframes logo-in { from { scale: 0.4; opacity: 0; } to { scale: 1; opacity: 1; } }
+      .tagline { margin: 6px 0 0; color: var(--text); font-size: 16px; font-weight: 700; text-shadow: 0 2px 0 #0008; }
+      .perks { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 420px; }
+      .perks li { font-size: 12px; font-weight: 800; color: var(--text); background: #ffffff14; border: 2px solid #ffffff22; border-radius: 999px; padding: 4px 10px; }
+      .perks li::before { content: "★ "; color: var(--accent); }
+
+      .menu .card { width: min(400px, 100%); position: relative; border-color: var(--ink); box-shadow: 0 6px 0 var(--ink), 0 0 0 1px #ffffff10, 0 18px 40px #0008, inset 0 2px 0 #ffffff22; }
+      .card-title { margin: 0 0 2px; font-family: var(--display); font-weight: 400; font-size: 24px; text-align: center; color: var(--text); }
+      button.play { font-size: 26px; min-height: 62px; position: relative; overflow: hidden; background: linear-gradient(180deg, #fff07a, var(--accent) 55%, #ffb627); }
+      button.play:not(:disabled) { animation: play-glow 1.8s ease-in-out infinite; }
+      button.play::after { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; background: linear-gradient(90deg, transparent, #ffffffaa, transparent); transform: skewX(-20deg); animation: shine 3.2s ease-in-out infinite; }
+      @keyframes play-glow { 50% { box-shadow: 0 4px 0 var(--ink), 0 0 0 5px #ffd23f40, 0 0 26px #ffd23f66; } }
+      @keyframes shine { 0%, 60% { left: -40%; } 100% { left: 130%; } }
+      button.create { background: linear-gradient(180deg, #9fe3ff, #5fb8f5); }
       .account { display: flex; gap: 8px; align-items: center; justify-content: space-between; font-size: 14px; color: var(--muted); }
       .account:empty { display: none; }
       .account > button { min-height: 38px; font-size: 15px; padding: 6px 12px; }
       .account > button:only-child { flex: 1; }
+      .menu-foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; font-size: 11px; color: var(--muted); opacity: 0.7; }
+      button.link { min-height: 0; padding: 0; border: 0; box-shadow: none; background: none; color: inherit; font: inherit; font-size: 11px; text-decoration: underline; cursor: pointer; }
+      button.link:active:not(:disabled) { transform: none; box-shadow: none; }
+
+      /* Tablets upright: more room, bigger hero */
+      @media (min-width: 600px) and (min-height: 800px) {
+        .cast .mascot.sheet { width: 100px; height: 110px; --k: 4; }
+        .cast .far .mascot.sheet { width: 78px; height: 86px; --k: 3; }
+        .cast .star .mascot.sheet { width: 170px; height: 168px; --k: 6.6; }
+        .logo { font-size: 104px; }
+        .tagline { font-size: 19px; }
+        .perks { max-width: 620px; }
+        .perks li { font-size: 14px; padding: 5px 12px; }
+        .menu .card { width: min(460px, 100%); padding: 20px; gap: 12px; }
+      }
       .guide h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 26px; text-align: center; }
       .guide-body { display: grid; gap: 14px; }
       .guide-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; align-content: start; }
@@ -185,7 +232,6 @@
       @keyframes sheet-play { to { background-position-x: calc(var(--frames) * var(--fw) * -1 * var(--s)); } }
       /* Sheet characters animate themselves: the seat keeps them in place (the old mascot strolled around). */
       .seat .mascot.sheet, .seat.easy .mascot.sheet, .seat.medium .mascot.sheet, .seat.hard .mascot.sheet { animation: none; }
-      .hero .mascot.sheet { --k: 8; }
       .net-hud {
         position: fixed;
         left: 8px;
@@ -360,9 +406,23 @@
       .confetti i { position: absolute; top: -20px; left: var(--x); width: 8px; height: 14px; border-radius: 2px; transform: rotate(var(--r)); animation: fall var(--t) linear var(--d) infinite; }
       @keyframes fall { to { transform: translate(30px, 110vh) rotate(calc(var(--r) + 720deg)); } }
 
-      /* Phones in landscape and desktops: side by side */
+      /* Phones in landscape and desktops: hero and card side by side */
       @media (orientation: landscape) and (min-width: 560px) {
-        .menu { grid-template-columns: 1fr minmax(300px, 380px); justify-items: stretch; gap: clamp(16px, 4vw, 48px); }
+        .menu { grid-template-columns: 1fr minmax(300px, 400px); justify-items: stretch; align-items: center; gap: clamp(16px, 4vw, 56px); }
+      }
+      /* Desktop and iPads sideways: the full title screen */
+      @media (orientation: landscape) and (min-width: 1000px) and (min-height: 640px) {
+        .screen.menu:not(.guiding) { width: min(1240px, 100%); }
+        .cast .mascot.sheet { width: 110px; height: 120px; --k: 4.4; }
+        .cast .far .mascot.sheet { width: 86px; height: 94px; --k: 3.3; }
+        .cast .star .mascot.sheet { width: 190px; height: 186px; --k: 7.4; }
+        .cast .near { margin-inline: -14px; }
+        .logo { font-size: clamp(96px, 9vw, 132px); }
+        .tagline { font-size: 20px; }
+        .perks { max-width: 660px; gap: 8px; }
+        .perks li { font-size: 14px; padding: 6px 14px; }
+        .menu .card { padding: 22px; gap: 12px; }
+        .card-title { font-size: 28px; }
       }
       /* Desktop: the item guide fills the screen, the grid on the left and the item in use on the right */
       @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
@@ -386,16 +446,20 @@
         input, button { min-height: 40px; padding: 6px 12px; }
         button.big { min-height: 46px; font-size: 20px; }
         .mascot.sheet { --k: 2; }
-        .hero .mascot.sheet { --k: 4; }
-        .tagline, .menu .hint:not(.version) { display: none; }
+        .perks, .menu .hint, .card-title { display: none; }
+        .screen.menu { padding-right: 56px; } /* clear of the sound button */
+        .logo { font-size: 50px; }
+        .tagline { font-size: 14px; }
+        .cast .mascot.sheet { width: 50px; height: 54px; --k: 2; }
+        .cast .far { display: none; }
+        .cast .star .mascot.sheet { width: 84px; height: 82px; --k: 3.2; }
+        button.play { min-height: 50px; font-size: 22px; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } }
-      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero .mascot, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.sheet i { animation: none; } }
+      @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero::before, .cast .star, .menu-bg i, button.play, button.play::after, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.sheet i { animation: none; } }
 
       /* Sound toggle */
       .extras > button { flex: 1; }
-      .row.dev > button { flex: 1; font-size: 12px; opacity: 0.8; }
-      .hint.version { margin: 0; font-size: 11px; opacity: 0.5; text-align: center; }
       .demo-leave { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; font-size: 15px; min-height: 40px; padding: 6px 14px; }
       .sound { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; display: grid; justify-items: end; gap: 8px; }
       .sound-panel { background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; width: 200px; }

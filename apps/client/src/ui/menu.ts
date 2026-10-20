@@ -1,4 +1,4 @@
-import { MASCOT_COLOR } from "./art";
+import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
@@ -58,8 +58,8 @@ export class Menu {
     this.code.addEventListener("keydown", (e) => e.key === "Enter" && joinByCode());
 
     this.buttons = [
-      button("Jogar online", () => go({ kind: "public" }), "primary big"),
-      button("Criar sala privada", () => go({ kind: "create" })),
+      button("▶  Jogar agora", () => go({ kind: "public" }), "primary big play"),
+      button("Criar sala com amigos", () => go({ kind: "create" }), "create"),
       button("Entrar", joinByCode),
     ];
     const [publicBtn, createBtn, joinBtn] = this.buttons;
@@ -68,12 +68,13 @@ export class Menu {
     const debugLabel = (on: boolean) => `Modo debug: ${on ? "ligado" : "desligado"}`;
     const debugBtn = button(debugLabel(debugOn(location.search, storage)), () => {
       debugBtn.textContent = debugLabel(toggleDebug(storage));
-    }, "mini");
+    }, "link");
 
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
     logo.append(el("span", { text: "TOP" }));
     const card = el("div", { class: "card" }, [
+      el("h2", { class: "card-title", text: "Bora jogar?" }),
       this.account,
       this.name,
       publicBtn,
@@ -87,8 +88,12 @@ export class Menu {
         button("Assistir demo", () => handlers.demo(), "ghost"),
       ]),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
-      el("div", { class: "row dev" }, [debugBtn, button("Atualizar jogo", () => void freshReload(), "mini")]),
-      el("p", { class: "hint version", text: versionLabel(__APP_VERSION__) }),
+      // Tools for us, kept small: version, debug readout, reload past a stale cache.
+      el("div", { class: "menu-foot" }, [
+        el("span", { text: versionLabel(__APP_VERSION__) }),
+        debugBtn,
+        button("Atualizar jogo", () => void freshReload(), "link"),
+      ]),
     ]);
     const preview = new ItemPreview();
     const { root: guide, open: openGuide } = itemGuide({
@@ -104,10 +109,16 @@ export class Menu {
     };
     guide.hidden = true;
     this.root = el("div", { class: "screen menu" }, [
+      menuBackdrop(),
       el("div", { class: "hero" }, [
-        characterArt("bomb", MASCOT_COLOR, "idle"),
+        cast(),
         logo,
-        el("p", { class: "tagline", text: "Batalha de bombas com até 5 amigos" }),
+        el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
+        el(
+          "ul",
+          { class: "perks" },
+          ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
+        ),
       ]),
       card,
       guide,
@@ -177,4 +188,31 @@ export class Menu {
     this.error.className = "error";
     this.error.textContent = message;
   }
+}
+
+/** The lineup on the title screen: the mascot in front, players in their arena colors at its sides. */
+function cast(): HTMLElement {
+  const [white, , red, blue, green] = PLAYER_COLORS;
+  const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
+  return el("div", { class: "cast" }, [
+    member(characterArt("bomb", green, "walk"), "far left"),
+    member(characterArt("ninja", red, "walk"), "near left"),
+    member(characterArt("bomb", MASCOT_COLOR, "idle"), "star"),
+    member(characterArt("ninja", white, "walk"), "near right"),
+    member(characterArt("bomb", blue, "walk"), "far right"),
+  ]);
+}
+
+/** Behind the menu: embers drifting up (the light rays turn behind the hero). */
+function menuBackdrop(): HTMLElement {
+  const embers = Array.from({ length: 18 }, (_, i) => {
+    const e = el("i");
+    e.style.setProperty("--x", `${(i * 37) % 100}%`);
+    e.style.setProperty("--d", `${-((i * 1.7) % 9)}s`);
+    e.style.setProperty("--t", `${7 + (i % 5)}s`);
+    return e;
+  });
+  const bg = el("div", { class: "menu-bg" }, embers);
+  bg.setAttribute("aria-hidden", "true");
+  return bg;
 }
