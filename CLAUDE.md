@@ -68,7 +68,8 @@ ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; 
 `scripts/build-ninja-sheet.py`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`.
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
-modes redraw every frame and drop details (shield vanished, chest star on the back).
+modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must
+match the sprite's pose: a template walk on the arms-up Carry state drew extra arms, so carry walk uses our keypoints.
 Art is HD: everything else (bombs, items, flames, tiles) is also drawn by scripts in `apps/client/scripts`
 (see `public/sprites/LICENSES.md`); rerun a script to change its art.
 
