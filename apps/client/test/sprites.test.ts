@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -297,6 +297,17 @@ describe("ice blast visuals", () => {
     expect(solid[0]!.tint).not.toBe(0xffffff);
     const melting = Array.from({ length: 30 }, (_, t) => frozenLook(30, t)!.block);
     expect(new Set(melting)).toEqual(new Set([true, false]));
+  });
+
+  it("the ice block hugs the body: from just over the head to just under the feet", () => {
+    const body = 21;
+    const b = iceBlock(100, 50, body);
+    const feet = 50 + 6;
+    expect(b.y).toBeGreaterThanOrEqual(feet - body - 3);
+    expect(b.y).toBeLessThan(feet - body);
+    expect(b.y + b.h).toBeGreaterThan(feet);
+    expect(b.y + b.h).toBeLessThanOrEqual(feet + 3);
+    expect(b.x + b.w / 2).toBe(100);
   });
 });
 

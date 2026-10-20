@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -527,8 +527,9 @@ export class Renderer {
         top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);
       }
       if (ice?.block) {
-        top.roundRect(cx - 7, cy - headroom - 1, 14, headroom + 8, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
-        top.moveTo(cx - 4, cy - headroom + 2).lineTo(cx - 1, cy - headroom + 5).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
+        const b = iceBlock(cx, cy, headroom);
+        top.roundRect(b.x, b.y, b.w, b.h, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
+        top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
       }
       // A spark over a ninja whose special is ready.
       if (character === "ninja" && p.specialCooldown === 0 && !ice) {

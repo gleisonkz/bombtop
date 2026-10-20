@@ -336,6 +336,16 @@ export function frozenLook(frozen: number, tick: number): { tint: number; block:
   return { tint: 0x9fdcff, block: !melting || Math.floor(tick / 4) % 2 === 0 };
 }
 
+/** Where players' feet stand, below the tile center. */
+export const FEET_DY = 6;
+
+/** The ice block around a frozen player whose drawn body is `bodyH` tall: just over the head to just under the feet. */
+export function iceBlock(cx: number, cy: number, bodyH: number): { x: number; y: number; w: number; h: number } {
+  const w = 14;
+  const top = cy + FEET_DY - bodyH - 2;
+  return { x: cx - w / 2, y: top, w, h: bodyH + 4 };
+}
+
 export interface FrameRect {
   x: number;
   y: number;
