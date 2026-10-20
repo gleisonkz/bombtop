@@ -289,7 +289,13 @@
       .seat.empty .seat-name { color: var(--muted); }
       .picker { display: flex; gap: 3px; width: 100%; max-width: 220px; margin-top: 4px; padding: 3px; background: #00000059; border-radius: 10px; }
       .picker.spacer { display: none; }
-      button.mini.pick { background: transparent; color: var(--muted); border-color: transparent; box-shadow: none; }
+      button.mini.pick { flex: 1 1 0; min-width: 0; padding-inline: 2px; line-height: 1.1; background: transparent; color: var(--muted); border-color: transparent; box-shadow: none; } /* equal thirds; long names wrap */
+      .seat { container-type: inline-size; }
+      /* Narrow standing cards (phones sideways): the names stack, one per line */
+      @container (max-width: 170px) {
+        .picker { flex-direction: column; gap: 1px; }
+        button.mini.pick { flex: none; padding-block: 2px; font-size: 12px; }
+      }
       button.mini.pick.on { background: var(--accent); color: #15152a; border-color: var(--ink); }
       .add-bot { grid-template-columns: repeat(3, 1fr); column-gap: 6px; padding: 12px 10px 10px; }
       .seat.add-bot > .seat-name, .seat.add-bot > .seat-sub { grid-column: 1 / -1; justify-self: center; }
