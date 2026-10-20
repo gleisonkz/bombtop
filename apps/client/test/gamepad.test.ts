@@ -37,6 +37,15 @@ describe("GamepadInput", () => {
     expect(g.sample().action).toBe(false); // B and X are one logical button: still held, no new press
   });
 
+  it("reports A as held while it stays down", () => {
+    let state = pad([0]);
+    const g = new GamepadInput(() => state);
+    expect(g.sample()).toMatchObject({ bomb: true, hold: true });
+    expect(g.sample()).toMatchObject({ bomb: false, hold: true });
+    state = pad([]);
+    expect(g.sample().hold).toBeUndefined();
+  });
+
   it("Y is the special button, once per press", () => {
     let state = pad([3]);
     const g = new GamepadInput(() => state);

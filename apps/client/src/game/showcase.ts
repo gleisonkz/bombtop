@@ -21,7 +21,7 @@ import {
 export const SHOWCASE_VIEW = { x: 1, y: 3, width: 11, height: 5 };
 
 /** One thing a scripted player does: walk some tiles, press a button, face a way, or wait. */
-type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" } | { face: Facing } | { wait: number };
+type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" } | { face: Facing } | { wait: number } | { holdBomb: number };
 
 interface Scene {
   /** Puts players, blocks and powers in place on an empty arena. */
@@ -127,7 +127,7 @@ const SCENES: Record<ItemKind, Scene> = {
       you.fireRange = 1;
       you.facing = "right";
     },
-    you: [{ press: "bomb" }, { wait: 6 }, { press: "bomb" }, { wait: 30 }, { press: "bomb" }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
+    you: [{ press: "bomb" }, { wait: 6 }, { holdBomb: 30 }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
     seconds: 5,
   },
   [ItemKind.Skull]: {
@@ -174,6 +174,15 @@ class Script {
     if ("face" in st) {
       this.i++;
       return { dir: st.face, bomb: false };
+    }
+    if ("holdBomb" in st) {
+      // Pressed on the first tick, then kept down; letting go (the next step) throws a carried bomb.
+      const first = this.waited === 0;
+      if (++this.waited >= st.holdBomb) {
+        this.waited = 0;
+        this.i++;
+      }
+      return { dir: null, bomb: first, hold: true };
     }
     if ("wait" in st) {
       if (++this.waited >= st.wait) {

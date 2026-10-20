@@ -66,6 +66,17 @@ describe("InputQueue", () => {
     expect(bombs.indexOf(true)).toBe(5); // client tick 4 + 4-tick delay = server tick 8
   });
 
+  it("keeps the bomb button held until the input that lets it go (glove carry)", () => {
+    const q = new InputQueue();
+    q.push({ dir: null, bomb: true, hold: true }, 1, undefined, 0);
+    expect(q.take(0)).toMatchObject({ bomb: true, hold: true });
+    expect(q.take(1)).toMatchObject({ bomb: false, hold: true });
+    q.push({ dir: "left", bomb: false, hold: true }, 2, undefined, 2);
+    expect(q.take(2).hold).toBe(true);
+    q.push(go(null), 3, undefined, 3);
+    expect(q.take(3).hold).toBeFalsy();
+  });
+
   it("fires a special press once, like a bomb", () => {
     const q = new InputQueue();
     q.push({ dir: null, bomb: false, special: true }, 1, undefined, 0);

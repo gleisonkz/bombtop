@@ -66,10 +66,22 @@ describe("TouchInput", () => {
     expect(t.sample().action).toBe(true);
   });
 
+  it("the bomb button stays held until the finger lifts", () => {
+    const t = new TouchInput();
+    t.press("bomb");
+    expect(t.sample()).toMatchObject({ bomb: true, hold: true });
+    expect(t.sample()).toMatchObject({ bomb: false, hold: true });
+    t.release("bomb");
+    expect(t.sample().hold).toBeUndefined();
+  });
+
   it("reset releases everything", () => {
     const t = new TouchInput();
     t.stickStart(1, 0, 0);
     t.stickMove(1, 50, 0);
+    t.press("bomb");
+    t.reset();
+    expect(t.sample()).toEqual({ dir: null, bomb: false, action: false });
     t.press("bomb");
     t.reset();
     expect(t.sample()).toEqual({ dir: null, bomb: false, action: false });

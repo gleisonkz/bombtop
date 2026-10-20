@@ -52,6 +52,10 @@ class EdgeButton {
     this.held = false;
   }
 
+  get isHeld(): boolean {
+    return this.held;
+  }
+
   take(): boolean {
     const pressed = this.pending;
     this.pending = false;
@@ -102,6 +106,7 @@ export class KeyboardInput {
     const dir = this.held.at(-1) ?? null;
     const input: PlayerInput = { dir, bomb: this.buttons.bomb.take(), action: this.buttons.action.take() };
     if (this.buttons.special.take()) input.special = true;
+    if (this.buttons.bomb.isHeld) input.hold = true;
     // Two perpendicular keys: walk along the earlier one until the newer one opens up.
     const horizontal = (d: Dir) => d === "left" || d === "right";
     const alt = this.held.findLast((d) => dir && horizontal(d) !== horizontal(dir));
@@ -133,5 +138,6 @@ export function mergeInputs(inputs: PlayerInput[]): PlayerInput {
   };
   if (steering?.alt) merged.alt = steering.alt;
   if (inputs.some((i) => i.special)) merged.special = true;
+  if (inputs.some((i) => i.hold)) merged.hold = true;
   return merged;
 }

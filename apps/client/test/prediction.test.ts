@@ -20,6 +20,13 @@ describe("Predictor", () => {
     expect(p.step(input(null, { special: true }))).toBe(5);
   });
 
+  it("sends when the bomb button is let go, so the server knows when a carried bomb is thrown", () => {
+    const p = new Predictor("me");
+    expect(p.step(input(null, { bomb: true, hold: true }))).toBe(1);
+    expect(p.step(input(null, { hold: true }))).toBeNull();
+    expect(p.step(input(null))).toBe(2);
+  });
+
   it("counts its ticks, so each sent input can carry the tick it was made on", () => {
     const pr = new Predictor("p1");
     expect(pr.clock).toBe(0);

@@ -46,6 +46,7 @@ export class GamepadInput {
     const specialNow = down(SPECIAL_BUTTONS);
     const input: PlayerInput = { dir: direction(pad), bomb: bombNow && !this.bombHeld, action: actionNow && !this.actionHeld };
     if (specialNow && !this.specialHeld) input.special = true;
+    if (bombNow) input.hold = true;
     this.bombHeld = bombNow;
     this.actionHeld = actionNow;
     this.specialHeld = specialNow;

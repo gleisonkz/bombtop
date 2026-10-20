@@ -57,6 +57,7 @@ export function sanitizeInput(raw: unknown): PlayerInput {
   const dir = DIRS.has(r.dir as Direction) ? (r.dir as Direction) : null;
   const input: PlayerInput = { dir, bomb: r.bomb === true, action: r.action === true };
   if (r.special === true) input.special = true;
+  if (r.hold === true) input.hold = true;
   if (dir && DIRS.has(r.alt as Direction) && r.alt !== dir) input.alt = r.alt as Direction;
   return input;
 }

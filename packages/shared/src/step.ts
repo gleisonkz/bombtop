@@ -1,4 +1,4 @@
-import { punch, updateHeldBombs, useGlove } from "./air";
+import { bombButton, punch, updateHeldBombs } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
 import { applyFloor } from "./floor";
@@ -35,7 +35,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (!input) continue;
     const dir = cursedDirection(p, input.dir);
     if (dir && p.alive) p.facing = dir;
-    if (input.bomb && !useGlove(s, p)) placeBomb(s, p.id);
+    bombButton(s, p, input);
     if (input.action) detonateRemote(s, p.id) || punch(s, p) || useMountAbility(s, p);
     if (input.special) useSpecial(s, p);
     const moved = steer(s, p, dir, cursedDirection(p, input.alt ?? null));

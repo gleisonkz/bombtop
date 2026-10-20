@@ -45,8 +45,8 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   },
   [ItemKind.Glove]: {
     name: "Luva",
-    text: "Aperte bomba em cima da sua bomba para levantá-la; aperte de novo para arremessar.",
-    tips: ["Jogue bombas por cima dos blocos em quem está encurralado.", "Enquanto você carrega, o pavio continua queimando!"],
+    text: "Aperte bomba em cima da sua bomba e segure para carregá-la; solte o botão para arremessar.",
+    tips: ["Jogue bombas por cima dos blocos em quem está encurralado.", "Enquanto você carrega, o pavio fica pausado: segure e escolha a hora."],
   },
   [ItemKind.Skull]: {
     name: "Caveira",

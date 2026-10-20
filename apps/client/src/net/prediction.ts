@@ -12,6 +12,8 @@ interface Entry {
   seq: number;
   dir: Direction;
   alt: Direction;
+  /** Bomb button down (a carried bomb is thrown when it is let go). */
+  hold: boolean;
   /** Client tick from which this input is held. */
   tick: number;
 }
@@ -37,11 +39,12 @@ export class Predictor {
   /** Records this tick's input. Returns the sequence number to send it with, or null when nothing changed. */
   step(input: PlayerInput): number | null {
     const alt = input.alt ?? null;
+    const hold = !!input.hold;
     const last = this.log.at(-1);
     let sent: number | null = null;
-    if (!last || last.dir !== input.dir || last.alt !== alt || input.bomb || input.action || input.special) {
+    if (!last || last.dir !== input.dir || last.alt !== alt || last.hold !== hold || input.bomb || input.action || input.special) {
       sent = ++this.seq;
-      this.log.push({ seq: sent, dir: input.dir, alt, tick: this.tick });
+      this.log.push({ seq: sent, dir: input.dir, alt, hold, tick: this.tick });
     }
     this.tick++;
     return sent;

@@ -40,6 +40,7 @@ function steerFromVector(dx: number, dy: number, deadZone: number, prev: Steer):
 export class TouchInput {
   private stick: ({ id: number; ox: number; oy: number } & Steer) | null = null;
   private pending: { bomb: boolean; action: boolean; special?: true } = { bomb: false, action: false };
+  private bombDown = false;
 
   constructor(private readonly deadZone = 12) {}
 
@@ -70,17 +71,25 @@ export class TouchInput {
 
   press(button: "bomb" | "action" | "special"): void {
     this.pending[button] = true;
+    if (button === "bomb") this.bombDown = true;
+  }
+
+  /** A finger lifted off a button (only the bomb button cares: it lets go of a carried bomb). */
+  release(button: "bomb" | "action" | "special"): void {
+    if (button === "bomb") this.bombDown = false;
   }
 
   sample(): PlayerInput {
     const input: PlayerInput = { dir: this.stick?.dir ?? null, ...this.pending };
     if (this.stick?.alt) input.alt = this.stick.alt;
+    if (this.bombDown) input.hold = true;
     this.pending = { bomb: false, action: false };
     return input;
   }
 
   reset(): void {
     this.stick = null;
+    this.bombDown = false;
     this.pending = { bomb: false, action: false };
   }
 }

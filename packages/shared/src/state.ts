@@ -52,8 +52,10 @@ export interface PlayerInput {
    * is blocked, so holding up+left walks up and turns left at the next opening.
    */
   alt?: Direction;
-  /** Primary button: drop bomb. */
+  /** Primary button: drop bomb (pressed this tick). */
   bomb: boolean;
+  /** The bomb button is down right now: a bomb lifted with the glove is carried until it is let go. */
+  hold?: boolean;
   /** Secondary button: detonate / punch. */
   action?: boolean;
   /** Special button: the character's own move (ninja: ice blast). */

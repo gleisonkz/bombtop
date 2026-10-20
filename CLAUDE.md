@@ -51,7 +51,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | remote | `bombs.ts` | action detonates oldest; normal fuse if owner dies |
 | pierce | `bombs.ts` | flames run through blocks/items/bombs; walls stop them |
 | punch | `air.ts` | action launches bomb in front 3 tiles; wraps edges; bounces; stuns |
-| glove | `air.ts` | bomb on own bomb lifts it, press again throws |
+| glove | `air.ts` | bomb press on own bomb lifts it, carried while the button is held (`PlayerInput.hold`), thrown when let go |
 | skull | `curse.ts` | slow/fast/reverse/diarrhea/constipation/weakFire, 10s, contagious |
 | egg (mounts) | `mount.ts` | extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
 | sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |

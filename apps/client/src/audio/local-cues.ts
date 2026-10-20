@@ -1,4 +1,4 @@
-import { detonateRemote, placeBomb, punch, useGlove, useMountAbility, useSpecial, type MatchState, type Player, type PlayerInput, type PublicView } from "@bombtop/shared";
+import { bombButton, detonateRemote, punch, useMountAbility, useSpecial, type MatchState, type Player, type PlayerInput, type PublicView } from "@bombtop/shared";
 import { soundCues, type Cue, type CueName } from "./cues";
 
 /** Sounds of our own button presses, played before the server confirms them. */
@@ -13,7 +13,7 @@ export function actionCues(view: PublicView, me: Player, input: PlayerInput): Cu
   const before: MatchState = { ...structuredClone(view), rng: 0, players: [structuredClone(me)] };
   const after = structuredClone(before);
   const p = after.players[0]!;
-  if (input.bomb && !useGlove(after, p)) placeBomb(after, p.id);
+  bombButton(after, p, input);
   if (input.action) detonateRemote(after, p.id) || punch(after, p) || useMountAbility(after, p);
   if (input.special) useSpecial(after, p);
   return soundCues(before, after).filter((c) => OWN.has(c.name));

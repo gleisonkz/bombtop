@@ -1,5 +1,6 @@
 import { AIR_DISTANCE, AIR_TICKS_PER_TILE, STUN_TICKS } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing, type MatchState, type Player } from "./state";
+import { placeBomb } from "./bombs";
+import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 
 /** Launches a grounded bomb into the air from its current tile. */
 export function launch(b: Bomb, dir: Facing): void {
@@ -19,17 +20,23 @@ export function punch(s: MatchState, p: Player): boolean {
 }
 
 /**
- * Bomb button with the glove: throws the carried bomb, or lifts the bomb
- * the player stands on. Returns false when neither applies (caller then
- * places a bomb as usual).
+ * The bomb button, glove included: a carried bomb is thrown once the button
+ * is let go; a press on your own bomb lifts it; any other press places one.
  */
-export function useGlove(s: MatchState, p: Player): boolean {
+export function bombButton(s: MatchState, p: Player, input: PlayerInput): void {
   const held = s.bombs.find((b) => b.heldBy === p.id);
   if (held) {
+    if (input.hold) return;
     held.heldBy = null;
     launch(held, p.facing);
-    return true;
+    return;
   }
+  if (!input.bomb) return;
+  if (!lift(s, p)) placeBomb(s, p.id);
+}
+
+/** Lifts the bomb the player stands on, if they have the glove. */
+function lift(s: MatchState, p: Player): boolean {
   if (!p.alive || !p.canGlove) return false;
   const { x, y } = playerTile(p);
   const bomb = bombAt(s, x, y);

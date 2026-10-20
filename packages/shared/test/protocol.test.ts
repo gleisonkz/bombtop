@@ -10,6 +10,11 @@ describe("sanitizeInput", () => {
     expect(sanitizeInput({ dir: "diagonal", bomb: "yes", action: 1 })).toEqual({ dir: null, bomb: false, action: false });
   });
 
+  it("keeps a held bomb button only when it is strictly true", () => {
+    expect(sanitizeInput({ dir: null, bomb: false, hold: true })).toEqual({ dir: null, bomb: false, action: false, hold: true });
+    expect(sanitizeInput({ dir: null, bomb: false, hold: 1 })).toEqual({ dir: null, bomb: false, action: false });
+  });
+
   it("survives garbage", () => {
     for (const raw of [null, undefined, 42, "x", [], { dir: { up: true } }]) {
       expect(sanitizeInput(raw)).toEqual({ dir: null, bomb: false, action: false });

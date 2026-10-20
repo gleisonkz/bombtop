@@ -64,6 +64,15 @@ describe("KeyboardInput", () => {
     expect(k.sample().bomb).toBe(true);
   });
 
+  it("reports the bomb key as held until it is let go (glove carry)", () => {
+    const k = new KeyboardInput(WASD);
+    k.keyDown("Space");
+    expect(k.sample()).toMatchObject({ bomb: true, hold: true });
+    expect(k.sample()).toMatchObject({ bomb: false, hold: true });
+    k.keyUp("Space");
+    expect(k.sample().hold).toBeUndefined();
+  });
+
   it("does not lose a tap released before the next sample", () => {
     const k = new KeyboardInput(WASD);
     k.keyDown("Space");
@@ -133,6 +142,11 @@ describe("mergeInputs", () => {
         { dir: "left", alt: "up", bomb: false },
       ]),
     ).toEqual({ dir: "left", alt: "up", bomb: false, action: false });
+  });
+
+  it("holds the bomb button if any source holds it", () => {
+    expect(mergeInputs([{ dir: null, bomb: false }, { dir: null, bomb: false, hold: true }]).hold).toBe(true);
+    expect(mergeInputs([{ dir: null, bomb: false }]).hold).toBeUndefined();
   });
 
   it("is idle with no inputs", () => {

@@ -93,14 +93,14 @@ describe("item showcase", () => {
     expect(far).toBeGreaterThanOrEqual(5);
   });
 
-  it("glove: the hero lifts a bomb and throws it", () => {
-    let lifted = false;
+  it("glove: the hero lifts a bomb, carries it a while and throws it", () => {
+    let carried = 0;
     let far = 0;
     play(ItemKind.Glove, (s) => {
-      lifted ||= s.bombs.some((b) => b.heldBy === "you");
+      if (s.bombs.some((b) => b.heldBy === "you")) carried++;
       far = Math.max(far, ...s.bombs.filter((b) => !b.heldBy).map((b) => b.x));
     });
-    expect(lifted).toBe(true);
+    expect(carried).toBeGreaterThanOrEqual(20);
     expect(far).toBeGreaterThanOrEqual(5);
   });
 

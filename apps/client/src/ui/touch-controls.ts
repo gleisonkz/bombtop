@@ -36,21 +36,29 @@ export class TouchControls {
     stick.addEventListener("pointerup", end);
     stick.addEventListener("pointercancel", end);
 
-    const pad = (label: string, cls: string, onPress: () => void) => {
-      const b = el("div", { class: `touch-btn ${cls}`, text: label });
+    const pad = (label: string, button: "bomb" | "action" | "special") => {
+      const b = el("div", { class: `touch-btn ${button}`, text: label });
       b.addEventListener("pointerdown", (e) => {
         e.preventDefault();
-        onPress();
+        this.input.press(button);
+        try {
+          b.setPointerCapture(e.pointerId); // the lift counts even if the finger slid off the button
+        } catch {
+          /* pointer already gone */
+        }
       });
+      const release = () => this.input.release(button);
+      b.addEventListener("pointerup", release);
+      b.addEventListener("pointercancel", release);
       return b;
     };
 
     this.root = el("div", { class: "touch" }, [
       stick,
       el("div", { class: "touch-buttons" }, [
-        pad("❄", "special", () => this.input.press("special")),
-        pad("AÇÃO", "action", () => this.input.press("action")),
-        pad("💣", "bomb", () => this.input.press("bomb")),
+        pad("❄", "special"),
+        pad("AÇÃO", "action"),
+        pad("💣", "bomb"),
       ]),
     ]);
     this.root.hidden = true;
