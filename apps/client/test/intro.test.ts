@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Intro, INTRO_TICKS, introDue } from "../src/game/intro";
+import { playerTile } from "@bombtop/shared";
+import { Intro, INTRO_TICKS, INTRO_VIEW, introDue } from "../src/game/intro";
 
 /** Runs the intro, calling `each` after every tick. */
 function play(each: (intro: Intro) => void = () => {}): Intro {
@@ -44,6 +45,16 @@ describe("Intro", () => {
     expect(ice).toBe(true);
     expect(shield).toBe(true);
     expect(bounced).toBe(true);
+  });
+
+  it("plays inside the zoomed window of the arena", () => {
+    const inside = (x: number, y: number) =>
+      x >= INTRO_VIEW.x && x < INTRO_VIEW.x + INTRO_VIEW.width && y >= INTRO_VIEW.y && y < INTRO_VIEW.y + INTRO_VIEW.height;
+    play(({ state }) => {
+      for (const p of state.players) expect(inside(playerTile(p).x, playerTile(p).y)).toBe(true);
+      for (const f of state.flames) expect(inside(f.x, f.y)).toBe(true);
+    });
+    expect(INTRO_VIEW.height).toBeLessThan(11);
   });
 
   it("nobody gets hurt", () => {

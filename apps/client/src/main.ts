@@ -41,16 +41,24 @@ const art = Promise.allSettled([
   renderer.useTileArt().catch((e) => console.error("tile art", e)),
 ]);
 
-let arena = { width: 13, height: 11 };
+let arena = { width: 13, height: 11, x: 0, y: 0 };
 let mode: GameMode | null = null;
 
-function fit(width = arena.width, height = arena.height): void {
-  arena = { width, height };
+/** Fits the arena (or the window of it starting at tile x, y) to the screen. */
+function fit(width: number, height: number, x = 0, y = 0): void {
+  arena = { width, height, x, y };
+  refit();
+}
+
+/** Fits the last arena again (the screen changed size). */
+function refit(): void {
+  const { width, height, x, y } = arena;
   const w = width * TILE_PX;
   const h = height * TILE_PX;
   const scale = fitScale(window.innerWidth, window.innerHeight, w, h);
   app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
   app.stage.scale.set(scale);
+  app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
 }
 
 /** Phones: hide the browser bars and hold landscape. Must run inside a tap handler. */
@@ -242,6 +250,6 @@ window.addEventListener("keydown", (e) => {
 });
 window.addEventListener("keyup", (e) => mode?.keyUp(e.code));
 window.addEventListener("blur", () => mode?.blur());
-window.addEventListener("resize", () => fit());
+window.addEventListener("resize", refit);
 
-fit();
+refit();

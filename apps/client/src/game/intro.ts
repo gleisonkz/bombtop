@@ -1,6 +1,9 @@
 import { createMatch, placePlayerAt, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtop/shared";
 import { Script } from "./showcase";
 
+/** The stretch of arena the intro plays in (tiles), zoomed to fill the screen. */
+export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
+
 /** How long the intro lasts. */
 export const INTRO_TICKS = 7 * TICK_RATE;
 
@@ -11,9 +14,9 @@ export interface IntroCard {
 
 /** Who is introduced when (ticks), then the logo until the end. */
 const CARDS: { from: number; to: number; card: IntroCard }[] = [
-  { from: 10, to: 120, card: { name: "Bomba", line: "O mascote. Bomba pra todo lado!" } },
-  { from: 120, to: 200, card: { name: "Ninja", line: "Raio de gelo: congela quem estiver na frente." } },
-  { from: 200, to: 330, card: { name: "Capitão América", line: "Escudo: segura o fogo e manda de volta." } },
+  { from: 10, to: 120, card: { name: "Bomba", line: "O mascote explosivo. Planta a bomba e sai correndo!" } },
+  { from: 120, to: 200, card: { name: "Ninja", line: "Raio de gelo! Quem estiver na frente vira picolé." } },
+  { from: 200, to: 330, card: { name: "Capitão América", line: "Ergue o escudo e devolve o fogo pra quem mandou!" } },
 ];
 const LOGO_FROM = 330;
 
@@ -41,13 +44,13 @@ export class Intro {
     placePlayerAt(s, "captain", 11, 5);
     const [captain, bomb, ninja] = s.players;
     bomb!.facing = "down";
-    bomb!.fireRange = 2;
+    bomb!.fireRange = 1;
     ninja!.facing = "right";
     captain!.facing = "left";
     this.state = s;
     this.scripts = [
       // Drops its bomb on (7,5) and climbs out of its reach.
-      new Script("bomb", [{ wait: 100 }, { press: "bomb" }, { go: "up", tiles: 4 }]),
+      new Script("bomb", [{ wait: 100 }, { press: "bomb" }, { go: "up", tiles: 2 }]),
       // Ice straight at the bomb, which stops it.
       new Script("ninja", [{ wait: 160 }, { press: "special" }]),
       // Next to the bomb, shield up before it blows: its fire bounces back down the corridor.
