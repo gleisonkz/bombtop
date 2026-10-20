@@ -11,6 +11,12 @@ export class NetStats {
   private shown = { fps: 0, late: 0 };
   private lastArrival: number | null = null;
   private worstGap = 0;
+  /** Since the last report: the longest frame (the device itself froze) and every frame drawn late. */
+  private slowest = 0;
+  private missed = 0;
+  /** Since the last report: the biggest jump between two frames, in tiles, of our player and of the others. */
+  private jumpMe = 0;
+  private jumpOthers = 0;
 
   /** A snapshot arrived. */
   arrival(nowMs: number): void {
@@ -19,16 +25,20 @@ export class NetStats {
   }
 
   /** What goes to the server's log; starts the worst-gap window over. */
-  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; ua: string } {
+  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; slow: number; missed: number; jumpMe: number; jumpOthers: number; ua: string } {
     const out = {
       ...(this.ping === null ? {} : { ping: this.ping }),
       delay: Math.round(this.delay),
       fps: this.shown.fps,
       late: this.shown.late,
       gap: Math.round(this.worstGap),
+      slow: Math.round(this.slowest),
+      missed: this.missed,
+      jumpMe: Math.round(this.jumpMe * 100),
+      jumpOthers: Math.round(this.jumpOthers * 100),
       ua,
     };
-    this.worstGap = 0;
+    this.worstGap = this.slowest = this.missed = this.jumpMe = this.jumpOthers = 0;
     return out;
   }
 
@@ -36,12 +46,20 @@ export class NetStats {
   frame(deltaMs: number, late: boolean, delayMs: number): void {
     this.frames++;
     if (late) this.late++;
+    if (late) this.missed++;
+    this.slowest = Math.max(this.slowest, deltaMs);
     this.delay = delayMs;
     this.elapsed += deltaMs;
     if (this.elapsed >= 1000 - 1e-6) {
       this.shown = { fps: this.frames, late: this.late };
       this.elapsed = this.frames = this.late = 0;
     }
+  }
+
+  /** How far (in tiles) our player and the furthest-moving other player went since the last frame. */
+  jumps(me: number, others: number): void {
+    this.jumpMe = Math.max(this.jumpMe, me);
+    this.jumpOthers = Math.max(this.jumpOthers, others);
   }
 
   summary(): string {

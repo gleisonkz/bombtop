@@ -4,6 +4,7 @@ import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { carryOn } from "../net/carry-on";
 import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
+import { between } from "../render/sprites";
 import {
   C2S,
   ROOM_NAME,
@@ -191,11 +192,35 @@ export class OnlineGame implements GameMode {
       this.echo.played(got, nowMs);
     }
     view = this.pickups.apply(view, nowMs);
-    if (!me) return this.ctx.renderer.draw(view, prev, sample.alpha);
+    if (!me) {
+      this.measureJumps(view, prev, sample.alpha, null);
+      return this.ctx.renderer.draw(view, prev, sample.alpha);
+    }
     if (import.meta.env.DEV) Object.assign(window, { __me: me });
     prev.set(me.id, { px: me.px, py: me.py });
     const players = view.players.map((p) => (p.id === me.id ? me : p));
+    this.measureJumps({ ...view, players }, prev, sample.alpha, me.id);
     this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
+  }
+
+  /** Where each player was drawn last frame, to report teleports in debug mode. */
+  private drawn = new Map<string, { px: number; py: number }>();
+
+  private measureJumps(view: PublicView, prev: Map<string, { px: number; py: number }>, alpha: number, me: string | null): void {
+    if (!this.hud) return;
+    let mine = 0;
+    let others = 0;
+    for (const p of view.players) {
+      if (!p.alive) continue;
+      const at = between(prev.get(p.id) ?? p, p, alpha);
+      const was = this.drawn.get(p.id);
+      this.drawn.set(p.id, at);
+      if (!was) continue;
+      const tiles = (Math.abs(at.px - was.px) + Math.abs(at.py - was.py)) / TILE;
+      if (p.id === me) mine = Math.max(mine, tiles);
+      else others = Math.max(others, tiles);
+    }
+    this.hud.stats.jumps(mine, others);
   }
 
   /**

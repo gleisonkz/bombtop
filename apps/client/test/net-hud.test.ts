@@ -27,8 +27,28 @@ describe("NetStats.report", () => {
     s.ping = 9;
     for (const at of [0, 33, 66, 200, 233]) s.arrival(at);
     for (let i = 0; i < 60; i++) s.frame(1000 / 60, i < 5, 70);
-    expect(s.report("UA")).toEqual({ ping: 9, delay: 70, fps: 60, late: 5, gap: 134, ua: "UA" });
+    expect(s.report("UA")).toEqual({ ping: 9, delay: 70, fps: 60, late: 5, gap: 134, slow: 17, missed: 5, jumpMe: 0, jumpOthers: 0, ua: "UA" });
     s.arrival(266);
     expect(s.report("UA").gap).toBe(33);
+  });
+
+  it("tells the device's own stalls apart: the slowest frame and every late frame since the last report", () => {
+    const s = new NetStats();
+    s.frame(16, false, 50);
+    s.frame(340, true, 50); // the phone froze
+    for (let i = 0; i < 70; i++) s.frame(16, i < 3, 50); // a newer second, without the stall
+    const r = s.report("UA");
+    expect(r.slow).toBe(340);
+    expect(r.missed).toBe(4);
+    s.frame(16, false, 50);
+    expect(s.report("UA")).toMatchObject({ slow: 16, missed: 0 });
+  });
+
+  it("reports the biggest jump between two frames, ours and other players', in hundredths of a tile", () => {
+    const s = new NetStats();
+    s.jumps(0.1, 0.2);
+    s.jumps(0.05, 1.5); // someone teleported on screen
+    expect(s.report("UA")).toMatchObject({ jumpMe: 10, jumpOthers: 150 });
+    expect(s.report("UA")).toMatchObject({ jumpMe: 0, jumpOthers: 0 });
   });
 });
