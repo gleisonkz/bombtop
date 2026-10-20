@@ -62,10 +62,13 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 
 Action button priority: detonate remote > punch > mount ability.
 
-Characters (looks only): `CHARACTERS` in `protocol.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
+Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja). Picked in the lobby (own seat),
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
 ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; frames laid out by
 `scripts/build-ninja-sheet.py`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`.
+PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
+or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
+modes redraw every frame and drop details (shield vanished, chest star on the back).
 Art is HD: everything else (bombs, items, flames, tiles) is also drawn by scripts in `apps/client/scripts`
 (see `public/sprites/LICENSES.md`); rerun a script to change its art.
 
