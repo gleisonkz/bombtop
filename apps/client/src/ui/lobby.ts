@@ -39,20 +39,19 @@ export class LobbyPanel {
     parent: HTMLElement,
     private readonly handlers: LobbyHandlers,
   ) {
-    this.startBtn = button("Começar partida", handlers.start, "primary big");
-    const invite = button("Convidar amigos", () => void this.invite(invite), "primary");
-    const title = el("h2", { text: "Sala" });
-    title.append(this.stage);
+    this.startBtn = button("Começar partida", handlers.start, "primary big start");
+    const invite = button("Convidar amigos", () => void this.invite(invite), "primary invite-btn");
     this.root = el("div", { class: "screen lobby" }, [
-      el("div", { class: "card" }, [
-        title,
-        el("div", { class: "code-box" }, [el("small", { text: "Código da sala" }), this.code]),
-        invite,
-        this.status,
-        this.startBtn,
-        button("Sair", handlers.leave, "ghost"),
+      el("div", { class: "lobby-shell" }, [
+        el("header", { class: "lobby-head card" }, [
+          button("← Sair", handlers.leave, "ghost leave"),
+          el("div", { class: "lobby-title" }, [el("h2", { text: "Sala" }), this.stage]),
+          el("div", { class: "code-box" }, [el("small", { text: "Código da sala" }), this.code]),
+          invite,
+        ]),
+        this.seats,
+        el("footer", { class: "lobby-foot" }, [this.status, this.startBtn]),
       ]),
-      this.seats,
     ]);
     this.root.hidden = true;
     parent.appendChild(this.root);
@@ -66,15 +65,23 @@ export class LobbyPanel {
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
     const isHost = info.hostId === me;
     this.seats.replaceChildren(
-      ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }) => {
+      ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
+        const tag = el("span", { class: "slot-tag", text: `P${i + 1}` });
         if (!member && isHost) {
           return el("div", { class: "seat empty add-bot" }, [
-            el("span", { class: "seat-sub", text: "+ Bot" }),
+            tag,
+            el("span", { class: "seat-name", text: "Vaga livre" }),
+            el("span", { class: "seat-sub", text: "Chamar um bot:" }),
             ...BOT_LEVELS.map((level) => button(LEVEL_NAMES[level], () => this.handlers.addBot(level), `mini ${level}`)),
           ]);
         }
         if (!member) {
-          return el("div", { class: "seat empty" }, [characterArt("bomb", MASCOT_COLOR, "idle"), el("span", { class: "seat-sub", text: "Vaga livre" })]);
+          return el("div", { class: "seat empty" }, [
+            tag,
+            characterArt("bomb", MASCOT_COLOR, "idle"),
+            el("span", { class: "seat-name", text: "Vaga livre" }),
+            el("span", { class: "seat-sub", text: "esperando alguém…" }),
+          ]);
         }
         const you = member.id === me;
         const cls = seatClass(member, me);
@@ -84,9 +91,12 @@ export class LobbyPanel {
             ? `${you ? "você • " : ""}${member.wins} 🏆`
             : "reconectando…";
         return el("div", { class: cls }, [
+          tag,
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
-          characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
+          el("div", { class: "stage-spot" }, [
+            characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
+          ]),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.

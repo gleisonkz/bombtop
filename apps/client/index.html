@@ -178,16 +178,7 @@
       .or { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
       .or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed #ffffff22; }
 
-      /* Lobby */
-      .lobby { grid-template-columns: 1fr; }
-      .lobby h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 26px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
       .chip { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 700; background: #00000044; color: var(--accent); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-      .code-box { display: grid; gap: 2px; background: #00000040; border: 2px dashed #ffffff30; border-radius: 12px; padding: 8px 12px; }
-      .code-box small { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-      .code-box code { font-family: ui-monospace, monospace; font-size: 20px; font-weight: 700; letter-spacing: 1px; user-select: all; overflow-wrap: anywhere; }
-      .seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px 10px; padding-top: 10px; }
-      .seat { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px; padding: 10px 6px 8px; min-height: 120px; background: #00000030; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 4px 0 var(--ink); animation: pop 0.25s ease-out; min-width: 0; }
-      .seat .mascot { width: 60px; height: 60px; }
       /* A character from its sheet: one row played in CSS, scaled by --s, standing on the bottom of the box. */
       .mascot.sheet { position: relative; --k: 2.7; }
       .mascot.sheet i { position: absolute; left: calc(50% - var(--ax) * var(--s)); top: calc(100% - var(--ay) * var(--s)); width: calc(var(--fw) * var(--s)); height: calc(var(--fh) * var(--s)); background: no-repeat 0 calc(var(--row) * var(--fh) * -1 * var(--s)) / calc(var(--sw) * var(--s)) calc(var(--sh) * var(--s)); animation: sheet-play var(--dur) steps(var(--frames)) infinite; }
@@ -195,7 +186,6 @@
       /* Sheet characters animate themselves: the seat keeps them in place (the old mascot strolled around). */
       .seat .mascot.sheet, .seat.easy .mascot.sheet, .seat.medium .mascot.sheet, .seat.hard .mascot.sheet { animation: none; }
       .hero .mascot.sheet { --k: 8; }
-      .picker { display: flex; gap: 4px; width: 100%; }
       .net-hud {
         position: fixed;
         left: 8px;
@@ -208,23 +198,141 @@
         font: 12px/1.3 ui-monospace, monospace;
         pointer-events: none;
       }
-      .picker.spacer { visibility: hidden; }
-      button.mini.pick { background: #ffffff22; color: var(--text); }
-      button.mini.pick.on { background: var(--accent); color: #15152a; }
-      .seat.me { background: #ffd23f22; border-color: var(--accent); }
-      .seat.empty { background: transparent; border: 3px dashed #ffffff26; box-shadow: none; color: var(--muted); animation: none; }
-      .seat.empty .mascot { opacity: 0.18; filter: grayscale(1); }
-      .seat.away .mascot { opacity: 0.5; }
       .seat-name { font-weight: 800; font-size: 14px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .seat-sub { font-size: 12px; color: var(--muted); }
-      .add-bot { gap: 5px; padding: 8px; }
-      .add-bot .seat-sub { font-family: var(--display); font-size: 15px; color: var(--text); }
       button.mini { min-height: 0; width: 100%; padding: 4px 6px; font-size: 13px; border-width: 2px; border-radius: 8px; box-shadow: 0 2px 0 var(--ink); }
       button.mini.easy { background: #8be28b; }
       button.mini.medium { background: #ffd23f; }
       button.mini.hard { background: #ff7a6b; }
-      .kick-bot { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; min-height: 0; padding: 0; font-size: 13px; border-width: 2px; border-radius: 50%; box-shadow: none; background: #ffffffcc; }
-      .crown { position: absolute; top: 8px; left: 10px; font-size: 20px; line-height: 1; filter: drop-shadow(0 2px 0 var(--ink)); } /* inside the card, opposite the bot remove button */
+
+      /* Lobby: the arena dimmed behind, the room bar on top, a seat card per player, the start button at the bottom.
+         Phones in portrait list the seats as rows; wider screens stand them side by side. */
+      .screen.lobby { position: fixed; inset: 0; width: auto; max-height: none; display: block; overflow: hidden; padding: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: radial-gradient(ellipse at 50% 0%, #3b2a6ecc, transparent 60%), linear-gradient(180deg, #14142bd9, #0b0b16f2); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: fade-in 0.25s ease-out; }
+      .lobby-shell { height: 100%; max-width: 1480px; margin: 0 auto; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; }
+      .lobby-head { grid-template-columns: auto 1fr; grid-template-areas: "leave title" "code invite"; align-items: center; gap: 10px; padding: 10px 12px; }
+      .lobby-head .leave { grid-area: leave; justify-self: start; min-height: 38px; padding: 4px 12px; font-size: 15px; }
+      .lobby-title { grid-area: title; display: flex; align-items: center; gap: 10px; min-width: 0; padding-right: 48px; } /* clear of the sound button */
+      .lobby-title h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1; }
+      .code-box { grid-area: code; display: grid; gap: 1px; min-width: 0; background: #00000040; border: 2px dashed #ffffff30; border-radius: 12px; padding: 5px 12px; }
+      .code-box small { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+      .code-box code { font-family: ui-monospace, monospace; font-size: 18px; font-weight: 700; letter-spacing: 1px; color: var(--accent); user-select: all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      body:has(.lobby:not([hidden])) .sound { top: calc(max(10px, env(safe-area-inset-top)) + 9px); right: calc(max(12px, env(safe-area-inset-right)) + 9px); } /* tucked into the room bar's corner */
+      .lobby-head .invite-btn { grid-area: invite; align-self: stretch; padding: 6px 14px; font-size: 16px; }
+
+      .seats { --gap: 10px; overflow-y: auto; scrollbar-width: none; display: grid; gap: var(--gap); align-content: start; padding: 14px 10px 12px; margin-inline: -8px; } /* padding keeps the glow of your seat from being clipped */
+      .seat { --p: #f5f5f5; position: relative; display: grid; grid-template-columns: 84px minmax(0, 1fr); column-gap: 12px; row-gap: 2px; align-items: center; min-width: 0; padding: 8px 12px 8px 8px;
+        background: radial-gradient(ellipse 60% 90% at 12% 50%, color-mix(in srgb, var(--p) 22%, transparent), transparent 70%), linear-gradient(180deg, var(--panel-hi), var(--panel));
+        border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--ink), inset 0 3px 0 color-mix(in srgb, var(--p) 65%, transparent); animation: pop 0.25s ease-out; }
+      .seat:nth-child(2) { --p: #9a9ac0; } .seat:nth-child(3) { --p: #ff5a5a; } .seat:nth-child(4) { --p: #4f8dff; } .seat:nth-child(5) { --p: #4fd16a; }
+      .seat > .stage-spot, .seat.empty > .mascot { grid-column: 1; grid-row: 1 / span 3; }
+      .seat > :not(.stage-spot, .mascot, .slot-tag, .crown, .kick-bot) { grid-column: 2; }
+      .stage-spot { position: relative; height: 72px; display: grid; place-items: end center; }
+      .stage-spot::before { content: ""; position: absolute; left: 8%; right: 8%; bottom: -4px; height: 16px; border-radius: 50%; background: radial-gradient(ellipse, color-mix(in srgb, var(--p) 55%, transparent), #00000066 60%, transparent 72%); }
+      .seat .mascot.sheet { position: relative; width: 100%; height: 100%; --k: 2.4; }
+      .seat.empty > .mascot.sheet { height: 72px; opacity: 0.16; filter: grayscale(1); }
+      .seat.away .mascot { opacity: 0.5; }
+      .seat .seat-name { font-family: var(--display); font-weight: 400; font-size: 20px; line-height: 1.1; justify-self: start; }
+      .seat.me .seat-name { color: var(--accent); }
+      .seat-sub { font-size: 12px; color: var(--muted); justify-self: start; }
+      .slot-tag { position: absolute; top: -11px; left: 10px; z-index: 1; font-family: var(--display); font-size: 13px; line-height: 1; padding: 3px 7px; color: var(--ink); background: var(--p); border: 2px solid var(--ink); border-radius: 8px; }
+      .crown { position: absolute; top: -15px; left: 46px; z-index: 1; font-size: 20px; line-height: 1; filter: drop-shadow(0 2px 0 var(--ink)); }
+      .kick-bot { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; font-size: 13px; border-width: 2px; border-radius: 50%; box-shadow: none; background: #ffffffcc; }
+      .seat.me { border-color: var(--accent); box-shadow: 0 5px 0 var(--ink), 0 0 0 3px #ffd23f40, 0 0 14px #ffd23f40, inset 0 3px 0 color-mix(in srgb, var(--p) 65%, transparent); }
+      .seat.easy::after { top: 8px; left: 64px; font-size: 18px; } /* the dozing bot's z, over its head */
+      .seat.empty { background: #0b0b1666; border: 3px dashed #ffffff2a; box-shadow: none; animation: none; }
+      .seat.empty .slot-tag { background: #2a2a5c; color: var(--muted); border-color: #ffffff2a; }
+      .seat.empty .seat-name { color: var(--muted); }
+      .picker { display: flex; gap: 3px; width: 100%; max-width: 220px; margin-top: 4px; padding: 3px; background: #00000059; border-radius: 10px; }
+      .picker.spacer { display: none; }
+      button.mini { min-height: 0; width: 100%; padding: 4px 6px; font-size: 13px; border-width: 2px; border-radius: 8px; box-shadow: 0 2px 0 var(--ink); }
+      button.mini.pick { background: transparent; color: var(--muted); border-color: transparent; box-shadow: none; }
+      button.mini.pick.on { background: var(--accent); color: #15152a; border-color: var(--ink); }
+      .add-bot { grid-template-columns: repeat(3, 1fr); column-gap: 6px; padding: 12px 10px 10px; }
+      .seat.add-bot > .seat-name, .seat.add-bot > .seat-sub { grid-column: 1 / -1; justify-self: center; }
+      .seat.add-bot > button { grid-column: auto; padding: 6px 4px; font-size: 14px; margin-top: 4px; }
+      .add-bot::before { content: "+" / ""; display: none; place-items: center; width: 64px; height: 64px; margin-bottom: 6px; border: 3px dashed #ffffff33; border-radius: 50%; font-family: var(--display); font-size: 40px; line-height: 1; color: #ffffff55; }
+
+      .lobby-foot { display: grid; gap: 8px; justify-items: center; padding-bottom: 4px; } /* room for the button's shadow */
+      .lobby-foot .hint { font-size: 14px; font-weight: 700; color: var(--text); background: #00000059; border-radius: 999px; padding: 6px 14px; }
+      .lobby-foot .start { width: min(100%, 420px); }
+      .lobby-foot .start:not(:disabled) { animation: start-pulse 1.6s ease-in-out infinite; }
+      @keyframes start-pulse { 50% { box-shadow: 0 4px 0 var(--ink), 0 0 0 6px #ffd23f40; } }
+
+      /* Tablets and phones turned sideways: one row for the room bar, seats as standing cards */
+      @media (min-width: 600px) {
+        .lobby-shell { padding-inline: 56px; } /* both sides, so the row stays centered and clear of the sound button */
+        .lobby-head { grid-template-columns: auto auto 1fr auto; grid-template-areas: "leave title code invite"; gap: 14px; }
+        .lobby-title { padding-right: 0; }
+        body:has(.lobby:not([hidden])) .sound { top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); }
+        .code-box { justify-self: end; max-width: 280px; }
+        .seats { --gap: 14px; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; row-gap: calc(var(--gap) + 12px); padding-top: 18px; } /* rows apart enough for the P tags */
+        .seat { flex: 0 1 calc((100% - 2 * var(--gap)) / 3); max-width: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 18px 10px 12px; text-align: center;
+          background: radial-gradient(ellipse 75% 50% at 50% 42%, color-mix(in srgb, var(--p) 24%, transparent), transparent 70%), linear-gradient(180deg, var(--panel-hi), var(--panel)); }
+        .stage-spot { width: 100%; height: 120px; }
+        .seat .mascot.sheet { --k: 4.2; }
+        .seat.empty > .mascot.sheet { height: 120px; }
+        .seat .seat-name { font-size: 22px; max-width: 100%; }
+        .slot-tag { top: -12px; left: 50%; transform: translateX(-50%); }
+        .crown { top: 8px; left: 10px; }
+        .seat.easy::after { top: 22%; left: 62%; font-size: 24px; }
+        .picker.spacer { display: flex; visibility: hidden; }
+        .seat.empty { justify-content: center; }
+        .seat.add-bot > button { width: 100%; max-width: 180px; }
+        .add-bot::before { display: grid; }
+      }
+      @media (min-width: 600px) and (orientation: landscape) {
+        .seat { flex-basis: calc((100% - 4 * var(--gap)) / 5); }
+      }
+      /* Desktop and iPads: big characters on their spots */
+      @media (min-width: 1000px) and (min-height: 640px) {
+        .lobby-shell { gap: 18px; padding-block: 8px; }
+        .lobby-head { padding: 14px 18px; }
+        .lobby-title h2 { font-size: 32px; }
+        .code-box code { font-size: 22px; }
+        .lobby-head .invite-btn { font-size: 18px; padding: 8px 22px; }
+        .seats { --gap: 20px; }
+        .seat { max-width: 290px; padding: 22px 14px 16px; gap: 8px; }
+        .stage-spot { height: 200px; }
+        .seat .mascot.sheet { --k: 7; }
+        .seat.empty > .mascot.sheet { height: 200px; }
+        .seat .seat-name { font-size: 26px; }
+        .seat-sub { font-size: 14px; }
+        .seat.add-bot > button { font-size: 17px; padding: 8px; }
+        .lobby-foot .hint { font-size: 15px; }
+        .lobby-foot .start { font-size: 26px; min-height: 62px; }
+      }
+      /* Tablets upright (iPad): room to stand the characters tall */
+      @media (min-width: 700px) and (min-height: 900px) and (orientation: portrait) {
+        .lobby-title h2 { font-size: 30px; }
+        .code-box code { font-size: 20px; }
+        .seats { --gap: 18px; }
+        .seat { padding: 22px 12px 14px; gap: 8px; }
+        .stage-spot, .seat.empty > .mascot.sheet { height: 190px; }
+        .seat .mascot.sheet { --k: 6.5; }
+        .seat .seat-name { font-size: 26px; }
+        .seat-sub { font-size: 14px; }
+        .seat.add-bot > button { font-size: 17px; padding: 8px; }
+        .lobby-foot .start { font-size: 26px; min-height: 62px; }
+      }
+      /* Phones sideways: little height, so everything gets compact */
+      @media (orientation: landscape) and (max-height: 500px) {
+        .lobby-shell { gap: 6px; }
+        .lobby-head { padding: 6px 10px; }
+        .lobby-title h2 { font-size: 22px; }
+        .code-box { padding: 2px 10px; }
+        .code-box small { display: none; }
+        .code-box code { font-size: 16px; }
+        .lobby-head .leave, .lobby-head .invite-btn { min-height: 36px; }
+        .seats { --gap: 10px; padding-top: 14px; }
+        .seat { padding: 14px 6px 8px; gap: 3px; }
+        .stage-spot, .seat.empty > .mascot.sheet { height: 88px; }
+        .seat .mascot.sheet { --k: 3; }
+        .seat .seat-name { font-size: 17px; }
+        .seat-sub { font-size: 11px; }
+        .seat.add-bot > button { padding: 3px 4px; font-size: 13px; }
+        .lobby-foot { grid-template-columns: 1fr auto; align-items: center; }
+        .lobby-foot .start { width: auto; min-width: 260px; min-height: 44px; font-size: 20px; }
+        .lobby-foot .hint:only-child { grid-column: 1 / -1; }
+      }
 
       /* End of match: dimmed arena, the winner in their victory pose, everyone's place, confetti. */
       .screen.results { position: fixed; inset: 0; width: auto; max-height: none; padding: 12px; place-items: center; background: radial-gradient(circle at 50% 40%, #0b0b1655, #0b0b16cc); animation: fade-in 0.3s ease-out; }
@@ -255,19 +363,6 @@
       /* Phones in landscape and desktops: side by side */
       @media (orientation: landscape) and (min-width: 560px) {
         .menu { grid-template-columns: 1fr minmax(300px, 380px); justify-items: stretch; gap: clamp(16px, 4vw, 48px); }
-        .lobby { grid-template-columns: minmax(250px, 320px) 1fr; align-items: start; padding-right: 56px; } /* clear of the sound button */
-        .seats { grid-template-columns: repeat(3, 1fr); }
-      }
-      /* Desktop: a wide room, all five seats in a row, big characters */
-      @media (orientation: landscape) and (min-width: 1100px) and (min-height: 640px) {
-        .screen.lobby { width: min(1500px, 100%); grid-template-columns: minmax(300px, 360px) 1fr; gap: 28px; }
-        .seats { grid-template-columns: repeat(5, 1fr); gap: 16px; padding-top: 0; }
-        .seat { min-height: 340px; padding: 18px 10px 14px; gap: 8px; align-content: end; }
-        .seat .mascot { width: 170px; height: 190px; }
-        .seat .mascot.sheet { --k: 7; }
-        .seat-name { font-size: 20px; }
-        .seat.add-bot { align-content: center; }
-        .seat.add-bot button { width: 100%; }
       }
       /* Desktop: the item guide fills the screen, the grid on the left and the item in use on the right */
       @media (orientation: landscape) and (min-width: 900px) and (min-height: 600px) {
@@ -290,8 +385,6 @@
         .card { padding: 12px; gap: 8px; }
         input, button { min-height: 40px; padding: 6px 12px; }
         button.big { min-height: 46px; font-size: 20px; }
-        .seat { min-height: 92px; padding: 8px 4px 6px; }
-        .seat .mascot { width: 44px; height: 44px; }
         .mascot.sheet { --k: 2; }
         .hero .mascot.sheet { --k: 4; }
         .tagline, .menu .hint:not(.version) { display: none; }
