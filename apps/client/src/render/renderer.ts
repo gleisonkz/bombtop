@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, shieldLook, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -100,40 +100,6 @@ async function rasterize(svg: string): Promise<Texture> {
   return tex;
 }
 
-/** Shield texture size in pixels: drawn large so it stays smooth when grown and scaled up. */
-const SHIELD_PX = 64;
-
-/** The captain's round shield: red and white rings, a blue center and a white star. */
-function shieldTexture(): Texture {
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = SHIELD_PX;
-  const g = canvas.getContext("2d")!;
-  const c = SHIELD_PX / 2;
-  const ring = (r: number, color: string) => {
-    g.beginPath();
-    g.arc(c, c, r, 0, Math.PI * 2);
-    g.fillStyle = color;
-    g.fill();
-  };
-  ring(c, "#1b1b24");
-  ring(c - 2, "#b8202e");
-  ring(c * 0.78, "#f2f2f2");
-  ring(c * 0.58, "#b8202e");
-  ring(c * 0.4, "#24427a");
-  g.beginPath();
-  for (let i = 0; i < 10; i++) {
-    const r = i % 2 === 0 ? c * 0.36 : c * 0.15;
-    const a = -Math.PI / 2 + (i * Math.PI) / 5;
-    g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r);
-  }
-  g.closePath();
-  g.fillStyle = "#ffffff";
-  g.fill();
-  const tex = Texture.from(canvas);
-  tex.source.scaleMode = "linear";
-  return tex;
-}
-
 /** Placeholder renderer: flat shapes, with sprite characters once a sheet is loaded. */
 export class Renderer {
   readonly root = new Container();
@@ -148,7 +114,8 @@ export class Renderer {
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
-  private shieldArt: Texture | null = null;
+  /** The captain's spiral of light, behind and in front of him, once loaded. */
+  private spiralArt: { behind: Texture[]; front: Texture[] } | null = null;
   private readonly skins = new Map<CharacterId, Skin>();
   /** The mascot in each player color and mood (`${player}:${mood}`), once drawn. */
   private mascots: Map<string, Texture> | null = null;
@@ -217,6 +184,14 @@ export class Renderer {
   }
 
   /** Draws bombs with the bomb art instead of shapes. */
+  async useSpiralArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${SPIRAL.url}`);
+    base.source.scaleMode = "linear"; // shrunk to the captain's scale
+    const row = (r: number) =>
+      Array.from({ length: SPIRAL.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * SPIRAL.frameW, r * SPIRAL.frameH, SPIRAL.frameW, SPIRAL.frameH) }));
+    this.spiralArt = { behind: row(SPIRAL.rows.behind), front: row(SPIRAL.rows.front) };
+  }
+
   async useFlameArt(): Promise<void> {
     const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${FLAMES.url}`);
     base.source.scaleMode = "linear"; // drawn at half size
@@ -390,20 +365,22 @@ export class Renderer {
     sprite.zIndex = cy;
   }
 
-  /** The captain's big shield, grown in front of him (beyond him when he faces up). */
-  private placeShield(id: string, facing: Facing, ticks: number, cx: number, cy: number): void {
-    this.shieldArt ??= shieldTexture();
-    const look = shieldLook(facing, ticks);
-    const sprite = this.sprite(`shield:${id}`);
-    const scale = (look.size * TILE_PX) / SHIELD_PX;
-    sprite.texture = this.shieldArt;
-    sprite.anchor.set(0.5);
-    sprite.position.set(cx + look.dx * TILE_PX, cy + look.dy * TILE_PX);
-    sprite.scale.set(scale * look.squash, scale);
-    sprite.rotation = 0;
-    sprite.alpha = 1;
-    sprite.tint = 0xffffff;
-    sprite.zIndex = cy + (look.front ? 0.5 : -0.5);
+  /** The spiral of light round a captain with his shield up: half behind him, half in front. */
+  private placeSpiral(id: string, ticks: number, cx: number, cy: number): void {
+    if (!this.spiralArt) return;
+    const f = spiralFrame(ticks);
+    const scale = SHEETS.captain.scale;
+    for (const [side, z] of [["behind", -0.5], ["front", 0.5]] as const) {
+      const sprite = this.sprite(`spiral-${side}:${id}`);
+      sprite.texture = this.spiralArt[side][f]!;
+      sprite.anchor.set(SPIRAL.anchorX / SPIRAL.frameW, SPIRAL.anchorY / SPIRAL.frameH);
+      sprite.position.set(cx, cy + 6);
+      sprite.scale.set(scale);
+      sprite.rotation = 0;
+      sprite.alpha = 1;
+      sprite.tint = 0xffffff;
+      sprite.zIndex = cy + z;
+    }
   }
 
   /** The player's sprite, shown this frame. */
@@ -581,7 +558,7 @@ export class Renderer {
         top.roundRect(b.x, b.y, b.w, b.h, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
         top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
       }
-      if (p.shield > 0) this.placeShield(p.id, p.facing, SHIELD_TICKS - p.shield, cx, cy);
+      if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
       // A spark over a player whose special is ready.
       if ((character === "ninja" || character === "captain") && p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;

@@ -120,11 +120,11 @@ export const SHEETS = {
   /** Captain America, made in PixelLab (scripts/build-character-sheet.py captain lays out its frames). */
   captain: {
     url: "sprites/captain.png",
-    width: 864,
+    width: 1116,
     height: 2484,
-    frameW: 108,
+    frameW: 124,
     frameH: 138,
-    anchorX: 53,
+    anchorX: 61,
     anchorY: 135,
     bodyH: 124,
     ticksPerFrame: 7,
@@ -134,8 +134,8 @@ export const SHEETS = {
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 7 },
-    /** Raising the shield; the last frame holds while it is up. */
-    cast: strips(8, 9, 10, 6),
+    /** The special: shield forward, he drops to one knee as it grows huge; the kneel holds while it is up. */
+    cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     lobby: { row: 17, frames: 8 },
@@ -357,21 +357,28 @@ export function beamAlpha(ticks: number): number {
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
 }
 
-/** Ticks the captain's big shield takes to grow to full size. */
-export const SHIELD_GROW_TICKS = 12;
-
 /**
- * Where the captain's big shield sits, `ticks` after he raised it, in tiles from his
- * position: `size` is its width, `squash` its horizontal scale (edge-on when he faces
- * sideways) and `front` whether it is drawn over him (facing up it is beyond him).
+ * The spiral of light round the captain while his shield is up (PixelLab VFX "Captain shield spiral",
+ * laid out by scripts/build-captain-spiral.py): one row drawn behind him, one in front. The anchor is
+ * the point between his feet, like the character sheets', and it is drawn at the captain's scale.
  */
-export function shieldLook(facing: Facing, ticks: number): { size: number; dx: number; dy: number; squash: number; front: boolean } {
-  const t = Math.min(1, ticks / SHIELD_GROW_TICKS);
-  const size = 0.4 + (1.15 - 0.4) * (1 - (1 - t) * (1 - t));
-  // Facing the camera it covers him from the chest down, so his head shows over it.
-  if (facing === "down") return { size, dx: 0, dy: 0, squash: 1, front: true };
-  if (facing === "up") return { size, dx: 0, dy: -0.7, squash: 1, front: false };
-  return { size, dx: facing === "left" ? -0.45 : 0.45, dy: -0.3, squash: 0.35, front: true };
+export const SPIRAL = {
+  url: "sprites/captain-spiral.png",
+  width: 1608,
+  height: 336,
+  frameW: 134,
+  frameH: 168,
+  anchorX: 80,
+  anchorY: 138,
+  frames: 12,
+  fps: 12,
+  ticksPerFrame: 5,
+  rows: { behind: 0, front: 1 },
+} as const;
+
+/** The spiral's frame `ticks` after the shield went up (it loops). */
+export function spiralFrame(ticks: number): number {
+  return Math.floor(ticks / SPIRAL.ticksPerFrame) % SPIRAL.frames;
 }
 
 /**

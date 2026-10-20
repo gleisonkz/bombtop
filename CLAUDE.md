@@ -66,7 +66,8 @@ Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb ma
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
 ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; frames laid out by
 `scripts/build-character-sheet.py ninja`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
-`scripts/build-character-sheet.py captain`; his big shield is drawn by the renderer (`shieldLook`).
+`scripts/build-character-sheet.py captain`; his special (cast rows): shield forward, then he kneels as it grows huge
+(PixelLab "Shield" state + v3 interpolation), and a spiral of light loops round him (PixelLab VFX, `scripts/build-captain-spiral.py`, `SPIRAL`).
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must

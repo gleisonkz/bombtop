@@ -18,7 +18,12 @@ and its "Carry" state). Frames laid out by `scripts/build-character-sheet.py nin
 
 Fan art of Captain America (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
 (character "Captain America HD" and its "Carry" state). Frames laid out by
-`scripts/build-character-sheet.py captain`; rows = `SHEETS.captain`. The big shield is drawn in code by the renderer.
+`scripts/build-character-sheet.py captain`; rows = `SHEETS.captain`.
+
+## captain-spiral.png
+
+The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),
+laid out by `scripts/build-captain-spiral.py` from its game pack (one row behind him, one in front).
 
 ## Generated art
 

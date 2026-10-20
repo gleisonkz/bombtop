@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, SHIELD_GROW_TICKS, shieldLook, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -521,21 +521,15 @@ describe("captain sheet and shield", () => {
     expect(held).toMatchObject({ x: (brace.down.frames - 1) * captain.frameW, y: brace.down.row * captain.frameH });
   });
 
-  it("the big shield grows in front of him, then stays full size", () => {
-    expect(shieldLook("down", 0).size).toBeLessThan(shieldLook("down", SHIELD_GROW_TICKS).size);
-    expect(shieldLook("down", SHIELD_GROW_TICKS).size).toBe(shieldLook("down", SHIELD_TICKS).size);
-    expect(shieldLook("down", SHIELD_TICKS).size).toBeGreaterThan(1); // wider than a tile
+  it("the spiral of light loops at its own pace while the shield is up", () => {
+    expect(spiralFrame(0)).toBe(0);
+    expect(spiralFrame(SPIRAL.ticksPerFrame)).toBe(1);
+    expect(spiralFrame(SPIRAL.frames * SPIRAL.ticksPerFrame)).toBe(0);
+    expect(SPIRAL.ticksPerFrame * SPIRAL.fps).toBe(TICK_RATE);
   });
 
-  it("sits on the side he faces: in front of him facing down, behind him facing up, edge-on sideways", () => {
-    const down = shieldLook("down", SHIELD_TICKS);
-    const up = shieldLook("up", SHIELD_TICKS);
-    const left = shieldLook("left", SHIELD_TICKS);
-    expect(down).toMatchObject({ front: true });
-    expect(down.dy).toBeGreaterThan(up.dy);
-    expect(up.front).toBe(false);
-    expect(left.dx).toBeLessThan(0);
-    expect(shieldLook("right", SHIELD_TICKS).dx).toBeGreaterThan(0);
-    expect(left.squash).toBeLessThan(down.squash);
+  it("the spiral sheet holds a row behind him and a row in front", () => {
+    expect(SPIRAL.frames * SPIRAL.frameW).toBeLessThanOrEqual(SPIRAL.width);
+    expect(Math.max(SPIRAL.rows.behind, SPIRAL.rows.front) + 1).toBe(SPIRAL.height / SPIRAL.frameH);
   });
 });
