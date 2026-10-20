@@ -29,7 +29,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   pickup: { gain: 0.5, vary: 0.03, voices: 2 },
   curse: { gain: 0.6, vary: 0.03, voices: 1 },
   stun: { gain: 0.55, vary: 0.05, voices: 2 },
-  death: { gain: 0.7, vary: 0.03, voices: 2 }, // the cry is loud
+  death: { gain: 0.7, vary: 0.03, voices: 2 },
   mount: { gain: 0.55, vary: 0.04, voices: 2 },
   dismount: { gain: 0.6, vary: 0.04, voices: 2 },
   jump: { gain: 0.4, vary: 0.06, voices: 2 },
