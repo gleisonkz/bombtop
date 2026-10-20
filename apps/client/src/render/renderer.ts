@@ -626,4 +626,9 @@ export class Renderer {
   showBanner(text: string): void {
     this.banner.text = text;
   }
+
+  /** The round clock over the arena (hidden for scripted scenes like the intro). */
+  showClock(on: boolean): void {
+    this.clock.visible = on;
+  }
 }

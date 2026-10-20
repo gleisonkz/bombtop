@@ -22,6 +22,9 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 
 - `packages/shared` — game simulation + tests (Vitest)
 - `apps/client` — Vite + PixiJS PWA: menu, lobby, online play.
+  Title intro: once per browser session (sessionStorage `bombtop.intro`) a scripted match (`game/intro.ts`, real sim) introduces
+  each character with a name card, then the logo (`game/intro-mode.ts`); skip with the button/Esc/Enter/Space, "Tocar com som" replays it with sound.
+  Not shown when arriving by an invite link or on the guide.
   Inputs in `src/input` (keyboard, gamepad, touch) are pure and unit-tested; DOM/Pixi glue is not.
 - `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleSession` holds
   all room logic (unit-tested); `BattleRoom` is a thin adapter (integration-tested over the network).

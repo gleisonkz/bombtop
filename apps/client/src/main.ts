@@ -4,6 +4,8 @@ import { characterId, DEFAULT_CHARACTER } from "@bombtop/shared";
 import { Sound, WebAudioBackend } from "./audio/sound";
 import type { GameMode, ModeContext } from "./game/mode";
 import { DemoGame } from "./game/demo-game";
+import { introDue } from "./game/intro";
+import { IntroMode } from "./game/intro-mode";
 import { OnlineGame, SERVER_URL } from "./game/online-game";
 import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
@@ -26,15 +28,18 @@ document.getElementById("app")!.appendChild(app.canvas);
 const renderer = new Renderer();
 app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
-void renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e));
-void renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e));
-void renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e));
-void renderer.useMascots().catch((e) => console.error("mascot", e));
-void renderer.useBombArt().catch((e) => console.error("bomb art", e));
-void renderer.useFlameArt().catch((e) => console.error("flame art", e));
-void renderer.useSpiralArt().catch((e) => console.error("spiral art", e));
-void renderer.useItemArt().catch((e) => console.error("item art", e));
-void renderer.useTileArt().catch((e) => console.error("tile art", e));
+// Art loads in the background; the intro waits for it so it never plays with placeholder shapes.
+const art = Promise.allSettled([
+  renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e)),
+  renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e)),
+  renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e)),
+  renderer.useMascots().catch((e) => console.error("mascot", e)),
+  renderer.useBombArt().catch((e) => console.error("bomb art", e)),
+  renderer.useFlameArt().catch((e) => console.error("flame art", e)),
+  renderer.useSpiralArt().catch((e) => console.error("spiral art", e)),
+  renderer.useItemArt().catch((e) => console.error("item art", e)),
+  renderer.useTileArt().catch((e) => console.error("tile art", e)),
+]);
 
 let arena = { width: 13, height: 11 };
 let mode: GameMode | null = null;
@@ -205,6 +210,21 @@ window.addEventListener("popstate", () => {
   else menu.showGuide(guideRoute.isOpen());
 });
 if (guideRoute.isOpen()) menu.showGuide(true);
+
+// Once per session the title intro plays before the menu (not when arriving by an invite link or on the guide).
+if (!invite && !guideRoute.isOpen() && introDue(tabStore)) {
+  menu.hide();
+  void art.then(() => {
+    if (mode) return; // the player got somewhere else meanwhile
+    setMode(
+      new IntroMode(ctx, () => {
+        setMode(null);
+        menu.show();
+      }),
+      false,
+    );
+  });
+}
 
 watchAccount((a) => {
   account = a;

@@ -21,7 +21,7 @@ import {
 export const SHOWCASE_VIEW = { x: 1, y: 3, width: 11, height: 5 };
 
 /** One thing a scripted player does: walk some tiles, press a button, face a way, or wait. */
-type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" } | { face: Facing } | { wait: number } | { holdBomb: number };
+export type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" | "special" } | { face: Facing } | { wait: number } | { holdBomb: number };
 
 interface Scene {
   /** Puts players, blocks and powers in place on an empty arena. */
@@ -151,7 +151,7 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** Plays a player's steps, one input per tick. */
-class Script {
+export class Script {
   private i = 0;
   private waited = 0;
   private target: { x: number; y: number } | null = null;
@@ -169,7 +169,7 @@ class Script {
     if (!st || !p.alive) return { dir: null, bomb: false };
     if ("press" in st) {
       this.i++;
-      return { dir: null, bomb: st.press === "bomb", action: st.press === "action" };
+      return { dir: null, bomb: st.press === "bomb", action: st.press === "action", special: st.press === "special" };
     }
     if ("face" in st) {
       this.i++;
