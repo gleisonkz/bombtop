@@ -26,7 +26,7 @@ describe("AdaptiveDelay", () => {
     const steady = feed(new AdaptiveDelay(), [33], 600);
     const jittery = feed(new AdaptiveDelay(), [10, 70, 20, 33, 90, 5], 600);
     expect(jittery).toBeGreaterThan(steady + 30);
-    expect(jittery).toBeLessThanOrEqual(150);
+    expect(jittery).toBeLessThanOrEqual(250);
   });
 
   it("remembers rare stalls (mobile networks) and keeps room for the next one", () => {
@@ -43,7 +43,7 @@ describe("AdaptiveDelay", () => {
   });
 
   it("never goes past its bounds", () => {
-    expect(feed(new AdaptiveDelay(), [400], 300)).toBe(150);
+    expect(feed(new AdaptiveDelay(), [400], 300)).toBe(250);
     expect(feed(new AdaptiveDelay(), [1], 3000)).toBe(40);
   });
 

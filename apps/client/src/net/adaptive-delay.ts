@@ -1,5 +1,6 @@
 const MIN_MS = 40;
-const MAX_MS = 150;
+/** Mobile data (4G) holds snapshots back 350-600 ms now and then: room for most of that. */
+const MAX_MS = 250;
 const START_MS = 100;
 /** Weight of each new arrival in the running averages. */
 const SMOOTH = 0.05;
