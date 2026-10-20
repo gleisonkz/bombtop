@@ -6,8 +6,8 @@ import { NetLog, netReport } from "../src/net-log";
 
 describe("netReport", () => {
   it("keeps the measurements, as bounded numbers", () => {
-    expect(netReport({ ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, ua: "Android 14; Chrome", extra: "x" })).toEqual({
-      ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, ua: "Android 14; Chrome",
+    expect(netReport({ ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome", extra: "x" })).toEqual({
+      ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome",
     });
   });
 

@@ -8,10 +8,17 @@ export interface NetReport {
   fps?: number;
   late?: number;
   gap?: number;
+  /** Longest frame, ms: the device itself froze. */
+  slow?: number;
+  /** Frames drawn with no newer snapshot, over the whole report period. */
+  missed?: number;
+  /** Biggest jump between two frames, hundredths of a tile: our player, the others. */
+  jumpMe?: number;
+  jumpOthers?: number;
   ua?: string;
 }
 
-const LIMITS: Record<Exclude<keyof NetReport, "ua">, number> = { ping: 10_000, delay: 10_000, fps: 1000, late: 100_000, gap: 60_000 };
+const LIMITS: Record<Exclude<keyof NetReport, "ua">, number> = { ping: 10_000, delay: 10_000, fps: 1000, late: 100_000, gap: 60_000, slow: 60_000, missed: 100_000, jumpMe: 10_000, jumpOthers: 10_000 };
 const UA_MAX = 120;
 const MIN_GAP_MS = 2000;
 
