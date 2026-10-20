@@ -3,7 +3,9 @@ import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
 import { lobbySlots, seatClass } from "./lobby-slots";
+import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
+import type { Placing } from "../game/standings";
 
 const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja" };
 
@@ -31,6 +33,7 @@ export class LobbyPanel {
   private readonly seats = el("div", { class: "seats" });
   private readonly status = el("p", { class: "hint" });
   private readonly startBtn: HTMLButtonElement;
+  private readonly results: ResultScreen;
 
   constructor(
     parent: HTMLElement,
@@ -53,10 +56,12 @@ export class LobbyPanel {
     ]);
     this.root.hidden = true;
     parent.appendChild(this.root);
+    this.results = new ResultScreen(parent);
   }
 
   update(info: LobbyInfo, me: string): void {
     this.root.hidden = info.phase !== "lobby";
+    if (info.phase !== "results") this.results.hide();
     this.code.textContent = info.code;
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
     const isHost = info.hostId === me;
@@ -122,7 +127,13 @@ export class LobbyPanel {
     }
   }
 
+  /** The match is over: who won and everyone's place, until the room is back in the lobby. */
+  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null): void {
+    this.results.show(placings, info.members, me, winnerId);
+  }
+
   hide(): void {
     this.root.hidden = true;
+    this.results.hide();
   }
 }

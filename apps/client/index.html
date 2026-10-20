@@ -226,6 +226,32 @@
       .kick-bot { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; min-height: 0; padding: 0; font-size: 13px; border-width: 2px; border-radius: 50%; box-shadow: none; background: #ffffffcc; }
       .crown { position: absolute; top: 8px; left: 10px; font-size: 20px; line-height: 1; filter: drop-shadow(0 2px 0 var(--ink)); } /* inside the card, opposite the bot remove button */
 
+      /* End of match: dimmed arena, the winner in their victory pose, everyone's place, confetti. */
+      .screen.results { position: fixed; inset: 0; width: auto; max-height: none; padding: 12px; place-items: center; background: radial-gradient(circle at 50% 40%, #0b0b1655, #0b0b16cc); animation: fade-in 0.3s ease-out; }
+      .results .card { width: min(440px, 100%); max-height: 100%; overflow: auto; scrollbar-width: none; justify-items: center; position: relative; z-index: 1; animation: pop 0.35s cubic-bezier(0.2, 1.6, 0.5, 1); }
+      .results-title { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 7vmin, 44px); line-height: 1; text-align: center; color: var(--accent); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 0 4px 0 var(--ink); animation: title-in 0.6s cubic-bezier(0.2, 1.8, 0.4, 1) both; }
+      .results-title.draw { color: var(--muted); }
+      @keyframes title-in { from { transform: scale(2.2) rotate(-6deg); opacity: 0; } to { transform: scale(1) rotate(-2deg); opacity: 1; } }
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+      .champion { position: relative; width: 120px; height: 104px; display: grid; place-items: end center; }
+      .champion::before { content: ""; position: absolute; inset: -18px -40px -6px; background: repeating-conic-gradient(from 0deg, #ffd23f40 0 12deg, transparent 12deg 30deg); border-radius: 50%; mask: radial-gradient(circle, #000 30%, transparent 70%); animation: spin 9s linear infinite; }
+      .champion .mascot.sheet { width: 120px; height: 104px; --k: 4.4; }
+      .placings { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 6px; }
+      .placing { display: grid; grid-template-columns: 34px 44px 1fr auto; align-items: center; gap: 8px; padding: 4px 10px; background: #00000030; border: 2px solid #ffffff1a; border-radius: 12px; opacity: 0; animation: slide-in 0.35s ease-out forwards; }
+      .placing:nth-child(2) { animation-delay: 0.45s; } .placing:nth-child(3) { animation-delay: 0.55s; } .placing:nth-child(4) { animation-delay: 0.65s; } .placing:nth-child(5) { animation-delay: 0.75s; } .placing:first-child { animation-delay: 0.35s; }
+      .placing.won { background: #ffd23f2a; border-color: var(--accent); }
+      .placing.me .seat-name { color: var(--accent); }
+      .placing .place { font-family: var(--display); font-size: 22px; text-align: center; }
+      .placing .mascot.sheet { width: 44px; height: 40px; --k: 1.7; }
+      .placing:not(.won) .mascot.sheet { filter: saturate(0.6) brightness(0.85); }
+      @keyframes slide-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+      .results-timer { width: 100%; height: 6px; border-radius: 3px; background: #00000040; overflow: hidden; }
+      .results-timer i { display: block; height: 100%; background: var(--accent); transform-origin: left; animation: drain var(--results-s, 6s) linear forwards; }
+      @keyframes drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+      .confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+      .confetti i { position: absolute; top: -20px; left: var(--x); width: 8px; height: 14px; border-radius: 2px; transform: rotate(var(--r)); animation: fall var(--t) linear var(--d) infinite; }
+      @keyframes fall { to { transform: translate(30px, 110vh) rotate(calc(var(--r) + 720deg)); } }
+
       /* Phones in landscape and desktops: side by side */
       @media (orientation: landscape) and (min-width: 560px) {
         .menu { grid-template-columns: 1fr minmax(300px, 380px); justify-items: stretch; gap: clamp(16px, 4vw, 48px); }

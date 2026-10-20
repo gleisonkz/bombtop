@@ -5,6 +5,7 @@ import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { carryOn } from "../net/carry-on";
 import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
 import { between } from "../render/sprites";
+import { Standings } from "./standings";
 import {
   C2S,
   ROOM_NAME,
@@ -71,6 +72,9 @@ export class OnlineGame implements GameMode {
   private readonly kicks = new KickPrediction();
   private latest: Snapshot | null = null;
   private lobby: LobbyInfo | null = null;
+  /** Who went out when, for the results screen. */
+  private readonly standings = new Standings();
+  private result: ResultMessage | null = null;
   private leaving = false;
 
   static async connect(
@@ -111,12 +115,16 @@ export class OnlineGame implements GameMode {
         this.ghosts.clear();
         this.pickups = new GhostPickups();
         this.kicks.clear();
+        this.standings.reset();
+        this.result = null;
         ctx.sound.play("start");
       }
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
       panel.update(info, room.sessionId);
-      if (info.phase === "playing") ctx.renderer.showBanner("");
+      if (info.phase !== "results") ctx.renderer.showBanner("");
+      // Shown on the results phase's lobby update, which carries the new win counts.
+      else if (this.result) this.showResults(this.result.winnerId);
     });
     // Whole snapshots now and then; in between, only what changed.
     const snapshots = new DeltaReceiver<Snapshot>();
@@ -126,10 +134,9 @@ export class OnlineGame implements GameMode {
       if (snap) this.received(snap);
     });
     room.onMessage(S2C.result, (result: ResultMessage) => {
-      const winner = this.lobby?.members.find((m) => m.id === result.winnerId);
-      const you = result.winnerId === room.sessionId;
+      this.result = result;
       ctx.sound.play(resultSound(result.winnerId, room.sessionId));
-      ctx.renderer.showBanner(you ? "Você venceu!" : winner ? `${winner.name} venceu!` : "Empate!");
+      this.showResults(result.winnerId);
     });
     room.onLeave(() => {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
@@ -293,7 +300,14 @@ export class OnlineGame implements GameMode {
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
     this.latest = snap;
+    this.standings.see(snap.players, snap.tick);
     if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
+  }
+
+  private showResults(winnerId: string | null): void {
+    if (!this.lobby) return;
+    const ids = this.lobby.members.map((m) => m.id);
+    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId);
   }
 
   /** Token to take this seat back after a reload. */

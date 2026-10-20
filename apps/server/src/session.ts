@@ -1,4 +1,5 @@
 import {
+  RESULTS_TICKS,
   Bot,
   createMatch,
   matchResult,
@@ -22,8 +23,7 @@ import {
 } from "@bombtop/shared";
 import { InputQueue } from "./input-queue";
 
-/** Ticks the results screen stays up before returning to the lobby. */
-export const RESULTS_TICKS = 4 * TICK_RATE;
+export { RESULTS_TICKS } from "@bombtop/shared";
 
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
 export const SNAPSHOT_EVERY = 2;
