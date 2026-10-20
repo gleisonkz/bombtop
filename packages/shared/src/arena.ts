@@ -72,6 +72,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       character: opts.characters?.[id] ?? DEFAULT_CHARACTER,
       frozen: 0,
       specialCooldown: 0,
+      shield: 0,
       curse: null,
       mount: null,
       invuln: 0,

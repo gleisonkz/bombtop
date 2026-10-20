@@ -1,24 +1,39 @@
-"""Builds sprites/ninja.png (SHEETS.ninja in render/sprites.ts) from the ninja's PixelLab animation
-frames (character "Ice ninja HD", 128px; carry poses from its "Carry" state).
+"""Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
+  ninja: sprites/ninja.png, character "Ice ninja HD" (128px; carry poses from its "Carry" state)
+  captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-ninja-sheet.py FRAMES_DIR public/sprites/ninja.png
+Usage: python build-character-sheet.py ninja|captain FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import json, sys
 from pathlib import Path
 from PIL import Image
 
 # (sheet row name, animation folder, direction, frames)
-ROWS = [
-    ("idle.down", "idle-s3", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
-    ("walk.down", "skel", "south", 6), ("walk.side", "skel", "east", 6), ("walk.up", "skel", "north", 6),
-    ("stun", "hit3", "south", 6),
-    ("death", "death3", "south", 8),
-    ("cast.down", "castice", "south", 9), ("cast.side", "castice", "east", 9), ("cast.up", "castice", "north", 9),
-    ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
-    ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
-    ("lobby", "lobby-seal", "south", 8),
-]
+CHARACTERS = {
+    "ninja": [
+        ("idle.down", "idle-s3", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "skel", "south", 6), ("walk.side", "skel", "east", 6), ("walk.up", "skel", "north", 6),
+        ("stun", "hit3", "south", 6),
+        ("death", "death3", "south", 8),
+        ("cast.down", "castice", "south", 9), ("cast.side", "castice", "east", 9), ("cast.up", "castice", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby-seal", "south", 8),
+    ],
+    # cast = raising the shield (skeleton-posed brace); "up" is the back view without the shield, the
+    # renderer draws the big shield in front of him.
+    "captain": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 6), ("cast.side", "cast", "east", 6), ("cast.up", "cast", "north", 6),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+}
 BASE = 400  # work canvas size, feet baseline at BASE * 0.75
 
 
@@ -37,9 +52,9 @@ def body_middle(im):
 
 
 def main():
-    src, out = Path(sys.argv[1]), Path(sys.argv[2])
+    character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
-    for name, folder, d, n in ROWS:
+    for name, folder, d, n in CHARACTERS[character]:
         frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         ground = feet(frames[0])
         placed = []

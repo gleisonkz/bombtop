@@ -72,8 +72,9 @@ describe("botLevel", () => {
 
 describe("characterId", () => {
   it("accepts only known characters, bare or in a message", () => {
-    expect(CHARACTERS).toEqual(["bomb", "ninja"]);
+    expect(CHARACTERS).toEqual(["bomb", "ninja", "captain"]);
     expect(characterId("ninja")).toBe("ninja");
+    expect(characterId("captain")).toBe("captain");
     expect(characterId({ character: "bomb" })).toBe("bomb");
     expect(characterId({ character: "dragon" })).toBeNull();
     expect(characterId(null)).toBeNull();

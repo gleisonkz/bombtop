@@ -12,7 +12,13 @@ Trial character sheets. Both are CC0 (public domain, no attribution required).
 ## ninja.png
 
 The project's own character, made in PixelLab (pixellab.ai) for Bombtop at 128px (character "Ice ninja HD"
-and its "Carry" state). Frames laid out by `scripts/build-ninja-sheet.py`; rows = `SHEETS.ninja`. Ice cast: skeleton-posed body plus ice effects drawn by `scripts/build-ninja-cast.py`.
+and its "Carry" state). Frames laid out by `scripts/build-character-sheet.py ninja`; rows = `SHEETS.ninja`. Ice cast: skeleton-posed body plus ice effects drawn by `scripts/build-ninja-cast.py`.
+
+## captain.png
+
+Fan art of Captain America (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Captain America HD" and its "Carry" state). Frames laid out by
+`scripts/build-character-sheet.py captain`; rows = `SHEETS.captain`. The big shield is drawn in code by the renderer.
 
 ## Generated art
 

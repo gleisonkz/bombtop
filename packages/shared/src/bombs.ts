@@ -2,6 +2,7 @@ import { FLAME_TICKS, FUSE_TICKS } from "./constants";
 import { updateAir } from "./air";
 import { effectiveRange } from "./curse";
 import { updateSlides } from "./kick";
+import { shieldAt } from "./special";
 import { bombAt, getTile, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
@@ -54,33 +55,53 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
   if (!s.bombs.includes(bomb)) return;
   s.bombs = s.bombs.filter((b) => b !== bomb);
   addFlame(s, bomb.x, bomb.y, bomb.ownerId);
-  // Pierce flames run through blocks, items and bombs; only walls stop them.
-  const pierce = bomb.type === "pierce";
 
+  const reachedEnd = new Map<string, boolean>();
+  const reflected: { dx: number; dy: number; by: string }[] = [];
   for (const [dx, dy] of DIRECTIONS) {
-    for (let i = 1; i <= bomb.range; i++) {
-      const x = bomb.x + dx * i;
-      const y = bomb.y + dy * i;
-      const tile = getTile(s, x, y);
-      if (tile === Tile.Wall) break;
-      addFlame(s, x, y, bomb.ownerId);
-      if (tile === Tile.Block) {
-        setTile(s, x, y, Tile.Empty);
-        if (pierce) continue;
-        break;
-      }
-      const item = s.items.find((it) => it.x === x && it.y === y);
-      if (item) {
-        s.items = s.items.filter((it) => it !== item);
-        if (!pierce) break;
-      }
-      const hit = bombAt(s, x, y);
-      if (hit) {
-        queue.push(hit);
-        if (!pierce) break;
-      }
+    const end = burnRay(s, bomb, dx, dy, 1, bomb.range, bomb.ownerId, queue);
+    reachedEnd.set(`${dx},${dy}`, end === true);
+    if (typeof end === "string") reflected.push({ dx, dy, by: end });
+  }
+  // A shield sends its arm back: the far arm burns on for another `range` tiles, as the captain's fire.
+  for (const { dx, dy, by } of reflected) {
+    if (reachedEnd.get(`${-dx},${-dy}`)) burnRay(s, bomb, -dx, -dy, bomb.range + 1, bomb.range * 2, by, queue);
+  }
+}
+
+/**
+ * Burns tiles `from`..`to` steps away from the bomb toward (dx,dy). Returns true
+ * when the ray ran its full length, false when something stopped it, or the id of
+ * the shielded captain it hit.
+ */
+function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number, to: number, ownerId: string, queue: Bomb[]): boolean | string {
+  // Pierce flames run through blocks, items and bombs; only walls (and shields) stop them.
+  const pierce = bomb.type === "pierce";
+  for (let i = from; i <= to; i++) {
+    const x = bomb.x + dx * i;
+    const y = bomb.y + dy * i;
+    const tile = getTile(s, x, y);
+    if (tile === Tile.Wall) return false;
+    const shield = shieldAt(s, x, y, dx, dy);
+    if (shield) return shield.id;
+    addFlame(s, x, y, ownerId);
+    if (tile === Tile.Block) {
+      setTile(s, x, y, Tile.Empty);
+      if (pierce) continue;
+      return false;
+    }
+    const item = s.items.find((it) => it.x === x && it.y === y);
+    if (item) {
+      s.items = s.items.filter((it) => it !== item);
+      if (!pierce) return false;
+    }
+    const hit = bombAt(s, x, y);
+    if (hit) {
+      queue.push(hit);
+      if (!pierce) return false;
     }
   }
+  return true;
 }
 
 function addFlame(s: MatchState, x: number, y: number, ownerId: string): void {

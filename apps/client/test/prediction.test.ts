@@ -103,6 +103,15 @@ describe("Predictor", () => {
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
   });
 
+  it("does not move a captain planted behind his shield", () => {
+    const p = new Predictor("me");
+    const snap = snapshot();
+    snap.players[0]!.shield = 100;
+    p.step(input("right"));
+    p.step(input("right"));
+    expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
+  });
+
   it("returns null when the player is not in the match", () => {
     expect(new Predictor("ghost").predict(snapshot())).toBeNull();
   });

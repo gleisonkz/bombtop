@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, SHIELD_GROW_TICKS, shieldLook, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -475,5 +475,50 @@ describe("between", () => {
 
   it("never carries a teleport (warp, respawn) past where it landed", () => {
     expect(between(from, { px: 1000 + 3 * TILE, py: 500 }, 1.5)).toEqual({ px: 1000 + 3 * TILE, py: 500 });
+  });
+});
+
+describe("captain sheet and shield", () => {
+  const captain = SHEETS.captain;
+  const brace = captain.cast!;
+  const frame = (facing: "up" | "down" | "left" | "right", shielding: number) =>
+    playerFrame(captain, { facing, moving: false, carrying: false, shielding, tick: 0 });
+
+  it("every row fits inside the image", () => {
+    const strips = [captain.idle, captain.walk, captain.cast!, captain.carryIdle!, captain.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, captain.stun!, captain.death!, captain.lobby!]) {
+      expect((s.row + 1) * captain.frameH).toBeLessThanOrEqual(captain.height);
+      expect(s.frames * captain.frameW).toBeLessThanOrEqual(captain.width);
+    }
+  });
+
+  it("stands about as tall as the ninja on screen", () => {
+    const tall = (s: typeof captain | typeof SHEETS.ninja) => s.bodyH * s.scale;
+    expect(Math.abs(tall(captain) - tall(SHEETS.ninja))).toBeLessThan(2);
+  });
+
+  it("raises the shield with the brace row and holds its last frame while the shield is up", () => {
+    expect(frame("down", 0)).toMatchObject({ x: 0, y: brace.down.row * captain.frameH });
+    expect(frame("left", 0)).toMatchObject({ y: brace.side.row * captain.frameH, flip: true });
+    const held = frame("down", SHIELD_TICKS - 1);
+    expect(held).toMatchObject({ x: (brace.down.frames - 1) * captain.frameW, y: brace.down.row * captain.frameH });
+  });
+
+  it("the big shield grows in front of him, then stays full size", () => {
+    expect(shieldLook("down", 0).size).toBeLessThan(shieldLook("down", SHIELD_GROW_TICKS).size);
+    expect(shieldLook("down", SHIELD_GROW_TICKS).size).toBe(shieldLook("down", SHIELD_TICKS).size);
+    expect(shieldLook("down", SHIELD_TICKS).size).toBeGreaterThan(1); // wider than a tile
+  });
+
+  it("sits on the side he faces: in front of him facing down, behind him facing up, edge-on sideways", () => {
+    const down = shieldLook("down", SHIELD_TICKS);
+    const up = shieldLook("up", SHIELD_TICKS);
+    const left = shieldLook("left", SHIELD_TICKS);
+    expect(down).toMatchObject({ front: true });
+    expect(down.dy).toBeGreaterThan(up.dy);
+    expect(up.front).toBe(false);
+    expect(left.dx).toBeLessThan(0);
+    expect(shieldLook("right", SHIELD_TICKS).dx).toBeGreaterThan(0);
+    expect(left.squash).toBeLessThan(down.squash);
   });
 });

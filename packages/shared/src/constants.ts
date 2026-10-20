@@ -85,6 +85,9 @@ export const ICE_RANGE = 4;
 export const FREEZE_TICKS = 5 * TICK_RATE;
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
+/** Captain's shield: how long it stays up (he stands still behind it). */
+export const SHIELD_TICKS = 3 * TICK_RATE;
+
 /** Ticks a blast stays on screen. */
 export const BLAST_TICKS = 36;
 

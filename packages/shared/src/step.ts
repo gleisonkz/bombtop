@@ -25,6 +25,11 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     }
     if (p.invuln > 0) p.invuln--;
     if (p.specialCooldown > 0) p.specialCooldown--;
+    // Planted behind the shield: it wears off on time even if he gets stunned or frozen.
+    if (p.shield > 0) {
+      p.shield--;
+      continue;
+    }
     if (p.stun > 0) {
       p.stun--;
       continue;

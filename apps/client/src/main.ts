@@ -28,6 +28,7 @@ app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 void renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e));
 void renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e));
+void renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e));
 void renderer.useMascots().catch((e) => console.error("mascot", e));
 void renderer.useBombArt().catch((e) => console.error("bomb art", e));
 void renderer.useFlameArt().catch((e) => console.error("flame art", e));

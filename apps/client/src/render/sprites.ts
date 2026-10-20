@@ -90,7 +90,7 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
-  /** The ninja, made in PixelLab at 128px (scripts/build-ninja-sheet.py lays out its frames). */
+  /** The ninja, made in PixelLab at 128px (scripts/build-character-sheet.py ninja lays out its frames). */
   ninja: {
     url: "sprites/ninja.png",
     width: 1152,
@@ -114,6 +114,33 @@ export const SHEETS = {
     lobby: { row: 17, frames: 8 },
     hues: [185, 250],
     scale: 0.21,
+  },
+  /** Captain America, made in PixelLab (scripts/build-character-sheet.py captain lays out its frames). */
+  captain: {
+    url: "sprites/captain.png",
+    width: 864,
+    height: 2484,
+    frameW: 108,
+    frameH: 138,
+    anchorX: 53,
+    anchorY: 135,
+    bodyH: 124,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Raising the shield; the last frame holds while it is up. */
+    cast: strips(8, 9, 10, 6),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** The navy suit and helmet (the carried bomb's blue-black stays). */
+    hues: [200, 232],
+    hueBase: [35, 56, 92],
+    scale: 0.17,
   },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
@@ -326,6 +353,23 @@ export function beamAlpha(ticks: number): number {
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
 }
 
+/** Ticks the captain's big shield takes to grow to full size. */
+export const SHIELD_GROW_TICKS = 12;
+
+/**
+ * Where the captain's big shield sits, `ticks` after he raised it, in tiles from his
+ * position: `size` is its width, `squash` its horizontal scale (edge-on when he faces
+ * sideways) and `front` whether it is drawn over him (facing up it is beyond him).
+ */
+export function shieldLook(facing: Facing, ticks: number): { size: number; dx: number; dy: number; squash: number; front: boolean } {
+  const t = Math.min(1, ticks / SHIELD_GROW_TICKS);
+  const size = 0.4 + (1.15 - 0.4) * (1 - (1 - t) * (1 - t));
+  // Facing the camera it covers him from the chest down, so his head shows over it.
+  if (facing === "down") return { size, dx: 0, dy: 0, squash: 1, front: true };
+  if (facing === "up") return { size, dx: 0, dy: -0.7, squash: 1, front: false };
+  return { size, dx: facing === "left" ? -0.45 : 0.45, dy: -0.3, squash: 0.35, front: true };
+}
+
 /**
  * How a frozen player looks: tinted icy inside a block of ice, which flickers
  * in its last second as it melts. Null when not frozen.
@@ -361,12 +405,17 @@ export function playerFrame(
     carrying,
     stunned,
     casting,
+    shielding,
     tick,
-  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; tick: number },
+  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; shielding?: number | undefined; tick: number },
 ): FrameRect {
   if (stunned && sheet.stun) return cell(sheet, sheet.stun, Math.floor(tick / sheet.ticksPerFrame) % sheet.stun.frames);
   const view = facing === "left" || facing === "right" ? "side" : facing;
   const flip = view === "side" && facing !== sheet.side;
+  if (sheet.cast && shielding !== undefined) {
+    const strip = sheet.cast[view];
+    return { ...cell(sheet, strip, Math.min(Math.floor(shielding / CAST_TICKS_PER_FRAME), strip.frames - 1)), flip };
+  }
   const castCol = casting === undefined ? -1 : Math.floor(casting / CAST_TICKS_PER_FRAME);
   if (sheet.cast && castCol >= 0 && castCol < sheet.cast[view].frames) return { ...cell(sheet, sheet.cast[view], castCol), flip };
   const set = carrying && sheet.carryIdle ? (moving ? sheet.carryWalk! : sheet.carryIdle) : moving ? sheet.walk : sheet.idle;

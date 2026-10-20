@@ -7,7 +7,7 @@ import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
 import type { Placing } from "../game/standings";
 
-const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja" };
+const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja", captain: "Capitão América" };
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
   classic: "Clássica",

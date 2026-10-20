@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -84,6 +84,8 @@ export interface Player {
   frozen: number;
   /** Ticks until the special can be used again. */
   specialCooldown: number;
+  /** Ticks left with the captain's shield up (planted, facing `facing`). */
+  shield: number;
   curse: Curse | null;
   mount: MountKind | null;
   /** Ticks left of post-hit invulnerability. */

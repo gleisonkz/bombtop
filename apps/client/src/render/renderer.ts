@@ -1,8 +1,8 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintHues, playerFrame, recolor, shadeHues, shieldLook, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -102,6 +102,40 @@ async function rasterize(svg: string): Promise<Texture> {
   return tex;
 }
 
+/** Shield texture size in pixels: drawn large so it stays smooth when grown and scaled up. */
+const SHIELD_PX = 64;
+
+/** The captain's round shield: red and white rings, a blue center and a white star. */
+function shieldTexture(): Texture {
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = SHIELD_PX;
+  const g = canvas.getContext("2d")!;
+  const c = SHIELD_PX / 2;
+  const ring = (r: number, color: string) => {
+    g.beginPath();
+    g.arc(c, c, r, 0, Math.PI * 2);
+    g.fillStyle = color;
+    g.fill();
+  };
+  ring(c, "#1b1b24");
+  ring(c - 2, "#b8202e");
+  ring(c * 0.78, "#f2f2f2");
+  ring(c * 0.58, "#b8202e");
+  ring(c * 0.4, "#24427a");
+  g.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? c * 0.36 : c * 0.15;
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r);
+  }
+  g.closePath();
+  g.fillStyle = "#ffffff";
+  g.fill();
+  const tex = Texture.from(canvas);
+  tex.source.scaleMode = "linear";
+  return tex;
+}
+
 /** Placeholder renderer: flat shapes, with sprite characters once a sheet is loaded. */
 export class Renderer {
   readonly root = new Container();
@@ -116,6 +150,7 @@ export class Renderer {
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
+  private shieldArt: Texture | null = null;
   private readonly skins = new Map<CharacterId, Skin>();
   /** The mascot in each player color and mood (`${player}:${mood}`), once drawn. */
   private mascots: Map<string, Texture> | null = null;
@@ -357,6 +392,22 @@ export class Renderer {
     sprite.zIndex = cy;
   }
 
+  /** The captain's big shield, grown in front of him (beyond him when he faces up). */
+  private placeShield(id: string, facing: Facing, ticks: number, cx: number, cy: number): void {
+    this.shieldArt ??= shieldTexture();
+    const look = shieldLook(facing, ticks);
+    const sprite = this.sprite(`shield:${id}`);
+    const scale = (look.size * TILE_PX) / SHIELD_PX;
+    sprite.texture = this.shieldArt;
+    sprite.anchor.set(0.5);
+    sprite.position.set(cx + look.dx * TILE_PX, cy + look.dy * TILE_PX);
+    sprite.scale.set(scale * look.squash, scale);
+    sprite.rotation = 0;
+    sprite.alpha = 1;
+    sprite.tint = 0xffffff;
+    sprite.zIndex = cy + (look.front ? 0.5 : -0.5);
+  }
+
   /** The player's sprite, shown this frame. */
   private sprite(id: string): Sprite {
     let sprite = this.sprites.get(id);
@@ -508,7 +559,8 @@ export class Renderer {
       if (skin) {
         const { sheet } = skin;
         const casting = blast && BLAST_TICKS - blast.ttl;
-        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, tick });
+        const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
+        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
         this.placeSprite(skin, p.id, i, f, cx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
@@ -531,8 +583,9 @@ export class Renderer {
         top.roundRect(b.x, b.y, b.w, b.h, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
         top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
       }
-      // A spark over a ninja whose special is ready.
-      if (character === "ninja" && p.specialCooldown === 0 && !ice) {
+      if (p.shield > 0) this.placeShield(p.id, p.facing, SHIELD_TICKS - p.shield, cx, cy);
+      // A spark over a player whose special is ready.
+      if ((character === "ninja" || character === "captain") && p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: COLORS.ice, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
