@@ -1,10 +1,11 @@
-import { BOT_LEVELS, CHARACTERS, MAX_PLAYERS, type BotLevel, type CharacterId, type LobbyInfo } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type CharacterId, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
 import { lobbySlots, seatClass } from "./lobby-slots";
 import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
+import { cycleCharacter } from "./character-cycle";
 import type { Placing } from "../game/standings";
 
 const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja", captain: "Capitão América" };
@@ -100,13 +101,12 @@ export class LobbyPanel {
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
-          el(
-            "div",
-            { class: you ? "picker" : "picker spacer" },
-            CHARACTERS.map((c) =>
-              button(CHARACTER_NAMES[c], () => you && this.handlers.pickCharacter(c), `mini pick${c === member.character ? " on" : ""}`),
-            ),
-          ),
+          // Arrows step through the characters, so any number of them fits on a narrow card.
+          el("div", { class: you ? "picker" : "picker spacer" }, [
+            this.pickArrow("‹", "Personagem anterior", you, member.character, -1),
+            el("span", { class: "pick-name", text: CHARACTER_NAMES[member.character] }),
+            this.pickArrow("›", "Próximo personagem", you, member.character, 1),
+          ]),
         ]);
       }),
     );
@@ -120,6 +120,12 @@ export class LobbyPanel {
       : isHost
         ? "Todo mundo pronto? Bora!"
         : "Esperando o anfitrião começar…";
+  }
+
+  private pickArrow(text: string, label: string, you: boolean, current: CharacterId, step: 1 | -1): HTMLButtonElement {
+    const b = button(text, () => you && this.handlers.pickCharacter(cycleCharacter(current, step)), "mini pick-arrow");
+    b.setAttribute("aria-label", label);
+    return b;
   }
 
   /** Native share sheet (WhatsApp etc.) on phones; copies the message elsewhere. */
