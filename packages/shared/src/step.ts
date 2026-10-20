@@ -2,7 +2,7 @@ import { bombButton, punch, updateHeldBombs } from "./air";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
 import { applyFloor } from "./floor";
-import { collectItems } from "./items";
+import { collectItems, dropItems } from "./items";
 import { tryKick } from "./kick";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
@@ -14,6 +14,7 @@ import { playerTile, type MatchState, type PlayerInput } from "./state";
 /** Advances the simulation by one tick, applying each player's input for this tick. */
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   s.tick++;
+  const living = s.players.filter((p) => p.alive);
   // Thawed before anyone acts, so a freeze lasts the same whoever moved first.
   for (const p of s.players) if (p.frozen > 0) p.frozen--;
 
@@ -64,6 +65,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }
+  for (const p of living) if (!p.alive) dropItems(s, p);
 
   updateHeldBombs(s);
 }
