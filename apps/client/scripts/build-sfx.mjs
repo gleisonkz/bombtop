@@ -3,6 +3,8 @@
 //
 // Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
+// Freesound (CC0 only), the HQ preview of each: death cry = "nooo1.wav" by christerljung,
+// https://freesound.org/people/christerljung/sounds/345933/ (saved as freesound/345933_1770836-hq.mp3).
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -17,6 +19,7 @@ const S = (lib, file) => join(SRC, "sonniss", "raw", lib, file);
 const CSD = (lib, file) => S(`Cinematic Sound Design - ${lib}`, file);
 const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
 const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
+const FS = (file) => join(SRC, "freesound", file);
 
 /**
  * name -> { src, len (s), layer?: { src, len, gain (dB), lowpass? (Hz), at? (s, delay) } }
@@ -37,7 +40,12 @@ const RECIPE = {
   pickup: { src: ESM_AG("DSGNStngr_Power Up Bright Positive Successful Light Saturation Crash Shimmer 05_ESM_AG.wav"), len: 1.2 },
   curse: { src: CSD("System & UI Feedback Elements", "Interface Deny Low Fat Dark.wav"), len: 0.75 },
   stun: { src: CSD("Cartoon Bloopers", "Cartoon Confused Dizzy.wav"), len: 1.2 },
-  death: { src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"), len: 1.8 },
+  // a cartoon "nooo!" over the falling bass
+  death: {
+    src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"),
+    len: 1.8,
+    layer: { src: FS("345933_1770836-hq.mp3"), len: 1.3, gain: -6 },
+  },
   mount: { src: CSD("UI Interaction Elements", "Accept Boing Crunch.wav"), len: 0.9 },
   dismount: { src: CSD("Cartoon Impacts", "Cartoon Pops Random Sequence Reverb.wav"), len: 1.2 },
   jump: { src: K("digital-audio", "phaseJump1.ogg"), len: 0.45 },
