@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -520,6 +520,30 @@ describe("castTicks", () => {
   it("other casts start with their blast", () => {
     expect(castTicks(0, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
     expect(castTicks(0, undefined)).toBeUndefined();
+  });
+});
+
+describe("kameSegments", () => {
+  it("lays the kamehameha out: its ball at his hands, beam pieces a tile apart, its head where it stops", () => {
+    const parts = kameSegments(0, 10, 64, 10);
+    expect(parts[0]).toEqual({ kind: "orb", x: 0, y: 10, rot: 0 });
+    expect(parts.filter((p) => p.kind === "body").map((p) => p.x)).toEqual([8, 24, 40, 56]);
+    const head = parts.at(-1)!;
+    expect(head.kind).toBe("head");
+    expect(head.x).toBeCloseTo(64 - 0.8);
+    expect(head.y).toBe(10);
+  });
+
+  it("turns the pieces toward where it goes", () => {
+    const up = kameSegments(5, 50, 5, 18);
+    expect(up.every((p) => Math.abs(p.rot + Math.PI / 2) < 1e-9)).toBe(true);
+    expect(up.find((p) => p.kind === "body")!.y).toBe(42);
+  });
+
+  it("never runs the beam past its head", () => {
+    const parts = kameSegments(0, 0, 70, 0);
+    for (const p of parts.filter((q) => q.kind === "body")) expect(p.x + 8).toBeLessThanOrEqual(70);
+    expect(Math.max(...parts.filter((q) => q.kind === "body").map((p) => p.x)) + 8).toBe(70); // and leaves no gap
   });
 });
 

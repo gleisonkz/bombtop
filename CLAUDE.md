@@ -88,7 +88,8 @@ PixelLab's filter blocks character states that mention a bomb (and blocked a "Ca
 the carry with skeletons from the base rotation instead; the renderer draws the held bomb over the head anyway.
 Goku (fan art) made in PixelLab ("Goku HD", standard mode with custom chibi proportions and detailed shading to match
 the others), laid out by `scripts/build-character-sheet.py goku`; Kamehameha and carry walk posed from our own skeletons
-(keypoints fitted to his own rest pose: his legs are longer than Thor's); the beam is drawn by the renderer.
+(keypoints fitted to his own rest pose: his legs are longer than Thor's); the beam is HD art from
+`scripts/build-kamehameha.py` (`KAMEHAMEHA`, laid out by `kameSegments`).
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must

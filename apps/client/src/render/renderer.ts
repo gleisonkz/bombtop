@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, outsideBeams, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -108,6 +108,11 @@ export class Renderer {
   private readonly world = new Graphics();
   /** Flames sit on the floor, under players and bombs. */
   private readonly flameLayer = new Container();
+  /** Goku's Kamehameha, over the players. */
+  private readonly beamLayer = new Container();
+  private kameArt: Record<KamePiece["kind"], Texture[]> | null = null;
+  private readonly kameSprites: Sprite[] = [];
+  private kameUsed = 0;
   private readonly itemLayer = new Container();
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
@@ -152,7 +157,7 @@ export class Renderer {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.world, this.itemLayer, this.flameLayer, this.people, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.world, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.banner, this.clock);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -192,6 +197,14 @@ export class Renderer {
     const row = (r: number) =>
       Array.from({ length: SPIRAL.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * SPIRAL.frameW, r * SPIRAL.frameH, SPIRAL.frameW, SPIRAL.frameH) }));
     this.spiralArt = { behind: row(SPIRAL.rows.behind), front: row(SPIRAL.rows.front) };
+  }
+
+  async useKameArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${KAMEHAMEHA.url}`);
+    base.source.scaleMode = "linear";
+    const row = (r: number) =>
+      Array.from({ length: KAMEHAMEHA.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * KAMEHAMEHA.size, r * KAMEHAMEHA.size, KAMEHAMEHA.size, KAMEHAMEHA.size) }));
+    this.kameArt = { orb: row(KAMEHAMEHA.rows.orb), body: row(KAMEHAMEHA.rows.body), head: row(KAMEHAMEHA.rows.head) };
   }
 
   async useFlameArt(): Promise<void> {
@@ -585,7 +598,9 @@ export class Renderer {
       }
     });
 
+    this.kameUsed = 0;
     for (const b of s.blasts) this.drawBlast(top, b);
+    for (let i = this.kameUsed; i < this.kameSprites.length; i++) this.kameSprites[i]!.visible = false;
     this.drawParticles(top);
     const shake = this.fx.shake;
     this.root.position.set(Math.sin(s.tick * 2.3) * shake, Math.cos(s.tick * 3.1) * shake);
@@ -636,6 +651,29 @@ export class Renderer {
   private drawKamehameha(g: Graphics, x0: number, y0: number, x1: number, y1: number, ttl: number): void {
     const age = BLAST_TICKS - ttl;
     const w = Math.min(1, (age + 1) / 4) * Math.min(1, ttl / 12);
+    if (this.kameArt) {
+      // Swells in at once, thins out as it fades; the energy flows along it (a frame every 2 ticks).
+      const frame = Math.floor(age / 2) % KAMEHAMEHA.frames;
+      const order = { body: 0, head: 1, orb: 2 }; // the balls over the beam's ends
+      for (const part of kameSegments(x0, y0, x1, y1, TILE_PX).sort((a, b) => order[a.kind] - order[b.kind])) {
+        let sprite = this.kameSprites[this.kameUsed];
+        if (!sprite) {
+          sprite = new Sprite();
+          sprite.anchor.set(0.5);
+          this.kameSprites.push(sprite);
+          this.beamLayer.addChild(sprite);
+        }
+        this.kameUsed++;
+        const grow = part.kind === "body" ? 1 : 0.6 + 0.4 * w;
+        sprite.texture = this.kameArt[part.kind][frame]!;
+        sprite.position.set(part.x, part.y);
+        sprite.rotation = part.rot;
+        sprite.scale.set(KAMEHAMEHA.scale * grow, KAMEHAMEHA.scale * w);
+        sprite.alpha = Math.min(1, ttl / 6);
+        sprite.visible = true;
+      }
+      return;
+    }
     const pulse = 1 + Math.sin(age / 1.5) * 0.08;
     for (const [width, color, a] of [[14, COLORS.ki, 0.35], [8, 0xbff4ff, 0.8], [3.5, 0xffffff, 1]] as const) {
       g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color, width: width * w * pulse, alpha: a, cap: "round" });

@@ -429,6 +429,38 @@ export function castTicks(charge: number, blast: Pick<Blast, "ttl" | "kind"> | u
   return (blast.kind === "kamehameha" ? KAME_CHARGE : 0) + BLAST_TICKS - blast.ttl;
 }
 
+/**
+ * Goku's Kamehameha art (scripts/build-kamehameha.py): the ball of ki at his hands, the beam (tiles
+ * seamlessly), and its head; FRAMES looping frames each, pointing right. Drawn one cell per tile.
+ */
+export const KAMEHAMEHA = {
+  url: "sprites/kamehameha.png",
+  size: 128,
+  frames: 8,
+  rows: { orb: 0, body: 1, head: 2 },
+  scale: 0.125,
+  /** The head's ball sits this far (in tiles) right of its cell's center. */
+  headBall: 0.05,
+};
+
+export type KamePiece = { kind: keyof typeof KAMEHAMEHA.rows; x: number; y: number; rot: number };
+
+/** Where the Kamehameha's pieces go for a beam from (x0,y0) to (x1,y1), `tile` pixels a tile. */
+export function kameSegments(x0: number, y0: number, x1: number, y1: number, tile = 16): KamePiece[] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const ux = len ? (x1 - x0) / len : 1;
+  const uy = len ? (y1 - y0) / len : 0;
+  const rot = Math.atan2(uy, ux);
+  const parts: KamePiece[] = [{ kind: "orb", x: x0, y: y0, rot }];
+  let t = tile / 2;
+  for (; t <= len - tile / 2 + 1e-6; t += tile) parts.push({ kind: "body", x: x0 + ux * t, y: y0 + uy * t, rot });
+  // a last piece flush with the head, so no gap is left before it
+  if (len > tile && t - tile < len - tile / 2 - 1e-6) parts.push({ kind: "body", x: x1 - ux * (tile / 2), y: y1 - uy * (tile / 2), rot });
+  const back = KAMEHAMEHA.headBall * tile;
+  parts.push({ kind: "head", x: x1 - ux * back, y: y1 - uy * back, rot });
+  return parts;
+}
+
 /** Flames without the Kamehameha's own fire along its beam (the beam is drawn over those tiles instead). */
 export function outsideBeams<F extends Pick<Flame, "x" | "y" | "ownerId">>(flames: F[], blasts: readonly Blast[]): F[] {
   const beams = blasts.filter((b) => b.kind === "kamehameha");

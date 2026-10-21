@@ -43,6 +43,7 @@ const art = Promise.allSettled([
   renderer.useMascots().catch((e) => console.error("mascot", e)),
   renderer.useBombArt().catch((e) => console.error("bomb art", e)),
   renderer.useFlameArt().catch((e) => console.error("flame art", e)),
+  renderer.useKameArt().catch((e) => console.error("kamehameha art", e)),
   renderer.useSpiralArt().catch((e) => console.error("spiral art", e)),
   renderer.useItemArt().catch((e) => console.error("item art", e)),
   renderer.useTileArt().catch((e) => console.error("tile art", e)),
