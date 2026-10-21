@@ -509,6 +509,16 @@
       .mute { width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }
       .mute svg { width: 22px; height: 22px; }
 
+      /* In-match menu (☰, top left): touch controls and leaving */
+      .match-menu { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; display: grid; justify-items: start; gap: 8px; }
+      body:has(.lobby:not([hidden])) .match-menu { display: none; }
+      .match-menu-btn { width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; font-size: 22px; line-height: 1; background: #ffffffd9; }
+      .match-panel { background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; width: 210px; }
+      .match-panel span { font-family: var(--display); font-size: 15px; }
+      .match-panel button { font-size: 15px; min-height: 38px; padding: 6px 10px; }
+      .match-leave { background: #ff7a6b; }
+      .match-leave.sure { background: #e84a4a; color: #fff; }
+
       /* Touch controls */
       .touch { position: fixed; inset: 0; z-index: 1; display: flex; touch-action: none; user-select: none; -webkit-user-select: none; }
       body:has(.lobby:not([hidden])) .touch { display: none; } /* nothing to steer in the lobby */
@@ -522,6 +532,8 @@
       .dpad-arrow.down { left: 52px; bottom: 0; } .dpad-arrow.down::after { border-top: 14px solid #111; border-bottom-width: 0; }
       .dpad-arrow.left { left: 0; top: 52px; } .dpad-arrow.left::after { border-right: 14px solid #111; border-left-width: 0; }
       .dpad-arrow.right { right: 0; top: 52px; } .dpad-arrow.right::after { border-left: 14px solid #111; border-right-width: 0; }
+      .knob { position: fixed; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: #ffffff55; border: 3px solid #ffffffaa; pointer-events: none; }
+      .touch.stick .dpad { display: none; }
       .dpad-arrow.on { background: var(--accent); transform: translateY(3px); box-shadow: 0 1px 0 #000; }
       /* Special right above the bomb button (the thumb's home), action to its left */
       .touch-buttons { align-self: flex-end; display: grid; grid-template-areas: ". special" "action bomb"; gap: 12px 16px; align-items: end; justify-items: center; padding: 0 20px 28px; }

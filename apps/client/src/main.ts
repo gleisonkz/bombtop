@@ -11,6 +11,8 @@ import { fitScale } from "./render/fit";
 import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
+import { MatchMenu } from "./ui/match-menu";
+import { controlStyle } from "./input/control-style";
 import { codeFromUrl } from "./net/invite";
 import { GuideRoute } from "./net/guide-route";
 import { browserAddress, RoomRoute } from "./net/room-route";
@@ -121,12 +123,23 @@ document.body.appendChild(el("div", { class: "sound" }, [muteBtn, soundPanel]));
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
+// Touch steering (setas or joystick), switchable mid-match from the ☰ menu, which also leaves the match.
+const CONTROLS_KEY = "bombtop.controls";
+touch.setStyle(controlStyle(storage.get(CONTROLS_KEY)));
+const matchMenu = new MatchMenu(document.body, controlStyle(storage.get(CONTROLS_KEY)), {
+  style: (style) => {
+    storage.set(CONTROLS_KEY, style);
+    touch.setStyle(style);
+  },
+  leave: () => (online ? void online.leave() : ctx.exit()),
+});
 
 function setMode(next: GameMode | null, controls = !!next): void {
   mode?.dispose();
   mode = next;
   renderer.hide(); // the last frame of the previous mode must not linger behind menus
   touch.setVisible(controls);
+  matchMenu.setVisible(controls);
 }
 
 // The room lives in the address (/sala/CODE) while the player is in it.
