@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -505,6 +505,56 @@ describe("between", () => {
 
   it("never carries a teleport (warp, respawn) past where it landed", () => {
     expect(between(from, { px: 1000 + 3 * TILE, py: 500 }, 1.5)).toEqual({ px: 1000 + 3 * TILE, py: 500 });
+  });
+});
+
+describe("castTicks", () => {
+  it("runs goku's cast from the start of his charge: the beam leaves on the thrust frame", () => {
+    expect(castTicks(KAME_CHARGE, undefined)).toBe(0);
+    expect(castTicks(1, undefined)).toBe(KAME_CHARGE - 1);
+    const beam = { ttl: BLAST_TICKS, kind: "kamehameha" } as const;
+    expect(castTicks(0, beam)).toBe(KAME_CHARGE);
+    expect(KAME_CHARGE).toBe(5 * CAST_TICKS_PER_FRAME);
+  });
+
+  it("other casts start with their blast", () => {
+    expect(castTicks(0, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
+    expect(castTicks(0, undefined)).toBeUndefined();
+  });
+});
+
+describe("outsideBeams", () => {
+  it("drops the kamehameha's own fire along its beam, which is drawn instead", () => {
+    const beam = { ownerId: "g", x: 2, y: 3, dir: "right", length: 2, ttl: 30, kind: "kamehameha" } as const;
+    const flames = [
+      { x: 3, y: 3, ttl: 5, ownerId: "g" },
+      { x: 4, y: 3, ttl: 5, ownerId: "g" },
+      { x: 5, y: 3, ttl: 5, ownerId: "g" }, // past its end
+      { x: 3, y: 3, ttl: 5, ownerId: "other" },
+    ];
+    expect(outsideBeams(flames, [beam])).toEqual([flames[2], flames[3]]);
+    expect(outsideBeams(flames, [{ ...beam, kind: "ice" }])).toEqual(flames);
+  });
+});
+
+describe("goku sheet", () => {
+  const goku = SHEETS.goku;
+
+  it("every row fits inside the image", () => {
+    const strips = [goku.idle, goku.walk, goku.cast!, goku.carryIdle!, goku.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, goku.stun!, goku.death!, goku.lobby!]) {
+      expect((s.row + 1) * goku.frameH).toBeLessThanOrEqual(goku.height);
+      expect(s.frames * goku.frameW).toBeLessThanOrEqual(goku.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    expect(Math.abs(goku.bodyH * goku.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  });
+
+  it("the kamehameha leaves from his hands, out in front of him", () => {
+    const [x] = boltOrigin(goku, "right", 100, 50);
+    expect(x).toBeGreaterThan(105);
   });
 });
 

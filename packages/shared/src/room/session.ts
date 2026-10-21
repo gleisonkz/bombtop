@@ -37,6 +37,7 @@ export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   bomb: ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"],
   ninja: ["Hanzo", "Kenji", "Ryu", "Kage", "Hayate", "Shiro", "Akira", "Yuki"],
   captain: ["Capitão Bravo", "Capitão Trovão", "Capitão Estrela", "Capitão Valente", "Capitão Águia", "Capitão Brasil", "Capitão Escudo", "Capitão Liberdade"],
+  goku: ["Kakaroto", "Son", "Kaio", "Saiyajin", "Kame", "Nimbus", "Shenlong", "Genki"],
   thor: ["Thorvald", "Bjorn", "Ragnar", "Ulfric", "Sigurd", "Leif", "Eirik", "Halvar"],
 };
 

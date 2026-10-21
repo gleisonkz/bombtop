@@ -1,6 +1,9 @@
 """Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
   ninja: sprites/ninja.png, character "Ice ninja HD" (128px; carry poses from its "Carry" state)
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
+  goku: sprites/goku.png, character "Goku HD" (180px canvas; cast = Kamehameha and carry walk posed from our own
+    skeletons; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a glow at his hands in the side
+    thrust: that view holds its clean last frame. The hands in the side and front thrust are the "muzzle".
   thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons;
     the back view comes from a second "Thor HD", made in v3 from the first's south/east/west, whose cape
     covers his back (the first one's hung in front of him),
@@ -10,9 +13,9 @@
     face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
-import json, sys
+import colorsys, json, sys
 from pathlib import Path
 from PIL import Image
 
@@ -42,6 +45,17 @@ CHARACTERS = {
     ],
     # cast = hammer swung overhead, then thrust forward as the bolt leaves it (frame 5, BEAM_DELAY)
     "thor": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = Kamehameha: hands cupped at his hip while it charges, thrust forward as the beam leaves (frame 5)
+    "goku": [
         ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),
@@ -103,6 +117,53 @@ def thor_cast(folder, d, frames):
     return frames[:THRUST] + [thrust.copy() for _ in frames[THRUST:]]
 
 
+def ki_blue(im):
+    """The ki PixelLab drew at his hip while charging is yellow: turn it the game's Kamehameha blue."""
+    px = im.load()
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b, a = px[x, y]
+            if not a:
+                continue
+            h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+            if 45 <= h * 360 <= 70 and l > 0.6:
+                r, g, b = colorsys.hls_to_rgb(195 / 360, l, s)
+                px[x, y] = (round(r * 255), round(g * 255), round(b * 255), a)
+    return im
+
+
+def goku_cast(folder, d, frames):
+    if folder != "cast":
+        return frames
+    if d != "east":
+        return frames[:THRUST] + [frames[THRUST].copy() for _ in frames[THRUST:]]
+    return [ki_blue(f) for f in frames[:THRUST]] + [frames[-1].copy() for _ in frames[THRUST:]]
+
+
+def skin(p):
+    r, g, b, a = p
+    return a > 200 and r > 190 and r - b > 40 and g > 120
+
+
+def hands_side(im):
+    """Side view: the tip of his outstretched hands (rightmost opaque pixel in the middle band) and its row."""
+    px = im.load()
+    band = range(int(im.height * 0.4), int(im.height * 0.75))
+    for x in range(im.width - 1, -1, -1):
+        ys = [y for y in band if px[x, y][3] > 128]
+        if ys:
+            return x + 1, sum(ys) / len(ys)
+    raise ValueError("no hands")
+
+
+def hands_front(im):
+    """Front view: the bottom middle of the skin pixels in the body's middle band (his hands at his chest)."""
+    px = im.load()
+    pts = [(x, y) for y in range(int(im.height * 0.4), int(im.height * 0.75)) for x in range(im.width) if skin(px[x, y])]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return (min(xs) + max(xs) + 1) / 2, max(ys) + 1
+
+
 def silver_box(im):
     """Bounding box of the hammer head's grey (low saturation, light) pixels below the face."""
     px = im.load()
@@ -122,6 +183,8 @@ def main():
         frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
+        if character == "goku":
+            frames = goku_cast(folder, d, frames)
         ground = feet(frames[0])
         placed = []
         for im in frames:
@@ -170,6 +233,20 @@ def main():
             "down": [(x0 + x1 + 1) / 2 - ax, y1 + 1 - ay],
             # the back view hides the hammer in front of his face: the bolt leaves from over his head
             "up": [0, sb[1] + (sb[3] - sb[1]) * 0.25 - ay],
+        }
+    if character == "goku":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        down = rows[names.index("cast.down")][1][THRUST].crop((left, top, right, bottom))
+        dx, dy = hands_front(down)
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [dx - ax, dy - ay],
+            # the back view hides his hands in front of him: the beam leaves from over his shoulders
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.35 - ay],
         }
     print(json.dumps(info))
 

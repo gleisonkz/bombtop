@@ -104,7 +104,7 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
   return true;
 }
 
-function addFlame(s: MatchState, x: number, y: number, ownerId: string): void {
+export function addFlame(s: MatchState, x: number, y: number, ownerId: string): void {
   const existing = s.flames.find((f) => f.x === x && f.y === y);
   if (existing) {
     existing.ttl = FLAME_TICKS;

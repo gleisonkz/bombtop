@@ -263,13 +263,14 @@ describe("bots", () => {
     expect(new Set(s.members.map((m) => m.name)).size).toBe(MAX_PLAYERS);
   });
 
-  it("names each bot after its character: a ninja name, Capitão something, a Norse name for thor, a fuse word for the mascot", () => {
+  it("names each bot after its character: a ninja name, Capitão something, a Norse name for thor, a Dragon Ball name for goku, a fuse word for the mascot", () => {
     const s = lobby(1);
     for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
     for (const m of s.members.slice(1)) {
       if (m.character === "ninja") expect(BOT_NAMES.ninja).toContain(m.name);
       if (m.character === "captain") expect(m.name).toMatch(/^Capitão \S/);
       if (m.character === "thor") expect(BOT_NAMES.thor).toContain(m.name);
+      if (m.character === "goku") expect(BOT_NAMES.goku).toContain(m.name);
       if (m.character === "bomb") expect(BOT_NAMES.bomb).toContain(m.name);
     }
     expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(4);

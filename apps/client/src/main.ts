@@ -39,6 +39,7 @@ const art = Promise.allSettled([
   renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e)),
   renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e)),
   renderer.useSheet("thor", SHEETS.thor).catch((e) => console.error("thor sheet", e)),
+  renderer.useSheet("goku", SHEETS.goku).catch((e) => console.error("goku sheet", e)),
   renderer.useMascots().catch((e) => console.error("mascot", e)),
   renderer.useBombArt().catch((e) => console.error("bomb art", e)),
   renderer.useFlameArt().catch((e) => console.error("flame art", e)),

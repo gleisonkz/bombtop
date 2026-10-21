@@ -18,6 +18,7 @@ export type CueName =
   | "warp"
   | "ice"
   | "thunder"
+  | "kamehameha"
   | "freeze"
   | "hurry";
 
@@ -78,8 +79,10 @@ export function soundCues(prev: View, next: View): Cue[] {
     if (!items.has(k) && !flames.has(k) && i.kind !== ItemKind.Skull) cues.push({ name: "pickup", x: mid(i.x) });
   }
 
+  // The kamehameha is heard from the start of its charge (see below), its sound runs into the beam.
   for (const b of next.blasts) {
-    if (b.ttl >= BLAST_TICKS - elapsed) cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
+    if (b.kind === "kamehameha" || b.ttl < BLAST_TICKS - elapsed) continue;
+    cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
   }
 
   for (const p of next.players) {
@@ -100,6 +103,7 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("warp", !was.warpLock && p.warpLock);
     hear("dash", !was.dashTicks && p.dashTicks);
     hear("freeze", !was.frozen && p.frozen);
+    hear("kamehameha", !was.charge && p.charge);
   }
 
   if (!prev.pressure && next.pressure) cues.push({ name: "hurry", x: width / 2 });

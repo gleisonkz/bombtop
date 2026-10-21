@@ -1,8 +1,8 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, outsideBeams, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -21,6 +21,7 @@ const COLORS = {
   cursed: 0xb57bff,
   ice: 0x7fd8ff,
   bolt: 0xffe45c,
+  ki: 0x7fdcff,
   cart: 0x8d6e63,
   belt: 0x3a3f4b,
   beltArrow: 0xffd23f,
@@ -471,9 +472,10 @@ export class Renderer {
       g.circle(cx, cy, 4).fill(COLORS.items[item.kind]);
     }
 
-    if (this.flameArt) this.drawFlames(s.flames);
+    const flames = outsideBeams(s.flames, s.blasts);
+    if (this.flameArt) this.drawFlames(flames);
     else {
-      for (const f of s.flames) {
+      for (const f of flames) {
         g.rect(f.x * TILE_PX, f.y * TILE_PX, TILE_PX, TILE_PX).fill(COLORS.flame);
         g.rect(f.x * TILE_PX + 4, f.y * TILE_PX + 4, TILE_PX - 8, TILE_PX - 8).fill(COLORS.flameCore);
       }
@@ -534,7 +536,7 @@ export class Renderer {
       const skin = this.skins.get(character);
       if (skin) {
         const { sheet } = skin;
-        const casting = blast && BLAST_TICKS - blast.ttl;
+        const casting = castTicks(p.charge, blast);
         const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
         this.placeSprite(skin, p.id, i, f, cx, cy, tint);
@@ -568,9 +570,17 @@ export class Renderer {
         }
       }
       // A spark over a player whose special is ready.
-      if ((character === "ninja" || character === "captain" || character === "thor") && p.specialCooldown === 0 && !ice) {
+      // Goku's ki gathering at his hip while the Kamehameha charges (the side view's sprite draws its own).
+      if (p.charge > 0 && (p.facing === "up" || p.facing === "down")) {
+        const r = 0.8 + 1.8 * (1 - p.charge / KAME_CHARGE) + Math.sin(s.tick / 2) * 0.3;
+        const kx = cx + (p.facing === "down" ? -3 : 3);
+        top.circle(kx, cy - 1, r + 1.5).fill({ color: COLORS.ki, alpha: 0.4 });
+        top.circle(kx, cy - 1, r).fill({ color: 0xffffff, alpha: 0.9 });
+      }
+      if (character !== "bomb" && p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        top.circle(cx + 6, cy - headroom, r + 1).fill({ color: character === "thor" ? COLORS.bolt : COLORS.ice, alpha: 0.5 });
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki }[character as string] ?? COLORS.ice;
+        top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
     });
@@ -588,14 +598,21 @@ export class Renderer {
 
   /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
   private drawBlast(g: Graphics, b: Blast): void {
-    const alpha = beamAlpha(BLAST_TICKS - b.ttl);
-    if (alpha <= 0 || b.length === 0) return;
+    if (b.length === 0) return;
     const [dx, dy] = DIR_VECTORS[b.dir];
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
-    const x0 = center(b.x) + dx * 6;
-    const y0 = center(b.y) + dy * 6;
     const x1 = center(b.x + dx * b.length);
     const y1 = center(b.y + dy * b.length);
+    // The Kamehameha shows the moment it fires (its charge was the wind-up); ice and bolts wait for the thrust.
+    if (b.kind === "kamehameha") {
+      const at = this.lastSeen.get(b.ownerId);
+      const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
+      return this.drawKamehameha(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl);
+    }
+    const alpha = beamAlpha(BLAST_TICKS - b.ttl);
+    if (alpha <= 0) return;
+    const x0 = center(b.x) + dx * 6;
+    const y0 = center(b.y) + dy * 6;
     if (b.kind === "lightning") {
       // From the hammer of the caster as drawn, level with it all the way to where it stopped.
       const at = this.lastSeen.get(b.ownerId);
@@ -610,6 +627,23 @@ export class Renderer {
       g.poly([sx, sy - 2.5, sx + 1.5, sy, sx, sy + 2.5, sx - 1.5, sy]).fill({ color: 0xffffff, alpha });
     }
     g.circle(x1, y1, 5).fill({ color: COLORS.ice, alpha: alpha * 0.5 });
+  }
+
+  /**
+   * Goku's Kamehameha: a thick beam of light-blue ki with a white core, swelling in at once and thinning
+   * out as it fades, a ball of ki at his hands and a bigger one where it stops.
+   */
+  private drawKamehameha(g: Graphics, x0: number, y0: number, x1: number, y1: number, ttl: number): void {
+    const age = BLAST_TICKS - ttl;
+    const w = Math.min(1, (age + 1) / 4) * Math.min(1, ttl / 12);
+    const pulse = 1 + Math.sin(age / 1.5) * 0.08;
+    for (const [width, color, a] of [[14, COLORS.ki, 0.35], [8, 0xbff4ff, 0.8], [3.5, 0xffffff, 1]] as const) {
+      g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color, width: width * w * pulse, alpha: a, cap: "round" });
+    }
+    g.circle(x1, y1, 9 * w * pulse).fill({ color: COLORS.ki, alpha: 0.45 });
+    g.circle(x1, y1, 5 * w * pulse).fill({ color: 0xffffff, alpha: 0.95 });
+    g.circle(x0, y0, 6 * w).fill({ color: COLORS.ki, alpha: 0.5 });
+    g.circle(x0, y0, 3.5 * w).fill({ color: 0xffffff, alpha: 1 });
   }
 
   /** Thor's bolt: a yellow glow and a white core along a zigzag that re-forks every 3 ticks, flashing at the end. */

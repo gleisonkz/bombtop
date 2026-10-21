@@ -118,6 +118,17 @@ describe("soundCues", () => {
     expect(names(v, next)).toEqual(["mount", "jump", "warp", "dash"]);
   });
 
+  it("hears the kamehameha when goku starts charging it, and not again when the beam leaves", () => {
+    const v = view();
+    const charging = later(v, (n) => void (n.players[0]!.charge = 18));
+    expect(names(v, charging)).toEqual(["kamehameha"]);
+    const fired = later(charging, (n) => {
+      n.players[0]!.charge = 0;
+      n.blasts.push({ ownerId: n.players[0]!.id, x: 1, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 1, kind: "kamehameha" });
+    });
+    expect(names(charging, fired)).toEqual([]);
+  });
+
   it("hears thunder for a lightning bolt, at the caster", () => {
     const v = view();
     const next = later(v, (n) => {

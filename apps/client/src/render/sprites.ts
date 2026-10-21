@@ -1,4 +1,4 @@
-import { BLAST_TICKS, DIR_VECTORS, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, DIR_VECTORS, KAME_CHARGE, type Blast, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -178,6 +178,35 @@ export const SHEETS = {
     /** White would melt his armor into his silver helmet and discs: that player keeps the navy. */
     keepFor: [[245, 245, 245]],
     scale: 0.17,
+  },
+  /** Goku (fan art), made in PixelLab (scripts/build-character-sheet.py goku lays out its frames). */
+  goku: {
+    url: "sprites/goku.png",
+    width: 1314,
+    height: 2862,
+    frameW: 146,
+    frameH: 159,
+    anchorX: 71.5,
+    anchorY: 153,
+    bodyH: 148,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The Kamehameha: hands cupped at his hip while it charges, thrust forward as the beam leaves. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His hands at the thrust (the back view hides them: over his shoulders). */
+    muzzle: { side: [46.5, -67.5], down: [2.5, -34], up: [0, -97] },
+    /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */
+    hues: [205, 235],
+    hueBase: [8, 59, 137],
+    scale: 0.15,
   },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
@@ -388,6 +417,31 @@ export const BEAM_DELAY = 20;
 export function beamAlpha(ticks: number): number {
   if (ticks < BEAM_DELAY) return 0;
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
+}
+
+/**
+ * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
+ * beam leaves on the thrust frame, KAME_CHARGE in), the others' from their blast; undefined when not casting.
+ */
+export function castTicks(charge: number, blast: Pick<Blast, "ttl" | "kind"> | undefined): number | undefined {
+  if (charge > 0) return KAME_CHARGE - charge;
+  if (!blast) return undefined;
+  return (blast.kind === "kamehameha" ? KAME_CHARGE : 0) + BLAST_TICKS - blast.ttl;
+}
+
+/** Flames without the Kamehameha's own fire along its beam (the beam is drawn over those tiles instead). */
+export function outsideBeams<F extends Pick<Flame, "x" | "y" | "ownerId">>(flames: F[], blasts: readonly Blast[]): F[] {
+  const beams = blasts.filter((b) => b.kind === "kamehameha");
+  if (!beams.length) return flames;
+  return flames.filter(
+    (f) =>
+      !beams.some((b) => {
+        if (f.ownerId !== b.ownerId) return false;
+        const [dx, dy] = DIR_VECTORS[b.dir];
+        const i = dx ? (f.x - b.x) * dx : (f.y - b.y) * dy;
+        return i >= 1 && i <= b.length && (dx ? f.y === b.y : f.x === b.x);
+      }),
+  );
 }
 
 /**

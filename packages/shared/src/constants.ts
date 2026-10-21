@@ -89,6 +89,14 @@ export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 export const BOLT_RANGE = 5;
 export const BOLT_STUN_TICKS = 3 * TICK_RATE;
 
+/**
+ * Goku's Kamehameha: reach in tiles, the charge before it fires (he stands still; a stun or freeze
+ * cancels it) and its recharge (longer: it kills).
+ */
+export const KAME_RANGE = 5;
+export const KAME_CHARGE = 20;
+export const KAME_COOLDOWN = 30 * TICK_RATE;
+
 /** Captain's shield: how long it stays up (he stands still behind it). */
 export const SHIELD_TICKS = 3 * TICK_RATE;
 

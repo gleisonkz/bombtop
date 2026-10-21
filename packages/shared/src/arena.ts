@@ -73,6 +73,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       frozen: 0,
       specialCooldown: 0,
       shield: 0,
+      charge: 0,
       curse: null,
       mount: null,
       invuln: 0,

@@ -20,7 +20,9 @@ export function predictBlast(view: PublicView, me: Player): Blast | null {
   const players = view.players.map((p) => (p.id === me.id ? structuredClone(me) : structuredClone(p)));
   const s = { ...structuredClone(view), players, rng: 0 } as MatchState;
   const caster = players.find((p) => p.id === me.id)!;
-  return useSpecial(s, caster) ? s.blasts.at(-1)! : null;
+  const before = s.blasts.length;
+  // Goku's kamehameha only charges now: its beam comes from the server once the charge is done.
+  return useSpecial(s, caster) && s.blasts.length > before ? s.blasts.at(-1)! : null;
 }
 
 /**

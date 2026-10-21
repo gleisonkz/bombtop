@@ -112,6 +112,15 @@ describe("Predictor", () => {
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
   });
 
+  it("does not move goku while he charges the kamehameha", () => {
+    const p = new Predictor("me");
+    const snap = snapshot();
+    snap.players[0]!.charge = 10;
+    p.step(input("right"));
+    p.step(input("right"));
+    expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
+  });
+
   it("returns null when the player is not in the match", () => {
     expect(new Predictor("ghost").predict(snapshot())).toBeNull();
   });

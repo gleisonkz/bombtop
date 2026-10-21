@@ -2,7 +2,7 @@ import { TICK_RATE, type CharacterId } from "@bombtop/shared";
 import { paintSheet, SHEETS, type SheetLayout } from "../render/sprites";
 
 /** The sheet each character is drawn from, in the arena and in the menus. */
-export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor };
+export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku };
 
 export type PreviewState = "walk" | "idle" | "dizzy";
 

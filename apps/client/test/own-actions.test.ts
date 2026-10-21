@@ -3,7 +3,7 @@ import { BLAST_TICKS, createMatch, ItemKind, publicView, TICK_RATE, TILE, type P
 import { actionCues } from "../src/audio/local-cues";
 import { GhostBlasts, GhostPickups, predictBlast } from "../src/net/own-actions";
 
-function view(character: "ninja" | "bomb" = "ninja"): PublicView {
+function view(character: "ninja" | "bomb" | "goku" = "ninja"): PublicView {
   return publicView(createMatch({ seed: 1, playerIds: ["me", "them"], blockDensity: 0, characters: { me: character } }));
 }
 const me = (v: PublicView): Player => structuredClone(v.players[0]!);
@@ -29,6 +29,13 @@ describe("ice blast, predicted", () => {
     const p = me(v);
     p.facing = "right";
     expect(predictBlast(v, p)).toMatchObject({ ownerId: "me", x: 1, y: 1, dir: "right", ttl: BLAST_TICKS });
+  });
+
+  it("goku's kamehameha is heard at once but makes no blast until its charge is done", () => {
+    const v = view("goku");
+    v.blasts.push({ ownerId: "them", x: 5, y: 5, dir: "up", length: 1, ttl: 10, kind: "ice" });
+    expect(predictBlast(v, me(v))).toBeNull();
+    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["kamehameha"]);
   });
 
   it("draws our blast at once, ages it, and hands over to the server's copy", () => {

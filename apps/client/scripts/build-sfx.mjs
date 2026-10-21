@@ -63,6 +63,12 @@ const RECIPE = {
     len: 0.6,
     layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 1.2, gain: -4, lowpass: 400, at: 0.05 },
   },
+  // Goku's special: the charge humming between his hands, then the beam leaving them (KAME_CHARGE = 0.33 s)
+  kamehameha: {
+    src: K("sci-fi-sounds", "forceField_001.ogg"),
+    len: 0.4,
+    layer: { src: K("sci-fi-sounds", "laserLarge_000.ogg"), len: 0.9, gain: 0, at: 0.33 },
+  },
   freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),

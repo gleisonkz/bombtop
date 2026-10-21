@@ -8,7 +8,7 @@ import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
-import { updateBlasts, useSpecial } from "./special";
+import { kamehameha, updateBlasts, useSpecial } from "./special";
 import { playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
@@ -33,9 +33,17 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     }
     if (p.stun > 0) {
       p.stun--;
+      p.charge = 0;
       continue;
     }
-    if (p.frozen > 0) continue;
+    if (p.frozen > 0) {
+      p.charge = 0;
+      continue;
+    }
+    if (p.charge > 0) {
+      if (--p.charge === 0) kamehameha(s, p.id, playerTile(p), p.facing, true);
+      continue;
+    }
     if (updateMountMove(s, p)) continue;
     if (p.curse?.kind === "diarrhea") placeBomb(s, p.id);
     if (!input) continue;
