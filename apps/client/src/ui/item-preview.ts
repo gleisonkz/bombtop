@@ -27,6 +27,7 @@ export class ItemPreview {
     if (app.canvas.parentElement !== host) host.appendChild(app.canvas);
     const show = (this.show = scene instanceof Showcase ? scene : new Showcase(scene));
     this.renderer!.setCharacters(new Map(show.state.players.map((p) => [p.id, p.character])));
+    this.renderer!.setColors(show.colors);
     this.resize(host);
     app.ticker.start();
   }

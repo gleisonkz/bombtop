@@ -153,6 +153,9 @@ const SCENES: Record<ItemKind, Scene> = {
   },
 };
 
+/** The player color (by seat) each character wears in their scene, as in the menus: the ninja in ice blue, Goku in green. */
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0 };
+
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
   bomb: {
@@ -191,7 +194,7 @@ const SPECIALS: Record<CharacterId, Scene> = {
     seconds: 5,
   },
   thor: {
-    characters: { you: "thor", rival: "ninja" },
+    characters: { you: "thor", rival: "goku" },
     setup(s, you) {
       placePlayerAt(s, "you", 3, 5);
       placePlayerAt(s, "rival", 7, 5);
@@ -291,6 +294,8 @@ export class Showcase {
   state!: MatchState;
   readonly length: number;
   readonly target: readonly [number, number] | undefined;
+  /** Player colors (seat numbers) the scene's characters wear instead of their seat's; empty for the items. */
+  readonly colors: Map<string, number>;
   private readonly scene: Scene;
   private scripts: Script[] = [];
   private tick = 0;
@@ -299,6 +304,8 @@ export class Showcase {
     const scene = (this.scene = typeof what === "object" ? what : SCENES[what]);
     this.length = scene.seconds * TICK_RATE;
     this.target = scene.target;
+    const cast = scene.characters;
+    this.colors = new Map(cast ? [["you", CHARACTER_COLOR[cast.you]], ["rival", CHARACTER_COLOR[cast.rival]]] : []);
     this.reset();
   }
 

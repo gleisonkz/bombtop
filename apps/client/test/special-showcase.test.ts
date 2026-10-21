@@ -30,6 +30,15 @@ describe("special showcase", () => {
     }
   });
 
+  it("dresses each character in their own color (the ninja in ice blue) and the rival in another", () => {
+    expect(specialShowcase("ninja").colors.get("you")).toBe(3);
+    expect(specialShowcase("goku").colors.get("you")).toBe(4);
+    for (const c of CHARACTERS) {
+      const { colors } = specialShowcase(c);
+      expect(colors.get("rival"), c).not.toBe(colors.get("you"));
+    }
+  });
+
   it("keeps the action inside the window shown", () => {
     for (const c of CHARACTERS) {
       play(c, (s) => {

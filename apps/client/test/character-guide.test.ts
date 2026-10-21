@@ -4,6 +4,7 @@ import { CHARACTER_GUIDE } from "../src/ui/character-guide";
 import { CHARACTER_SHEETS, characterMoves } from "../src/ui/sheet-art";
 import { CAST_TICKS_PER_FRAME, SHEETS } from "../src/render/sprites";
 import { SOUNDS } from "../src/audio/sound";
+import { PLAYER_COLORS } from "../src/ui/art";
 
 describe("character guide", () => {
   it("has every character, in the game's order, with a story, the special and tips", () => {
@@ -16,6 +17,10 @@ describe("character guide", () => {
       expect(c.special.text.length, c.id).toBeGreaterThan(40);
       expect(c.special.tips.length, c.id).toBeGreaterThanOrEqual(3);
     }
+  });
+
+  it("shows the ninja in ice blue, not a player red", () => {
+    expect(CHARACTER_GUIDE.find((c) => c.id === "ninja")!.color).toBe(PLAYER_COLORS[3]);
   });
 
   it("lets every character be heard: picked, special, winning and losing, all real sounds", () => {

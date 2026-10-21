@@ -5,7 +5,7 @@ import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
 import { button, el } from "./dom";
 import { CHARACTER_SHEETS, characterArt, characterMoves } from "./sheet-art";
 
-const [white, , red, blue, green] = PLAYER_COLORS;
+const [white, , , blue, green] = PLAYER_COLORS;
 
 interface Info {
   name: string;
@@ -39,7 +39,7 @@ const INFO: Record<CharacterId, Info> = {
   ninja: {
     name: "Ninja",
     title: "O guerreiro do gelo",
-    color: red,
+    color: blue,
     story:
       "Treinado num templo escondido nas montanhas geladas, aprendeu a esfriar o ar com as mãos antes de aprender a andar. Fala pouco, observa muito e ataca uma vez só. Entrou na arena para provar que paciência e sangue frio vencem qualquer explosão.",
     special: {

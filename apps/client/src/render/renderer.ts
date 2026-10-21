@@ -190,6 +190,13 @@ export class Renderer {
     this.characters = characters;
   }
 
+  /** Players who wear another seat's color than their own (the guides dress each character in theirs). */
+  setColors(colors: Map<string, number>): void {
+    this.colors = colors;
+  }
+
+  private colors = new Map<string, number>();
+
   private character(id: string): CharacterId {
     return this.characters.get(id) ?? DEFAULT_CHARACTER;
   }
@@ -550,7 +557,8 @@ export class Renderer {
 
     const ring = perimeter(width, height);
     this.rasenUsed = 0;
-    s.players.forEach((p, i) => {
+    s.players.forEach((p, seat) => {
+      const i = this.colors.get(p.id) ?? seat;
       const color = COLORS.players[i % COLORS.players.length]!;
       if (!p.alive) {
         this.drawDeath(p.id, i, s.tick);
