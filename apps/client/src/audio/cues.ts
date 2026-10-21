@@ -1,4 +1,5 @@
 import { BLAST_TICKS, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
   | "place"
@@ -21,7 +22,8 @@ export type CueName =
   | "kamehameha"
   | "rasengan"
   | "freeze"
-  | "hurry";
+  | "hurry"
+  | VoiceName;
 
 export interface Cue {
   name: CueName;
@@ -92,7 +94,7 @@ export function soundCues(prev: View, next: View): Cue[] {
     const x = p.px / TILE;
     const hear = (name: CueName, when: unknown) => when && cues.push({ name, x });
     if (was.alive && !p.alive) {
-      cues.push({ name: "death", x });
+      cues.push({ name: voiceLine(p.character, "death") ?? "death", x });
       continue;
     }
     if (!p.alive) continue;

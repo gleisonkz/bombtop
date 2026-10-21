@@ -2,6 +2,7 @@ import "@fontsource/lilita-one/latin-400.css";
 import { Application } from "pixi.js";
 import { characterId, DEFAULT_CHARACTER } from "@bombtop/shared";
 import { Sound, WebAudioBackend } from "./audio/sound";
+import { voiceLine } from "./audio/voices";
 import type { GameMode, ModeContext } from "./game/mode";
 import { DemoGame } from "./game/demo-game";
 import { introDue } from "./game/intro";
@@ -181,6 +182,8 @@ const lobby = new LobbyPanel(ui, {
   removeBot: (id) => online?.removeBot(id),
   pickCharacter: (c) => {
     storage.set(CHARACTER_KEY, c);
+    const line = voiceLine(c, "pick");
+    if (line) sound.play(line);
     online?.pickCharacter(c);
   },
 });

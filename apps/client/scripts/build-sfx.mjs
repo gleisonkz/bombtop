@@ -1,10 +1,12 @@
 // Builds public/sfx/*.m4a from the original sound libraries (kept outside the repo).
-// usage: SFX_SRC=E:/sfx-src node scripts/build-sfx.mjs   (needs ffmpeg on PATH)
+// usage: SFX_SRC=E:/sfx-src node scripts/build-sfx.mjs [name...]   (needs ffmpeg on PATH; names rebuild only those)
 //
 // Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
 // Freesound (CC0 only), the HQ preview of each: death cry = "Cartoon Scream 1.wav" by tonsil5,
 // https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3).
+// Goku's voice (Japanese, Masako Nozawa) and Kamehameha effects are from Dragon Ball FighterZ (fan use; (c) Bandai Namco /
+// Arc System Works), as ripped on The Sounds Resource: assets 411947 "Goku (Japanese)" and 411912 "Goku", unzipped under dbfz/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -20,9 +22,11 @@ const CSD = (lib, file) => S(`Cinematic Sound Design - ${lib}`, file);
 const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
 const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
 const FS = (file) => join(SRC, "freesound", file);
+const GOKU = (n) => join(SRC, "dbfz", "dbfz-goku-jp", "Goku", "Default", `vgkn${n}.ogg`);
+const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
 /**
- * name -> { src, len (s), layer?: { src, len, gain (dB), lowpass? (Hz), at? (s, delay) } }
+ * name -> { src, len (s), tempo?, layer? | layers?: [{ src, len, gain (dB), lowpass? (Hz), at? (s, delay), tempo? }] }
  * Every clip is trimmed of leading silence, cut to `len`, faded out, mixed to mono
  * and peak-normalized; per-sound loudness is set in code (SOUNDS in sound.ts).
  */
@@ -64,11 +68,24 @@ const RECIPE = {
     layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 1.2, gain: -4, lowpass: 400, at: 0.05 },
   },
   // Goku's special: the charge humming between his hands, then the beam leaving them (KAME_CHARGE = 0.33 s)
+  // Goku's special: ki gathering in his hands, the beam roaring out at KAME_CHARGE (0.33 s), and his shout, sped up
+  // a little so its "HA!" lands while the beam is out
   kamehameha: {
-    src: K("sci-fi-sounds", "forceField_001.ogg"),
-    len: 0.4,
-    layer: { src: K("sci-fi-sounds", "laserLarge_000.ogg"), len: 0.9, gain: 0, at: 0.33 },
+    src: GOKU_FX("Kamehame_Chrg"),
+    len: 0.45,
+    layers: [
+      { src: GOKU_FX("Kamehame_Fire"), len: 1.3, gain: -7, at: 0.33 },
+      { src: GOKU("206"), len: 1.6, gain: 0, tempo: 1.25 },
+    ],
   },
+  // Goku's own lines: "Ossu! Ora Goku!" when picked, a cry over the falling bass, "Yossha! Ora katta zo!" when he wins
+  "goku-pick": { src: GOKU("600"), len: 1.7 },
+  "goku-death": {
+    src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"),
+    len: 1.8,
+    layer: { src: GOKU("014"), len: 1.4, gain: -3 },
+  },
+  "goku-win": { src: GOKU("404"), len: 3.3 },
   // Naruto's special: the ball of chakra whirring in his hand as he dashes, then the strike (RASENGAN_TICKS = 0.2 s)
   rasengan: {
     src: K("sci-fi-sounds", "engineCircular_001.ogg"),
@@ -101,13 +118,20 @@ function ffmpeg(args) {
   return execFileSync("ffmpeg", ["-hide_banner", "-y", ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
 }
 
-function filterFor({ len, layer }) {
-  const main = `[0:a]aformat=channel_layouts=mono,${shape(len)}[m]`;
-  if (!layer) return `${main};[m]anull[mix]`;
-  const lowpass = layer.lowpass ? `,lowpass=f=${layer.lowpass}` : "";
-  const delay = layer.at ? `,adelay=${Math.round(layer.at * 1000)}` : "";
-  const sub = `[1:a]aformat=channel_layouts=mono,${shape(layer.len)}${lowpass},volume=${layer.gain}dB${delay}[l]`;
-  return `${main};${sub};[m][l]amix=inputs=2:duration=longest:normalize=0[mix]`;
+const layersOf = (r) => r.layers ?? (r.layer ? [r.layer] : []);
+const tempoOf = (t) => (t ? `,atempo=${t}` : "");
+
+function filterFor(r) {
+  const layers = layersOf(r);
+  const main = `[0:a]aformat=channel_layouts=mono${tempoOf(r.tempo)},${shape(r.len)}[m]`;
+  if (!layers.length) return `${main};[m]anull[mix]`;
+  const subs = layers.map((l, i) => {
+    const lowpass = l.lowpass ? `,lowpass=f=${l.lowpass}` : "";
+    const delay = l.at ? `,adelay=${Math.round(l.at * 1000)}` : "";
+    return `[${i + 1}:a]aformat=channel_layouts=mono${tempoOf(l.tempo)},${shape(l.len)}${lowpass},volume=${l.gain}dB${delay}[l${i}]`;
+  });
+  const pads = ["[m]", ...layers.map((_, i) => `[l${i}]`)].join("");
+  return `${[main, ...subs].join(";")};${pads}amix=inputs=${layers.length + 1}:duration=longest:normalize=0[mix]`;
 }
 
 /** Loudest sample of the mixed clip, in dBFS. */
@@ -119,11 +143,13 @@ function peakDb(inputs, graph) {
 }
 
 mkdirSync(OUT, { recursive: true });
+const only = process.argv.slice(2);
 for (const [name, r] of Object.entries(RECIPE)) {
-  const inputs = ["-i", r.src, ...(r.layer ? ["-i", r.layer.src] : [])];
+  if (only.length && !only.includes(name)) continue;
+  const inputs = ["-i", r.src, ...layersOf(r).flatMap((l) => ["-i", l.src])];
   const graph = filterFor(r);
   const max = peakDb(inputs, graph);
   const gain = -1 - max;
   ffmpeg([...inputs, "-filter_complex", `${graph};[mix]volume=${gain}dB,aresample=48000[out]`, "-map", "[out]", "-c:a", "aac", "-b:a", "96k", join(OUT, `${name}.m4a`)]);
-  console.log(`${name.padEnd(9)} peak ${max.toFixed(1)} dB -> ${gain >= 0 ? "+" : ""}${gain.toFixed(1)} dB`);
+  console.log(`${name.padEnd(10)} peak ${max.toFixed(1)} dB -> ${gain >= 0 ? "+" : ""}${gain.toFixed(1)} dB`);
 }

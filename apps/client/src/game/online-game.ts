@@ -1,5 +1,6 @@
 import { Client } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
+import { winnerVoice } from "../audio/voices";
 import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { carryOn } from "../net/carry-on";
@@ -40,6 +41,8 @@ import type { GameMode, ModeContext } from "./mode";
 
 /** Sounds of the world ahead: heard when they are drawn, not when the late snapshot shows them. */
 const WORLD_CUES = new Set<CueName>(["explode", "break", "wall"]);
+/** When the winner's cheer plays: after the announcer and the jingle (see the win/lose/draw recipes). */
+const WIN_CHEER_MS = 2300;
 
 export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, location.href);
 
@@ -142,6 +145,9 @@ export class OnlineGame implements GameMode {
     room.onMessage(S2C.result, (result: ResultMessage) => {
       this.result = result;
       ctx.sound.play(resultSound(result.winnerId, room.sessionId));
+      // The winner's own cheer, once the announcer and jingle are done.
+      const cheer = winnerVoice(result.winnerId, this.lobby?.members ?? []);
+      if (cheer) setTimeout(() => ctx.sound.play(cheer), WIN_CHEER_MS);
       this.showResults(result.winnerId);
     });
     room.onLeave(() => {

@@ -1,7 +1,8 @@
 import type { Cue, CueName } from "./cues";
 import { explosionGain, panFor, VoiceLimiter } from "./mixer";
+import type { VoiceName } from "./voices";
 
-export type SoundName = CueName | "start" | "win" | "lose" | "draw" | "end" | "click";
+export type SoundName = CueName | VoiceName | "start" | "win" | "lose" | "draw" | "end" | "click";
 
 interface SoundSpec {
   /** Linear volume (files are peak-normalized; this sets the mix). */
@@ -47,6 +48,9 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   draw: { gain: 0.55, vary: 0, voices: 1 },
   end: { gain: 0.55, vary: 0, voices: 1 },
   click: { gain: 0.35, vary: 0.04, voices: 2 },
+  "goku-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "goku-death": { gain: 0.7, vary: 0, voices: 2 },
+  "goku-win": { gain: 0.65, vary: 0, voices: 1 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

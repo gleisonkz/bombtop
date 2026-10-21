@@ -105,6 +105,13 @@ describe("soundCues", () => {
     ]);
   });
 
+  it("hears a character with a voice cry out in their own voice", () => {
+    const v = view();
+    v.players[0]!.character = "goku";
+    const next = later(v, (n) => void (n.players[0]!.alive = false));
+    expect(names(v, next)).toEqual(["goku-death"]);
+  });
+
   it("hears mounting, jumps, dashes and warps", () => {
     const v = view();
     v.players[1]!.mount = "dasher";
