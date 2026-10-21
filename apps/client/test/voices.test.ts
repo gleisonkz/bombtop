@@ -16,9 +16,16 @@ describe("voiceLine", () => {
     expect(voiceLine("naruto", "win")).toBe("naruto-win");
   });
 
-  it("is silent for characters without a voice yet", () => {
-    expect(voiceLine("bomb", "pick")).toBeNull();
-    expect(voiceLine("ninja", "death")).toBeNull();
+  it("gives every character their own lines for being picked, dying and winning", () => {
+    for (const c of CHARACTERS) {
+      for (const moment of ["pick", "death", "win"] as const) expect(voiceLine(c, moment)).toBe(`${c}-${moment}`);
+    }
+  });
+
+  it("gives a shout on using the special to those whose special sound has no voice in it", () => {
+    for (const c of ["bomb", "ninja", "captain", "thor"] as const) expect(voiceLine(c, "special")).toBe(`${c}-special`);
+    expect(voiceLine("goku", "special")).toBeNull(); // shouted over the kamehameha sound
+    expect(voiceLine("naruto", "special")).toBeNull();
   });
 
   it("only names sounds in the mix", () => {
@@ -38,9 +45,8 @@ describe("winnerVoice", () => {
     expect(winnerVoice("a", members)).toBe("goku-win");
   });
 
-  it("stays quiet on a tie or for a winner without a voice", () => {
+  it("stays quiet on a tie or for a winner who left", () => {
     expect(winnerVoice(null, members)).toBeNull();
-    expect(winnerVoice("b", members)).toBeNull();
     expect(winnerVoice("gone", members)).toBeNull();
   });
 });

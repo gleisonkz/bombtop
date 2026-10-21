@@ -43,6 +43,13 @@ describe("actionCues", () => {
     expect(actionCues(w, q, { dir: null, bomb: false, action: true }).map((c) => c.name)).toEqual(["throw"]);
   });
 
+  it("hears our own special shout the moment the button is pressed", () => {
+    const v = view();
+    const p = me(v);
+    p.character = "captain";
+    expect(actionCues(v, p, { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["captain-special"]);
+  });
+
   it("does not touch the snapshot it was given", () => {
     const v = view();
     actionCues(v, me(v), { dir: null, bomb: true });

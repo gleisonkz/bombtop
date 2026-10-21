@@ -100,9 +100,13 @@ or `animate_with_skeleton_v3` with our own keypoints when no template fits): `te
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must
 match the sprite's pose: a template walk on the arms-up Carry state drew extra arms, so carry walk uses our keypoints.
 Sound: `audio/cues.ts` reads what changed between views; files built by `scripts/build-sfx.mjs` (sources outside the repo,
-`E:/sfx-src`). Character voices (`audio/voices.ts`): a line when picked in the lobby, their own death cry, a cheer when
-they win. Goku and Naruto have them so far (Japanese; Goku ripped from Dragon Ball FighterZ, as is his Kamehameha sound;
-Naruto from Ultimate Ninja Storm 2, his "Rasengan!" shout layered on the Rasengan sound).
+`E:/sfx-src`). Character voices (`audio/voices.ts`), every character: a line when picked in the lobby, their own death cry,
+a cheer when they win, and a shout when they use their special (heard when `specialCooldown` starts; Goku and Naruto
+shout inside their kamehameha/rasengan sounds instead). Sources ripped on The Sounds Resource (asset ids in `build-sfx.mjs`):
+Goku from Dragon Ball FighterZ (Japanese, also his Kamehameha sound), Naruto from Ultimate Ninja Storm 2 (Japanese),
+Captain America and Thor from Marvel vs. Capcom: Infinite (the captain's shout layered on his shield clang), the ninja as
+Sub-Zero from Mortal Kombat (2011), the bomb mascot as White Bomber from Super Bomberman R. Downloads from that site sit
+behind a Cloudflare check: fetch them through the user's own Chrome (Claude in Chrome), not curl.
 Art is HD: everything else (bombs, items, flames, tiles) is also drawn by scripts in `apps/client/scripts`
 (see `public/sprites/LICENSES.md`); rerun a script to change its art.
 

@@ -9,6 +9,10 @@
 // Arc System Works), as ripped on The Sounds Resource: assets 411947 "Goku (Japanese)" and 411912 "Goku", unzipped under dbfz/.
 // Naruto's voice (Japanese, Junko Takeuchi) is from Naruto Shippuden: Ultimate Ninja Storm 2 (PS3; (c) Bandai Namco /
 // CyberConnect2), The Sounds Resource asset 489753 "Naruto", unzipped under uns2/uns2-naruto/.
+// Captain America's and Thor's voices (and the captain's shield clang) are from Marvel vs. Capcom: Infinite (fan use; (c) Capcom /
+// Marvel), The Sounds Resource assets 407793 "Captain America" and 407825 "Thor", unzipped under mvci/.
+// The ninja speaks as Sub-Zero from Mortal Kombat (2011) (fan use; (c) Warner Bros. / NetherRealm), asset 413724 "Sub-Zero",
+// under mk9/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -24,8 +28,14 @@ const CSD = (lib, file) => S(`Cinematic Sound Design - ${lib}`, file);
 const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
 const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
 const FS = (file) => join(SRC, "freesound", file);
+const BASS_DOWN = CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav");
 const GOKU = (n) => join(SRC, "dbfz", "dbfz-goku-jp", "Goku", "Default", `vgkn${n}.ogg`);
 const NARUTO = (name) => join(SRC, "uns2", "uns2-naruto", "Naruto23", "AB", `${name}.wav`);
+const CAP = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Voice", `00B_CV#${n} (${tag}).wav`);
+const CAP_FX = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Sounds", `00B_SE#${n} (${tag}).wav`);
+const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV${n} (${tag}).wav`);
+const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
+const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
 /**
@@ -107,6 +117,30 @@ const RECIPE = {
     layer: { src: NARUTO("PL_2nrt [17]"), len: 1.4, gain: -3 },
   },
   "naruto-win": { src: NARUTO("v_win [2]"), len: 2.7 },
+  // The bomb mascot (White Bomber): "Leave it to me!", a cry over the falling bass, "I did it!", a "Ha!" as he plants his mega bomb
+  "bomb-pick": { src: WHITE("002"), len: 0.9 },
+  "bomb-death": { src: BASS_DOWN, len: 1.8, layer: { src: WHITE("015"), len: 1.4, gain: -3 } },
+  "bomb-win": { src: WHITE("024"), len: 1.7 },
+  "bomb-special": { src: WHITE("009"), len: 0.6 },
+  // The ninja (Sub-Zero): "This fight will be your last!", a cry, "Feel death's cold embrace." (Bi-Han), a "Hya!" as he throws his ice
+  "ninja-pick": { src: SUBZERO("kuai_liang", "intro.wav"), len: 2.0 },
+  "ninja-death": { src: BASS_DOWN, len: 1.8, layer: { src: SUBZERO("kuai_liang", "death_sh02.mp3"), len: 1.4, gain: -3 } },
+  "ninja-win": { src: SUBZERO("bi_han", "intro.wav"), len: 2.6 },
+  "ninja-special": { src: SUBZERO("kuai_liang", "spatk_sh01.mp3"), len: 0.85 },
+  // Captain America: "Avengers assemble!", a cry, "I could do this all day.", and his shield clanging up as he shouts
+  "captain-pick": { src: CAP(112, "VO_APR_SP11"), len: 1.7 },
+  "captain-death": { src: BASS_DOWN, len: 1.8, layer: { src: CAP(34, "VO_LOSE_DOWN; VO_LOSE_KO"), len: 1.4, gain: -3 } },
+  "captain-win": { src: CAP(142, "VO_TEASE"), len: 1.8 },
+  "captain-special": {
+    src: CAP_FX(7, "SKILL_SHIELD_CATCH"),
+    len: 0.9,
+    layer: { src: CAP(130, "VO_SKILL_SP6_1"), len: 0.8, gain: -1 },
+  },
+  // Thor: "Brave warrior, I bid thee welcome.", a cry, "Thou art not worthy to face me.", "Thunder!" over his bolt
+  "thor-pick": { src: THOR("_COLLECT#77", "VO_CHARASELE_011_3"), len: 2.7 },
+  "thor-death": { src: BASS_DOWN, len: 1.8, layer: { src: THOR("#35", "VO_LOSE_KO"), len: 1.4, gain: -3 } },
+  "thor-win": { src: THOR("#132", "VO_TEASE"), len: 2.3 },
+  "thor-special": { src: THOR("#108", "VO_SKILL_SP2_1"), len: 0.85 },
   // the bomb mascot's mega bomb: a heavy thud as it lands, over a low boom
   mega: {
     src: K("impact-sounds", "impactPlate_heavy_001.ogg"),

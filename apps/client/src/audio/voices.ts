@@ -1,14 +1,21 @@
 import type { CharacterId } from "@bombtop/shared";
 
-/** When a character speaks up. */
-export type VoiceMoment = "pick" | "death" | "win";
+/** When a character speaks up: picked in the lobby, dying, winning, using their special. */
+export type VoiceMoment = "pick" | "death" | "win" | "special";
 
-export type VoiceName = "goku-pick" | "goku-death" | "goku-win" | "naruto-pick" | "naruto-death" | "naruto-win";
+type Lines<C extends string> = `${C}-${"pick" | "death" | "win"}`;
+export type VoiceName = Lines<CharacterId> | `${"bomb" | "ninja" | "captain" | "thor"}-special`;
 
-/** Characters' own voices; the rest use the shared sounds (or stay quiet). */
-export const VOICE_LINES: Partial<Record<CharacterId, Record<VoiceMoment, VoiceName>>> = {
-  goku: { pick: "goku-pick", death: "goku-death", win: "goku-win" },
-  naruto: { pick: "naruto-pick", death: "naruto-death", win: "naruto-win" },
+const lines = <C extends CharacterId>(c: C) => ({ pick: `${c}-pick`, death: `${c}-death`, win: `${c}-win` }) as const;
+
+/** Characters' own voices. Goku and Naruto shout over their special's own sound (kamehameha, rasengan), so no special line. */
+export const VOICE_LINES: Record<CharacterId, Partial<Record<VoiceMoment, VoiceName>>> = {
+  bomb: { ...lines("bomb"), special: "bomb-special" },
+  ninja: { ...lines("ninja"), special: "ninja-special" },
+  captain: { ...lines("captain"), special: "captain-special" },
+  thor: { ...lines("thor"), special: "thor-special" },
+  goku: lines("goku"),
+  naruto: lines("naruto"),
 };
 
 export function voiceLine(character: CharacterId, moment: VoiceMoment): VoiceName | null {

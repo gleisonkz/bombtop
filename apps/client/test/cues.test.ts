@@ -99,7 +99,7 @@ describe("soundCues", () => {
       b!.stun = 60;
     });
     expect(soundCues(v, next)).toEqual([
-      { name: "death", x: v.players[0]!.px / TILE },
+      { name: "bomb-death", x: v.players[0]!.px / TILE },
       { name: "stun", x: v.players[1]!.px / TILE },
       { name: "dismount", x: v.players[1]!.px / TILE },
     ]);
@@ -116,6 +116,18 @@ describe("soundCues", () => {
     v.players[0]!.character = "goku";
     const next = later(v, (n) => void (n.players[0]!.alive = false));
     expect(names(v, next)).toEqual(["goku-death"]);
+  });
+
+  it("hears a character shout as they use their special", () => {
+    const v = view();
+    v.players[0]!.character = "thor";
+    v.players[1]!.character = "goku";
+    v.players[1]!.specialCooldown = 100;
+    const next = later(v, (n) => {
+      n.players[0]!.specialCooldown = 1200;
+      n.players[1]!.specialCooldown = 98; // still recharging: nothing new
+    });
+    expect(names(v, next)).toEqual(["thor-special"]);
   });
 
   it("hears mounting, jumps, dashes and warps", () => {

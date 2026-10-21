@@ -109,6 +109,8 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("freeze", !was.frozen && p.frozen);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);
+    const shout = voiceLine(p.character, "special");
+    if (shout) hear(shout, !was.specialCooldown && p.specialCooldown);
   }
 
   if (!prev.pressure && next.pressure) cues.push({ name: "hurry", x: width / 2 });

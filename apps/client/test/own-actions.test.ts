@@ -12,7 +12,7 @@ const TICK_MS = 1000 / TICK_RATE;
 describe("ice blast, predicted", () => {
   it("is heard the moment the button is pressed, when the special is ready", () => {
     const v = view();
-    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["ice"]);
+    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["ice", "ninja-special"]);
   });
 
   it("stays quiet while recharging", () => {
@@ -24,7 +24,7 @@ describe("ice blast, predicted", () => {
 
   it("hears the bomb mascot's mega bomb land at once", () => {
     const b = view("bomb");
-    expect(actionCues(b, me(b), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["mega"]);
+    expect(actionCues(b, me(b), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["mega", "bomb-special"]);
   });
 
   it("works out the blast the server will make, from our predicted player", () => {
