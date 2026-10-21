@@ -4,7 +4,7 @@ import type { MascotView, Mood } from "../ui/art";
 type Rgb = readonly [number, number, number];
 
 /** One animation: a row of the sheet and how many frames it has. */
-interface Strip {
+export interface Strip {
   row: number;
   frames: number;
 }

@@ -23,7 +23,8 @@ import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { button, el, storage } from "./ui/dom";
-import { Menu } from "./ui/menu";
+import { Listener } from "./audio/cues";
+import { Menu, type Guide } from "./ui/menu";
 import { isTouchDevice, TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
@@ -153,8 +154,14 @@ function setMode(next: GameMode | null, controls = !!next): void {
 
 // The room lives in the address (/sala/CODE) while the player is in it.
 const route = new RoomRoute(browserAddress);
-// So does the item guide (/itens), opened from the menu.
-const guideRoute = new GuideRoute(browserAddress);
+// So do the guides opened from the menu: items (/itens) and characters (/personagens).
+const guideRoutes: Record<Guide, GuideRoute> = {
+  items: new GuideRoute(browserAddress, "/itens"),
+  characters: new GuideRoute(browserAddress, "/personagens"),
+};
+/** The guide the address shows, if any. */
+const guideInAddress = (): Guide | null => (Object.keys(guideRoutes) as Guide[]).find((g) => guideRoutes[g].isOpen()) ?? null;
+const sceneEars = new Listener();
 // This tab's seat, so a reload takes it back.
 const seats = new SeatMemory(tabStore);
 
@@ -222,10 +229,12 @@ const menu = new Menu(ui, {
     );
   },
   guide: (open) => {
-    if (open) guideRoute.opened();
-    else guideRoute.closed();
+    if (open) guideRoutes[open].opened();
+    else for (const r of Object.values(guideRoutes)) r.closed();
     menu.showGuide(open);
   },
+  hear: (name) => sound.play(name),
+  hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width),
   online: async (choice, name) => {
     goFullscreen();
     menu.setBusy(true);
@@ -266,12 +275,12 @@ let invite = codeFromUrl(location.href);
 // Back button while in a room: leave it.
 window.addEventListener("popstate", () => {
   if (route.wentBack()) void online?.leave();
-  else menu.showGuide(guideRoute.isOpen());
+  else menu.showGuide(guideInAddress());
 });
-if (guideRoute.isOpen()) menu.showGuide(true);
+if (guideInAddress()) menu.showGuide(guideInAddress());
 
 // Once per session the title intro plays before the menu (not when arriving by an invite link or on the guide).
-if (!invite && !guideRoute.isOpen() && introDue(tabStore)) {
+if (!invite && !guideInAddress() && introDue(tabStore)) {
   menu.hide();
   void art.then(() => {
     if (mode) return; // the player got somewhere else meanwhile

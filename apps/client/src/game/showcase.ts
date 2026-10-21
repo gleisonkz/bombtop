@@ -12,6 +12,7 @@ import {
   tileCenter,
   TICK_RATE,
   type Facing,
+  type CharacterId,
   type MatchState,
   type Player,
   type PlayerInput,
@@ -24,6 +25,8 @@ export const SHOWCASE_VIEW = { x: 1, y: 3, width: 11, height: 5 };
 export type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" | "special" } | { face: Facing } | { wait: number } | { holdBomb: number };
 
 interface Scene {
+  /** Who plays "you" and "rival" (the mascot and the ninja when left out). */
+  characters?: { you: CharacterId; rival: CharacterId };
   /** Puts players, blocks and powers in place on an empty arena. */
   setup(s: MatchState, you: Player, rival: Player): void;
   you: Step[];
@@ -150,6 +153,79 @@ const SCENES: Record<ItemKind, Scene> = {
   },
 };
 
+/** Each character's special shown in use, played by that character against a rival. */
+const SPECIALS: Record<CharacterId, Scene> = {
+  bomb: {
+    characters: { you: "bomb", rival: "ninja" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      you.fireRange = 2;
+      // Four tiles off: past his own fire, inside the mega bomb's (twice as far, piercing).
+      blocks(s, [5, 5], [7, 5], [3, 7]);
+    },
+    you: [{ wait: 20 }, { press: "special" }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
+    target: [7, 5],
+    seconds: 5,
+  },
+  ninja: {
+    characters: { you: "ninja", rival: "bomb" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 6, 5);
+      you.facing = "right";
+    },
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 4,
+  },
+  captain: {
+    characters: { you: "captain", rival: "bomb" },
+    setup(s, you, rival) {
+      placePlayerAt(s, "you", 5, 5);
+      placePlayerAt(s, "rival", 6, 5);
+      you.facing = "right";
+      rival.fireRange = 2;
+    },
+    // Shield up shortly before the rival's bomb, right next to him, goes off.
+    you: [{ wait: 140 }, { face: "right" }, { press: "special" }],
+    rival: [{ press: "bomb" }, { go: "right", tiles: 3 }, { go: "up", tiles: 1 }],
+    seconds: 5,
+  },
+  thor: {
+    characters: { you: "thor", rival: "ninja" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  goku: {
+    characters: { you: "goku", rival: "bomb" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      you.facing = "right";
+      blocks(s, [3, 5], [4, 5], [5, 5], [6, 5], [7, 5]);
+    },
+    you: [{ wait: 30 }, { press: "special" }],
+    target: [7, 5],
+    seconds: 4,
+  },
+  naruto: {
+    characters: { you: "naruto", rival: "thor" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 5, 5);
+      you.facing = "right";
+    },
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 4,
+  },
+};
+
+/** A character's special shown in use, looping. */
+export const specialShowcase = (character: CharacterId) => new Showcase(SPECIALS[character]);
+
 /** Plays a player's steps, one input per tick. */
 export class Script {
   private i = 0;
@@ -210,16 +286,17 @@ export class Script {
   }
 }
 
-/** An item shown in use on a small stretch of arena, looping. */
+/** An item (or a scene of its own) shown in use on a small stretch of arena, looping. */
 export class Showcase {
   state!: MatchState;
   readonly length: number;
   readonly target: readonly [number, number] | undefined;
+  private readonly scene: Scene;
   private scripts: Script[] = [];
   private tick = 0;
 
-  constructor(readonly kind: ItemKind) {
-    const scene = SCENES[kind];
+  constructor(what: ItemKind | Scene) {
+    const scene = (this.scene = typeof what === "object" ? what : SCENES[what]);
     this.length = scene.seconds * TICK_RATE;
     this.target = scene.target;
     this.reset();
@@ -235,8 +312,8 @@ export class Showcase {
   }
 
   private reset(): void {
-    const scene = SCENES[this.kind];
-    const s = createMatch({ seed: 1, playerIds: ["you", "rival"], blockDensity: 0, revenge: false, characters: { you: "bomb", rival: "ninja" } });
+    const scene = this.scene;
+    const s = createMatch({ seed: 1, playerIds: ["you", "rival"], blockDensity: 0, revenge: false, characters: scene.characters ?? { you: "bomb", rival: "ninja" } });
     s.items = [];
     const [you, rival] = s.players as [Player, Player];
     // The rival waits out of the way unless the scene needs it.

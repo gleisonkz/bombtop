@@ -229,6 +229,27 @@
       .guide-tips { margin: 0; padding-left: 20px; color: var(--muted); display: grid; gap: 4px; line-height: 1.35; }
       .guide-icon { --px: 40px; flex: none; width: var(--px); height: var(--px); background-size: calc(var(--px) * var(--cols)) calc(var(--px) * var(--rows)); background-position: calc(var(--cell) * var(--px) * -1) 0; }
       .guide-icon.big { --px: 56px; }
+      /* Character guide: same frame as the item guide, with a portrait, the special, voice lines and every animation */
+      /* A guide taller than the screen scrolls from its top (centering would push the top out of reach) */
+      .screen.menu.guiding { align-content: safe center; }
+      /* Characters: the picker stays on top (the detail is long), compact */
+      .chars-list { grid-template-columns: repeat(3, 1fr); order: -2; }
+      .chars-list .guide-card { padding: 6px 4px; }
+      .chars-list .mascot.sheet { width: 56px; height: 58px; --k: 2.2; }
+      .chars-head { gap: 14px; }
+      .chars-head h3 { line-height: 1; }
+      .chars-title { margin: 2px 0 0; color: var(--accent); font-weight: 700; font-size: 14px; }
+      .chars-portrait { flex: none; width: 92px; height: 96px; display: grid; place-items: end center; border-radius: 14px; background: radial-gradient(circle at 50% 70%, #ffd23f33, transparent 70%); }
+      .chars-portrait .mascot.sheet { width: 100%; height: 100%; --k: 3.6; }
+      .chars-special { display: grid; gap: 6px; padding: 10px 12px; border-radius: 12px; background: #00000030; border: 2px solid #ffffff1a; }
+      .chars-special-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+      .chars-special-head strong { font-family: var(--display); font-weight: 400; font-size: 18px; }
+      .chars-voices { display: flex; flex-wrap: wrap; gap: 6px; }
+      .chars-voices button { min-height: 36px; padding: 4px 12px; font-size: 15px; }
+      .chars-moves { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+      .chars-move { margin: 0; display: grid; justify-items: center; gap: 4px; padding: 6px 4px; border-radius: 12px; background: #00000030; border: 2px solid #ffffff14; }
+      .chars-move .mascot.sheet { width: 72px; height: 76px; --k: 2.8; }
+      .chars-move figcaption { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.15; }
       .or { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
       .or::before, .or::after { content: ""; flex: 1; border-top: 2px dashed #ffffff22; }
 
@@ -453,6 +474,12 @@
         .guide-text { font-size: 17px; }
         .guide-tips { font-size: 15px; }
         .guide > button { justify-self: center; min-width: 240px; }
+        .chars-list { grid-template-columns: repeat(2, 1fr); position: sticky; top: 0; }
+        .chars-list .mascot.sheet { width: 84px; height: 88px; --k: 3.3; }
+        .chars-portrait { width: 120px; height: 124px; }
+        .chars-portrait .mascot.sheet { --k: 4.8; }
+        .chars-moves { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+        .chars-move .mascot.sheet { width: 90px; height: 96px; --k: 3.5; }
       }
       @media (max-height: 460px) {
         .screen { gap: 12px; padding-top: 10px; }

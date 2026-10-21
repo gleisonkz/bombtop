@@ -61,3 +61,17 @@ describe("GuideRoute", () => {
     expect(a.entries).toEqual(["https://x.app/"]);
   });
 });
+
+describe("GuideRoute for another page", () => {
+  it("keeps the character guide at /personagens the same way", () => {
+    const a = fakeAddress();
+    const r = new GuideRoute(a, "/personagens");
+    expect(r.isOpen()).toBe(false);
+    r.opened();
+    expect(a.entries).toEqual(["https://x.app/", "https://x.app/personagens"]);
+    expect(r.isOpen()).toBe(true);
+    expect(new GuideRoute(a).isOpen()).toBe(false);
+    r.closed();
+    expect(a.entries).toEqual(["https://x.app/"]);
+  });
+});

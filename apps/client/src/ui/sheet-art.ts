@@ -1,5 +1,5 @@
 import { TICK_RATE, type CharacterId } from "@bombtop/shared";
-import { paintSheet, SHEETS, type SheetLayout } from "../render/sprites";
+import { CAST_TICKS_PER_FRAME, paintSheet, SHEETS, type SheetLayout, type Strip } from "../render/sprites";
 
 /** The sheet each character is drawn from, in the arena and in the menus. */
 export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku, naruto: SHEETS.naruto };
@@ -11,6 +11,33 @@ export function previewPose(sheet: SheetLayout, state: PreviewState): { row: num
   const strip = state === "walk" ? (sheet.lobby ?? sheet.walk.down) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
   const per = state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
   return { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
+}
+
+/** One animation of a sheet, as the guide shows it: which row, how many frames, how long one loop lasts. */
+export interface Move {
+  label: string;
+  row: number;
+  frames: number;
+  seconds: number;
+}
+
+/** Every animation a sheet has, each at the speed the arena plays it. */
+export function characterMoves(sheet: SheetLayout): Move[] {
+  const move = (label: string, strip: Strip | undefined, ticksPerFrame: number): Move[] =>
+    strip ? [{ label, row: strip.row, frames: strip.frames, seconds: (strip.frames * ticksPerFrame) / TICK_RATE }] : [];
+  const per = sheet.ticksPerFrame;
+  return [
+    ...move("Parado", sheet.idle.down, sheet.idleTicksPerFrame ?? per),
+    ...move("Andando (frente)", sheet.walk.down, per),
+    ...move("Andando (lado)", sheet.walk.side, per),
+    ...move("Andando (costas)", sheet.walk.up, per),
+    ...move("Carregando bomba", sheet.carryWalk?.down, per),
+    ...move("Especial (frente)", sheet.cast?.down, CAST_TICKS_PER_FRAME),
+    ...move("Especial (lado)", sheet.cast?.side, CAST_TICKS_PER_FRAME),
+    ...move("Tonto", sheet.stun, per),
+    ...move("Derrota", sheet.death, per),
+    ...move("Vitória", sheet.lobby, per),
+  ];
 }
 
 const painted = new Map<string, Promise<string>>();
@@ -44,9 +71,9 @@ function sheetUrl(sheet: SheetLayout, color: string): Promise<string> {
  * A character for the menus: one row of its sheet played in CSS, standing on the
  * bottom of its box (the box moves it around like the old mascot).
  */
-export function characterArt(character: CharacterId, color: string, state: PreviewState = "walk"): HTMLElement {
+export function characterArt(character: CharacterId, color: string, state: PreviewState | Omit<Move, "label"> = "walk"): HTMLElement {
   const sheet = CHARACTER_SHEETS[character];
-  const pose = previewPose(sheet, state);
+  const pose = typeof state === "string" ? previewPose(sheet, state) : state;
   const span = document.createElement("span");
   span.className = `mascot sheet ${character}`;
   const sprite = document.createElement("i");

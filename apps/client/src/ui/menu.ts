@@ -1,4 +1,8 @@
+import type { PublicView } from "@bombtop/shared";
+import type { SoundName } from "../audio/sound";
+import { specialShowcase } from "../game/showcase";
 import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
+import { characterGuide } from "./character-guide";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
@@ -14,11 +18,16 @@ export interface MenuHandlers {
   demo(): void;
   /** Play with friends nearby over Wi-Fi, no internet (the typed name is theirs). */
   offline(name: string): void;
-  /** The item guide was opened or closed from its buttons. */
-  guide(open: boolean): void;
+  /** A guide (items or characters) was opened, or closed (null) from its buttons. */
+  guide(open: Guide | null): void;
+  /** A sound to play from the character guide: a voice line, or the scene shown. */
+  hear(sound: SoundName): void;
+  hearScene(view: PublicView): void;
   login(): void;
   logout(): void;
 }
+
+export type Guide = "items" | "characters";
 
 const NAME_KEY = "bombtop.name";
 
@@ -33,8 +42,8 @@ export class Menu {
   private readonly buttons: HTMLButtonElement[];
   private readonly account = el("div", { class: "account" });
   private readonly joinByCode: () => void;
-  /** Shows the item guide instead of the menu card, or the card again. */
-  readonly showGuide: (on: boolean) => void;
+  /** Shows a guide instead of the menu card, or the card again (null). */
+  readonly showGuide: (guide: Guide | null) => void;
 
   private readonly handlers: MenuHandlers;
 
@@ -86,9 +95,10 @@ export class Menu {
       this.status,
       this.error,
       el("div", { class: "row extras" }, [
-        button("Ver itens", () => handlers.guide(true), "ghost"),
-        button("Assistir demo", () => handlers.demo(), "ghost"),
+        button("Ver itens", () => handlers.guide("items"), "ghost"),
+        button("Personagens", () => handlers.guide("characters"), "ghost"),
       ]),
+      button("Assistir demo", () => handlers.demo(), "ghost"),
       button("📶 Jogar offline (Wi-Fi)", () => {
         storage.set(NAME_KEY, this.name.value.trim());
         handlers.offline(this.name.value);
@@ -102,18 +112,27 @@ export class Menu {
       ]),
     ]);
     const preview = new ItemPreview();
-    const { root: guide, open: openGuide } = itemGuide({
-      close: () => handlers.guide(false),
+    const items = itemGuide({
+      close: () => handlers.guide(null),
       show: (kind, stage) => void preview.play(kind, stage).catch((e) => console.error("item preview", e)),
     });
-    this.showGuide = (on: boolean) => {
-      card.hidden = on;
-      guide.hidden = !on;
-      this.root.classList.toggle("guiding", on);
-      if (on) openGuide();
-      else preview.pause();
+    // The characters' scenes are heard (their specials' sounds); the items' play silent.
+    const charPreview = new ItemPreview((view) => handlers.hearScene(view));
+    const characters = characterGuide({
+      close: () => handlers.guide(null),
+      show: (c, stage) => void charPreview.play(specialShowcase(c), stage).catch((e) => console.error("character preview", e)),
+      hear: (sound) => handlers.hear(sound),
+    });
+    const guides = { items, characters };
+    this.showGuide = (on: Guide | null) => {
+      card.hidden = !!on;
+      for (const [name, g] of Object.entries(guides)) g.root.hidden = name !== on;
+      this.root.classList.toggle("guiding", !!on);
+      if (on) guides[on].open();
+      if (on !== "items") preview.pause();
+      if (on !== "characters") charPreview.pause();
     };
-    guide.hidden = true;
+    items.root.hidden = characters.root.hidden = true;
     this.root = el("div", { class: "screen menu" }, [
       menuBackdrop(),
       el("div", { class: "hero" }, [
@@ -127,7 +146,8 @@ export class Menu {
         ),
       ]),
       card,
-      guide,
+      items.root,
+      characters.root,
     ]);
     parent.appendChild(this.root);
   }

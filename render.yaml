@@ -22,9 +22,12 @@ services:
       - type: rewrite
         source: /sala/*
         destination: /index.html
-      # So is the item guide.
+      # So are the item and character guides.
       - type: rewrite
         source: /itens
+        destination: /index.html
+      - type: rewrite
+        source: /personagens
         destination: /index.html
     headers:
       # Let the PWA pick up new deploys right away.

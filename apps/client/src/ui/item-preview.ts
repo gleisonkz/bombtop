@@ -1,13 +1,13 @@
 import { Application } from "pixi.js";
-import { publicView, TICK_RATE, type ItemKind } from "@bombtop/shared";
+import { CHARACTERS, publicView, TICK_RATE, type ItemKind, type PublicView } from "@bombtop/shared";
 import { SHOWCASE_VIEW, Showcase } from "../game/showcase";
 import { FixedStep } from "../loop/fixed-step";
 import { Renderer, TILE_PX } from "../render/renderer";
-import { SHEETS } from "../render/sprites";
+import { CHARACTER_SHEETS } from "./sheet-art";
 
 /**
- * A small arena that plays an item's showcase scene, for the item guide. Made on
- * first use; paused while the guide is closed.
+ * A small arena that plays a showcase scene (an item or a special in use), for the
+ * guides. Made on first use; paused while the guide is closed.
  */
 export class ItemPreview {
   private app: Application | null = null;
@@ -17,12 +17,16 @@ export class ItemPreview {
   private prev = new Map<string, { px: number; py: number }>();
   private ready: Promise<void> | null = null;
 
-  /** Plays `kind` in `host` (the canvas moves there if it was elsewhere). */
-  async play(kind: ItemKind, host: HTMLElement): Promise<void> {
+  /** `onView` sees every frame drawn (to hear the scene). */
+  constructor(private readonly onView: (view: PublicView) => void = () => {}) {}
+
+  /** Plays `scene` (an item's, or any showcase) in `host` (the canvas moves there if it was elsewhere). */
+  async play(scene: ItemKind | Showcase, host: HTMLElement): Promise<void> {
     await (this.ready ??= this.init());
     const app = this.app!;
     if (app.canvas.parentElement !== host) host.appendChild(app.canvas);
-    this.show = new Showcase(kind);
+    const show = (this.show = scene instanceof Showcase ? scene : new Showcase(scene));
+    this.renderer!.setCharacters(new Map(show.state.players.map((p) => [p.id, p.character])));
     this.resize(host);
     app.ticker.start();
   }
@@ -36,14 +40,15 @@ export class ItemPreview {
     await app.init({ backgroundAlpha: 0, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
     const r = (this.renderer = new Renderer());
     app.stage.addChild(r.root);
-    r.setCharacters(new Map([["you", "bomb"], ["rival", "ninja"]]));
     await Promise.all([
       r.useTileArt(),
       r.useItemArt(),
       r.useBombArt(),
       r.useFlameArt(),
-      r.useSheet("bomb", SHEETS.bomber),
-      r.useSheet("ninja", SHEETS.ninja),
+      r.useKameArt(),
+      r.useRasenganArt(),
+      r.useSpiralArt(),
+      ...CHARACTERS.map((c) => r.useSheet(c, CHARACTER_SHEETS[c])),
     ]).catch((e) => console.error("item preview art", e));
     app.ticker.add((t) => this.frame(t.deltaMS));
     window.addEventListener("resize", () => app.canvas.parentElement && this.resize(app.canvas.parentElement));
@@ -67,6 +72,8 @@ export class ItemPreview {
       this.prev = new Map(show.state.players.map((p) => [p.id, { px: p.px, py: p.py }]));
       show.advance();
     }
-    this.renderer!.draw(publicView(show.state), this.prev, this.loop.alpha);
+    const view = publicView(show.state);
+    this.onView(view);
+    this.renderer!.draw(view, this.prev, this.loop.alpha);
   }
 }
