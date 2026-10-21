@@ -170,6 +170,11 @@
       .cast .star .mascot.sheet { width: 120px; height: 118px; --k: 4.6; filter: drop-shadow(0 6px 0 #0006); }
       .cast .near { margin-inline: -10px; }
       .cast .far.left { margin-right: -6px; } .cast .far.right { margin-left: -6px; }
+      .cast .edge .mascot.sheet { width: 46px; height: 52px; --k: 1.8; filter: brightness(0.72); }
+      /* Naruto at the left edge; as much room on the right keeps the mascot centered */
+      .cast .edge { margin-right: -8px; }
+      .cast .far.right { margin-right: 38px; }
+      @media (max-width: 400px) { .cast .edge { display: none; } .cast .far.right { margin-right: 0; } }
       .cast .star { z-index: 1; animation: bob 2.4s ease-in-out infinite; }
       .logo { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(54px, 15vw, 76px); line-height: 0.9; color: var(--accent); letter-spacing: 2px; -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; rotate: -3deg;
         text-shadow: 0 6px 0 var(--ink), 0 0 28px #ffb34766; animation: logo-in 0.7s cubic-bezier(0.2, 1.7, 0.4, 1) both; }
@@ -200,6 +205,8 @@
       @media (min-width: 600px) and (min-height: 800px) {
         .cast .mascot.sheet { width: 100px; height: 110px; --k: 4; }
         .cast .far .mascot.sheet { width: 78px; height: 86px; --k: 3; }
+        .cast .edge .mascot.sheet { width: 66px; height: 74px; --k: 2.6; }
+        .cast .far.right { margin-right: 58px; }
         .cast .star .mascot.sheet { width: 170px; height: 168px; --k: 6.6; }
         .logo { font-size: 104px; }
         .tagline { font-size: 19px; }
@@ -420,6 +427,8 @@
         .screen.menu:not(.guiding) { width: min(1240px, 100%); }
         .cast .mascot.sheet { width: 110px; height: 120px; --k: 4.4; }
         .cast .far .mascot.sheet { width: 86px; height: 94px; --k: 3.3; }
+        .cast .edge .mascot.sheet { width: 74px; height: 80px; --k: 2.8; }
+        .cast .far.right { margin-right: 66px; }
         .cast .star .mascot.sheet { width: 190px; height: 186px; --k: 7.4; }
         .cast .near { margin-inline: -14px; }
         .logo { font-size: clamp(96px, 9vw, 132px); }
@@ -456,7 +465,7 @@
         .logo { font-size: 50px; }
         .tagline { font-size: 14px; }
         .cast .mascot.sheet { width: 50px; height: 54px; --k: 2; }
-        .cast .far { display: none; }
+        .cast .far, .cast .edge { display: none; }
         .cast .star .mascot.sheet { width: 84px; height: 82px; --k: 3.2; }
         button.play { min-height: 50px; font-size: 22px; }
       }
