@@ -26,6 +26,7 @@ import {
 import { Listener, type CueName } from "../audio/cues";
 import { actionCues, EchoFilter } from "../audio/local-cues";
 import { GamepadInput } from "../input/gamepad";
+import { KeepAwake } from "../net/keep-awake";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import { GhostBombs } from "../net/ghost-bombs";
@@ -54,6 +55,8 @@ export const SERVER_URL: string = serverUrl(import.meta.env.VITE_SERVER_URL, loc
 export class OnlineGame implements GameMode {
   private readonly inputs = [new KeyboardInput(WASD), new KeyboardInput(ARROWS)];
   private readonly pad = new GamepadInput();
+  /** A beat every 50 ms while quiet in a match keeps a phone's Wi-Fi from batching our snapshots. */
+  private readonly awake = new KeepAwake(50);
   /** Render delay for snapshots, as short as the connection allows. */
   private readonly delay = new AdaptiveDelay();
   private readonly buffer = new SnapshotBuffer(this.delay.ms);
@@ -274,7 +277,14 @@ export class OnlineGame implements GameMode {
     if ((input.bomb || input.action || input.special) && this.playing()) this.actNow(input);
     const t = this.predictor.clock;
     const seq = this.predictor.step(input);
-    if (seq !== null) this.room.send(C2S.input, { ...input, seq, t });
+    const now = performance.now();
+    if (seq !== null) {
+      this.room.send(C2S.input, { ...input, seq, t });
+      this.awake.sent(now);
+    } else if (this.playing() && this.awake.due(now)) {
+      this.room.send(C2S.beat);
+      this.awake.sent(now);
+    }
     // Walking into a bomb kicks it now on our screen, not a round trip later.
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (me) this.kicks.check(this.latest!, me, input.dir, performance.now());

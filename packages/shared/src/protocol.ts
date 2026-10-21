@@ -23,6 +23,8 @@ export const C2S = {
   character: "character",
   /** Connection measurements from a ?debug client, logged on the server. */
   stats: "stats",
+  /** Nothing to do: sent during a match when the client has been quiet, so a phone's Wi-Fi radio doesn't doze. */
+  beat: "beat",
 } as const;
 
 /** Server -> client message types. */

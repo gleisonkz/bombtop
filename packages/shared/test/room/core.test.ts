@@ -32,6 +32,15 @@ describe("RoomCore", () => {
     expect(r.sent.map((s) => [s.to, s.type])).toEqual([["a", S2C.lobby]]);
   });
 
+  it("takes a beat (a phone keeping its Wi-Fi awake) without doing or answering anything", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    const before = r.broadcast.length;
+    r.core.message("a", C2S.beat);
+    expect(r.sent).toEqual([]);
+    expect(r.broadcast).toHaveLength(before);
+  });
+
   it("runs the lobby messages: bots, characters, start", () => {
     const r = room();
     r.core.join("a", "Ana", "bomb");
