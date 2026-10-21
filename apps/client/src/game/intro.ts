@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 7 * TICK_RATE;
+export const INTRO_TICKS = 9 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -17,13 +17,15 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 10, to: 120, card: { name: "Bomba", line: "O mascote explosivo. Planta a bomba e sai correndo!" } },
   { from: 120, to: 200, card: { name: "Ninja", line: "Raio de gelo! Quem estiver na frente vira picolé." } },
   { from: 200, to: 330, card: { name: "Capitão América", line: "Ergue o escudo e devolve o fogo pra quem mandou!" } },
+  { from: 330, to: 450, card: { name: "Thor", line: "Ergue o martelo e solta um raio: quem leva fica tonto!" } },
 ];
-const LOGO_FROM = 330;
+const LOGO_FROM = 450;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
  * (row 5 is an open corridor). The mascot drops a bomb and walks off, the ninja's ice hits it,
- * the captain raises his shield and the blast bounces back off it, then the logo.
+ * the captain raises his shield and the blast bounces back off it, Thor's bolt leaves the mascot dizzy
+ * up in row 3, then the logo.
  */
 export class Intro {
   readonly state: MatchState;
@@ -32,21 +34,23 @@ export class Intro {
   constructor() {
     const s = createMatch({
       seed: 1,
-      // Seat order picks the arena colors: white captain (keeps his navy suit), black bomb, red ninja.
-      playerIds: ["captain", "bomb", "ninja"],
+      // Seat order picks the arena colors: white captain (keeps his navy suit), black bomb, red ninja, blue thor.
+      playerIds: ["captain", "bomb", "ninja", "thor"],
       blockDensity: 0,
       revenge: false,
-      characters: { bomb: "bomb", ninja: "ninja", captain: "captain" },
+      characters: { bomb: "bomb", ninja: "ninja", captain: "captain", thor: "thor" },
     });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
     placePlayerAt(s, "captain", 11, 5);
-    const [captain, bomb, ninja] = s.players;
+    placePlayerAt(s, "thor", 11, 3);
+    const [captain, bomb, ninja, thor] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
     captain!.facing = "left";
+    thor!.facing = "left";
     this.state = s;
     this.scripts = [
       // Drops its bomb on (7,5) and climbs out of its reach.
@@ -55,6 +59,8 @@ export class Intro {
       new Script("ninja", [{ wait: 160 }, { press: "special" }]),
       // Next to the bomb, shield up before it blows: its fire bounces back down the corridor.
       new Script("captain", [{ wait: 200 }, { go: "left", tiles: 3 }, { wait: 6 }, { press: "special" }]),
+      // Steps in along row 3 and strikes the mascot, who climbed up there out of its bomb's reach.
+      new Script("thor", [{ wait: 320 }, { go: "left", tiles: 1 }, { wait: 6 }, { press: "special" }]),
     ];
   }
 

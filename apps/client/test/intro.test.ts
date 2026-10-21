@@ -20,7 +20,7 @@ describe("Intro", () => {
       const key = card?.name ?? (intro.logo() ? "logo" : null);
       if (key && seen[seen.length - 1] !== key) seen.push(key);
     });
-    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "logo"]);
+    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "logo"]);
   });
 
   it("each card says what the character does", () => {
@@ -29,7 +29,7 @@ describe("Intro", () => {
       const card = intro.card();
       if (card) lines.add(card.line);
     });
-    expect(lines.size).toBe(3);
+    expect(lines.size).toBe(4);
     for (const line of lines) expect(line.length).toBeGreaterThan(10);
   });
 
@@ -47,6 +47,17 @@ describe("Intro", () => {
     expect(bounced).toBe(true);
   });
 
+  it("thor's bolt leaves the mascot dizzy", () => {
+    let bolt = false;
+    let dizzy = false;
+    play(({ state }) => {
+      bolt ||= state.blasts.some((b) => b.ownerId === "thor" && b.kind === "lightning" && b.length > 0);
+      dizzy ||= state.players.some((p) => p.id === "bomb" && p.stun > 0);
+    });
+    expect(bolt).toBe(true);
+    expect(dizzy).toBe(true);
+  });
+
   it("plays inside the zoomed window of the arena", () => {
     const inside = (x: number, y: number) =>
       x >= INTRO_VIEW.x && x < INTRO_VIEW.x + INTRO_VIEW.width && y >= INTRO_VIEW.y && y < INTRO_VIEW.y + INTRO_VIEW.height;
@@ -62,8 +73,8 @@ describe("Intro", () => {
     expect(intro.state.players.every((p) => p.alive && p.frozen === 0)).toBe(true);
   });
 
-  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja", () => {
-    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja"]);
+  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor", () => {
+    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor"]);
   });
 
   it(`ends after ${INTRO_TICKS / 60} seconds and then stays put`, () => {
