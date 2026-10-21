@@ -94,3 +94,30 @@ describe("TouchInput", () => {
     expect(t.sample().special).toBeFalsy();
   });
 });
+
+describe("TouchInput d-pad", () => {
+  it("steers by where the finger is on the pad, measured from its fixed center", () => {
+    const t = new TouchInput();
+    t.padStart(1, 100, 100, 100, 60); // touched the up arrow
+    expect(t.sample().dir).toBe("up");
+    t.stickMove(1, 140, 100); // slid onto the right arrow without lifting
+    expect(t.sample().dir).toBe("right");
+    t.stickEnd(1);
+    expect(t.sample().dir).toBeNull();
+  });
+
+  it("the center never moves, however far the finger goes", () => {
+    const t = new TouchInput();
+    t.padStart(1, 100, 100, 100, 20);
+    t.stickMove(1, 100, -200);
+    t.stickMove(1, 100, 140);
+    expect(t.sample().dir).toBe("down");
+    expect(t.origin).toEqual({ x: 100, y: 100 });
+  });
+
+  it("the middle of the pad is neutral", () => {
+    const t = new TouchInput();
+    t.padStart(1, 100, 100, 104, 98);
+    expect(t.sample().dir).toBeNull();
+  });
+});

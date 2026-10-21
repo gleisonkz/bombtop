@@ -1,40 +1,46 @@
-import { STICK_RADIUS, TouchInput } from "../input/touch";
+import { TouchInput } from "../input/touch";
 import { el } from "./dom";
 
 /** True on phones/tablets (primary pointer is a finger). */
 export const isTouchDevice = (): boolean =>
   typeof matchMedia !== "undefined" && matchMedia("(pointer: coarse)").matches;
 
-/** On-screen joystick (left half) and bomb/action buttons (right), feeding a TouchInput. */
+/** On-screen d-pad (bottom left) and bomb/action/special buttons (right), feeding a TouchInput. */
 export class TouchControls {
   readonly input = new TouchInput();
   private readonly root: HTMLElement;
-  private readonly knob = el("div", { class: "knob" });
 
   constructor(parent: HTMLElement) {
-    const stick = el("div", { class: "stick-zone" }, [this.knob]);
-    stick.addEventListener("pointerdown", (e) => {
-      this.input.stickStart(e.pointerId, e.clientX, e.clientY);
-      this.knob.dataset.pid = String(e.pointerId);
-      this.showKnob(e.clientX, e.clientY, 0, 0);
+    // A fixed d-pad: the finger steers by where it is on the cross and can slide from arrow to arrow.
+    const arrows = (["up", "right", "down", "left"] as const).map((d) => el("span", { class: `dpad-arrow ${d}` }));
+    const dpad = el("div", { class: "dpad" }, arrows);
+    const light = (dir: string | null) => arrows.forEach((a) => a.classList.toggle("on", a.classList.contains(dir ?? "-")));
+    const centre = () => {
+      const r = dpad.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    };
+    dpad.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      const c = centre();
+      this.input.padStart(e.pointerId, c.x, c.y, e.clientX, e.clientY);
+      light(this.input.direction);
       try {
-        stick.setPointerCapture(e.pointerId); // keep tracking the finger outside the zone
+        dpad.setPointerCapture(e.pointerId); // keep tracking the finger off the pad
       } catch {
         /* pointer already gone */
       }
     });
-    stick.addEventListener("pointermove", (e) => {
+    dpad.addEventListener("pointermove", (e) => {
       this.input.stickMove(e.pointerId, e.clientX, e.clientY);
-      const origin = this.input.origin;
-      if (!origin || this.knob.dataset.pid !== String(e.pointerId)) return;
-      this.showKnob(origin.x, origin.y, e.clientX - origin.x, e.clientY - origin.y);
+      light(this.input.direction);
     });
     const end = (e: PointerEvent) => {
       this.input.stickEnd(e.pointerId);
-      this.knob.hidden = true;
+      light(null);
     };
-    stick.addEventListener("pointerup", end);
-    stick.addEventListener("pointercancel", end);
+    dpad.addEventListener("pointerup", end);
+    dpad.addEventListener("pointercancel", end);
+    const stick = el("div", { class: "stick-zone" }, [dpad]);
 
     const pad = (label: string, button: "bomb" | "action" | "special") => {
       const b = el("div", { class: `touch-btn ${button}`, text: label });
@@ -62,20 +68,11 @@ export class TouchControls {
       ]),
     ]);
     this.root.hidden = true;
-    this.knob.hidden = true;
     parent.appendChild(this.root);
   }
 
   setVisible(visible: boolean): void {
     this.root.hidden = !visible || !isTouchDevice();
     if (this.root.hidden) this.input.reset();
-  }
-
-  private showKnob(ox: number, oy: number, dx: number, dy: number): void {
-    const len = Math.hypot(dx, dy);
-    const k = len > STICK_RADIUS ? STICK_RADIUS / len : 1; // clamp the knob to the ring
-    this.knob.style.left = `${ox + dx * k}px`;
-    this.knob.style.top = `${oy + dy * k}px`;
-    this.knob.hidden = false;
   }
 }

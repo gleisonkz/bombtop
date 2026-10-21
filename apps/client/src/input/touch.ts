@@ -38,7 +38,7 @@ function steerFromVector(dx: number, dy: number, deadZone: number, prev: Steer):
 
 /** Virtual joystick (follows one finger from where it touched down) plus two tap buttons. */
 export class TouchInput {
-  private stick: ({ id: number; ox: number; oy: number } & Steer) | null = null;
+  private stick: ({ id: number; ox: number; oy: number; fixed?: true } & Steer) | null = null;
   private pending: { bomb: boolean; action: boolean; special?: true } = { bomb: false, action: false };
   private bombDown = false;
 
@@ -49,15 +49,26 @@ export class TouchInput {
     return this.stick ? { x: this.stick.ox, y: this.stick.oy } : null;
   }
 
+  /** Direction being steered right now (for lighting the d-pad arrow). */
+  get direction(): Direction {
+    return this.stick?.dir ?? null;
+  }
+
   stickStart(id: number, x: number, y: number): void {
     this.stick = { id, ox: x, oy: y, dir: null, alt: null };
+  }
+
+  /** A finger on the d-pad centered at (cx, cy): it steers from that fixed center (see stickMove/stickEnd). */
+  padStart(id: number, cx: number, cy: number, x: number, y: number): void {
+    this.stick = { id, ox: cx, oy: cy, fixed: true, dir: null, alt: null };
+    this.stickMove(id, x, y);
   }
 
   stickMove(id: number, x: number, y: number): void {
     const st = this.stick;
     if (st?.id !== id) return;
     const dist = Math.hypot(x - st.ox, y - st.oy);
-    if (dist > STICK_RADIUS) {
+    if (!st.fixed && dist > STICK_RADIUS) {
       const k = STICK_RADIUS / dist;
       st.ox = x - (x - st.ox) * k;
       st.oy = y - (y - st.oy) * k;

@@ -513,7 +513,16 @@
       .touch { position: fixed; inset: 0; z-index: 1; display: flex; touch-action: none; user-select: none; -webkit-user-select: none; }
       body:has(.lobby:not([hidden])) .touch { display: none; } /* nothing to steer in the lobby */
       .stick-zone { flex: 1; position: relative; }
-      .knob { position: fixed; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: #ffffff55; border: 3px solid #ffffffaa; pointer-events: none; }
+      /* D-pad: a cross of four arrows; the whole square is touchable (corners steer diagonally) */
+      .dpad { position: absolute; left: max(20px, env(safe-area-inset-left)); bottom: 24px; width: 156px; height: 156px; }
+      .dpad::before { content: ""; position: absolute; inset: 52px; background: #e8e8f4cc; border: 3px solid #000; border-radius: 8px; }
+      .dpad-arrow { position: absolute; width: 52px; height: 52px; display: grid; place-items: center; background: #e8e8f4cc; border: 3px solid #000; border-radius: 12px; box-shadow: 0 4px 0 #000; }
+      .dpad-arrow::after { content: ""; border: 11px solid transparent; }
+      .dpad-arrow.up { left: 52px; top: 0; } .dpad-arrow.up::after { border-bottom: 14px solid #111; border-top-width: 0; }
+      .dpad-arrow.down { left: 52px; bottom: 0; } .dpad-arrow.down::after { border-top: 14px solid #111; border-bottom-width: 0; }
+      .dpad-arrow.left { left: 0; top: 52px; } .dpad-arrow.left::after { border-right: 14px solid #111; border-left-width: 0; }
+      .dpad-arrow.right { right: 0; top: 52px; } .dpad-arrow.right::after { border-left: 14px solid #111; border-right-width: 0; }
+      .dpad-arrow.on { background: var(--accent); transform: translateY(3px); box-shadow: 0 1px 0 #000; }
       /* Special right above the bomb button (the thumb's home), action to its left */
       .touch-buttons { align-self: flex-end; display: grid; grid-template-areas: ". special" "action bomb"; gap: 12px 16px; align-items: end; justify-items: center; padding: 0 20px 28px; }
       .touch-btn { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #111; border: 3px solid #000; box-shadow: 0 4px 0 #000; }

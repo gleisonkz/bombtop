@@ -13,7 +13,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 - **Mechanics:** all classic ones are in scope — bombs, fire, speed, kick, punch, glove/throw,
   remote bomb, pierce bomb, skull/virus, mounts, revenge cart, stage gimmicks.
 - **Server:** Colyseus (Node), authoritative. Client interpolates snapshots (prediction: todo).
-- **Client:** Vite + PixiJS + vite-plugin-pwa. Touch joystick + gamepad + keyboard.
+- **Client:** Vite + PixiJS + vite-plugin-pwa. Touch d-pad (fixed cross, slide between arrows) + gamepad + keyboard.
 - **Auth/data:** Supabase (Google login; profiles/ranking todo). Optional: unset = guest-only.
 - **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in `render.yaml`).
 - **Anti-cheat:** server authority; client only sends inputs.
