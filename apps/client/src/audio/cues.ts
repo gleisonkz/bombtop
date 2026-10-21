@@ -23,6 +23,7 @@ export type CueName =
   | "rasengan"
   | "freeze"
   | "hurry"
+  | "mega"
   | VoiceName;
 
 export interface Cue {
@@ -65,7 +66,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   const elapsed = next.tick - prev.tick;
   const oldBombs = new Set(prev.bombs.map(bombKey));
   for (const b of next.bombs) {
-    if (grounded(b) && !oldBombs.has(bombKey(b)) && b.fuse >= FUSE_TICKS - elapsed) cues.push({ name: "place", x: mid(b.x) });
+    if (grounded(b) && !oldBombs.has(bombKey(b)) && b.fuse >= FUSE_TICKS - elapsed) cues.push({ name: b.mega ? "mega" : "place", x: mid(b.x) });
   }
   const count = (v: View, f: (b: Bomb) => unknown) => v.bombs.filter(f).length;
   const moving = (f: (b: Bomb) => unknown, name: CueName) => {

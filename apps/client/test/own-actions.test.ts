@@ -15,13 +15,16 @@ describe("ice blast, predicted", () => {
     expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["ice"]);
   });
 
-  it("stays quiet while recharging or for characters without one", () => {
+  it("stays quiet while recharging", () => {
     const v = view();
     const p = me(v);
     p.specialCooldown = 10;
     expect(actionCues(v, p, { dir: null, bomb: false, special: true })).toEqual([]);
+  });
+
+  it("hears the bomb mascot's mega bomb land at once", () => {
     const b = view("bomb");
-    expect(actionCues(b, me(b), { dir: null, bomb: false, special: true })).toEqual([]);
+    expect(actionCues(b, me(b), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["mega"]);
   });
 
   it("works out the blast the server will make, from our predicted player", () => {

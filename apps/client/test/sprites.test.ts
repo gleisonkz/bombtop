@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -204,6 +204,14 @@ describe("bomb sheet", () => {
     expect(new Set(calm)).toEqual(new Set([0xffffff]));
     const late = Array.from({ length: 60 }, (_, t) => look(30, t).tint);
     expect(new Set(late).size).toBe(2);
+  });
+
+  it("draws the bomb mascot's mega bomb bigger", () => {
+    const mega = bombLook({ fuse: FUSE_TICKS, tick: 5, type: "pierce", mega: true });
+    const plain = look(FUSE_TICKS, 5, "pierce");
+    expect(mega.sx / plain.sx).toBeCloseTo(MEGA_SCALE);
+    expect(mega.sy / plain.sy).toBeCloseTo(MEGA_SCALE);
+    expect(MEGA_SCALE).toBeGreaterThan(1.3);
   });
 
   it("keeps breathing while a remote bomb waits with its fuse on hold", () => {

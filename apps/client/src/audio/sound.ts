@@ -42,6 +42,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
+  mega: { gain: 0.7, vary: 0.04, voices: 2 },
   start: { gain: 0.6, vary: 0, voices: 1 },
   win: { gain: 0.6, vary: 0, voices: 1 },
   lose: { gain: 0.55, vary: 0, voices: 1 },

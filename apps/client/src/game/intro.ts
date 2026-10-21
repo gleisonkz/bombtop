@@ -14,7 +14,7 @@ export interface IntroCard {
 
 /** Who is introduced when (ticks), then the logo until the end. */
 const CARDS: { from: number; to: number; card: IntroCard }[] = [
-  { from: 10, to: 120, card: { name: "Bomba", line: "O mascote explosivo. Planta a bomba e sai correndo!" } },
+  { from: 10, to: 120, card: { name: "Bomba", line: "Bomba gigante! Planta uma bombona que atravessa tudo e sai correndo." } },
   { from: 120, to: 200, card: { name: "Ninja", line: "Raio de gelo! Quem estiver na frente vira picolé." } },
   { from: 200, to: 330, card: { name: "Capitão América", line: "Ergue o escudo e devolve o fogo pra quem mandou!" } },
   { from: 330, to: 450, card: { name: "Thor", line: "Ergue o martelo e solta um raio: quem leva fica tonto!" } },
@@ -25,7 +25,7 @@ const LOGO_FROM = 690;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
- * (row 5 is an open corridor). The mascot drops a bomb and walks off, the ninja's ice hits it,
+ * (row 5 is an open corridor). The mascot plants its mega bomb and walks off, the ninja's ice hits it,
  * the captain raises his shield and the blast bounces back off it, Thor's bolt leaves the mascot dizzy
  * up in row 3, Goku's Kamehameha smashes a row of blocks in row 7, Naruto's Rasengan knocks the mascot
  * back along row 3, then the logo.
@@ -64,14 +64,14 @@ export class Intro {
     naruto!.facing = "right";
     this.state = s;
     this.scripts = [
-      // Drops its bomb on (7,5) and climbs out of its reach.
-      new Script("bomb", [{ wait: 100 }, { press: "bomb" }, { go: "up", tiles: 2 }]),
+      // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
+      new Script("bomb", [{ wait: 100 }, { press: "special" }, { go: "up", tiles: 3 }, { wait: 170 }, { go: "down", tiles: 1 }]),
       // Ice straight at the bomb, which stops it.
       new Script("ninja", [{ wait: 160 }, { press: "special" }]),
       // Next to the bomb, shield up before it blows: its fire bounces back down the corridor.
       new Script("captain", [{ wait: 200 }, { go: "left", tiles: 3 }, { wait: 6 }, { press: "special" }]),
       // Steps in along row 3 and strikes the mascot, who climbed up there out of its bomb's reach.
-      new Script("thor", [{ wait: 320 }, { go: "left", tiles: 1 }, { wait: 6 }, { press: "special" }]),
+      new Script("thor", [{ wait: 330 }, { go: "left", tiles: 1 }, { wait: 6 }, { press: "special" }]),
       // Steps up to the wall of blocks in row 7 and blasts through all five.
       new Script("goku", [{ wait: 450 }, { go: "right", tiles: 1 }, { wait: 6 }, { press: "special" }]),
       // Steps in along row 3 and dashes into the dizzy mascot, knocking it back toward Thor.

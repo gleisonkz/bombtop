@@ -105,6 +105,12 @@ describe("soundCues", () => {
     ]);
   });
 
+  it("hears a mega bomb land with its own thud", () => {
+    const v = view();
+    const next = later(v, (n) => void n.bombs.push(bomb(3, 5, { type: "pierce", range: 4, mega: true })));
+    expect(names(v, next)).toEqual(["mega"]);
+  });
+
   it("hears a character with a voice cry out in their own voice", () => {
     const v = view();
     v.players[0]!.character = "goku";

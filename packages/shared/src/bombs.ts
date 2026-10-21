@@ -12,7 +12,7 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   if (!p || !p.alive || p.curse?.kind === "constipation") return false;
   const { x, y } = playerTile(p);
   if (bombAt(s, x, y)) return false;
-  const active = s.bombs.filter((b) => b.ownerId === playerId).length;
+  const active = s.bombs.filter((b) => b.ownerId === playerId && !b.mega).length;
   if (active >= p.bombCapacity) return false;
 
   s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });

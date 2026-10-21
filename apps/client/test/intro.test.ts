@@ -58,6 +58,12 @@ describe("Intro", () => {
     expect(names.size).toBe(CHARACTERS.length);
   });
 
+  it("the mascot opens with its mega bomb", () => {
+    let mega = false;
+    play(({ state }) => void (mega ||= state.bombs.some((b) => b.ownerId === "bomb" && b.mega)));
+    expect(mega).toBe(true);
+  });
+
   it("goku's kamehameha smashes the row of blocks in front of him", () => {
     let beam = false;
     const intro = play(({ state }) => {

@@ -92,6 +92,13 @@ const RECIPE = {
     len: 0.45,
     layer: { src: ESM_AG("FGHTImpt_Combat Punch Impact Light Hit Delay Crunchy Vintage Quick Smack 05_ESM_AG.wav"), len: 0.5, gain: -2, at: 0.2 },
   },
+  // the bomb mascot's mega bomb: a heavy thud as it lands, over a low boom
+  mega: {
+    src: K("impact-sounds", "impactPlate_heavy_001.ogg"),
+    len: 0.6,
+    tempo: 0.8,
+    layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 0.9, gain: -5, lowpass: 220 },
+  },
   freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),

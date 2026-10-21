@@ -1,5 +1,6 @@
 import { addFlame } from "./bombs";
-import { BLAST_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE } from "./constants";
+import { effectiveRange } from "./curse";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -11,6 +12,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Captain: raises his shield for SHIELD_TICKS (see `shieldAt`).
  * Goku: charges for KAME_CHARGE ticks, then fires the Kamehameha (see `kamehameha`).
  * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
+ * Bomb mascot: plants a mega bomb on his tile, piercing and twice his fire.
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -29,6 +31,12 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     p.px = tileCenter(x);
     p.py = tileCenter(y);
     p.rasengan = RASENGAN_TICKS;
+  } else if (p.character === "bomb") {
+    const { x, y } = playerTile(p);
+    if (bombAt(s, x, y)) return false;
+    s.bombs.push({ ownerId: p.id, x, y, fuse: FUSE_TICKS, range: effectiveRange(p) * 2, type: "pierce", slide: null, offset: 0, air: null, heldBy: null, mega: true });
+    p.specialCooldown = MEGA_COOLDOWN;
+    return true;
   } else {
     return false;
   }

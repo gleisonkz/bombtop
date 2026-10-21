@@ -136,6 +136,8 @@ export interface Bomb {
   air: AirState | null;
   /** Id of the player carrying this bomb (glove), or null. Held bombs sit on no tile. */
   heldBy: string | null;
+  /** The bomb mascot's special: a mega bomb, drawn bigger; it takes none of his bomb slots. */
+  mega?: boolean;
 }
 
 export interface AirState {

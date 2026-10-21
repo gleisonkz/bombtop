@@ -97,6 +97,9 @@ export const KAME_RANGE = 5;
 export const KAME_CHARGE = 20;
 export const KAME_COOLDOWN = 30 * TICK_RATE;
 
+/** The bomb mascot's mega bomb (piercing, twice his fire): its recharge. */
+export const MEGA_COOLDOWN = 25 * TICK_RATE;
+
 /**
  * Naruto's Rasengan: a dash RASENGAN_RANGE tiles straight ahead, RASENGAN_TICKS_PER_TILE ticks a tile;
  * the first player he runs into is knocked back up to RASENGAN_PUSH tiles and stunned.

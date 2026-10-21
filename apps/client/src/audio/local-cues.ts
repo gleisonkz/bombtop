@@ -2,7 +2,7 @@ import { bombButton, detonateRemote, punch, useMountAbility, useSpecial, type Ma
 import { soundCues, type Cue, type CueName } from "./cues";
 
 /** Sounds of our own button presses, played before the server confirms them. */
-const OWN: ReadonlySet<CueName> = new Set(["place", "throw", "jump", "dash", "ice", "thunder", "kamehameha", "rasengan"]);
+const OWN: ReadonlySet<CueName> = new Set(["place", "throw", "jump", "dash", "ice", "thunder", "kamehameha", "rasengan", "mega"]);
 
 /**
  * What our own button press sounds like, worked out with the same rules the

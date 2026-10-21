@@ -286,17 +286,21 @@ export const bombFrame = (type: BombType): number => BOMBS.order.indexOf(type) *
 
 const SPARK = [1, 1, 0, 1, 0, 1, 1, 1, 0]; // irregular, like a burning fuse
 
+/** How much bigger the bomb mascot's mega bomb is drawn. */
+export const MEGA_SCALE = 1.6;
+
 /**
  * How a bomb looks this tick: it breathes (squash and stretch), faster and
  * flashing red in its last second, while its spark (or remote light) flickers.
  * Timed by the match clock, so a remote bomb on hold still breathes.
  */
-export function bombLook({ fuse, tick, type }: { fuse: number; tick: number; type: BombType }) {
+export function bombLook({ fuse, tick, type, mega }: { fuse: number; tick: number; type: BombType; mega?: boolean | undefined }) {
   const urgent = fuse <= TICK_RATE;
   const breath = Math.sin((tick / TICK_RATE) * Math.PI * 2 * (urgent ? 5 : 2)) * 0.1;
+  const size = mega ? MEGA_SCALE : 1;
   return {
-    sx: 1 + breath,
-    sy: 1 - breath,
+    sx: (1 + breath) * size,
+    sy: (1 - breath) * size,
     tint: urgent && Math.floor(tick / 4) % 2 === 0 ? 0xff7070 : 0xffffff,
     glow: type === "remote" ? Math.floor(tick / 20) % 2 === 0 : SPARK[Math.floor(tick / 3) % SPARK.length] === 1,
   };

@@ -362,7 +362,7 @@ export class Renderer {
       this.bombSprites.push(sprite);
       this.people.addChild(sprite);
     }
-    const look = bombLook({ fuse: b.fuse, tick, type: b.type });
+    const look = bombLook({ fuse: b.fuse, tick, type: b.type, mega: b.mega });
     sprite.texture = this.bombArt!.get(b.type)!;
     sprite.position.set(cx, cy);
     sprite.scale.set(BOMBS.scale * look.sx, BOMBS.scale * look.sy);
