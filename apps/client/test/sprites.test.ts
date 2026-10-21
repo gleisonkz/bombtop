@@ -465,7 +465,7 @@ describe("HD art", () => {
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
-    expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(38 * 0.55, 0); // the ninja stands as tall as before
+    expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
   });
 });
 

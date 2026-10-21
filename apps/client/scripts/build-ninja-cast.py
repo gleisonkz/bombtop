@@ -1,6 +1,7 @@
 """Builds the ninja's ice cast frames: the PixelLab skeleton cast (castcustom/<dir>/0..7.png, posed
-from our own skeletons: both hands gather at one side, then thrust forward) with our ice drawn over it,
-a frost orb growing between the hands, then a burst of shards as the palms thrust.
+from our own skeletons on "Ice ninja HD4", 180px canvas: both hands gather at one side, then thrust
+forward) with our ice drawn over it, a frost orb growing between the hands, then a burst of shards as
+the palms thrust.
 Writes castice/<dir>/0..8.png (9 frames x CAST_TICKS_PER_FRAME = BLAST_TICKS; the thrust lands on
 frame 5 = BEAM_DELAY, when the beam shows).
 Usage: python build-ninja-cast.py FRAMES_DIR"""
@@ -11,12 +12,14 @@ from PIL import Image, ImageDraw
 
 # output column -> generated frame
 SOURCE = [0, 1, 2, 2, 2, 3, 4, 5, 6]
-# where the hands meet in each generated frame (128px canvas), from the skeletons we posed
+# where the hands meet in each generated frame (180px canvas), read off the frames PixelLab drew
 HANDS = {
-    "south": {1: (48, 82), 2: (46, 79), 3: (64, 93), 4: (64, 94), 5: (64, 94)},
-    "east": {1: (49, 84), 2: (47, 84), 3: (99, 79), 4: (100, 79), 5: (100, 79)},
-    "north": {1: (82, 80), 2: (84, 78), 3: (64, 66), 4: (64, 65), 5: (64, 65)},
+    "south": {1: (66, 107), 2: (65, 105), 3: (90, 122), 4: (90, 122), 5: (90, 122)},
+    "east": {1: (78, 115), 2: (72, 110), 3: (128, 107), 4: (128, 107), 5: (128, 107)},
+    "north": {1: (110, 100), 2: (110, 97), 3: (90, 82), 4: (90, 82), 5: (90, 82)},
 }
+# the ice is drawn this much bigger than on the old 128px ninja, so it keeps its size on the stage
+FX = 1.4
 FORWARD = {"south": (0, 1), "east": (1, 0), "north": (0, -1)}
 # per column: frost orb radius, burst radius, shard reach (0 = none)
 LOOK = [(0, 0, 0), (4, 0, 0), (6, 0, 0), (7.5, 0, 0), (9, 0, 0), (0, 18, 14), (0, 13, 22), (0, 7, 28), (0, 0, 0)]
@@ -79,8 +82,8 @@ def burst(size, cx, cy, r, reach, fwd):
         dist = reach * (1.0 if k == 2 else 0.75)
         if dist <= 0:
             continue
-        length = 9 if k == 2 else 6
-        shard(d, cx + dx * dist, cy + dy * dist, dx, dy, length, 2.6 if k == 2 else 2)
+        length = (9 if k == 2 else 6) * FX
+        shard(d, cx + dx * dist, cy + dy * dist, dx, dy, length, (2.6 if k == 2 else 2) * FX)
     return im
 
 
@@ -92,7 +95,7 @@ def main():
         for col, frame in enumerate(SOURCE):
             body = Image.open(src / "castcustom" / direction / f"{frame}.png").convert("RGBA")
             size = body.width
-            orb_r, burst_r, reach = LOOK[col]
+            orb_r, burst_r, reach = (v * FX for v in LOOK[col])
             fx = Image.new("RGBA", (size, size))
             if frame in hands and (orb_r or burst_r or reach):
                 cx, cy = hands[frame]

@@ -94,30 +94,31 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
-  /** The ninja, made in PixelLab at 128px (scripts/build-character-sheet.py ninja lays out its frames). */
+  /** The ninja, made in PixelLab ("Ice ninja HD4"; scripts/build-character-sheet.py ninja lays out its frames). */
   ninja: {
     url: "sprites/ninja.png",
-    width: 1152,
-    height: 2142,
-    frameW: 128,
-    frameH: 119,
-    /** The body's middle (the katana hilt sticks out on one side, so not the cell's middle). */
-    anchorX: 63,
-    anchorY: 106,
-    bodyH: 100,
+    width: 1620,
+    height: 2988,
+    frameW: 180,
+    frameH: 166,
+    anchorX: 90.5,
+    anchorY: 151,
+    bodyH: 142,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
     idle: strips(0, 1, 2, 4),
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
-    death: { row: 7, frames: 8 },
+    death: { row: 7, frames: 7 },
+    /** The ice blast: hands gather a frost orb at one side, then both palms thrust it forward. */
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     lobby: { row: 17, frames: 8 },
+    /** His blue helmet and suit and the ice on his armor. */
     hues: [185, 250],
-    scale: 0.21,
+    scale: 0.156,
   },
   /** Captain America, made in PixelLab (scripts/build-character-sheet.py captain lays out its frames). */
   captain: {
