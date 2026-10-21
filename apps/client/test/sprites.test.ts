@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -522,6 +522,24 @@ describe("thor sheet", () => {
   it("stands about as tall as the captain on screen", () => {
     const tall = (s: typeof thor | typeof SHEETS.captain) => s.bodyH * s.scale;
     expect(Math.abs(tall(thor) - tall(SHEETS.captain))).toBeLessThan(2);
+  });
+
+  it("the bolt leaves from the hammer's head, on whichever side he faces", () => {
+    const s = thor.scale;
+    const [rx, ry] = boltOrigin(thor, "right", 100, 50);
+    expect(rx).toBeCloseTo(100 + thor.muzzle!.side[0] * s);
+    expect(ry).toBeCloseTo(50 + 6 + thor.muzzle!.side[1] * s);
+    expect(rx).toBeGreaterThan(100 + 5); // out in front of him
+    const [lx, ly] = boltOrigin(thor, "left", 100, 50);
+    expect(lx).toBeCloseTo(200 - rx);
+    expect(ly).toBeCloseTo(ry);
+    expect(boltOrigin(thor, "down", 100, 50)[1]).toBeCloseTo(56 + thor.muzzle!.down[1] * s);
+    expect(boltOrigin(thor, "up", 100, 50)[1]).toBeLessThan(50);
+  });
+
+  it("characters without a muzzle send it from just in front of their tile's center", () => {
+    expect(boltOrigin(SHEETS.captain, "right", 100, 50)).toEqual([106, 50]);
+    expect(boltOrigin(undefined, "up", 100, 50)).toEqual([100, 44]);
   });
 
   it("the cast thrusts the hammer forward when the bolt shows", () => {

@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, DIR_VECTORS, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -21,6 +21,8 @@ export interface SheetLayout {
   anchorY: number;
   /** Character height in pixels, to hold a bomb over its head. */
   bodyH: number;
+  /** Where a bolt leaves the cast pose (sheet pixels from the anchor; `side` faces `side`). */
+  muzzle?: Record<"down" | "side" | "up", readonly [number, number]>;
   /** Ticks each walk frame stays on screen. */
   ticksPerFrame: number;
   /** Ticks each idle frame stays on screen, when standing breathes slower than walking. */
@@ -149,13 +151,15 @@ export const SHEETS = {
   /** Thor (fan art), made in PixelLab (scripts/build-character-sheet.py thor lays out its frames). */
   thor: {
     url: "sprites/thor.png",
-    width: 1620,
+    width: 1260,
     height: 2610,
-    frameW: 180,
+    frameW: 140,
     frameH: 145,
-    anchorX: 91,
+    anchorX: 71,
     anchorY: 143,
     bodyH: 124,
+    /** The hammer's face in the thrust (the back view hides it: over his head). */
+    muzzle: { side: [69, -73.5], down: [1, -30], up: [0, -93] },
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -384,6 +388,21 @@ export const BEAM_DELAY = 20;
 export function beamAlpha(ticks: number): number {
   if (ticks < BEAM_DELAY) return 0;
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
+}
+
+/**
+ * Where a bolt cast toward `dir` by a player standing at (cx,cy) starts: the sheet's muzzle (Thor's
+ * hammer) placed like the sprite (anchor at cy + 6, mirrored when facing away from `side`), or else
+ * 6 px in front of the tile's center.
+ */
+export function boltOrigin(sheet: SheetLayout | undefined, dir: Facing, cx: number, cy: number): [number, number] {
+  const [dx, dy] = DIR_VECTORS[dir];
+  if (!sheet?.muzzle) return [cx + dx * 6, cy + dy * 6];
+  const view = dir === "left" || dir === "right" ? "side" : dir;
+  const [mx, my] = sheet.muzzle[view];
+  const flip = view === "side" && dir !== sheet.side ? -1 : 1;
+  const s = sheet.scale ?? 1;
+  return [cx + mx * s * flip, cy + 6 + my * s];
 }
 
 /**

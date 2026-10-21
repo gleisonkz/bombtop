@@ -2,7 +2,10 @@
   ninja: sprites/ninja.png, character "Ice ninja HD" (128px; carry poses from its "Carry" state)
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
   thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons,
-    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8)
+    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8).
+    PixelLab drew sparks round the thrust hammer that clash with the game's own bolt: the thrust holds its
+    first frame (clean in front and back; in the side view cut off at the hammer's face). The hammer's
+    face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
 Usage: python build-character-sheet.py ninja|captain|thor FRAMES_DIR public/sprites/<name>.png
@@ -48,6 +51,7 @@ CHARACTERS = {
     ],
 }
 BASE = 400  # work canvas size, feet baseline at BASE * 0.75
+THRUST = 5  # thor: first cast frame with the hammer thrust forward (BEAM_DELAY / CAST_TICKS_PER_FRAME)
 
 
 def feet(im):
@@ -64,11 +68,58 @@ def body_middle(im):
     return (cols[0] + cols[-1] + 1) / 2
 
 
+def silver(p):
+    """The hammer head's grey: opaque, light, unsaturated (the sparks are tinted blue)."""
+    r, g, b, a = p
+    return a > 200 and max(r, g, b) > 150 and max(r, g, b) - min(r, g, b) < 40
+
+
+def hammer_face(im):
+    """Side view: the rightmost column holding 8+ silver pixels (the hammer's face), and those pixels' rows."""
+    px = im.load()
+    for x in range(im.width - 1, -1, -1):
+        ys = [y for y in range(im.height) if silver(px[x, y])]
+        if len(ys) >= 8:
+            return x, ys
+    raise ValueError("no hammer face")
+
+
+def hammer_face_cut(im):
+    """Side view: erase everything past the hammer's face, sparks included."""
+    edge = hammer_face(im)[0]
+    px = im.load()
+    for y in range(im.height):
+        for x in range(edge + 1, im.width):
+            px[x, y] = (0, 0, 0, 0)
+    return im
+
+
+def thor_cast(folder, d, frames):
+    if folder != "cast":
+        return frames
+    thrust = hammer_face_cut(frames[THRUST]) if d == "east" else frames[THRUST]
+    return frames[:THRUST] + [thrust.copy() for _ in frames[THRUST:]]
+
+
+def silver_box(im):
+    """Bounding box of the hammer head's grey (low saturation, light) pixels below the face."""
+    px = im.load()
+    pts = []
+    for y in range(im.height // 2, im.height):
+        for x in range(im.width):
+            if silver(px[x, y]) and max(px[x, y][:3]) > 170:
+                pts.append((x, y))
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
 def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
         frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
+        if character == "thor":
+            frames = thor_cast(folder, d, frames)
         ground = feet(frames[0])
         placed = []
         for im in frames:
@@ -103,6 +154,21 @@ def main():
         "anchorX": body_middle(stand), "anchorY": int(BASE * 0.75) - top, "bodyH": bb[3] - bb[1],
         "rows": {name: i for i, (name, _) in enumerate(rows)},
     }
+    if character == "thor":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sb = side.getchannel("A").getbbox()
+        fx, rows_at = hammer_face(side)
+        face = fx + 1
+        down = rows[names.index("cast.down")][1][THRUST].crop((left, top, right, bottom))
+        x0, y0, x1, y1 = silver_box(down)
+        info["muzzle"] = {
+            "side": [face - ax, (rows_at[0] + rows_at[-1]) / 2 - ay],
+            "down": [(x0 + x1 + 1) / 2 - ax, y1 + 1 - ay],
+            # the back view hides the hammer in front of his face: the bolt leaves from over his head
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.25 - ay],
+        }
     print(json.dumps(info))
 
 

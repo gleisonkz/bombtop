@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltPoints, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -596,7 +596,12 @@ export class Renderer {
     const y0 = center(b.y) + dy * 6;
     const x1 = center(b.x + dx * b.length);
     const y1 = center(b.y + dy * b.length);
-    if (b.kind === "lightning") return this.drawBolt(g, x0, y0, x1, y1, b.ttl, alpha);
+    if (b.kind === "lightning") {
+      // From the hammer of the caster as drawn, level with it all the way to where it stopped.
+      const at = this.lastSeen.get(b.ownerId);
+      const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
+      return this.drawBolt(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl, alpha);
+    }
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.ice, width: 6, alpha: alpha * 0.6, cap: "round" });
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: 0xffffff, width: 2, alpha, cap: "round" });
     for (let i = 1; i <= b.length; i++) {
