@@ -205,7 +205,7 @@ function cast(): HTMLElement {
     member(characterArt("ninja", red, "walk"), "near left"),
     member(characterArt("bomb", MASCOT_COLOR, "idle"), "star"),
     member(characterArt("captain", white, "walk"), "near right"),
-    member(characterArt("bomb", blue, "walk"), "far right"),
+    member(characterArt("thor", blue, "walk"), "far right"),
   ]);
 }
 
