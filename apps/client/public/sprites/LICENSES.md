@@ -59,4 +59,5 @@ in HD: drawn on a design grid at high resolution and scaled down, so edges are s
   the burst where it strikes (8 frames, played once).
 - `tiles.png` — `build-tiles.py`. Cells (128px): grass A (plain, flowers, pebbles), grass B (darker),
   breakable block, inner pillar, border wall. Order = `TILES.cells`.
-- `bomber.png` — `build-bomber.py`, the bomb mascot. 128px frames; rows = `SHEETS.bomber`.
+- `bomber.png` — the bomb mascot as a bomb-headed man, made in PixelLab ("Bomb man HD"), laid out by
+  `build-character-sheet.py bomb`; rows = `SHEETS.bomber` (`build-bomber.py` drew the old round mascot).

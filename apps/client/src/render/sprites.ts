@@ -1,4 +1,4 @@
-import { BLAST_TICKS, DIR_VECTORS, KAME_CHARGE, RASENGAN_TICKS, type Blast, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -239,25 +239,34 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14,
   },
-  /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
+  /** The bomb mascot, a bomb-headed man made in PixelLab (scripts/build-character-sheet.py bomb lays out its frames). */
   bomber: {
     url: "sprites/bomber.png",
-    width: 768,
-    height: 1024,
-    frameW: 128,
-    frameH: 128,
-    anchorX: 64,
-    anchorY: 120,
-    bodyH: 104,
-    ticksPerFrame: 8,
+    width: 1170,
+    height: 3006,
+    frameW: 130,
+    frameH: 167,
+    anchorX: 65,
+    anchorY: 161,
+    bodyH: 155,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
     side: "right",
     idle: strips(0, 1, 2, 4),
-    walk: strips(3, 4, 5, 4),
-    stun: { row: 6, frames: 4 },
-    death: { row: 7, frames: 6 },
-    hues: [225, 285],
-    hueBase: [78, 64, 160],
-    scale: 0.175,
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Planting the mega bomb: he crouches with both hands pushed down, then rises. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His violet bomb head and suit. */
+    hues: [250, 290],
+    hueBase: [106, 71, 145],
+    /** White would wash his bomb head out round his white eyes: that player keeps the violet. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.143,
   },
 } satisfies Record<string, SheetLayout>;
 
@@ -460,10 +469,16 @@ const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE
 /**
  * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
  * beam leaves on the thrust frame, KAME_CHARGE in), Naruto's from the start of his Rasengan dash (it
- * strikes on the lunge frame), the others' from their blast; undefined when not casting.
+ * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, the others' from their
+ * blast; undefined when not casting.
  */
-export function castTicks(p: Pick<Player, "charge" | "rasengan">, blast: Pick<Blast, "ttl" | "kind"> | undefined): number | undefined {
+export function castTicks(
+  p: Pick<Player, "charge" | "rasengan">,
+  blast: Pick<Blast, "ttl" | "kind"> | undefined,
+  mega?: Pick<Bomb, "fuse">,
+): number | undefined {
   if (p.charge > 0) return KAME_CHARGE - p.charge;
+  if (mega) return FUSE_TICKS - mega.fuse;
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
   if (!blast) return undefined;
   return (WINDUP[blast.kind] ?? 0) + BLAST_TICKS - blast.ttl;

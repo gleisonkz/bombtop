@@ -584,7 +584,7 @@ export class Renderer {
       const skin = this.skins.get(character);
       if (skin) {
         const { sheet } = skin;
-        const casting = castTicks(p, blast);
+        const casting = castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
         const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
         this.placeSprite(skin, p.id, i, f, cx, cy, tint);
@@ -634,9 +634,9 @@ export class Renderer {
         const ahead = "burst" in rasen && blast?.length ? TILE_PX * 0.4 : 0;
         this.placeRasengan(top, rasen, hx + dx * ahead, hy + dy * ahead);
       }
-      if (character !== "bomb" && p.specialCooldown === 0 && !ice) {
+      if (p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }

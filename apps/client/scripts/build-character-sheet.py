@@ -16,9 +16,15 @@
     standing frames; lobby = the v3 "victory pose" frames 1..8). The breathing idle blew puffs of breath in the side
     view and shut his eyes in front: idle front and side are his rotation ("rot/<dir>.png") bobbing a pixel instead.
     The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
+  bomb: sprites/bomber.png, character "Bomb man HD" (180px canvas; standard mode, its side view redrawn with an eye
+    and re-imported in v3: south/north idle, walk, hit and death come from the first "Bomb man HD", side idle and walk
+    from the re-imported one). Cast = planting the mega bomb, posed from our own skeletons as 3 frames (half crouch,
+    crouch with both hands pushed down, half crouch) spread over the 9 cast cells with his rotation ("rot/<dir>.png")
+    standing at both ends; carry walk posed from our own skeletons (hands up beside his big head), carry idle = its
+    standing frames, lobby = the v3 "victory pose" frames 1..8.
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|bomb FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -81,8 +87,20 @@ CHARACTERS = {
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 8),
     ],
+    # cast = planting the mega bomb: crouches, hands pushed down, rises (see bomb_frames)
+    "bomb": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
 }
 BASE = 400
+PLANT = ["rot", 0, 1, 1, 1, 1, 2, "rot", "rot"]  # bomb: his 3 posed cast frames over the 9 cast cells
 LUNGE = 3  # naruto: first cast frame of the lunge
 CAST6 = [0, 1, 2, 3, 3, 3, 4, 4, 5]  # naruto: his 6 posed cast frames spread over the 9 cast cells
 BOB = [0, 0, 1, 1]  # naruto: idle breathing from a still rotation, pixels down  # work canvas size, feet baseline at BASE * 0.75
@@ -216,6 +234,19 @@ def naruto_frames(src, folder, d):
     return None
 
 
+def bomb_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [still.copy() if i == "rot" else load("cast3", i) for i in PLANT]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
 def hand_front(im):
     """Front view: the lowest middle of the skin pixels in the lower body band, near the middle (his hand held out)."""
     px = im.load()
@@ -230,7 +261,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = naruto_frames(src, folder, d) if character == "naruto" else None
+        frames = {"naruto": naruto_frames, "bomb": bomb_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":

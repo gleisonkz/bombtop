@@ -79,7 +79,7 @@ Action button priority: detonate remote > punch > mount ability.
 Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain, thor, goku, naruto). Picked in the lobby (own seat),
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
 ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; frames laid out by
-`scripts/build-character-sheet.py ninja`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
+`scripts/build-character-sheet.py ninja`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), the bomb mascot is a bomb-headed man made in PixelLab ("Bomb man HD", same settings as Goku; its side view was redrawn with an eye and re-imported), laid out by `scripts/build-character-sheet.py bomb`, his mega bomb plant and carry walk posed from our own skeletons. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
 `scripts/build-character-sheet.py captain`; his special (cast rows): shield forward, then he kneels as it grows huge
 (PixelLab "Shield" state + v3 interpolation), and a spiral of light loops round him (PixelLab VFX, `scripts/build-captain-spiral.py`, `SPIRAL`).
 Thor (fan art) made in PixelLab ("Thor HD", 180px canvas), laid out by `scripts/build-character-sheet.py thor`; his cast (hammer overhead,

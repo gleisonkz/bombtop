@@ -10,8 +10,9 @@ describe("character previews", () => {
   });
 
   it("walks toward us, breathes when idle, reels when dizzy", () => {
-    const s = SHEETS.bomber;
-    expect(previewPose(s, "walk")).toEqual({ row: s.walk.down.row, frames: 4, seconds: (4 * s.ticksPerFrame) / TICK_RATE });
+    const { lobby: _, ...s } = SHEETS.bomber;
+    expect(s.walk.down.frames).toBe(6);
+    expect(previewPose(s, "walk")).toEqual({ row: s.walk.down.row, frames: 6, seconds: (6 * s.ticksPerFrame) / TICK_RATE });
     expect(previewPose(s, "idle").row).toBe(s.idle.down.row);
     expect(previewPose(s, "dizzy").row).toBe(s.stun.row);
   });

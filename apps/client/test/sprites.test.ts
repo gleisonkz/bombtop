@@ -423,22 +423,33 @@ describe("bomber sheet", () => {
   const sheet = SHEETS.bomber;
 
   it("fits every strip inside the image", () => {
-    const strips = [...Object.values(sheet.idle), ...Object.values(sheet.walk), sheet.stun, sheet.death];
+    const strips = [
+      ...[sheet.idle, sheet.walk, sheet.cast, sheet.carryIdle, sheet.carryWalk].flatMap((set) => Object.values(set)),
+      sheet.stun,
+      sheet.death,
+      sheet.lobby,
+    ];
     for (const s of strips) {
       expect((s.row + 1) * sheet.frameH).toBeLessThanOrEqual(sheet.height);
       expect(s.frames * sheet.frameW).toBeLessThanOrEqual(sheet.width);
     }
   });
 
-  it("walks through 4 steps per view, mirroring right for left", () => {
+  it("walks through 6 steps per view, mirroring right for left", () => {
     const cols = new Set(Array.from({ length: 64 }, (_, tick) => playerFrame(sheet, { facing: "down", moving: true, carrying: false, tick }).x));
-    expect(cols.size).toBe(4);
+    expect(cols.size).toBe(6);
     expect(playerFrame(sheet, { facing: "left", moving: true, carrying: false, tick: 0 }).flip).toBe(true);
     expect(playerFrame(sheet, { facing: "up", moving: true, carrying: false, tick: 0 }).y).toBe(sheet.walk.up.row * sheet.frameH);
   });
 
-  it("repaints the violet body in the player's color, by hue", () => {
-    expect(sheet.hues).toEqual([225, 285]);
+  it("repaints the violet bomb head and suit in the player's color, by hue", () => {
+    expect(sheet.hues).toEqual([250, 290]);
+    expect(sheet.keepFor).toEqual([[245, 245, 245]]); // white would wash his head out round his eyes
+  });
+
+  it("plants his mega bomb on the cast rows", () => {
+    const f = playerFrame(sheet, { facing: "down", moving: false, carrying: false, casting: 2 * CAST_TICKS_PER_FRAME, tick: 0 });
+    expect(f.y).toBe(sheet.cast.down.row * sheet.frameH);
   });
 
   it("plays its death once, then is gone", () => {
@@ -453,7 +464,7 @@ describe("HD art", () => {
     expect(FLAMES.size * FLAMES.scale).toBe(16);
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
-    expect(SHEETS.bomber.frameW * SHEETS.bomber.scale).toBeCloseTo(32 * 0.7);
+    expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
     expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(38 * 0.55, 0); // the ninja stands as tall as before
   });
 });
@@ -548,6 +559,11 @@ describe("castTicks", () => {
     expect(castTicks({ charge: 0, rasengan: 1 }, undefined)).toBe(RASENGAN_TICKS - 1);
     expect(castTicks(still, { ttl: BLAST_TICKS - 2, kind: "rasengan" })).toBe(RASENGAN_TICKS + 2);
     expect(RASENGAN_TICKS).toBe(3 * CAST_TICKS_PER_FRAME);
+  });
+
+  it("runs the bomb mascot's from the moment his mega bomb lands", () => {
+    expect(castTicks(still, undefined, { fuse: FUSE_TICKS })).toBe(0);
+    expect(castTicks(still, undefined, { fuse: FUSE_TICKS - 7 })).toBe(7);
   });
 
   it("other casts start with their blast", () => {
