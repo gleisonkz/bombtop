@@ -1,5 +1,6 @@
 import { RoomCore, TICK_RATE } from "@bombtop/shared";
 import type { RoomLink } from "./room-link";
+import { TickClock } from "../loop/tick-clock";
 
 /** An ordered, reliable text pipe to one other phone (a WebRTC data channel). */
 export interface Wire {
@@ -120,15 +121,11 @@ export class LocalHost {
 
   private run(): void {
     if (this.timer !== undefined || typeof window === "undefined") return;
-    // Catches up after a slow frame so the match keeps real time (no catch-up past half a second).
+    // Keeps real time: after a slow frame the owed ticks are played a few per call, not in one freeze.
     const step = 1000 / TICK_RATE;
-    let last = performance.now();
-    let owed = 0;
+    const clock = new TickClock(step, performance.now());
     this.timer = setInterval(() => {
-      const now = performance.now();
-      owed = Math.min(owed + now - last, 500);
-      last = now;
-      for (; owed >= step; owed -= step) this.tick();
+      for (let n = clock.due(performance.now()); n > 0; n--) this.tick();
     }, step / 2);
   }
 }
