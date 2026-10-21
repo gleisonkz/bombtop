@@ -201,7 +201,7 @@ function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
-    member(characterArt("bomb", green, "walk"), "far left"),
+    member(characterArt("goku", green, "walk"), "far left"),
     member(characterArt("ninja", red, "walk"), "near left"),
     member(characterArt("bomb", MASCOT_COLOR, "idle"), "star"),
     member(characterArt("captain", white, "walk"), "near right"),
