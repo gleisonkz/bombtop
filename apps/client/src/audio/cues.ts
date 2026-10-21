@@ -19,6 +19,7 @@ export type CueName =
   | "ice"
   | "thunder"
   | "kamehameha"
+  | "rasengan"
   | "freeze"
   | "hurry";
 
@@ -79,9 +80,9 @@ export function soundCues(prev: View, next: View): Cue[] {
     if (!items.has(k) && !flames.has(k) && i.kind !== ItemKind.Skull) cues.push({ name: "pickup", x: mid(i.x) });
   }
 
-  // The kamehameha is heard from the start of its charge (see below), its sound runs into the beam.
+  // The kamehameha and the rasengan are heard from the start of their charge or dash (see below).
   for (const b of next.blasts) {
-    if (b.kind === "kamehameha" || b.ttl < BLAST_TICKS - elapsed) continue;
+    if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
     cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
   }
 
@@ -104,6 +105,7 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("dash", !was.dashTicks && p.dashTicks);
     hear("freeze", !was.frozen && p.frozen);
     hear("kamehameha", !was.charge && p.charge);
+    hear("rasengan", !was.rasengan && p.rasengan);
   }
 
   if (!prev.pressure && next.pressure) cues.push({ name: "hurry", x: width / 2 });

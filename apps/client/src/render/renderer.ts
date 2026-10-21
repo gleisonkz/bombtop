@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -113,6 +113,10 @@ export class Renderer {
   private kameArt: Record<KamePiece["kind"], Texture[]> | null = null;
   private readonly kameSprites: Sprite[] = [];
   private kameUsed = 0;
+  /** Naruto's Rasengan (the ball in his hand, the burst where it strikes), over the players too. */
+  private rasenArt: { orb: Texture[]; burst: Texture[] } | null = null;
+  private readonly rasenSprites: Sprite[] = [];
+  private rasenUsed = 0;
   private readonly itemLayer = new Container();
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
@@ -205,6 +209,36 @@ export class Renderer {
     const row = (r: number) =>
       Array.from({ length: KAMEHAMEHA.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * KAMEHAMEHA.size, r * KAMEHAMEHA.size, KAMEHAMEHA.size, KAMEHAMEHA.size) }));
     this.kameArt = { orb: row(KAMEHAMEHA.rows.orb), body: row(KAMEHAMEHA.rows.body), head: row(KAMEHAMEHA.rows.head) };
+  }
+
+  async useRasenganArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${RASENGAN.url}`);
+    base.source.scaleMode = "linear";
+    const row = (r: number) =>
+      Array.from({ length: RASENGAN.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * RASENGAN.size, r * RASENGAN.size, RASENGAN.size, RASENGAN.size) }));
+    this.rasenArt = { orb: row(RASENGAN.rows.orb), burst: row(RASENGAN.rows.burst) };
+  }
+
+  /** The Rasengan's ball or burst at (x,y), from the art once loaded (else a plain glowing ball). */
+  private placeRasengan(g: Graphics, look: { orb: number } | { burst: number }, x: number, y: number): void {
+    if (!this.rasenArt) {
+      const r = "orb" in look ? 3 : 3 + look.burst * 1.5;
+      g.circle(x, y, r + 1.5).fill({ color: COLORS.ki, alpha: 0.45 });
+      g.circle(x, y, r).fill({ color: 0xffffff, alpha: "orb" in look ? 0.9 : 0.6 });
+      return;
+    }
+    let sprite = this.rasenSprites[this.rasenUsed];
+    if (!sprite) {
+      sprite = new Sprite();
+      sprite.anchor.set(0.5);
+      this.rasenSprites.push(sprite);
+      this.beamLayer.addChild(sprite);
+    }
+    this.rasenUsed++;
+    sprite.texture = "orb" in look ? this.rasenArt.orb[look.orb]! : this.rasenArt.burst[look.burst]!;
+    sprite.scale.set("orb" in look ? RASENGAN.orbScale : RASENGAN.burstScale);
+    sprite.position.set(x, y);
+    sprite.visible = true;
   }
 
   async useFlameArt(): Promise<void> {
@@ -515,6 +549,7 @@ export class Renderer {
     }
 
     const ring = perimeter(width, height);
+    this.rasenUsed = 0;
     s.players.forEach((p, i) => {
       const color = COLORS.players[i % COLORS.players.length]!;
       if (!p.alive) {
@@ -549,7 +584,7 @@ export class Renderer {
       const skin = this.skins.get(character);
       if (skin) {
         const { sheet } = skin;
-        const casting = castTicks(p.charge, blast);
+        const casting = castTicks(p, blast);
         const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
         this.placeSprite(skin, p.id, i, f, cx, cy, tint);
@@ -590,9 +625,18 @@ export class Renderer {
         top.circle(kx, cy - 1, r + 1.5).fill({ color: COLORS.ki, alpha: 0.4 });
         top.circle(kx, cy - 1, r).fill({ color: 0xffffff, alpha: 0.9 });
       }
+      // Naruto's Rasengan: spinning in his hand as he dashes, bursting where it strikes.
+      const rasen = rasenganLook(p.rasengan, blast);
+      if (rasen) {
+        const dir = "burst" in rasen && blast ? blast.dir : p.facing;
+        const [hx, hy] = boltOrigin(skin?.sheet, dir, cx, cy);
+        const [dx, dy] = DIR_VECTORS[dir];
+        const ahead = "burst" in rasen && blast?.length ? TILE_PX * 0.4 : 0;
+        this.placeRasengan(top, rasen, hx + dx * ahead, hy + dy * ahead);
+      }
       if (character !== "bomb" && p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -601,6 +645,7 @@ export class Renderer {
     this.kameUsed = 0;
     for (const b of s.blasts) this.drawBlast(top, b);
     for (let i = this.kameUsed; i < this.kameSprites.length; i++) this.kameSprites[i]!.visible = false;
+    for (let i = this.rasenUsed; i < this.rasenSprites.length; i++) this.rasenSprites[i]!.visible = false;
     this.drawParticles(top);
     const shake = this.fx.shake;
     this.root.position.set(Math.sin(s.tick * 2.3) * shake, Math.cos(s.tick * 3.1) * shake);
@@ -613,7 +658,7 @@ export class Renderer {
 
   /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
   private drawBlast(g: Graphics, b: Blast): void {
-    if (b.length === 0) return;
+    if (b.length === 0 || b.kind === "rasengan") return; // the rasengan is drawn with its caster
     const [dx, dy] = DIR_VECTORS[b.dir];
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
     const x1 = center(b.x + dx * b.length);

@@ -121,6 +121,15 @@ describe("Predictor", () => {
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
   });
 
+  it("leaves naruto's rasengan dash to the server", () => {
+    const p = new Predictor("me");
+    const snap = snapshot();
+    snap.players[0]!.rasengan = 8;
+    p.step(input("down"));
+    p.step(input("down"));
+    expect(p.predict(snap)!.py).toBe(snap.players[0]!.py);
+  });
+
   it("returns null when the player is not in the match", () => {
     expect(new Predictor("ghost").predict(snapshot())).toBeNull();
   });

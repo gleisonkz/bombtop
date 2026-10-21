@@ -3,7 +3,7 @@ import { BLAST_TICKS, createMatch, ItemKind, publicView, TICK_RATE, TILE, type P
 import { actionCues } from "../src/audio/local-cues";
 import { GhostBlasts, GhostPickups, predictBlast } from "../src/net/own-actions";
 
-function view(character: "ninja" | "bomb" | "goku" = "ninja"): PublicView {
+function view(character: "ninja" | "bomb" | "goku" | "naruto" = "ninja"): PublicView {
   return publicView(createMatch({ seed: 1, playerIds: ["me", "them"], blockDensity: 0, characters: { me: character } }));
 }
 const me = (v: PublicView): Player => structuredClone(v.players[0]!);
@@ -36,6 +36,12 @@ describe("ice blast, predicted", () => {
     v.blasts.push({ ownerId: "them", x: 5, y: 5, dir: "up", length: 1, ttl: 10, kind: "ice" });
     expect(predictBlast(v, me(v))).toBeNull();
     expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["kamehameha"]);
+  });
+
+  it("naruto's rasengan is heard at once; its strike comes from the server", () => {
+    const v = view("naruto");
+    expect(predictBlast(v, me(v))).toBeNull();
+    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["rasengan"]);
   });
 
   it("draws our blast at once, ages it, and hands over to the server's copy", () => {

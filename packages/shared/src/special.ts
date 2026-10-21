@@ -1,6 +1,6 @@
 import { addFlame } from "./bombs";
-import { BLAST_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, SHIELD_TICKS, SPECIAL_COOLDOWN } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, type BlastKind, type Facing, type MatchState, type Player } from "./state";
+import { BLAST_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE } from "./constants";
+import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
@@ -10,6 +10,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Thor: a lightning bolt the same way that stuns the first player within BOLT_RANGE tiles.
  * Captain: raises his shield for SHIELD_TICKS (see `shieldAt`).
  * Goku: charges for KAME_CHARGE ticks, then fires the Kamehameha (see `kamehameha`).
+ * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -23,6 +24,11 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     p.charge = KAME_CHARGE;
     p.specialCooldown = KAME_COOLDOWN;
     return true;
+  } else if (p.character === "naruto") {
+    const { x, y } = playerTile(p);
+    p.px = tileCenter(x);
+    p.py = tileCenter(y);
+    p.rasengan = RASENGAN_TICKS;
   } else {
     return false;
   }
@@ -44,7 +50,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha">, { range: number; strike: (p: Player) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, { range: number; strike: (p: Player) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = BOLT_STUN_TICKS) },
 };
@@ -103,6 +109,54 @@ export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y:
   }
   s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "kamehameha" });
   if (reflector) kamehameha(s, reflector.id, playerTile(reflector), OPPOSITE[dir], false);
+}
+
+const others = (s: MatchState, p: Player, x: number, y: number) =>
+  s.players.find((o) => o !== p && o.alive && playerTile(o).x === x && playerTile(o).y === y);
+
+/**
+ * One tick of Naruto's Rasengan dash. On each tile center he looks at the tile ahead: a wall or bomb
+ * stops him, a block breaks and stops him, a player in it is knocked back up to RASENGAN_PUSH tiles
+ * (until something is in the way) and stunned, and a shield facing him stuns him instead.
+ */
+export function updateRasengan(s: MatchState, p: Player): void {
+  const [dx, dy] = DIR_VECTORS[p.facing];
+  if (p.rasengan % RASENGAN_TICKS_PER_TILE === 0) {
+    const { x, y } = playerTile(p);
+    const tx = x + dx;
+    const ty = y + dy;
+    const tile = getTile(s, tx, ty);
+    const shield = shieldAt(s, tx, ty, dx, dy);
+    const hit = others(s, p, tx, ty);
+    if (shield) {
+      p.stun = RASENGAN_STUN_TICKS;
+    } else if (tile === Tile.Block) {
+      setTile(s, tx, ty, Tile.Empty);
+    } else if (hit) {
+      let to = 0;
+      while (to < RASENGAN_PUSH) {
+        const nx = tx + dx * (to + 1);
+        const ny = ty + dy * (to + 1);
+        if (getTile(s, nx, ny) !== Tile.Empty || bombAt(s, nx, ny) || others(s, hit, nx, ny)) break;
+        to++;
+      }
+      hit.px = tileCenter(tx + dx * to);
+      hit.py = tileCenter(ty + dy * to);
+      hit.stun = RASENGAN_STUN_TICKS;
+      hit.charge = hit.rasengan = 0;
+    }
+    if (shield || tile !== Tile.Empty || bombAt(s, tx, ty) || hit) {
+      p.rasengan = 0;
+      s.blasts.push({ ownerId: p.id, x, y, dir: p.facing, length: 1, ttl: BLAST_TICKS, kind: "rasengan" });
+      return;
+    }
+  }
+  p.px += (dx * TILE) / RASENGAN_TICKS_PER_TILE;
+  p.py += (dy * TILE) / RASENGAN_TICKS_PER_TILE;
+  if (--p.rasengan === 0) {
+    const { x, y } = playerTile(p);
+    s.blasts.push({ ownerId: p.id, x, y, dir: p.facing, length: 0, ttl: BLAST_TICKS, kind: "rasengan" });
+  }
 }
 
 /** Blasts fade after BLAST_TICKS. */

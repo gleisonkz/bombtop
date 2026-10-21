@@ -20,7 +20,7 @@ describe("Intro", () => {
       const key = card?.name ?? (intro.logo() ? "logo" : null);
       if (key && seen[seen.length - 1] !== key) seen.push(key);
     });
-    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "Goku", "logo"]);
+    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "Goku", "Naruto", "logo"]);
   });
 
   it("each card says what the character does", () => {
@@ -29,7 +29,7 @@ describe("Intro", () => {
       const card = intro.card();
       if (card) lines.add(card.line);
     });
-    expect(lines.size).toBe(5);
+    expect(lines.size).toBe(6);
     for (const line of lines) expect(line.length).toBeGreaterThan(10);
   });
 
@@ -68,6 +68,18 @@ describe("Intro", () => {
     for (let x = 3; x <= 7; x++) expect(tiles[7 * width + x]).toBe(Tile.Empty);
   });
 
+  it("naruto's rasengan knocks the mascot back down row 3", () => {
+    let struck = false;
+    let knocked = false;
+    play(({ state }) => {
+      struck ||= state.blasts.some((b) => b.ownerId === "naruto" && b.kind === "rasengan" && b.length === 1);
+      const bomb = state.players.find((p) => p.id === "bomb")!;
+      knocked ||= struck && playerTile(bomb).x === 9 && playerTile(bomb).y === 3 && bomb.stun > 0;
+    });
+    expect(struck).toBe(true);
+    expect(knocked).toBe(true);
+  });
+
   it("thor's bolt leaves the mascot dizzy", () => {
     let bolt = false;
     let dizzy = false;
@@ -94,8 +106,8 @@ describe("Intro", () => {
     expect(intro.state.players.every((p) => p.alive && p.frozen === 0)).toBe(true);
   });
 
-  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor, green goku", () => {
-    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku"]);
+  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor, green goku, white naruto (his navy jacket)", () => {
+    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku", "naruto"]);
   });
 
   it(`ends after ${INTRO_TICKS / 60} seconds and then stays put`, () => {

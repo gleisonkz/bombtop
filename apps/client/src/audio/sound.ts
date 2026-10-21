@@ -38,6 +38,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   ice: { gain: 0.55, vary: 0.04, voices: 2 },
   thunder: { gain: 0.6, vary: 0.05, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
+  rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
   start: { gain: 0.6, vary: 0, voices: 1 },

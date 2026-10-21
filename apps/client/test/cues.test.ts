@@ -129,6 +129,17 @@ describe("soundCues", () => {
     expect(names(charging, fired)).toEqual([]);
   });
 
+  it("hears the rasengan when naruto starts his dash, and not again when it strikes", () => {
+    const v = view();
+    const dashing = later(v, (n) => void (n.players[0]!.rasengan = 11));
+    expect(names(v, dashing)).toEqual(["rasengan"]);
+    const struck = later(dashing, (n) => {
+      n.players[0]!.rasengan = 0;
+      n.blasts.push({ ownerId: n.players[0]!.id, x: 1, y: 1, dir: "right", length: 1, ttl: BLAST_TICKS - 1, kind: "rasengan" });
+    });
+    expect(names(dashing, struck)).toEqual([]);
+  });
+
   it("hears thunder for a lightning bolt, at the caster", () => {
     const v = view();
     const next = later(v, (n) => {

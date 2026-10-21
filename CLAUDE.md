@@ -72,11 +72,11 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | revenge cart | `revenge.ts` | **off for now** (`createMatch` `revenge` defaults to false). dead ride the border, throw bombs; a kill swaps them back in |
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters). Only classic is in the rotation (`STAGES`) for now |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
-| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Goku: Kamehameha, charges 1/3 s planted (`Player.charge`; a stun or freeze cancels it), then a beam 5 tiles straight ahead: fire through blocks (breaking them) and bombs (setting them off) up to the first player, who burns; walls stop it, a shield sends it back; 30 s recharge. Bomb: none yet |
+| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Goku: Kamehameha, charges 1/3 s planted (`Player.charge`; a stun or freeze cancels it), then a beam 5 tiles straight ahead: fire through blocks (breaking them) and bombs (setting them off) up to the first player, who burns; walls stop it, a shield sends it back; 30 s recharge. Naruto: Rasengan, dashes 3 tiles straight ahead (`Player.rasengan`, 4 ticks a tile, deaf to the stick; a stun or freeze cuts it short): a wall or bomb stops him, a block in his way breaks and stops him, the first player he runs into is knocked back up to 2 tiles and stunned 2 s, a shield facing him stuns him instead; 20 s recharge. Bomb: none yet |
 
 Action button priority: detonate remote > punch > mount ability.
 
-Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain, thor, goku). Picked in the lobby (own seat),
+Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain, thor, goku, naruto). Picked in the lobby (own seat),
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
 ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; frames laid out by
 `scripts/build-character-sheet.py ninja`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
@@ -90,6 +90,11 @@ Goku (fan art) made in PixelLab ("Goku HD", standard mode with custom chibi prop
 the others), laid out by `scripts/build-character-sheet.py goku`; Kamehameha and carry walk posed from our own skeletons
 (keypoints fitted to his own rest pose: his legs are longer than Thor's); the beam is HD art from
 `scripts/build-kamehameha.py` (`KAMEHAMEHA`, laid out by `kameSegments`).
+Naruto (fan art) made in PixelLab ("Naruto HD", same settings as Goku), laid out by `scripts/build-character-sheet.py naruto`;
+Rasengan dash and carry walk posed from our own skeletons; his idle front and side are the still rotation bobbing
+(the breathing template puffed breath and shut his eyes). The Rasengan (ball in his hand, burst where it strikes) is HD
+art from `scripts/build-rasengan.py` (`RASENGAN`, `rasenganLook`). The title intro seats him in a sixth seat (one more
+than a match holds), pushed onto the intro's state.
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must

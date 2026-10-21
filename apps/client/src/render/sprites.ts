@@ -1,4 +1,4 @@
-import { BLAST_TICKS, DIR_VECTORS, KAME_CHARGE, type Blast, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, DIR_VECTORS, KAME_CHARGE, RASENGAN_TICKS, type Blast, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -207,6 +207,37 @@ export const SHEETS = {
     hues: [205, 235],
     hueBase: [8, 59, 137],
     scale: 0.15,
+  },
+  /** Naruto (fan art), made in PixelLab (scripts/build-character-sheet.py naruto lays out its frames). */
+  naruto: {
+    url: "sprites/naruto.png",
+    width: 1188,
+    height: 2952,
+    frameW: 132,
+    frameH: 164,
+    anchorX: 66.5,
+    anchorY: 159,
+    bodyH: 158,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The Rasengan: dashing with his hand out, then the lunge as it strikes. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His hand in the lunge, where the Rasengan spins (the back view hides it: over his shoulders). */
+    muzzle: { side: [49.5, -66.5], down: [0, -52.5], up: [0, -84.7] },
+    /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
+    hues: [205, 232],
+    hueBase: [6, 42, 92],
+    /** White would bleach his jacket: that player keeps the navy. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.14,
   },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
@@ -419,14 +450,19 @@ export function beamAlpha(ticks: number): number {
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
 }
 
+/** Ticks before a blast in which its cast already ran (Goku's charge, Naruto's dash). */
+const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS };
+
 /**
  * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
- * beam leaves on the thrust frame, KAME_CHARGE in), the others' from their blast; undefined when not casting.
+ * beam leaves on the thrust frame, KAME_CHARGE in), Naruto's from the start of his Rasengan dash (it
+ * strikes on the lunge frame), the others' from their blast; undefined when not casting.
  */
-export function castTicks(charge: number, blast: Pick<Blast, "ttl" | "kind"> | undefined): number | undefined {
-  if (charge > 0) return KAME_CHARGE - charge;
+export function castTicks(p: Pick<Player, "charge" | "rasengan">, blast: Pick<Blast, "ttl" | "kind"> | undefined): number | undefined {
+  if (p.charge > 0) return KAME_CHARGE - p.charge;
+  if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
   if (!blast) return undefined;
-  return (blast.kind === "kamehameha" ? KAME_CHARGE : 0) + BLAST_TICKS - blast.ttl;
+  return (WINDUP[blast.kind] ?? 0) + BLAST_TICKS - blast.ttl;
 }
 
 /**
@@ -459,6 +495,32 @@ export function kameSegments(x0: number, y0: number, x1: number, y1: number, til
   const back = KAMEHAMEHA.headBall * tile;
   parts.push({ kind: "head", x: x1 - ux * back, y: y1 - uy * back, rot });
   return parts;
+}
+
+/**
+ * Naruto's Rasengan art (scripts/build-rasengan.py): the spinning ball of chakra in his hand (looping)
+ * and the burst where it strikes (played once).
+ */
+export const RASENGAN = {
+  url: "sprites/rasengan.png",
+  size: 128,
+  frames: 8,
+  rows: { orb: 0, burst: 1 },
+  orbScale: 0.085,
+  burstScale: 0.2,
+  /** Ticks each burst frame stays on screen. */
+  burstTicks: 2,
+};
+
+/**
+ * What of Naruto's Rasengan shows, given his dash ticks left and his latest blast: the ball spinning
+ * in his hand (a frame a tick) all through the dash, then the burst where it struck; null for nothing.
+ */
+export function rasenganLook(rasengan: number, blast: Pick<Blast, "ttl" | "kind"> | undefined): { orb: number } | { burst: number } | null {
+  if (rasengan > 0) return { orb: (RASENGAN_TICKS - rasengan) % RASENGAN.frames };
+  if (blast?.kind !== "rasengan") return null;
+  const frame = Math.floor((BLAST_TICKS - blast.ttl) / RASENGAN.burstTicks);
+  return frame < RASENGAN.frames ? { burst: frame } : null;
 }
 
 /** Flames without the Kamehameha's own fire along its beam (the beam is drawn over those tiles instead). */

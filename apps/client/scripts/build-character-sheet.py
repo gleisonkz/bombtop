@@ -11,9 +11,14 @@
     PixelLab drew sparks round the thrust hammer that clash with the game's own bolt: the thrust holds its
     first frame (clean in front and back; in the side view cut off at the hammer's face). The hammer's
     face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.
+  naruto: sprites/naruto.png, character "Naruto HD" (180px canvas; Rasengan dash and carry walk posed from our own
+    skeletons, 6 frames each: 3 running with his hand out, 2 lunging, 1 settling; carry idle = the carry walk's
+    standing frames; lobby = the v3 "victory pose" frames 1..8). The breathing idle blew puffs of breath in the side
+    view and shut his eyes in front: idle front and side are his rotation ("rot/<dir>.png") bobbing a pixel instead.
+    The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -65,8 +70,22 @@ CHARACTERS = {
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 8),
     ],
+    # cast = Rasengan: dashing with his hand out (frames 0-2, RASENGAN_TICKS), the lunge as it strikes (3+)
+    "naruto": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
 }
-BASE = 400  # work canvas size, feet baseline at BASE * 0.75
+BASE = 400
+LUNGE = 3  # naruto: first cast frame of the lunge
+CAST6 = [0, 1, 2, 3, 3, 3, 4, 4, 5]  # naruto: his 6 posed cast frames spread over the 9 cast cells
+BOB = [0, 0, 1, 1]  # naruto: idle breathing from a still rotation, pixels down  # work canvas size, feet baseline at BASE * 0.75
 THRUST = 5  # thor: first cast frame with the hammer thrust forward (BEAM_DELAY / CAST_TICKS_PER_FRAME)
 
 
@@ -176,11 +195,44 @@ def silver_box(im):
     return min(xs), min(ys), max(xs), max(ys)
 
 
+def bob(im, dy):
+    out = Image.new("RGBA", im.size)
+    out.alpha_composite(im.crop((0, 0, im.width, im.height - dy)), (0, dy))
+    return out
+
+
+def naruto_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast":
+        return [load("cast6", i) for i in CAST6]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
+def hand_front(im):
+    """Front view: the lowest middle of the skin pixels in the lower body band, near the middle (his hand held out)."""
+    px = im.load()
+    mid = im.width / 2
+    pts = [(x, y) for y in range(int(im.height * 0.5), int(im.height * 0.8)) for x in range(im.width)
+           if abs(x - mid) < im.width * 0.2 and skin(px[x, y])]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    return (min(xs) + max(xs) + 1) / 2, (min(ys) + max(ys)) / 2
+
+
 def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
+        frames = naruto_frames(src, folder, d) if character == "naruto" else None
+        if frames is None:
+            frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
         if character == "goku":
@@ -247,6 +299,20 @@ def main():
             "down": [dx - ax, dy - ay],
             # the back view hides his hands in front of him: the beam leaves from over his shoulders
             "up": [0, sb[1] + (sb[3] - sb[1]) * 0.35 - ay],
+        }
+    if character == "naruto":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][LUNGE].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        down = rows[names.index("cast.down")][1][LUNGE].crop((left, top, right, bottom))
+        dx, dy = hand_front(down)
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [dx - ax, dy - ay],
+            # the back view hides his hand in front of him: the ball shows over his shoulder
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
         }
     print(json.dumps(info))
 

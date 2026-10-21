@@ -69,6 +69,12 @@ const RECIPE = {
     len: 0.4,
     layer: { src: K("sci-fi-sounds", "laserLarge_000.ogg"), len: 0.9, gain: 0, at: 0.33 },
   },
+  // Naruto's special: the ball of chakra whirring in his hand as he dashes, then the strike (RASENGAN_TICKS = 0.2 s)
+  rasengan: {
+    src: K("sci-fi-sounds", "engineCircular_001.ogg"),
+    len: 0.45,
+    layer: { src: ESM_AG("FGHTImpt_Combat Punch Impact Light Hit Delay Crunchy Vintage Quick Smack 05_ESM_AG.wav"), len: 0.5, gain: -2, at: 0.2 },
+  },
   freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),

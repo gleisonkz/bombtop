@@ -97,6 +97,16 @@ export const KAME_RANGE = 5;
 export const KAME_CHARGE = 20;
 export const KAME_COOLDOWN = 30 * TICK_RATE;
 
+/**
+ * Naruto's Rasengan: a dash RASENGAN_RANGE tiles straight ahead, RASENGAN_TICKS_PER_TILE ticks a tile;
+ * the first player he runs into is knocked back up to RASENGAN_PUSH tiles and stunned.
+ */
+export const RASENGAN_RANGE = 3;
+export const RASENGAN_TICKS_PER_TILE = 4;
+export const RASENGAN_TICKS = RASENGAN_RANGE * RASENGAN_TICKS_PER_TILE;
+export const RASENGAN_PUSH = 2;
+export const RASENGAN_STUN_TICKS = 2 * TICK_RATE;
+
 /** Captain's shield: how long it stays up (he stands still behind it). */
 export const SHIELD_TICKS = 3 * TICK_RATE;
 

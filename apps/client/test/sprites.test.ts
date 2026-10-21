@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -508,18 +508,43 @@ describe("between", () => {
   });
 });
 
+describe("rasenganLook", () => {
+  it("spins the ball in naruto's hand all through his dash", () => {
+    expect(rasenganLook(RASENGAN_TICKS, undefined)).toEqual({ orb: 0 });
+    expect(rasenganLook(RASENGAN_TICKS - 3, undefined)).toEqual({ orb: 3 });
+    expect(rasenganLook(RASENGAN_TICKS - 9, undefined)).toEqual({ orb: 9 % RASENGAN.frames });
+  });
+
+  it("bursts where it strikes, a frame every 2 ticks, then is gone", () => {
+    const struck = (age: number) => ({ ttl: BLAST_TICKS - age, kind: "rasengan" as const });
+    expect(rasenganLook(0, struck(0))).toEqual({ burst: 0 });
+    expect(rasenganLook(0, struck(5))).toEqual({ burst: 2 });
+    expect(rasenganLook(0, struck(2 * RASENGAN.frames))).toBeNull();
+    expect(rasenganLook(0, { ttl: BLAST_TICKS, kind: "ice" })).toBeNull();
+    expect(rasenganLook(0, undefined)).toBeNull();
+  });
+});
+
 describe("castTicks", () => {
+  const still = { charge: 0, rasengan: 0 };
   it("runs goku's cast from the start of his charge: the beam leaves on the thrust frame", () => {
-    expect(castTicks(KAME_CHARGE, undefined)).toBe(0);
-    expect(castTicks(1, undefined)).toBe(KAME_CHARGE - 1);
+    expect(castTicks({ charge: KAME_CHARGE, rasengan: 0 }, undefined)).toBe(0);
+    expect(castTicks({ charge: 1, rasengan: 0 }, undefined)).toBe(KAME_CHARGE - 1);
     const beam = { ttl: BLAST_TICKS, kind: "kamehameha" } as const;
-    expect(castTicks(0, beam)).toBe(KAME_CHARGE);
+    expect(castTicks(still, beam)).toBe(KAME_CHARGE);
     expect(KAME_CHARGE).toBe(5 * CAST_TICKS_PER_FRAME);
   });
 
+  it("runs naruto's from the start of his dash: the strike comes on the lunge frame", () => {
+    expect(castTicks({ charge: 0, rasengan: RASENGAN_TICKS }, undefined)).toBe(0);
+    expect(castTicks({ charge: 0, rasengan: 1 }, undefined)).toBe(RASENGAN_TICKS - 1);
+    expect(castTicks(still, { ttl: BLAST_TICKS - 2, kind: "rasengan" })).toBe(RASENGAN_TICKS + 2);
+    expect(RASENGAN_TICKS).toBe(3 * CAST_TICKS_PER_FRAME);
+  });
+
   it("other casts start with their blast", () => {
-    expect(castTicks(0, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
-    expect(castTicks(0, undefined)).toBeUndefined();
+    expect(castTicks(still, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
+    expect(castTicks(still, undefined)).toBeUndefined();
   });
 });
 

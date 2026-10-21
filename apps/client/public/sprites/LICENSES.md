@@ -32,6 +32,12 @@ Fan art of Goku (Dragon Ball) for this non-commercial project, made in PixelLab 
 (character "Goku HD"; Kamehameha and carry walk posed with skeleton v3 from its rotations). Frames laid out by
 `scripts/build-character-sheet.py goku`; rows = `SHEETS.goku`.
 
+## naruto.png
+
+Fan art of Naruto (Naruto) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Naruto HD"; Rasengan dash and carry walk posed with skeleton v3 from its rotations). Frames laid out by
+`scripts/build-character-sheet.py naruto`; rows = `SHEETS.naruto`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),
@@ -49,6 +55,8 @@ in HD: drawn on a design grid at high resolution and scaled down, so edges are s
 - `flames.png` — `build-flames.py`. Rows (128px): fireball center, arm segment, arm tip; columns: 5 stages.
 - `kamehameha.png` — `build-kamehameha.py`, Goku's beam. Rows (128px): ball of ki, beam segment (tiles
   seamlessly), head; columns: 8 looping frames.
+- `rasengan.png` — `build-rasengan.py`, Naruto's Rasengan. Rows (128px): the spinning ball (8 looping frames),
+  the burst where it strikes (8 frames, played once).
 - `tiles.png` — `build-tiles.py`. Cells (128px): grass A (plain, flowers, pebbles), grass B (darker),
   breakable block, inner pillar, border wall. Order = `TILES.cells`.
 - `bomber.png` — `build-bomber.py`, the bomb mascot. 128px frames; rows = `SHEETS.bomber`.

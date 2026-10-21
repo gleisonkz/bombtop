@@ -21,7 +21,7 @@ export function predictBlast(view: PublicView, me: Player): Blast | null {
   const s = { ...structuredClone(view), players, rng: 0 } as MatchState;
   const caster = players.find((p) => p.id === me.id)!;
   const before = s.blasts.length;
-  // Goku's kamehameha only charges now: its beam comes from the server once the charge is done.
+  // Goku's kamehameha only charges now and Naruto's rasengan only starts its dash: what they hit comes from the server.
   return useSpecial(s, caster) && s.blasts.length > before ? s.blasts.at(-1)! : null;
 }
 

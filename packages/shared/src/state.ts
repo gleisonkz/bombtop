@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -88,6 +88,8 @@ export interface Player {
   shield: number;
   /** Ticks until Goku's Kamehameha fires (he stands still while it charges). */
   charge: number;
+  /** Ticks left in Naruto's Rasengan dash (he runs `facing`, deaf to the stick; see `updateRasengan`). */
+  rasengan: number;
   curse: Curse | null;
   mount: MountKind | null;
   /** Ticks left of post-hit invulnerability. */
@@ -183,11 +185,14 @@ export interface Blast {
   dir: Facing;
   length: number;
   ttl: number;
-  /** Ninja's ice (freezes), Thor's lightning (stuns) or Goku's Kamehameha (burns, see `kamehameha`). */
+  /**
+   * Ninja's ice (freezes), Thor's lightning (stuns), Goku's Kamehameha (burns, see `kamehameha`) or
+   * where Naruto's Rasengan struck (`length` 1; 0 when it ran its course).
+   */
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "kamehameha";
+export type BlastKind = "ice" | "lightning" | "kamehameha" | "rasengan";
 
 export interface MatchState {
   tick: number;
