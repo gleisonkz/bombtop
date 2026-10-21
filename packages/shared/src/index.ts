@@ -22,3 +22,4 @@ export * from "./delta";
 export * from "./room/session";
 export * from "./room/input-queue";
 export * from "./room/snapshot-stream";
+export * from "./room/core";

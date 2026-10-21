@@ -27,9 +27,10 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   Not shown when arriving by an invite link or on the guide.
   Inputs in `src/input` (keyboard, gamepad, touch) are pure and unit-tested; DOM/Pixi glue is not.
 - `packages/shared/src/room` — room logic, pure and transport-agnostic so it also runs in a browser:
-  `BattleSession` (lobby, host, match lifecycle, bots), `InputQueue` (input jitter buffer), `SnapshotStream`.
-- `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleRoom` is a thin adapter
-  around `BattleSession` (integration-tested over the network).
+  `BattleSession` (lobby, host, match lifecycle, bots), `InputQueue` (input jitter buffer), `SnapshotStream`,
+  and `RoomCore`: what each client message does and what goes back, behind a `RoomOutput` (send/broadcast).
+- `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleRoom` is a thin adapter around `RoomCore`
+  (integration-tested over the network).
 
 ## Commands
 

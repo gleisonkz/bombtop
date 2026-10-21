@@ -1,20 +1,6 @@
 import { Room, type Client } from "@colyseus/core";
-import {
-  botLevel,
-  C2S,
-  characterId,
-  DEFAULT_CHARACTER,
-  MAX_PLAYERS,
-  S2C,
-  inputSeq,
-  inputTick,
-  sanitizeInput,
-  sanitizeName,
-  TICK_RATE,
-  type RoomPhase,
-} from "@bombtop/shared";
+import { C2S, MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
-import { BattleSession, SnapshotStream } from "@bombtop/shared";
 import { NetLog, netReport } from "./net-log";
 
 /** ?debug clients' connection reports, read over SSH (deploy/vps/README.md). */
@@ -33,54 +19,36 @@ export interface BattleRoomOptions {
   token?: string;
 }
 
-/** Thin Colyseus adapter around BattleSession. State is sent as messages, not Schema. */
+/** Thin Colyseus adapter around RoomCore. State is sent as messages, not Schema. */
 export class BattleRoom extends Room {
   maxClients = MAX_PLAYERS;
-  private session = new BattleSession();
-  private lastPhase: RoomPhase = "lobby";
-  /** Whole snapshots now and then, differences in between. */
-  private stream = new SnapshotStream();
+  private readonly core = new RoomCore(() => this.roomId, {
+    send: (id, type, message) => this.clients.getById(id)?.send(type, message),
+    broadcast: (type, message) => this.broadcast(type, message),
+    // Locked while a match runs (no public joins); bots take seats too, so a full room stops taking people.
+    phaseChanged: (phase) => void (phase === "playing" ? this.lock() : phase === "lobby" ? this.unlock() : undefined),
+    seatsChanged: (full) => void (full ? this.lock() : this.unlock()),
+  });
 
   async onCreate(options: BattleRoomOptions) {
     if (options?.private) await this.setPrivate(true);
     this.setPatchRate(null);
 
-    this.onMessage(C2S.input, (client, message) => {
-      this.session.setInput(client.sessionId, sanitizeInput(message), inputSeq(message), inputTick(message));
-    });
-    this.onMessage(C2S.sync, (client) => {
-      client.send(S2C.lobby, this.session.lobbyInfo(this.roomId));
-      // The base the next difference is made against.
-      const last = this.stream.last;
-      if (this.session.phase !== "lobby" && last) client.send(S2C.snapshot, last);
-    });
-    this.onMessage(C2S.addBot, (client, message) => {
-      const level = botLevel(message);
-      if (level && this.session.addBot(client.sessionId, level)) this.seatsChanged();
-    });
-    this.onMessage(C2S.removeBot, (client, message: unknown) => {
-      const id = (message as { id?: unknown } | null)?.id;
-      if (typeof id === "string" && this.session.removeBot(client.sessionId, id)) this.seatsChanged();
-    });
-    this.onMessage(C2S.character, (client, message) => {
-      const character = characterId(message);
-      if (character && this.session.setCharacter(client.sessionId, character)) this.broadcastLobby();
-    });
+    for (const type of [C2S.input, C2S.sync, C2S.addBot, C2S.removeBot, C2S.character, C2S.start]) {
+      this.onMessage(type, (client, message) => this.core.message(client.sessionId, type, message));
+    }
     this.onMessage(C2S.stats, (client, message) => {
       const report = netReport(message);
       if (!report || !netLog.allow(client.sessionId)) return;
-      const player = this.session.lobbyInfo(this.roomId).members.find((m) => m.id === client.sessionId)?.name ?? "?";
+      const player = this.core.session.lobbyInfo(this.roomId).members.find((m) => m.id === client.sessionId)?.name ?? "?";
       try {
         netLog.write({ room: this.roomId, player }, report);
       } catch (err) {
         console.warn("[bombtop] net log", err);
       }
     });
-    this.onMessage(C2S.start, (client) => {
-      if (this.session.start(client.sessionId)) this.syncPhase();
-    });
 
-    this.setSimulationInterval(() => this.update(), 1000 / TICK_RATE);
+    this.setSimulationInterval(() => this.core.update(), 1000 / TICK_RATE);
   }
 
   /**
@@ -93,59 +61,23 @@ export class BattleRoom extends Room {
 
   onJoin(client: Client, options: BattleRoomOptions) {
     const auth = client.auth as Partial<AuthUser> | undefined;
-    if (!this.session.join(client.sessionId, sanitizeName(auth?.name ?? options?.name), characterId(options?.character) ?? DEFAULT_CHARACTER)) {
+    if (!this.core.join(client.sessionId, auth?.name ?? options?.name, options?.character)) {
       throw new Error("Sala cheia ou partida em andamento");
     }
-    this.broadcastLobby();
   }
 
   onDrop(client: Client) {
-    this.session.setConnected(client.sessionId, false);
-    this.broadcastLobby();
+    this.core.setConnected(client.sessionId, false);
     // Rejects at once when the client dropped mid-join or the room is closing:
     // left unhandled, that rejection would take the whole server down.
     this.allowReconnection(client, RECONNECT_SECONDS).catch(() => this.onLeave(client));
   }
 
   onReconnect(client: Client) {
-    this.session.setConnected(client.sessionId, true);
-    this.broadcastLobby();
+    this.core.setConnected(client.sessionId, true);
   }
 
   onLeave(client: Client) {
-    this.session.leave(client.sessionId);
-    this.broadcastLobby();
-  }
-
-  private update() {
-    const out = this.session.tick();
-    if (out.snapshot) {
-      const sent = this.stream.next(out.snapshot);
-      if ("full" in sent) this.broadcast(S2C.snapshot, sent.full);
-      else this.broadcast(S2C.delta, sent.delta);
-    }
-    if (out.result) this.broadcast(S2C.result, out.result);
-    this.syncPhase();
-  }
-
-  /** Locks the room while a match runs (no public joins) and announces phase changes. */
-  private syncPhase() {
-    const phase = this.session.phase;
-    if (phase === this.lastPhase) return;
-    this.lastPhase = phase;
-    if (phase === "playing") void this.lock();
-    if (phase === "lobby") void this.unlock();
-    this.broadcastLobby();
-  }
-
-  /** Bots take seats too: a full room stops taking people until a bot leaves. */
-  private seatsChanged() {
-    if (this.session.members.length >= MAX_PLAYERS) void this.lock();
-    else void this.unlock();
-    this.broadcastLobby();
-  }
-
-  private broadcastLobby() {
-    this.broadcast(S2C.lobby, this.session.lobbyInfo(this.roomId));
+    this.core.leave(client.sessionId);
   }
 }
