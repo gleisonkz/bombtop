@@ -194,9 +194,9 @@ class Pose:
         self.pelvis = v3(0, 10.9, 0)
         self.lean = 4.0                   # torso pitch, degrees forward
         self.twist = 0.0
-        self.foot = {1: v3(3.3, 2.0, 0.5), -1: v3(-3.3, 2.0, 0.1)}    # ankles; 1 = his left
+        self.foot = {1: v3(2.7, 2.0, 0.5), -1: v3(-2.7, 2.0, 0.1)}    # ankles; 1 = his left
         self.toe = {1: 0.0, -1: 0.0}      # foot pitch (degrees, + toe down)
-        self.hand = {1: v3(8.2, 10.8, 0.8), -1: v3(-8.2, 10.8, 0.6)}
+        self.hand = {1: v3(8.4, 10.6, 0.8), -1: v3(-8.4, 10.6, 0.6)}
         self.elbow_out = {1: 0.6, -1: 0.6}
         self.fist = {1: True, -1: True}
         self.head = v3(0, 0, 0)           # offset from the neck
@@ -219,13 +219,13 @@ def skeleton(p):
     s["chest"] = rot_x(pel + v3(0, 7.6, 0), p.lean, pel)
     s["neck"] = rot_x(pel + v3(0, 10.0, 0), p.lean, pel)
     for side in (1, -1):
-        hip = pel + v3(side * 3.1, -0.6, 0)
+        hip = pel + v3(side * 2.5, -0.6, 0)
         knee, ankle = ik(hip, p.foot[side], THIGH, SHIN, v3(side * 0.15, 0, 1))
         s[("hip", side)], s[("knee", side)], s[("ankle", side)] = hip, knee, ankle
-        sh = rot_x(pel + v3(side * 6.6, 8.6, -0.2), p.lean, pel)
+        sh = rot_x(pel + v3(side * 6.4, 8.5, -0.2), p.lean, pel)
         elbow, hand = ik(sh, p.hand[side], UPPER, FORE, v3(side * p.elbow_out[side], -0.4, -1))
         s[("shoulder", side)], s[("elbow", side)], s[("hand", side)] = sh, elbow, hand
-    s["head"] = s["neck"] + v3(0, HEAD_R + 0.4, 0.5) + p.head
+    s["head"] = s["neck"] + v3(0, HEAD_R - 0.7, 0.5) + p.head
     return s
 
 
@@ -242,90 +242,76 @@ def draw(pose, view_name):
     depth = lambda p: v.screen(p)[2]
     cam = v.toward()
 
-    # legs: thigh, shin, boot
+    # legs: thigh, shin, then a tall boot (shaft and foot) with a steel toe cap
     for side in (1, -1):
         hip, knee, ankle = s[("hip", side)], s[("knee", side)], s[("ankle", side)]
         dz = depth(ankle) + depth(knee)
-        f.add(dz / 2 - 0.3, lambda hip=hip, knee=knee: f.part(lambda d: f.capsule(d, sc(hip), sc(knee), 3.0, 2.6), PANTS))
-        f.add(dz / 2 - 0.2, lambda knee=knee, ankle=ankle: f.part(lambda d: f.capsule(d, sc(knee), sc(ankle), 2.6, 2.2), PANTS))
-        # knee pad (armor), only where it faces us
-        kp = knee + v3(0, 0.3, 1.2)
-        f.add(depth(kp) + 0.1 if np.dot(v3(0, 0, 1), cam) >= 0 or view_name == "side" else -99,
-              lambda kp=kp: f.part(lambda d: f.capsule(d, sc(kp), sc(kp + v3(0, -1.0, 0.1)), 1.5, 1.3), ARMOR, radius=1.2))
+        f.add(dz / 2 - 0.3, lambda hip=hip, knee=knee: f.part(lambda d: f.capsule(d, sc(hip), sc(knee), 2.35, 2.0), PANTS))
+        f.add(dz / 2 - 0.2, lambda knee=knee, ankle=ankle: f.part(lambda d: f.capsule(d, sc(knee), sc(ankle), 1.95, 1.75), PANTS))
         toe_dir = rot_x(v3(0, 0, 1), pose.toe[side], v3(0, 0, 0))
-        heel, toe = ankle + v3(0, -0.4, -0.9), ankle + v3(0, -0.6, 0) + toe_dir * 3.2
-        f.add(depth(ankle) + 0.2, lambda heel=heel, toe=toe, ankle=ankle: (
-            f.part(lambda d: (f.capsule(d, sc(heel), sc(toe), 2.3, 2.0), f.capsule(d, sc(ankle + v3(0, 1.0, 0)), sc(heel), 2.3, 2.3)), BOOT, gloss=0.4),
-        ))
+        heel, toe = ankle + v3(0, -0.5, -0.8), ankle + v3(0, -0.7, 0) + toe_dir * 2.9
+        shaft = knee + (ankle - knee) * 0.42
 
-    # torso: rings lofted from the hips to the shoulders
+        def boot(heel=heel, toe=toe, ankle=ankle, shaft=shaft):
+            f.part(lambda d: (f.capsule(d, sc(shaft), sc(ankle), 2.0, 2.0), f.capsule(d, sc(heel), sc(toe), 2.0, 1.75)), BOOT, gloss=0.5)
+            # turned-down cuff in the armor color
+            f.part(lambda d: f.capsule(d, sc(shaft + v3(0, 0.25, 0)), sc(shaft + v3(0, -0.45, 0)), 2.2, 2.2), ARMOR, radius=0.9, ink=0.32)
+            if view_name != "back":
+                tc = toe + (heel - toe) * 0.08
+                f.part(lambda d: f.capsule(d, sc(tc), sc(tc + (heel - toe) * 0.18), 1.4, 1.4), STEEL, radius=0.8, ink=0.3, gloss=0.8)
+        f.add(max(dz / 2 - 0.2, depth(ankle)) + 0.15, boot)
+
+    # torso: rings lofted from the hips to the shoulders, a V from the chest to the waist
     lean, pel = pose.lean, s["pelvis"]
-    body_rings = [(-0.8, 4.6, 3.2), (1.2, 4.3, 3.1), (3.4, 4.6, 3.3), (5.8, 6.2, 4.0), (8.0, 6.8, 4.1), (9.6, 5.4, 3.5)]
+    body_rings = [(-0.6, 4.1, 2.9), (1.6, 3.7, 2.7), (4.0, 4.9, 3.1), (6.4, 6.0, 3.4), (8.3, 6.2, 3.3), (9.6, 4.5, 2.8)]
     torso_pts = [sc(q) for y, rx, rz in body_rings for q in ring(pel, rx, rz, y, lean=lean, about=pel)]
-    f.add(0.0, lambda: f.part(lambda d: f.hull(d, torso_pts), SUIT, radius=3.0))
-    # armor vest: chest and back plates over the upper torso
-    vest_rings = [(3.0, 4.95, 3.6), (5.8, 6.55, 4.35), (8.0, 7.1, 4.45), (9.3, 5.7, 3.8)]
-    vest_pts = [sc(q) for y, rx, rz in vest_rings for q in ring(pel, rx, rz, y, lean=lean, about=pel)]
+    f.add(0.0, lambda: f.part(lambda d: f.hull(d, torso_pts), SUIT, radius=2.6))
 
-    def vest():
-        f.part(lambda d: f.hull(d, vest_pts), ARMOR, radius=2.6, gloss=0.25)
-        # seams: a center line down the front plate (or the spine plate behind), straps over the shoulders
-        dd = ImageDraw.Draw(f.img)
-        w = int(K * 0.3)
-        face = 1 if view_name != "back" else -1
-        if view_name in ("front", "back"):
-            top, bot = rot_x(pel + v3(0, 8.9, 4.3 * face), lean, pel), rot_x(pel + v3(0, 3.4, 3.6 * face), lean, pel)
-            dd.line([f.u(c) for c in sc(top) + sc(bot)], fill=INK + (200,), width=w)
-        else:
-            a, b = rot_x(pel + v3(4.0, 8.6, 3.5), lean, pel), rot_x(pel + v3(4.3, 3.4, 3.3), lean, pel)
-            dd.line([f.u(c) for c in sc(a) + sc(b)], fill=INK + (160,), width=w)
-        # leather harness: straps from each shoulder crossing to the far hip, front and back
-        for zf in (1, -1):
-            if np.dot(v3(0, 0, zf), cam) <= 0.1 and view_name != "side":
-                continue
-            for sx in (1, -1):
-                a = rot_x(pel + v3(sx * 4.6, 9.2, 3.2 * zf), lean, pel)
-                mid = rot_x(pel + v3(0, 6.0, 4.55 * zf), lean, pel)
-                b = rot_x(pel + v3(-sx * 4.4, 2.9, 3.5 * zf), lean, pel)
-                if view_name == "side" and zf < 0:
-                    continue
-                pts = [sc(a), sc(mid), sc(b)]
-                f.part(lambda d, pts=pts: (f.capsule(d, pts[0], pts[1], 0.75, 0.75), f.capsule(d, pts[1], pts[2], 0.75, 0.75)), LEATHER, radius=0.5, ink=0.32, rim=False)
-            mid = rot_x(pel + v3(0, 6.0, 4.6 * zf), lean, pel)
-            if view_name != "side":
-                x, y = sc(mid)
-                f.part(lambda d: d.ellipse([f.u(x - 1.15), f.u(y - 1.15), f.u(x + 1.15), f.u(y + 1.15)], fill=255), STEEL, radius=0.6, ink=0.32, gloss=0.6)
-    f.add(0.05, vest)
+    # armor: a chest plate tapering to the waist (and a back plate), in the player color
+    def plate_pts(zf):
+        rows = [(3.6, 3.8, 3.35), (5.4, 5.2, 3.7), (7.2, 5.8, 3.75), (8.7, 5.2, 3.55)]
+        pts = []
+        for y, rx, rz in rows:
+            for a in np.linspace(-1.15, 1.15, 9):
+                q = pel + v3(math.sin(a) * rx, y, math.cos(a) * rz * zf)
+                pts.append(sc(rot_x(q, lean, pel)))
+        return pts
 
-    # belt with a buckle and pouches
-    belt_pts = [sc(q) for y in (1.5, 2.8) for q in ring(pel, 4.7, 3.35, y, lean=lean, about=pel)]
+    for zf in (1, -1):
+        facing = np.dot(v3(0, 0, zf), cam)
+        if facing < -0.1:
+            continue
+        pts = plate_pts(zf)
+
+        def plate(pts=pts, zf=zf, facing=facing):
+            f.part(lambda d: f.hull(d, pts), ARMOR, radius=1.8, gloss=0.4)
+            if facing > 0.5 and zf > 0:  # the emblem: a white bomb with a lit fuse
+                cx, cy = sc(rot_x(pel + v3(0, 6.1, 3.9), lean, pel))
+                f.part(lambda d: (d.ellipse([f.u(cx - 1.7), f.u(cy - 1.5), f.u(cx + 1.7), f.u(cy + 1.9)], fill=255),
+                                  d.rectangle([f.u(cx - 0.6), f.u(cy - 2.2), f.u(cx + 0.6), f.u(cy - 1.2)], fill=255)),
+                       (236, 236, 240), radius=0.7, ink=0.3, rim=False)
+                dd = ImageDraw.Draw(f.img)
+                dd.line([f.u(cx + 0.2), f.u(cy - 2.2), f.u(cx + 1.1), f.u(cy - 3.0)], fill=INK + (255,), width=int(K * 0.42))
+                dd.rectangle([f.u(cx + 0.9), f.u(cy - 3.7), f.u(cx + 1.8), f.u(cy - 2.8)], fill=(255, 150, 40, 255))
+            elif facing > 0.5:  # back plate: a vertical seam
+                a, b = sc(rot_x(pel + v3(0, 8.4, -3.5), lean, pel)), sc(rot_x(pel + v3(0, 3.9, -3.2), lean, pel))
+                ImageDraw.Draw(f.img).line([f.u(c) for c in a + b], fill=INK + (200,), width=int(K * 0.32))
+        f.add(0.05 + 0.01 * zf, plate)
+
+    # belt with a brass buckle
+    belt_pts = [sc(q) for y in (1.3, 2.6) for q in ring(pel, 4.2, 3.05, y, lean=lean, about=pel)]
 
     def belt():
-        f.part(lambda d: f.hull(d, belt_pts), LEATHER, radius=0.8, ink=0.4)
-        for ang in (0.0, 0.9, -0.9, math.pi * 0.5, -math.pi * 0.5, math.pi):
-            dirv = v3(math.sin(ang), 0, math.cos(ang))
-            if np.dot(dirv, cam) < 0.25:
-                continue
-            c = rot_x(pel + v3(0, 2.15, 0) + dirv * v3(4.95, 0, 3.6), lean, pel)
-            x, y = sc(c)
-            if ang == 0.0:  # buckle
-                f.part(lambda d: d.rounded_rectangle([f.u(x - 1.1), f.u(y - 0.85), f.u(x + 1.1), f.u(y + 0.85)], radius=f.u(0.3), fill=255), BRASS, radius=0.5, ink=0.3, gloss=0.5)
-            elif abs(ang) < 1.2:
-                pass
-            else:  # pouch
-                f.part(lambda d: d.rounded_rectangle([f.u(x - 1.2), f.u(y - 0.9), f.u(x + 1.2), f.u(y + 1.6)], radius=f.u(0.45), fill=255), PANTS, radius=0.7, ink=0.35)
+        f.part(lambda d: f.hull(d, belt_pts), LEATHER, radius=0.8, ink=0.36)
+        if np.dot(v3(0, 0, 1), cam) > 0.25:
+            x, y = sc(rot_x(pel + v3(0, 1.95, 3.1), lean, pel))
+            f.part(lambda d: d.rounded_rectangle([f.u(x - 1.0), f.u(y - 0.8), f.u(x + 1.0), f.u(y + 0.8)], radius=f.u(0.25), fill=255), BRASS, radius=0.5, ink=0.3, gloss=0.6)
+        if view_name == "side":  # a mini bomb hanging at his hip
+            x, y = sc(rot_x(pel + v3(3.8, 0.4, 0.4), lean, pel))
+            f.part(lambda d: d.ellipse([f.u(x - 1.35), f.u(y - 1.35), f.u(x + 1.35), f.u(y + 1.35)], fill=255), tuple(IRON), radius=1.1, ink=0.32, gloss=0.8)
     f.add(0.1, belt)
-    for sx in (1, -1):
-        bc = rot_x(pel + v3(sx * 3.4, 0.3, 3.0), lean, pel)
-        def mini(bc=bc):
-            x, y = sc(bc)
-            f.part(lambda d: d.ellipse([f.u(x - 1.45), f.u(y - 1.45), f.u(x + 1.45), f.u(y + 1.45)], fill=255), tuple(IRON), radius=1.2, ink=0.35, gloss=0.7)
-            dd = ImageDraw.Draw(f.img)
-            dd.rectangle([f.u(x - 0.6), f.u(y - 2.0), f.u(x + 0.6), f.u(y - 1.25)], fill=STEEL + (255,), outline=INK + (255,), width=int(K * 0.2))
-            dd.line([f.u(x + 0.1), f.u(y - 2.0), f.u(x + 0.8), f.u(y - 2.9)], fill=FUSE + (255,), width=int(K * 0.35))
-        f.add(1.0 if view_name == "front" else (depth(bc) + 0.15 if view_name == "side" else -0.5), mini)
 
-    # arms: shoulder pad, upper arm, forearm, glove
+    # arms: shoulder pad, sleeve, glove with a cuff, fist
     for side in (1, -1):
         sh, el, ha = s[("shoulder", side)], s[("elbow", side)], s[("hand", side)]
         bias = 0.6 if view_name != "side" else 0.0
@@ -333,21 +319,21 @@ def draw(pose, view_name):
         dz = max(dz, depth(ha) + 0.2) if view_name == "front" and ha[2] > 1.5 else dz
 
         def arm(sh=sh, el=el, ha=ha, side=side):
-            f.part(lambda d: f.capsule(d, sc(sh), sc(el), 2.3, 2.05), SUIT)
-            f.part(lambda d: f.capsule(d, sc(el), sc(ha), 2.1, 1.95), SUIT)
-            # bracer on the forearm
-            a, b = el + (ha - el) * 0.35, el + (ha - el) * 0.8
-            f.part(lambda d: f.capsule(d, sc(a), sc(b), 2.25, 2.15), GLOVE, radius=1.0, gloss=0.3)
-            hx, hy = sc(ha + (ha - el) / (np.linalg.norm(ha - el) or 1) * 0.6)
-            f.part(lambda d: d.ellipse([f.u(hx - 2.2), f.u(hy - 2.1), f.u(hx + 2.2), f.u(hy + 2.2)], fill=255), GLOVE, radius=1.3, gloss=0.3)
+            f.part(lambda d: f.capsule(d, sc(sh), sc(el), 1.6, 1.4), SUIT)
+            f.part(lambda d: f.capsule(d, sc(el), sc(ha), 1.4, 1.3), SUIT)
+            a = el + (ha - el) * 0.45
+            f.part(lambda d: f.capsule(d, sc(a), sc(ha), 1.55, 1.45), GLOVE, radius=0.9, gloss=0.3)
+            fist = ha + (ha - el) / (np.linalg.norm(ha - el) or 1) * 0.7
+            hx, hy = sc(fist)
+            f.part(lambda d: d.ellipse([f.u(hx - 1.6), f.u(hy - 1.55), f.u(hx + 1.6), f.u(hy + 1.65)], fill=255), GLOVE, radius=1.0, gloss=0.4)
         f.add(dz, arm)
-        pad = sh + v3(side * 0.5, 0.7, 0)
+        pad = sh + v3(side * 0.3, 0.6, 0)
         f.add(dz + 0.05 if view_name != "side" else depth(pad) + 0.1,
-              lambda pad=pad, side=side: f.part(lambda d: f.capsule(d, sc(pad + v3(-side * 0.9, 0.5, 0)), sc(pad + v3(side * 0.7, -0.7, 0)), 2.8, 2.5), ARMOR, radius=1.6, gloss=0.35))
+              lambda pad=pad, side=side: f.part(lambda d: f.capsule(d, sc(pad + v3(-side * 0.7, 0.35, 0)), sc(pad + v3(side * 0.5, -0.5, 0)), 2.05, 1.7), ARMOR, radius=1.2, gloss=0.45))
 
     # scarf: wrapped round the neck, two tails streaming out behind
     nk = s["neck"]
-    wrap = [sc(q) for yy in (-0.9, 0.9) for q in ring(nk, 3.6, 3.0, yy)]
+    wrap = [sc(q) for yy in (-0.8, 0.8) for q in ring(nk, 3.3, 2.8, yy)]
     f.add(0.25, lambda: f.part(lambda d: f.hull(d, wrap), SCARF, radius=1.4))
     for k, (dx, ln, ph) in enumerate(((0.9, 9.5, 0.0), (-0.6, 7.5, 1.7))):
         pts = []
@@ -683,17 +669,38 @@ def cast(i):
     return p
 
 
+def mini_bomb(at, spark):
+    """A small iron bomb with a lit fuse, at a world point (his lobby toss)."""
+    def fn(f, v, s):
+        x, y = v.screen(at)[:2]
+        f.part(lambda d: d.ellipse([f.u(x - 1.9), f.u(y - 1.9), f.u(x + 1.9), f.u(y + 1.9)], fill=255), tuple(IRON), radius=1.5, ink=0.38, gloss=0.8)
+        dd = ImageDraw.Draw(f.img)
+        dd.rectangle([f.u(x - 0.7), f.u(y - 2.6), f.u(x + 0.7), f.u(y - 1.7)], fill=STEEL + (255,), outline=INK + (255,), width=int(K * 0.25))
+        dd.line([f.u(x + 0.2), f.u(y - 2.6), f.u(x + 1.0), f.u(y - 3.5)], fill=FUSE + (255,), width=int(K * 0.4))
+        r = 0.9 if spark % 2 else 0.65
+        dd.rectangle([f.u(x + 1.0 - r), f.u(y - 3.6 - r), f.u(x + 1.0 + r), f.u(y - 3.6 + r)], fill=(255, 150, 40, 255))
+        dd.rectangle([f.u(x + 0.75), f.u(y - 3.85), f.u(x + 1.25), f.u(y - 3.35)], fill=SPARK + (255,))
+    return fn
+
+
+TOSS_HAND = [12.6, 14.6, 19.0, 15.6, 15.0, 17.6, 12.4, 12.4]
+TOSS_BOMB = [None, None, 30.0, 44.0, 41.0, 25.0, None, None]
+
+
 def lobby(i):
-    """Arms folded, scarf streaming, the visor pulsing."""
-    b = math.sin(i / 8 * 2 * math.pi)
+    """His own move: one hand on his hip, he tosses a mini bomb up and catches it, scarf streaming."""
     p = Pose(spark=i, wind=i / 8 * 2 * math.pi, drag=0.85)
-    p.visor = 0.85 + 0.15 * b
+    p.visor = 1.0 if i in (3, 4) else 0.85
     p.lean = 2
-    p.pelvis = p.pelvis + v3(0, -0.15 * (1 - b), 0)
-    p.foot = {1: v3(3.9, 2.0, 0.5), -1: v3(-3.9, 2.0, 0.3)}
-    p.hand[1] = v3(-3.2, 17.0, 4.4)
-    p.hand[-1] = v3(3.4, 16.2, 4.9)
-    p.elbow_out = {1: 1.4, -1: 1.4}
+    p.nod = -6 if i in (2, 3, 4) else 0  # he watches it go up
+    p.foot = {1: v3(3.6, 2.0, 0.5), -1: v3(-3.4, 2.0, 0.3)}
+    p.hand[1] = v3(5.9, 12.0, 1.2)  # on his hip
+    p.elbow_out[1] = 2.2
+    p.hand[-1] = v3(-6.4, TOSS_HAND[i], 3.4)
+    p.elbow_out[-1] = 0.9
+    by = TOSS_BOMB[i]
+    at = v3(-6.4, by, 3.6) if by is not None else v3(-6.4, TOSS_HAND[i] + 2.4, 3.8)
+    p.fx = [(60, mini_bomb(at, i))]
     return p
 
 

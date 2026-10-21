@@ -249,7 +249,7 @@ export const SHEETS = {
     frameH: 165,
     anchorX: 67.5,
     anchorY: 159,
-    bodyH: 123,
+    bodyH: 119,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -268,7 +268,7 @@ export const SHEETS = {
     hueBase: [106, 71, 145],
     /** White would bleach his armor into the steel round his head: that player keeps the violet. */
     keepFor: [[245, 245, 245]],
-    scale: 0.18,
+    scale: 0.186,
   },
 } satisfies Record<string, SheetLayout>;
 
