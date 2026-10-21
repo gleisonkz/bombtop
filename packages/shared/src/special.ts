@@ -1,11 +1,12 @@
-import { BLAST_TICKS, FREEZE_TICKS, ICE_RANGE, SHIELD_TICKS, SPECIAL_COOLDOWN } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Facing, type MatchState, type Player } from "./state";
+import { BLAST_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, SHIELD_TICKS, SPECIAL_COOLDOWN } from "./constants";
+import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
 /**
  * The player's special, when ready. Ninja: an ice blast straight ahead that
  * freezes the first player within ICE_RANGE tiles; walls, blocks and bombs stop it.
+ * Thor: a lightning bolt the same way that stuns the first player within BOLT_RANGE tiles.
  * Captain: raises his shield for SHIELD_TICKS (see `shieldAt`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
@@ -13,7 +14,9 @@ export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.character === "captain") {
     p.shield = SHIELD_TICKS;
   } else if (p.character === "ninja") {
-    iceBlast(s, p.id, playerTile(p), p.facing, true);
+    blast(s, "ice", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "thor") {
+    blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else {
     return false;
   }
@@ -34,12 +37,19 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
   });
 }
 
-/** An ice blast from (x,y) toward `dir`; a shield it meets sends it back once. */
-function iceBlast(s: MatchState, ownerId: string, from: { x: number; y: number }, dir: Facing, canReflect: boolean): void {
+/** What each blast does: how far it reaches and what it does to the first player it hits. */
+const BLASTS: Record<BlastKind, { range: number; strike: (p: Player) => void }> = {
+  ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
+  lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = BOLT_STUN_TICKS) },
+};
+
+/** A blast from (x,y) toward `dir`; a shield it meets sends it back once. */
+function blast(s: MatchState, kind: BlastKind, ownerId: string, from: { x: number; y: number }, dir: Facing, canReflect: boolean): void {
+  const { range, strike } = BLASTS[kind];
   const [dx, dy] = DIR_VECTORS[dir];
   let length = 0;
   let reflector: Player | undefined;
-  for (let i = 1; i <= ICE_RANGE; i++) {
+  for (let i = 1; i <= range; i++) {
     const tx = from.x + dx * i;
     const ty = from.y + dy * i;
     if (getTile(s, tx, ty) !== Tile.Empty || bombAt(s, tx, ty)) break;
@@ -51,12 +61,12 @@ function iceBlast(s: MatchState, ownerId: string, from: { x: number; y: number }
     }
     const hit = s.players.find((o) => o.id !== ownerId && o.alive && playerTile(o).x === tx && playerTile(o).y === ty);
     if (hit) {
-      hit.frozen = FREEZE_TICKS;
+      strike(hit);
       break;
     }
   }
-  s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS });
-  if (reflector) iceBlast(s, reflector.id, playerTile(reflector), OPPOSITE[dir], false);
+  s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind });
+  if (reflector) blast(s, kind, reflector.id, playerTile(reflector), OPPOSITE[dir], false);
 }
 
 /** Blasts fade after BLAST_TICKS. */

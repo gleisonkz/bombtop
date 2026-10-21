@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltPoints, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -20,6 +20,7 @@ const COLORS = {
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
   ice: 0x7fd8ff,
+  bolt: 0xffe45c,
   cart: 0x8d6e63,
   belt: 0x3a3f4b,
   beltArrow: 0xffd23f,
@@ -559,10 +560,17 @@ export class Renderer {
         top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
       }
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
+      // Thor's bolt leaves its victim crackling while stunned.
+      if (p.stun > 0 && s.blasts.some((b) => b.kind === "lightning" && b.ownerId !== p.id) && !ice) {
+        for (let k = 0; k < 3; k++) {
+          const a = s.tick / 5 + (k * Math.PI * 2) / 3;
+          top.circle(cx + Math.cos(a) * 6, cy - headroom + Math.sin(a) * 2, 1.2).fill(COLORS.bolt);
+        }
+      }
       // A spark over a player whose special is ready.
-      if ((character === "ninja" || character === "captain") && p.specialCooldown === 0 && !ice) {
+      if ((character === "ninja" || character === "captain" || character === "thor") && p.specialCooldown === 0 && !ice) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        top.circle(cx + 6, cy - headroom, r + 1).fill({ color: COLORS.ice, alpha: 0.5 });
+        top.circle(cx + 6, cy - headroom, r + 1).fill({ color: character === "thor" ? COLORS.bolt : COLORS.ice, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
     });
@@ -588,6 +596,7 @@ export class Renderer {
     const y0 = center(b.y) + dy * 6;
     const x1 = center(b.x + dx * b.length);
     const y1 = center(b.y + dy * b.length);
+    if (b.kind === "lightning") return this.drawBolt(g, x0, y0, x1, y1, b.ttl, alpha);
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.ice, width: 6, alpha: alpha * 0.6, cap: "round" });
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: 0xffffff, width: 2, alpha, cap: "round" });
     for (let i = 1; i <= b.length; i++) {
@@ -596,6 +605,19 @@ export class Renderer {
       g.poly([sx, sy - 2.5, sx + 1.5, sy, sx, sy + 2.5, sx - 1.5, sy]).fill({ color: 0xffffff, alpha });
     }
     g.circle(x1, y1, 5).fill({ color: COLORS.ice, alpha: alpha * 0.5 });
+  }
+
+  /** Thor's bolt: a yellow glow and a white core along a zigzag that re-forks every 3 ticks, flashing at the end. */
+  private drawBolt(g: Graphics, x0: number, y0: number, x1: number, y1: number, ttl: number, alpha: number): void {
+    const seed = Math.floor(ttl / 3);
+    for (const [k, width, color, a] of [[0, 6, COLORS.bolt, 0.45], [0, 2, 0xffffff, 1], [1, 1, COLORS.bolt, 0.8]] as const) {
+      const pts = boltPoints(x0, y0, x1, y1, seed + k * 101);
+      g.moveTo(pts[0]![0], pts[0]![1]);
+      for (const [x, y] of pts.slice(1)) g.lineTo(x, y);
+      g.stroke({ color, width, alpha: alpha * a, cap: "round", join: "round" });
+    }
+    g.circle(x1, y1, 4 + (seed % 2)).fill({ color: COLORS.bolt, alpha: alpha * 0.5 });
+    g.circle(x1, y1, 2).fill({ color: 0xffffff, alpha });
   }
 
   private drawFloor(g: Graphics, floor: Floor, px: number, py: number, tick: number): void {

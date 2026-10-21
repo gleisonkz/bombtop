@@ -85,6 +85,10 @@ export const ICE_RANGE = 4;
 export const FREEZE_TICKS = 5 * TICK_RATE;
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
+/** Thor's lightning bolt: reach in tiles and how long it stuns. */
+export const BOLT_RANGE = 5;
+export const BOLT_STUN_TICKS = 3 * TICK_RATE;
+
 /** Captain's shield: how long it stays up (he stands still behind it). */
 export const SHIELD_TICKS = 3 * TICK_RATE;
 

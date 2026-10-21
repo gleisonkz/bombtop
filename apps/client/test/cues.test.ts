@@ -118,10 +118,18 @@ describe("soundCues", () => {
     expect(names(v, next)).toEqual(["mount", "jump", "warp", "dash"]);
   });
 
+  it("hears thunder for a lightning bolt, at the caster", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 4, y: 1, dir: "left", length: 2, ttl: BLAST_TICKS - 1, kind: "lightning" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "thunder", x: 4.5 }]);
+  });
+
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {
     const v = view();
     const next = later(v, (n) => {
-      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2 });
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2, kind: "ice" });
       n.players[1]!.frozen = 300;
     });
     expect(soundCues(v, next)).toEqual([

@@ -20,6 +20,12 @@ Fan art of Captain America (Marvel) for this non-commercial project, made in Pix
 (character "Captain America HD" and its "Carry" state). Frames laid out by
 `scripts/build-character-sheet.py captain`; rows = `SHEETS.captain`.
 
+## thor.png
+
+Fan art of Thor (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Thor HD"; cast and carry walk posed with skeleton v3 from its rotations). Frames laid out by
+`scripts/build-character-sheet.py thor`; rows = `SHEETS.thor`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

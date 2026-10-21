@@ -72,16 +72,20 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | revenge cart | `revenge.ts` | dead ride the border, throw bombs; a kill swaps them back in |
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters). Only classic is in the rotation (`STAGES`) for now |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
-| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Bomb: none yet |
+| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Bomb: none yet |
 
 Action button priority: detonate remote > punch > mount ability.
 
-Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain). Picked in the lobby (own seat),
+Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain, thor). Picked in the lobby (own seat),
 saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
 ninja made in PixelLab at 128px (characters "Ice ninja HD" + its "Carry" state; frames laid out by
 `scripts/build-character-sheet.py ninja`, includes carry and lobby rows; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), bomb from `scripts/build-bomber.py`. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
 `scripts/build-character-sheet.py captain`; his special (cast rows): shield forward, then he kneels as it grows huge
 (PixelLab "Shield" state + v3 interpolation), and a spiral of light loops round him (PixelLab VFX, `scripts/build-captain-spiral.py`, `SPIRAL`).
+Thor (fan art) made in PixelLab ("Thor HD", 180px canvas), laid out by `scripts/build-character-sheet.py thor`; his cast (hammer overhead,
+then thrust forward) and carry walk are posed from our own skeletons; the bolt is drawn by the renderer (`boltPoints`).
+PixelLab's filter blocks character states that mention a bomb (and blocked a "Carry" state of Thor outright): pose
+the carry with skeletons from the base rotation instead; the renderer draws the held bomb over the head anyway.
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must

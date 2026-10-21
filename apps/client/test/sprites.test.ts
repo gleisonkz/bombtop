@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -290,6 +290,19 @@ describe("ice blast visuals", () => {
     expect(beamAlpha(BLAST_TICKS - 1)).toBeLessThan(beamAlpha(BEAM_DELAY));
   });
 
+  it("a lightning bolt zigzags from end to end, within a few pixels of the line, and flickers over time", () => {
+    const pts = boltPoints(0, 10, 64, 10, 3);
+    expect(pts[0]).toEqual([0, 10]);
+    expect(pts.at(-1)).toEqual([64, 10]);
+    expect(pts.length).toBeGreaterThan(4);
+    for (const [, y] of pts) expect(Math.abs(y - 10)).toBeLessThanOrEqual(4);
+    expect(pts.some(([, y]) => y !== 10)).toBe(true);
+    expect(boltPoints(0, 10, 64, 10, 3)).toEqual(pts);
+    expect(boltPoints(0, 10, 64, 10, 4)).not.toEqual(pts);
+    const down = boltPoints(5, 0, 5, 48, 1);
+    for (const [x] of down) expect(Math.abs(x - 5)).toBeLessThanOrEqual(4);
+  });
+
   it("frozen players turn icy, and the ice flickers in its last second", () => {
     expect(frozenLook(0, 0)).toBeNull();
     const solid = Array.from({ length: 30 }, (_, t) => frozenLook(FREEZE_TICKS, t)!);
@@ -492,6 +505,27 @@ describe("between", () => {
 
   it("never carries a teleport (warp, respawn) past where it landed", () => {
     expect(between(from, { px: 1000 + 3 * TILE, py: 500 }, 1.5)).toEqual({ px: 1000 + 3 * TILE, py: 500 });
+  });
+});
+
+describe("thor sheet", () => {
+  const thor = SHEETS.thor;
+
+  it("every row fits inside the image", () => {
+    const strips = [thor.idle, thor.walk, thor.cast!, thor.carryIdle!, thor.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, thor.stun!, thor.death!, thor.lobby!]) {
+      expect((s.row + 1) * thor.frameH).toBeLessThanOrEqual(thor.height);
+      expect(s.frames * thor.frameW).toBeLessThanOrEqual(thor.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    const tall = (s: typeof thor | typeof SHEETS.captain) => s.bodyH * s.scale;
+    expect(Math.abs(tall(thor) - tall(SHEETS.captain))).toBeLessThan(2);
+  });
+
+  it("the cast thrusts the hammer forward when the bolt shows", () => {
+    expect(thor.cast!.down.frames * CAST_TICKS_PER_FRAME).toBeGreaterThan(BEAM_DELAY);
   });
 });
 

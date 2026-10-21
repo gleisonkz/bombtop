@@ -146,6 +146,35 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.17,
   },
+  /** Thor (fan art), made in PixelLab (scripts/build-character-sheet.py thor lays out its frames). */
+  thor: {
+    url: "sprites/thor.png",
+    width: 1620,
+    height: 2610,
+    frameW: 180,
+    frameH: 145,
+    anchorX: 91,
+    anchorY: 143,
+    bodyH: 124,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The special: hammer swung overhead, then thrust forward as the bolt leaves it. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** The navy armor (the silver helmet and chest discs sit just past it, at hue 229). */
+    hues: [205, 226],
+    hueBase: [47, 56, 73],
+    /** White would melt his armor into his silver helmet and discs: that player keeps the navy. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.17,
+  },
   /** The bomb mascot (scripts/build-bomber.py); its violet body is repainted by hue. */
   bomber: {
     url: "sprites/bomber.png",
@@ -355,6 +384,26 @@ export const BEAM_DELAY = 20;
 export function beamAlpha(ticks: number): number {
   if (ticks < BEAM_DELAY) return 0;
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
+}
+
+/**
+ * Thor's lightning bolt from (x0,y0) to (x1,y1): a zigzag every ~6 px, at most 4 px off the
+ * straight line. The same `seed` draws the same bolt; a new one every few ticks makes it crackle.
+ */
+export function boltPoints(x0: number, y0: number, x1: number, y1: number, seed: number): [number, number][] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const steps = Math.max(2, Math.round(len / 6));
+  const nx = len ? -(y1 - y0) / len : 0;
+  const ny = len ? (x1 - x0) / len : 0;
+  const pts: [number, number][] = [[x0, y0]];
+  for (let i = 1; i < steps; i++) {
+    const t = i / steps;
+    const r = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+    const off = ((r - Math.floor(r)) * 2 - 1) * 4;
+    pts.push([x0 + (x1 - x0) * t + nx * off, y0 + (y1 - y0) * t + ny * off]);
+  }
+  pts.push([x1, y1]);
+  return pts;
 }
 
 /**

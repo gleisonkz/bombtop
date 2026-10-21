@@ -57,6 +57,12 @@ const RECIPE = {
     len: 0.8,
     layer: { src: K("impact-sounds", "impactGlass_light_000.ogg"), len: 0.6, gain: -2, at: 0.3 },
   },
+  // Thor's special: an electric zap cracking over a low thunder rumble
+  thunder: {
+    src: K("digital-audio", "zap1.ogg"),
+    len: 0.6,
+    layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 1.2, gain: -4, lowpass: 400, at: 0.05 },
+  },
   freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),

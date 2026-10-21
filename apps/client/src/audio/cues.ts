@@ -17,6 +17,7 @@ export type CueName =
   | "dash"
   | "warp"
   | "ice"
+  | "thunder"
   | "freeze"
   | "hurry";
 
@@ -77,7 +78,9 @@ export function soundCues(prev: View, next: View): Cue[] {
     if (!items.has(k) && !flames.has(k) && i.kind !== ItemKind.Skull) cues.push({ name: "pickup", x: mid(i.x) });
   }
 
-  for (const b of next.blasts) if (b.ttl >= BLAST_TICKS - elapsed) cues.push({ name: "ice", x: mid(b.x) });
+  for (const b of next.blasts) {
+    if (b.ttl >= BLAST_TICKS - elapsed) cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
+  }
 
   for (const p of next.players) {
     const was = prev.players.find((q) => q.id === p.id);

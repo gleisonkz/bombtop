@@ -1,9 +1,11 @@
 """Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
   ninja: sprites/ninja.png, character "Ice ninja HD" (128px; carry poses from its "Carry" state)
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
+  thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons,
+    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8)
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import json, sys
 from pathlib import Path
@@ -24,6 +26,17 @@ CHARACTERS = {
     # cast = raising the shield (skeleton-posed brace); "up" is the back view without the shield, the
     # renderer draws the big shield in front of him.
     "captain": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = hammer swung overhead, then thrust forward as the bolt leaves it (frame 5, BEAM_DELAY)
+    "thor": [
         ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),

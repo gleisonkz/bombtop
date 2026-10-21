@@ -36,6 +36,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   dash: { gain: 0.45, vary: 0.06, voices: 2 },
   warp: { gain: 0.45, vary: 0.04, voices: 2 },
   ice: { gain: 0.55, vary: 0.04, voices: 2 },
+  thunder: { gain: 0.6, vary: 0.05, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
   start: { gain: 0.6, vary: 0, voices: 1 },
