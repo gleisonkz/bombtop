@@ -7,6 +7,8 @@
 // https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3).
 // Goku's voice (Japanese, Masako Nozawa) and Kamehameha effects are from Dragon Ball FighterZ (fan use; (c) Bandai Namco /
 // Arc System Works), as ripped on The Sounds Resource: assets 411947 "Goku (Japanese)" and 411912 "Goku", unzipped under dbfz/.
+// Naruto's voice (Japanese, Junko Takeuchi) is from Naruto Shippuden: Ultimate Ninja Storm 2 (PS3; (c) Bandai Namco /
+// CyberConnect2), The Sounds Resource asset 489753 "Naruto", unzipped under uns2/uns2-naruto/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -23,6 +25,7 @@ const ESM_AG = (file) => S("Epic Stock Media - Anime Game", file);
 const SOLER = (lib, file) => S(`Federico Soler - Effective Trailer ${lib} Vol. 2`, file);
 const FS = (file) => join(SRC, "freesound", file);
 const GOKU = (n) => join(SRC, "dbfz", "dbfz-goku-jp", "Goku", "Default", `vgkn${n}.ogg`);
+const NARUTO = (name) => join(SRC, "uns2", "uns2-naruto", "Naruto23", "AB", `${name}.wav`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
 /**
@@ -90,8 +93,20 @@ const RECIPE = {
   rasengan: {
     src: K("sci-fi-sounds", "engineCircular_001.ogg"),
     len: 0.45,
-    layer: { src: ESM_AG("FGHTImpt_Combat Punch Impact Light Hit Delay Crunchy Vintage Quick Smack 05_ESM_AG.wav"), len: 0.5, gain: -2, at: 0.2 },
+    layers: [
+      { src: ESM_AG("FGHTImpt_Combat Punch Impact Light Hit Delay Crunchy Vintage Quick Smack 05_ESM_AG.wav"), len: 0.5, gain: -2, at: 0.2 },
+      // his shout of "Rasengan!", sped up a little to fit the dash
+      { src: NARUTO("PL_2nrt [55]"), len: 0.7, gain: 0, tempo: 1.15 },
+    ],
   },
+  // Naruto's own lines: "Iku tte bayo!" when picked, a cry over the falling bass, "Heh! Ore no kachi da!" when he wins
+  "naruto-pick": { src: NARUTO("PL_2nrt [18]"), len: 0.9 },
+  "naruto-death": {
+    src: CSD("Cartoon & Animation Vol 2", "Cartoon Transition Bass Down.wav"),
+    len: 1.8,
+    layer: { src: NARUTO("PL_2nrt [17]"), len: 1.4, gain: -3 },
+  },
+  "naruto-win": { src: NARUTO("v_win [2]"), len: 2.7 },
   // the bomb mascot's mega bomb: a heavy thud as it lands, over a low boom
   mega: {
     src: K("impact-sounds", "impactPlate_heavy_001.ogg"),

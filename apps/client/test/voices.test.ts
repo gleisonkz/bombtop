@@ -10,6 +10,12 @@ describe("voiceLine", () => {
     expect(voiceLine("goku", "win")).toBe("goku-win");
   });
 
+  it("gives Naruto his own lines too", () => {
+    expect(voiceLine("naruto", "pick")).toBe("naruto-pick");
+    expect(voiceLine("naruto", "death")).toBe("naruto-death");
+    expect(voiceLine("naruto", "win")).toBe("naruto-win");
+  });
+
   it("is silent for characters without a voice yet", () => {
     expect(voiceLine("bomb", "pick")).toBeNull();
     expect(voiceLine("ninja", "death")).toBeNull();

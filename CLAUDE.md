@@ -101,7 +101,8 @@ modes redraw every frame and drop details (shield vanished, chest star on the ba
 match the sprite's pose: a template walk on the arms-up Carry state drew extra arms, so carry walk uses our keypoints.
 Sound: `audio/cues.ts` reads what changed between views; files built by `scripts/build-sfx.mjs` (sources outside the repo,
 `E:/sfx-src`). Character voices (`audio/voices.ts`): a line when picked in the lobby, their own death cry, a cheer when
-they win. Only Goku has them so far (Japanese, ripped from Dragon Ball FighterZ, as is his Kamehameha sound).
+they win. Goku and Naruto have them so far (Japanese; Goku ripped from Dragon Ball FighterZ, as is his Kamehameha sound;
+Naruto from Ultimate Ninja Storm 2, his "Rasengan!" shout layered on the Rasengan sound).
 Art is HD: everything else (bombs, items, flames, tiles) is also drawn by scripts in `apps/client/scripts`
 (see `public/sprites/LICENSES.md`); rerun a script to change its art.
 

@@ -52,6 +52,9 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "goku-pick": { gain: 0.6, vary: 0, voices: 1 },
   "goku-death": { gain: 0.7, vary: 0, voices: 2 },
   "goku-win": { gain: 0.65, vary: 0, voices: 1 },
+  "naruto-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "naruto-death": { gain: 0.7, vary: 0, voices: 2 },
+  "naruto-win": { gain: 0.65, vary: 0, voices: 1 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

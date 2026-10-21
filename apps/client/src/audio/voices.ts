@@ -3,11 +3,12 @@ import type { CharacterId } from "@bombtop/shared";
 /** When a character speaks up. */
 export type VoiceMoment = "pick" | "death" | "win";
 
-export type VoiceName = "goku-pick" | "goku-death" | "goku-win";
+export type VoiceName = "goku-pick" | "goku-death" | "goku-win" | "naruto-pick" | "naruto-death" | "naruto-win";
 
 /** Characters' own voices; the rest use the shared sounds (or stay quiet). */
 export const VOICE_LINES: Partial<Record<CharacterId, Record<VoiceMoment, VoiceName>>> = {
   goku: { pick: "goku-pick", death: "goku-death", win: "goku-win" },
+  naruto: { pick: "naruto-pick", death: "naruto-death", win: "naruto-win" },
 };
 
 export function voiceLine(character: CharacterId, moment: VoiceMoment): VoiceName | null {
