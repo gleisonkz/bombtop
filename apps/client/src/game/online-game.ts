@@ -1,4 +1,4 @@
-import { Client, type Room } from "@colyseus/sdk";
+import { Client } from "@colyseus/sdk";
 import { resultSound } from "../audio/sound";
 import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
@@ -28,6 +28,7 @@ import { GamepadInput } from "../input/gamepad";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
 import { FixedStep } from "../loop/fixed-step";
 import { GhostBombs } from "../net/ghost-bombs";
+import type { RoomLink } from "../net/room-link";
 import { KickPrediction } from "../net/kick-prediction";
 import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
@@ -101,8 +102,13 @@ export class OnlineGame implements GameMode {
     return new OnlineGame(room, ctx, panel);
   }
 
+  /** A match in a room reached some other way (offline: hosted on a phone nearby). */
+  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel): OnlineGame {
+    return new OnlineGame(link, ctx, panel);
+  }
+
   private constructor(
-    private readonly room: Room,
+    private readonly room: RoomLink,
     private readonly ctx: ModeContext,
     private readonly panel: LobbyPanel,
   ) {
