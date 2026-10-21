@@ -152,9 +152,9 @@ export const SHEETS = {
   thor: {
     url: "sprites/thor.png",
     width: 1260,
-    height: 2610,
+    height: 2628,
     frameW: 140,
-    frameH: 145,
+    frameH: 146,
     anchorX: 71,
     anchorY: 143,
     bodyH: 124,

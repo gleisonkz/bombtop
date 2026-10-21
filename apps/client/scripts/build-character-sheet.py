@@ -1,7 +1,9 @@
 """Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
   ninja: sprites/ninja.png, character "Ice ninja HD" (128px; carry poses from its "Carry" state)
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
-  thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons,
+  thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons;
+    the back view comes from a second "Thor HD", made in v3 from the first's south/east/west, whose cape
+    covers his back (the first one's hung in front of him),
     carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8).
     PixelLab drew sparks round the thrust hammer that clash with the game's own bolt: the thrust holds its
     first frame (clean in front and back; in the side view cut off at the hammer's face). The hammer's
