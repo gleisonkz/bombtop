@@ -442,9 +442,9 @@ describe("bomber sheet", () => {
     expect(playerFrame(sheet, { facing: "up", moving: true, carrying: false, tick: 0 }).y).toBe(sheet.walk.up.row * sheet.frameH);
   });
 
-  it("repaints the violet bomb head and suit in the player's color, by hue", () => {
+  it("repaints his violet armor in the player's color, by hue", () => {
     expect(sheet.hues).toEqual([250, 290]);
-    expect(sheet.keepFor).toEqual([[245, 245, 245]]); // white would wash his head out round his eyes
+    expect(sheet.keepFor).toEqual([[245, 245, 245]]); // white would bleach his armor into his steel
   });
 
   it("plants his mega bomb on the cast rows", () => {

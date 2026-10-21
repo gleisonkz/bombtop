@@ -1,239 +1,724 @@
-"""Bomb mascot sprite sheet (SHEETS.bomber in render/sprites.ts): rows 0-2 idle (front, side, back),
-3-5 walk, 6 stunned, 7 death. 128x128 frames drawn at 4x and scaled down, so edges are smooth and
-shading is soft. Designed on a 32-unit grid (1 unit = 4 px).
-The body is violet (hue ~255), which the game repaints in each player's color by hue;
-everything else is neutral or warm so it keeps its color.
-Usage: python build-bomber.py public/sprites/bomber.png preview.png  (needs Pillow, numpy)"""
+"""The bomb mascot, drawn in code (SHEETS.bomber in render/sprites.ts): a demolition trooper whose head is an iron bomb,
+a visor slit glowing across it and a lit fuse on top; armor plates in the player's color over a dark suit.
+
+He is a 3D puppet: joints in design units (y up from the ground, x = his left, z = where he faces), limbs found by
+two-bone IK from where the hands and feet go, so one pose gives the front, side and back views alike. Parts are
+projected, sorted back to front and filled as soft cel-shaded volumes with an ink rim (drawn 4x and scaled down).
+The armor is violet (hue ~263, `hueBase` exactly), which the game repaints in each player's color; the rest is
+neutral or warm and keeps its color.
+
+Sheet rows (SHEETS.bomber): idle, walk, (front, side, back each), stun, death, cast (planting the mega bomb), carry
+idle, carry walk, lobby. Frames are FW x FH units at PX px per unit.
+Usage: python build-bomber.py public/sprites/bomber.png [preview.png]  (needs Pillow, numpy, scipy)"""
 import math, random, sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
+from scipy import ndimage
 
-U = 4          # px per design unit in the final frame
-SS = 4         # supersampling
-F = 32 * U     # frame size
-D = F * SS     # drawing size
-K = U * SS     # drawing px per unit
-COLS, ROWS = 6, 8
+FW, FH = 45, 55            # frame in design units
+PX, SS = 3.0, 4            # px per unit in the sheet (pixel art at the others' density), supersampling
+K = PX * SS                # drawing px per unit
+W, H = round(FW * K), round(FH * K)
+OW, OH = W // SS, H // SS  # the frame in sheet pixels
+GROUND = 53                # ground line, in units from the top of the frame
+COLS = 9
 
-INK = (26, 26, 26, 255)
-BODY_DEEP, BODY, BODY_LIGHT = np.array([40, 32, 92.0]), np.array([78, 64, 160.0]), np.array([140, 126, 220.0])
-FOOT, FOOT_SHADE, FOOT_FAR = (255, 178, 60, 255), (220, 120, 28, 255), (205, 128, 40, 255)
-CAP, CAP_LIGHT, CAP_DARK = (112, 112, 112, 255), (170, 170, 170, 255), (72, 72, 72, 255)
-FUSE = (150, 108, 58, 255)
-YELLOW, ORANGE, WHITE = (255, 214, 63, 255), (255, 122, 26, 255), (255, 255, 255, 255)
-PUPIL, MOUTH, CHEEK = (20, 20, 20, 255), (130, 30, 44, 255), (255, 120, 160, 150)
-LIGHT_DIR = np.array([-0.5, -0.65, 0.58])
-LIGHT_DIR = LIGHT_DIR / np.linalg.norm(LIGHT_DIR)
+INK = (22, 22, 26)
+IRON = np.array([60, 62, 68.0])
+SUIT = (84, 88, 98)
+PANTS = (70, 74, 84)
+BOOT = (44, 44, 50)
+GLOVE = (52, 52, 58)
+ARMOR = (106, 71, 145)     # = SHEETS.bomber.hueBase
+STEEL = (128, 132, 140)
+LEATHER = (112, 74, 42)
+SCARF = (150, 52, 38)
+BRASS = (184, 146, 72)
+FUSE = (150, 108, 58)
+VISOR = (255, 96, 24)
+VISOR_HOT = (255, 214, 140)
+SPARK = (255, 214, 63)
+LIGHT = np.array([-0.5, 0.65, 0.58])  # from the top left, towards the camera (screen x, world y, depth)
+LIGHT = LIGHT / np.linalg.norm(LIGHT)
 
-def u(v):
-    return v * K
-
-def box(cx, cy, rx, ry):
-    return [u(cx - rx), u(cy - ry), u(cx + rx), u(cy + ry)]
 
 def smooth(a, b, t):
     t = np.clip((t - a) / (b - a), 0, 1)
     return t * t * (3 - 2 * t)
 
+
+def v3(x, y, z):
+    return np.array([x, y, z], float)
+
+
+def rot_x(p, deg, about):
+    """Pitch round the x axis (positive leans the top forward, +z)."""
+    a = math.radians(deg)
+    d = p - about
+    y = d[1] * math.cos(a) - d[2] * math.sin(a)
+    z = d[1] * math.sin(a) + d[2] * math.cos(a)
+    return about + np.array([d[0], y, z])
+
+
+def ik(root, target, l1, l2, pole):
+    """Middle joint of a two-bone chain from `root` reaching for `target`, bending towards `pole`."""
+    d = target - root
+    dist = max(1e-6, min(np.linalg.norm(d), l1 + l2 - 1e-3))
+    n = d / np.linalg.norm(d)
+    a = (l1 * l1 - l2 * l2 + dist * dist) / (2 * dist)
+    h = math.sqrt(max(0.0, l1 * l1 - a * a))
+    p = pole - n * np.dot(pole, n)
+    p = p / (np.linalg.norm(p) or 1)
+    return root + n * a + p * h, root + n * dist
+
+
+class View:
+    """Projects world points for one camera: 'front' (he faces us), 'side' (he faces right) or 'back'."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def screen(self, p):
+        """World point -> (screen x, screen y, depth towards the camera), in units."""
+        x, y, z = p
+        sx, depth = {"front": (x, z), "side": (z, x), "back": (-x, -z)}[self.name]
+        return FW / 2 + sx, GROUND - y, depth
+
+    def toward(self):
+        """The camera direction in world space."""
+        return {"front": v3(0, 0, 1), "side": v3(1, 0, 0), "back": v3(0, 0, -1)}[self.name]
+
+
 class Frame:
     def __init__(self):
-        self.img = Image.new("RGBA", (D, D))
-        self.d = ImageDraw.Draw(self.img)
+        self.img = Image.new("RGBA", (W, H))
+        self.items = []  # (depth, draw function)
 
-    def ellipse(self, cx, cy, rx, ry, fill, outline=0.0):
-        if outline:
-            self.d.ellipse(box(cx, cy, rx + outline, ry + outline), fill=INK)
-        self.d.ellipse(box(cx, cy, rx, ry), fill=fill)
+    def u(self, v):
+        return v * K
 
-    def layer(self, rgba):
-        self.img.alpha_composite(rgba)
+    def add(self, depth, fn):
+        self.items.append((depth, fn))
 
-    def done(self):
-        return self.img.resize((F, F), Image.LANCZOS)
+    def render(self):
+        for _, fn in sorted(self.items, key=lambda it: it[0]):
+            fn()
+        return pixelate(self.img)
 
-def foot(f, cx, cy, color=FOOT):
-    f.ellipse(cx, cy, 3.3, 1.9, color, 0.55)
-    if color == FOOT:  # lit top, shaded sole
-        f.d.chord(box(cx, cy, 3.3, 1.9), 20, 160, fill=FOOT_SHADE)
-        f.d.ellipse(box(cx - 0.9, cy - 0.7, 1.2, 0.5), fill=(255, 220, 150, 255))
+    # --- masks -------------------------------------------------------------------------------------
+    def new_mask(self):
+        m = Image.new("L", (W, H))
+        return m, ImageDraw.Draw(m)
 
-def body(f, cx, cy, rx, ry, flash=False):
-    """Round body: ink rim, soft cel shading lit from the top left, glossy highlight."""
-    f.ellipse(cx, cy, rx, ry, INK, 0.7)
-    ys, xs = np.mgrid[0:D, 0:D]
-    nx = ((xs + 0.5) / K - cx) / rx
-    ny = ((ys + 0.5) / K - cy) / ry
-    r2 = nx * nx + ny * ny
-    inside = r2 <= 1
-    nz = np.sqrt(np.clip(1 - r2, 0, 1))
-    lam = nx * LIGHT_DIR[0] + ny * LIGHT_DIR[1] + nz * LIGHT_DIR[2]
-    a = smooth(0.12, 0.42, lam)[..., None]
-    b = smooth(0.78, 0.97, lam)[..., None]
-    col = BODY_DEEP * (1 - a) + BODY * a
-    col = col * (1 - b) + BODY_LIGHT * b
-    # bounce light along the bottom rim
-    rim = (smooth(0.75, 1.0, np.sqrt(r2)) * smooth(0.2, 0.8, ny))[..., None]
-    col = col * (1 - rim * 0.35) + np.array([110, 96, 190.0]) * rim * 0.35
-    if flash:
-        col[:] = 255
-    out = np.zeros((D, D, 4), np.uint8)
-    out[..., :3] = np.clip(col, 0, 255).astype(np.uint8)
-    out[..., 3] = inside * 255
-    f.layer(Image.fromarray(out, "RGBA"))
-    if not flash:  # gloss: a soft oval and a bright dot
-        g = Image.new("RGBA", (D, D))
-        gd = ImageDraw.Draw(g)
-        gd.ellipse(box(cx - rx * 0.42, cy - ry * 0.52, rx * 0.26, ry * 0.17), fill=(255, 255, 255, 120))
-        g = g.rotate(28, center=(u(cx - rx * 0.42), u(cy - ry * 0.52)), resample=Image.BICUBIC)
-        g = g.filter(ImageFilter.GaussianBlur(K * 0.25))
-        f.layer(g)
-        f.d.ellipse(box(cx - rx * 0.55, cy - ry * 0.62, 0.55, 0.55), fill=WHITE)
+    def capsule(self, d, a, b, ra, rb):
+        (ax, ay), (bx, by) = a, b
+        d.ellipse([self.u(ax - ra), self.u(ay - ra), self.u(ax + ra), self.u(ay + ra)], fill=255)
+        d.ellipse([self.u(bx - rb), self.u(by - rb), self.u(bx + rb), self.u(by + rb)], fill=255)
+        dx, dy = bx - ax, by - ay
+        L = math.hypot(dx, dy) or 1e-6
+        nx, ny = -dy / L, dx / L
+        d.polygon([(self.u(ax + nx * ra), self.u(ay + ny * ra)), (self.u(bx + nx * rb), self.u(by + ny * rb)),
+                   (self.u(bx - nx * rb), self.u(by - ny * rb)), (self.u(ax - nx * ra), self.u(ay - ny * ra))], fill=255)
 
-def cap_and_fuse(f, top, mirror, frame):
-    m = (lambda x: 32 - x) if mirror else (lambda x: x)
-    # fuse: a curve from the cap to the spark
-    pts = [(m(21.0 + t * 4.5), top - 3.5 - math.sin(t * math.pi * 0.8) * 2.6) for t in np.linspace(0, 1, 12)]
-    f.d.line([(u(x), u(y)) for x, y in pts], fill=INK, width=int(K * 1.4), joint="curve")
-    f.d.line([(u(x), u(y)) for x, y in pts], fill=FUSE, width=int(K * 0.75), joint="curve")
-    # cap
-    x0, x1 = sorted((m(18.6), m(23.4)))
-    f.d.rounded_rectangle([u(x0 - 0.6), u(top - 3.6), u(x1 + 0.6), u(top + 1.2)], radius=K * 1.0, fill=INK)
-    f.d.rounded_rectangle([u(x0), u(top - 3.0), u(x1), u(top + 0.6)], radius=K * 0.6, fill=CAP)
-    f.d.rounded_rectangle([u(x0 + 0.4), u(top - 2.7), u(x1 - 0.4), u(top - 1.9)], radius=K * 0.3, fill=CAP_LIGHT)
-    # spark: a star with a glow, flickering between two shapes
-    sx, sy = pts[-1]
-    glow = Image.new("RGBA", (D, D))
-    ImageDraw.Draw(glow).ellipse(box(sx, sy, 2.6, 2.6), fill=(255, 200, 60, 110))
-    f.layer(glow.filter(ImageFilter.GaussianBlur(K * 0.8)))
-    rot = 0 if frame % 2 == 0 else math.pi / 5
-    r_out, r_in = (2.2, 0.9) if frame % 2 == 0 else (1.8, 0.8)
-    star = [(u(sx + math.cos(rot + i * math.pi / 5 - math.pi / 2) * (r_out if i % 2 == 0 else r_in)),
-             u(sy + math.sin(rot + i * math.pi / 5 - math.pi / 2) * (r_out if i % 2 == 0 else r_in))) for i in range(10)]
-    f.d.polygon(star, fill=YELLOW, outline=ORANGE, width=int(K * 0.3))
-    f.d.ellipse(box(sx, sy, 0.6, 0.6), fill=WHITE)
+    def hull(self, d, pts):
+        pts = np.array(pts)
+        if len(pts) < 3:
+            return
+        from scipy.spatial import ConvexHull
+        h = ConvexHull(pts)
+        d.polygon([(self.u(pts[i][0]), self.u(pts[i][1])) for i in h.vertices], fill=255)
 
-def eye(f, cx, cy, look=0.0, rx=1.7, ry=2.4):
-    f.ellipse(cx, cy, rx, ry, WHITE, 0.4)
-    f.ellipse(cx + look, cy + 0.5, rx * 0.62, ry * 0.6, PUPIL)
-    f.d.ellipse(box(cx + look + 0.35, cy - 0.15, 0.38, 0.38), fill=WHITE)
+    # --- fills ------------------------------------------------------------------------------------
+    def ink(self, m, width=0.55):
+        grown = m.filter(ImageFilter.MaxFilter(int(self.u(width) * 2) | 1))
+        self.img.paste(Image.new("RGBA", (W, H), INK + (255,)), (0, 0), grown)
 
-def x_eye(f, cx, cy):
-    w = int(K * 0.6)
-    f.d.line([u(cx - 1.4), u(cy - 1.4), u(cx + 1.4), u(cy + 1.4)], fill=INK, width=w)
-    f.d.line([u(cx + 1.4), u(cy - 1.4), u(cx - 1.4), u(cy + 1.4)], fill=INK, width=w)
+    def volume(self, m, color, radius=3.0, deep=0.55, light=1.3, gloss=0.0, rim=True):
+        """Fills mask `m` as a rounded volume lit from the top left: dark core shadow, base, a lit band;
+        a cool rim light on the shadow side and an optional gloss streak."""
+        bb = m.getbbox()
+        if not bb:
+            return
+        pad = int(self.u(radius)) + 2
+        x0, y0, x1, y1 = max(0, bb[0] - pad), max(0, bb[1] - pad), min(W, bb[2] + pad), min(H, bb[3] + pad)
+        a = np.asarray(m.crop((x0, y0, x1, y1)), float) / 255
+        inside = a > 0.5
+        dist = ndimage.distance_transform_edt(inside) / K
+        t = np.clip(dist / radius, 0, 1)
+        h = np.sqrt(1 - (1 - t) ** 2)
+        gy, gx = np.gradient(h * radius * K)
+        n = np.dstack([-gx, gy, np.full_like(h, K * 0.9)])
+        n /= np.linalg.norm(n, axis=2, keepdims=True)
+        lam = (n * LIGHT).sum(axis=2)
+        base = np.array(color, float)
+        darker, lighter = base * deep, np.minimum(255, base * light + 22)
+        # pixel-art shading: flat tones in hard bands, no gradients
+        s1 = (lam > 0.42)[..., None]
+        s2 = (lam > 0.8)[..., None]
+        col = np.where(s1, base, darker)
+        col = np.where(s2, lighter, col)
+        if rim:  # a band of bounce light along the lower right edge
+            r = ((t < 0.3) & (lam < -0.25))[..., None]
+            col = np.where(r, base * 0.72, col)
+        if gloss:
+            g = (lam > 1.0 - 0.035 * gloss)[..., None]
+            col = np.where(g, np.minimum(255, base * 0.6 + 150), col)
+        out = np.zeros(a.shape + (4,), np.uint8)
+        out[..., :3] = np.clip(col, 0, 255)
+        out[..., 3] = np.clip(a * 255, 0, 255)
+        self.img.alpha_composite(Image.fromarray(out, "RGBA"), (x0, y0))
 
-def dizzy_eye(f, cx, cy, frame):
-    f.ellipse(cx, cy, 1.8, 2.2, WHITE, 0.4)
-    pts = [(u(cx + math.cos(t + frame) * t * 0.22), u(cy + math.sin(t + frame) * t * 0.26)) for t in np.linspace(0, 4 * math.pi, 40)]
-    f.d.line(pts, fill=INK, width=int(K * 0.35))
+    def part(self, draw_mask, color, ink=0.42, **kw):
+        m, d = self.new_mask()
+        draw_mask(d)
+        self.ink(m, ink)
+        self.volume(m, color, **kw)
+        return m
 
-def cheeks(f, xs, cy):
-    c = Image.new("RGBA", (D, D))
-    cd = ImageDraw.Draw(c)
-    for x in xs:
-        cd.ellipse(box(x, cy + 2.6, 1.6, 0.9), fill=CHEEK)
-    f.layer(c.filter(ImageFilter.GaussianBlur(K * 0.2)))
+    def glow(self, cx, cy, r, color, alpha, blur):
+        g = Image.new("RGBA", (W, H))
+        ImageDraw.Draw(g).ellipse([self.u(cx - r), self.u(cy - r), self.u(cx + r), self.u(cy + r)], fill=color + (alpha,))
+        self.img.alpha_composite(g.filter(ImageFilter.GaussianBlur(K * blur)))
 
-def front_face(f, cy, mood, frame):
-    if mood == "dead":
-        x_eye(f, 12, cy - 1.5)
-        x_eye(f, 20, cy - 1.5)
-    elif mood == "dizzy":
-        dizzy_eye(f, 12, cy - 1.5, frame)
-        dizzy_eye(f, 20, cy - 1.5, frame)
-    else:
-        eye(f, 12, cy - 1.5, 0.3)
-        eye(f, 20, cy - 1.5, -0.3)
-    cheeks(f, (8.6, 23.4), cy)
-    if mood in ("dead", "dizzy"):
-        pts = [(u(13.5 + i * 0.5), u(cy + 4.2 + (0.5 if i % 2 else -0.3))) for i in range(11)]
-        f.d.line(pts, fill=MOUTH, width=int(K * 0.55), joint="curve")
-    else:
-        f.d.chord([u(13.2), u(cy + 1.6), u(18.8), u(cy + 5.8)], 0, 180, fill=INK)
-        f.d.chord([u(13.7), u(cy + 2.0), u(18.3), u(cy + 5.2)], 0, 180, fill=MOUTH)
-        f.d.ellipse(box(16, cy + 4.4, 1.2, 0.6), fill=(240, 110, 120, 255))  # tongue
 
-def side_face(f, cy):
-    eye(f, 19.5, cy - 1.5, 0.7)
-    eye(f, 24.4, cy - 1.5, 0.4, rx=1.0, ry=2.2)  # far eye, foreshortened
-    cheeks(f, (21.5,), cy)
-    f.d.chord([u(20.6), u(cy + 1.8), u(25.2), u(cy + 5.4)], 0, 180, fill=INK)
-    f.d.chord([u(21.0), u(cy + 2.2), u(24.8), u(cy + 4.9)], 0, 180, fill=MOUTH)
+# --- the body -------------------------------------------------------------------------------------
+THIGH, SHIN = 4.5, 4.4
+UPPER, FORE = 4.4, 4.1
+HEAD_R = 9.8
 
-def mascot(view, step=0, squash=0, frame=0, mood="happy", shift=0.0, flash=False):
+
+class Pose:
+    """Where he is: pelvis and lean, feet and hands (world), head nod; all in units, relative to rest."""
+
+    def __init__(self, **kw):
+        self.pelvis = v3(0, 10.9, 0)
+        self.lean = 4.0                   # torso pitch, degrees forward
+        self.twist = 0.0
+        self.foot = {1: v3(3.3, 2.0, 0.5), -1: v3(-3.3, 2.0, 0.1)}    # ankles; 1 = his left
+        self.toe = {1: 0.0, -1: 0.0}      # foot pitch (degrees, + toe down)
+        self.hand = {1: v3(8.2, 10.8, 0.8), -1: v3(-8.2, 10.8, 0.6)}
+        self.elbow_out = {1: 0.6, -1: 0.6}
+        self.fist = {1: True, -1: True}
+        self.head = v3(0, 0, 0)           # offset from the neck
+        self.nod = 0.0                    # head pitch, degrees forward
+        self.visor = 1.0                  # glow strength (0 = dark)
+        self.dizzy = False
+        self.spark = 0                    # fuse spark frame
+        self.flash = 0.0                  # white flash over everything
+        self.wind = 0.0                   # scarf phase (cycles over a loop)
+        self.drag = 0.4                   # how far the scarf streams back (0 hangs, 1 flies)
+        self.fx = []                      # extra drawings over him: (depth, fn(frame, view, skeleton))
+        self.hidden = False               # only the fx (he has blown up)
+        self.__dict__.update(kw)
+
+
+def skeleton(p):
+    s = {}
+    pel = p.pelvis
+    s["pelvis"] = pel
+    s["chest"] = rot_x(pel + v3(0, 7.6, 0), p.lean, pel)
+    s["neck"] = rot_x(pel + v3(0, 10.0, 0), p.lean, pel)
+    for side in (1, -1):
+        hip = pel + v3(side * 3.1, -0.6, 0)
+        knee, ankle = ik(hip, p.foot[side], THIGH, SHIN, v3(side * 0.15, 0, 1))
+        s[("hip", side)], s[("knee", side)], s[("ankle", side)] = hip, knee, ankle
+        sh = rot_x(pel + v3(side * 6.6, 8.6, -0.2), p.lean, pel)
+        elbow, hand = ik(sh, p.hand[side], UPPER, FORE, v3(side * p.elbow_out[side], -0.4, -1))
+        s[("shoulder", side)], s[("elbow", side)], s[("hand", side)] = sh, elbow, hand
+    s["head"] = s["neck"] + v3(0, HEAD_R + 0.4, 0.5) + p.head
+    return s
+
+
+def ring(center, rx, rz, y, n=24, lean=0.0, about=None):
+    pts = [center + v3(math.cos(a) * rx, y, math.sin(a) * rz) for a in np.linspace(0, 2 * math.pi, n, endpoint=False)]
+    return [rot_x(q, lean, about) for q in pts] if about is not None else pts
+
+
+def draw(pose, view_name):
     f = Frame()
-    lifted = step % 2 == 1
-    cx, cy = 16 + shift, 17 + (-1 if lifted else 0) + squash * 0.8
-    rx, ry = 9.8 + squash * 0.4, 9.8 - squash * 0.6
-    if view == "side":
-        far = {0: (12, 28.3), 1: (17, 26.5), 2: (20, 28.3), 3: (16, 28.3)}[step]
-        near = {0: (20, 28.3), 1: (16, 28.3), 2: (12, 28.3), 3: (17, 26.5)}[step]
-        foot(f, far[0] + shift, far[1], FOOT_FAR)
-    else:
-        lf = {0: (11.5, 28.3), 1: (11.5, 26.5), 2: (12.5, 28.3), 3: (11.5, 28.3)}[step]
-        rf = {0: (20.5, 28.3), 1: (20.5, 28.3), 2: (19.5, 28.3), 3: (20.5, 26.5)}[step]
-        foot(f, lf[0] + shift, lf[1])
-        foot(f, rf[0] + shift, rf[1])
-    cap_and_fuse(f, cy - ry + 1, view == "back", frame)
-    body(f, cx, cy, rx, ry, flash)
-    if view == "side":
-        foot(f, near[0] + shift, near[1])
-    if view == "front":
-        front_face(f, cy, mood, frame)
-    elif view == "side":
-        side_face(f, cy)
-    return f
+    v = View(view_name)
+    s = skeleton(pose)
+    sc = lambda p: v.screen(p)[:2]
+    depth = lambda p: v.screen(p)[2]
+    cam = v.toward()
 
-def stunned(frame):
-    f = mascot("front", 0, 0, frame, "dizzy", shift=[-0.8, 0, 0.8, 0][frame])
-    for i in range(3):
-        a = frame * math.pi / 2 + i * 2 * math.pi / 3
-        x, y = 16 + math.cos(a) * 8.5, 4.2 + math.sin(a) * 2.4
-        star = [(u(x + math.cos(j * math.pi / 5 - math.pi / 2) * (1.5 if j % 2 == 0 else 0.6)),
-                 u(y + math.sin(j * math.pi / 5 - math.pi / 2) * (1.5 if j % 2 == 0 else 0.6))) for j in range(10)]
-        f.d.polygon(star, fill=YELLOW, outline=ORANGE, width=int(K * 0.25))
-    return f.done()
+    # legs: thigh, shin, boot
+    for side in (1, -1):
+        hip, knee, ankle = s[("hip", side)], s[("knee", side)], s[("ankle", side)]
+        dz = depth(ankle) + depth(knee)
+        f.add(dz / 2 - 0.3, lambda hip=hip, knee=knee: f.part(lambda d: f.capsule(d, sc(hip), sc(knee), 3.0, 2.6), PANTS))
+        f.add(dz / 2 - 0.2, lambda knee=knee, ankle=ankle: f.part(lambda d: f.capsule(d, sc(knee), sc(ankle), 2.6, 2.2), PANTS))
+        # knee pad (armor), only where it faces us
+        kp = knee + v3(0, 0.3, 1.2)
+        f.add(depth(kp) + 0.1 if np.dot(v3(0, 0, 1), cam) >= 0 or view_name == "side" else -99,
+              lambda kp=kp: f.part(lambda d: f.capsule(d, sc(kp), sc(kp + v3(0, -1.0, 0.1)), 1.5, 1.3), ARMOR, radius=1.2))
+        toe_dir = rot_x(v3(0, 0, 1), pose.toe[side], v3(0, 0, 0))
+        heel, toe = ankle + v3(0, -0.4, -0.9), ankle + v3(0, -0.6, 0) + toe_dir * 3.2
+        f.add(depth(ankle) + 0.2, lambda heel=heel, toe=toe, ankle=ankle: (
+            f.part(lambda d: (f.capsule(d, sc(heel), sc(toe), 2.3, 2.0), f.capsule(d, sc(ankle + v3(0, 1.0, 0)), sc(heel), 2.3, 2.3)), BOOT, gloss=0.4),
+        ))
 
-def smoke(radius, density, seed):
-    r = random.Random(seed)
-    img = Image.new("RGBA", (D, D))
-    d = ImageDraw.Draw(img)
-    for _ in range(int(26 * density)):
-        a, dist = r.uniform(0, 2 * math.pi), r.uniform(0, radius)
-        x, y = 16 + math.cos(a) * dist, 18 + math.sin(a) * dist * 0.8
-        s = r.uniform(1.6, 3.4) * (0.6 + density * 0.5)
-        g = int(120 + dist / radius * 90)
-        d.ellipse(box(x, y, s, s), fill=(g, g, g + 10, int(200 * min(1, density + 0.3))))
-    for _ in range(int(8 * density)):
-        a, dist = r.uniform(0, 2 * math.pi), r.uniform(radius * 0.6, radius * 1.3)
-        x, y = 16 + math.cos(a) * dist, 18 + math.sin(a) * dist
-        d.ellipse(box(x, y, 0.5, 0.5), fill=r.choice((YELLOW, ORANGE)))
-    return img.filter(ImageFilter.GaussianBlur(K * 0.15)).resize((F, F), Image.LANCZOS)
+    # torso: rings lofted from the hips to the shoulders
+    lean, pel = pose.lean, s["pelvis"]
+    body_rings = [(-0.8, 4.6, 3.2), (1.2, 4.3, 3.1), (3.4, 4.6, 3.3), (5.8, 6.2, 4.0), (8.0, 6.8, 4.1), (9.6, 5.4, 3.5)]
+    torso_pts = [sc(q) for y, rx, rz in body_rings for q in ring(pel, rx, rz, y, lean=lean, about=pel)]
+    f.add(0.0, lambda: f.part(lambda d: f.hull(d, torso_pts), SUIT, radius=3.0))
+    # armor vest: chest and back plates over the upper torso
+    vest_rings = [(3.0, 4.95, 3.6), (5.8, 6.55, 4.35), (8.0, 7.1, 4.45), (9.3, 5.7, 3.8)]
+    vest_pts = [sc(q) for y, rx, rz in vest_rings for q in ring(pel, rx, rz, y, lean=lean, about=pel)]
 
-def main():
-    sheet = Image.new("RGBA", (F * COLS, F * ROWS))
-    put = lambda img, c, r: sheet.alpha_composite(img, (c * F, r * F))
-    for r, view in enumerate(["front", "side", "back"]):
-        for c, squash in enumerate([0, 0, 1, 1]):
-            put(mascot(view, 0, squash, c).done(), c, r)
-        for c in range(4):
-            put(mascot(view, c, 0, c).done(), c, r + 3)
-    for c in range(4):
-        put(stunned(c), c, 6)
-    death = [
-        mascot("front", 0, 0, 0, "dead", flash=True).done(),
-        mascot("front", 0, 1, 1, "dead").done(),
-        mascot("front", 0, -1, 0, "dead").done(),
-        smoke(9, 1.0, 1),
-        smoke(11, 0.6, 2),
-        smoke(12, 0.25, 3),
-    ]
-    for c, img in enumerate(death):
-        put(img, c, 7)
-    sheet.save(sys.argv[1])
+    def vest():
+        f.part(lambda d: f.hull(d, vest_pts), ARMOR, radius=2.6, gloss=0.25)
+        # seams: a center line down the front plate (or the spine plate behind), straps over the shoulders
+        dd = ImageDraw.Draw(f.img)
+        w = int(K * 0.3)
+        face = 1 if view_name != "back" else -1
+        if view_name in ("front", "back"):
+            top, bot = rot_x(pel + v3(0, 8.9, 4.3 * face), lean, pel), rot_x(pel + v3(0, 3.4, 3.6 * face), lean, pel)
+            dd.line([f.u(c) for c in sc(top) + sc(bot)], fill=INK + (200,), width=w)
+        else:
+            a, b = rot_x(pel + v3(4.0, 8.6, 3.5), lean, pel), rot_x(pel + v3(4.3, 3.4, 3.3), lean, pel)
+            dd.line([f.u(c) for c in sc(a) + sc(b)], fill=INK + (160,), width=w)
+        # leather harness: straps from each shoulder crossing to the far hip, front and back
+        for zf in (1, -1):
+            if np.dot(v3(0, 0, zf), cam) <= 0.1 and view_name != "side":
+                continue
+            for sx in (1, -1):
+                a = rot_x(pel + v3(sx * 4.6, 9.2, 3.2 * zf), lean, pel)
+                mid = rot_x(pel + v3(0, 6.0, 4.55 * zf), lean, pel)
+                b = rot_x(pel + v3(-sx * 4.4, 2.9, 3.5 * zf), lean, pel)
+                if view_name == "side" and zf < 0:
+                    continue
+                pts = [sc(a), sc(mid), sc(b)]
+                f.part(lambda d, pts=pts: (f.capsule(d, pts[0], pts[1], 0.75, 0.75), f.capsule(d, pts[1], pts[2], 0.75, 0.75)), LEATHER, radius=0.5, ink=0.32, rim=False)
+            mid = rot_x(pel + v3(0, 6.0, 4.6 * zf), lean, pel)
+            if view_name != "side":
+                x, y = sc(mid)
+                f.part(lambda d: d.ellipse([f.u(x - 1.15), f.u(y - 1.15), f.u(x + 1.15), f.u(y + 1.15)], fill=255), STEEL, radius=0.6, ink=0.32, gloss=0.6)
+    f.add(0.05, vest)
+
+    # belt with a buckle and pouches
+    belt_pts = [sc(q) for y in (1.5, 2.8) for q in ring(pel, 4.7, 3.35, y, lean=lean, about=pel)]
+
+    def belt():
+        f.part(lambda d: f.hull(d, belt_pts), LEATHER, radius=0.8, ink=0.4)
+        for ang in (0.0, 0.9, -0.9, math.pi * 0.5, -math.pi * 0.5, math.pi):
+            dirv = v3(math.sin(ang), 0, math.cos(ang))
+            if np.dot(dirv, cam) < 0.25:
+                continue
+            c = rot_x(pel + v3(0, 2.15, 0) + dirv * v3(4.95, 0, 3.6), lean, pel)
+            x, y = sc(c)
+            if ang == 0.0:  # buckle
+                f.part(lambda d: d.rounded_rectangle([f.u(x - 1.1), f.u(y - 0.85), f.u(x + 1.1), f.u(y + 0.85)], radius=f.u(0.3), fill=255), BRASS, radius=0.5, ink=0.3, gloss=0.5)
+            elif abs(ang) < 1.2:
+                pass
+            else:  # pouch
+                f.part(lambda d: d.rounded_rectangle([f.u(x - 1.2), f.u(y - 0.9), f.u(x + 1.2), f.u(y + 1.6)], radius=f.u(0.45), fill=255), PANTS, radius=0.7, ink=0.35)
+    f.add(0.1, belt)
+    for sx in (1, -1):
+        bc = rot_x(pel + v3(sx * 3.4, 0.3, 3.0), lean, pel)
+        def mini(bc=bc):
+            x, y = sc(bc)
+            f.part(lambda d: d.ellipse([f.u(x - 1.45), f.u(y - 1.45), f.u(x + 1.45), f.u(y + 1.45)], fill=255), tuple(IRON), radius=1.2, ink=0.35, gloss=0.7)
+            dd = ImageDraw.Draw(f.img)
+            dd.rectangle([f.u(x - 0.6), f.u(y - 2.0), f.u(x + 0.6), f.u(y - 1.25)], fill=STEEL + (255,), outline=INK + (255,), width=int(K * 0.2))
+            dd.line([f.u(x + 0.1), f.u(y - 2.0), f.u(x + 0.8), f.u(y - 2.9)], fill=FUSE + (255,), width=int(K * 0.35))
+        f.add(1.0 if view_name == "front" else (depth(bc) + 0.15 if view_name == "side" else -0.5), mini)
+
+    # arms: shoulder pad, upper arm, forearm, glove
+    for side in (1, -1):
+        sh, el, ha = s[("shoulder", side)], s[("elbow", side)], s[("hand", side)]
+        bias = 0.6 if view_name != "side" else 0.0
+        dz = (depth(sh) + depth(el) + depth(ha)) / 3 + bias
+        dz = max(dz, depth(ha) + 0.2) if view_name == "front" and ha[2] > 1.5 else dz
+
+        def arm(sh=sh, el=el, ha=ha, side=side):
+            f.part(lambda d: f.capsule(d, sc(sh), sc(el), 2.3, 2.05), SUIT)
+            f.part(lambda d: f.capsule(d, sc(el), sc(ha), 2.1, 1.95), SUIT)
+            # bracer on the forearm
+            a, b = el + (ha - el) * 0.35, el + (ha - el) * 0.8
+            f.part(lambda d: f.capsule(d, sc(a), sc(b), 2.25, 2.15), GLOVE, radius=1.0, gloss=0.3)
+            hx, hy = sc(ha + (ha - el) / (np.linalg.norm(ha - el) or 1) * 0.6)
+            f.part(lambda d: d.ellipse([f.u(hx - 2.2), f.u(hy - 2.1), f.u(hx + 2.2), f.u(hy + 2.2)], fill=255), GLOVE, radius=1.3, gloss=0.3)
+        f.add(dz, arm)
+        pad = sh + v3(side * 0.5, 0.7, 0)
+        f.add(dz + 0.05 if view_name != "side" else depth(pad) + 0.1,
+              lambda pad=pad, side=side: f.part(lambda d: f.capsule(d, sc(pad + v3(-side * 0.9, 0.5, 0)), sc(pad + v3(side * 0.7, -0.7, 0)), 2.8, 2.5), ARMOR, radius=1.6, gloss=0.35))
+
+    # scarf: wrapped round the neck, two tails streaming out behind
+    nk = s["neck"]
+    wrap = [sc(q) for yy in (-0.9, 0.9) for q in ring(nk, 3.6, 3.0, yy)]
+    f.add(0.25, lambda: f.part(lambda d: f.hull(d, wrap), SCARF, radius=1.4))
+    for k, (dx, ln, ph) in enumerate(((0.9, 9.5, 0.0), (-0.6, 7.5, 1.7))):
+        pts = []
+        for t in np.linspace(0, 1, 9):
+            back = ln * (0.18 * t + (0.25 + 0.6 * pose.drag) * t * t)
+            drop = ln * t * (1.0 - 0.55 * pose.drag)
+            wave = math.sin(pose.wind + ph + t * 4.0) * t * (0.6 + 1.4 * pose.drag)
+            pts.append(nk + v3(dx + wave * 0.6, -0.4 - drop + wave * 0.5 * pose.drag, -2.6 - back))
+        tail_depth = sum(depth(q) for q in pts) / len(pts)
+        def tail(pts=pts):
+            def m(d):
+                for i in range(len(pts) - 1):
+                    w = 1.7 - 0.6 * i / (len(pts) - 1)
+                    f.capsule(d, sc(pts[i]), sc(pts[i + 1]), w, w - 0.07)
+                # frayed end
+                ex, ey = sc(pts[-1])
+                for j in (-1, 0, 1):
+                    f.capsule(d, (ex, ey), (ex + j * 0.45 + (sc(pts[-1])[0] - sc(pts[-2])[0]) * 0.5, ey + (sc(pts[-1])[1] - sc(pts[-2])[1]) * 0.5), 0.35, 0.2)
+            f.part(m, SCARF, radius=0.9, ink=0.45)
+        f.add(tail_depth if view_name != "front" else -5 + k * 0.01, tail)
+
+    # head: the iron bomb, its band, the visor slit, the cap and fuse
+    hc = s["head"]
+    f.add(0.4, lambda: head(f, v, pose, hc))
+    for dz, fn in pose.fx:
+        f.add(dz, lambda fn=fn: fn(f, v, s))
+    if pose.hidden:
+        f.items = [(dz, fn) for dz, fn in f.items if dz >= 50]
+    return f.render() if not pose.flash else flash(f.render(), pose.flash)
+
+
+def head(f, v, pose, hc):
+    sc = lambda p: v.screen(p)[:2]
+    cx, cy = sc(hc)
+    r = HEAD_R
+    m, d = f.new_mask()
+    d.ellipse([f.u(cx - r), f.u(cy - r), f.u(cx + r), f.u(cy + r)], fill=255)
+    f.ink(m, 0.48)
+    # sphere shading: real normals, iron with a hard specular
+    x0, y0, x1, y1 = [int(f.u(c)) for c in (cx - r - 1, cy - r - 1, cx + r + 1, cy + r + 1)]
+    ys, xs = np.mgrid[y0:y1, x0:x1]
+    nx = ((xs + 0.5) / K - cx) / r
+    ny = -((ys + 0.5) / K - cy) / r
+    r2 = nx * nx + ny * ny
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lam = nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2]
+    tones = [IRON * 0.42, IRON * 0.72, IRON, IRON * 1.45 + 12, IRON * 2.2 + 40]
+    col = np.where((lam < 0.05)[..., None], tones[0], np.where((lam < 0.38)[..., None], tones[1],
+          np.where((lam < 0.72)[..., None], tones[2], np.where((lam < 0.9)[..., None], tones[3], tones[4]))))
+    refl = 2 * lam[..., None] * np.dstack([nx, ny, nz]) - LIGHT
+    spec = np.clip(refl[..., 2], 0, 1) ** 18
+    col = np.where((spec > 0.55)[..., None], np.array([226, 230, 238.0]), col)
+    # cast iron: a few scratches
+    sr = random.Random(5)
+    scratch = Image.new("L", (x1 - x0, y1 - y0))
+    sdraw = ImageDraw.Draw(scratch)
+    for _ in range(9):
+        a, d0 = sr.uniform(0, math.pi), sr.uniform(0.15, 0.8)
+        b = sr.uniform(0, 2 * math.pi)
+        px_, py_ = (r + 1 + math.cos(b) * d0 * r) * K, (r + 1 + math.sin(b) * d0 * r) * K
+        L = sr.uniform(0.8, 2.2) * K
+        sdraw.line([px_ - math.cos(a) * L, py_ - math.sin(a) * L, px_ + math.cos(a) * L, py_ + math.sin(a) * L], fill=sr.randint(60, 120), width=max(1, int(K * 0.14)))
+    sc_ = np.asarray(scratch, float)[..., None] / 255
+    col = np.where(sc_ > 0.3, np.minimum(255, col * 1.6 + 18), col)
+    rimlight = (np.sqrt(r2) > 0.86) & (nx + ny * 0.3 < -0.35)
+    col = np.where(rimlight[..., None], np.array([92, 100, 118.0]), col)
+    out = np.zeros(nx.shape + (4,), np.uint8)
+    out[..., :3] = np.clip(col, 0, 255)
+    out[..., 3] = (r2 <= 1) * 255
+    f.img.alpha_composite(Image.fromarray(out, "RGBA"), (x0, y0))
+
+    cam = v.toward()
+    tilt = pose.nod
+    def on_head(dirv):
+        return hc + rot_x(dirv, tilt, v3(0, 0, 0)) * r
+
+    dd = ImageDraw.Draw(f.img)
+    # the steel band round the eyes, with rivets
+    band_y = -0.05
+    angs = np.linspace(0, 2 * math.pi, 120, endpoint=False)
+    def band_pts(y, scale=1.0):
+        rr = math.sqrt(1 - y * y) * scale
+        return [(a, on_head(v3(math.sin(a) * rr, y, math.cos(a) * rr))) for a in angs]
+    top, bot = band_pts(band_y + 0.17, 1.03), band_pts(band_y - 0.17, 1.03)
+    band = Image.new("L", (W, H))
+    bd = ImageDraw.Draw(band)
+    for i in range(len(angs)):
+        j = (i + 1) % len(angs)
+        quad = [top[i][1], top[j][1], bot[j][1], bot[i][1]]
+        if min(np.dot((q - hc), cam) for q in quad) < -0.2:
+            continue
+        bd.polygon([(f.u(sc(q)[0]), f.u(sc(q)[1])) for q in quad], fill=255)
+    clip = Image.new("L", (W, H))
+    clip.paste(band, (0, 0), m)
+    bandimg = Image.new("RGBA", (W, H))
+    bandimg.paste(Image.new("RGBA", (W, H), INK + (255,)), (0, 0), clip.filter(ImageFilter.MaxFilter(int(K * 0.5) | 1)))
+    f.img.alpha_composite(bandimg)
+    f.volume(clip, STEEL, radius=0.7, gloss=0.6, rim=False)
+    # rivets
+    for a in np.linspace(0, 2 * math.pi, 14, endpoint=False):
+        if abs((a + math.pi) % (2 * math.pi) - math.pi) < 0.75:
+            continue  # the visor
+        p = on_head(v3(math.sin(a) * 1.03, band_y, math.cos(a) * 1.03))
+        if np.dot(p - hc, cam) < 0.25 * r:
+            continue
+        x, y = sc(p)
+        dd.ellipse([f.u(x - 0.38), f.u(y - 0.38), f.u(x + 0.38), f.u(y + 0.38)], fill=(70, 72, 80, 255))
+        dd.ellipse([f.u(x - 0.22), f.u(y - 0.3), f.u(x + 0.1), f.u(y - 0.02)], fill=(210, 214, 222, 255))
+
+    # visor: a narrow slit across the front of the band, glowing
+    if pose.visor > 0 or True:
+        slit = Image.new("L", (W, H))
+        sd = ImageDraw.Draw(slit)
+        sclip = Image.new("L", (W, H))
+        for sgn in (-1, 1):
+            span = np.linspace(0.07, 0.6, 24) * sgn
+            top_y = lambda a: band_y + 0.015 + 0.13 * (abs(a) - 0.07) / 0.53
+            upper = [on_head(v3(math.sin(a) * 1.05, top_y(a), math.cos(a) * 1.05)) for a in span]
+            lower = [on_head(v3(math.sin(a) * 1.05, top_y(a) - 0.13 - 0.04 * (0.6 - abs(a)), math.cos(a) * 1.05)) for a in span]
+            vis = [np.dot(q - hc, cam) > 0.05 * r for q in upper]
+            poly = [sc(q) for q, ok in zip(upper, vis) if ok] + [sc(q) for q, ok in list(zip(lower, vis))[::-1] if ok]
+            if len(poly) > 3:
+                sd.polygon([(f.u(x), f.u(y)) for x, y in poly], fill=255)
+        sclip.paste(slit, (0, 0), m)
+        if sclip.getbbox():
+            dark = Image.new("RGBA", (W, H), (12, 8, 6, 255))
+            f.img.paste(dark, (0, 0), sclip.filter(ImageFilter.MaxFilter(int(K * 0.3) | 1)))
+            g = pose.visor
+            if g > 0:
+                hot = Image.new("RGBA", (W, H), tuple(int(c * g + 30 * (1 - g)) for c in VISOR) + (255,))
+                f.img.paste(hot, (0, 0), sclip)
+                core = sclip.filter(ImageFilter.MinFilter(int(K * 0.42) | 1))
+                f.img.paste(Image.new("RGBA", (W, H), VISOR_HOT + (int(255 * g),)), (0, 0), core)
+
+            poly = [(x / K, y / K) for x, y in np.argwhere(np.asarray(sclip) > 128)[::400][:, ::-1]]
+            if pose.dizzy and poly:  # static flickering across the slits
+                rr = random.Random(pose.spark)
+                for _ in range(6):
+                    x, y = poly[rr.randrange(len(poly))]
+                    dd.line([f.u(x - 0.8), f.u(y), f.u(x + 0.8), f.u(y)], fill=(255, 255, 255, 220), width=int(K * 0.25))
+
+    # cap and fuse on the crown, tipped back a little
+    up = rot_x(v3(0, 0.96, -0.28), tilt, v3(0, 0, 0))
+    base = hc + up * r * 0.93
+    capt = hc + up * (r + 0.5)
+    behind = np.dot(up, cam) < -0.15
+    f_pts = []
+    for t in np.linspace(0, 1, 14):
+        p = capt + up * (t * 4.2 - t * t * 1.2) + rot_x(v3(0, 0, -1), tilt, v3(0, 0, 0)) * (math.sin(t * math.pi * 1.1) * 1.4 + t * 2.4) + v3(t * 2.2, 0, 0)
+        f_pts.append(sc(p))
+    def cap():
+        f.part(lambda d: f.capsule(d, sc(base), sc(capt), 3.2, 3.0), STEEL, radius=0.8, gloss=0.5, ink=0.45)
+        top_x, top_y = sc(capt)
+        dd.ellipse([f.u(top_x - 2.1), f.u(top_y - 0.75), f.u(top_x + 2.1), f.u(top_y + 0.75)], fill=(40, 40, 46, 255))
+    def fuse():
+        dd.line([(f.u(x), f.u(y)) for x, y in f_pts], fill=INK + (255,), width=int(K * 1.35), joint="curve")
+        dd.line([(f.u(x), f.u(y)) for x, y in f_pts], fill=FUSE + (255,), width=int(K * 0.8), joint="curve")
+        for (x, y) in f_pts[2::3]:  # braid
+            dd.line([f.u(x - 0.25), f.u(y - 0.25), f.u(x + 0.25), f.u(y + 0.25)], fill=(96, 66, 34, 255), width=int(K * 0.2))
+        sx, sy = f_pts[-1]
+        fl = [1.0, 0.75, 1.15, 0.85][pose.spark % 4]
+        dd.ellipse([f.u(sx - 1.9 * fl), f.u(sy - 1.9 * fl), f.u(sx + 1.9 * fl), f.u(sy + 1.9 * fl)], fill=(255, 140, 40, 255))
+        n = 8
+        rot = pose.spark * 0.7
+        star = [(f.u(sx + math.cos(rot + i * math.pi / n) * (1.6 * fl if i % 2 == 0 else 0.55)),
+                 f.u(sy + math.sin(rot + i * math.pi / n) * (1.6 * fl if i % 2 == 0 else 0.55))) for i in range(2 * n)]
+        dd.polygon(star, fill=SPARK + (255,))
+        dd.ellipse([f.u(sx - 0.45), f.u(sy - 0.45), f.u(sx + 0.45), f.u(sy + 0.45)], fill=(255, 255, 240, 255))
+    if behind:
+        # drawn before the head would have been nicer; the cap sits on the crown so it shows over the top edge anyway
+        pass
+    cap()
+    fuse()
+
+
+def pixelate(img):
+    """Down to the sheet's pixel grid the pixel-art way: each pixel takes the most common color of its SSxSS
+    block (no blending, so edges stay hard and the palette stays the drawing's own few tones)."""
+    a = np.asarray(img).astype(np.uint32)
+    a = a[: OH * SS, : OW * SS]
+    alpha = (a[..., 3] >= 128).astype(np.uint32)
+    packed = ((a[..., 0] << 16) | (a[..., 1] << 8) | a[..., 2]) * alpha + alpha * (1 << 24)
+    blocks = packed.reshape(OH, SS, OW, SS).transpose(0, 2, 1, 3).reshape(OH, OW, SS * SS)
+    counts = (blocks[..., :, None] == blocks[..., None, :]).sum(-1)
+    # ties go to the darker (outline) color, so 1-pixel ink lines survive
+    lum = ((blocks >> 16) & 255) * 3 + ((blocks >> 8) & 255) * 6 + (blocks & 255)
+    score = counts * 4096 - lum * (blocks >> 24) + (blocks >> 24) * 0
+    best = np.take_along_axis(blocks, score.argmax(-1)[..., None], -1)[..., 0]
+    out = np.zeros((OH, OW, 4), np.uint8)
+    out[..., 0], out[..., 1], out[..., 2] = (best >> 16) & 255, (best >> 8) & 255, best & 255
+    out[..., 3] = ((best >> 24) & 1) * 255
+    return Image.fromarray(out, "RGBA")
+
+
+def flash(img, amount):
+    a = np.asarray(img).astype(float)
+    a[..., :3] = a[..., :3] * (1 - amount) + 255 * amount
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
+# --- effects -------------------------------------------------------------------------------------
+def stars(phase):
+    """Three little stars circling over his head (stunned)."""
+    def fn(f, v, s):
+        hc = s["head"]
+        for i in range(3):
+            a = phase + i * 2 * math.pi / 3
+            p = hc + v3(math.cos(a) * 8.5, HEAD_R + 2.2, math.sin(a) * 4.0)
+            x, y = v.screen(p)[:2]
+            big = 1.5 + 0.35 * math.sin(a)
+            pts = [(f.u(x + math.cos(j * math.pi / 4 - math.pi / 2) * (big if j % 2 == 0 else big * 0.38)),
+                    f.u(y + math.sin(j * math.pi / 4 - math.pi / 2) * (big if j % 2 == 0 else big * 0.38))) for j in range(8)]
+            m, d = f.new_mask()
+            d.polygon(pts, fill=255)
+            f.ink(m, 0.35)
+            f.img.paste(Image.new("RGBA", (W, H), SPARK + (255,)), (0, 0), m)
+    return fn
+
+
+def blast(size, smoke, seed):
+    """His end: a fireball with a ring of smoke (size 0..1), or the smoke alone drifting (smoke 0..1)."""
+    def fn(f, v, s):
+        rr = random.Random(seed)
+        cx, cy = v.screen(s["head"] + v3(0, -6, 0))[:2]
+        dd = ImageDraw.Draw(f.img)
+        puffs = []
+        for _ in range(16):
+            a, dist = rr.uniform(0, 2 * math.pi), rr.uniform(0.25, 1.0)
+            puffs.append((a, dist, rr.uniform(0.7, 1.2)))
+        R = 7 + 9 * max(size, smoke)
+        for a, dist, sz in sorted(puffs, key=lambda q: -q[1]):
+            x, y = cx + math.cos(a) * dist * R, cy + math.sin(a) * dist * R * 0.8 - smoke * 4
+            r = (3.2 + 2.2 * sz) * (0.6 + 0.6 * max(size, smoke)) * (1 - 0.45 * smoke ** 2)
+            col = (118, 116, 122) if smoke else (96, 92, 98)
+            f.part(lambda d, x=x, y=y, r=r: d.ellipse([f.u(x - r), f.u(y - r), f.u(x + r), f.u(y + r)], fill=255), col, radius=r * 0.9, ink=0.4)
+        if size:
+            for r, col in ((7.5 * size + 2, (255, 120, 30)), (5.2 * size + 1.4, (255, 196, 60)), (2.8 * size + 0.8, (255, 246, 200))):
+                dd.ellipse([f.u(cx - r), f.u(cy - r * 0.9), f.u(cx + r), f.u(cy + r * 0.9)], fill=col + (255,))
+            for _ in range(10):  # embers
+                a, dist = rr.uniform(0, 2 * math.pi), rr.uniform(0.8, 1.3) * R
+                x, y = cx + math.cos(a) * dist, cy + math.sin(a) * dist * 0.8
+                dd.rectangle([f.u(x - 0.5), f.u(y - 0.5), f.u(x + 0.5), f.u(y + 0.5)], fill=rr.choice((SPARK, (255, 120, 30))) + (255,))
+    return fn
+
+
+# --- animations -----------------------------------------------------------------------------------
+def idle(i, carry=False):
+    b = math.sin(i / 4 * 2 * math.pi)
+    p = Pose(spark=i, wind=i / 4 * 2 * math.pi, drag=0.25)
+    p.pelvis = p.pelvis + v3(0, -0.25 * (1 - b) / 2, 0)
+    p.lean = 4 + 0.8 * (1 - b) / 2
+    for side in (1, -1):
+        p.hand[side] = p.hand[side] + v3(0, -0.2 * (1 - b) / 2, 0)
+    if carry:
+        hold(p, 0.15 * b)
+    return p
+
+
+def hold(p, dy=0.0):
+    """Hands up beside his head, holding a bomb overhead (the game draws the bomb)."""
+    for side in (1, -1):
+        p.hand[side] = v3(side * 7.6, 27.0 + dy, 1.2)
+        p.elbow_out[side] = 1.6
+    p.lean = 1.0
+
+
+def walk(i, n=6, carry=False):
+    ph = i / n * 2 * math.pi
+    p = Pose(spark=i, wind=ph * 2, drag=0.75)
+    p.lean = 9
+    for side in (1, -1):
+        c = math.cos(ph + (0 if side == 1 else math.pi))
+        sn = math.sin(ph + (0 if side == 1 else math.pi))
+        p.foot[side] = v3(side * 3.0, 2.0 + max(0.0, sn) * 2.4, 0.4 + 3.4 * c)
+        p.toe[side] = -18 * max(0.0, sn)
+        p.hand[side] = v3(side * 7.9, 11.2 + 0.6 * max(0, -c), 0.8 - 3.0 * c)
+    p.pelvis = p.pelvis + v3(0, -0.55 * abs(math.cos(ph)) + 0.25, 0.3)
+    if carry:
+        hold(p, 0.3 * abs(math.sin(ph)))
+        p.lean = 4
+    return p
+
+
+def stun(i):
+    p = Pose(spark=i, dizzy=True, wind=i, drag=0.15)
+    p.visor = [1.0, 0.25, 0.8, 0.15, 1.0, 0.4][i]
+    w = math.sin(i / 6 * 2 * math.pi)
+    p.head = v3(0.9 * w, -0.2, 0)
+    p.nod = 10 + 4 * w
+    p.lean = 10
+    p.pelvis = p.pelvis + v3(0.4 * w, -0.9, 0)
+    for side in (1, -1):
+        p.foot[side] = p.foot[side] + v3(side * 0.4, 0, 0)
+        p.hand[side] = v3(side * 8.6 + 0.4 * w, 9.2, 1.4)
+    p.fx = [(60, stars(i * math.pi / 3))]
+    return p
+
+
+def death(i):
+    if i <= 3:
+        p = Pose(spark=i, drag=0.3, wind=i)
+        p.visor = [1.0, 0.6, 0.3, 0.0][i]
+        p.flash = [0.55, 0.0, 0.0, 0.0][i]
+        p.lean = [-6, 10, 18, 22][i]
+        p.nod = [-10, 12, 22, 26][i]
+        drop = [0, 1.2, 3.6, 5.0][i]
+        p.pelvis = p.pelvis + v3(0, -drop, [0, -0.6, -0.6, -0.4][i])
+        for side in (1, -1):
+            p.hand[side] = v3(side * [9.2, 8.4, 7.4, 6.8][i], [13, 10, 7.4, 6.0][i], [0, 1.0, 2.6, 3.4][i])
+        return p
+    p = Pose(hidden=True)
+    p.pelvis = p.pelvis + v3(0, -5.0, 0)
+    p.fx = [(60, [blast(1.0, 0, 2), blast(0.0, 0.5, 3), blast(0.0, 1.0, 4)][i - 4])]
+    return p
+
+
+CROUCH = [0, 0.45, 1, 1, 1, 1, 0.45, 0, 0]
+
+
+def cast(i):
+    """Planting the mega bomb: down on one knee, both hands pushed onto it in front, then up."""
+    c = CROUCH[i]
+    p = Pose(spark=i, drag=0.3, wind=i)
+    p.pelvis = p.pelvis + v3(0, -4.2 * c, -0.6 * c)
+    p.lean = 4 + 22 * c
+    p.nod = 12 * c
+    p.foot[1] = v3(3.3, 2.0, 0.5 + 1.8 * c)
+    p.foot[-1] = v3(-3.3, 2.0 + 0.6 * c, 0.1 - 2.6 * c)
+    p.toe[-1] = 40 * c
+    for side in (1, -1):
+        p.hand[side] = p.hand[side] * (1 - c) + v3(side * 3.4, 4.0, 6.4) * c
+        p.elbow_out[side] = 0.6 + 0.8 * c
+    return p
+
+
+def lobby(i):
+    """Arms folded, scarf streaming, the visor pulsing."""
+    b = math.sin(i / 8 * 2 * math.pi)
+    p = Pose(spark=i, wind=i / 8 * 2 * math.pi, drag=0.85)
+    p.visor = 0.85 + 0.15 * b
+    p.lean = 2
+    p.pelvis = p.pelvis + v3(0, -0.15 * (1 - b), 0)
+    p.foot = {1: v3(3.9, 2.0, 0.5), -1: v3(-3.9, 2.0, 0.3)}
+    p.hand[1] = v3(-3.2, 17.0, 4.4)
+    p.hand[-1] = v3(3.4, 16.2, 4.9)
+    p.elbow_out = {1: 1.4, -1: 1.4}
+    return p
+
+
+DIRS = ["front", "side", "back"]
+ROWS = (
+    [("idle", d, 4, idle) for d in DIRS]
+    + [("walk", d, 6, walk) for d in DIRS]
+    + [("stun", "front", 6, stun), ("death", "front", 7, death)]
+    + [("cast", d, 9, cast) for d in DIRS]
+    + [("carryIdle", d, 4, lambda i: idle(i, carry=True)) for d in DIRS]
+    + [("carryWalk", d, 6, lambda i: walk(i, carry=True)) for d in DIRS]
+    + [("lobby", "front", 8, lobby)]
+)
+
+
+if __name__ == "__main__":
+    out = sys.argv[1]
+    sheet = Image.new("RGBA", (OW * COLS, OH * len(ROWS)))
+    for r, (name, view, n, make) in enumerate(ROWS):
+        for i in range(n):
+            sheet.alpha_composite(draw(make(i), view), (i * OW, r * OH))
+        print(name, view, file=sys.stderr)
+    sheet.save(out)
+    print(f"sheet {sheet.size}, cell {OW}x{OH}, anchor {FW / 2 * PX} {GROUND * PX}")
     if len(sys.argv) > 2:
         prev = Image.new("RGBA", sheet.size, (47, 107, 58, 255))
         prev.alpha_composite(sheet)
         prev.save(sys.argv[2])
-
-main()

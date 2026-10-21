@@ -240,34 +240,35 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14,
   },
-  /** The bomb mascot, a bomb-headed man made in PixelLab (scripts/build-character-sheet.py bomb lays out its frames). */
+  /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber.png",
-    width: 1170,
-    height: 3006,
-    frameW: 130,
-    frameH: 167,
-    anchorX: 65,
-    anchorY: 161,
-    bodyH: 155,
+    width: 1215,
+    height: 2970,
+    frameW: 135,
+    frameH: 165,
+    anchorX: 67.5,
+    anchorY: 159,
+    bodyH: 123,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
     idle: strips(0, 1, 2, 4),
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
+    /** He buckles, his visor goes dark, and he blows up. */
     death: { row: 7, frames: 7 },
-    /** Planting the mega bomb: he crouches with both hands pushed down, then rises. */
+    /** Planting the mega bomb: down on one knee with both hands pushed onto it, then up. */
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     lobby: { row: 17, frames: 8 },
-    /** His violet bomb head and suit. */
+    /** His armor plates (shoulders, vest, knees). */
     hues: [250, 290],
     hueBase: [106, 71, 145],
-    /** White would wash his bomb head out round his white eyes: that player keeps the violet. */
+    /** White would bleach his armor into the steel round his head: that player keeps the violet. */
     keepFor: [[245, 245, 245]],
-    scale: 0.143,
+    scale: 0.18,
   },
 } satisfies Record<string, SheetLayout>;
 
