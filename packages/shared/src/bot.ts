@@ -213,13 +213,22 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb): Danger {
   if (extra) bombs.push(extra);
   const when = new Map<Bomb, number>();
   for (const b of bombs) when.set(b, b.type === "remote" ? (b.ownerId === me ? FUSE_TICKS : REMOTE_THREAT) : b.fuse);
-  const blasts = new Map(bombs.map((b) => [b, blast(s, b)]));
+  const occ = occupancy(s);
+  const blasts = new Map(bombs.map((b) => [b, blast(s, b, occ)]));
+  // Bombs by tile, in field order (sliding ones can share a tile).
+  const at = new Map<number, Bomb[]>();
+  for (const b of bombs) {
+    const k = b.y * w + b.x;
+    const list = at.get(k);
+    if (list) list.push(b);
+    else at.set(k, [b]);
+  }
   // A bomb caught in an earlier blast goes off with it.
   for (let changed = true; changed; ) {
     changed = false;
     for (const b of bombs) {
       for (const [x, y] of blasts.get(b)!) {
-        const hit = bombs.find((o) => o !== b && o.x === x && o.y === y);
+        const hit = at.get(y * w + x)?.find((o) => o !== b);
         if (hit && when.get(hit)! > when.get(b)!) {
           when.set(hit, when.get(b)!);
           changed = true;
@@ -250,8 +259,22 @@ function pressureDanger(s: MatchState, mark: (x: number, y: number, t: number) =
   }
 }
 
+/** Tiles holding a resting bomb, or an item (tile keys y * width + x): looked up instead of searched. */
+interface Occupancy {
+  bombs: Set<number>;
+  items: Set<number>;
+}
+
+function occupancy(s: MatchState): Occupancy {
+  const w = s.grid.width;
+  return {
+    bombs: new Set(s.bombs.filter((b) => !b.air && !b.heldBy).map((b) => b.y * w + b.x)),
+    items: new Set(s.items.map((i) => i.y * w + i.x)),
+  };
+}
+
 /** Tiles an explosion covers. */
-function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">): [number, number][] {
+function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">, occ = occupancy(s)): [number, number][] {
   const tiles: [number, number][] = [[b.x, b.y]];
   const pierce = b.type === "pierce";
   for (const f of FACINGS) {
@@ -262,7 +285,8 @@ function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">): [num
       const tile = getTile(s, x, y);
       if (tile === Tile.Wall) break;
       tiles.push([x, y]);
-      if (!pierce && (tile === Tile.Block || bombAt(s, x, y) || s.items.some((it) => it.x === x && it.y === y))) break;
+      const k = y * s.grid.width + x;
+      if (!pierce && (tile === Tile.Block || occ.bombs.has(k) || occ.items.has(k))) break;
     }
   }
   return tiles;
@@ -279,6 +303,7 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
   const perStep = TILE / Math.max(1, effectiveSpeed(p));
   // Off-center players need a little longer to clear their own tile.
   const lag = (Math.abs(p.px - tileCenter(start.x)) + Math.abs(p.py - tileCenter(start.y))) / Math.max(1, effectiveSpeed(p));
+  const bombs = occupancy(s).bombs;
   const seen = new Set([start.y * w + start.x]);
   const out: Node[] = [{ ...start, steps: 0, first: start }];
   for (let i = 0; i < out.length; i++) {
@@ -288,7 +313,7 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
       const x = n.x + dx;
       const y = n.y + dy;
       const k = y * w + x;
-      if (seen.has(k) || getTile(s, x, y) !== Tile.Empty || bombAt(s, x, y)) continue;
+      if (seen.has(k) || getTile(s, x, y) !== Tile.Empty || bombs.has(k)) continue;
       const burns = danger.get(k);
       const through = (n.steps + 2) * perStep + lag + margin;
       if (burns !== undefined && (strict || burns <= through)) continue;
