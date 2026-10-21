@@ -1,11 +1,11 @@
-import { createMatch, placePlayerAt, step, TICK_RATE, type MatchState, type PlayerInput } from "@bombtop/shared";
+import { createMatch, placePlayerAt, setTile, step, Tile, TICK_RATE, type MatchState, type PlayerInput } from "@bombtop/shared";
 import { Script } from "./showcase";
 
 /** The stretch of arena the intro plays in (tiles), zoomed to fill the screen. */
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 9 * TICK_RATE;
+export const INTRO_TICKS = 11 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -18,14 +18,16 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 120, to: 200, card: { name: "Ninja", line: "Raio de gelo! Quem estiver na frente vira picolé." } },
   { from: 200, to: 330, card: { name: "Capitão América", line: "Ergue o escudo e devolve o fogo pra quem mandou!" } },
   { from: 330, to: 450, card: { name: "Thor", line: "Ergue o martelo e solta um raio: quem leva fica tonto!" } },
+  { from: 450, to: 570, card: { name: "Goku", line: "Kamehameha! Carrega o ki e manda um raio que derruba tudo na frente." } },
 ];
-const LOGO_FROM = 450;
+const LOGO_FROM = 570;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
  * (row 5 is an open corridor). The mascot drops a bomb and walks off, the ninja's ice hits it,
  * the captain raises his shield and the blast bounces back off it, Thor's bolt leaves the mascot dizzy
- * up in row 3, then the logo.
+ * up in row 3, Goku's Kamehameha smashes a row of blocks in row 7, then the logo.
+ * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
@@ -34,23 +36,26 @@ export class Intro {
   constructor() {
     const s = createMatch({
       seed: 1,
-      // Seat order picks the arena colors: white captain (keeps his navy suit), black bomb, red ninja, blue thor.
-      playerIds: ["captain", "bomb", "ninja", "thor"],
+      // Seat order picks the arena colors: white captain (keeps his navy suit), black bomb, red ninja, blue thor, green goku.
+      playerIds: ["captain", "bomb", "ninja", "thor", "goku"],
       blockDensity: 0,
       revenge: false,
-      characters: { bomb: "bomb", ninja: "ninja", captain: "captain", thor: "thor" },
+      characters: { bomb: "bomb", ninja: "ninja", captain: "captain", thor: "thor", goku: "goku" },
     });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
     placePlayerAt(s, "captain", 11, 5);
     placePlayerAt(s, "thor", 11, 3);
-    const [captain, bomb, ninja, thor] = s.players;
+    placePlayerAt(s, "goku", 1, 7);
+    for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
+    const [captain, bomb, ninja, thor, goku] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
     captain!.facing = "left";
     thor!.facing = "left";
+    goku!.facing = "right";
     this.state = s;
     this.scripts = [
       // Drops its bomb on (7,5) and climbs out of its reach.
@@ -61,6 +66,8 @@ export class Intro {
       new Script("captain", [{ wait: 200 }, { go: "left", tiles: 3 }, { wait: 6 }, { press: "special" }]),
       // Steps in along row 3 and strikes the mascot, who climbed up there out of its bomb's reach.
       new Script("thor", [{ wait: 320 }, { go: "left", tiles: 1 }, { wait: 6 }, { press: "special" }]),
+      // Steps up to the wall of blocks in row 7 and blasts through all five.
+      new Script("goku", [{ wait: 450 }, { go: "right", tiles: 1 }, { wait: 6 }, { press: "special" }]),
     ];
   }
 

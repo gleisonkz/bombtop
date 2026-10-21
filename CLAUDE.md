@@ -128,6 +128,10 @@ Screen design (menu, lobby, results, guide, HUD, overlays) is always done for ev
 desktop, tablet/iPad upright and sideways, phone upright and sideways (little height). Check each
 viewport in the browser (devtools emulation) before committing.
 
+New characters always join the title intro (`game/intro.ts`): a seat in the scene, a name card and a
+moment showing their special. `test/intro.test.ts` fails if any `CHARACTERS` entry is missing. They also
+get a place in the title lineup (`ui/menu.ts`).
+
 TDD: write the failing test first (`packages/shared/test`, `apps/*/test`), then minimal code,
 then refactor. Atomic commits: one logical change per commit, every commit green.
 
