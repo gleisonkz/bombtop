@@ -183,6 +183,14 @@ export class OnlineGame implements GameMode {
   }
 
   frame(deltaMs: number, nowMs: number): void {
+    if (!this.hud) return this.step(deltaMs, nowMs);
+    const t = performance.now();
+    this.step(deltaMs, nowMs);
+    this.hud.stats.work(performance.now() - t);
+  }
+
+  /** One frame: inputs for the ticks due, then the screen. */
+  private step(deltaMs: number, nowMs: number): void {
     for (let i = this.loop.advance(deltaMs); i > 0; i--) this.sendInput();
 
     const sample = this.buffer.sample(nowMs);

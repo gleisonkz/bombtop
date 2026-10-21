@@ -1,7 +1,7 @@
 import { Room, type Client } from "@colyseus/core";
 import { C2S, MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
-import { NetLog, netReport } from "./net-log";
+import { NetLog, netReport, TickCost } from "./net-log";
 
 /** ?debug clients' connection reports, read over SSH (deploy/vps/README.md). */
 const netLog = new NetLog(process.env.LOG_DIR ?? "logs");
@@ -30,6 +30,8 @@ export class BattleRoom extends Room {
     seatsChanged: (full) => void (full ? this.lock() : this.unlock()),
   });
 
+  private readonly tickCost = new TickCost();
+
   async onCreate(options: BattleRoomOptions) {
     if (options?.private) await this.setPrivate(true);
     this.setPatchRate(null);
@@ -42,13 +44,17 @@ export class BattleRoom extends Room {
       if (!report || !netLog.allow(client.sessionId)) return;
       const player = this.core.session.lobbyInfo(this.roomId).members.find((m) => m.id === client.sessionId)?.name ?? "?";
       try {
-        netLog.write({ room: this.roomId, player }, report);
+        netLog.write({ room: this.roomId, player }, { ...report, tick: this.tickCost.take() });
       } catch (err) {
         console.warn("[bombtop] net log", err);
       }
     });
 
-    this.setSimulationInterval(() => this.core.update(), 1000 / TICK_RATE);
+    this.setSimulationInterval(() => {
+      const t = performance.now();
+      this.core.update();
+      this.tickCost.add(performance.now() - t);
+    }, 1000 / TICK_RATE);
   }
 
   /**

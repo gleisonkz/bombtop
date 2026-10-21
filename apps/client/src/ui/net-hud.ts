@@ -14,6 +14,8 @@ export class NetStats {
   /** Since the last report: the longest frame (the device itself froze) and every frame drawn late. */
   private slowest = 0;
   private missed = 0;
+  /** Since the last report: the most CPU time our own code spent on one frame. */
+  private worstWork = 0;
   /** Since the last report: the biggest jump between two frames, in tiles, of our player and of the others. */
   private jumpMe = 0;
   private jumpOthers = 0;
@@ -25,7 +27,7 @@ export class NetStats {
   }
 
   /** What goes to the server's log; starts the worst-gap window over. */
-  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; slow: number; missed: number; jumpMe: number; jumpOthers: number; ua: string } {
+  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; slow: number; missed: number; work: number; jumpMe: number; jumpOthers: number; ua: string } {
     const out = {
       ...(this.ping === null ? {} : { ping: this.ping }),
       delay: Math.round(this.delay),
@@ -34,11 +36,12 @@ export class NetStats {
       gap: Math.round(this.worstGap),
       slow: Math.round(this.slowest),
       missed: this.missed,
+      work: Math.round(this.worstWork * 10),
       jumpMe: Math.round(this.jumpMe * 100),
       jumpOthers: Math.round(this.jumpOthers * 100),
       ua,
     };
-    this.worstGap = this.slowest = this.missed = this.jumpMe = this.jumpOthers = 0;
+    this.worstGap = this.slowest = this.missed = this.worstWork = this.jumpMe = this.jumpOthers = 0;
     return out;
   }
 
@@ -54,6 +57,11 @@ export class NetStats {
       this.shown = { fps: this.frames, late: this.late };
       this.elapsed = this.frames = this.late = 0;
     }
+  }
+
+  /** CPU time our own code spent on a frame (ms): a slow frame with little work is the browser or device. */
+  work(ms: number): void {
+    this.worstWork = Math.max(this.worstWork, ms);
   }
 
   /** How far (in tiles) our player and the furthest-moving other player went since the last frame. */

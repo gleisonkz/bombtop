@@ -27,7 +27,7 @@ describe("NetStats.report", () => {
     s.ping = 9;
     for (const at of [0, 33, 66, 200, 233]) s.arrival(at);
     for (let i = 0; i < 60; i++) s.frame(1000 / 60, i < 5, 70);
-    expect(s.report("UA")).toEqual({ ping: 9, delay: 70, fps: 60, late: 5, gap: 134, slow: 17, missed: 5, jumpMe: 0, jumpOthers: 0, ua: "UA" });
+    expect(s.report("UA")).toEqual({ ping: 9, delay: 70, fps: 60, late: 5, gap: 134, slow: 17, missed: 5, work: 0, jumpMe: 0, jumpOthers: 0, ua: "UA" });
     s.arrival(266);
     expect(s.report("UA").gap).toBe(33);
   });
@@ -42,6 +42,15 @@ describe("NetStats.report", () => {
     expect(r.missed).toBe(4);
     s.frame(16, false, 50);
     expect(s.report("UA")).toMatchObject({ slow: 16, missed: 0 });
+  });
+
+  it("tells our own code's cost apart from the browser's: the most CPU time one frame took, in tenths of a ms", () => {
+    const s = new NetStats();
+    s.work(2.34);
+    s.work(11.06); // drawing this frame took 11 ms of our own time
+    s.work(3);
+    expect(s.report("UA").work).toBe(111);
+    expect(s.report("UA").work).toBe(0);
   });
 
   it("reports the biggest jump between two frames, ours and other players', in hundredths of a tile", () => {

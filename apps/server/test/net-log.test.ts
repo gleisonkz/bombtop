@@ -2,12 +2,12 @@ import { mkdtempSync, readFileSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { NetLog, netReport } from "../src/net-log";
+import { NetLog, netReport, TickCost } from "../src/net-log";
 
 describe("netReport", () => {
   it("keeps the measurements, as bounded numbers", () => {
-    expect(netReport({ ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome", extra: "x" })).toEqual({
-      ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome",
+    expect(netReport({ ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, work: 85, tick: 12, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome", extra: "x" })).toEqual({
+      ping: 12.4, delay: 61, fps: 58, late: 3, gap: 140, slow: 340, missed: 9, work: 85, jumpMe: 12, jumpOthers: 140, ua: "Android 14; Chrome",
     });
   });
 
@@ -43,5 +43,16 @@ describe("NetLog", () => {
     expect(log.allow("a")).toBe(false);
     now = 2500;
     expect(log.allow("a")).toBe(true);
+  });
+});
+
+describe("TickCost", () => {
+  it("keeps the room's slowest simulation tick (tenths of a ms) between two reports", () => {
+    const c = new TickCost();
+    c.add(0.21);
+    c.add(1.37); // a tick with a big chain of explosions
+    c.add(0.3);
+    expect(c.take()).toBe(14);
+    expect(c.take()).toBe(0);
   });
 });
