@@ -24,8 +24,8 @@ export const DEFAULT_BLOCK_DENSITY = 0.75;
 /** Chance (0..1) that a block hides a power-up. */
 export const ITEM_CHANCE = 0.5;
 
-/** Relative odds of each basic power-up when a block hides one. */
-export const ITEM_WEIGHTS = { fire: 6, bomb: 6, speed: 2, kick: 1, remote: 1, pierce: 1, punch: 1, glove: 1, skull: 1, fullFire: 0.5, egg: 1 } as const;
+/** Relative odds of each basic power-up when a block hides one. 0 = not in play (eggs: mounts are off until their art and rules are settled). */
+export const ITEM_WEIGHTS = { fire: 6, bomb: 6, speed: 2, kick: 1, remote: 1, pierce: 1, punch: 1, glove: 1, skull: 1, fullFire: 0.5, egg: 0 } as const;
 
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;

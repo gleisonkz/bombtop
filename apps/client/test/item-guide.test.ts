@@ -4,9 +4,12 @@ import { ITEM_GUIDE } from "../src/ui/item-guide";
 import { ITEMS } from "../src/render/sprites";
 
 describe("item guide", () => {
-  it("describes every item, in the art's order", () => {
-    expect(ITEM_GUIDE.map((i) => i.kind)).toEqual(ITEMS.order);
-    expect(new Set(ITEM_GUIDE.map((i) => i.kind)).size).toBe(Object.values(ItemKind).length);
+  it("describes every item in play, in the art's order", () => {
+    expect(ITEM_GUIDE.map((i) => i.kind)).toEqual(ITEMS.order.filter((k) => k !== ItemKind.Egg));
+  });
+
+  it("leaves out the egg while mounts are off", () => {
+    expect(ITEM_GUIDE.some((i) => i.kind === ItemKind.Egg)).toBe(false);
   });
 
   it("gives each a name and a description", () => {

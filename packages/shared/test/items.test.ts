@@ -54,12 +54,12 @@ describe("item generation", () => {
     expect(a.items).not.toEqual(c.items);
   });
 
-  it("produces every power-up kind", () => {
+  it("produces every power-up kind in play", () => {
     const kinds = new Set<ItemKind>();
     for (let seed = 1; seed <= 200; seed++) {
       for (const i of createMatch({ seed, playerIds: ids }).items) kinds.add(i.kind);
     }
-    expect(kinds).toEqual(new Set(Object.values(ItemKind)));
+    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Egg)));
   });
 
   it("hides enough bombs and fire for a full room: over one of each per player", () => {

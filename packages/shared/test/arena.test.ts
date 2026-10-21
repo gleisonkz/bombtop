@@ -1,9 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, getTile, playerTile, SPAWN_POINTS, Tile } from "../src";
+import { createMatch, getTile, ItemKind, playerTile, SPAWN_POINTS, Tile } from "../src";
 
 const ids = ["p1", "p2", "p3", "p4", "p5"];
 
 describe("arena", () => {
+  it("hides no eggs: mounts are off for now", () => {
+    for (let seed = 1; seed <= 200; seed++) {
+      expect(createMatch({ seed, playerIds: ids }).items.some((i) => i.kind === ItemKind.Egg)).toBe(false);
+    }
+  });
+
+  it("gives the dead no revenge carts unless asked", () => {
+    expect(createMatch({ seed: 1, playerIds: ids }).revenge).toBe(false);
+    expect(createMatch({ seed: 1, playerIds: ids, revenge: true }).revenge).toBe(true);
+  });
+
   it("creates a 13x11 arena by default", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
     expect(s.grid.width).toBe(13);

@@ -43,8 +43,9 @@ describe("perimeter", () => {
 });
 
 describe("revenge carts", () => {
-  it("a player who dies gets a cart on the border", () => {
+  it("a player who dies gets a cart on the border (when turned on)", () => {
     const s = emptyMatch(["p1", "p2", "p3"]);
+    s.revenge = true;
     kill(s, "p1");
     expect(player(s).alive).toBe(false);
     const t = cartTile(s);

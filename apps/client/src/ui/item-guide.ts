@@ -1,4 +1,4 @@
-import { ItemKind } from "@bombtop/shared";
+import { ITEM_WEIGHTS, ItemKind } from "@bombtop/shared";
 import { ITEMS, itemCell } from "../render/sprites";
 import { button, el } from "./dom";
 
@@ -60,8 +60,8 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   },
 };
 
-/** Every item with its name, description, tips and the left edge of its cell on the item sheet. */
-export const ITEM_GUIDE = ITEMS.order.map((kind) => ({ kind, ...INFO[kind], cell: itemCell(kind) }));
+/** Every item in play with its name, description, tips and the left edge of its cell on the item sheet. */
+export const ITEM_GUIDE = ITEMS.order.filter((kind) => ITEM_WEIGHTS[kind] > 0).map((kind) => ({ kind, ...INFO[kind], cell: itemCell(kind) }));
 
 /** An item's plate from the sheet, as an element. */
 function icon(cell: number, cls = "guide-icon"): HTMLElement {

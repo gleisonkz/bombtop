@@ -18,7 +18,7 @@ export interface MatchOptions {
   seed: number;
   playerIds: string[];
   blockDensity?: number;
-  /** Dead players ride revenge carts (default true). */
+  /** Dead players ride revenge carts (default false: off until the idea is settled). */
   revenge?: boolean;
   stage?: StageId;
   /** Each player's character (default: the bomb). */
@@ -26,7 +26,7 @@ export interface MatchOptions {
 }
 
 export function createMatch(opts: MatchOptions): MatchState {
-  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = true, stage = "classic" } = opts;
+  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = false, stage = "classic" } = opts;
   if (playerIds.length > MAX_PLAYERS) {
     throw new Error(`At most ${MAX_PLAYERS} players per match`);
   }

@@ -67,9 +67,9 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | punch | `air.ts` | action launches bomb in front 3 tiles; wraps edges; bounces; stuns |
 | glove | `air.ts` | bomb press on own bomb lifts it, carried while the button is held (`PlayerInput.hold`), thrown when let go |
 | skull | `curse.ts` | slow/fast/reverse/diarrhea/constipation/weakFire, 10s, contagious |
-| egg (mounts) | `mount.ts` | extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
+| egg (mounts) | `mount.ts` | **off for now** (weight 0 in `ITEM_WEIGHTS`, left out of the guide) until the mount art and rules are settled. extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
 | sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |
-| revenge cart | `revenge.ts` | dead ride the border, throw bombs; a kill swaps them back in |
+| revenge cart | `revenge.ts` | **off for now** (`createMatch` `revenge` defaults to false). dead ride the border, throw bombs; a kill swaps them back in |
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters). Only classic is in the rotation (`STAGES`) for now |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. Server runs them (`session.ts`), host adds them in the lobby |
 | specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Bomb: none yet |
