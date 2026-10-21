@@ -509,6 +509,29 @@
       .mute { width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; display: grid; place-items: center; background: #ffffffd9; }
       .mute svg { width: 22px; height: 22px; }
 
+      /* Offline pairing dialog: QR codes and the camera, over everything (the lobby too) */
+      .screen.pair { position: fixed; inset: 0; z-index: 4; width: auto; max-height: none; padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom)); place-items: center; background: #0b0b16e6; }
+      .pair-card { width: min(440px, 100%); max-height: 100%; overflow: auto; justify-items: center; text-align: center; }
+      .pair-card h2 { font-family: var(--display); font-weight: 400; font-size: 24px; margin: 0; }
+      .pair-hint { font-size: 14px; color: var(--muted); white-space: pre-line; margin: 0; }
+      .pair-body { display: grid; gap: 10px; justify-items: center; width: 100%; }
+      .pair-body > .big { width: 100%; }
+      .pair-qr { width: min(300px, 78vmin); aspect-ratio: 1; background: #fff; border-radius: 10px; padding: 6px; }
+      .pair-qr svg { width: 100%; height: 100%; display: block; }
+      .pair-cam { width: min(240px, 60vmin); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; border: 3px solid var(--ink); background: #000; }
+      .pair-paste { width: 100%; font-size: 14px; }
+      .pair-slot { font-size: 14px; color: var(--muted); }
+      .offline-btn { width: 100%; }
+      @media (orientation: landscape) and (max-height: 500px) {
+        .pair-card { width: min(720px, 100%); padding: 10px 14px; gap: 6px; }
+        .pair-card h2 { font-size: 19px; }
+        .pair-hint { font-size: 13px; }
+        /* QR on the left, everything else stacked beside it */
+        .pair-body:has(.pair-qr) { grid-template-columns: auto 1fr; align-items: center; column-gap: 14px; }
+        .pair-body:has(.pair-qr) > .pair-qr { grid-row: span 3; align-self: center; width: min(220px, calc(100vh - 170px)); }
+        .pair-cam { width: min(200px, 34vh); }
+      }
+
       /* In-match menu (☰, top left): touch controls and leaving */
       .match-menu { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; display: grid; justify-items: start; gap: 8px; }
       body:has(.lobby:not([hidden])) .match-menu { display: none; }

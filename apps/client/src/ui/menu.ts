@@ -12,6 +12,8 @@ export interface MenuHandlers {
   online(choice: OnlineChoice, name: string): void;
   /** Watch bots play each other. */
   demo(): void;
+  /** Play with friends nearby over Wi-Fi, no internet (the typed name is theirs). */
+  offline(name: string): void;
   /** The item guide was opened or closed from its buttons. */
   guide(open: boolean): void;
   login(): void;
@@ -87,6 +89,10 @@ export class Menu {
         button("Ver itens", () => handlers.guide(true), "ghost"),
         button("Assistir demo", () => handlers.demo(), "ghost"),
       ]),
+      button("📶 Jogar offline (Wi-Fi)", () => {
+        storage.set(NAME_KEY, this.name.value.trim());
+        handlers.offline(this.name.value);
+      }, "ghost offline-btn"),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
       // Tools for us, kept small: version, debug readout, reload past a stale cache.
       el("div", { class: "menu-foot" }, [

@@ -12,6 +12,9 @@ import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { MatchMenu } from "./ui/match-menu";
+import { Pairing } from "./ui/pairing";
+import { LocalHost } from "./net/local-host";
+import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
 import { codeFromUrl } from "./net/invite";
 import { GuideRoute } from "./net/guide-route";
@@ -193,6 +196,23 @@ const menu = new Menu(ui, {
     setMode(new DemoGame(ctx), false);
   },
   logout: () => void signOut(),
+  offline: (name) => {
+    menu.hide();
+    const who = account?.name ?? name;
+    pairing.choose(
+      () => {
+        const host = new LocalHost();
+        playOffline(host.hostLink(who, savedCharacter()), () => void pairing.hostPair(host));
+      },
+      () => {
+        pairing
+          .join(who, savedCharacter())
+          .then((link) => playOffline(link, null))
+          .catch(() => menu.show());
+      },
+      () => menu.show(),
+    );
+  },
   guide: (open) => {
     if (open) guideRoute.opened();
     else guideRoute.closed();
@@ -205,6 +225,7 @@ const menu = new Menu(ui, {
       const character = savedCharacter();
       const who = account ? { name: account.name, token: account.token, character } : { name, character };
       const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
+      lobby.setOffline(null);
       online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
       route.entered(online.code);
       seats.remember(online.code, online.seatToken);
@@ -222,6 +243,15 @@ const menu = new Menu(ui, {
     }
   },
 });
+
+// Offline (Wi-Fi): this phone hosts the room, or joins a friend's phone (no server, no internet).
+const pairing = new Pairing(ui);
+function playOffline(link: RoomLink, pair: (() => void) | null): void {
+  lobby.setOffline({ pair });
+  online = OnlineGame.over(link, ctx, lobby);
+  menu.hide();
+  setMode(online);
+}
 
 // An invite link, or a reload inside a room: join it.
 let invite = codeFromUrl(location.href);

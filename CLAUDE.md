@@ -17,6 +17,13 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 - **Auth/data:** Supabase (Google login; profiles/ranking todo). Optional: unset = guest-only.
 - **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in `render.yaml`).
 - **Anti-cheat:** server authority; client only sends inputs.
+- **Offline (Wi-Fi) play:** "Jogar offline" in the menu. One phone hosts: `LocalHost` (`net/local-host.ts`) runs `RoomCore`
+  in the browser and the host plays through a loopback `RoomLink`; friends connect by WebRTC data channel (`net/rtc-pair.ts`,
+  no STUN: same Wi-Fi or a phone's hotspot) and play through `PeerLink`. No signaling server: the phones swap two QR codes
+  (host's offer, friend's answer; `net/rtc-signal.ts` deflates the SDP), read with the camera (`jsqr`) or pasted as text
+  (`ui/pairing.ts`). The camera is opened before the offer is made: with it on, browsers share the real LAN address instead
+  of an mDNS name. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
+  so it opens without internet once visited.
 
 ## Layout
 

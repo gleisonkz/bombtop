@@ -35,19 +35,23 @@ export class LobbyPanel {
   private readonly status = el("p", { class: "hint" });
   private readonly startBtn: HTMLButtonElement;
   private readonly results: ResultScreen;
+  private readonly codeLabel = el("small", { text: "Código da sala" });
+  private readonly inviteBtn: HTMLButtonElement;
+  /** Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone). */
+  private offline: { pair: (() => void) | null } | null = null;
 
   constructor(
     parent: HTMLElement,
     private readonly handlers: LobbyHandlers,
   ) {
     this.startBtn = button("Começar partida", handlers.start, "primary big start");
-    const invite = button("Convidar amigos", () => void this.invite(invite), "primary invite-btn");
+    const invite = (this.inviteBtn = button("Convidar amigos", () => void this.invite(invite), "primary invite-btn"));
     this.root = el("div", { class: "screen lobby" }, [
       el("div", { class: "lobby-shell" }, [
         el("header", { class: "lobby-head card" }, [
           button("← Sair", handlers.leave, "ghost leave"),
           el("div", { class: "lobby-title" }, [el("h2", { text: "Sala" }), this.stage]),
-          el("div", { class: "code-box" }, [el("small", { text: "Código da sala" }), this.code]),
+          el("div", { class: "code-box" }, [this.codeLabel, this.code]),
           invite,
         ]),
         this.seats,
@@ -59,10 +63,18 @@ export class LobbyPanel {
     this.results = new ResultScreen(parent);
   }
 
+  /** An offline room (`pair` adds a friend, on the host's phone), or back to an online one (null). */
+  setOffline(offline: { pair: (() => void) | null } | null): void {
+    this.offline = offline;
+    this.codeLabel.textContent = offline ? "Partida offline" : "Código da sala";
+    this.inviteBtn.textContent = offline ? "Adicionar amigo" : "Convidar amigos";
+    this.inviteBtn.hidden = !!offline && !offline.pair;
+  }
+
   update(info: LobbyInfo, me: string): void {
     this.root.hidden = info.phase !== "lobby";
     if (info.phase !== "results") this.results.hide();
-    this.code.textContent = info.code;
+    this.code.textContent = this.offline ? "Wi-Fi" : info.code;
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
     const isHost = info.hostId === me;
     this.seats.replaceChildren(
@@ -130,6 +142,7 @@ export class LobbyPanel {
 
   /** Native share sheet (WhatsApp etc.) on phones; copies the message elsewhere. */
   private async invite(btn: HTMLButtonElement): Promise<void> {
+    if (this.offline?.pair) return this.offline.pair();
     const url = inviteUrl(location.href, this.code.textContent ?? "");
     const text = inviteText(url);
     const label = btn.textContent;
