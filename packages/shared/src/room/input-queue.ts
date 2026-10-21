@@ -1,4 +1,4 @@
-import type { Direction, InputAck, PlayerInput } from "@bombtop/shared";
+import type { Direction, InputAck, PlayerInput } from "../index";
 
 /** How long (server ticks) a late message keeps the delay raised. */
 const WINDOW = 180;

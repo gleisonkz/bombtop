@@ -20,10 +20,9 @@ import {
   type Snapshot,
   type RoomPhase,
   type StageId,
-} from "@bombtop/shared";
+} from "../index";
 import { InputQueue } from "./input-queue";
 
-export { RESULTS_TICKS } from "@bombtop/shared";
 
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
 export const SNAPSHOT_EVERY = 2;

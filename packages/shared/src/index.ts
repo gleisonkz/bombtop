@@ -19,3 +19,6 @@ export { createRng, nextRandom } from "./rng";
 export { Bot, BOT_LEVELS, botInput, heading, type BotLevel } from "./bot";
 export * from "./special";
 export * from "./delta";
+export * from "./room/session";
+export * from "./room/input-queue";
+export * from "./room/snapshot-stream";

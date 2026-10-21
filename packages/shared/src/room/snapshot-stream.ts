@@ -1,4 +1,4 @@
-import { diff, type Patch, type Snapshot } from "@bombtop/shared";
+import { diff, type Patch, type Snapshot } from "../index";
 
 /** A whole snapshot every this many (2 s at 30 Hz), so a client can never drift for long. */
 export const KEYFRAME_EVERY = 60;

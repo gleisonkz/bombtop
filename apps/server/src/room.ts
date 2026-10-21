@@ -14,8 +14,7 @@ import {
   type RoomPhase,
 } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
-import { BattleSession } from "./session";
-import { SnapshotStream } from "./snapshot-stream";
+import { BattleSession, SnapshotStream } from "@bombtop/shared";
 import { NetLog, netReport } from "./net-log";
 
 /** ?debug clients' connection reports, read over SSH (deploy/vps/README.md). */

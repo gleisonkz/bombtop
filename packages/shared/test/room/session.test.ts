@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "@bombtop/shared";
-import { BattleSession, BOT_NAMES, RESULTS_TICKS } from "../src/session";
+import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "../../src";
+import { BattleSession, BOT_NAMES, RESULTS_TICKS } from "../../src";
 
 function lobby(n: number) {
   const s = new BattleSession({ seed: () => 1, blockDensity: 0 });

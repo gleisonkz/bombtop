@@ -26,8 +26,10 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   each character with a name card, then the logo (`game/intro-mode.ts`); skip with the button/Esc/Enter/Space, "Tocar com som" replays it with sound.
   Not shown when arriving by an invite link or on the guide.
   Inputs in `src/input` (keyboard, gamepad, touch) are pure and unit-tested; DOM/Pixi glue is not.
-- `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleSession` holds
-  all room logic (unit-tested); `BattleRoom` is a thin adapter (integration-tested over the network).
+- `packages/shared/src/room` — room logic, pure and transport-agnostic so it also runs in a browser:
+  `BattleSession` (lobby, host, match lifecycle, bots), `InputQueue` (input jitter buffer), `SnapshotStream`.
+- `apps/server` — Colyseus 0.18 server (`@colyseus/core` + ws-transport). `BattleRoom` is a thin adapter
+  around `BattleSession` (integration-tested over the network).
 
 ## Commands
 

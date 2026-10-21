@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PlayerInput } from "@bombtop/shared";
-import { InputQueue } from "../src/input-queue";
+import type { PlayerInput } from "../../src";
+import { InputQueue } from "../../src";
 
 const go = (dir: PlayerInput["dir"], bomb = false): PlayerInput => ({ dir, bomb });
 

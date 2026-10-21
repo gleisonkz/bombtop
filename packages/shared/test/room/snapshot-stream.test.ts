@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, patch, publicView, type Snapshot } from "@bombtop/shared";
-import { KEYFRAME_EVERY, SnapshotStream } from "../src/snapshot-stream";
+import { createMatch, patch, publicView, type Snapshot } from "../../src";
+import { KEYFRAME_EVERY, SnapshotStream } from "../../src";
 
 function snaps(n: number): Snapshot[] {
   const v = publicView(createMatch({ seed: 1, playerIds: ["a", "b"] }));
