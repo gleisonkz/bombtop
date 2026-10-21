@@ -119,6 +119,9 @@ export class BattleSession {
   setConnected(id: string, connected: boolean): void {
     const m = this.members.find((m) => m.id === id);
     if (m) m.connected = connected;
+    // A dropped player stops (their key's release may never come), and a page that
+    // comes back counts its inputs from 1 again: start their queue afresh.
+    this.inputs.delete(id);
   }
 
   lobbyInfo(code: string): LobbyInfo {

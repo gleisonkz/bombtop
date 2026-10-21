@@ -120,6 +120,28 @@ describe("playing", () => {
     expect(snap!.acks.c1).toEqual({ seq: 8, ticks: 2 });
   });
 
+  it("a player who drops stops walking, and their numbering starts over when they come back", () => {
+    const s = playing();
+    const p = s.match!.players[0]!;
+    for (let i = 0; i < 3; i++) s.tick();
+    s.setInput("c1", { dir: "right", bomb: false }, 50, 0);
+    for (let i = 0; i < 3; i++) s.tick();
+    s.setConnected("c1", false); // the key's release never arrives
+    s.tick();
+    const stopped = p.px;
+    s.tick();
+    expect(p.px).toBe(stopped);
+    s.setConnected("c1", true); // a reloaded page counts its inputs from 1 again
+    s.setInput("c1", { dir: "left", bomb: false }, 1, 0);
+    s.tick();
+    s.setInput("c1", { dir: null, bomb: false }, 2, 1);
+    for (let i = 0; i < 3; i++) s.tick();
+    const back = p.px;
+    s.tick();
+    expect(p.px).toBe(back);
+    expect(back).toBeLessThan(stopped); // the new page's inputs are heard
+  });
+
   it("moves a player exactly as far as their client held the key, though messages take different times to arrive", () => {
     const s = playing();
     const p = s.match!.players[0]!;
