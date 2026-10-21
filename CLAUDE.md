@@ -46,6 +46,10 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 - Client server URL: `VITE_SERVER_URL` (default `<page host>:2567`; a path like `/colyseus` uses the page origin + dev proxy, for tunnels)
 - `pnpm test` — all tests
 - `pnpm typecheck`
+- `pnpm -C packages/shared bench [filter]` — server tick benchmark: seeded matches with 1/2/4 bots per level and a field full
+  of chaining bombs, mean/p95/p99/max per tick and the bots' share; exits non-zero when a p99 passes a quarter of a tick.
+  Run it before and after touching `bot.ts` or the sim. `test/bot-replay.test.ts` fingerprints seeded bot matches tick by
+  tick: a speed-up must leave them unchanged (update them only when behavior is meant to change).
 - dev server logs: `.agent/dev.log` (client), `.agent/server.log` (game server)
 - phone testing (fixed URL, keeps an installed PWA working): `MSYS_NO_PATHCONV=1 PWA_DEV=1 VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`). In Git Bash, `MSYS_NO_PATHCONV=1` stops `/colyseus` from being rewritten to a Windows path. `PWA_DEV=1` turns the service worker on in dev (only for this; plain `pnpm dev` runs without it so pages never go stale).
 - In dev, the latest server snapshot is exposed for debugging: `window.__snapshot`; the renderer as `window.__renderer`
@@ -122,6 +126,12 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
 - Server-authoritative, 60 Hz sim; snapshots (`publicView`: no buried items, no PRNG state) at 30 Hz.
 - Client sends input only on change/button press; server buffers button taps between ticks.
 - Client renders other players snapshots in the past, interpolated, by an adaptive delay (`net/adaptive-delay.ts`: ~1 snapshot gap + jitter room, 40-250 ms; past the newest snapshot walking players walk on, `net/carry-on.ts`). Own player, bombs and kicks are predicted (`net/prediction.ts`, `ghost-bombs.ts`, `kick-prediction.ts`); bombs, flames, blocks and items are drawn from the latest snapshot run ahead by our input lead (`net/world-ahead.ts`), so explosions land on time.
+- Clocks, one contract per mode: a client's own frame loop (`loop/fixed-step.ts`) runs at most 5 ticks a frame and drops
+  the rest (only its local view slows); the offline host (`loop/tick-clock.ts`) is authoritative for every phone, so it
+  plays every owed tick, a few per call (no long freeze), dropping time past 500 ms; the server ticks on Colyseus' interval.
+- Telling a lag's cause apart: `?debug` reports (see `deploy/vps/README.md`) carry snapshot gaps, stalled frames, our own
+  CPU time per frame (`work`) and the server's slowest tick (`tick`). Measured (Oct 2026): a server tick with 4 hard bots
+  costs ~0.2 ms p99 of its 16.67 ms, so bots are not a lag source; look at the network and the phone first.
 - Clients must send `sync` after attaching message handlers: the SDK drops messages that
   arrive before a handler exists.
 
