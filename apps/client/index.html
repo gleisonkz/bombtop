@@ -564,6 +564,10 @@
       html.lite .menu-bg, html.lite .hero::before { display: none; }
       .demo-leave { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; font-size: 15px; min-height: 40px; padding: 6px 14px; }
       .sound { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 3; display: grid; justify-items: end; gap: 8px; }
+      .corner-btns { display: flex; gap: 8px; }
+      body:has(.lobby:not([hidden])) .corner-btns { flex-direction: column-reverse; } /* stacked beside the room bar, clear of its invite button */
+      /* Full screen is for computers (a notebook on the TV); phones and tablets play from the installed app. */
+      @media (pointer: coarse) { .full-btn { display: none; } }
       .sound-panel { background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; width: 200px; }
       .sound-panel span { font-family: var(--display); font-size: 15px; }
       .sound-panel input[type="range"] { width: 100%; min-height: 0; padding: 0; border: 0; accent-color: var(--accent); background: transparent; }

@@ -129,7 +129,23 @@ function showMute(): void {
   muteToggle.textContent = sound.muted ? "Ligar som" : "Sem som";
 }
 showMute();
-document.body.appendChild(el("div", { class: "sound" }, [muteBtn, soundPanel]));
+// Full screen (computers: a notebook on the TV over HDMI); phones play from the installed app, already full screen.
+const FULL = '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="#15152a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const WINDOWED = '<path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="#15152a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const fullBtn = button("", () => {
+  if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+  else void document.documentElement.requestFullscreen().catch(() => {});
+}, "mute full-btn");
+const showFull = () => {
+  const on = !!document.fullscreenElement;
+  fullBtn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${on ? WINDOWED : FULL}</svg>`; // static markup
+  fullBtn.setAttribute("aria-label", on ? "Sair da tela cheia" : "Tela cheia");
+  fullBtn.title = on ? "Sair da tela cheia" : "Tela cheia";
+};
+showFull();
+fullBtn.hidden = !document.fullscreenEnabled;
+document.addEventListener("fullscreenchange", showFull);
+document.body.appendChild(el("div", { class: "sound" }, [el("div", { class: "corner-btns" }, [fullBtn, muteBtn]), soundPanel]));
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
