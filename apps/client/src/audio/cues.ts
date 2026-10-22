@@ -52,16 +52,18 @@ export function soundCues(prev: View, next: View): Cue[] {
 
   const oldFlames = new Set(prev.flames.map((f) => key(f.x, f.y)));
   const fresh = next.flames.filter((f) => !oldFlames.has(key(f.x, f.y)));
-  if (fresh.length) {
-    const x = fresh.reduce((sum, f) => sum + f.x, 0) / fresh.length;
-    cues.push({ name: "explode", x: mid(x), size: fresh.length });
+  // A block set burning on its own (a Kamehameha, a Rasengan) breaks without a bomb going off.
+  const blast = fresh.filter((f) => !f.block);
+  if (blast.length) {
+    const x = blast.reduce((sum, f) => sum + f.x, 0) / blast.length;
+    cues.push({ name: "explode", x: mid(x), size: blast.length });
   }
 
   const { width, tiles } = next.grid;
   const changed = (from: (t: Tile) => boolean, to: Tile) =>
     tiles.findIndex((t, i) => t === to && from(prev.grid.tiles[i]!));
-  // A block blown up by fire breaks as the fire reaches it (it burns away later, silently);
-  // one smashed some other way (a Kamehameha, a Rasengan) breaks as it goes.
+  // A block breaks as it starts burning (it burns away later, silently); one cleared some other way
+  // (sudden death, a scripted scene) breaks as it goes.
   const burning = new Set(prev.flames.filter((f) => f.block).map((f) => key(f.x, f.y)));
   const lit = fresh.find((f) => f.block);
   const smashed = tiles.findIndex((t, i) => t === Tile.Empty && prev.grid.tiles[i] === Tile.Block && !burning.has(key(i % width, Math.floor(i / width))));

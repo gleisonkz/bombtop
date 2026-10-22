@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   CHARACTERS,
   createMatch,
+  FLAME_TICKS,
   KAME_CHARGE,
   KAME_COOLDOWN,
   KAME_RANGE,
@@ -60,12 +61,15 @@ describe("goku kamehameha", () => {
     expect(player(s, "p2").stun).toBe(0);
   });
 
-  it("blasts through blocks, breaking them", () => {
+  it("blasts through blocks, which burn away like blown-up blocks", () => {
     const s = duel(3);
     setTile(s, 4, 5, Tile.Block);
     fire(s);
-    expect(s.grid.tiles[5 * s.grid.width + 4]).toBe(Tile.Empty);
+    expect(s.grid.tiles[5 * s.grid.width + 4]).toBe(Tile.Block);
+    expect(s.flames).toEqual([expect.objectContaining({ x: 4, y: 5, block: true })]);
     expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1); // may already have ticked once
+    run(s, FLAME_TICKS);
+    expect(s.grid.tiles[5 * s.grid.width + 4]).toBe(Tile.Empty);
   });
 
   it("stops at walls", () => {

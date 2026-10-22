@@ -1,6 +1,7 @@
+import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
 import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
+import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
@@ -111,7 +112,7 @@ export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y:
       break;
     }
     length = i;
-    if (tile === Tile.Block) setTile(s, tx, ty, Tile.Empty);
+    if (tile === Tile.Block) addFlame(s, tx, ty, ownerId, true); // burns away like a blown-up block
     const hit = s.players.find((o) => o.id !== ownerId && o.alive && playerTile(o).x === tx && playerTile(o).y === ty);
     if (hit) {
       hit.stun = SPECIAL_STUN_TICKS;
@@ -143,7 +144,7 @@ export function updateRasengan(s: MatchState, p: Player): void {
     if (shield) {
       p.stun = SPECIAL_STUN_TICKS;
     } else if (tile === Tile.Block) {
-      setTile(s, tx, ty, Tile.Empty);
+      addFlame(s, tx, ty, p.id, true); // burns away like a blown-up block
     } else if (hit) {
       let to = 0;
       while (to < RASENGAN_PUSH) {

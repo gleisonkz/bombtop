@@ -59,12 +59,12 @@ describe("soundCues", () => {
     expect(names(v, next)).toEqual(["break", "wall"]);
   });
 
-  it("hears a blown-up block break when the fire reaches it, not when it has burned away", () => {
+  it("hears a block break when it starts burning (a Kamehameha's block makes no explosion sound), not when it has burned away", () => {
     const v = view();
     const i = (x: number, y: number) => y * v.grid.width + x;
     v.grid.tiles[i(3, 1)] = Tile.Block;
     const lit = later(v, (n) => n.flames.push({ x: 3, y: 1, ttl: 30, block: true }));
-    expect(names(v, lit)).toEqual(["explode", "break"]);
+    expect(names(v, lit)).toEqual(["break"]);
     const gone = later(lit, (n) => {
       n.flames = [];
       n.grid.tiles[i(3, 1)] = Tile.Empty;
