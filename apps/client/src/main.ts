@@ -28,6 +28,11 @@ import { LITE_RESOLUTION, liteOn } from "./ui/dev-tools";
 import { Listener } from "./audio/cues";
 import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
+import { startClientLog } from "./net/client-log";
+
+// Boots, crashes (a page that died in front of the player, as iOS does past its memory) and script errors go to
+// the game server's log (client-<date>.jsonl, deploy/vps/README.md).
+startClientLog(SERVER_URL, __APP_VERSION__, storage);
 
 const app = new Application();
 // Lite mode (smart TV browsers, ?lite, or the menu's switch): fewer pixels, stretched by the screen, and 30 frames a

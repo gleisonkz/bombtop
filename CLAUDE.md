@@ -169,7 +169,10 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
 - Clocks, one contract per mode: a client's own frame loop (`loop/fixed-step.ts`) runs at most 5 ticks a frame and drops
   the rest (only its local view slows); the offline host (`loop/tick-clock.ts`) is authoritative for every phone, so it
   plays every owed tick, a few per call (no long freeze), dropping time past 500 ms; the server ticks on Colyseus' interval.
-- Telling a lag's cause apart: `?debug` reports (see `deploy/vps/README.md`) carry snapshot gaps, stalled frames, our own
+- Front-end monitoring (`deploy/vps/README.md`): every player's match reports its connection to the server's log every
+  5 s (`net-<date>.jsonl`), and every page reports opening, crashing (found on the next opening: `net/client-log.ts`
+  `AliveMark`) and script errors over `POST /log` (`client-<date>.jsonl`).
+- Telling a lag's cause apart: the connection reports (see `deploy/vps/README.md`) carry snapshot gaps, stalled frames, our own
   CPU time per frame (`work`) and the server's slowest tick (`tick`). Measured (Oct 2026): a server tick with 4 hard bots
   costs ~0.2 ms p99 of its 16.67 ms, so bots are not a lag source; look at the network and the phone first.
 - Clients must send `sync` after attaching message handlers: the SDK drops messages that

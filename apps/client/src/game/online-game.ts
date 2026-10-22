@@ -36,7 +36,8 @@ import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
-import { debugNet, NetHud } from "../ui/net-hud";
+import { debugNet, NetHud, NetStats } from "../ui/net-hud";
+import { crumb } from "../net/client-log";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
 
@@ -65,7 +66,10 @@ export class OnlineGame implements GameMode {
   private readonly listener = new Listener();
   private readonly worldListener = new Listener();
   /** Connection readout (?debug), with its ping timer. */
-  private readonly hud = debugNet() ? new NetHud() : null;
+  /** How the connection and this screen are doing, reported to the server's log by every player (gaps, stalls). */
+  private readonly stats = new NetStats();
+  /** The same numbers on screen, with ?debug. */
+  private readonly hud = debugNet() ? new NetHud(this.stats) : null;
   private pinger: ReturnType<typeof setInterval> | undefined;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
@@ -124,6 +128,7 @@ export class OnlineGame implements GameMode {
     this.ghosts = new GhostBombs(room.sessionId);
     this.blastGhosts = new GhostBlasts(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
+      if (info.phase !== this.lobby?.phase) crumb(`${watching ? "tv" : "sala"} ${info.phase} (${info.members.length})`);
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
         this.ghosts.clear();
@@ -158,15 +163,12 @@ export class OnlineGame implements GameMode {
     room.onLeave(() => {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
     });
-    const hud = this.hud;
-    if (hud) {
-      let n = 0;
-      this.pinger = setInterval(() => {
-        room.ping((ms) => (hud.stats.ping = ms));
-        // Every 5 s the numbers go to the server's log, so nobody has to send screenshots.
-        if (++n % 5 === 0) room.send(C2S.stats, hud.stats.report(navigator.userAgent));
-      }, 1000);
-    }
+    let n = 0;
+    this.pinger = setInterval(() => {
+      room.ping((ms) => (this.stats.ping = ms));
+      // Every 5 s of a match the numbers go to the server's log, so nobody has to send screenshots.
+      if (++n % 5 === 0 && this.lobby?.phase === "playing") room.send(C2S.stats, { ...this.stats.report(navigator.userAgent), ...memoryUse() });
+    }, 1000);
     // Handlers are attached: ask for the current state (earlier broadcasts were dropped).
     room.send(C2S.sync);
   }
@@ -188,10 +190,9 @@ export class OnlineGame implements GameMode {
   }
 
   frame(deltaMs: number, nowMs: number): void {
-    if (!this.hud) return this.step(deltaMs, nowMs);
     const t = performance.now();
     this.step(deltaMs, nowMs);
-    this.hud.stats.work(performance.now() - t);
+    this.stats.work(performance.now() - t);
   }
 
   /** One frame: inputs for the ticks due, then the screen. */
@@ -200,10 +201,8 @@ export class OnlineGame implements GameMode {
 
     const sample = this.buffer.sample(nowMs);
     if (!sample) return this.hud?.show();
-    if (this.hud) {
-      this.hud.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
-      this.hud.show();
-    }
+    this.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
+    this.hud?.show();
     const world = this.latest!;
     const width = sample.to.grid.width;
     const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
@@ -232,11 +231,10 @@ export class OnlineGame implements GameMode {
     this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
   }
 
-  /** Where each player was drawn last frame, to report teleports in debug mode. */
+  /** Where each player was drawn last frame, to report teleports. */
   private drawn = new Map<string, { px: number; py: number }>();
 
   private measureJumps(view: PublicView, prev: Map<string, { px: number; py: number }>, alpha: number, me: string | null): void {
-    if (!this.hud) return;
     let mine = 0;
     let others = 0;
     for (const p of view.players) {
@@ -249,7 +247,7 @@ export class OnlineGame implements GameMode {
       if (p.id === me) mine = Math.max(mine, tiles);
       else others = Math.max(others, tiles);
     }
-    this.hud.stats.jumps(mine, others);
+    this.stats.jumps(mine, others);
   }
 
   private playing(): boolean {
@@ -312,7 +310,7 @@ export class OnlineGame implements GameMode {
   private received(snap: Snapshot): void {
     if (!this.buffer.latest) this.ctx.fit(snap.grid.width, snap.grid.height);
     const now = performance.now();
-    this.hud?.stats.arrival(now);
+    this.stats.arrival(now);
     this.delay.observe(now);
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
@@ -357,4 +355,11 @@ export class OnlineGame implements GameMode {
       void this.room.leave().catch(() => undefined);
     }
   }
+}
+
+/** The page's script memory (MB, Chrome only) and the device's (GB), for the log: a phone near its limit crashes. */
+function memoryUse(): { mem?: number; dm?: number } {
+  const heap = (performance as { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize;
+  const dm = (navigator as { deviceMemory?: number }).deviceMemory;
+  return { ...(heap ? { mem: Math.round(heap / 2 ** 20) } : {}), ...(dm ? { dm } : {}) };
 }

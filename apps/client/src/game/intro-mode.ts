@@ -3,6 +3,7 @@ import { Listener } from "../audio/cues";
 import { FixedStep } from "../loop/fixed-step";
 import { button, el } from "../ui/dom";
 import { Intro, INTRO_VIEW } from "./intro";
+import { crumb } from "../net/client-log";
 import type { GameMode, ModeContext } from "./mode";
 
 /**
@@ -43,6 +44,7 @@ export class IntroMode implements GameMode {
     this.card.hidden = true;
     this.logo.hidden = true;
     document.body.appendChild(this.root);
+    crumb("intro");
     const s = this.intro.state;
     ctx.fit(INTRO_VIEW.width, INTRO_VIEW.height, INTRO_VIEW.x, INTRO_VIEW.y);
     ctx.renderer.setCharacters(new Map(s.players.map((p) => [p.id, p.character])));

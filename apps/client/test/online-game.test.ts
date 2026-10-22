@@ -4,7 +4,7 @@ import type { ModeContext } from "../src/game/mode";
 import type { RoomLink } from "../src/net/room-link";
 import type { LobbyPanel } from "../src/ui/lobby";
 
-vi.mock("../src/ui/net-hud", () => ({ debugNet: () => false, NetHud: vi.fn() }));
+vi.mock("../src/ui/net-hud", async (original) => ({ ...(await original<typeof import("../src/ui/net-hud")>()), debugNet: () => false, NetHud: vi.fn() }));
 
 let OnlineGame: typeof import("../src/game/online-game").OnlineGame;
 
@@ -21,6 +21,7 @@ describe("online snapshot rendering", () => {
   let send: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
     now = 1000;
     vi.spyOn(performance, "now").mockImplementation(() => now);
     vi.stubGlobal("window", {});
@@ -44,6 +45,7 @@ describe("online snapshot rendering", () => {
 
   afterEach(() => {
     game.dispose();
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -103,5 +105,15 @@ describe("online snapshot rendering", () => {
     handlers.get(S2C.snapshot)!(snap);
     game.frame(0, now);
     expect(draw.mock.calls.at(-1)![0].bombs).toEqual([]);
+  });
+
+  it("reports the connection to the server's log every 5 s of a match, without ?debug (gaps on players' phones)", () => {
+    receive(60);
+    now += 1000 / 30;
+    receive(62);
+    vi.advanceTimersByTime(5000);
+    const reports = send.mock.calls.filter(([type]) => type === C2S.stats).map(([, m]) => m);
+    expect(reports).toHaveLength(1);
+    expect(reports[0]).toMatchObject({ gap: Math.round(1000 / 30) });
   });
 });

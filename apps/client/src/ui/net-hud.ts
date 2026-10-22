@@ -78,10 +78,9 @@ export class NetStats {
 
 /** Connection readout in a corner, for testing on phones: open the game with ?debug. */
 export class NetHud {
-  readonly stats = new NetStats();
   private readonly box = el("div", { class: "net-hud" });
 
-  constructor() {
+  constructor(readonly stats = new NetStats()) {
     document.body.appendChild(this.box);
   }
 
