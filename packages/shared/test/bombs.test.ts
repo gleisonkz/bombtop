@@ -68,6 +68,21 @@ describe("placing bombs", () => {
 });
 
 describe("explosions", () => {
+  it("detonates remote bombs with flames after three seconds", () => {
+    const s = emptyMatch();
+    s.players[0]!.bombType = "remote";
+    moveTo(s, "p1", 5, 5);
+    expect(placeBomb(s, "p1")).toBe(true);
+    moveTo(s, "p1", 1, 1);
+    run(s, FUSE_TICKS - 1);
+    expect(s.bombs).toHaveLength(1);
+    expect(s.bombs[0]!.fuse).toBe(1);
+    step(s);
+    expect(s.bombs).toHaveLength(0);
+    for (const [x, y] of [[5, 5], [4, 5], [6, 5], [5, 4], [5, 6]]) {
+      expect(hasFlame(s, x!, y!)).toBe(true);
+    }
+  });
   it("explodes when the fuse runs out", () => {
     const s = emptyMatch();
     moveTo(s, "p1", 5, 5);

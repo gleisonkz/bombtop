@@ -75,14 +75,14 @@ describe("glove", () => {
     expect(s.bombs[0]!.heldBy).toBeNull();
   });
 
-  it("a held bomb follows its holder and its fuse pauses", () => {
+  it("a held bomb follows its holder while its fuse continues", () => {
     const s = gloveMatch();
     lift(s);
     const b = s.bombs[0]!;
     const fuse = b.fuse;
     carry(s, 32, "down"); // 2 tiles at base speed
     expect([b.x, b.y]).toEqual([3, 7]);
-    expect(b.fuse).toBe(fuse);
+    expect(b.fuse).toBe(fuse - 32);
   });
 
   it("holding a bomb does not place new ones", () => {

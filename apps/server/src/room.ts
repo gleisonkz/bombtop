@@ -1,5 +1,5 @@
 import { Room, type Client } from "@colyseus/core";
-import { C2S, MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
+import { C2S, MAX_PLAYERS, RoomCore, TickClock, TICK_RATE } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { NetLog, netReport, TickCost } from "./net-log";
 
@@ -50,11 +50,16 @@ export class BattleRoom extends Room {
       }
     });
 
+    const stepMs = 1000 / TICK_RATE;
+    const clock = new TickClock(stepMs, performance.now());
     this.setSimulationInterval(() => {
-      const t = performance.now();
-      this.core.update();
-      this.tickCost.add(performance.now() - t);
-    }, 1000 / TICK_RATE);
+      const ticks = clock.due(performance.now());
+      for (let i = 0; i < ticks; i++) {
+        const t = performance.now();
+        this.core.update();
+        this.tickCost.add(performance.now() - t);
+      }
+    }, stepMs / 2);
   }
 
   /**

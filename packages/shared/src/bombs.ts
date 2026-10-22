@@ -28,17 +28,12 @@ export function updateBombs(s: MatchState): void {
   updateAir(s);
 
   for (const b of s.bombs) {
-    if (!b.air && !b.heldBy && !isHeldByRemote(s, b)) b.fuse--;
+    b.fuse--;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0);
   while (queue.length > 0) {
     explode(s, queue.shift()!, queue);
   }
-}
-
-/** Remote bombs wait for their owner's signal; if the owner dies they fall back to a normal fuse. */
-function isHeldByRemote(s: MatchState, b: Bomb): boolean {
-  return b.type === "remote" && !!s.players.find((p) => p.id === b.ownerId)?.alive;
 }
 
 /**

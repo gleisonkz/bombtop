@@ -61,6 +61,12 @@ describe("SnapshotBuffer", () => {
     expect(b.size).toBe(5);
   });
 
+  it("recovers its clock when the server temporarily runs slower than real time", () => {
+    const b = new SnapshotBuffer(40);
+    for (let i = 0; i < 300; i++) b.push(snap(i * 2), i * 50);
+    expect(b.sample(299 * 50)!.pastMs).toBeLessThanOrEqual(100);
+  });
+
   it("resets when a new match starts (tick goes backwards)", () => {
     const b = new SnapshotBuffer(100);
     b.push(snap(500), 1000);
