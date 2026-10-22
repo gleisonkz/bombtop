@@ -34,6 +34,7 @@ export function collectItems(s: MatchState): void {
     if (getTile(s, x, y) !== Tile.Empty) continue;
     const item = s.items.find((i) => i.x === x && i.y === y);
     if (!item) continue;
+    if (item.kind !== ItemKind.Skull) p.curse = null; // any other item cures a curse
     EFFECTS[item.kind](p, s);
     s.items = s.items.filter((i) => i !== item);
   }

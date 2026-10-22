@@ -25,19 +25,32 @@ export function cursedDirection(p: Player, dir: Direction): Direction {
   return dir && p.curse?.kind === "reverse" ? OPPOSITE[dir] : dir;
 }
 
-/** Counts curses down and spreads them between living players sharing a tile. */
+/**
+ * Counts curses down and passes them between living players sharing a tile: whoever touches a
+ * cursed player takes the curse off them (one at a time, never straight back to who passed it on).
+ */
 export function updateCurses(s: MatchState): void {
   for (const p of s.players) {
     if (p.curse && --p.curse.ticks <= 0) p.curse = null;
   }
   const alive = s.players.filter((p) => p.alive);
+  const touching = (a: Player, b: Player) => {
+    const ta = playerTile(a);
+    const tb = playerTile(b);
+    return ta.x === tb.x && ta.y === tb.y;
+  };
+  for (const p of alive) {
+    const from = p.curse?.from && s.players.find((o) => o.id === p.curse!.from);
+    if (p.curse?.from && !(from && from.alive && touching(p, from))) delete p.curse.from;
+  }
+  const passes: [Player, Player][] = [];
   for (const carrier of alive) {
     if (!carrier.curse) continue;
-    const t = playerTile(carrier);
-    for (const other of alive) {
-      if (other.curse) continue;
-      const o = playerTile(other);
-      if (o.x === t.x && o.y === t.y) other.curse = { ...carrier.curse };
-    }
+    const taker = alive.find((o) => o !== carrier && !o.curse && o.id !== carrier.curse!.from && touching(carrier, o) && !passes.some(([, t]) => t === o));
+    if (taker) passes.push([carrier, taker]);
+  }
+  for (const [carrier, taker] of passes) {
+    taker.curse = { kind: carrier.curse!.kind, ticks: carrier.curse!.ticks, from: carrier.id };
+    carrier.curse = null;
   }
 }

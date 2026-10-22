@@ -120,6 +120,8 @@ export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation
 export interface Curse {
   kind: CurseKind;
   ticks: number;
+  /** Who just passed it on: it cannot go back to them until the two have parted. */
+  from?: string;
 }
 
 export interface Bomb {
