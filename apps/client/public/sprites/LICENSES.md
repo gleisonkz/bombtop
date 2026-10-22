@@ -64,7 +64,8 @@ in HD: drawn on a design grid at high resolution and scaled down, so edges are s
 - `rasengan.png` — `build-rasengan.py`, Naruto's Rasengan. Rows (128px): the spinning ball (8 looping frames),
   the burst where it strikes (8 frames, played once).
 - `tiles.png` — `build-tiles.py`. Cells (128px): grass A (plain, flowers, pebbles), grass B (darker),
-  breakable block, inner pillar, border wall. Order = `TILES.cells`.
+  breakable block, inner pillar, border wall, then the block burning away in 6 frames over the grass (struck, ablaze,
+  breaking, collapsing, embers, ash; played over its flame's life). Order = `TILES.cells`.
 - `bomber.png` — `build-bomber.py`, the bomb mascot: a demolition trooper with an iron bomb for a head, drawn as
   pixel art (a 3D puppet posed per frame, flat shading bands, reduced to the pixel grid without blending);
   rows = `SHEETS.bomber`.

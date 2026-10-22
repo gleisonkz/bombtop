@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -440,6 +440,15 @@ describe("tile art", () => {
     expect(tileCell(Tile.Wall, 7, h - 1, w, h)).toBe(TILES.cells.border);
     expect(tileCell(Tile.Wall, 2, 2, w, h)).toBe(TILES.cells.pillar);
     expect(tileCell(Tile.Block, 3, 1, w, h)).toBe(TILES.cells.block);
+  });
+
+  it("a blown-up block burns away in six frames over its flame's life: struck, ablaze, breaking, collapsing, embers, ash", () => {
+    expect(TILES.cells.burn).toHaveLength(6);
+    const frames = Array.from({ length: FLAME_TICKS }, (_, i) => burnCell(FLAME_TICKS - i));
+    expect(frames[0]).toBe(TILES.cells.burn[0]);
+    expect(frames.at(-1)).toBe(TILES.cells.burn.at(-1));
+    expect([...frames].sort((a, b) => a - b)).toEqual(frames);
+    expect(new Set(frames)).toEqual(new Set(TILES.cells.burn));
   });
 
   it("grass alternates two shades like a lawn, with the odd flower patch", () => {

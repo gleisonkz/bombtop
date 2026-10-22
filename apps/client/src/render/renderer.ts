@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -124,6 +124,9 @@ export class Renderer {
   private tileArt: Texture[] | null = null;
   private tileScale = TILES.scale;
   private readonly tileSprites: Sprite[] = [];
+  /** Blown-up blocks burning away, over the grass they stood on. */
+  private readonly burnLayer = new Container();
+  private readonly burnSprites: Sprite[] = [];
   private readonly people = new Container();
   private readonly overlay = new Graphics();
   private readonly sprites = new Map<string, Sprite>();
@@ -163,7 +166,7 @@ export class Renderer {
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.world, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.world, this.burnLayer, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.banner, this.clock);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -267,10 +270,13 @@ export class Renderer {
     this.tileArt = Array.from({ length: count }, (_, i) => new Texture({ source: base.source, frame: new Rectangle(i * layout.size, 0, layout.size, layout.size) }));
   }
 
-  private drawTiles(s: PublicView): void {
+  /** `burning`: tile index -> ticks left on a blown-up block's flame. */
+  private drawTiles(s: PublicView, burning: ReadonlyMap<number, number>): void {
     const art = this.tileArt!;
     const { width, height } = s.grid;
     for (const sprite of this.tileSprites) sprite.visible = false;
+    for (const sprite of this.burnSprites) sprite.visible = false;
+    let burns = 0;
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const i = y * width + x;
@@ -280,10 +286,23 @@ export class Renderer {
           this.tileSprites[i] = sprite;
           this.tileLayer.addChild(sprite);
         }
-        sprite.texture = art[tileCell(getTile(s, x, y), x, y, width, height)]!;
+        const ttl = burning.get(i);
+        sprite.texture = art[tileCell(ttl === undefined ? getTile(s, x, y) : Tile.Empty, x, y, width, height)]!;
         sprite.scale.set(this.tileScale);
         sprite.position.set(x * TILE_PX, y * TILE_PX);
         sprite.visible = true;
+        if (ttl === undefined) continue;
+        let burn = this.burnSprites[burns];
+        if (!burn) {
+          burn = new Sprite();
+          this.burnSprites.push(burn);
+          this.burnLayer.addChild(burn);
+        }
+        burns++;
+        burn.texture = art[burnCell(ttl)]!;
+        burn.scale.set(this.tileScale);
+        burn.position.set(x * TILE_PX, y * TILE_PX);
+        burn.visible = true;
       }
     }
   }
@@ -500,7 +519,9 @@ export class Renderer {
     let bombs = 0;
     const { width, height } = s.grid;
 
-    if (this.tileArt) this.drawTiles(s);
+    // A blown-up block burns away as its own art, in place of the flame on its tile.
+    const burning = new Map(this.tileArt ? s.flames.filter((f) => f.block).map((f) => [f.y * width + f.x, f.ttl]) : []);
+    if (this.tileArt) this.drawTiles(s, burning);
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const px = x * TILE_PX;
@@ -509,7 +530,7 @@ export class Renderer {
         if (this.tileArt) {
           if (tile !== Tile.Empty) continue;
           this.drawFloor(g, getFloor(s, x, y), px, py, s.tick);
-          if (y > 0 && castsShadow(getTile(s, x, y - 1))) g.rect(px, py, TILE_PX, 3).fill({ color: 0x000000, alpha: 0.28 });
+          if (y > 0 && castsShadow(getTile(s, x, y - 1)) && !burning.has((y - 1) * width + x)) g.rect(px, py, TILE_PX, 3).fill({ color: 0x000000, alpha: 0.28 });
         } else if (tile === Tile.Wall) {
           g.rect(px, py, TILE_PX, TILE_PX).fill(COLORS.wall);
           g.rect(px, py, TILE_PX, 4).fill(COLORS.wallTop);
@@ -532,7 +553,7 @@ export class Renderer {
       g.circle(cx, cy, 4).fill(COLORS.items[item.kind]);
     }
 
-    const flames = outsideBeams(s.flames, s.blasts);
+    const flames = outsideBeams(s.flames, s.blasts).filter((f) => !burning.has(f.y * width + f.x));
     if (this.flameArt) this.drawFlames(flames);
     else {
       for (const f of flames) {

@@ -430,14 +430,24 @@ export function flameFrame(ttl: number): number {
   return Math.min(FLAMES.frames - 1, Math.max(0, Math.floor(age * FLAMES.frames)));
 }
 
-/** Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade. */
+/**
+ * Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade;
+ * `burn` is a blown-up block burning away (struck, ablaze, breaking, collapsing, embers, ash), drawn over the grass.
+ */
 export const TILES = {
   url: "sprites/tiles.png",
   size: 128,
   /** Drawn size: one cell per tile. */
   scale: 0.125,
-  cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8 },
+  cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8, burn: [9, 10, 11, 12, 13, 14] },
 };
+
+/** Cell of a blown-up block whose flame goes out in `ttl` ticks: it burns away with it. */
+export function burnCell(ttl: number): number {
+  const { burn } = TILES.cells;
+  const age = 1 - ttl / FLAME_TICKS;
+  return burn[Math.min(burn.length - 1, Math.max(0, Math.floor(age * burn.length)))]!;
+}
 
 /** Which cell a tile shows. Grass variants are picked by a hash of the position, so they stay put. */
 export function tileCell(tile: Tile, x: number, y: number, width: number, height: number): number {
