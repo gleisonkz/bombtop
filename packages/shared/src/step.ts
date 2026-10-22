@@ -16,7 +16,10 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   s.tick++;
   const living = s.players.filter((p) => p.alive);
   // Thawed before anyone acts, so a freeze lasts the same whoever moved first.
-  for (const p of s.players) if (p.frozen > 0) p.frozen--;
+  for (const p of s.players) {
+    if (p.frozen > 0) p.frozen--;
+    if (p.webbed > 0) p.webbed--;
+  }
 
   for (const p of s.players) {
     const input = inputs[p.id];
@@ -36,7 +39,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       p.charge = p.rasengan = 0;
       continue;
     }
-    if (p.frozen > 0) {
+    if (p.frozen > 0 || p.webbed > 0) {
       p.charge = p.rasengan = 0;
       continue;
     }

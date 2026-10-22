@@ -40,6 +40,7 @@ export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   goku: ["Kakaroto", "Son", "Kaio", "Saiyajin", "Kame", "Nimbus", "Shenlong", "Genki"],
   naruto: ["Konoha", "Dattebayo", "Ichiraku", "Kurama", "Hokage", "Uzumaki", "Rasen", "Ramen"],
   thor: ["Thorvald", "Bjorn", "Ragnar", "Ulfric", "Sigurd", "Leif", "Eirik", "Halvar"],
+  spider: ["Aranha", "Teia", "Parker", "Queens", "Tarântula", "Viúva", "Tecelão", "Escalador"],
 };
 
 export interface SessionOptions {

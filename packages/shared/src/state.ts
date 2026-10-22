@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -82,6 +82,8 @@ export interface Player {
   character: CharacterId;
   /** Ticks left frozen by an ice blast (no movement or actions; flames still kill). */
   frozen: number;
+  /** Ticks left wrapped in the spider's web (no movement or actions; flames still kill). */
+  webbed: number;
   /** Ticks until the special can be used again. */
   specialCooldown: number;
   /** Ticks left with the captain's shield up (planted, facing `facing`). */
@@ -188,13 +190,13 @@ export interface Blast {
   length: number;
   ttl: number;
   /**
-   * Ninja's ice (freezes), Thor's lightning (stuns), Goku's Kamehameha (breaks blocks) or
+   * Ninja's ice (freezes), Thor's lightning (stuns), the spider's web (wraps up), Goku's Kamehameha (breaks blocks) or
    * where Naruto's Rasengan struck (`length` 1; 0 when it ran its course).
    */
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "kamehameha" | "rasengan";
+export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan";
 
 export interface MatchState {
   tick: number;

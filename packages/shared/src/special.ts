@@ -1,5 +1,5 @@
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -8,6 +8,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * The player's special, when ready. Ninja: an ice blast straight ahead that
  * freezes the first player within ICE_RANGE tiles; walls, blocks and bombs stop it.
  * Thor: a lightning bolt the same way that stuns the first player within BOLT_RANGE tiles.
+ * Spider: a web shot the same way that wraps up the first player within WEB_RANGE tiles.
  * Captain: raises his shield for SHIELD_TICKS (see `shieldAt`).
  * Goku: charges for KAME_CHARGE ticks, then fires the Kamehameha (see `kamehameha`).
  * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
@@ -21,6 +22,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "ice", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "thor") {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "spider") {
+    blast(s, "web", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "goku") {
     p.charge = KAME_CHARGE;
     p.specialCooldown = KAME_COOLDOWN;
@@ -60,6 +63,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, { range: number; strike: (p: Player) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = BOLT_STUN_TICKS) },
+  web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
 };
 
 /** A blast from (x,y) toward `dir`; a shield it meets sends it back once. */
