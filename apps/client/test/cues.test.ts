@@ -194,6 +194,14 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "shock", x: 4.5 }]);
   });
 
+  it("hears Static's magnet pull, at the caster", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 4, y: 1, dir: "left", length: 2, ttl: BLAST_TICKS - 1, kind: "magnet" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "magnet", x: 4.5 }]);
+  });
+
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {
     const v = view();
     const next = later(v, (n) => {

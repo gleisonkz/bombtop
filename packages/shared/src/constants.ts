@@ -96,6 +96,9 @@ export const BOLT_RANGE = 5;
 export const WEB_RANGE = 5;
 export const WEB_TICKS = 4 * TICK_RATE;
 
+/** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
+export const MAGNET_RANGE = 5;
+
 /** Pikachu's thunder shock: how far each arm of the cross around him reaches. */
 export const THUNDER_RANGE = 2;
 

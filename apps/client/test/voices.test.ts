@@ -26,6 +26,7 @@ describe("voiceLine", () => {
     for (const c of ["bomb", "ninja", "captain", "thor", "spider", "pikachu"] as const) expect(voiceLine(c, "special")).toBe(`${c}-special`);
     expect(voiceLine("goku", "special")).toBeNull(); // shouted over the kamehameha sound
     expect(voiceLine("naruto", "special")).toBeNull();
+    expect(voiceLine("static", "special")).toBeNull(); // his magnet's crackle is his special's sound
   });
 
   it("only names sounds in the mix", () => {

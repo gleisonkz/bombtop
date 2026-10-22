@@ -163,10 +163,28 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  static: {
+    name: "Super Choque",
+    title: "O herói elétrico de Dakota",
+    color: blue,
+    story:
+      "Virgil era só um garoto de Dakota até respirar o gás do Big Bang e sair de lá cheio de eletricidade. Agora controla o magnetismo, voa numa tampa de bueiro e não perde uma piada nem no meio da briga. Descobriu que a arena é o melhor treino que existe: tem metal, faísca e rival para todo lado.",
+    special: {
+      name: "Puxão Magnético",
+      recharge: "20 s",
+      text: "Lança um campo magnético em linha reta: o primeiro jogador até 5 casas à frente é arrastado até a casa colada nele e fica tonto por 3 s. Blocos, bombas e paredes param o campo.",
+      tips: [
+        "Puxe e solte uma bomba na hora: ele chega tonto bem do seu lado.",
+        "Funciona de longe (5 casas): tire o rival de um esconderijo no fim do corredor.",
+        "Só o primeiro da linha é puxado: quem vem atrás fica onde está.",
+        "O escudo do Capitão devolve o campo: quem é arrastado até ele, tonto, é você.",
+      ],
+    },
+  },
 };
 
-/** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it). */
-const SPECIAL_SOUND: Partial<Record<CharacterId, SoundName>> = { goku: "kamehameha", naruto: "rasengan" };
+/** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */
+const SPECIAL_SOUND: Partial<Record<CharacterId, SoundName>> = { goku: "kamehameha", naruto: "rasengan", static: "magnet" };
 
 /** Every character with who they are, their story, their special with tips, and their voice lines. */
 export const CHARACTER_GUIDE = CHARACTERS.map((id) => {

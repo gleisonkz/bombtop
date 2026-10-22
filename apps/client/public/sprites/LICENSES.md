@@ -51,6 +51,14 @@ Fan art of Pikachu (Pokémon, Nintendo / The Pokémon Company) for this non-comm
 shock and carry walk posed with skeleton v3 from their rotations). Frames laid out by
 `scripts/build-character-sheet.py pikachu`; rows = `SHEETS.pikachu`.
 
+## static.png
+
+Fan art of Static (Static Shock, DC / Milestone) for this non-commercial project, made in PixelLab (pixellab.ai)
+(characters "Static Shock HD 2" and "Static Shock HD v3", a v3 rotation of its front and sides for the back; magnet pull,
+carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's flying disc, its glow, shadow and
+sparks are drawn by `scripts/build-static-lobby.py`. Frames laid out by `scripts/build-character-sheet.py static`;
+rows = `SHEETS.static`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

@@ -298,6 +298,38 @@ export const SHEETS = {
     hueBase: [34, 82, 149],
     scale: 0.145,
   },
+  /** Static (fan art), made in PixelLab (scripts/build-character-sheet.py static lays out its frames). */
+  static: {
+    url: "sprites/static.png",
+    width: 2352,
+    height: 3348,
+    frameW: 168,
+    frameH: 186,
+    anchorX: 82,
+    anchorY: 182,
+    bodyH: 155,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The magnet pull: hands gathered at his chest, pushed out as the field leaves, then yanked back. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Sparks between his hands, a jump onto his flying manhole cover and a surf on it (scripts/build-static-lobby.py). */
+    lobby: { row: 17, frames: 14 },
+    /** His pushed-out hands, where the field leaves (the back view hides them: over his shoulders). */
+    muzzle: { side: [59, -75], down: [2, -58], up: [0, -86.35] },
+    /** His long blue coat. */
+    hues: [200, 222],
+    hueBase: [24, 61, 94],
+    /** White would bleach his coat (and grey his hair): that player keeps the blue. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.139,
+  },
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",
@@ -664,6 +696,23 @@ export function boltPoints(x0: number, y0: number, x1: number, y1: number, seed:
   }
   pts.push([x1, y1]);
   return pts;
+}
+
+/** How often a new ring of Static's magnet pull leaves the one pulled, and how long it takes to reach him. */
+const MAGNET_WAVE_GAP = 5;
+const MAGNET_WAVE_TICKS = 15;
+
+/**
+ * Static's magnet pull from (x0,y0) (him) to (x1,y1) (where it caught): rings of force, `age` ticks in,
+ * running from the far end back to him and shrinking as they arrive (radius 7 px there, 2 px at his hand).
+ */
+export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; r: number }[] {
+  const out: { x: number; y: number; r: number }[] = [];
+  for (let k = 0; k < MAGNET_WAVE_TICKS / MAGNET_WAVE_GAP; k++) {
+    const t = 1 - ((age + k * MAGNET_WAVE_GAP) % MAGNET_WAVE_TICKS) / MAGNET_WAVE_TICKS;
+    out.push({ x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, r: 2 + 5 * t });
+  }
+  return out;
 }
 
 /**

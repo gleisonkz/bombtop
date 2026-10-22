@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -318,6 +318,24 @@ describe("ice blast visuals", () => {
     expect(boltPoints(0, 10, 64, 10, 4)).not.toEqual(pts);
     const down = boltPoints(5, 0, 5, 48, 1);
     for (const [x] of down) expect(Math.abs(x - 5)).toBeLessThanOrEqual(4);
+  });
+
+  it("the magnet pull sends rings of force from the one pulled back to the caster, shrinking as they arrive", () => {
+    const at = (age: number) => magnetWaves(0, 10, 64, 10, age);
+    const waves = at(4);
+    expect(waves.length).toBeGreaterThanOrEqual(2);
+    for (const w of waves) {
+      expect(w.y).toBe(10);
+      expect(w.x).toBeGreaterThanOrEqual(0);
+      expect(w.x).toBeLessThanOrEqual(64);
+    }
+    // Each ring moves toward the caster tick by tick.
+    expect(at(5)[0]!.x).toBeLessThan(waves[0]!.x);
+    const near = waves.reduce((a, b) => (a.x < b.x ? a : b));
+    const far = waves.reduce((a, b) => (a.x > b.x ? a : b));
+    expect(near.r).toBeLessThan(far.r);
+    const down = magnetWaves(5, 0, 5, 48, 3);
+    for (const w of down) expect(w.x).toBe(5);
   });
 
   it("frozen players turn icy, and the ice flickers in its last second", () => {

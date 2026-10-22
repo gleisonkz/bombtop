@@ -1,6 +1,6 @@
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -15,6 +15,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
  * Bomb mascot: plants a mega bomb on his tile, piercing and twice his fire.
  * Pikachu: a thunder shock all around him (see `thunder`).
+ * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -26,6 +27,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "spider") {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "static") {
+    blast(s, "magnet", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "pikachu") {
     thunder(s, p);
   } else if (p.character === "goku") {
@@ -64,10 +67,20 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder">, { range: number; strike: (p: Player) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
+  magnet: {
+    range: MAGNET_RANGE,
+    // The tiles between are clear (the blast stopped at the first thing in its way), so the pull always lands.
+    strike: (p, from, dx, dy) => {
+      p.px = tileCenter(from.x + dx);
+      p.py = tileCenter(from.y + dy);
+      p.stun = SPECIAL_STUN_TICKS;
+      p.charge = p.rasengan = 0;
+    },
+  },
 };
 
 /** A blast from (x,y) toward `dir`; a shield it meets sends it back once. */
@@ -88,7 +101,7 @@ function blast(s: MatchState, kind: keyof typeof BLASTS, ownerId: string, from: 
     }
     const hit = s.players.find((o) => o.id !== ownerId && o.alive && playerTile(o).x === tx && playerTile(o).y === ty);
     if (hit) {
-      strike(hit);
+      strike(hit, from, dx, dy);
       break;
     }
   }

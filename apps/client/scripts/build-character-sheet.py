@@ -29,9 +29,15 @@
     crackling); carry idle = the carry walk's standing frames; lobby = the v3 "victory pose" frames 1..8. Idle side and
     back are his rotation bobbing (the breathing template puffed breath and shut his eye); the stun skips frame 3 (a
     grey smudge).
+  static: sprites/static.png, character "Static Shock HD v3" (a v3 rotation of "Static Shock HD 2"'s front, side and side
+    mirrored, for a back view: the first drew his front twice). cast = the magnet pull and carry walk posed from our own
+    skeletons, 6 frames each (the back view only gathering: see STATIC_CAST_UP) (hands gathered at his chest, both pushed out ahead as the field leaves, fists yanked back
+    pulling the catch in); carry idle = the carry walk's standing frames; lobby = 14 poses from our own skeletons
+    ("lobby14": charging sparks, jumping, surfing with arms spread) that build-static-lobby.py lifts onto his flying
+    disc (FRAMES_DIR/lobby). His pushed-out hands are the "muzzle".
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -115,6 +121,17 @@ CHARACTERS = {
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the magnet pull: hands gathered (cells 0-4), pushed out as the field leaves (cell 5, BEAM_DELAY), yanked back
+    "static": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 14),
     ],
 }
 BASE = 400
@@ -290,6 +307,25 @@ def pikachu_frames(src, folder, d):
     return None
 
 
+STATIC_CAST = [0, 1, 1, 2, 2, 3, 4, 5, 5]  # static: his 6 posed cast frames over the 9 cast cells, push on cell THRUST
+# static, back view: PixelLab turned him to face us once his hands left his chest (twice), so the back cast holds the
+# first three frames of a second try ("cast6n": gathering at his chest), the push hidden in front of him anyway
+STATIC_CAST_UP = [0, 1, 1, 2, 2, 2, 2, 1, 0]
+STATIC_HANDS = (90, 111)  # static: his pushed-out hands in the front cast, on PixelLab's 180px canvas (its skeleton)
+
+
+def static_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast" and d == "north":
+        return [load("cast6n", i) for i in STATIC_CAST_UP]
+    if folder == "cast":
+        return [load("cast6", i) for i in STATIC_CAST]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -314,7 +350,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":
@@ -412,6 +448,21 @@ def main():
             "side": [sx - ax, sy - ay],
             "down": [wx - ax, wy - ay],
             # the back view hides his hand in front of him: the web leaves from over his shoulder
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
+        }
+    if character == "static":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        first = Image.open(src / "cast6" / "south" / "0.png")
+        wx = (BASE - first.width) // 2 + STATIC_HANDS[0] - left
+        wy = int(BASE * 0.75) - feet(first.convert("RGBA")) + STATIC_HANDS[1] - top
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [wx - ax, wy - ay],
+            # the back view hides his hands in front of him: the field leaves from over his shoulders
             "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
         }
     print(json.dumps(info))

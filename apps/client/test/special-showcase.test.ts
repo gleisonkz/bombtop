@@ -104,4 +104,15 @@ describe("special showcase", () => {
     play("spider", (s) => (bombedWhileWebbed ||= rival(s).webbed > 0 && s.bombs.some((b) => b.ownerId === "you")));
     expect(bombedWhileWebbed).toBe(true);
   });
+
+  it("static: the magnet drags the rival from afar to his side, dizzy, and a bomb comes", () => {
+    const start = rival(specialShowcase("static").state).px;
+    let pulled = false;
+    let bombed = false;
+    play("static", (s) => {
+      pulled ||= rival(s).stun > 0 && rival(s).px < start;
+      bombed ||= pulled && rival(s).stun > 0 && s.bombs.some((b) => b.ownerId === "you");
+    });
+    expect(bombed).toBe(true);
+  });
 });

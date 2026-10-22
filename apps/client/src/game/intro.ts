@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 17 * TICK_RATE;
+export const INTRO_TICKS = 19 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -22,8 +22,9 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 570, to: 690, card: { name: "Naruto", line: "Rasengan! Avança com a esfera de chakra e arremessa quem estiver na frente." } },
   { from: 690, to: 810, card: { name: "Homem-Aranha", line: "Teia! Quem leva fica enrolado num casulo, sem fugir da bomba." } },
   { from: 810, to: 930, card: { name: "Pikachu", line: "Choque do Trovão! Uma descarga em volta deixa tonto quem estiver perto." } },
+  { from: 930, to: 1050, card: { name: "Super Choque", line: "Puxão magnético! Arrasta o rival lá de longe pra colado nele, tonto." } },
 ];
-const LOGO_FROM = 930;
+const LOGO_FROM = 1050;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
@@ -31,13 +32,13 @@ const LOGO_FROM = 930;
  * the captain raises his shield and the blast bounces back off it, Thor's bolt leaves the mascot dizzy
  * up in row 3, Goku's Kamehameha smashes a row of blocks in row 7, Naruto's Rasengan knocks the mascot
  * back along row 3, the spider walks down row 7 (open since the Kamehameha) and webs Goku, Pikachu steps up
- * from row 8 and shocks the spider, then the logo.
+ * from row 8 and shocks the spider, Static steps up into row 7 and drags Pikachu over to him with his magnet, then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
   /** Seats some wear instead of their own (renderer `setColors`): the spider's seventh would be the second's black. */
-  readonly colors = new Map([["spider", 2], ["pikachu", 3]]);
+  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -55,6 +56,8 @@ export class Intro {
     s.players.push({ ...structuredClone(s.players[0]!), id: "spider", character: "spider" });
     // And Pikachu in an eighth, in blue to keep his blue scarf (see `colors`).
     s.players.push({ ...structuredClone(s.players[0]!), id: "pikachu", character: "pikachu" });
+    // And Static in a ninth, in blue to keep his blue coat (see `colors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "static", character: "static" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
@@ -64,8 +67,9 @@ export class Intro {
     placePlayerAt(s, "naruto", 2, 3);
     placePlayerAt(s, "spider", 11, 7);
     placePlayerAt(s, "pikachu", 9, 8);
+    placePlayerAt(s, "static", 11, 8);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu] = s.players;
+    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
@@ -75,6 +79,7 @@ export class Intro {
     naruto!.facing = "right";
     spider!.facing = "left";
     pikachu!.facing = "up";
+    zap!.facing = "up";
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -93,6 +98,8 @@ export class Intro {
       new Script("spider", [{ wait: 690 }, { go: "left", tiles: 4 }, { wait: 6 }, { press: "special" }]),
       // Steps up into row 7, two tiles from the spider, turns to him and shocks him.
       new Script("pikachu", [{ wait: 810 }, { go: "up", tiles: 1 }, { face: "left" }, { wait: 6 }, { press: "special" }]),
+      // Comes up into row 7 on the right, turns to Pikachu two tiles off and drags him over.
+      new Script("static", [{ wait: 930 }, { go: "up", tiles: 1 }, { face: "left" }, { wait: 6 }, { press: "special" }]),
     ];
   }
 

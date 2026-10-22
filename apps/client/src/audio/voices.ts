@@ -8,7 +8,10 @@ export type VoiceName = Lines<CharacterId> | `${"bomb" | "ninja" | "captain" | "
 
 const lines = <C extends CharacterId>(c: C) => ({ pick: `${c}-pick`, death: `${c}-death`, win: `${c}-win` }) as const;
 
-/** Characters' own voices. Goku and Naruto shout over their special's own sound (kamehameha, rasengan), so no special line. */
+/**
+ * Characters' own voices. Goku and Naruto shout over their special's own sound (kamehameha, rasengan), so no special line;
+ * Static's special is heard as his magnet's crackle.
+ */
 export const VOICE_LINES: Record<CharacterId, Partial<Record<VoiceMoment, VoiceName>>> = {
   bomb: { ...lines("bomb"), special: "bomb-special" },
   ninja: { ...lines("ninja"), special: "ninja-special" },
@@ -18,6 +21,7 @@ export const VOICE_LINES: Record<CharacterId, Partial<Record<VoiceMoment, VoiceN
   naruto: lines("naruto"),
   spider: { ...lines("spider"), special: "spider-special" },
   pikachu: { ...lines("pikachu"), special: "pikachu-special" },
+  static: lines("static"),
 };
 
 export function voiceLine(character: CharacterId, moment: VoiceMoment): VoiceName | null {
