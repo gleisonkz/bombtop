@@ -51,15 +51,35 @@ export class LocalHost {
     });
   }
 
-  /** The host's own seat. Starts the room's clock. */
+  /** The host's own seat. Starts the room's clock; leaving it closes the room. */
   hostLink(name: string, character: string): RoomLink {
+    const link = this.localLink(name, character, () => this.close())!;
+    this.run();
+    return link;
+  }
+
+  /**
+   * Another player on this same screen (couch play: one per controller), or null when the room is
+   * full or playing. Leaving frees the seat; the room goes on.
+   */
+  seat(name: string, character: string): RoomLink | null {
+    return this.localLink(name, character, (id) => {
+      this.links.delete(id);
+      this.core.leave(id);
+    });
+  }
+
+  /** A seat whose messages never leave this device. */
+  private localLink(name: string, character: string, left: (id: string) => void): RoomLink | null {
     const id = `p${++this.seq}`;
     const handlers: Handlers = new Map();
     const leaveHandlers: ((code: number) => void)[] = [];
     // Delivered a moment later, like a network would: handlers attached right after still get it.
     this.links.set(id, (type, message) => queueMicrotask(() => dispatch(handlers, type, message)));
-    this.core.join(id, name, character);
-    this.run();
+    if (!this.core.join(id, name, character)) {
+      this.links.delete(id);
+      return null;
+    }
     return {
       sessionId: id,
       roomId: OFFLINE_CODE,
@@ -69,7 +89,7 @@ export class LocalHost {
       onLeave: (cb) => leaveHandlers.push(cb),
       ping: (cb) => cb(0),
       leave: async () => {
-        this.close();
+        left(id);
         for (const cb of leaveHandlers) cb(1000);
       },
     };

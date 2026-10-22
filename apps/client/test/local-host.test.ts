@@ -49,6 +49,34 @@ describe("LocalHost", () => {
     expect(lobbies.at(-1)!.hostId).toBe(me.sessionId);
   });
 
+  it("seats more players on the same screen (one per controller), who play and leave on their own", async () => {
+    const host = new LocalHost();
+    const me = host.hostLink("Ana", "bomb");
+    const pad = host.seat("Controle 2", "ninja")!;
+    const lobbies = inbox<LobbyInfo>(me, S2C.lobby);
+    me.send(C2S.sync);
+    await flush();
+    expect(lobbies.at(-1)!.members.map((m) => [m.name, m.character])).toEqual([["Ana", "bomb"], ["Controle 2", "ninja"]]);
+    me.send(C2S.start);
+    await flush();
+    pad.send(C2S.input, { dir: "left", bomb: false, seq: 1 });
+    await flush();
+    const start = host.core.session.match!.players.find((p) => p.id === pad.sessionId)!.px;
+    for (let i = 0; i < 20; i++) host.tick();
+    expect(host.core.session.match!.players.find((p) => p.id === pad.sessionId)!.px).toBeLessThan(start);
+    await pad.leave();
+    await flush();
+    expect(lobbies.at(-1)!.members.map((m) => m.name)).toEqual(["Ana"]);
+  });
+
+  it("does not seat a controller when the room is full", () => {
+    const host = new LocalHost();
+    host.hostLink("Ana", "bomb");
+    const seats = [2, 3, 4, 5, 6].map((n) => host.seat(`Controle ${n}`, "bomb"));
+    expect(seats.slice(0, 4).every(Boolean)).toBe(true);
+    expect(seats[4]).toBeNull();
+  });
+
   it("a friend joins over a wire and both see the same lobby", async () => {
     const host = new LocalHost();
     const me = host.hostLink("Ana", "bomb");

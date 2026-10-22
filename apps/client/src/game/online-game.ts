@@ -24,6 +24,7 @@ import {
 } from "@bombtop/shared";
 import { Listener, type CueName } from "../audio/cues";
 import { actionCues, EchoFilter } from "../audio/local-cues";
+import type { CouchSeats } from "../input/couch";
 import { GamepadInput } from "../input/gamepad";
 import { KeepAwake } from "../net/keep-awake";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
@@ -103,15 +104,17 @@ export class OnlineGame implements GameMode {
     return new OnlineGame(room, ctx, panel);
   }
 
-  /** A match in a room reached some other way (offline: hosted on a phone nearby). */
-  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel): OnlineGame {
-    return new OnlineGame(link, ctx, panel);
+  /** A match in a room reached some other way (offline: hosted on a phone nearby; `couch`: more controllers here). */
+  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel, couch: CouchSeats | null = null): OnlineGame {
+    return new OnlineGame(link, ctx, panel, couch);
   }
 
   private constructor(
     private readonly room: RoomLink,
     private readonly ctx: ModeContext,
     private readonly panel: LobbyPanel,
+    /** Other players on this screen, one per extra controller (couch play). */
+    private readonly couch: CouchSeats | null = null,
   ) {
     this.predictor = new Predictor(room.sessionId);
     this.ghosts = new GhostBombs(room.sessionId);
@@ -251,6 +254,7 @@ export class OnlineGame implements GameMode {
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
+    this.couch?.tick(this.lobby?.phase ?? null, this.lobby?.members.map((m) => m.character) ?? []);
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
     const actor = (input.bomb || input.action || input.special) && this.playing() ? this.predictor.predict(this.latest!) : null;
     const t = this.predictor.clock;
@@ -332,6 +336,7 @@ export class OnlineGame implements GameMode {
 
   async leave(): Promise<void> {
     this.leaving = true;
+    this.couch?.leaveAll();
     await this.room.leave().catch(() => undefined);
     this.ctx.exit();
   }
@@ -343,6 +348,7 @@ export class OnlineGame implements GameMode {
     this.ctx.renderer.showBanner("");
     if (!this.leaving) {
       this.leaving = true;
+      this.couch?.leaveAll();
       void this.room.leave().catch(() => undefined);
     }
   }

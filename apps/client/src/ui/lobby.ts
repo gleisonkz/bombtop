@@ -37,8 +37,11 @@ export class LobbyPanel {
   private readonly results: ResultScreen;
   private readonly codeLabel = el("small", { text: "Código da sala" });
   private readonly inviteBtn: HTMLButtonElement;
-  /** Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone). */
-  private offline: { pair: (() => void) | null } | null = null;
+  /**
+   * Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone).
+   * `couch`: players also join on this same screen with their controllers.
+   */
+  private offline: { pair: (() => void) | null; couch?: boolean } | null = null;
 
   constructor(
     parent: HTMLElement,
@@ -63,10 +66,10 @@ export class LobbyPanel {
     this.results = new ResultScreen(parent);
   }
 
-  /** An offline room (`pair` adds a friend, on the host's phone), or back to an online one (null). */
-  setOffline(offline: { pair: (() => void) | null } | null): void {
+  /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen), or back to an online one (null). */
+  setOffline(offline: { pair: (() => void) | null; couch?: boolean } | null): void {
     this.offline = offline;
-    this.codeLabel.textContent = offline ? "Partida offline" : "Código da sala";
+    this.codeLabel.textContent = offline?.couch ? "Mesma tela" : offline ? "Partida offline" : "Código da sala";
     this.inviteBtn.textContent = offline ? "Adicionar amigo" : "Convidar amigos";
     this.inviteBtn.hidden = !!offline && !offline.pair;
   }
@@ -74,7 +77,7 @@ export class LobbyPanel {
   update(info: LobbyInfo, me: string): void {
     this.root.hidden = info.phase !== "lobby";
     if (info.phase !== "results") this.results.hide();
-    this.code.textContent = this.offline ? "Wi-Fi" : info.code;
+    this.code.textContent = this.offline?.couch ? "🎮" : this.offline ? "Wi-Fi" : info.code;
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
     const isHost = info.hostId === me;
     this.seats.replaceChildren(
@@ -84,7 +87,7 @@ export class LobbyPanel {
           return el("div", { class: "seat empty add-bot" }, [
             tag,
             el("span", { class: "seat-name", text: "Vaga livre" }),
-            el("span", { class: "seat-sub", text: "Chamar um bot:" }),
+            el("span", { class: "seat-sub", text: this.offline?.couch ? "Aperte A num controle, ou chame um bot:" : "Chamar um bot:" }),
             ...BOT_LEVELS.map((level) => button(LEVEL_NAMES[level], () => this.handlers.addBot(level), `mini ${level}`)),
           ]);
         }
@@ -125,13 +128,14 @@ export class LobbyPanel {
     const enough = info.members.length >= 2;
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
-    this.status.textContent = !enough
+    const couch = this.offline?.couch ? "🎮 Controles: A entra, Y troca o personagem, B sai, Start começa. " : "";
+    this.status.textContent = couch + (!enough
       ? isHost
         ? "Convide a galera ou coloque bots nas vagas!"
         : "Esperando mais jogadores…"
       : isHost
         ? "Todo mundo pronto? Bora!"
-        : "Esperando o anfitrião começar…";
+        : "Esperando o anfitrião começar…");
   }
 
   private pickArrow(text: string, label: string, you: boolean, current: CharacterId, step: 1 | -1): HTMLButtonElement {

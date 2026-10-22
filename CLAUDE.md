@@ -24,6 +24,12 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   (`ui/pairing.ts`). The camera is opened before the offer is made: with it on, browsers share the real LAN address instead
   of an mDNS name. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
   so it opens without internet once visited.
+- **Couch play (one screen, a controller each):** "🎮 Vários controles (mesma tela)" in the menu (shown on computers, and on
+  touch screens once a controller is plugged in). The screen hosts a `LocalHost` room; the keyboard and the first controller
+  are player one, and every other controller gets its own local seat (`LocalHost.seat`) through `CouchSeats`
+  (`input/couch.ts`): A joins in the lobby, Y changes its character, B leaves, Start on any controller starts the match; in a
+  match each sends its own input. Friends' phones can still pair in over Wi-Fi. Meant for a PC on the TV (HDMI) with
+  Bluetooth controllers (the Gamepad API reads up to 4).
 
 ## Layout
 

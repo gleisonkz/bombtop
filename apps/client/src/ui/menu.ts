@@ -18,6 +18,8 @@ export interface MenuHandlers {
   demo(): void;
   /** Play with friends nearby over Wi-Fi, no internet (the typed name is theirs). */
   offline(name: string): void;
+  /** Play on this one screen, a controller per player (the TV mode). */
+  couch(name: string): void;
   /** A guide (items or characters) was opened, or closed (null) from its buttons. */
   guide(open: Guide | null): void;
   /** A sound to play from the character guide: a voice line, or the scene shown. */
@@ -103,6 +105,11 @@ export class Menu {
         storage.set(NAME_KEY, this.name.value.trim());
         handlers.offline(this.name.value);
       }, "ghost offline-btn"),
+      // Shown on computers, and on touch screens once a controller is plugged in (index.html).
+      button("🎮 Vários controles (mesma tela)", () => {
+        storage.set(NAME_KEY, this.name.value.trim());
+        handlers.couch(this.name.value);
+      }, "ghost couch-btn"),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
       // Tools for us, kept small: version, debug readout, reload past a stale cache.
       el("div", { class: "menu-foot" }, [

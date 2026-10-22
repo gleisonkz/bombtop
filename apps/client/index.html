@@ -518,7 +518,7 @@
         .cast .star .title-bomber { --fly-cell: 82px; width: 84px; height: 82px; }
         button.play { min-height: 50px; font-size: 22px; }
       }
-      @media (pointer: coarse) { .keys-hint { display: none; } }
+      @media (pointer: coarse) { .keys-hint { display: none; } html:not(.has-pad) .couch-btn { display: none; } }
       @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero::before, .cast .star, .cast .star .title-bomber i, .menu-bg i, button.play, button.play::after, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.sheet i { animation: none; } }
 
       /* Mouse: everything clickable answers the pointer (touch screens skip this, so taps never leave a stuck hover) */

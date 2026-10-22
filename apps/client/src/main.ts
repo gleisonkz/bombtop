@@ -14,6 +14,7 @@ import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { MatchMenu } from "./ui/match-menu";
 import { Pairing } from "./ui/pairing";
+import { CouchSeats } from "./input/couch";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
@@ -218,6 +219,13 @@ const menu = new Menu(ui, {
       () => menu.show(),
     );
   },
+  couch: (name) => {
+    // This screen hosts the room (no server); the first controller (or the keyboard) is player one and
+    // every other controller joins with A. Friends' phones can still pair in over Wi-Fi.
+    const host = new LocalHost();
+    const link = host.hostLink(account?.name ?? name, savedCharacter());
+    playOffline(link, () => void pairing.hostPair(host), new CouchSeats(host, undefined, () => online?.start()));
+  },
   guide: (open) => {
     if (open) guideRoutes[open].opened();
     else for (const r of Object.values(guideRoutes)) r.closed();
@@ -252,9 +260,9 @@ const menu = new Menu(ui, {
 
 // Offline (Wi-Fi): this phone hosts the room, or joins a friend's phone (no server, no internet).
 const pairing = new Pairing(ui);
-function playOffline(link: RoomLink, pair: (() => void) | null): void {
-  lobby.setOffline({ pair });
-  online = OnlineGame.over(link, ctx, lobby);
+function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null): void {
+  lobby.setOffline({ pair, couch: !!couch });
+  online = OnlineGame.over(link, ctx, lobby, couch);
   menu.hide();
   setMode(online);
 }
@@ -300,5 +308,7 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => mode?.keyUp(e.code));
 window.addEventListener("blur", () => mode?.blur());
 window.addEventListener("resize", refit);
+// A controller on a phone or tablet brings out the couch-play button (hidden on touch screens otherwise).
+window.addEventListener("gamepadconnected", () => document.documentElement.classList.add("has-pad"));
 
 refit();
