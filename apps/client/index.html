@@ -276,8 +276,11 @@
       .seat .mascot.sheet, .seat.easy .mascot.sheet, .seat.medium .mascot.sheet, .seat.hard .mascot.sheet { animation: none; }
       .net-hud {
         position: fixed;
-        left: 8px;
-        bottom: 8px;
+        top: max(8px, env(safe-area-inset-top));
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: calc(100% - 140px); /* between the corner buttons */
+        text-align: center;
         z-index: 50;
         padding: 4px 8px;
         border-radius: 6px;
@@ -286,6 +289,7 @@
         font: 12px/1.3 ui-monospace, monospace;
         pointer-events: none;
       }
+      body:has(.lobby:not([hidden])) .net-hud { display: none; } /* nothing to measure in the lobby; it covered the start button */
       .seat-name { font-weight: 800; font-size: 14px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       button.mini { min-height: 0; width: 100%; padding: 4px 6px; font-size: 13px; border-width: 2px; border-radius: 8px; box-shadow: 0 2px 0 var(--ink); }
       button.mini.easy { background: #8be28b; }

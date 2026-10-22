@@ -25,7 +25,7 @@ import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from 
 import { button, el, storage } from "./ui/dom";
 import { Listener } from "./audio/cues";
 import { Menu, type Guide } from "./ui/menu";
-import { isTouchDevice, TouchControls } from "./ui/touch-controls";
+import { TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
 // Render at the device's pixel density: the arena is vector drawn, so any scale stays sharp.
@@ -71,14 +71,6 @@ function refit(): void {
   app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
   app.stage.scale.set(scale);
   app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
-}
-
-/** Phones: hide the browser bars (either orientation plays). Must run inside a tap handler. */
-function goFullscreen(): void {
-  if (!isTouchDevice() || document.fullscreenElement) return;
-  document.documentElement
-    .requestFullscreen?.({ navigationUI: "hide" })
-    .catch(() => undefined); // unsupported (iOS Safari) or refused: keep playing windowed
 }
 
 const sound = new Sound(new WebAudioBackend(import.meta.env.BASE_URL), storage);
@@ -179,10 +171,7 @@ const ctx: ModeContext = {
 
 let online: OnlineGame | null = null;
 const lobby = new LobbyPanel(ui, {
-  start: () => {
-    goFullscreen();
-    online?.start();
-  },
+  start: () => online?.start(),
   leave: () => void online?.leave(),
   addBot: (level) => online?.addBot(level),
   removeBot: (id) => online?.removeBot(id),
@@ -235,7 +224,6 @@ const menu = new Menu(ui, {
   hear: (name) => sound.play(name),
   hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width),
   online: async (choice, name) => {
-    goFullscreen();
     menu.setBusy(true);
     try {
       const character = savedCharacter();
