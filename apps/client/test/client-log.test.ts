@@ -58,4 +58,26 @@ describe("ClientLog", () => {
     for (let i = 0; i < 50; i++) log.error(`e${i}`);
     expect(sent).toHaveLength(10);
   });
+
+  it("sends what the page caught and logged, with the error's stack", () => {
+    const sent: unknown[] = [];
+    const log = new ClientLog((e) => void sent.push(e), {});
+    const err = new Error("404");
+    err.stack = "Error: 404 at load";
+    log.console("error", ["sprite sheet", err]);
+    log.console("warn", ["sound thor-win unavailable", { code: 1 }]);
+    expect(sent).toEqual([
+      { kind: "console", level: "error", msg: "sprite sheet 404", stack: "Error: 404 at load" },
+      { kind: "console", level: "warn", msg: 'sound thor-win unavailable {"code":1}' },
+    ]);
+  });
+
+  it("caps what the console sends apart from script errors, so a chatty one cannot hide them", () => {
+    const sent: { kind: string }[] = [];
+    const log = new ClientLog((e) => void sent.push(e as { kind: string }), {});
+    for (let i = 0; i < 50; i++) log.console("warn", [`w${i}`]);
+    log.error("boom");
+    expect(sent.filter((e) => e.kind === "console")).toHaveLength(10);
+    expect(sent.at(-1)).toMatchObject({ kind: "error", msg: "boom" });
+  });
 });

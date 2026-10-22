@@ -19,7 +19,11 @@ Public URL: `wss://187-127-63-110.sslip.io` (Caddy terminates TLS, proxies to `1
   address): `/opt/bombtop/logs/client-YYYY-MM-DD.jsonl`. `boot` = a page opened (path, screen size, device
   memory, build `v`, user agent); `crash` = the last page died in front of the player without closing (what
   it was doing, `crumb`, and how long it had been open, `age` ms): what iOS does past its memory limit,
-  showing "a problem repeatedly occurred"; `error` = an uncaught script error with its stack.
+  showing "a problem repeatedly occurred"; `error` = an uncaught script error with its stack; `console` = a
+  failure the page caught and wrote with console.error/warn (`level`; a sheet or sound that did not load);
+  `freeze` = the page's thread stopped answering for 5 s while in front (sent by a worker, so it arrives even
+  if the page never comes back; `crumb` = what it was doing) and `unfreeze` = it came back, `ms` stuck in all.
+  A `crash` with no `freeze` before it is the page killed (memory); with one, it froze and was closed.
   Read them: `ssh -i ~/.ssh/bombtop_vps root@187.127.63.110 'grep -h crash /opt/bombtop/logs/client-*.jsonl | tail'`.
   Telling a lag's cause apart: `gap` high = the network (or the server) held snapshots back; `slow` high
   with `work` low = the phone/browser stalled (`work` is the most CPU time our own code spent on one

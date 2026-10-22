@@ -1,6 +1,9 @@
-/** What a page reports about itself, with no room needed: it opened, it crashed last time, or a script failed. */
+/**
+ * What a page reports about itself, with no room needed: it opened, it crashed last time, a script failed, it caught
+ * and logged a failure (console), or its main thread stopped (freeze) and came back (unfreeze).
+ */
 export interface ClientEvent {
-  kind: "boot" | "crash" | "error";
+  kind: "boot" | "crash" | "error" | "console" | "freeze" | "unfreeze";
   /** The address it was on (/sala/<code>, /tv/<code>, /). */
   path?: string;
   /** What it was doing last (menu, lobby, match…), for a crash. */
@@ -9,6 +12,10 @@ export interface ClientEvent {
   age?: number;
   msg?: string;
   stack?: string;
+  /** console.error or console.warn. */
+  level?: string;
+  /** How long the main thread had been stuck, ms. */
+  ms?: number;
   ua?: string;
   /** The client's build. */
   v?: string;
@@ -19,9 +26,13 @@ export interface ClientEvent {
   dm?: number;
 }
 
-const KINDS = new Set(["boot", "crash", "error"]);
-const TEXT: Record<"path" | "crumb" | "msg" | "stack" | "ua" | "v", number> = { path: 80, crumb: 80, msg: 300, stack: 1000, ua: 160, v: 20 };
-const NUMBERS: Record<"age" | "w" | "h" | "dm", number> = { age: 7 * 24 * 3600_000, w: 20_000, h: 20_000, dm: 1024 };
+const KINDS = new Set(["boot", "crash", "error", "console", "freeze", "unfreeze"]);
+const TEXT: Record<"path" | "crumb" | "msg" | "stack" | "level" | "ua" | "v", number> = {
+  path: 80, crumb: 80, msg: 300, stack: 1000, level: 10, ua: 160, v: 20,
+};
+const NUMBERS: Record<"age" | "ms" | "w" | "h" | "dm", number> = {
+  age: 7 * 24 * 3600_000, ms: 24 * 3600_000, w: 20_000, h: 20_000, dm: 1024,
+};
 
 /** The page's report, with only sane fields kept; null when it is not one. */
 export function clientEvent(message: unknown): ClientEvent | null {

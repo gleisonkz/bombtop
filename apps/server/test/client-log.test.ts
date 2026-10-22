@@ -15,6 +15,15 @@ describe("clientEvent", () => {
     expect(clientEvent({ kind: "error", msg: "boom", stack: "at x" })).toEqual({ kind: "error", msg: "boom", stack: "at x" });
   });
 
+  it("keeps errors the page caught and logged, and how long it froze", () => {
+    expect(clientEvent({ kind: "console", level: "error", msg: "sprite sheet 404", stack: "at y" })).toEqual({
+      kind: "console", level: "error", msg: "sprite sheet 404", stack: "at y",
+    });
+    expect(clientEvent({ kind: "freeze", path: "/sala/AB12", crumb: "lobby", ms: 5200 })).toEqual({ kind: "freeze", path: "/sala/AB12", crumb: "lobby", ms: 5200 });
+    expect(clientEvent({ kind: "unfreeze", crumb: "lobby", ms: 9100 })).toEqual({ kind: "unfreeze", crumb: "lobby", ms: 9100 });
+    expect(clientEvent({ kind: "freeze", ms: -5, level: "x".repeat(50) })).toEqual({ kind: "freeze", level: "x".repeat(10) });
+  });
+
   it("drops anything else, and cuts long text", () => {
     expect(clientEvent({ kind: "hack" })).toBeNull();
     expect(clientEvent("boot")).toBeNull();
