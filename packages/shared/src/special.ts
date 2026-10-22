@@ -1,4 +1,3 @@
-import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
 import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
@@ -90,9 +89,8 @@ function blast(s: MatchState, kind: keyof typeof BLASTS, ownerId: string, from: 
 }
 
 /**
- * Goku's Kamehameha from (x,y) toward `dir`: fire on every tile up to KAME_RANGE, through blocks
- * (breaking them) and bombs (setting them off), up to the first player in its way, who burns in it;
- * walls stop it, and a shield sends it back once.
+ * Goku's Kamehameha from (x,y) toward `dir`: reaches up to KAME_RANGE, breaking blocks in its path.
+ * Walls stop it, and a shield sends it back once.
  */
 export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y: number }, dir: Facing, canReflect: boolean): void {
   const [dx, dy] = DIR_VECTORS[dir];
@@ -109,11 +107,7 @@ export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y:
       break;
     }
     length = i;
-    addFlame(s, tx, ty, ownerId);
     if (tile === Tile.Block) setTile(s, tx, ty, Tile.Empty);
-    const bomb = bombAt(s, tx, ty);
-    if (bomb) bomb.fuse = 0;
-    if (s.players.some((o) => o.id !== ownerId && o.alive && playerTile(o).x === tx && playerTile(o).y === ty)) break;
   }
   s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "kamehameha" });
   if (reflector) kamehameha(s, reflector.id, playerTile(reflector), OPPOSITE[dir], false);

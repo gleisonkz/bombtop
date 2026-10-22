@@ -8,7 +8,7 @@ import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
 import { freshReload, toggleDebug, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
-import { characterArt } from "./sheet-art";
+import { characterArt, titleBomberArt } from "./sheet-art";
 
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
 
@@ -224,7 +224,7 @@ function cast(): HTMLElement {
     member(characterArt("naruto", white, "walk"), "edge left"),
     member(characterArt("goku", green, "walk"), "far left"),
     member(characterArt("ninja", blue, "walk"), "near left"),
-    member(characterArt("bomb", MASCOT_COLOR, "idle"), "star"),
+    member(titleBomberArt(), "star"),
     member(characterArt("captain", white, "walk"), "near right"),
     member(characterArt("thor", blue, "walk"), "far right"),
   ]);

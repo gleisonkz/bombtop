@@ -1,9 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { TICK_RATE } from "@bombtop/shared";
-import { CHARACTER_SHEETS, previewPose } from "../src/ui/sheet-art";
+import { CHARACTER_SHEETS, previewPose, TITLE_BOMBER_SHEET } from "../src/ui/sheet-art";
 import { SHEETS } from "../src/render/sprites";
 
 describe("character previews", () => {
+  it("uses the dedicated flying Bomber on the title screen", () => {
+    expect(TITLE_BOMBER_SHEET).toEqual({
+      url: "sprites/bomber-title-fly.png",
+      columns: 4,
+      rows: 2,
+      frames: 8,
+    });
+  });
+
   it("shows each character with its own sheet", () => {
     expect(CHARACTER_SHEETS.bomb).toBe(SHEETS.bomber);
     expect(CHARACTER_SHEETS.ninja).toBe(SHEETS.ninja);

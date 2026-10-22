@@ -1,0 +1,84 @@
+DIAGNOSTICO DE LAG E OPORTUNIDADES DE MELHORIA - BOMBTOP
+Data: 21/10/2026
+Escopo: auditoria estatica do codigo TypeScript/PixiJS/Colyseus.
+Importante: os pontos abaixo sao gargalos potenciais identificados no codigo; sem profiling de CPU, frametime e rede nao e possivel afirmar qual causa o lag observado nem prometer lag zero.
+
+ARQUITETURA ATUAL
+- Simulacao: 60 ticks/segundo, intervalo ideal de aproximadamente 16,67 ms (packages/shared/src/constants.ts; apps/server/src/room.ts).
+- O servidor executa a logica autoritativa da partida, inclusive bots, a cada tick (packages/shared/src/room/session.ts).
+- Snapshots sao produzidos a cada 2 ticks, aproximadamente 30 Hz (packages/shared/src/room/session.ts).
+- Cliente: PixiJS, loop de renderizacao separado, predicao local, interpolacao entre snapshots e atraso adaptativo (apps/client/src/game/online-game.ts; apps/client/src/net/snapshot-buffer.ts).
+- Host local: executa RoomCore e seu temporizador no navegador (apps/client/src/net/local-host.ts).
+
+PROBLEMAS E MELHORIAS PRIORITARIAS
+
+P0 - CPU DA INTELIGENCIA ARTIFICIAL
+Evidencia: packages/shared/src/bot.ts: em Bot.choose(), dangerMap() roda a cada tick de cada bot; reach() realiza busca de caminhos; dificuldade hard usa think=1.
+Risco: quatro bots dificeis geram ate 240 avaliacoes de IA por segundo, com calculos e alocacoes repetidos. Frequencia alta nao prova, sozinha, estouro do orcamento de CPU.
+Melhorar: separar seguranca imediata da decisao estrategica; manter respostas criticas por tick, escalonar objetivos e rotas; compartilhar ou reutilizar dados de perigo imutaveis por tick quando a perspectiva do bot permitir.
+Validar: medir tempo total e P95/P99 de Bot.input(), dangerMap(), decide() e reach() em 1, 2 e 4 bots, dificuldades easy/medium/hard.
+
+P0 - COMPLEXIDADE DAS EXPLOSOES EM CADEIA NA IA
+Evidencia: packages/shared/src/bot.ts: dangerMap() percorre bombas e seus alcances, usando buscas repetidas para localizar bombas atingidas e recalculando tempos ate estabilizar.
+Risco: custo cresce com a quantidade de bombas e explosoes simultaneas.
+Melhorar: criar indice de ocupacao por celula durante o tick, reutilizar alcance de explosoes quando o estado permitir e eliminar buscas lineares aninhadas; preservar regras e ordem deterministica.
+Validar: cenarios com muitas bombas comuns, perfurantes e remotas, incluindo detonacoes encadeadas; comparar o resultado da simulacao antes/depois.
+
+P0 - TICKS ACUMULADOS NO HOST LOCAL
+Evidencia: apps/client/src/net/local-host.ts acumula ate 500 ms de atraso e processa os ticks pendentes em um unico callback, sem limite proprio de ticks por chamada.
+Risco: apos bloqueio da thread principal, podem ocorrer cerca de 30 atualizacoes consecutivas, agravando congelamentos perceptiveis.
+Melhorar: medir atrasos e custo do catch-up; definir politica limitada de recuperacao sem perder sincronismo; avaliar mover a simulacao local para Web Worker com comunicacao de estado bem definida.
+Validar: introduzir pausas controladas de 50/150/500 ms e medir maior frame, backlog, velocidade da partida e divergencia do estado.
+
+P1 - BUSCAS DE CAMINHO E ALOCACOES REPETIDAS
+Evidencia: packages/shared/src/bot.ts: reach() reconstrói estruturas Set/array/nos e verifica ocupacao durante BFS; bombAt() procura na colecao de bombas.
+Risco: GC frequente e consumo de CPU quando varios bots exploram o mapa.
+Melhorar: indices por posicao e buffers temporarios reutilizaveis; limitar recomputacoes ao mudar objetivo, terreno ou ameaca; garantir que nenhum cache fique obsoleto.
+Validar: coletar contagem de BFS por segundo, alocacoes, pausas de GC e taxa de acerto de cache.
+
+P1 - CUSTO DE SIMULACAO E RENDERIZACAO NA MESMA THREAD
+Evidencia: no modo local, apps/client/src/net/local-host.ts executa simulacao via timer no navegador; apps/client/src/main.ts alimenta o ticker do PixiJS; na demo, apps/client/src/game/demo-game.ts executa bots e renderizacao no frame.
+Risco: calculos de IA e sistemas do jogo podem atrasar callbacks visuais, mesmo sem latencia de rede.
+Melhorar: fazer profiling da main thread e avaliar Worker para a simulacao; evitar mensagens excessivas ou copia integral do estado a cada frame.
+Validar: FPS, picos de frame, long tasks e tempo de renderizacao com/sem bots e com/sem efeitos visuais.
+
+P1 - DIFERENTES POLITICAS DE RECUPERACAO TEMPORAL
+Evidencia: apps/client/src/loop/fixed-step.ts limita a 5 ticks por frame e descarta acumulado excedente, enquanto o host local permite recuperar ate 500 ms.
+Risco: ritmo ou transicoes perceptivelmente distintos entre demo, cliente e host sob travamentos.
+Melhorar: explicitar o contrato temporal por modo, separar atraso de renderizacao de atraso da simulacao autoritativa e testar pausas grandes.
+Validar: comparacao da duracao e dos eventos de uma partida apos interrupcoes artificiais.
+
+P2 - SNAPSHOTS, INTERPOLACAO E JITTER
+Evidencia: snapshots a ~30 Hz; apps/client/src/net/snapshot-buffer.ts interpola e detecta falta de snapshots; apps/client/src/net/adaptive-delay.ts adapta atraso de 40 a 250 ms.
+Risco: perda ou variacao na entrega de snapshots causa movimento irregular e atraso visual, mesmo com 60 ticks de simulacao.
+Melhorar: diagnosticar diferentemente rede, CPU local e servidor; ajustar buffer e envio de snapshots somente com evidencia de perdas/jitter.
+Validar: ?debug exibe ping, atraso, FPS e quadros sem snapshot; comparar comportamento em rede local e online, incluindo gaps e saltos de posicao.
+
+P2 - OUTROS CUSTOS A PERFILAR
+- packages/shared/src/bombs.ts: propagacao de explosoes e buscas repetidas.
+- packages/shared/src/step.ts: processamento sequencial da simulacao.
+- apps/client/src/render/renderer.ts: processamento de mapa e sprites por frame.
+- apps/client/src/audio/cues.ts: criacao de colecoes e comparacao de eventos.
+Nao otimizar esses pontos antes de medir sua contribuicao real.
+
+PLANO DE EXECUCAO RECOMENDADO
+1. Criar benchmark reprodutivel, com seed fixa, 1/2/4 bots, dificuldades e diversas quantidades de bombas; coletar media, P95, P99 e maximo do tempo por tick.
+2. Instrumentar separadamente IA, step(), explosoes, serializacao/delta de snapshots, renderizacao, GC e backlog do temporizador.
+3. Corrigir primeiro o gargalo comprovado de IA, preservando comportamento, determinismo e testes de fuga de explosoes.
+4. Controlar catch-up do host e estudar isolamento da simulacao em Worker quando as medicoes demonstrarem bloqueio da thread principal.
+5. Repetir os mesmos cenarios e comparar antes/depois, inclusive dispositivos mais lentos.
+6. Testar multiplayer e demo para confirmar ausencia de regressao em movimentacao, sincronizacao, explosoes e eventos.
+
+CRITERIOS DE ACEITE PROPOSTOS
+- Manter simulacao de 60 Hz sem alterar fisica ou mecanicas involuntariamente.
+- Tempo P99 de um tick significativamente abaixo de 16,67 ms, com margem para variacoes do ambiente.
+- Sem crescimento continuo de backlog em partidas com 4 bots dificeis.
+- Ausencia de picos novos de travamento nas explosoes simultaneas.
+- Reducao mensuravel dos picos de frametime na main thread.
+- Predicao, interpolacao, resultados e comportamento deterministico protegidos por testes.
+
+OBSERVACAO SOBRE COUNTER-STRIKE
+Tickrate define cadencia de simulacao, nao frequencia obrigatoria de IA estrategica nem garantia de zero lag. Subtick do CS2 registra momentos de certas acoes entre ticks; copiar esse conceito nao substitui profiling e reducao de trabalho por atualizacao no Bombtop.
+
+STATUS
+Documento de diagnostico e recomendacoes. Nenhum ajuste de codigo ou benchmark de desempenho foi executado como parte deste documento.

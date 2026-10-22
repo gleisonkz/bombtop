@@ -49,7 +49,7 @@ describe("goku kamehameha", () => {
     expect(player(s, "p2").alive).toBe(true);
     step(s);
     expect(s.blasts).toEqual([expect.objectContaining({ ownerId: "p1", dir: "right", length: KAME_RANGE, kind: "kamehameha" })]);
-    expect(player(s, "p2").alive).toBe(false);
+    expect(player(s, "p2").alive).toBe(true);
   });
 
   it(`reaches ${KAME_RANGE} tiles, no further`, () => {
@@ -63,7 +63,7 @@ describe("goku kamehameha", () => {
     setTile(s, 4, 5, Tile.Block);
     fire(s);
     expect(s.grid.tiles[5 * s.grid.width + 4]).toBe(Tile.Empty);
-    expect(player(s, "p2").alive).toBe(false);
+    expect(player(s, "p2").alive).toBe(true);
   });
 
   it("stops at walls", () => {
@@ -75,21 +75,22 @@ describe("goku kamehameha", () => {
     expect(player(s, "p2").alive).toBe(true);
   });
 
-  it("only the first player in its way goes down", () => {
+  it("passes through players without hurting them", () => {
     const s = duel(2, { p3: "bomb" });
     placePlayerAt(s, "p3", 7, 5);
     fire(s);
-    expect(player(s, "p2").alive).toBe(false);
+    expect(player(s, "p2").alive).toBe(true);
     expect(player(s, "p3").alive).toBe(true);
+    expect(s.blasts[0]?.length).toBe(KAME_RANGE);
   });
 
-  it("sets off bombs in its way", () => {
+  it("does not set off bombs in its way", () => {
     const s = duel(4);
     placePlayerAt(s, "p2", 5, 5);
     placeBomb(s, "p2");
     placePlayerAt(s, "p2", 9, 7);
     fire(s);
-    expect(s.bombs).toEqual([]);
+    expect(s.bombs).toHaveLength(1);
   });
 
   it("a captain's shield sends it back at goku", () => {
@@ -100,7 +101,7 @@ describe("goku kamehameha", () => {
     player(s, "p3").shield = SHIELD_TICKS;
     fire(s);
     expect(player(s, "p3").alive).toBe(true);
-    expect(player(s).alive).toBe(false);
+    expect(player(s).alive).toBe(true);
   });
 
   it("a stun while charging cancels it", () => {

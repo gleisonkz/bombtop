@@ -99,11 +99,11 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Kamehameha",
       recharge: "30 s",
-      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente: quebra os blocos, explode as bombas no caminho e queima o primeiro jogador que acertar. Só as paredes param.",
+      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. Só as paredes param.",
       tips: [
-        "É o único especial que derruba direto: alinhe com o rival antes de carregar.",
+        "Use para abrir corredores e limpar blocos rapidamente.",
         "Enquanto carrega você fica parado: nunca use com fogo vindo na sua direção.",
-        "O raio explode as bombas no caminho: dá para disparar uma reação em cadeia.",
+        "O raio não machuca jogadores nem detona bombas.",
         "A recarga é a mais longa (30 s): se errar, jogue com calma até voltar.",
       ],
     },

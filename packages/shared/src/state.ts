@@ -188,7 +188,7 @@ export interface Blast {
   length: number;
   ttl: number;
   /**
-   * Ninja's ice (freezes), Thor's lightning (stuns), Goku's Kamehameha (burns, see `kamehameha`) or
+   * Ninja's ice (freezes), Thor's lightning (stuns), Goku's Kamehameha (breaks blocks) or
    * where Naruto's Rasengan struck (`length` 1; 0 when it ran its course).
    */
   kind: BlastKind;

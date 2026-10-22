@@ -1,0 +1,23 @@
+{
+  "family": "bombtop-bombs-v1",
+  "identity": "../BOMB-IDENTITY.md",
+  "reference": "../references/bomb-identity-2026.png",
+  "kind": "spritesheet",
+  "cell_size": [128, 128],
+  "grid": [3, 1],
+  "margins": [0, 0, 0, 0],
+  "spacing": [0, 0],
+  "occupied_cells": [[0, 0], [1, 0], [2, 0]],
+  "transparent_background": true,
+  "binary_alpha": true,
+  "column_order": ["normal", "pierce", "remote"],
+  "anchor": [64, 76],
+  "states": {
+    "armed": "states/armed.png",
+    "warning": "states/warning.png",
+    "critical": "states/critical.png",
+    "detonation_start": "states/detonation-start.png"
+  },
+  "runtime_integration": "concept-only; existing renderer still loads apps/client/public/sprites/bombs.png",
+  "animation_note": "Four distinct still stages; these are not a timed explosion animation."
+}

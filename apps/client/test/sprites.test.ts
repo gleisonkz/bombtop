@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
 import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
@@ -178,6 +179,11 @@ describe("paintHues", () => {
 });
 
 describe("bomb sheet", () => {
+    it("shows the energy stage at the final instant before detonation", () => {
+      expect(BOMBS.stages).toContain("detonation-start");
+      expect(bombLook({ fuse: 1, tick: 1, type: "normal" }).stage).toBe("detonation-start");
+      expect(bombLook({ fuse: TICK_RATE, tick: 1, type: "normal" }).stage).toBe("critical");
+    });
   it("has one cell per bomb type, inside the sheet", () => {
     const xs = (["normal", "pierce", "remote"] as const).map((t) => bombFrame(t));
     expect(new Set(xs).size).toBe(3);
@@ -198,12 +204,15 @@ describe("bomb sheet", () => {
     for (const l of xs) expect(Math.sign(l.sx - 1)).toBe(-Math.sign(l.sy - 1) || 0);
   });
 
-  it("breathes faster and flashes red in its last second", () => {
+  it("breathes faster while retaining the original colors in its last second", () => {
     expect(flips(30)).toBeGreaterThan(flips(FUSE_TICKS));
     const calm = Array.from({ length: 60 }, (_, t) => look(FUSE_TICKS, t).tint);
     expect(new Set(calm)).toEqual(new Set([0xffffff]));
     const late = Array.from({ length: 60 }, (_, t) => look(30, t).tint);
-    expect(new Set(late).size).toBe(2);
+    expect(new Set(late)).toEqual(new Set([0xffffff]));
+    const flashes = Array.from({ length: TICK_RATE }, (_, elapsed) => look(TICK_RATE - elapsed, elapsed).flash);
+    expect(flashes).toContain(true);
+    expect(flashes).toContain(false);
   });
 
   it("draws the bomb mascot's mega bomb bigger", () => {
@@ -214,7 +223,7 @@ describe("bomb sheet", () => {
     expect(MEGA_SCALE).toBeGreaterThan(1.3);
   });
 
-  it("keeps breathing while a remote bomb waits with its fuse on hold", () => {
+  it("keeps breathing throughout the remote bomb fuse", () => {
     expect(look(FUSE_TICKS, 7, "remote").sx).not.toBe(look(FUSE_TICKS, 0, "remote").sx);
   });
 
@@ -422,6 +431,14 @@ describe("tile art", () => {
 describe("bomber sheet", () => {
   const sheet = SHEETS.bomber;
 
+  it("matches the PNG dimensions and its nine-by-eighteen grid", () => {
+    const png = readFileSync(new URL("../public/sprites/bomber-atlas.png", import.meta.url));
+    expect(sheet.width).toBe(png.readUInt32BE(16));
+    expect(sheet.height).toBe(png.readUInt32BE(20));
+    expect(sheet.frameW * 9).toBeCloseTo(sheet.width);
+    expect(sheet.frameH * 18).toBeCloseTo(sheet.height);
+  });
+
   it("fits every strip inside the image", () => {
     const strips = [
       ...[sheet.idle, sheet.walk, sheet.cast, sheet.carryIdle, sheet.carryWalk].flatMap((set) => Object.values(set)),
@@ -462,7 +479,7 @@ describe("HD art", () => {
   it("is drawn at the same size on the stage as the old pixel art", () => {
     expect(TILES.size * TILES.scale).toBe(16);
     expect(FLAMES.size * FLAMES.scale).toBe(16);
-    expect(BOMBS.size * BOMBS.scale).toBeCloseTo(32 * 0.55);
+    expect(BOMBS.size * BOMBS.scale).toBeCloseTo(128 * 0.1);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
     expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku

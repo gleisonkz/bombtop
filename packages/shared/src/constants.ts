@@ -91,7 +91,7 @@ export const BOLT_STUN_TICKS = 3 * TICK_RATE;
 
 /**
  * Goku's Kamehameha: reach in tiles, the charge before it fires (he stands still; a stun or freeze
- * cancels it) and its recharge (longer: it kills).
+ * cancels it) and its recharge.
  */
 export const KAME_RANGE = 5;
 export const KAME_CHARGE = 20;

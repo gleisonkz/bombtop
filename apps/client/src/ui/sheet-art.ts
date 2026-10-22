@@ -6,6 +6,21 @@ export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS
 
 export type PreviewState = "walk" | "idle" | "dizzy";
 
+export const TITLE_BOMBER_SHEET = {
+  url: "sprites/bomber-title-fly.png",
+  columns: 4,
+  rows: 2,
+  frames: 8,
+} as const;
+
+/** Bomber's dedicated eight-frame airborne loop for the title-screen hero. */
+export function titleBomberArt(): HTMLElement {
+  const span = document.createElement("span");
+  span.className = "mascot title-bomber";
+  span.appendChild(document.createElement("i"));
+  return span;
+}
+
 /** Which row a preview plays and how fast: the sheet's lobby pose when it has one, else walking; arena timing. */
 export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number } {
   const strip = state === "walk" ? (sheet.lobby ?? sheet.walk.down) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;

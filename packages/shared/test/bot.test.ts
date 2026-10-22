@@ -45,6 +45,33 @@ describe("botInput", () => {
     expect(player(s).alive).toBe(true);
   });
 
+  it("does not detonate its remote bomb while standing in its blast", () => {
+    const s = emptyMatch();
+    const me = player(s);
+    me.bombType = "remote";
+    s.bombs.push({ ownerId: me.id, x: 1, y: 1, fuse: FUSE_TICKS, range: 3, type: "remote", slide: null, offset: 0, air: null, heldBy: null });
+    const target = player(s, "p2");
+    target.px = center(3);
+    target.py = center(1);
+
+    expect(new Bot(me.id, "hard").input(s).action).not.toBe(true);
+  });
+
+  it("closes the distance to an idle rival instead of pacing without purpose", () => {
+    const s = emptyMatch();
+    const me = player(s);
+    const target = player(s, "p2");
+    target.px = center(9);
+    target.py = center(1);
+    const bot = new Bot(me.id, "hard");
+    const before = Math.abs(target.px - me.px) + Math.abs(target.py - me.py);
+
+    for (let i = 0; i < 2 * TICK_RATE; i++) step(s, { [me.id]: bot.input(s) });
+
+    const after = Math.abs(target.px - me.px) + Math.abs(target.py - me.py);
+    expect(after).toBeLessThan(before);
+  });
+
   it("clears blocks and does not blow itself up over a long match", () => {
     for (const seed of [1, 2, 3, 4]) {
       const s = createMatch({ seed, playerIds: ["bot", "idle"], revenge: false });

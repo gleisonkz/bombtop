@@ -78,7 +78,7 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
     paintSheet(data.data, sheet, rgb);
     ctx.putImageData(data, 0, 0);
     const tex = Texture.from(canvas);
-    tex.source.scaleMode = (sheet.scale ?? 1) < 1 ? "linear" : "nearest"; // shrunk pixel art aliases badly
+    tex.source.scaleMode = sheet.url === SHEETS.bomber.url ? "nearest" : (sheet.scale ?? 1) < 1 ? "linear" : "nearest";
     return tex;
   });
   return { sheet, sources, frames: new Map() };
@@ -132,7 +132,7 @@ export class Renderer {
   private mascots: Map<string, Texture> | null = null;
   private characters = new Map<string, CharacterId>();
   /** One texture per bomb type, once the bomb art is loaded. */
-  private bombArt: Map<BombType, Texture> | null = null;
+  private bombArt: Map<string, Texture> | null = null;
   private readonly bombSprites: Sprite[] = [];
   /** Flame textures by piece, one per stage of the flame's life, once loaded. */
   private flameArt: Record<FlamePiece["kind"], Texture[]> | null = null;
@@ -353,11 +353,15 @@ export class Renderer {
   }
 
   async useBombArt(): Promise<void> {
-    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BOMBS.url}`);
-    base.source.scaleMode = "linear"; // shrunk pixel art aliases badly
-    this.bombArt = new Map(
-      BOMBS.order.map((type) => [type, new Texture({ source: base.source, frame: new Rectangle(bombFrame(type), 0, BOMBS.size, BOMBS.size) })]),
-    );
+    const stages = await Promise.all(BOMBS.stages.flatMap((stage) => [stage, `${stage}-white`]).map(async (variant) => {
+      const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}sprites/bombs/${variant}.png`);
+      base.source.scaleMode = "linear";
+      return { variant, base };
+    }));
+    this.bombArt = new Map(stages.flatMap(({ variant, base }) => BOMBS.order.map((type) => [
+      `${variant}:${type}`,
+      new Texture({ source: base.source, frame: new Rectangle(bombFrame(type), 0, BOMBS.size, BOMBS.size) }),
+    ] as const)));
   }
 
   /** Places the `n`th bomb sprite of this frame, centered on (cx, cy), with its spark on `glow`. */
@@ -370,7 +374,7 @@ export class Renderer {
       this.people.addChild(sprite);
     }
     const look = bombLook({ fuse: b.fuse, tick, type: b.type, mega: b.mega });
-    sprite.texture = this.bombArt!.get(b.type)!;
+    sprite.texture = this.bombArt!.get(`${look.stage}${look.flash ? "-white" : ""}:${b.type}`)!;
     sprite.position.set(cx, cy);
     sprite.scale.set(BOMBS.scale * look.sx, BOMBS.scale * look.sy);
     sprite.tint = look.tint;

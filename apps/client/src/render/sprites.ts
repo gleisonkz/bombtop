@@ -242,14 +242,14 @@ export const SHEETS = {
   },
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
-    url: "sprites/bomber.png",
-    width: 1215,
-    height: 2970,
-    frameW: 135,
-    frameH: 165,
-    anchorX: 67.5,
-    anchorY: 159,
-    bodyH: 119,
+    url: "sprites/bomber-atlas.png",
+    width: 936,
+    height: 2592,
+    frameW: 104,
+    frameH: 144,
+    anchorX: 52,
+    anchorY: 140,
+    bodyH: 110,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -268,7 +268,7 @@ export const SHEETS = {
     hueBase: [106, 71, 145],
     /** White would bleach his armor into the steel round his head: that player keeps the violet. */
     keepFor: [[245, 245, 245]],
-    scale: 0.186,
+    scale: 0.2,
   },
 } satisfies Record<string, SheetLayout>;
 
@@ -277,12 +277,13 @@ export type SheetName = keyof typeof SHEETS;
 /** Bomb art (scripts/build-bombs-hd.py): one square cell per bomb type, side by side, on a 32-unit grid at 4 px per unit. */
 export const BOMBS = {
   url: "sprites/bombs.png",
+  stages: ["armed", "warning", "critical", "detonation-start"] as const,
   width: 384,
   size: 128,
   /** Cell pixel at the center of the bomb's body. */
   anchorX: 64,
   anchorY: 76,
-  scale: 0.1375,
+  scale: 0.1,
   order: ["normal", "pierce", "remote"] satisfies BombType[],
   /** Cell pixel of the fuse spark (or the remote's light) and its glow color. */
   glow: {
@@ -303,16 +304,19 @@ export const MEGA_SCALE = 1.6;
 /**
  * How a bomb looks this tick: it breathes (squash and stretch), faster and
  * flashing red in its last second, while its spark (or remote light) flickers.
- * Timed by the match clock, so a remote bomb on hold still breathes.
+ * Timed by the remaining fuse, including remote bombs.
  */
 export function bombLook({ fuse, tick, type, mega }: { fuse: number; tick: number; type: BombType; mega?: boolean | undefined }) {
   const urgent = fuse <= TICK_RATE;
+  const stage = fuse <= Math.round(TICK_RATE * 0.3) ? "detonation-start" : urgent ? "critical" : fuse <= TICK_RATE * 2 ? "warning" : "armed";
   const breath = Math.sin((tick / TICK_RATE) * Math.PI * 2 * (urgent ? 5 : 2)) * 0.1;
   const size = mega ? MEGA_SCALE : 1;
   return {
+    stage,
     sx: (1 + breath) * size,
     sy: (1 - breath) * size,
-    tint: urgent && Math.floor(tick / 4) % 2 === 0 ? 0xff7070 : 0xffffff,
+    tint: 0xffffff,
+    flash: urgent && Math.floor((FUSE_TICKS - fuse) / 6) % 2 === 0,
     glow: type === "remote" ? Math.floor(tick / 20) % 2 === 0 : SPARK[Math.floor(tick / 3) % SPARK.length] === 1,
   };
 }
