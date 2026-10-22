@@ -15,6 +15,7 @@ const TICK_MS = 1000 / TICK_RATE;
  * drift between our clock and the server's instead of holding one lucky arrival forever.
  */
 const CREEP_MS = 0.05;
+const MAX_CLOCK_DRIFT_MS = 100;
 
 interface Entry {
   snap: PublicView;
@@ -53,7 +54,7 @@ export class SnapshotBuffer {
     if (last && snap.tick < last.snap.tick) this.clear(); // a new match started
     const at = snap.tick * TICK_MS;
     const offset = atMs - at;
-    this.offset = this.offset === null ? offset : Math.min(offset, this.offset + CREEP_MS);
+    this.offset = this.offset === null ? offset : Math.max(offset - MAX_CLOCK_DRIFT_MS, Math.min(offset, this.offset + CREEP_MS));
     this.entries.push({ snap, at });
     if (this.entries.length > this.capacity) this.entries.shift();
   }

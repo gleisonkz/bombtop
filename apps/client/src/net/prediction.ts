@@ -18,6 +18,8 @@ interface Entry {
   tick: number;
 }
 
+const MAX_PREDICTION_TICKS = 12;
+
 /**
  * Client-side prediction for the local player: the server's snapshot is the
  * truth, and the inputs it has not applied yet (per its ack) are replayed on
@@ -55,12 +57,21 @@ export class Predictor {
     this.log = [];
   }
 
+  reconcile(snap: Snapshot): void {
+    const ack = snap.acks[this.me];
+    if (!ack) return;
+    const keep = this.log.findIndex((e) => e.seq >= ack.seq);
+    if (keep > 0) this.log = this.log.slice(keep);
+    const first = this.log[0];
+    if (first?.seq === ack.seq) this.tick = Math.max(this.tick, first.tick + ack.ticks);
+  }
+
   /** Ticks we run ahead of `snap`: the inputs the server has not applied yet. */
   lead(snap: Snapshot): number {
     const ack = snap.acks[this.me] ?? { seq: 0, ticks: 0 };
     const first = this.log.find((e) => e.seq >= ack.seq);
     if (!first) return 0;
-    return this.tick - first.tick - (first.seq === ack.seq ? ack.ticks : 0);
+    return Math.max(0, Math.min(MAX_PREDICTION_TICKS, this.tick - first.tick - (first.seq === ack.seq ? ack.ticks : 0)));
   }
 
   /** The local player as it should look now, or null when it is not in the match. */
@@ -68,17 +79,15 @@ export class Predictor {
     const found = snap.players.find((p) => p.id === this.me);
     if (!found) return null;
     const ack = snap.acks[this.me] ?? { seq: 0, ticks: 0 };
-    // Inputs older than the acked one are already part of the snapshot.
-    const keep = this.log.findIndex((e) => e.seq >= ack.seq);
-    if (keep > 0) this.log = this.log.slice(keep);
+    this.reconcile(snap);
 
     const p = structuredClone(found);
     if (!p.alive || p.stun > 0 || p.frozen > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
 
     const state = { ...snap, players: [p], rng: 0 } as MatchState;
     this.log.forEach((e, i) => {
-      let ticks = (this.log[i + 1]?.tick ?? this.tick) - e.tick;
-      if (e.seq === ack.seq) ticks -= ack.ticks;
+      const start = Math.max(e.tick + (e.seq === ack.seq ? ack.ticks : 0), this.tick - MAX_PREDICTION_TICKS);
+      let ticks = (this.log[i + 1]?.tick ?? this.tick) - start;
       for (; ticks > 0; ticks--) {
         const dir = cursedDirection(p, e.dir);
         const moved = steer(state, p, dir, cursedDirection(p, e.alt));

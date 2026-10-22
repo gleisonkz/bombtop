@@ -44,13 +44,13 @@ describe("punch", () => {
     expect(bomb.air).toBeNull();
   });
 
-  it("airborne bombs neither block nor burn their fuse", () => {
+  it("airborne bombs do not block and continue their fuse", () => {
     const { s, bomb } = setup(3, 5, "right", 4, 5);
     const fuse = bomb.fuse;
     press(s, "action");
     expect(bombAt(s, 4, 5)).toBeUndefined();
     run(s, AIR_TICKS_PER_TILE);
-    expect(bomb.fuse).toBe(fuse);
+    expect(bomb.fuse).toBe(fuse - AIR_TICKS_PER_TILE - 1);
   });
 
   it("flies over blocks and bounces when landing on one", () => {

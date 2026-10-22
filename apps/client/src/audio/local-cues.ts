@@ -12,7 +12,9 @@ const OWN: ReadonlySet<CueName> = new Set<CueName>([
  * server runs, on the latest snapshot with our predicted player in it.
  */
 export function actionCues(view: PublicView, me: Player, input: PlayerInput): Cue[] {
-  if (!me.alive || me.stun > 0 || me.jumpTicks > 0 || me.dashTicks > 0) return [];
+  // step thaws first; the other busy states consume even their final tick.
+  if (!me.alive || me.frozen > 1 || me.shield > 0 || me.stun > 0 || me.charge > 0 || me.rasengan > 0) return [];
+  if (me.jumpTicks > 0 || me.dashTicks > 0) return [];
   const before: MatchState = { ...structuredClone(view), rng: 0, players: [structuredClone(me)] };
   const after = structuredClone(before);
   const p = after.players[0]!;

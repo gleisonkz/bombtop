@@ -3,8 +3,6 @@ import { resultSound } from "../audio/sound";
 import { winnerVoice } from "../audio/voices";
 import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
-import { carryOn } from "../net/carry-on";
-import { aheadOf, MAX_AHEAD } from "../net/world-ahead";
 import { between } from "../render/sprites";
 import { Standings } from "./standings";
 import {
@@ -17,6 +15,7 @@ import {
   type CharacterId,
   type LobbyInfo,
   type PlayerInput,
+  type Player,
   type PublicView,
   type ResultMessage,
   type Snapshot,
@@ -40,7 +39,7 @@ import { debugNet, NetHud } from "../ui/net-hud";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
 
-/** Sounds of the world ahead: heard when they are drawn, not when the late snapshot shows them. */
+/** World changes are heard when their authoritative snapshot is drawn. */
 const WORLD_CUES = new Set<CueName>(["explode", "break", "wall"]);
 /** When the winner's cheer plays: after the announcer and the jingle (see the win/lose/draw recipes). */
 const WIN_CHEER_MS = 2300;
@@ -63,11 +62,7 @@ export class OnlineGame implements GameMode {
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
   private readonly listener = new Listener();
-  /** Hears the world run ahead (explosions, blocks, walls), in step with what is drawn. */
   private readonly worldListener = new Listener();
-  /** Tick the world is drawn at: the latest snapshot plus our lead; never goes back. */
-  private worldTick = 0;
-  private ahead: { from: Snapshot; n: number; view: PublicView } | null = null;
   /** Connection readout (?debug), with its ping timer. */
   private readonly hud = debugNet() ? new NetHud() : null;
   private pinger: ReturnType<typeof setInterval> | undefined;
@@ -202,17 +197,14 @@ export class OnlineGame implements GameMode {
       this.hud.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
       this.hud.show();
     }
-    const world = this.world();
+    const world = this.latest!;
     const width = sample.to.grid.width;
     const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
     this.ctx.sound.cues(this.echo.filter(heard, nowMs), width);
     this.ctx.sound.cues(this.worldListener.hear(world).filter((c) => WORLD_CUES.has(c.name)), width);
     const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
-    // Other players come from the (past) sample; bombs, flames and the arena from the world ahead.
     const { bombs, flames, grid, items, blasts } = world;
-    // While the next snapshot is late, walking players keep walking instead of freezing.
-    const others = carryOn(sample.from, sample.to, sample.pastMs);
-    const mixed = { ...others, bombs, flames, grid, items, blasts };
+    const mixed = { ...sample.to, tick: world.tick, bombs, flames, grid, items, blasts };
     let view = this.blastGhosts.apply(this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (me) {
@@ -253,20 +245,6 @@ export class OnlineGame implements GameMode {
     this.hud.stats.jumps(mine, others);
   }
 
-  /**
-   * The latest snapshot run forward to the time our predicted player lives in,
-   * so a bomb blows on our screen when it really does, not a round trip later.
-   */
-  private world(): PublicView {
-    const latest = this.latest!;
-    if (latest.tick < this.worldTick - MAX_AHEAD * 2) this.worldTick = 0; // new match
-    const lead = this.playing() ? this.predictor.lead(latest) : 0;
-    this.worldTick = Math.min(latest.tick + MAX_AHEAD, Math.max(this.worldTick, latest.tick + lead));
-    const n = this.worldTick - latest.tick;
-    if (this.ahead?.from !== latest || this.ahead.n !== n) this.ahead = { from: latest, n, view: aheadOf(latest, n) };
-    return this.ahead.view;
-  }
-
   private playing(): boolean {
     return !!this.latest && this.lobby?.phase === "playing";
   }
@@ -274,9 +252,10 @@ export class OnlineGame implements GameMode {
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
-    if ((input.bomb || input.action || input.special) && this.playing()) this.actNow(input);
+    const actor = (input.bomb || input.action || input.special) && this.playing() ? this.predictor.predict(this.latest!) : null;
     const t = this.predictor.clock;
     const seq = this.predictor.step(input);
+    if (actor && seq !== null) this.actNow(input, seq, actor);
     const now = performance.now();
     if (seq !== null) {
       this.room.send(C2S.input, { ...input, seq, t });
@@ -291,14 +270,12 @@ export class OnlineGame implements GameMode {
   }
 
   /** Our own button press is heard (and a placed bomb drawn) at once; the server's echo is skipped. */
-  private actNow(input: PlayerInput): void {
-    const me = this.predictor.predict(this.latest!);
-    if (!me) return;
+  private actNow(input: PlayerInput, seq: number, me: Player): void {
     const now = performance.now();
     // A blast we already predicted is still recharging on the server's side: don't cast it twice.
     const casting = this.blastGhosts.active(now);
-    const cues = actionCues(this.latest!, me, input).filter((c) => c.name !== "ice" || !casting);
-    for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now);
+    const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => c.name !== "ice" || !casting);
+    for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now, me.bombType, seq);
     const blast = cues.some((c) => c.name === "ice") ? predictBlast(this.latest!, me) : null;
     if (blast) this.blastGhosts.add(blast, now);
     this.ctx.sound.cues(cues, this.latest!.grid.width);
@@ -330,6 +307,8 @@ export class OnlineGame implements GameMode {
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
     this.latest = snap;
+    this.predictor.reconcile(snap);
+    this.ghosts.reconcile(snap);
     this.standings.see(snap.players, snap.tick);
     if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
   }

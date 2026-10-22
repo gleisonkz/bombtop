@@ -11,6 +11,28 @@ const bomb = (x: number, y: number, extra: Partial<Bomb> = {}): Bomb => ({
 });
 
 describe("actionCues", () => {
+  it.each(["shield", "stun", "charge", "rasengan", "jumpTicks", "dashTicks"] as const)("suppresses input while %s is active, including its final tick", (field) => {
+    const v = view();
+    const p = me(v);
+    p[field] = 1;
+    expect(actionCues(v, p, { dir: null, bomb: true, action: true, special: true })).toEqual([]);
+  });
+
+  it("suppresses input while frozen beyond the next thaw tick", () => {
+    const v = view();
+    const p = me(v);
+    p.frozen = 2;
+    expect(actionCues(v, p, { dir: null, bomb: true, special: true })).toEqual([]);
+  });
+
+  it("allows placement on the tick that frozen reaches zero", () => {
+    const v = view();
+    const p = me(v);
+    p.frozen = 1;
+    expect(actionCues(v, p, { dir: null, bomb: true })).toEqual([{ name: "place", x: 1.5 }]);
+    expect(p.frozen).toBe(1);
+  });
+
   it("hears our own bomb the moment the button is pressed", () => {
     const v = view();
     expect(actionCues(v, me(v), { dir: null, bomb: true })).toEqual([{ name: "place", x: 1.5 }]);

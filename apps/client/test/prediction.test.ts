@@ -63,6 +63,29 @@ describe("Predictor", () => {
     expect(p.lead(snapshot({ me: { seq: 1, ticks: 2 } }))).toBe(3);
   });
 
+  it("never reports a negative prediction lead after the client missed frames", () => {
+    const p = new Predictor("me");
+    p.step(input("right"));
+    expect(p.lead(snapshot({ me: { seq: 1, ticks: 60 } }))).toBe(0);
+  });
+
+  it("resynchronizes input timestamps after missed client frames", () => {
+    const p = new Predictor("me");
+    p.step(input(null));
+    p.reconcile(snapshot({ me: { seq: 1, ticks: 60 } }));
+    expect(p.clock).toBe(60);
+    expect(p.step(input("right"))).toBe(2);
+    expect(p.clock).toBe(61);
+  });
+
+  it("bounds movement prediction when acknowledgements stop arriving", () => {
+    const p = new Predictor("me");
+    const snap = snapshot();
+    for (let i = 0; i < 600; i++) p.step(input("right"));
+    expect(p.predict(snap)!.px - snap.players[0]!.px).toBeLessThanOrEqual(12 * snap.players[0]!.speed);
+    expect(p.lead(snap)).toBeLessThanOrEqual(12);
+  });
+
   it("follows later inputs in order, through the diagonal fallback", () => {
     const p = new Predictor("me");
     const snap = snapshot({ me: { seq: 1, ticks: 1 } });
