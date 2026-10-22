@@ -97,7 +97,7 @@ describe("soundCues", () => {
     v.items.push({ x: 1, y: 2, kind: ItemKind.Skull });
     const next = later(v, (n) => {
       n.items = [];
-      n.players[0]!.curse = { kind: "slow", ticks: 600 };
+      n.players[0]!.curse = { kind: "slow" };
     });
     expect(names(v, next)).toEqual(["curse"]);
   });

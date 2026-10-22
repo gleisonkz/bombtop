@@ -117,9 +117,9 @@ export type MountKind = "hopper" | "dasher" | "pusher";
 
 export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire";
 
+/** A skull's curse: it lasts until passed on by touch or cured by picking up another item. */
 export interface Curse {
   kind: CurseKind;
-  ticks: number;
   /** Who just passed it on: it cannot go back to them until the two have parted. */
   from?: string;
 }

@@ -137,7 +137,7 @@ const SCENES: Record<ItemKind, Scene> = {
     setup(s, you) {
       placePlayerAt(s, "you", 2, 5);
       placePlayerAt(s, "rival", 7, 5);
-      you.curse = { kind: "slow", ticks: 10 * TICK_RATE };
+      you.curse = { kind: "slow" };
     },
     you: [{ go: "right", tiles: 5 }, { go: "left", tiles: 4 }],
     seconds: 5,

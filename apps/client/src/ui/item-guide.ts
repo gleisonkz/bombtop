@@ -50,7 +50,7 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   },
   [ItemKind.Skull]: {
     name: "Caveira",
-    text: "Maldição por 10 s (lento, rápido, controles invertidos, bombas sem parar…). Encoste em alguém e ela passa para ele: você fica livre!",
+    text: "Maldição (lento, rápido, controles invertidos, bombas sem parar…) que não passa sozinha: encoste em alguém e ela vai para ele, ou pegue outro item para se curar.",
     tips: [
       "Pegou? Encoste num rival para passar a maldição, ou pegue qualquer outro item para se curar.",
       "Quem acabou de receber não consegue devolver na hora: precisa se afastar e encostar de novo.",

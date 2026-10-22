@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   BASE_SPEED,
   createMatch,
-  CURSE_TICKS,
   CURSES,
   FUSE_TICKS,
   ItemKind,
@@ -18,7 +17,7 @@ import { center, emptyMatch, hold, player, press, run } from "./helpers";
 function cursed(kind: CurseKind) {
   const s = emptyMatch();
   placePlayerAt(s, "p1", 5, 5);
-  player(s).curse = { kind, ticks: CURSE_TICKS };
+  player(s).curse = { kind };
   return s;
 }
 
@@ -29,7 +28,6 @@ describe("skull", () => {
     step(s);
     const curse = player(s).curse!;
     expect(CURSES).toContain(curse.kind);
-    expect(curse.ticks).toBeGreaterThan(CURSE_TICKS - 2);
   });
 
   it("the random curse is deterministic per match seed", () => {
@@ -44,10 +42,10 @@ describe("skull", () => {
     expect(kinds.size).toBeGreaterThan(3);
   });
 
-  it("curses wear off", () => {
+  it("never wears off by itself: only passing it on or another item ends it", () => {
     const s = cursed("slow");
-    run(s, CURSE_TICKS);
-    expect(player(s).curse).toBeNull();
+    run(s, 60 * 60);
+    expect(player(s).curse).toEqual({ kind: "slow" });
   });
 
   it("slow forces a crawl", () => {
@@ -94,10 +92,9 @@ describe("skull", () => {
 
   it("passes to a player who touches the cursed one, who is rid of it", () => {
     const s = cursed("reverse");
-    run(s, 10);
     placePlayerAt(s, "p2", 5, 5);
     step(s);
-    expect(player(s, "p2").curse).toEqual({ kind: "reverse", ticks: CURSE_TICKS - 11, from: "p1" });
+    expect(player(s, "p2").curse).toEqual({ kind: "reverse", from: "p1" });
     expect(player(s).curse).toBeNull();
   });
 
@@ -118,7 +115,7 @@ describe("skull", () => {
   it("two cursed players touching keep their own curses", () => {
     const s = cursed("reverse");
     placePlayerAt(s, "p2", 5, 5);
-    player(s, "p2").curse = { kind: "slow", ticks: CURSE_TICKS };
+    player(s, "p2").curse = { kind: "slow" };
     step(s);
     expect(player(s).curse?.kind).toBe("reverse");
     expect(player(s, "p2").curse?.kind).toBe("slow");

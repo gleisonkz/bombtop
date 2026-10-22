@@ -40,8 +40,6 @@ export const MAX_SPEED = BASE_SPEED * 2;
 /** Speed forced by the "slow" curse. */
 export const SLOW_SPEED = BASE_SPEED / 2;
 
-/** How long a skull curse lasts. */
-export const CURSE_TICKS = 10 * TICK_RATE;
 
 /** Invulnerability after losing a mount. */
 export const INVULN_TICKS = 2 * TICK_RATE;

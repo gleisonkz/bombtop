@@ -71,7 +71,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | pierce | `bombs.ts` | flames run through blocks/items/bombs; walls stop them |
 | punch | `air.ts` | action launches bomb in front 3 tiles; wraps edges; bounces; stuns |
 | glove | `air.ts` | bomb press on own bomb lifts it, carried while the button is held (`PlayerInput.hold`), thrown when let go |
-| skull | `curse.ts` | slow/fast/reverse/diarrhea/constipation/weakFire, 10s. Passed on by touch: whoever touches a cursed player takes it off them (`Curse.from`: not straight back until they part). Picking up any other item cures it |
+| skull | `curse.ts` | slow/fast/reverse/diarrhea/constipation/weakFire. It never wears off by itself (as in Super Bomberman 3/4): passed on by touch: whoever touches a cursed player takes it off them (`Curse.from`: not straight back until they part). Picking up any other item cures it |
 | egg (mounts) | `mount.ts` | **off for now** (weight 0 in `ITEM_WEIGHTS`, left out of the guide) until the mount art and rules are settled. extra hit + 2s invuln; hopper jump, dasher burst, pusher kicks |
 | sudden death | `pressure.ts` | after 3 min walls fall in an inward spiral (crush ignores mounts) |
 | revenge cart | `revenge.ts` | **off for now** (`createMatch` `revenge` defaults to false). dead ride the border, throw bombs; a kill swaps them back in |

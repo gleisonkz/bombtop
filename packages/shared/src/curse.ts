@@ -1,4 +1,4 @@
-import { CURSE_TICKS, MAX_SPEED, SLOW_SPEED } from "./constants";
+import { MAX_SPEED, SLOW_SPEED } from "./constants";
 import { nextRandom } from "./rng";
 import { playerTile, type CurseKind, type Direction, type MatchState, type Player } from "./state";
 
@@ -8,7 +8,7 @@ const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" } as con
 
 export function applyRandomCurse(s: MatchState, p: Player): void {
   const kind = CURSES[Math.floor(nextRandom(s) * CURSES.length)]!;
-  p.curse = { kind, ticks: CURSE_TICKS };
+  p.curse = { kind };
 }
 
 export function effectiveSpeed(p: Player): number {
@@ -26,13 +26,10 @@ export function cursedDirection(p: Player, dir: Direction): Direction {
 }
 
 /**
- * Counts curses down and passes them between living players sharing a tile: whoever touches a
- * cursed player takes the curse off them (one at a time, never straight back to who passed it on).
+ * Passes curses between living players sharing a tile: whoever touches a cursed player takes the
+ * curse off them (one at a time, never straight back to who passed it on).
  */
 export function updateCurses(s: MatchState): void {
-  for (const p of s.players) {
-    if (p.curse && --p.curse.ticks <= 0) p.curse = null;
-  }
   const alive = s.players.filter((p) => p.alive);
   const touching = (a: Player, b: Player) => {
     const ta = playerTile(a);
@@ -50,7 +47,7 @@ export function updateCurses(s: MatchState): void {
     if (taker) passes.push([carrier, taker]);
   }
   for (const [carrier, taker] of passes) {
-    taker.curse = { kind: carrier.curse!.kind, ticks: carrier.curse!.ticks, from: carrier.id };
+    taker.curse = { kind: carrier.curse!.kind, from: carrier.id };
     carrier.curse = null;
   }
 }
