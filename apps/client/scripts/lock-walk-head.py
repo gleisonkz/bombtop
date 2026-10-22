@@ -1,14 +1,16 @@
-"""Locks a character's head through its side walk, on the built sheet (run after build-character-sheet.py).
-PixelLab's template walk redraws the head on every frame: the captain's eyes, mouth and jaw changed shape
-from step to step, so his head seemed to wobble while his chin stayed put. One clean head (REF frame) is
-pasted over every frame instead, moved only with the body's bob, read off the neck (the narrowest row
+"""Locks a character's head through its idles and walks, on the built sheet (run after build-character-sheet.py).
+PixelLab's templates redraw the head on every frame: the captain's eyes, mouth and jaw changed shape
+from step to step (and while standing, breathing), so his head seemed to wobble while his chin stayed put.
+One clean head (each row's reference frame) is pasted over every frame of that row instead, moved only with the body's bob, read off the neck (the narrowest row
 under the head); everything from the neck down stays as PixelLab drew it.
-Usage: python lock-walk-head.py captain public/sprites/captain.png [preview.gif]"""
+Usage: python lock-walk-head.py captain public/sprites/captain.png [preview.gif]
+(the preview shows the first locked row)"""
 import sys
 from PIL import Image
 
-# name: (frame w, frame h, walk.side row, frames, reference frame) as in SHEETS (render/sprites.ts)
-SHEETS = {"captain": (124, 138, 4, 6, 1)}
+# name: (frame w, frame h, [(row, frames, reference frame)]) as in SHEETS (render/sprites.ts).
+# Captain: idle down, idle side, walk down, walk side (the backs barely change).
+SHEETS = {"captain": (124, 138, [(4, 6, 1), (0, 4, 2), (1, 4, 2), (3, 6, 0)])}
 
 
 def neck(cell):
@@ -38,9 +40,9 @@ def lock(sheet, fw, fh, row, frames, ref):
 
 def main():
     name, path = sys.argv[1], sys.argv[2]
-    fw, fh, row, frames, ref = SHEETS[name]
+    fw, fh, rows = SHEETS[name]
     sheet = Image.open(path).convert("RGBA")
-    out = lock(sheet, fw, fh, row, frames, ref)
+    out = [lock(sheet, fw, fh, row, frames, ref) for row, frames, ref in rows][0]
     sheet.save(path)
     if len(sys.argv) > 3:
         big = [Image.alpha_composite(Image.new("RGBA", c.size, (60, 120, 60, 255)), c).resize((fw * 4, fh * 4), Image.NEAREST) for c in out]
