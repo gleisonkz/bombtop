@@ -1,6 +1,6 @@
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -14,6 +14,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Goku: charges for KAME_CHARGE ticks, then fires the Kamehameha (see `kamehameha`).
  * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
  * Bomb mascot: plants a mega bomb on his tile, piercing and twice his fire.
+ * Pikachu: a thunder shock all around him (see `thunder`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -25,6 +26,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "spider") {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "pikachu") {
+    thunder(s, p);
   } else if (p.character === "goku") {
     p.charge = KAME_CHARGE;
     p.specialCooldown = KAME_COOLDOWN;
@@ -61,7 +64,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, { range: number; strike: (p: Player) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder">, { range: number; strike: (p: Player) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
@@ -91,6 +94,39 @@ function blast(s: MatchState, kind: keyof typeof BLASTS, ownerId: string, from: 
   }
   s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind });
   if (reflector) blast(s, kind, reflector.id, playerTile(reflector), OPPOSITE[dir], false);
+}
+
+/**
+ * Pikachu's thunder shock: stuns every other player on his tile and up to THUNDER_RANGE tiles away in
+ * each of the four directions; walls, blocks and bombs stop an arm. A shield facing him stops its arm
+ * and the shock goes back into him.
+ */
+function thunder(s: MatchState, p: Player): void {
+  const from = playerTile(p);
+  const stun = (x: number, y: number) => {
+    for (const o of s.players) {
+      if (o === p || !o.alive) continue;
+      const t = playerTile(o);
+      if (t.x === x && t.y === y) o.stun = SPECIAL_STUN_TICKS;
+    }
+  };
+  stun(from.x, from.y);
+  for (const dir of ["up", "down", "left", "right"] as const) {
+    const [dx, dy] = DIR_VECTORS[dir];
+    let length = 0;
+    for (let i = 1; i <= THUNDER_RANGE; i++) {
+      const tx = from.x + dx * i;
+      const ty = from.y + dy * i;
+      if (getTile(s, tx, ty) !== Tile.Empty || bombAt(s, tx, ty)) break;
+      length = i;
+      if (shieldAt(s, tx, ty, dx, dy)) {
+        p.stun = SPECIAL_STUN_TICKS;
+        break;
+      }
+      stun(tx, ty);
+    }
+    s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "thunder" });
+  }
 }
 
 /**

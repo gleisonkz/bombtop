@@ -93,6 +93,12 @@ describe("special showcase", () => {
     expect(pushed).toBe(true);
   });
 
+  it("pikachu: the shock stuns the rival close by, and a bomb comes while he is dizzy", () => {
+    let bombedWhileDizzy = false;
+    play("pikachu", (s) => (bombedWhileDizzy ||= rival(s).stun > 0 && s.bombs.some((b) => b.ownerId === "you")));
+    expect(bombedWhileDizzy).toBe(true);
+  });
+
   it("spider: the web wraps the rival up, and a bomb comes while he can't run", () => {
     let bombedWhileWebbed = false;
     play("spider", (s) => (bombedWhileWebbed ||= rival(s).webbed > 0 && s.bombs.some((b) => b.ownerId === "you")));

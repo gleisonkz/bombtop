@@ -21,6 +21,7 @@ export type CueName =
   | "web"
   | "webbed"
   | "thunder"
+  | "shock"
   | "kamehameha"
   | "rasengan"
   | "freeze"
@@ -95,7 +96,9 @@ export function soundCues(prev: View, next: View): Cue[] {
   // The kamehameha and the rasengan are heard from the start of their charge or dash (see below).
   for (const b of next.blasts) {
     if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
-    cues.push({ name: b.kind === "lightning" ? "thunder" : b.kind === "web" ? "web" : "ice", x: mid(b.x) });
+    if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
+    const name = ({ lightning: "thunder", thunder: "shock", web: "web" } as const)[b.kind as string] ?? "ice";
+    cues.push({ name, x: mid(b.x) });
   }
 
   for (const p of next.players) {

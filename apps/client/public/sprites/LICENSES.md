@@ -44,6 +44,13 @@ Fan art of Spider-Man (Marvel) for this non-commercial project, made in PixelLab
 (character "Spider-Man HD"; web shot and carry walk posed with skeleton v3 from its rotations). Frames laid out by
 `scripts/build-character-sheet.py spider`; rows = `SHEETS.spider`.
 
+## pikachu.png
+
+Fan art of Pikachu (Pokémon, Nintendo / The Pokémon Company) for this non-commercial project, made in PixelLab (pixellab.ai)
+(characters "Pikachu HD" for the front rows and "Pikachu HD v3", a v3 rotation of its front, for the side and back; thunder
+shock and carry walk posed with skeleton v3 from their rotations). Frames laid out by
+`scripts/build-character-sheet.py pikachu`; rows = `SHEETS.pikachu`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

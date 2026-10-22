@@ -145,6 +145,24 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  pikachu: {
+    name: "Pikachu",
+    title: "O ratinho elétrico",
+    color: blue,
+    story:
+      "Saiu da floresta atrás de um bom desafio e descobriu que a arena é cheia de rivais para chocar. Pequeno, rápido e teimoso, guarda eletricidade nas bochechas vermelhas e solta tudo de uma vez quando alguém chega perto demais. O lenço azul foi presente de um velho treinador, e ele não tira por nada.",
+    special: {
+      name: "Choque do Trovão",
+      recharge: "20 s",
+      text: "Solta uma descarga em volta de si: todo jogador até 2 casas de distância, para cima, para baixo e para os lados, fica tonto por 3 s. Blocos, bombas e paredes param o choque.",
+      tips: [
+        "Pega todo mundo ao redor de uma vez: ótimo quando te cercam.",
+        "Não atravessa blocos: use nos corredores abertos.",
+        "Tonto por 3 s dá tempo de soltar uma bomba do lado e sair.",
+        "O escudo do Capitão virado para você devolve o choque: quem fica tonto é você.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it). */

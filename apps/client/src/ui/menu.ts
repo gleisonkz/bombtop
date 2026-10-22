@@ -216,7 +216,7 @@ export class Menu {
   }
 }
 
-/** The lineup on the title screen: the mascot in front, players in their arena colors at its sides. */
+/** The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet. */
 function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
@@ -225,6 +225,7 @@ function cast(): HTMLElement {
     member(characterArt("goku", green, "walk"), "far left"),
     member(characterArt("ninja", blue, "walk"), "near left"),
     member(titleBomberArt(), "star"),
+    member(characterArt("pikachu", blue, "walk"), "front"),
     member(characterArt("captain", white, "walk"), "near right"),
     member(characterArt("thor", blue, "walk"), "far right"),
     member(characterArt("spider", red, "walk"), "edge right"),

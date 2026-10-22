@@ -653,8 +653,8 @@ export class Renderer {
         for (const [x0, y0, x1, y1] of c.strands) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1, alpha: 0.95 });
       }
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
-      // Thor's bolt leaves its victim crackling while stunned.
-      if (p.stun > 0 && s.blasts.some((b) => b.kind === "lightning" && b.ownerId !== p.id) && !ice) {
+      // Thor's bolt and Pikachu's shock leave their victims crackling while stunned.
+      if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder") && b.ownerId !== p.id) && !ice) {
         for (let k = 0; k < 3; k++) {
           const a = s.tick / 5 + (k * Math.PI * 2) / 3;
           top.circle(cx + Math.cos(a) * 6, cy - headroom + Math.sin(a) * 2, 1.2).fill(COLORS.bolt);
@@ -679,7 +679,7 @@ export class Renderer {
       }
       if (p.specialCooldown === 0 && !ice && !web) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -701,6 +701,7 @@ export class Renderer {
 
   /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
   private drawBlast(g: Graphics, b: Blast): void {
+    if (b.kind === "thunder") return this.drawThunder(g, b);
     if (b.length === 0 || b.kind === "rasengan") return; // the rasengan is drawn with its caster
     const [dx, dy] = DIR_VECTORS[b.dir];
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
@@ -791,6 +792,28 @@ export class Renderer {
       const ring = Array.from({ length: spokes }, (_, k) => [x1 + Math.cos((k / spokes) * Math.PI * 2) * r, y1 + Math.sin((k / spokes) * Math.PI * 2) * r]).flat();
       g.poly(ring).stroke({ color: COLORS.web, width: 0.6, alpha });
     }
+  }
+
+  /**
+   * One arm of Pikachu's thunder shock: bolts crackling from his cheeks out to where the arm stopped; the
+   * "up" arm (one per shock) also draws the burst of light around him.
+   */
+  private drawThunder(g: Graphics, b: Blast): void {
+    const alpha = beamAlpha(BLAST_TICKS - b.ttl);
+    if (alpha <= 0) return;
+    const at = this.lastSeen.get(b.ownerId);
+    const ox = at?.cx ?? b.x * TILE_PX + TILE_PX / 2;
+    const oy = (at?.cy ?? b.y * TILE_PX + TILE_PX / 2) - 3;
+    if (b.dir === "up") {
+      const r = 9 + ((BLAST_TICKS - b.ttl) % 4);
+      // A ring of light round him, thin enough to see him through it.
+      g.circle(ox, oy, r + 3).stroke({ color: COLORS.bolt, width: 3, alpha: alpha * 0.45 });
+      g.circle(ox, oy, r).fill({ color: COLORS.bolt, alpha: alpha * 0.12 });
+    }
+    if (b.length === 0) return;
+    const [dx, dy] = DIR_VECTORS[b.dir];
+    const reach = b.length * TILE_PX + TILE_PX * 0.3;
+    this.drawBolt(g, ox + dx * 4, oy + dy * 4, ox + dx * reach, oy + dy * reach, b.ttl + "udlr".indexOf(b.dir[0]!) * 7, alpha);
   }
 
   /** Thor's bolt: a yellow glow and a white core along a zigzag that re-forks every 3 ticks, flashing at the end. */

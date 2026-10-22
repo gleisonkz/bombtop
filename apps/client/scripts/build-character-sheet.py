@@ -23,9 +23,15 @@
     cast = the web shot and carry walk posed from our own skeletons, 6 frames each; carry idle = the carry walk's
     standing frames; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a web strand off the side thrust: the
     thrust holds its clean first frame (the game draws the web). The thrusting hand is the "muzzle".
+  pikachu: sprites/pikachu.png, character "Pikachu HD v3" (a v3 rotation of "Pikachu HD"'s front, whose own side view
+    mixed his back into a side head; the front rows come from "Pikachu HD", the same drawing). cast = the thunder shock
+    and carry walk posed from our own skeletons, 6 frames each (crouch gathering the charge, then arms flung out
+    crackling); carry idle = the carry walk's standing frames; lobby = the v3 "victory pose" frames 1..8. Idle side and
+    back are his rotation bobbing (the breathing template puffed breath and shut his eye); the stun skips frame 3 (a
+    grey smudge).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -91,6 +97,17 @@ CHARACTERS = {
     # cast = the web shot: hand pulled back (frames 0-4), thrust forward as the web leaves (frame 5, BEAM_DELAY)
     "spider": [
         ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the thunder shock: crouched gathering the charge (cells 0-4), arms flung out as it bursts (cell 5, BEAM_DELAY)
+    "pikachu": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),
         ("death", "death", "south", 7),
@@ -252,6 +269,27 @@ def spider_frames(src, folder, d):
     return None
 
 
+PIKA_CAST = [0, 1, 1, 2, 2, 3, 4, 4, 5]  # pikachu: his 6 posed cast frames over the 9 cast cells, burst on cell THRUST
+PIKA_STUN = [0, 1, 2, 2, 4, 5]  # pikachu: the stun without its smudged frame 3
+
+
+def pikachu_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "hit":
+        return [load("hit", i) for i in PIKA_STUN]
+    if folder == "cast":
+        return [load("cast6", i) for i in PIKA_CAST]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -276,7 +314,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":

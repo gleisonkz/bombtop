@@ -271,6 +271,33 @@ export const SHEETS = {
     keepFor: [[245, 245, 245], [232, 74, 74]],
     scale: 0.139,
   },
+  /** Pikachu (fan art), made in PixelLab (scripts/build-character-sheet.py pikachu lays out its frames). */
+  pikachu: {
+    url: "sprites/pikachu.png",
+    width: 1620,
+    height: 2952,
+    frameW: 180,
+    frameH: 164,
+    anchorX: 96,
+    anchorY: 157,
+    bodyH: 146,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The thunder shock: crouched gathering the charge, then arms flung out crackling. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His blue scarf (his yellow fur, red cheeks and black ear tips stay his own). */
+    hues: [205, 240],
+    hueBase: [34, 82, 149],
+    scale: 0.145,
+  },
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",

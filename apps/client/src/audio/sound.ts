@@ -38,6 +38,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   warp: { gain: 0.45, vary: 0.04, voices: 2 },
   ice: { gain: 0.55, vary: 0.04, voices: 2 },
   thunder: { gain: 0.6, vary: 0.05, voices: 2 },
+  shock: { gain: 0.6, vary: 0.04, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
   rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
@@ -77,6 +78,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "spider-death": { gain: 0.7, vary: 0, voices: 2 },
   "spider-win": { gain: 0.65, vary: 0, voices: 1 },
   "spider-special": { gain: 0.6, vary: 0, voices: 2 },
+  "pikachu-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "pikachu-death": { gain: 0.7, vary: 0, voices: 2 },
+  "pikachu-win": { gain: 0.65, vary: 0, voices: 1 },
+  "pikachu-special": { gain: 0.65, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

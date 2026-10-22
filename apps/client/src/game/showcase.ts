@@ -154,7 +154,7 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** The player color (by seat) each character wears in their scene, as in the menus: the ninja in ice blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2 };
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
@@ -234,6 +234,17 @@ const SPECIALS: Record<CharacterId, Scene> = {
     },
     // Web him from afar, run up, leave a bomb by him and get out of its way.
     you: [{ wait: 30 }, { press: "special" }, { wait: 20 }, { go: "right", tiles: 3 }, { press: "bomb" }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
+    seconds: 5,
+  },
+  pikachu: {
+    characters: { you: "pikachu", rival: "naruto" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 5, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "down";
+    },
+    // The rival comes close, he shocks it, drops a bomb by it and runs.
+    you: [{ wait: 40 }, { press: "special" }, { wait: 20 }, { go: "right", tiles: 1 }, { press: "bomb" }, { go: "left", tiles: 1 }, { go: "up", tiles: 1 }],
     seconds: 5,
   },
 };

@@ -186,6 +186,14 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "thunder", x: 4.5 }]);
   });
 
+  it("hears one shock for Pikachu's thunder shock, not one per arm", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      for (const dir of ["up", "down", "left", "right"] as const) n.blasts.push({ ownerId: "a", x: 4, y: 1, dir, length: 1, ttl: BLAST_TICKS - 1, kind: "thunder" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "shock", x: 4.5 }]);
+  });
+
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {
     const v = view();
     const next = later(v, (n) => {

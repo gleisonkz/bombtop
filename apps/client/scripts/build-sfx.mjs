@@ -12,6 +12,8 @@
 // Captain America's and Thor's voices (and the captain's shield clang) are from Marvel vs. Capcom: Infinite (fan use; (c) Capcom /
 // Marvel), The Sounds Resource assets 407793 "Captain America" and 407825 "Thor", unzipped under mvci/; Spider-Man's voice and his
 // web sounds from the same game, asset 407822 "Spider-Man", under mvci/mvci-spider/.
+// Pikachu's voice (Ikue Otani) and his Thunder sound are from Super Smash Bros. Ultimate (fan use; (c) Nintendo / The Pokemon
+// Company), The Sounds Resource asset 409668 "Pikachu", unzipped under ssbu/ssbu-pikachu/.
 // The ninja speaks as Sub-Zero from Mortal Kombat (2011) (fan use; (c) Warner Bros. / NetherRealm), asset 413724 "Sub-Zero",
 // under mk9/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -36,6 +38,7 @@ const CAP = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Vo
 const CAP_FX = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Sounds", `00B_SE#${n} (${tag}).wav`);
 const SPIDER = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Voice", `00D_CV${n} (${tag}).wav`);
 const SPIDER_FX = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Sounds", `00D_SE#${n} (${tag}).wav`);
+const PIKA = (name) => join(SRC, "ssbu", "ssbu-pikachu", "Super Smash Bros Ultimate", "Fighters", name.startsWith("se_") ? "se_pikachu" : "vc_pikachu", `${name}.wav`);
 const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV${n} (${tag}).wav`);
 const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
@@ -149,6 +152,13 @@ const RECIPE = {
   "spider-death": { src: BASS_DOWN, len: 1.8, layer: { src: SPIDER("#69", "VO_LOSE_KO"), len: 1.4, gain: -3 } },
   "spider-win": { src: SPIDER("#186", "VO_TEASE"), len: 2.2 },
   "spider-special": { src: SPIDER("#167", "VO_SKILL_SP7_1"), len: 0.9 },
+  // Pikachu (Super Smash Bros. Ultimate): "Pika-pika!", knocked out, "Pikaa!", "Pika-chuu!" as he shocks
+  "pikachu-pick": { src: PIKA("vc_pikachu_appeal02"), len: 1.1 },
+  "pikachu-death": { src: BASS_DOWN, len: 1.8, layer: { src: PIKA("vc_pikachu_knockout"), len: 1.6, gain: -3 } },
+  "pikachu-win": { src: PIKA("vc_pikachu_appeal03"), len: 1.3 },
+  "pikachu-special": { src: PIKA("vc_pikachu_002"), len: 1.2 },
+  // Pikachu's thunder shock: his own Thunder crackling down
+  shock: { src: PIKA("se_pikachu_special_L01"), len: 1.2 },
   // the bomb mascot's mega bomb: a heavy thud as it lands, over a low boom
   mega: {
     src: K("impact-sounds", "impactPlate_heavy_001.ogg"),

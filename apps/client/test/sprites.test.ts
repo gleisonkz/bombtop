@@ -767,6 +767,27 @@ describe("captain sheet and shield", () => {
   });
 });
 
+describe("pikachu sheet", () => {
+  const pikachu = SHEETS.pikachu;
+
+  it("every row fits inside the image", () => {
+    const strips = [pikachu.idle, pikachu.walk, pikachu.cast!, pikachu.carryIdle!, pikachu.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, pikachu.stun!, pikachu.death!, pikachu.lobby!]) {
+      expect((s.row + 1) * pikachu.frameH).toBeLessThanOrEqual(pikachu.height);
+      expect(s.frames * pikachu.frameW).toBeLessThanOrEqual(pikachu.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    expect(Math.abs(pikachu.bodyH * pikachu.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  });
+
+  it("only his blue scarf takes the player's color", () => {
+    expect(pikachu.hues).toEqual([205, 240]);
+    expect(pikachu.hueBase).toEqual([34, 82, 149]);
+  });
+});
+
 describe("spider sheet", () => {
   const spider = SHEETS.spider;
 

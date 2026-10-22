@@ -93,6 +93,9 @@ export const BOLT_RANGE = 5;
 export const WEB_RANGE = 5;
 export const WEB_TICKS = 4 * TICK_RATE;
 
+/** Pikachu's thunder shock: how far each arm of the cross around him reaches. */
+export const THUNDER_RANGE = 2;
+
 /**
  * Goku's Kamehameha: reach in tiles, the charge before it fires (he stands still; a stun or freeze
  * cancels it) and its recharge.
