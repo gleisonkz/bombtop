@@ -73,12 +73,11 @@ function refit(): void {
   app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
 }
 
-/** Phones: hide the browser bars and hold landscape. Must run inside a tap handler. */
+/** Phones: hide the browser bars (either orientation plays). Must run inside a tap handler. */
 function goFullscreen(): void {
   if (!isTouchDevice() || document.fullscreenElement) return;
   document.documentElement
     .requestFullscreen?.({ navigationUI: "hide" })
-    .then(() => (screen.orientation as ScreenOrientation & { lock?(o: string): Promise<void> }).lock?.("landscape"))
     .catch(() => undefined); // unsupported (iOS Safari) or refused: keep playing windowed
 }
 
