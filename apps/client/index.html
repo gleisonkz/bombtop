@@ -150,7 +150,7 @@
 
       /* Menu: a title screen. Light rays turn behind the cast and the logo, embers drift up, the play button glows.
          Phones upright stack the hero over the card; wider screens put them side by side. */
-      .menu { grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; gap: 14px; min-height: 100%; } /* the full height, so the rays fade out before its clipped edges */
+      .menu { grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: safe center; gap: 14px; min-height: 100%; } /* the full height, so the rays fade out before its clipped edges */
       .menu-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
         background: radial-gradient(ellipse 70% 50% at 50% 110%, #ff7a1a33, transparent 70%), radial-gradient(ellipse 60% 60% at 50% 0%, #6a3fc044, transparent 70%); }
       .menu-bg i { position: absolute; bottom: -12px; left: var(--x); width: 6px; height: 6px; border-radius: 1px; background: #ffd23f; box-shadow: 0 0 8px #ff7a1a; transform: rotate(45deg); opacity: 0; animation: ember var(--t) linear var(--d) infinite; }
