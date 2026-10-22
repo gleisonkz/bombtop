@@ -1,5 +1,5 @@
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BOLT_STUN_TICKS, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_STUN_TICKS, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, setTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -62,7 +62,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
 const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, { range: number; strike: (p: Player) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
-  lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = BOLT_STUN_TICKS) },
+  lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
 };
 
@@ -93,8 +93,8 @@ function blast(s: MatchState, kind: keyof typeof BLASTS, ownerId: string, from: 
 }
 
 /**
- * Goku's Kamehameha from (x,y) toward `dir`: reaches up to KAME_RANGE, breaking blocks in its path.
- * Walls stop it, and a shield sends it back once.
+ * Goku's Kamehameha from (x,y) toward `dir`: reaches up to KAME_RANGE, breaking blocks in its path,
+ * up to the first player in its way, who is stunned. Walls stop it, and a shield sends it back once.
  */
 export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y: number }, dir: Facing, canReflect: boolean): void {
   const [dx, dy] = DIR_VECTORS[dir];
@@ -112,6 +112,12 @@ export function kamehameha(s: MatchState, ownerId: string, from: { x: number; y:
     }
     length = i;
     if (tile === Tile.Block) setTile(s, tx, ty, Tile.Empty);
+    const hit = s.players.find((o) => o.id !== ownerId && o.alive && playerTile(o).x === tx && playerTile(o).y === ty);
+    if (hit) {
+      hit.stun = SPECIAL_STUN_TICKS;
+      hit.charge = hit.rasengan = 0;
+      break;
+    }
   }
   s.blasts.push({ ownerId, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "kamehameha" });
   if (reflector) kamehameha(s, reflector.id, playerTile(reflector), OPPOSITE[dir], false);
@@ -135,7 +141,7 @@ export function updateRasengan(s: MatchState, p: Player): void {
     const shield = shieldAt(s, tx, ty, dx, dy);
     const hit = others(s, p, tx, ty);
     if (shield) {
-      p.stun = RASENGAN_STUN_TICKS;
+      p.stun = SPECIAL_STUN_TICKS;
     } else if (tile === Tile.Block) {
       setTile(s, tx, ty, Tile.Empty);
     } else if (hit) {
@@ -148,7 +154,7 @@ export function updateRasengan(s: MatchState, p: Player): void {
       }
       hit.px = tileCenter(tx + dx * to);
       hit.py = tileCenter(ty + dy * to);
-      hit.stun = RASENGAN_STUN_TICKS;
+      hit.stun = SPECIAL_STUN_TICKS;
       hit.charge = hit.rasengan = 0;
     }
     if (shield || tile !== Tile.Empty || bombAt(s, tx, ty) || hit) {

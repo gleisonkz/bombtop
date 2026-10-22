@@ -99,11 +99,12 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Kamehameha",
       recharge: "30 s",
-      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. Só as paredes param.",
+      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. O primeiro jogador atingido fica tonto por 3 s, sem andar nem agir. Paredes param o raio.",
       tips: [
         "Use para abrir corredores e limpar blocos rapidamente.",
         "Enquanto carrega você fica parado: nunca use com fogo vindo na sua direção.",
-        "O raio não machuca jogadores nem detona bombas.",
+        "Atravessa blocos: acerta quem se esconde atrás deles.",
+        "O raio não detona bombas.",
         "A recarga é a mais longa (30 s): se errar, jogue com calma até voltar.",
       ],
     },
@@ -117,7 +118,7 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Rasengan",
       recharge: "20 s",
-      text: "Avança 3 casas em linha reta com a esfera de chakra. O primeiro jogador que ele acertar é arremessado até 2 casas e fica tonto por 2 s. Um bloco no caminho quebra e para a corrida; paredes e bombas também param.",
+      text: "Avança 3 casas em linha reta com a esfera de chakra. O primeiro jogador que ele acertar é arremessado até 2 casas e fica tonto por 3 s. Um bloco no caminho quebra e para a corrida; paredes e bombas também param.",
       tips: [
         "Empurre o rival para dentro do fogo da sua bomba.",
         "É uma fuga rápida: 3 casas num piscar de olhos para sair da linha de uma explosão.",

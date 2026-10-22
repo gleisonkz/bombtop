@@ -78,12 +78,12 @@ describe("special showcase", () => {
     expect(stunned).toBe(true);
   });
 
-  it("goku: the Kamehameha smashes a row of blocks", () => {
+  it("goku: the Kamehameha smashes through blocks and stuns the rival behind them", () => {
     const show = specialShowcase("goku");
-    const [x, y] = show.target!;
-    expect(getTile(show.state, x, y)).toBe(Tile.Block);
-    for (let t = 0; t < show.length; t++) show.advance();
-    expect(getTile(show.state, x, y)).toBe(Tile.Empty);
+    expect(getTile(show.state, 3, 5)).toBe(Tile.Block);
+    let stunned = false;
+    play("goku", (s) => (stunned ||= rival(s).stun > 0 && getTile(s, 3, 5) === Tile.Empty));
+    expect(stunned).toBe(true);
   });
 
   it("naruto: the Rasengan knocks the rival back and stuns him", () => {

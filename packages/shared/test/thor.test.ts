@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BOLT_RANGE,
-  BOLT_STUN_TICKS,
+  SPECIAL_STUN_TICKS,
   CHARACTERS,
   createMatch,
   setTile,
@@ -33,8 +33,8 @@ describe("thor lightning bolt", () => {
   it(`stuns the first player within ${BOLT_RANGE} tiles in front for 3 seconds`, () => {
     const s = duel(BOLT_RANGE);
     cast(s);
-    expect(player(s, "p2").stun).toBeGreaterThanOrEqual(BOLT_STUN_TICKS - 1); // may already have ticked once
-    expect(BOLT_STUN_TICKS).toBe(3 * 60);
+    expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1); // may already have ticked once
+    expect(SPECIAL_STUN_TICKS).toBe(3 * 60);
     expect(player(s, "p2").frozen).toBe(0);
   });
 
@@ -62,7 +62,7 @@ describe("thor lightning bolt", () => {
     const px = p2.px;
     run(s, 30, { p2: { dir: "right", bomb: false } });
     expect(p2.px).toBe(px);
-    run(s, BOLT_STUN_TICKS);
+    run(s, SPECIAL_STUN_TICKS);
     hold(s, "right", 10, "p2");
     expect(p2.px).toBeGreaterThan(px);
   });
@@ -82,7 +82,7 @@ describe("thor lightning bolt", () => {
     player(s, "p2").shield = SHIELD_TICKS;
     cast(s);
     expect(player(s, "p2").stun).toBe(0);
-    expect(player(s).stun).toBe(BOLT_STUN_TICKS);
+    expect(player(s).stun).toBe(SPECIAL_STUN_TICKS);
     expect(s.blasts.map((b) => b.kind)).toEqual(["lightning", "lightning"]);
   });
 });

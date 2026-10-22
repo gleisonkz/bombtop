@@ -7,7 +7,7 @@ import {
   playerTile,
   RASENGAN_PUSH,
   RASENGAN_RANGE,
-  RASENGAN_STUN_TICKS,
+  SPECIAL_STUN_TICKS,
   RASENGAN_TICKS,
   setTile,
   SHIELD_TICKS,
@@ -56,7 +56,7 @@ describe("naruto rasengan", () => {
     rush(s);
     expect(playerTile(player(s))).toEqual({ x: 2, y: 5 });
     expect(playerTile(player(s, "p2"))).toEqual({ x: 3 + RASENGAN_PUSH, y: 5 });
-    expect(player(s, "p2").stun).toBeGreaterThan(RASENGAN_STUN_TICKS - RASENGAN_TICKS);
+    expect(player(s, "p2").stun).toBeGreaterThan(SPECIAL_STUN_TICKS - RASENGAN_TICKS);
     expect(s.blasts).toEqual([expect.objectContaining({ ownerId: "p1", dir: "right", length: 1, kind: "rasengan" })]);
   });
 

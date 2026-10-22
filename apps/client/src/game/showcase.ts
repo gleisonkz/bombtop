@@ -207,12 +207,13 @@ const SPECIALS: Record<CharacterId, Scene> = {
     characters: { you: "goku", rival: "bomb" },
     setup(s, you) {
       placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 6, 5);
       you.facing = "right";
-      blocks(s, [3, 5], [4, 5], [5, 5], [6, 5], [7, 5]);
+      blocks(s, [3, 5], [4, 5], [5, 5]);
     },
+    // Blasts through the blocks into the rival behind them, who is left dizzy.
     you: [{ wait: 30 }, { press: "special" }],
-    target: [7, 5],
-    seconds: 4,
+    seconds: 5,
   },
   naruto: {
     characters: { you: "naruto", rival: "thor" },

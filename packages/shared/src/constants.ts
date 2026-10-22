@@ -85,9 +85,11 @@ export const ICE_RANGE = 4;
 export const FREEZE_TICKS = 5 * TICK_RATE;
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
-/** Thor's lightning bolt: reach in tiles and how long it stuns. */
+/** How long a special that stuns (Thor's bolt, Goku's Kamehameha, Naruto's Rasengan) stuns whoever it hits. */
+export const SPECIAL_STUN_TICKS = 3 * TICK_RATE;
+
+/** Thor's lightning bolt: reach in tiles. */
 export const BOLT_RANGE = 5;
-export const BOLT_STUN_TICKS = 3 * TICK_RATE;
 
 /** The spider's web shot: reach in tiles and how long it keeps the first player hit wrapped up. */
 export const WEB_RANGE = 5;
@@ -112,7 +114,6 @@ export const RASENGAN_RANGE = 3;
 export const RASENGAN_TICKS_PER_TILE = 4;
 export const RASENGAN_TICKS = RASENGAN_RANGE * RASENGAN_TICKS_PER_TILE;
 export const RASENGAN_PUSH = 2;
-export const RASENGAN_STUN_TICKS = 2 * TICK_RATE;
 
 /** Captain's shield: how long it stays up (he stands still behind it). */
 export const SHIELD_TICKS = 3 * TICK_RATE;
