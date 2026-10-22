@@ -36,6 +36,16 @@ describe("RoomRoute", () => {
     expect(a.href).toBe("https://x.app/");
   });
 
+  it("a TV watching puts /tv/ in the address, so a reload watches again", () => {
+    const a = fakeAddress();
+    const r = new RoomRoute(a);
+    r.entered("abc123", true);
+    expect(a.href).toBe("https://x.app/tv/abc123");
+    expect(r.wentBack()).toBe(false);
+    r.left();
+    expect(a.href).toBe("https://x.app/");
+  });
+
   it("tells when the address no longer names the room (back button)", () => {
     const a = fakeAddress();
     const r = new RoomRoute(a);

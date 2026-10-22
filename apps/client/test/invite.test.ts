@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { codeFromUrl, inviteText, inviteUrl, withoutInvite } from "../src/net/invite";
+import { codeFromUrl, inviteText, inviteUrl, tvCodeFromUrl, tvUrl, withoutInvite } from "../src/net/invite";
 
 describe("invite links", () => {
   it("builds a link to the room from the current page", () => {
@@ -31,6 +31,15 @@ describe("invite links", () => {
     expect(withoutInvite("https://x.app/?sala=abc&x=1")).toBe("https://x.app/?x=1");
     expect(withoutInvite("https://x.app/?sala=abc")).toBe("https://x.app/");
     expect(withoutInvite("https://x.app/sala/abc?x=1")).toBe("https://x.app/?x=1");
+  });
+
+  it("a TV watching a room has its own address, which is not a seat", () => {
+    expect(tvUrl("https://x.app/?a=1", "abc")).toBe("https://x.app/tv/abc");
+    expect(tvCodeFromUrl("https://x.app/tv/abc")).toBe("abc");
+    expect(codeFromUrl("https://x.app/tv/abc")).toBeNull();
+    expect(tvCodeFromUrl("https://x.app/sala/abc")).toBeNull();
+    expect(tvCodeFromUrl("https://x.app/tv/a%3Cb")).toBeNull();
+    expect(withoutInvite("https://x.app/tv/abc")).toBe("https://x.app/");
   });
 
   it("writes a message with the link", () => {

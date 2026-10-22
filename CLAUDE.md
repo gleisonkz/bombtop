@@ -24,6 +24,12 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   (`ui/pairing.ts`). The camera is opened before the offer is made: with it on, browsers share the real LAN address instead
   of an mDNS name. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
   so it opens without internet once visited.
+- **TV mode (watching):** the 📺 button next to "Entrar" in the menu watches the room of the typed code; the address
+  becomes `/tv/<code>` (`net/invite.ts`; rewritten in `render.yaml`), so a reload watches again. The TV joins with
+  `{ watch: true }`: `RoomCore.watch` gives it every broadcast but no seat (only `sync` is heard from it), up to
+  `MAX_WATCHERS`, any time, even mid-match; lobbies show how many screens watch (`LobbyInfo.watchers`). For that the
+  server never locks a room: one in a match or full is taken out of public matchmaking with `setPrivate` instead
+  (`BattleRoom.refreshListing`), which still lets a code join.
 - **Couch play (one screen, a controller each):** "🎮 Vários controles (mesma tela)" in the menu (shown on computers, and on
   touch screens once a controller is plugged in). The screen hosts a `LocalHost` room; the keyboard and the first controller
   are player one, and every other controller gets its own local seat (`LocalHost.seat`) through `CouchSeats`

@@ -18,14 +18,14 @@ import { CouchSeats } from "./input/couch";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
-import { codeFromUrl } from "./net/invite";
+import { codeFromUrl, tvCodeFromUrl } from "./net/invite";
 import { GuideRoute } from "./net/guide-route";
 import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { button, el, storage } from "./ui/dom";
 import { Listener } from "./audio/cues";
-import { Menu, type Guide } from "./ui/menu";
+import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
@@ -233,30 +233,35 @@ const menu = new Menu(ui, {
   },
   hear: (name) => sound.play(name),
   hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width),
-  online: async (choice, name) => {
-    menu.setBusy(true);
-    try {
-      const character = savedCharacter();
-      const who = account ? { name: account.name, token: account.token, character } : { name, character };
-      const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
-      lobby.setOffline(null);
-      online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
-      route.entered(online.code);
-      seats.remember(online.code, online.seatToken);
-      menu.hide();
-      setMode(online);
-    } catch (err) {
-      console.error(err);
-      route.left();
-      seats.forget();
-      menu.show(
-        choice.kind === "join"
-          ? "Não foi possível entrar: confira o código (a sala pode estar cheia ou em partida)."
-          : "Não foi possível conectar ao servidor.",
-      );
-    }
-  },
+  online: (choice, name) => void enterRoom(choice, name),
 });
+
+/** Joins a room online: as a player, or as a TV watching it (`watch`). */
+async function enterRoom(choice: OnlineChoice, name: string): Promise<void> {
+  menu.setBusy(true);
+  try {
+    const character = savedCharacter();
+    const who = account ? { name: account.name, token: account.token, character } : { name, character };
+    const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
+    lobby.setOffline(null);
+    online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
+    route.entered(online.code, online.watching);
+    if (!online.watching) seats.remember(online.code, online.seatToken);
+    menu.hide();
+    setMode(online);
+  } catch (err) {
+    console.error(err);
+    route.left();
+    seats.forget();
+    menu.show(
+      choice.kind === "join"
+        ? "Não foi possível entrar: confira o código (a sala pode estar cheia ou em partida)."
+        : choice.kind === "watch"
+          ? "Não foi possível assistir: confira o código da sala."
+          : "Não foi possível conectar ao servidor.",
+    );
+  }
+}
 
 // Offline (Wi-Fi): this phone hosts the room, or joins a friend's phone (no server, no internet).
 const pairing = new Pairing(ui);
@@ -269,6 +274,8 @@ function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeat
 
 // An invite link, or a reload inside a room: join it.
 let invite = codeFromUrl(location.href);
+// A TV address (/tv/CODE), or a reload of one: watch that room again.
+const tvCode = tvCodeFromUrl(location.href);
 // Back button while in a room: leave it.
 window.addEventListener("popstate", () => {
   if (route.wentBack()) void online?.leave();
@@ -277,7 +284,10 @@ window.addEventListener("popstate", () => {
 if (guideInAddress()) menu.showGuide(guideInAddress());
 
 // Once per session the title intro plays before the menu (not when arriving by an invite link or on the guide).
-if (!invite && !guideInAddress() && introDue(tabStore)) {
+if (tvCode) {
+  menu.hide();
+  void enterRoom({ kind: "watch", code: tvCode }, "");
+} else if (!invite && !guideInAddress() && introDue(tabStore)) {
   menu.hide();
   void art.then(() => {
     if (mode) return; // the player got somewhere else meanwhile

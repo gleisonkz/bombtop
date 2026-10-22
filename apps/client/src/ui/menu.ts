@@ -10,7 +10,8 @@ import { freshReload, toggleDebug, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt, titleBomberArt } from "./sheet-art";
 
-export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
+/** `watch`: this screen only shows the room's match (TV mode), with no seat. */
+export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string } | { kind: "watch"; code: string };
 
 export interface MenuHandlers {
   online(choice: OnlineChoice, name: string): void;
@@ -69,13 +70,22 @@ export class Menu {
       go({ kind: "join", code });
     });
     this.code.addEventListener("keydown", (e) => e.key === "Enter" && joinByCode());
+    // TV mode: this screen shows the room's match to the couch, with no seat.
+    const watchByCode = () => {
+      const code = this.code.value.trim();
+      if (!code) return this.showError("Digite o código da sala para assistir na TV.");
+      go({ kind: "watch", code });
+    };
 
     this.buttons = [
       button("▶  Jogar agora", () => go({ kind: "public" }), "primary big play"),
       button("Criar sala com amigos", () => go({ kind: "create" }), "create"),
       button("Entrar", joinByCode),
+      button("📺", watchByCode, "tv-btn"),
     ];
-    const [publicBtn, createBtn, joinBtn] = this.buttons;
+    const [publicBtn, createBtn, joinBtn, tvBtn] = this.buttons;
+    tvBtn!.title = "Assistir na TV (só mostra a partida da sala)";
+    tvBtn!.setAttribute("aria-label", "Assistir na TV");
 
     // Debug mode: a connection readout in game, also logged on the server for us to read.
     const debugLabel = (on: boolean) => `Modo debug: ${on ? "ligado" : "desligado"}`;
@@ -93,7 +103,7 @@ export class Menu {
       publicBtn,
       createBtn,
       el("div", { class: "or", text: "ou entre com um código" }),
-      el("div", { class: "row" }, [this.code, joinBtn]),
+      el("div", { class: "row" }, [this.code, joinBtn, tvBtn]),
       this.status,
       this.error,
       el("div", { class: "row extras" }, [

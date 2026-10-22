@@ -42,6 +42,7 @@ export class LobbyPanel {
    * `couch`: players also join on this same screen with their controllers.
    */
   private offline: { pair: (() => void) | null; couch?: boolean } | null = null;
+  private watching = false;
 
   constructor(
     parent: HTMLElement,
@@ -66,6 +67,12 @@ export class LobbyPanel {
     this.results = new ResultScreen(parent);
   }
 
+  /** TV mode: this screen only shows the room (no seat): no start or invite, a word on what it is for. */
+  setWatching(watching: boolean): void {
+    this.watching = watching;
+    this.inviteBtn.hidden = watching;
+  }
+
   /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen), or back to an online one (null). */
   setOffline(offline: { pair: (() => void) | null; couch?: boolean } | null): void {
     this.offline = offline;
@@ -78,7 +85,7 @@ export class LobbyPanel {
     this.root.hidden = info.phase !== "lobby";
     if (info.phase !== "results") this.results.hide();
     this.code.textContent = this.offline?.couch ? "🎮" : this.offline ? "Wi-Fi" : info.code;
-    this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
+    this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}${info.watchers ? ` • 📺 ${info.watchers}` : ""}`;
     const isHost = info.hostId === me;
     this.seats.replaceChildren(
       ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
@@ -128,6 +135,11 @@ export class LobbyPanel {
     const enough = info.members.length >= 2;
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
+    if (this.watching) {
+      this.startBtn.hidden = true;
+      this.status.textContent = "📺 Modo TV: esta tela mostra a partida. Cada um joga pelo seu celular (ou controle) com o código da sala.";
+      return;
+    }
     const couch = this.offline?.couch ? "🎮 Controles: A entra, Y troca o personagem, B sai, Start começa. " : "";
     this.status.textContent = couch + (!enough
       ? isHost

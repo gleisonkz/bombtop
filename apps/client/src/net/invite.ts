@@ -1,6 +1,8 @@
 /** Room pages live at /sala/<code>; old invite links carried it as ?sala=<code>. */
 const PARAM = "sala";
 const ROUTE = /^\/sala\/([^/]+)\/?$/;
+/** A TV watching a room (no seat): /tv/<code>. */
+const TV_ROUTE = /^\/tv\/([^/]+)\/?$/;
 /** Colyseus room ids: short url-safe strings. */
 const CODE = /^[A-Za-z0-9_-]{1,32}$/;
 
@@ -20,10 +22,23 @@ export function codeFromUrl(href: string): string | null {
   return code && CODE.test(code) ? code : null;
 }
 
+/** Address of a TV watching the room: a reload watches again instead of taking a seat. */
+export function tvUrl(pageHref: string, code: string): string {
+  const url = new URL(inviteUrl(pageHref, code));
+  url.pathname = `/tv/${code}`;
+  return url.toString();
+}
+
+/** Room code of a TV address, or null. */
+export function tvCodeFromUrl(href: string): string | null {
+  const code = TV_ROUTE.exec(new URL(href).pathname)?.[1];
+  return code && CODE.test(code) ? code : null;
+}
+
 /** The same address without the room: back to the menu. */
 export function withoutInvite(href: string): string {
   const url = new URL(href);
-  if (ROUTE.test(url.pathname)) url.pathname = "/";
+  if (ROUTE.test(url.pathname) || TV_ROUTE.test(url.pathname)) url.pathname = "/";
   url.searchParams.delete(PARAM);
   return url.toString();
 }

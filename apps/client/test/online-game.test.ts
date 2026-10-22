@@ -37,7 +37,7 @@ describe("online snapshot rendering", () => {
       sound: { play: vi.fn(), cues: vi.fn() },
       touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(),
     } as unknown as ModeContext;
-    const panel = { update: vi.fn(), hide: vi.fn() } as unknown as LobbyPanel;
+    const panel = { update: vi.fn(), hide: vi.fn(), setWatching: vi.fn() } as unknown as LobbyPanel;
     game = OnlineGame.over(link, ctx, panel);
     handlers.get(S2C.lobby)!({ phase: "playing", members: [{ id: "me", character: "bomb" }, { id: "bot", character: "bomb" }] });
   });

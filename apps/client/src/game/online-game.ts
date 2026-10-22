@@ -95,6 +95,7 @@ export class OnlineGame implements GameMode {
     }
     const base = { name: who.name, character: who.character };
     const options = who.token ? { ...base, token: who.token } : base;
+    if (choice.kind === "watch") return new OnlineGame(await client.joinById(choice.code, { watch: true }), ctx, panel, null, true);
     const room =
       choice.kind === "public"
         ? await client.joinOrCreate(ROOM_NAME, options)
@@ -115,7 +116,10 @@ export class OnlineGame implements GameMode {
     private readonly panel: LobbyPanel,
     /** Other players on this screen, one per extra controller (couch play). */
     private readonly couch: CouchSeats | null = null,
+    /** TV mode: this screen only shows the match (no seat, no input). */
+    readonly watching = false,
   ) {
+    panel.setWatching(watching);
     this.predictor = new Predictor(room.sessionId);
     this.ghosts = new GhostBombs(room.sessionId);
     this.blastGhosts = new GhostBlasts(room.sessionId);
@@ -254,6 +258,7 @@ export class OnlineGame implements GameMode {
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
+    if (this.watching) return;
     this.couch?.tick(this.lobby?.phase ?? null, this.lobby?.members.map((m) => m.character) ?? []);
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
     const actor = (input.bomb || input.action || input.special) && this.playing() ? this.predictor.predict(this.latest!) : null;
