@@ -6,12 +6,13 @@ describe("connecting message", () => {
     expect(connectingText(0)).toBe("Conectando…");
   });
 
-  it("explains a slow start: the free server is waking up", () => {
-    expect(connectingText(4000)).toMatch(/acordando/i);
-    expect(connectingText(4000)).toMatch(/1 minuto/);
+  it("calls a slow start a slow connection, not a sleeping server (ours never sleeps)", () => {
+    expect(connectingText(4000)).toMatch(/lenta/i);
+    expect(connectingText(4000)).not.toMatch(/acordando|dormi/i);
   });
 
-  it("keeps the player company on a long wait", () => {
-    expect(connectingText(30000)).toMatch(/quase/i);
+  it("points at the internet on a long wait", () => {
+    expect(connectingText(30000)).toMatch(/internet/i);
+    expect(connectingText(30000)).not.toMatch(/acordar/i);
   });
 });

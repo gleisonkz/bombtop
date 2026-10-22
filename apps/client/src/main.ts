@@ -189,7 +189,7 @@ const savedCharacter = () => characterId(storage.get(CHARACTER_KEY)) ?? DEFAULT_
 
 let account: Account | null = null;
 
-// The free server sleeps when idle: poke it now so it is awake by the time the player clicks.
+// Open the way to the server now (DNS, TLS) so joining is quicker when the player clicks.
 fetch(SERVER_URL, { mode: "no-cors" }).catch(() => {});
 
 const menu = new Menu(ui, {
