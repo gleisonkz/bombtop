@@ -18,6 +18,8 @@ export type CueName =
   | "dash"
   | "warp"
   | "ice"
+  | "web"
+  | "webbed"
   | "thunder"
   | "kamehameha"
   | "rasengan"
@@ -86,7 +88,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   // The kamehameha and the rasengan are heard from the start of their charge or dash (see below).
   for (const b of next.blasts) {
     if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
-    cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
+    cues.push({ name: b.kind === "lightning" ? "thunder" : b.kind === "web" ? "web" : "ice", x: mid(b.x) });
   }
 
   for (const p of next.players) {
@@ -107,6 +109,7 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("warp", !was.warpLock && p.warpLock);
     hear("dash", !was.dashTicks && p.dashTicks);
     hear("freeze", !was.frozen && p.frozen);
+    hear("webbed", !was.webbed && p.webbed);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);
     const shout = voiceLine(p.character, "special");

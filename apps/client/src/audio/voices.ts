@@ -4,7 +4,7 @@ import type { CharacterId } from "@bombtop/shared";
 export type VoiceMoment = "pick" | "death" | "win" | "special";
 
 type Lines<C extends string> = `${C}-${"pick" | "death" | "win"}`;
-export type VoiceName = Lines<CharacterId> | `${"bomb" | "ninja" | "captain" | "thor"}-special`;
+export type VoiceName = Lines<CharacterId> | `${"bomb" | "ninja" | "captain" | "thor" | "spider"}-special`;
 
 const lines = <C extends CharacterId>(c: C) => ({ pick: `${c}-pick`, death: `${c}-death`, win: `${c}-win` }) as const;
 
@@ -16,6 +16,7 @@ export const VOICE_LINES: Record<CharacterId, Partial<Record<VoiceMoment, VoiceN
   thor: { ...lines("thor"), special: "thor-special" },
   goku: lines("goku"),
   naruto: lines("naruto"),
+  spider: { ...lines("spider"), special: "spider-special" },
 };
 
 export function voiceLine(character: CharacterId, moment: VoiceMoment): VoiceName | null {

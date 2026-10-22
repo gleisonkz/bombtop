@@ -38,6 +38,12 @@ Fan art of Naruto (Naruto) for this non-commercial project, made in PixelLab (pi
 (character "Naruto HD"; Rasengan dash and carry walk posed with skeleton v3 from its rotations). Frames laid out by
 `scripts/build-character-sheet.py naruto`; rows = `SHEETS.naruto`.
 
+## spider.png
+
+Fan art of Spider-Man (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Spider-Man HD"; web shot and carry walk posed with skeleton v3 from its rotations). Frames laid out by
+`scripts/build-character-sheet.py spider`; rows = `SHEETS.spider`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

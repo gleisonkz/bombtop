@@ -5,7 +5,7 @@ import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
 import { button, el } from "./dom";
 import { CHARACTER_SHEETS, characterArt, characterMoves } from "./sheet-art";
 
-const [white, , , blue, green] = PLAYER_COLORS;
+const [white, , red, blue, green] = PLAYER_COLORS;
 
 interface Info {
   name: string;
@@ -123,6 +123,24 @@ const INFO: Record<CharacterId, Info> = {
         "É uma fuga rápida: 3 casas num piscar de olhos para sair da linha de uma explosão.",
         "Quebra um bloco à frente: bom para abrir caminho quando você está encurralado.",
         "Não corra contra o escudo do Capitão: quem fica tonto é você.",
+      ],
+    },
+  },
+  spider: {
+    name: "Homem-Aranha",
+    title: "O amigo da vizinhança",
+    color: red,
+    story:
+      "Um garoto do Queens que ganhou os poderes de uma aranha e aprendeu cedo que grandes poderes trazem grandes responsabilidades. Na arena ele não para de falar nem de pular, e sempre tem uma piada pronta. Quando a coisa aperta, um jato de teia resolve: quem leva fica grudado esperando a bomba chegar.",
+    special: {
+      name: "Teia",
+      recharge: "20 s",
+      text: "Dispara teia 5 casas em linha reta à frente. O primeiro jogador atingido fica enrolado num casulo por 4 s: não anda nem solta bombas, mas o fogo ainda pega.",
+      tips: [
+        "Prenda e solte uma bomba do lado: enrolado não foge.",
+        "Alcança 5 casas: acerte de longe e chegue com a bomba antes de a teia soltar.",
+        "Blocos, bombas e paredes param a teia: atire pelos corredores abertos.",
+        "O escudo do Capitão devolve a teia: quem fica grudado é você.",
       ],
     },
   },

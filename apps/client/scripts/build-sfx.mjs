@@ -10,7 +10,8 @@
 // Naruto's voice (Japanese, Junko Takeuchi) is from Naruto Shippuden: Ultimate Ninja Storm 2 (PS3; (c) Bandai Namco /
 // CyberConnect2), The Sounds Resource asset 489753 "Naruto", unzipped under uns2/uns2-naruto/.
 // Captain America's and Thor's voices (and the captain's shield clang) are from Marvel vs. Capcom: Infinite (fan use; (c) Capcom /
-// Marvel), The Sounds Resource assets 407793 "Captain America" and 407825 "Thor", unzipped under mvci/.
+// Marvel), The Sounds Resource assets 407793 "Captain America" and 407825 "Thor", unzipped under mvci/; Spider-Man's voice and his
+// web sounds from the same game, asset 407822 "Spider-Man", under mvci/mvci-spider/.
 // The ninja speaks as Sub-Zero from Mortal Kombat (2011) (fan use; (c) Warner Bros. / NetherRealm), asset 413724 "Sub-Zero",
 // under mk9/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
@@ -33,6 +34,8 @@ const GOKU = (n) => join(SRC, "dbfz", "dbfz-goku-jp", "Goku", "Default", `vgkn${
 const NARUTO = (name) => join(SRC, "uns2", "uns2-naruto", "Naruto23", "AB", `${name}.wav`);
 const CAP = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Voice", `00B_CV#${n} (${tag}).wav`);
 const CAP_FX = (n, tag) => join(SRC, "mvci", "mvci-captain", "Captain America", "Sounds", `00B_SE#${n} (${tag}).wav`);
+const SPIDER = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Voice", `00D_CV${n} (${tag}).wav`);
+const SPIDER_FX = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Sounds", `00D_SE#${n} (${tag}).wav`);
 const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV${n} (${tag}).wav`);
 const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
@@ -141,6 +144,11 @@ const RECIPE = {
   "thor-death": { src: BASS_DOWN, len: 1.8, layer: { src: THOR("#35", "VO_LOSE_KO"), len: 1.4, gain: -3 } },
   "thor-win": { src: THOR("#132", "VO_TEASE"), len: 2.3 },
   "thor-special": { src: THOR("#108", "VO_SKILL_SP2_1"), len: 0.85 },
+  // Spider-Man: "It's Spidey time!", a cry, "Can you do whatever a spider can?", "Web throw!" as he shoots
+  "spider-pick": { src: SPIDER("_COLLECT#112", "VO_CHARASELE_00D_3"), len: 1.6 },
+  "spider-death": { src: BASS_DOWN, len: 1.8, layer: { src: SPIDER("#69", "VO_LOSE_KO"), len: 1.4, gain: -3 } },
+  "spider-win": { src: SPIDER("#186", "VO_TEASE"), len: 2.2 },
+  "spider-special": { src: SPIDER("#167", "VO_SKILL_SP7_1"), len: 0.9 },
   // the bomb mascot's mega bomb: a heavy thud as it lands, over a low boom
   mega: {
     src: K("impact-sounds", "impactPlate_heavy_001.ogg"),
@@ -148,6 +156,9 @@ const RECIPE = {
     tempo: 0.8,
     layer: { src: SOLER("Booms", "EffectiveTrailer_Booms_Vol2_011.wav"), len: 0.9, gain: -5, lowpass: 220 },
   },
+  // the spider's web: his web ball leaving his hand, and splatting round whoever it wraps up
+  web: { src: SPIDER_FX(37, "SKILL_BALL_SHOT"), len: 0.6 },
+  webbed: { src: SPIDER_FX(35, "SKILL_BALL_HIT"), len: 0.7 },
   freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),

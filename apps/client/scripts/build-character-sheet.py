@@ -19,9 +19,13 @@
     standing frames; lobby = the v3 "victory pose" frames 1..8). The breathing idle blew puffs of breath in the side
     view and shut his eyes in front: idle front and side are his rotation ("rot/<dir>.png") bobbing a pixel instead.
     The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
+  spider: sprites/spider.png, character "Spider-Man HD" (180px canvas, chibi proportions per concept/PROMPT-BASE.md;
+    cast = the web shot and carry walk posed from our own skeletons, 6 frames each; carry idle = the carry walk's
+    standing frames; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a web strand off the side thrust: the
+    thrust holds its clean first frame (the game draws the web). The thrusting hand is the "muzzle".
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -76,6 +80,17 @@ CHARACTERS = {
     # cast = Rasengan: dashing with his hand out (frames 0-2, RASENGAN_TICKS), the lunge as it strikes (3+)
     "naruto": [
         ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the web shot: hand pulled back (frames 0-4), thrust forward as the web leaves (frame 5, BEAM_DELAY)
+    "spider": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),
         ("death", "death", "south", 7),
@@ -219,6 +234,24 @@ def naruto_frames(src, folder, d):
     return None
 
 
+# spider: his 6 posed cast frames over the 9 cast cells, thrust (posed frame 3) on cell THRUST; the front's
+# frame 2 came out with a smudge over an eye, so it is skipped
+SPIDER_CAST = {"south": [0, 1, 1, 1, 1, 3, 4, 4, 4], "east": [0, 1, 2, 2, 2, 3, 3, 3, 3], "north": [0, 1, 2, 2, 2, 3, 4, 4, 4]}
+SPIDER_WRIST = (81, 126)  # spider: the thrusting hand in the front thrust, on PixelLab's 180px canvas (its skeleton)
+
+
+def spider_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast":
+        return [load("cast6", i) for i in SPIDER_CAST[d]]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -243,7 +276,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":
@@ -325,6 +358,22 @@ def main():
             "side": [sx - ax, sy - ay],
             "down": [dx - ax, dy - ay],
             # the back view hides his hand in front of him: the ball shows over his shoulder
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
+        }
+    if character == "spider":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        # the front frames sit on the work canvas centered, feet on the baseline (see above)
+        first = Image.open(src / "cast6" / "south" / "0.png")
+        wx = (BASE - first.width) // 2 + SPIDER_WRIST[0] - left
+        wy = int(BASE * 0.75) - feet(first.convert("RGBA")) + SPIDER_WRIST[1] - top
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [wx - ax, wy - ay],
+            # the back view hides his hand in front of him: the web leaves from over his shoulder
             "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
         }
     print(json.dumps(info))

@@ -25,6 +25,13 @@ describe("actionCues", () => {
     expect(actionCues(v, p, { dir: null, bomb: true, special: true })).toEqual([]);
   });
 
+  it("suppresses input while webbed beyond the next tick it comes loose", () => {
+    const v = view();
+    const p = me(v);
+    p.webbed = 2;
+    expect(actionCues(v, p, { dir: null, bomb: true, special: true })).toEqual([]);
+  });
+
   it("allows placement on the tick that frozen reaches zero", () => {
     const v = view();
     const p = me(v);

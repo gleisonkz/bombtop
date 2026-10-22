@@ -82,7 +82,7 @@ export class Predictor {
     this.reconcile(snap);
 
     const p = structuredClone(found);
-    if (!p.alive || p.stun > 0 || p.frozen > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
+    if (!p.alive || p.stun > 0 || p.frozen > 0 || p.webbed > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
 
     const state = { ...snap, players: [p], rng: 0 } as MatchState;
     this.log.forEach((e, i) => {

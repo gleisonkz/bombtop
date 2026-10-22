@@ -240,6 +240,37 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14,
   },
+  /** Spider-Man (fan art), made in PixelLab (scripts/build-character-sheet.py spider lays out its frames). */
+  spider: {
+    url: "sprites/spider.png",
+    width: 1170,
+    height: 2898,
+    frameW: 130,
+    frameH: 161,
+    anchorX: 64.5,
+    anchorY: 155,
+    bodyH: 152,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The web shot: hand pulled back, then thrust forward as the web leaves. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His thrust hand, where the web leaves (the back view hides it: over his shoulder). */
+    muzzle: { side: [42.5, -74], down: [-8.5, -39], up: [0, -84.2] },
+    /** The blue of his suit's sides and legs (his red is the suit itself). */
+    hues: [205, 240],
+    hueBase: [5, 89, 194],
+    /** White would bleach his blue into his web lines, red would melt it into his suit: those players keep the blue. */
+    keepFor: [[245, 245, 245], [232, 74, 74]],
+    scale: 0.139,
+  },
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",
@@ -640,6 +671,35 @@ export function iceBlock(cx: number, cy: number, bodyH: number): { x: number; y:
   const w = 14;
   const top = cy + FEET_DY - bodyH - 2;
   return { x: cx - w / 2, y: top, w, h: bodyH + 4 };
+}
+
+/**
+ * How a player caught in the spider's web looks: shaking as they struggle, the web flickering
+ * in its last second as it comes loose. Null when not webbed.
+ */
+export function webbedLook(webbed: number, tick: number): { shake: number; wraps: boolean } | null {
+  if (webbed <= 0) return null;
+  const loosening = webbed <= TICK_RATE;
+  return { shake: Math.floor(tick / 5) % 2 ? 0.75 : -0.75, wraps: !loosening || Math.floor(tick / 4) % 2 === 0 };
+}
+
+type Strand = [number, number, number, number];
+
+/**
+ * The web cocoon around a player whose drawn body is `bodyH` tall, and the strands wound round it
+ * (x0,y0,x1,y1): a spiral, the turns in front all slanting one way and fewer seen through it behind, the other way.
+ */
+export function cocoon(cx: number, cy: number, bodyH: number): { x: number; y: number; w: number; h: number; strands: Strand[]; back: Strand[] } {
+  const w = 14;
+  const top = cy + FEET_DY - bodyH - 2;
+  const h = bodyH + 4;
+  const x0 = cx - w / 2;
+  const x1 = cx + w / 2;
+  const strands: Strand[] = [];
+  const back: Strand[] = [];
+  for (let y = top + 2; y + 3 <= top + h - 1; y += 3) strands.push([x0, y + 3, x1, y]);
+  for (let y = top + 3; y + 3 <= top + h - 1; y += 6) back.push([x0, y, x1, y + 3]);
+  return { x: x0, y: top, w, h, strands, back };
 }
 
 export interface FrameRect {

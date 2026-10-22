@@ -41,6 +41,8 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
   rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
+  web: { gain: 0.6, vary: 0.05, voices: 2 },
+  webbed: { gain: 0.55, vary: 0.05, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
   mega: { gain: 0.7, vary: 0.04, voices: 2 },
   start: { gain: 0.6, vary: 0, voices: 1 },
@@ -71,6 +73,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "naruto-pick": { gain: 0.6, vary: 0, voices: 1 },
   "naruto-death": { gain: 0.7, vary: 0, voices: 2 },
   "naruto-win": { gain: 0.65, vary: 0, voices: 1 },
+  "spider-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "spider-death": { gain: 0.7, vary: 0, voices: 2 },
+  "spider-win": { gain: 0.65, vary: 0, voices: 1 },
+  "spider-special": { gain: 0.6, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

@@ -274,9 +274,10 @@ export class OnlineGame implements GameMode {
     const now = performance.now();
     // A blast we already predicted is still recharging on the server's side: don't cast it twice.
     const casting = this.blastGhosts.active(now);
-    const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => c.name !== "ice" || !casting);
+    const shot = (c: { name: string }) => c.name === "ice" || c.name === "web";
+    const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => !shot(c) || !casting);
     for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now, me.bombType, seq);
-    const blast = cues.some((c) => c.name === "ice") ? predictBlast(this.latest!, me) : null;
+    const blast = cues.some(shot) ? predictBlast(this.latest!, me) : null;
     if (blast) this.blastGhosts.add(blast, now);
     this.ctx.sound.cues(cues, this.latest!.grid.width);
     this.echo.played(cues, now);

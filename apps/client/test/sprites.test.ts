@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -338,6 +338,38 @@ describe("ice blast visuals", () => {
     expect(b.y + b.h).toBeGreaterThan(feet);
     expect(b.y + b.h).toBeLessThanOrEqual(feet + 3);
     expect(b.x + b.w / 2).toBe(100);
+  });
+});
+
+describe("spider web", () => {
+  it("a webbed player struggles in place, and the web loosens (flickers) in its last second", () => {
+    expect(webbedLook(0, 0)).toBeNull();
+    const tight = Array.from({ length: 30 }, (_, t) => webbedLook(WEB_TICKS, t)!);
+    expect(new Set(tight.map((l) => l.wraps))).toEqual(new Set([true]));
+    expect(new Set(tight.map((l) => l.shake)).size).toBeGreaterThan(1);
+    for (const l of tight) expect(Math.abs(l.shake)).toBeLessThanOrEqual(1);
+    const loose = Array.from({ length: 30 }, (_, t) => webbedLook(30, t)!.wraps);
+    expect(new Set(loose)).toEqual(new Set([true, false]));
+  });
+
+  it("the cocoon wraps the body from over the head to the feet, strands crossing it", () => {
+    const body = 21;
+    const c = cocoon(100, 50, body);
+    const feet = 50 + 6;
+    expect(c.y).toBeLessThan(feet - body);
+    expect(c.y + c.h).toBeGreaterThan(feet);
+    expect(c.x + c.w / 2).toBe(100);
+    expect(c.strands.length).toBeGreaterThanOrEqual(5);
+    expect(c.back.length).toBeGreaterThanOrEqual(2);
+    for (const [x0, y0, x1, y1] of [...c.strands, ...c.back]) {
+      for (const [x, y] of [[x0, y0], [x1, y1]] as const) {
+        expect(x).toBeGreaterThanOrEqual(c.x);
+        expect(x).toBeLessThanOrEqual(c.x + c.w);
+        expect(y).toBeGreaterThanOrEqual(c.y);
+        expect(y).toBeLessThanOrEqual(c.y + c.h);
+      }
+      expect(y1).not.toBe(y0); // slanted, wound round him
+    }
   });
 });
 
@@ -723,5 +755,28 @@ describe("captain sheet and shield", () => {
   it("the spiral sheet holds a row behind him and a row in front", () => {
     expect(SPIRAL.frames * SPIRAL.frameW).toBeLessThanOrEqual(SPIRAL.width);
     expect(Math.max(SPIRAL.rows.behind, SPIRAL.rows.front) + 1).toBe(SPIRAL.height / SPIRAL.frameH);
+  });
+});
+
+describe("spider sheet", () => {
+  const spider = SHEETS.spider;
+
+  it("every row fits inside the image", () => {
+    const strips = [spider.idle, spider.walk, spider.cast!, spider.carryIdle!, spider.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, spider.stun!, spider.death!, spider.lobby!]) {
+      expect((s.row + 1) * spider.frameH).toBeLessThanOrEqual(spider.height);
+      expect(s.frames * spider.frameW).toBeLessThanOrEqual(spider.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    expect(Math.abs(spider.bodyH * spider.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  });
+
+  it("the web leaves from his thrust hand, out in front of him, on whichever side he faces", () => {
+    const [rx] = boltOrigin(spider, "right", 100, 50);
+    const [lx] = boltOrigin(spider, "left", 100, 50);
+    expect(rx).toBeGreaterThan(104);
+    expect(lx).toBeLessThan(96);
   });
 });

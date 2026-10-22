@@ -3,8 +3,8 @@ import { soundCues, type Cue, type CueName } from "./cues";
 
 /** Sounds of our own button presses, played before the server confirms them. */
 const OWN: ReadonlySet<CueName> = new Set<CueName>([
-  "place", "throw", "jump", "dash", "ice", "thunder", "kamehameha", "rasengan", "mega",
-  "bomb-special", "ninja-special", "captain-special", "thor-special",
+  "place", "throw", "jump", "dash", "ice", "web", "thunder", "kamehameha", "rasengan", "mega",
+  "bomb-special", "ninja-special", "captain-special", "thor-special", "spider-special",
 ]);
 
 /**
@@ -13,7 +13,7 @@ const OWN: ReadonlySet<CueName> = new Set<CueName>([
  */
 export function actionCues(view: PublicView, me: Player, input: PlayerInput): Cue[] {
   // step thaws first; the other busy states consume even their final tick.
-  if (!me.alive || me.frozen > 1 || me.shield > 0 || me.stun > 0 || me.charge > 0 || me.rasengan > 0) return [];
+  if (!me.alive || me.frozen > 1 || me.webbed > 1 || me.shield > 0 || me.stun > 0 || me.charge > 0 || me.rasengan > 0) return [];
   if (me.jumpTicks > 0 || me.dashTicks > 0) return [];
   const before: MatchState = { ...structuredClone(view), rng: 0, players: [structuredClone(me)] };
   const after = structuredClone(before);

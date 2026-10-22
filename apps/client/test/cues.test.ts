@@ -190,6 +190,23 @@ describe("soundCues", () => {
     expect(names(next, after)).toEqual([]);
   });
 
+  it("hears a web shot, at the caster, and the player it wraps up", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2, kind: "web" });
+      n.players[1]!.webbed = 240;
+    });
+    expect(soundCues(v, next)).toEqual([
+      { name: "web", x: 2.5 },
+      { name: "webbed", x: next.players[1]!.px / TILE },
+    ]);
+    const after = later(next, (n) => {
+      n.blasts[0]!.ttl -= 2;
+      n.players[1]!.webbed -= 2;
+    });
+    expect(names(next, after)).toEqual([]);
+  });
+
   it("hears sudden death starting", () => {
     const v = view();
     expect(names(v, later(v, (n) => (n.pressure = 1)))).toEqual(["hurry"]);

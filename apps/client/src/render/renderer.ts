@@ -1,7 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -22,6 +22,8 @@ const COLORS = {
   ice: 0x7fd8ff,
   bolt: 0xffe45c,
   ki: 0x7fdcff,
+  web: 0xf4f4f8,
+  webShade: 0x9a9aa8,
   cart: 0x8d6e63,
   belt: 0x3a3f4b,
   beltArrow: 0xffd23f,
@@ -589,8 +591,10 @@ export class Renderer {
       let headroom = 12;
       const moving = this.motion.moving(p.id, ux, uy);
       const ice = frozenLook(p.frozen, s.tick);
+      const web = webbedLook(p.webbed, s.tick);
       const tint = ice ? ice.tint : cursedFlash ? COLORS.cursed : 0xffffff;
-      const tick = ice ? 0 : s.tick; // frozen stiff
+      const tick = ice || web ? 0 : s.tick; // frozen stiff, or wrapped up and struggling
+      const sx = cx + (web?.shake ?? 0);
       const blast = s.blasts.find((b) => b.ownerId === p.id);
       const character = this.character(p.id);
       const skin = this.skins.get(character);
@@ -599,11 +603,11 @@ export class Renderer {
         const casting = castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
         const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
-        this.placeSprite(skin, p.id, i, f, cx, cy, tint);
+        this.placeSprite(skin, p.id, i, f, sx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });
-        this.placeMascot(p.id, i, cx, cy, look, tint);
+        this.placeMascot(p.id, i, sx, cy, look, tint);
         headroom = MASCOT.bodyH * MASCOT.scale;
       } else {
         const body = cursedFlash ? COLORS.cursed : color;
@@ -620,6 +624,12 @@ export class Renderer {
         const b = iceBlock(cx, cy, headroom);
         top.roundRect(b.x, b.y, b.w, b.h, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
         top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
+      }
+      if (web?.wraps) {
+        const c = cocoon(sx, cy, headroom);
+        top.roundRect(c.x, c.y, c.w, c.h, 5).fill({ color: COLORS.web, alpha: 0.3 }).stroke({ color: COLORS.webShade, width: 1, alpha: 0.9 });
+        for (const [x0, y0, x1, y1] of c.back) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.webShade, width: 0.8, alpha: 0.8 });
+        for (const [x0, y0, x1, y1] of c.strands) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1, alpha: 0.95 });
       }
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
       // Thor's bolt leaves its victim crackling while stunned.
@@ -646,9 +656,9 @@ export class Renderer {
         const ahead = "burst" in rasen && blast?.length ? TILE_PX * 0.4 : 0;
         this.placeRasengan(top, rasen, hx + dx * ahead, hy + dy * ahead);
       }
-      if (p.specialCooldown === 0 && !ice) {
+      if (p.specialCooldown === 0 && !ice && !web) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -690,6 +700,11 @@ export class Renderer {
       const at = this.lastSeen.get(b.ownerId);
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
       return this.drawBolt(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl, alpha);
+    }
+    if (b.kind === "web") {
+      const at = this.lastSeen.get(b.ownerId);
+      const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
+      return this.drawWeb(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, alpha);
     }
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.ice, width: 6, alpha: alpha * 0.6, cap: "round" });
     g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: 0xffffff, width: 2, alpha, cap: "round" });
@@ -739,6 +754,22 @@ export class Renderer {
     g.circle(x1, y1, 5 * w * pulse).fill({ color: 0xffffff, alpha: 0.95 });
     g.circle(x0, y0, 6 * w).fill({ color: COLORS.ki, alpha: 0.5 });
     g.circle(x0, y0, 3.5 * w).fill({ color: 0xffffff, alpha: 1 });
+  }
+
+  /** The spider's web: a taut strand from his hand to where it stopped, splatting into a little net there. */
+  private drawWeb(g: Graphics, x0: number, y0: number, x1: number, y1: number, alpha: number): void {
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.webShade, width: 2.5, alpha: alpha * 0.6, cap: "round" });
+    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1.2, alpha, cap: "round" });
+    const spokes = 8;
+    for (let k = 0; k < spokes; k++) {
+      const a = (k / spokes) * Math.PI * 2;
+      g.moveTo(x1, y1).lineTo(x1 + Math.cos(a) * 6, y1 + Math.sin(a) * 6);
+    }
+    g.stroke({ color: COLORS.web, width: 0.8, alpha });
+    for (const r of [2.5, 4.5]) {
+      const ring = Array.from({ length: spokes }, (_, k) => [x1 + Math.cos((k / spokes) * Math.PI * 2) * r, y1 + Math.sin((k / spokes) * Math.PI * 2) * r]).flat();
+      g.poly(ring).stroke({ color: COLORS.web, width: 0.6, alpha });
+    }
   }
 
   /** Thor's bolt: a yellow glow and a white core along a zigzag that re-forks every 3 ticks, flashing at the end. */

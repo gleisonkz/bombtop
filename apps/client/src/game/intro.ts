@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 13 * TICK_RATE;
+export const INTRO_TICKS = 15 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -20,19 +20,22 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 330, to: 450, card: { name: "Thor", line: "Ergue o martelo e solta um raio: quem leva fica tonto!" } },
   { from: 450, to: 570, card: { name: "Goku", line: "Kamehameha! Carrega o ki e manda um raio que derruba tudo na frente." } },
   { from: 570, to: 690, card: { name: "Naruto", line: "Rasengan! Avança com a esfera de chakra e arremessa quem estiver na frente." } },
+  { from: 690, to: 810, card: { name: "Homem-Aranha", line: "Teia! Quem leva fica enrolado num casulo, sem fugir da bomba." } },
 ];
-const LOGO_FROM = 690;
+const LOGO_FROM = 810;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
  * (row 5 is an open corridor). The mascot plants its mega bomb and walks off, the ninja's ice hits it,
  * the captain raises his shield and the blast bounces back off it, Thor's bolt leaves the mascot dizzy
  * up in row 3, Goku's Kamehameha smashes a row of blocks in row 7, Naruto's Rasengan knocks the mascot
- * back along row 3, then the logo.
+ * back along row 3, the spider walks down row 7 (open since the Kamehameha) and webs Goku, then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
+  /** Seats some wear instead of their own (renderer `setColors`): the spider's seventh would be the second's black. */
+  readonly colors = new Map([["spider", 2]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -46,6 +49,8 @@ export class Intro {
     });
     // One more than a match seats: Naruto sits in the sixth seat, which takes the first one's colors.
     s.players.push({ ...structuredClone(s.players[0]!), id: "naruto", character: "naruto" });
+    // And the spider in a seventh, dressed in red (see `colors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "spider", character: "spider" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
@@ -53,8 +58,9 @@ export class Intro {
     placePlayerAt(s, "thor", 11, 3);
     placePlayerAt(s, "goku", 1, 7);
     placePlayerAt(s, "naruto", 2, 3);
+    placePlayerAt(s, "spider", 11, 7);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, ninja, thor, goku, naruto] = s.players;
+    const [captain, bomb, ninja, thor, goku, naruto, spider] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
@@ -62,6 +68,7 @@ export class Intro {
     thor!.facing = "left";
     goku!.facing = "right";
     naruto!.facing = "right";
+    spider!.facing = "left";
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -76,6 +83,8 @@ export class Intro {
       new Script("goku", [{ wait: 450 }, { go: "right", tiles: 1 }, { wait: 6 }, { press: "special" }]),
       // Steps in along row 3 and dashes into the dizzy mascot, knocking it back toward Thor.
       new Script("naruto", [{ wait: 570 }, { go: "right", tiles: 2 }, { wait: 6 }, { press: "special" }]),
+      // Walks in along row 7 until Goku is in reach and webs him.
+      new Script("spider", [{ wait: 690 }, { go: "left", tiles: 4 }, { wait: 6 }, { press: "special" }]),
     ];
   }
 

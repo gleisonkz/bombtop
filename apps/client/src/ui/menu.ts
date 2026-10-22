@@ -218,7 +218,7 @@ export class Menu {
 
 /** The lineup on the title screen: the mascot in front, players in their arena colors at its sides. */
 function cast(): HTMLElement {
-  const [white, , , blue, green] = PLAYER_COLORS;
+  const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
     member(characterArt("naruto", white, "walk"), "edge left"),
@@ -227,6 +227,7 @@ function cast(): HTMLElement {
     member(titleBomberArt(), "star"),
     member(characterArt("captain", white, "walk"), "near right"),
     member(characterArt("thor", blue, "walk"), "far right"),
+    member(characterArt("spider", red, "walk"), "edge right"),
   ]);
 }
 
