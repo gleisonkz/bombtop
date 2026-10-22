@@ -1,6 +1,7 @@
 import { FUSE_TICKS, PRESSURE_INTERVAL, ROUND_TICKS, TILE } from "./constants";
 import { pressureOrder } from "./pressure";
 import { effectiveRange, effectiveSpeed } from "./curse";
+import { createRng } from "./rng";
 import {
   bombAt,
   DIR_VECTORS,
@@ -21,7 +22,8 @@ import {
  * knows where each blast will land and when, and gets out of the way. Between
  * "thoughts" (more often on harder levels) it picks what to do next: grab a
  * power-up, break blocks, or go after a rival, and it only drops a bomb when
- * it can still get away from it.
+ * it can still get away from it. Each bot has a personality (what it goes for, how
+ * careful it is) and its own dice, so no two bots, nor two matches, play alike.
  */
 
 export type BotLevel = "easy" | "medium" | "hard";
@@ -42,6 +44,37 @@ interface Tuning {
   cunning: boolean;
 }
 
+/** What a bot is like: what it goes for first, how careful and how predictable it is. */
+export type BotPersona = "hunter" | "collector" | "demolisher" | "cautious" | "wildcard";
+export const BOT_PERSONAS: readonly BotPersona[] = ["hunter", "collector", "demolisher", "cautious", "wildcard"];
+
+interface Traits {
+  /** Head start, in steps, given to each kind of goal when choosing (higher = preferred). */
+  item: number;
+  block: number;
+  rival: number;
+  /** Walks this many times further for a power-up. */
+  greed: number;
+  /** Goes after rivals even on levels that otherwise don't. */
+  hunts: boolean;
+  /** Extra ticks of safety wanted before dropping a bomb (never when running: that only narrows the way out). */
+  caution: number;
+  /** Thinks this many times slower. */
+  slow: number;
+  /** Random steps added to each goal's distance (how unpredictable). */
+  noise: number;
+  /** Chance, per thought, of strolling somewhere instead. */
+  wander: number;
+}
+
+const PERSONAS: Record<BotPersona, Traits> = {
+  hunter: { item: 0, block: 0, rival: 4, greed: 1, hunts: true, caution: 0, slow: 1, noise: 2, wander: 0 },
+  collector: { item: 5, block: 1, rival: -2, greed: 2.5, hunts: false, caution: 2, slow: 1, noise: 2, wander: 0.05 },
+  demolisher: { item: 1, block: 4, rival: -1, greed: 1, hunts: false, caution: 0, slow: 1, noise: 2, wander: 0 },
+  cautious: { item: 2, block: 1, rival: -3, greed: 1, hunts: false, caution: 10, slow: 1.5, noise: 2, wander: 0.05 },
+  wildcard: { item: 1, block: 1, rival: 1, greed: 1.5, hunts: true, caution: 0, slow: 1, noise: 7, wander: 0.2 },
+};
+
 const TUNING: Record<BotLevel, Tuning> = {
   easy: { think: 18, margin: 28, bombs: 1, itemReach: 5, hunt: false, cunning: false },
   medium: { think: 7, margin: 16, bombs: 2, itemReach: 9, hunt: true, cunning: false },
@@ -49,6 +82,17 @@ const TUNING: Record<BotLevel, Tuning> = {
 };
 
 const FACINGS: Facing[] = ["up", "down", "left", "right"];
+/** A bot's mood (see Bot.mood) lasts this long, up to twice as long. */
+const MOOD_TICKS = 120;
+
+/** How much a mood fancies tile (x, y), in [0, 1): a hash, the same for as long as the mood lasts. */
+function tileFancy(mood: number, x: number, y: number): number {
+  let h = Math.imul(mood ^ Math.imul(x + 1, 73856093) ^ Math.imul(y + 1, 19349663), 2654435761);
+  h ^= h >>> 15;
+  h = Math.imul(h, 2246822519);
+  h ^= h >>> 13;
+  return (h >>> 0) / 4294967296;
+}
 /** A rival's remote bomb can go off at any moment: assume this soon. */
 const REMOTE_THREAT = 20;
 
@@ -63,16 +107,30 @@ interface Node {
 
 export class Bot {
   private readonly tune: Tuning;
+  private readonly traits: Traits;
+  /** This bot's own dice (deterministic: the same seed plays the same match). */
+  private readonly random: () => number;
   private goal: { x: number; y: number } | null = null;
   private nextThink = 0;
+  /**
+   * The bot's mood: how much it fancies each tile, rerolled every few seconds. Fresh dice at every thought
+   * would flip its goal tick after tick (a hard bot thinks every tick) and leave it dithering by its bombs.
+   */
+  private mood = 0;
+  private moodUntil = 0;
   /** Last direction sent and where we were then: a step under way. */
   private stride: { dir: Facing; px: number; py: number } | null = null;
 
   constructor(
     readonly id: string,
     readonly level: BotLevel = "medium",
+    readonly persona: BotPersona = "demolisher",
+    seed = 0,
   ) {
-    this.tune = TUNING[level];
+    this.traits = PERSONAS[persona];
+    const base = TUNING[level];
+    this.tune = { ...base, hunt: base.hunt || this.traits.hunts };
+    this.random = createRng(seed);
   }
 
   /** This tick's input. */
@@ -105,7 +163,8 @@ export class Bot {
     // Everything else only walks through tiles that are safe for good.
     const nodes = reach(s, p, danger, this.tune.margin, true);
     if (s.tick >= this.nextThink) {
-      this.nextThink = s.tick + this.tune.think;
+      const think = this.tune.think * this.traits.slow;
+      this.nextThink = s.tick + Math.round(think + this.random() * think * 0.5);
       const act = this.decide(s, p, danger, nodes);
       if (act) return act;
     }
@@ -155,19 +214,56 @@ export class Bot {
       if (worth && this.canEscape(s, p, after)) return { dir: null, bomb: true };
     }
 
-    // Where to next: a power-up, a spot to bomb from, or a rival.
-    const items = new Set(s.items.filter((i) => i.kind !== ItemKind.Skull).map((i) => k(i.x, i.y)));
-    const pick =
-      nodes.find((n) => n.steps > 0 && n.steps <= t.itemReach && items.has(k(n.x, n.y)) && safe(n.x, n.y)) ??
-      (canBomb ? nodes.find((n) => n.steps > 0 && safe(n.x, n.y) && bombValue(s, p, n.x, n.y) > 0) : undefined) ??
-      (t.hunt ? this.towardRival(s, p, nodes, safe) : undefined);
+    // Where to next: a power-up, a spot to bomb from, or a rival, weighed by personality and a little luck;
+    // now and then just a stroll.
+    const pick = this.random() < this.traits.wander ? this.stroll(nodes, safe) : this.pickGoal(s, p, nodes, safe, canBomb);
     this.goal = pick ? { x: pick.x, y: pick.y } : null;
     return null;
   }
 
+  /** The best goal: each candidate's distance, less its kind's head start, plus some noise. */
+  private pickGoal(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean, canBomb: boolean): Node | undefined {
+    const t = this.tune;
+    const tr = this.traits;
+    const k = (x: number, y: number) => y * s.grid.width + x;
+    const items = new Set(s.items.filter((i) => i.kind !== ItemKind.Skull).map((i) => k(i.x, i.y)));
+    if (s.tick >= this.moodUntil) {
+      this.mood = Math.floor(this.random() * 2 ** 32);
+      this.moodUntil = s.tick + MOOD_TICKS + Math.floor(this.random() * MOOD_TICKS);
+    }
+    let best: Node | undefined;
+    let bestScore = Infinity;
+    const consider = (n: Node | undefined, headStart: number) => {
+      if (!n) return;
+      const score = n.steps - headStart + tileFancy(this.mood, n.x, n.y) * tr.noise;
+      if (score < bestScore) {
+        best = n;
+        bestScore = score;
+      }
+    };
+    let spots = 0;
+    for (const n of nodes) {
+      if (n.steps === 0 || !safe(n.x, n.y)) continue;
+      if (items.has(k(n.x, n.y)) && n.steps <= t.itemReach * tr.greed) consider(n, tr.item);
+      // The nearest few spots to bomb from (looking further costs time and changes little).
+      else if (canBomb && spots < 6 && bombValue(s, p, n.x, n.y) > 0) {
+        spots++;
+        consider(n, tr.block);
+      }
+    }
+    if (t.hunt) consider(this.towardRival(s, p, nodes, safe), tr.rival);
+    return best;
+  }
+
+  /** Somewhere safe nearby, at random. */
+  private stroll(nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
+    const near = nodes.filter((n) => n.steps > 0 && n.steps <= 6 && safe(n.x, n.y));
+    return near[Math.floor(this.random() * near.length)];
+  }
+
   /** With the bomb down (`after`), a safe tile must still be within reach in time. */
   private canEscape(s: MatchState, p: Player, after: Danger): boolean {
-    return reach(s, p, after, this.tune.margin, false).some((n) => !after.has(n.y * s.grid.width + n.x));
+    return reach(s, p, after, this.tune.margin + this.traits.caution, false).some((n) => !after.has(n.y * s.grid.width + n.x));
   }
 
   /** Whether the bomb would leave some rival with no safe tile to run to. */

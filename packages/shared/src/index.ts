@@ -16,7 +16,7 @@ export * from "./movement";
 export * from "./step";
 export * from "./curse";
 export { createRng, nextRandom } from "./rng";
-export { Bot, BOT_LEVELS, botInput, heading, type BotLevel } from "./bot";
+export { Bot, BOT_LEVELS, BOT_PERSONAS, botInput, heading, type BotLevel, type BotPersona } from "./bot";
 export * from "./special";
 export * from "./delta";
 export * from "./room/session";

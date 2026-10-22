@@ -1,4 +1,4 @@
-import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type CharacterId, type LobbyInfo } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { button, el } from "./dom";
@@ -17,6 +17,15 @@ const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
 };
 
 export const LEVEL_NAMES: Record<BotLevel, string> = { easy: "Fácil", medium: "Médio", hard: "Difícil" };
+
+/** Bot personalities, as shown on their seats. */
+export const PERSONA_NAMES: Record<BotPersona, string> = {
+  hunter: "Caçador",
+  collector: "Coletor",
+  demolisher: "Demolidor",
+  cautious: "Cauteloso",
+  wildcard: "Imprevisível",
+};
 
 export interface LobbyHandlers {
   start(): void;
@@ -109,7 +118,7 @@ export class LobbyPanel {
         const you = member.id === me;
         const cls = seatClass(member, me);
         const sub = member.bot
-          ? `🤖 ${LEVEL_NAMES[member.bot]} • ${member.wins} 🏆`
+          ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
           : member.connected
             ? `${you ? "você • " : ""}${member.wins} 🏆`
             : "reconectando…";

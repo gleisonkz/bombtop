@@ -1,4 +1,4 @@
-import { BOT_LEVELS, type BotLevel } from "./bot";
+import { BOT_LEVELS, type BotLevel, type BotPersona } from "./bot";
 import type { MatchResult } from "./pressure";
 import { CHARACTERS, type CharacterId, type Direction, type PlayerInput } from "./state";
 import type { StageId } from "./stage";
@@ -38,6 +38,8 @@ export interface LobbyMember {
   character: CharacterId;
   /** Set for computer players: their difficulty. */
   bot?: BotLevel;
+  /** Computer players: their personality (what they go for, how careful they are). */
+  persona?: BotPersona;
 }
 
 export interface LobbyInfo {

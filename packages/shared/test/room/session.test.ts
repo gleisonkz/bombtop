@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "../../src";
-import { BattleSession, BOT_NAMES, RESULTS_TICKS } from "../../src";
+import { BattleSession, BOT_NAMES, BOT_PERSONAS, RESULTS_TICKS } from "../../src";
 
 function lobby(n: number) {
   const s = new BattleSession({ seed: () => 1, blockDensity: 0 });
@@ -277,6 +277,14 @@ describe("bots", () => {
     s.addBot("c1", "easy");
     expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(2);
     expect(s.setCharacter(s.members[1]!.id, "bomb")).toBe(false);
+  });
+
+  it("gives the bots in a room different personalities", () => {
+    const s = lobby(1);
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "medium");
+    const personas = s.members.slice(1).map((m) => m.persona);
+    expect(personas.every((p) => p && BOT_PERSONAS.includes(p))).toBe(true);
+    expect(new Set(personas).size).toBe(personas.length);
   });
 
   it("gives each bot its own name", () => {

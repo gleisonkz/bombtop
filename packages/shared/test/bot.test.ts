@@ -12,6 +12,55 @@ function play(s: MatchState, bots: string[], ticks: number) {
 
 const blocks = (s: MatchState) => s.grid.tiles.filter((t) => t === Tile.Block).length;
 
+/** Runs `ticks` ticks with p1 driven by `bot` and p2 idle. */
+function drive(s: MatchState, bot: Bot, ticks: number) {
+  for (let i = 0; i < ticks; i++) step(s, { p1: bot.input(s) });
+}
+
+describe("bot personalities", () => {
+  /** p1 at (1,1); a power-up far down the left column, a rival close along the top row. */
+  function choice(): MatchState {
+    const s = emptyMatch();
+    s.items.push({ x: 1, y: 9, kind: ItemKind.Bomb });
+    const rival = player(s, "p2");
+    rival.px = center(7);
+    rival.py = center(1);
+    return s;
+  }
+
+  it("a collector walks far for a power-up a hunter leaves, to go after the rival", () => {
+    const collector = choice();
+    drive(collector, new Bot("p1", "medium", "collector"), 3 * TICK_RATE);
+    expect(player(collector).bombCapacity).toBe(2);
+    const hunter = choice();
+    drive(hunter, new Bot("p1", "medium", "hunter"), TICK_RATE);
+    expect(player(hunter).px).toBeGreaterThan(center(1));
+    expect(player(hunter).bombCapacity).toBe(1);
+  });
+
+  it("an easy hunter still goes after rivals (an easy bot usually only breaks blocks)", () => {
+    const s = choice();
+    s.items = [];
+    drive(s, new Bot("p1", "easy", "hunter"), 2 * TICK_RATE);
+    expect(player(s).px).toBeGreaterThan(center(2));
+  });
+
+  it("the same bot with the same seed makes the same moves; another seed plays it differently", () => {
+    const path = (seed: number) => {
+      const s = createMatch({ seed: 3, playerIds: ["p1", "p2"] });
+      const bot = new Bot("p1", "medium", "wildcard", seed);
+      const trail: string[] = [];
+      for (let i = 0; i < 6 * TICK_RATE; i++) {
+        step(s, { p1: bot.input(s) });
+        trail.push(`${player(s).px},${player(s).py}`);
+      }
+      return trail.join(";");
+    };
+    expect(path(1)).toBe(path(1));
+    expect(path(2)).not.toBe(path(1));
+  });
+});
+
 describe("botInput", () => {
   it("runs away from a bomb it is standing on", () => {
     const s = emptyMatch();

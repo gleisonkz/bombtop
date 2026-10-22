@@ -11,6 +11,7 @@ import {
   CHARACTERS,
   DEFAULT_CHARACTER,
   type BotLevel,
+  BOT_PERSONAS,
   type CharacterId,
   type LobbyInfo,
   type LobbyMember,
@@ -105,8 +106,13 @@ export class BattleSession {
     const taken = new Set(this.members.map((m) => m.name));
     const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
     const free = BOT_NAMES[character].filter((n) => !taken.has(n));
-    const name = free[Math.floor((this.opts.random ?? Math.random)() * free.length)] ?? `Bot ${this.botSeq + 1}`;
-    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character });
+    const random = this.opts.random ?? Math.random;
+    const name = free[Math.floor(random() * free.length)] ?? `Bot ${this.botSeq + 1}`;
+    // A personality no other bot in the room has (there are as many as bot seats).
+    const used = new Set(this.members.map((m) => m.persona));
+    const personas = BOT_PERSONAS.filter((p) => !used.has(p));
+    const persona = personas[Math.floor(random() * personas.length)] ?? BOT_PERSONAS[0]!;
+    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character, persona });
     return true;
   }
 
@@ -154,7 +160,8 @@ export class BattleSession {
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });
     this.inputs.clear();
-    this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot)]));
+    // Each bot gets its own dice for this match, from the match's seed: replays stay the same, matches don't.
+    this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot, m.persona, seed ^ hashId(m.id))]));
     this.phase = "playing";
     return true;
   }
@@ -200,4 +207,11 @@ export class BattleSession {
     if (result.over || this.match.tick % SNAPSHOT_EVERY === 0) out.snapshot = this.snapshot(this.match);
     return out;
   }
+}
+
+/** A string's FNV-1a hash (a bot's id, to give each bot different dice from one match seed). */
+function hashId(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
 }
