@@ -210,7 +210,7 @@ const lobby = new LobbyPanel(ui, {
   pickCharacter: (c) => {
     storage.set(CHARACTER_KEY, c);
     const line = voiceLine(c, "pick");
-    if (line) sound.play(line);
+    if (line) sound.play(line, { channel: "pick" });
     online?.pickCharacter(c);
   },
 });

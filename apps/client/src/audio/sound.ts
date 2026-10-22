@@ -98,10 +98,15 @@ export function resultSound(winnerId: string | null, me: string): SoundName {
   return winnerId === null ? "draw" : winnerId === me ? "win" : "lose";
 }
 
+/** A sound on its way out of the speakers. */
+export interface Playing {
+  stop(): void;
+}
+
 /** Where sounds actually go; WebAudioBackend in the browser, a fake in tests. */
 export interface AudioBackend {
   unlock(): Promise<void>;
-  play(name: SoundName, o: { gain: number; pan: number; rate: number }): void;
+  play(name: SoundName, o: { gain: number; pan: number; rate: number }): Playing | void;
   /** Milliseconds, for the voice limiter. */
   now(): number;
 }
@@ -147,12 +152,20 @@ export class Sound {
     return this.muted;
   }
 
-  play(name: SoundName, o: { pan?: number; gain?: number } = {}): void {
+  /** A `channel` holds one sound at a time: playing on it cuts whatever it was still playing. */
+  play(name: SoundName, o: { pan?: number; gain?: number; channel?: string } = {}): void {
+    if (o.channel) {
+      this.channels.get(o.channel)?.stop();
+      this.channels.delete(o.channel);
+    }
     const spec = SOUNDS[name];
     if (this.muted || this.volume === 0 || !this.allow(name, spec.voices)) return;
     const rate = 1 + (this.random() * 2 - 1) * spec.vary;
-    this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    const playing = this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    if (o.channel && playing) this.channels.set(o.channel, playing);
   }
+
+  private readonly channels = new Map<string, Playing>();
 
   /** Plays what happened in the arena (see soundCues). */
   cues(cues: Cue[], arenaWidth: number): void {
@@ -191,7 +204,7 @@ export class WebAudioBackend implements AudioBackend {
     );
   }
 
-  play(name: SoundName, o: { gain: number; pan: number; rate: number }): void {
+  play(name: SoundName, o: { gain: number; pan: number; rate: number }): Playing | void {
     const ctx = this.ctx;
     const buffer = this.buffers.get(name);
     if (!ctx || !buffer) return;
@@ -201,6 +214,7 @@ export class WebAudioBackend implements AudioBackend {
     const pan = new StereoPannerNode(ctx, { pan: o.pan });
     src.connect(gain).connect(pan).connect(ctx.destination);
     src.start();
+    return { stop: () => src.stop() };
   }
 
   now(): number {

@@ -4,13 +4,17 @@ import { MASTER_DB, SOUNDS, Sound, resultSound, type AudioBackend } from "../src
 /** Records what would reach the speakers. */
 function fakeBackend() {
   const played: { name: string; gain: number; pan: number; rate: number }[] = [];
+  const stopped: string[] = [];
   let unlocked = 0;
   const backend: AudioBackend = {
     unlock: async () => void unlocked++,
-    play: (name, o) => void played.push({ name, ...o }),
+    play: (name, o) => {
+      played.push({ name, ...o });
+      return { stop: () => void stopped.push(name) };
+    },
     now: () => 0,
   };
-  return { backend, played, unlocks: () => unlocked };
+  return { backend, played, stopped, unlocks: () => unlocked };
 }
 
 function memoryStore() {
@@ -97,6 +101,33 @@ describe("Sound", () => {
     await s.unlock();
     await s.unlock();
     expect(unlocks()).toBe(1);
+  });
+
+  it("cuts the sound still playing on the same channel", () => {
+    const { backend, played, stopped } = fakeBackend();
+    const s = new Sound(backend, memoryStore());
+    s.play("bomb-pick", { channel: "pick" });
+    s.play("ninja-pick", { channel: "pick" });
+    expect(played.map((p) => p.name)).toEqual(["bomb-pick", "ninja-pick"]);
+    expect(stopped).toEqual(["bomb-pick"]);
+  });
+
+  it("leaves sounds outside the channel alone", () => {
+    const { backend, stopped } = fakeBackend();
+    const s = new Sound(backend, memoryStore());
+    s.play("click");
+    s.play("bomb-pick", { channel: "pick" });
+    s.play("ninja-pick", { channel: "pick" });
+    expect(stopped).toEqual(["bomb-pick"]);
+  });
+
+  it("cuts the channel even when the new sound is muted", () => {
+    const { backend, stopped } = fakeBackend();
+    const s = new Sound(backend, memoryStore());
+    s.play("bomb-pick", { channel: "pick" });
+    s.toggleMute();
+    s.play("ninja-pick", { channel: "pick" });
+    expect(stopped).toEqual(["bomb-pick"]);
   });
 });
 
