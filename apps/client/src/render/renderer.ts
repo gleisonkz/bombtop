@@ -1,6 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
+import { PerColor } from "./per-color";
 import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
@@ -60,18 +61,20 @@ export interface PlayerPos {
   py: number;
 }
 
-/** A character sheet repainted once per player color. */
+/** A character sheet repainted in each player color it is drawn in. */
 interface Skin {
   sheet: SheetLayout;
-  sources: Texture[];
+  sources: PerColor<Texture>;
   frames: Map<string, Texture>;
 }
 
-/** Loads a sheet and repaints its clothes in each player color. */
+/** Loads a sheet; each player color is painted the first time a player in it is drawn. */
 async function loadSkin(sheet: SheetLayout): Promise<Skin> {
   const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${sheet.url}`);
   const img = base.source.resource as CanvasImageSource;
-  const sources = COLORS.players.map((color) => {
+  const frames = new Map<string, Texture>();
+  const paint = (player: number): Texture => {
+    const color = COLORS.players[player] ?? COLORS.players[0]!;
     const canvas = document.createElement("canvas");
     canvas.width = sheet.width;
     canvas.height = sheet.height;
@@ -84,8 +87,14 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
     const tex = Texture.from(canvas);
     tex.source.scaleMode = sheet.url === SHEETS.bomber.url ? "nearest" : (sheet.scale ?? 1) < 1 ? "linear" : "nearest";
     return tex;
-  });
-  return { sheet, sources, frames: new Map() };
+  };
+  const free = (tex: Texture): void => {
+    const canvas = tex.source.resource as HTMLCanvasElement;
+    tex.destroy(true);
+    canvas.width = canvas.height = 0; // iOS keeps a canvas's pixels until it is shrunk
+    frames.clear();
+  };
+  return { sheet, sources: new PerColor(paint, free), frames };
 }
 
 /** Mascot pixels per SVG unit: drawn larger than shown so it stays smooth when the stage is scaled up. */
@@ -197,6 +206,9 @@ export class Renderer {
   /** Each player's character, from the lobby. */
   setCharacters(characters: Map<string, CharacterId>): void {
     this.characters = characters;
+    // Characters off the stage let go of their painted colors (an iPhone holds only so many canvases).
+    const on = new Set(characters.values());
+    for (const [character, skin] of this.skins) if (!on.has(character)) skin.sources.clear();
   }
 
   /** Players who wear another seat's color than their own (the guides dress each character in theirs). */
@@ -500,7 +512,7 @@ export class Renderer {
     const key = `${player}:${x}:${y}`;
     let tex = skin.frames.get(key);
     if (!tex) {
-      tex = new Texture({ source: skin.sources[player]!.source, frame: new Rectangle(x, y, skin.sheet.frameW, skin.sheet.frameH) });
+      tex = new Texture({ source: skin.sources.get(player).source, frame: new Rectangle(x, y, skin.sheet.frameW, skin.sheet.frameH) });
       skin.frames.set(key, tex);
     }
     return tex;

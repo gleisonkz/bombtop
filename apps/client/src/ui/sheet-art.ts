@@ -75,7 +75,9 @@ function sheetUrl(sheet: SheetLayout, color: string): Promise<string> {
       const rgb = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) as [number, number, number];
       paintSheet(data.data, sheet, rgb);
       ctx.putImageData(data, 0, 0);
-      return canvas.toDataURL();
+      const url = canvas.toDataURL();
+      canvas.width = canvas.height = 0; // iOS keeps a canvas's pixels until it is shrunk
+      return url;
     })();
     painted.set(key, url);
   }
