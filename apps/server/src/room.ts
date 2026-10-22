@@ -1,5 +1,5 @@
 import { Room, type Client } from "@colyseus/core";
-import { C2S, MAX_PLAYERS, RoomCore, TickClock, TICK_RATE } from "@bombtop/shared";
+import { C2S, MAX_PLAYERS, MAX_WATCHERS, RoomCore, TickClock, TICK_RATE } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { NetLog, netReport, TickCost } from "./net-log";
 
@@ -17,23 +17,31 @@ export interface BattleRoomOptions {
   character?: string;
   /** Supabase access token (Google login). */
   token?: string;
+  /** A screen joining only to watch (TV mode): no seat, any time. */
+  watch?: boolean;
 }
 
 /** Thin Colyseus adapter around RoomCore. State is sent as messages, not Schema. */
 export class BattleRoom extends Room {
-  maxClients = MAX_PLAYERS;
+  maxClients = MAX_PLAYERS + MAX_WATCHERS;
   private readonly core = new RoomCore(() => this.roomId, {
     send: (id, type, message) => this.clients.getById(id)?.send(type, message),
     broadcast: (type, message) => this.broadcast(type, message),
-    // Locked while a match runs (no public joins); bots take seats too, so a full room stops taking people.
-    phaseChanged: (phase) => void (phase === "playing" ? this.lock() : phase === "lobby" ? this.unlock() : undefined),
-    seatsChanged: (full) => void (full ? this.lock() : this.unlock()),
+    phaseChanged: () => this.refreshListing(),
+    seatsChanged: () => this.refreshListing(),
   });
+  /** Created private (a room with friends): never matched publicly. */
+  private privateRoom = false;
+  private hidden = false;
+  /** Who joined to watch (not held for on a drop: they just join again). */
+  private readonly watchers = new Set<string>();
 
   private readonly tickCost = new TickCost();
 
   async onCreate(options: BattleRoomOptions) {
-    if (options?.private) await this.setPrivate(true);
+    this.privateRoom = !!options?.private;
+    if (this.privateRoom) await this.setPrivate(true);
+    this.hidden = this.privateRoom;
     this.setPatchRate(null);
 
     for (const type of [C2S.input, C2S.sync, C2S.addBot, C2S.removeBot, C2S.character, C2S.start, C2S.beat]) {
@@ -71,13 +79,33 @@ export class BattleRoom extends Room {
   }
 
   onJoin(client: Client, options: BattleRoomOptions) {
+    if (options?.watch) {
+      if (!this.core.watch(client.sessionId)) throw new Error("Já tem telas demais assistindo esta sala");
+      this.watchers.add(client.sessionId);
+      return;
+    }
     const auth = client.auth as Partial<AuthUser> | undefined;
     if (!this.core.join(client.sessionId, auth?.name ?? options?.name, options?.character)) {
       throw new Error("Sala cheia ou partida em andamento");
     }
+    this.refreshListing();
+  }
+
+  /**
+   * Out of public matchmaking while a match runs or every seat is taken (bots take seats too), but never
+   * locked: a TV can still join by code to watch.
+   */
+  private refreshListing(): void {
+    const s = this.core.session;
+    const hide = this.privateRoom || s.phase !== "lobby" || s.members.length >= MAX_PLAYERS;
+    if (hide === this.hidden) return;
+    this.hidden = hide;
+    void this.setPrivate(hide);
   }
 
   onDrop(client: Client) {
+    // A watcher is not held for: Colyseus calls onLeave next (no seat to keep).
+    if (this.watchers.has(client.sessionId)) return;
     this.core.setConnected(client.sessionId, false);
     // Rejects at once when the client dropped mid-join or the room is closing:
     // left unhandled, that rejection would take the whole server down.
@@ -89,6 +117,8 @@ export class BattleRoom extends Room {
   }
 
   onLeave(client: Client) {
+    this.watchers.delete(client.sessionId);
     this.core.leave(client.sessionId);
+    this.refreshListing();
   }
 }

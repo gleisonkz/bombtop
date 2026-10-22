@@ -47,6 +47,8 @@ export interface LobbyInfo {
   stage: StageId;
   /** Room id; doubles as the private-room code. */
   code: string;
+  /** Screens watching without a seat (TV mode). */
+  watchers?: number;
 }
 
 export type ResultMessage = MatchResult & { over: true };

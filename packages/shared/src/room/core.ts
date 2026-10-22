@@ -6,6 +6,7 @@ import {
   inputSeq,
   inputTick,
   MAX_PLAYERS,
+  MAX_WATCHERS,
   S2C,
   sanitizeInput,
   sanitizeName,
@@ -35,6 +36,8 @@ export class RoomCore {
   private lastPhase: RoomPhase = "lobby";
   /** Whole snapshots now and then, differences in between. */
   private readonly stream = new SnapshotStream();
+  /** Screens watching without a seat (TV mode): they get every broadcast, and may only sync. */
+  private readonly watchers = new Set<string>();
 
   constructor(
     /** The room's code (read when sent: a Colyseus room only gets its id once created). */
@@ -49,14 +52,23 @@ export class RoomCore {
     return ok;
   }
 
+  /** A screen that only watches (a TV); false when MAX_WATCHERS already do. Joins any time, even mid-match. */
+  watch(id: string): boolean {
+    if (this.watchers.size >= MAX_WATCHERS) return false;
+    this.watchers.add(id);
+    this.broadcastLobby();
+    return true;
+  }
+
   /** One message from a client (untrusted). */
   message(id: string, type: string, message?: unknown): void {
+    if (this.watchers.has(id) && type !== C2S.sync) return;
     switch (type) {
       case C2S.input:
         this.session.setInput(id, sanitizeInput(message), inputSeq(message), inputTick(message));
         break;
       case C2S.sync: {
-        this.out.send(id, S2C.lobby, this.session.lobbyInfo(this.roomCode()));
+        this.out.send(id, S2C.lobby, this.lobbyInfo());
         // The base the next difference is made against.
         const last = this.stream.last;
         if (this.session.phase !== "lobby" && last) this.out.send(id, S2C.snapshot, last);
@@ -89,7 +101,7 @@ export class RoomCore {
   }
 
   leave(id: string): void {
-    this.session.leave(id);
+    if (!this.watchers.delete(id)) this.session.leave(id);
     this.broadcastLobby();
   }
 
@@ -122,7 +134,11 @@ export class RoomCore {
     return typeof this.code === "string" ? this.code : this.code();
   }
 
+  private lobbyInfo() {
+    return { ...this.session.lobbyInfo(this.roomCode()), watchers: this.watchers.size };
+  }
+
   private broadcastLobby(): void {
-    this.out.broadcast(S2C.lobby, this.session.lobbyInfo(this.roomCode()));
+    this.out.broadcast(S2C.lobby, this.lobbyInfo());
   }
 }

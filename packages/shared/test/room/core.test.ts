@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { C2S, RoomCore, S2C, type LobbyInfo, type RoomPhase } from "../../src";
+import { C2S, MAX_WATCHERS, RoomCore, S2C, type LobbyInfo, type RoomPhase } from "../../src";
 
 /** A room whose messages land in lists instead of a network. */
 function room() {
@@ -23,6 +23,40 @@ describe("RoomCore", () => {
     expect(r.core.join("a", "Ana", "ninja")).toBe(true);
     expect(r.lastLobby().members.map((m) => [m.name, m.character])).toEqual([["Ana", "ninja"]]);
     expect(r.lastLobby().code).toBe("CODE");
+  });
+
+  it("a screen can watch without a seat: it gets the lobby and the match, and is counted", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    expect(r.core.watch("tv")).toBe(true);
+    expect(r.lastLobby().members.map((m) => m.id)).toEqual(["a"]);
+    expect(r.lastLobby().watchers).toBe(1);
+    r.core.message("tv", C2S.sync);
+    expect(r.sent.filter((s) => s.to === "tv").map((s) => s.type)).toEqual([S2C.lobby]);
+  });
+
+  it("a watcher cannot play: its inputs, bots, characters and starts are ignored", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    r.core.watch("tv");
+    r.core.message("tv", C2S.addBot, { level: "easy" });
+    r.core.message("tv", C2S.character, { character: "ninja" });
+    r.core.message("tv", C2S.start);
+    expect(r.lastLobby().members).toHaveLength(1);
+    expect(r.lastLobby().phase).toBe("lobby");
+  });
+
+  it(`watches mid-match too, up to ${MAX_WATCHERS} screens, and leaving frees the spot`, () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    r.core.message("a", C2S.addBot, { level: "easy" });
+    r.core.message("a", C2S.start);
+    for (let i = 0; i < MAX_WATCHERS; i++) expect(r.core.watch(`tv${i}`)).toBe(true);
+    expect(r.core.watch("one-too-many")).toBe(false);
+    r.core.leave("tv0");
+    expect(r.lastLobby().watchers).toBe(MAX_WATCHERS - 1);
+    expect(r.core.watch("tv-again")).toBe(true);
+    expect(r.lastLobby().members).toHaveLength(2);
   });
 
   it("answers a sync with the lobby, to that client only", () => {

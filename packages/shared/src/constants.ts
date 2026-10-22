@@ -9,6 +9,9 @@ export const FLAME_TICKS = Math.round(0.5 * TICK_RATE);
 
 export const MAX_PLAYERS = 5;
 
+/** Screens that may watch a room without a seat (a TV showing the match to the couch). */
+export const MAX_WATCHERS = 2;
+
 /** Fixed-point units per tile (16px sprites x 16 subpixels). Positions are integers. */
 export const TILE = 256;
 
