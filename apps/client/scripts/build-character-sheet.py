@@ -2,7 +2,8 @@
   ninja: sprites/ninja.png, character "Ice ninja HD4" (180px canvas; cast = the ice cast posed from our own
     skeletons with the ice drawn over it by build-ninja-cast.py; carry walk posed from our own skeletons, carry idle =
     its standing frames; lobby = the v3 "hand seal" frames 1..8)
-  captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
+  captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too); then run
+    lock-walk-head.py captain: the template side walk redrew his head on every frame (it wobbled, the jaw changed)
   goku: sprites/goku.png, character "Goku HD" (180px canvas; cast = Kamehameha and carry walk posed from our own
     skeletons; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a glow at his hands in the side
     thrust: that view holds its clean last frame. The hands in the side and front thrust are the "muzzle".
