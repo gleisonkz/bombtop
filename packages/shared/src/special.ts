@@ -1,6 +1,6 @@
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -15,6 +15,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Naruto: dashes ahead with the Rasengan (see `updateRasengan`).
  * Bomb mascot: plants a mega bomb on his tile, piercing and twice his fire.
  * Pikachu: a thunder shock all around him (see `thunder`).
+ * Flash: a dash at super speed straight ahead (see `superSpeed`).
  * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
@@ -29,6 +30,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "static") {
     blast(s, "magnet", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "flash") {
+    superSpeed(s, p);
   } else if (p.character === "pikachu") {
     thunder(s, p);
   } else if (p.character === "goku") {
@@ -67,7 +70,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
@@ -140,6 +143,37 @@ function thunder(s: MatchState, p: Player): void {
     }
     s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "thunder" });
   }
+}
+
+/**
+ * The flash's super speed: in a blink he runs up to FLASH_RANGE tiles straight ahead, through every player in his way
+ * (each left dizzy), stopping short of a wall, block or bomb, and on the last tile with nobody on it. A raised shield
+ * facing him stops him in front of it, dizzy himself.
+ */
+function superSpeed(s: MatchState, p: Player): void {
+  const from = playerTile(p);
+  const [dx, dy] = DIR_VECTORS[p.facing];
+  let land = 0;
+  for (let i = 1; i <= FLASH_RANGE; i++) {
+    const tx = from.x + dx * i;
+    const ty = from.y + dy * i;
+    if (getTile(s, tx, ty) !== Tile.Empty || bombAt(s, tx, ty)) break;
+    if (shieldAt(s, tx, ty, dx, dy)) {
+      p.stun = SPECIAL_STUN_TICKS;
+      break;
+    }
+    let free = true;
+    for (const o of s.players) {
+      if (o === p || !o.alive || playerTile(o).x !== tx || playerTile(o).y !== ty) continue;
+      o.stun = SPECIAL_STUN_TICKS;
+      o.charge = o.rasengan = 0;
+      free = false;
+    }
+    if (free) land = i;
+  }
+  p.px = tileCenter(from.x + dx * land);
+  p.py = tileCenter(from.y + dy * land);
+  s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length: land, ttl: BLAST_TICKS, kind: "flash" });
 }
 
 /**

@@ -17,7 +17,8 @@
 // The ninja speaks as Sub-Zero from Mortal Kombat (2011) (fan use; (c) Warner Bros. / NetherRealm), asset 413724 "Sub-Zero",
 // under mk9/; Static's lines (Phil LaMarr) are cut from Static Shock / Justice League Unlimited scenes on 101soundboards.com, board
 // "Static Shock (TV Show)" (fan use; (c) Warner Bros. / DC), under static-shock/ (to-the-rescue = sound 52736484, impresses-batman =
-// 52736429); the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// 52736429); the flash's (Taliesin Jaffe) from Injustice 2, board "Injustice 2 (PC): The Flash Voice" on the same site, under
+// flash-inj2/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -44,6 +45,7 @@ const PIKA = (name) => join(SRC, "ssbu", "ssbu-pikachu", "Super Smash Bros Ultim
 const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV${n} (${tag}).wav`);
 const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
+const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
@@ -165,6 +167,21 @@ const RECIPE = {
   "static-pick": { src: STATIC("to-the-rescue"), from: 128.55, len: 1.95 },
   "static-death": { src: BASS_DOWN, len: 2.4, layer: { src: STATIC("to-the-rescue"), from: 191.6, len: 2.3, gain: -3 } },
   "static-win": { src: STATIC("impresses-batman"), from: 2.65, len: 2.15 },
+  // The flash: "Sorry I'm late." when picked, "Ran right into that one, didn't I?" over the falling bass, "There's only one
+  // fastest man alive." when he wins, "Eat my dust!" as he dashes
+  "flash-pick": { src: FLASH("sorry-im-late"), len: 1.3 },
+  "flash-death": { src: BASS_DOWN, len: 2.0, layer: { src: FLASH("ran-right-into-that"), len: 1.9, gain: -3 } },
+  "flash-win": { src: FLASH("only-one-fastest"), len: 2.2 },
+  "flash-special": { src: FLASH("eat-my-dust"), len: 1.1 },
+  // the flash's dash: a whoosh tearing past, a crackle of the Speed Force
+  zoom: {
+    src: CSD("Colossal Impacts", "Woosh Debris.wav"),
+    len: 0.7,
+    layers: [
+      { src: K("digital-audio", "phaserUp4.ogg"), len: 0.35, gain: -6 },
+      { src: K("digital-audio", "zap1.ogg"), len: 0.4, gain: -8, at: 0.05 },
+    ],
+  },
   // Static's magnet pull: a crackling zap reaching out, the whir of it dragging back, a metal clank as it lands
   magnet: {
     src: K("digital-audio", "zapTwoTone2.ogg"),

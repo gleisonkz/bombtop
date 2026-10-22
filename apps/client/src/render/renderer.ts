@@ -2,7 +2,7 @@ import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "p
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
 import { PerColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -24,6 +24,8 @@ const COLORS = {
   bolt: 0xffe45c,
   /** Static's electromagnetism: light violet. */
   magnet: 0xb9a4ff,
+  /** The flash's suit, for his speed lines. */
+  speed: 0xe8352e,
   ki: 0x7fdcff,
   web: 0xf4f4f8,
   webShade: 0x9a9aa8,
@@ -670,8 +672,8 @@ export class Renderer {
         for (const [x0, y0, x1, y1] of c.strands) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1, alpha: 0.95 });
       }
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
-      // Thor's bolt, Pikachu's shock and Static's pull leave their victims crackling while stunned.
-      if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet") && b.ownerId !== p.id) && !ice) {
+      // Thor's bolt, Pikachu's shock, Static's pull and the flash's dash leave their victims crackling while stunned.
+      if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet" || b.kind === "flash") && b.ownerId !== p.id) && !ice) {
         for (let k = 0; k < 3; k++) {
           const a = s.tick / 5 + (k * Math.PI * 2) / 3;
           top.circle(cx + Math.cos(a) * 6, cy - headroom + Math.sin(a) * 2, 1.2).fill(COLORS.bolt);
@@ -696,7 +698,7 @@ export class Renderer {
       }
       if (p.specialCooldown === 0 && !ice && !web) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet, flash: COLORS.bolt }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -730,8 +732,8 @@ export class Renderer {
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
       return this.drawKamehameha(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl);
     }
-    // The magnet's pull lands at once (the one caught is already on his way), so it shows from the first tick.
-    const alpha = beamAlpha(BLAST_TICKS - b.ttl + (b.kind === "magnet" ? BEAM_DELAY : 0));
+    // The magnet's pull and the flash's dash land at once (the one caught, or he, is already there), so they show from the first tick.
+    const alpha = beamAlpha(BLAST_TICKS - b.ttl + (b.kind === "magnet" || b.kind === "flash" ? BEAM_DELAY : 0));
     if (alpha <= 0) return;
     const x0 = center(b.x) + dx * 6;
     const y0 = center(b.y) + dy * 6;
@@ -741,6 +743,7 @@ export class Renderer {
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
       return this.drawBolt(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl, alpha);
     }
+    if (b.kind === "flash") return this.drawSpeed(g, center(b.x), center(b.y), x1, y1, BLAST_TICKS - b.ttl, alpha);
     if (b.kind === "magnet") {
       const at = this.lastSeen.get(b.ownerId);
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
@@ -856,6 +859,18 @@ export class Renderer {
     }
     g.circle(x1, y1, 5).fill({ color: COLORS.magnet, alpha: alpha * 0.4 });
     g.circle(x0, y0, 2.5).fill({ color: 0xffffff, alpha });
+  }
+
+  /** The flash's dash: red and yellow speed lines from where he left to where he stopped, a bolt crackling along them. */
+  private drawSpeed(g: Graphics, x0: number, y0: number, x1: number, y1: number, age: number, alpha: number): void {
+    speedLines(x0, y0, x1, y1, age).forEach((l, k) => {
+      g.moveTo(l.x0, l.y0).lineTo(l.x1, l.y1).stroke({ color: k % 2 ? COLORS.bolt : COLORS.speed, width: k === 2 ? 3 : 1.5, alpha, cap: "round" });
+    });
+    const pts = boltPoints(x0, y0, x1, y1, Math.floor(age / 2));
+    g.moveTo(pts[0]![0], pts[0]![1]);
+    for (const [x, y] of pts.slice(1)) g.lineTo(x, y);
+    g.stroke({ color: 0xffffff, width: 1, alpha: alpha * 0.9, join: "round" });
+    g.circle(x0, y0, 6 * alpha).fill({ color: COLORS.bolt, alpha: alpha * 0.35 }); // the puff he left behind
   }
 
   /** Thor's bolt: a yellow glow and a white core along a zigzag that re-forks every 3 ticks, flashing at the end. */

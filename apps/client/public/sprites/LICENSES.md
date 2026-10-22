@@ -59,6 +59,13 @@ carry walk and the lobby poses posed with skeleton v3 from its rotations). The l
 sparks are drawn by `scripts/build-static-lobby.py`. Frames laid out by `scripts/build-character-sheet.py static`;
 rows = `SHEETS.static`.
 
+## flash.png
+
+Fan art of the Flash (DC) for this non-commercial project, made in PixelLab (pixellab.ai) (character "Flash HD"; skid
+stop, carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's afterimages, speed lines,
+bolts and dust are drawn by `scripts/build-flash-lobby.py`. Frames laid out by `scripts/build-character-sheet.py flash`;
+rows = `SHEETS.flash`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

@@ -181,6 +181,24 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  flash: {
+    name: "Flash",
+    title: "O homem mais rápido do mundo",
+    color: red,
+    story:
+      "Barry Allen era um perito criminal que vivia chegando atrasado, até um raio cair no laboratório dele numa noite de tempestade. Acordou ligado à Força de Aceleração e nunca mais se atrasou para nada. Na arena ele chega antes da bomba explodir, antes do rival perceber e às vezes antes até da partida começar.",
+    special: {
+      name: "Supervelocidade",
+      recharge: "20 s",
+      text: "Dispara num piscar até 5 casas em linha reta, atravessando quem estiver no caminho: todo jogador que ele passa fica tonto por 3 s. Para antes de blocos, bombas e paredes, e nunca termina em cima de alguém.",
+      tips: [
+        "Solte uma bomba e atravesse o rival: ele fica tonto bem na linha do fogo.",
+        "É também a melhor fuga do jogo: 5 casas num piscar, para longe da explosão.",
+        "Pega todo mundo da fileira de uma vez, não só o primeiro.",
+        "O escudo do Capitão virado para você te para na frente dele, e quem fica tonto é você.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

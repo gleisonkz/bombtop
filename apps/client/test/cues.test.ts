@@ -202,6 +202,14 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "magnet", x: 4.5 }]);
   });
 
+  it("hears the flash's dash, where he left from", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 4, ttl: BLAST_TICKS - 1, kind: "flash" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "zoom", x: 1.5 }]);
+  });
+
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {
     const v = view();
     const next = later(v, (n) => {

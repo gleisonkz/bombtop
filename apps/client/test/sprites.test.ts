@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -171,6 +171,18 @@ describe("paintHues", () => {
     expect([...px.slice(8)]).toEqual([230, 190, 150, 255]);
   });
 
+  it("takes a range that wraps past 360 (reds), leaving the hues outside it", () => {
+    const px = new Uint8ClampedArray([
+      210, 56, 53, 255, // red, hue ~1
+      111, 31, 49, 255, // dark crimson, hue ~345
+      248, 231, 40, 255, // yellow boots: untouched
+    ]);
+    paintHues(px, [335, 12], [61, 123, 242]);
+    expect(px[2]!).toBeGreaterThan(px[0]!);
+    expect(px[6]!).toBeGreaterThan(px[4]!);
+    expect([...px.slice(8)]).toEqual([248, 231, 40, 255]);
+  });
+
   it("turns them grey for an unsaturated player color", () => {
     const px = new Uint8ClampedArray([40, 90, 200, 255]);
     paintHues(px, [180, 260], [245, 245, 245]);
@@ -336,6 +348,20 @@ describe("ice blast visuals", () => {
     expect(near.r).toBeLessThan(far.r);
     const down = magnetWaves(5, 0, 5, 48, 3);
     for (const w of down) expect(w.x).toBe(5);
+  });
+
+  it("the flash's dash leaves speed lines from where he left to where he stopped, the tail catching up as they fade", () => {
+    const at = (age: number) => speedLines(0, 10, 80, 10, age);
+    const lines = at(0);
+    expect(lines.length).toBeGreaterThanOrEqual(3);
+    for (const l of lines) {
+      expect(l.y0).toBe(l.y1); // along the dash
+      expect(l.x1).toBeCloseTo(80, 0);
+      expect(l.x0).toBeGreaterThanOrEqual(0);
+    }
+    expect(new Set(lines.map((l) => l.y0)).size).toBe(lines.length); // side by side
+    expect(Math.min(...at(10).map((l) => l.x0))).toBeGreaterThan(Math.min(...lines.map((l) => l.x0)));
+    for (const l of speedLines(5, 0, 5, 48, 3)) expect(l.x0).toBe(l.x1);
   });
 
   it("frozen players turn icy, and the ice flickers in its last second", () => {

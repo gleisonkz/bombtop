@@ -115,4 +115,10 @@ describe("special showcase", () => {
     });
     expect(bombed).toBe(true);
   });
+
+  it("flash: plants a bomb and zips right through the rival, who is left dizzy in its way", () => {
+    let through = false;
+    play("flash", (s) => (through ||= rival(s).stun > 0 && you(s).px > rival(s).px && s.bombs.some((b) => b.ownerId === "you")));
+    expect(through).toBe(true);
+  });
 });

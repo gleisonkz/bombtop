@@ -23,7 +23,7 @@ describe("voiceLine", () => {
   });
 
   it("gives a shout on using the special to those whose special sound has no voice in it", () => {
-    for (const c of ["bomb", "ninja", "captain", "thor", "spider", "pikachu"] as const) expect(voiceLine(c, "special")).toBe(`${c}-special`);
+    for (const c of ["bomb", "ninja", "captain", "thor", "spider", "pikachu", "flash"] as const) expect(voiceLine(c, "special")).toBe(`${c}-special`);
     expect(voiceLine("goku", "special")).toBeNull(); // shouted over the kamehameha sound
     expect(voiceLine("naruto", "special")).toBeNull();
     expect(voiceLine("static", "special")).toBeNull(); // his magnet's crackle is his special's sound

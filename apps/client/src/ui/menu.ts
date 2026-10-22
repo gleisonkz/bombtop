@@ -242,12 +242,13 @@ export class Menu {
 
 /**
  * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
- * and Static on his flying disc at its other side.
+ * and Static on his flying disc at its other side; the flash at the far left.
  */
 function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
+    member(characterArt("flash", red, "walk"), "edge left"),
     member(characterArt("naruto", white, "walk"), "edge left"),
     member(characterArt("goku", green, "walk"), "far left"),
     member(characterArt("ninja", blue, "walk"), "near left"),

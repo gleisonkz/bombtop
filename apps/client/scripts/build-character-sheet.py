@@ -35,9 +35,14 @@
     pulling the catch in); carry idle = the carry walk's standing frames; lobby = 14 poses from our own skeletons
     ("lobby14": charging sparks, jumping, surfing with arms spread) that build-static-lobby.py lifts onto his flying
     disc (FRAMES_DIR/lobby). His pushed-out hands are the "muzzle".
+  flash: sprites/flash.png, character "Flash HD" (180px canvas). cast = the skid stop after his dash, posed from our own
+    skeletons (crouched, leaning back, arms flung out, then up again): the dash itself is instant, so the row starts
+    skidding (FLASH_CAST); carry walk posed from our own skeletons (the back view from a second try, "carry-walk-n":
+    the first turned him to face us), carry idle = its standing frames; lobby = 6 south and 5 sprinting east poses from
+    our own skeletons ("lobby6", "lobby5") that build-flash-lobby.py turns into his streak across the card (FRAMES_DIR/lobby).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -132,6 +137,17 @@ CHARACTERS = {
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 14),
+    ],
+    # cast = the skid stop after the dash (FLASH_CAST)
+    "flash": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 16),
     ],
 }
 BASE = 400
@@ -326,6 +342,22 @@ def static_frames(src, folder, d):
     return None
 
 
+FLASH_CAST = [1, 1, 1, 2, 2, 3, 3, 4, 5]  # flash: his 6 posed skid frames over the 9 cast cells, skidding from the first
+
+
+def flash_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    carry = "carry-walk-n" if d == "north" else "carry-walk"
+    if folder == "cast":
+        return [load("cast6", i) for i in FLASH_CAST]
+    if folder == "carry-walk":
+        return [load(carry, i) for i in range(6)]
+    if folder == "carry-idle":
+        return [load(carry, i) for i in (0, 0, 3, 3)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -350,7 +382,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":

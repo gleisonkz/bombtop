@@ -58,6 +58,7 @@ const art = Promise.allSettled([
   renderer.useSheet("spider", SHEETS.spider).catch((e) => console.error("spider sheet", e)),
   renderer.useSheet("pikachu", SHEETS.pikachu).catch((e) => console.error("pikachu sheet", e)),
   renderer.useSheet("static", SHEETS.static).catch((e) => console.error("static sheet", e)),
+  renderer.useSheet("flash", SHEETS.flash).catch((e) => console.error("flash sheet", e)),
   renderer.useMascots().catch((e) => console.error("mascot", e)),
   renderer.useBombArt().catch((e) => console.error("bomb art", e)),
   renderer.useFlameArt().catch((e) => console.error("flame art", e)),

@@ -330,6 +330,36 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.139,
   },
+  /** The Flash (fan art), made in PixelLab (scripts/build-character-sheet.py flash lays out its frames). */
+  flash: {
+    url: "sprites/flash.png",
+    width: 2880,
+    height: 3024,
+    frameW: 180,
+    frameH: 168,
+    anchorX: 91,
+    anchorY: 161,
+    bodyH: 157,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The skid stop after his dash (the dash itself is instant). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Crackling, gone in a flash, streaking across and back, a skid and a thumbs up (scripts/build-flash-lobby.py). */
+    lobby: { row: 17, frames: 16 },
+    /** His red suit (the range wraps through 360; his yellow boots, belt and ear wings stay his own). */
+    hues: [335, 12],
+    hueBase: [210, 56, 53],
+    /** White would bleach his whole suit (a ghost of the flash): that player keeps the red. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.137,
+  },
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",
@@ -716,6 +746,20 @@ export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age:
 }
 
 /**
+ * The flash's dash from (x0,y0) to (x1,y1), `age` ticks after it: speed lines side by side along it (the middle one
+ * longest), from where he left to where he stopped, their tails catching up with him as they fade.
+ */
+export function speedLines(x0: number, y0: number, x1: number, y1: number, age: number): { x0: number; y0: number; x1: number; y1: number }[] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const ux = len ? (x1 - x0) / len : 0;
+  const uy = len ? (y1 - y0) / len : 0;
+  return [-5, -2.5, 0, 2.5, 5].map((off, k) => {
+    const tail = Math.min(len, age * 4 + Math.abs(off) * 3 + (k % 2) * 6);
+    return { x0: x0 + ux * tail - uy * off, y0: y0 + uy * tail + ux * off, x1: x1 - uy * off, y1: y1 + ux * off };
+  });
+}
+
+/**
  * The spiral of light round the captain while his shield is up (PixelLab VFX "Captain shield spiral",
  * laid out by scripts/build-captain-spiral.py): one row drawn behind him, one in front. The anchor is
  * the point between his feet, like the character sheets', and it is drawn at the captain's scale.
@@ -873,7 +917,7 @@ export function shadeHues(px: Uint8ClampedArray, range: readonly [number, number
     if (px[i + 3] === 0) continue;
     const c: Rgb = [px[i]!, px[i + 1]!, px[i + 2]!];
     const [h, s] = toHsl(c);
-    if (s < 0.2 || h < range[0] || h > range[1]) continue;
+    if (s < 0.2 || !inHues(h, range)) continue;
     const k = luma(c) / ref;
     for (let ch = 0; ch < 3; ch++) {
       const v = to[ch]!;
@@ -908,6 +952,11 @@ export class MotionTracker {
   }
 }
 
+/** Whether hue `h` lies in `range` (degrees); a range whose start is past its end wraps through 360 (reds). */
+function inHues(h: number, range: readonly [number, number]): boolean {
+  return range[0] <= range[1] ? h >= range[0] && h <= range[1] : h >= range[0] || h <= range[1];
+}
+
 function toHsl([r, g, b]: Rgb): [number, number, number] {
   const [rr, gg, bb] = [r / 255, g / 255, b / 255];
   const max = Math.max(rr, gg, bb);
@@ -937,7 +986,7 @@ export function paintHues(px: Uint8ClampedArray, range: readonly [number, number
   for (let i = 0; i < px.length; i += 4) {
     if (px[i + 3] === 0) continue;
     const [h, s, l] = toHsl([px[i]!, px[i + 1]!, px[i + 2]!]);
-    if (s < 0.2 || h < range[0] || h > range[1]) continue;
+    if (s < 0.2 || !inHues(h, range)) continue;
     const lit = Math.min(1, Math.max(0, l + (tl - 0.5) * 0.6));
     const [r, g, b] = fromHsl(th, s * ts, lit);
     px[i] = r;

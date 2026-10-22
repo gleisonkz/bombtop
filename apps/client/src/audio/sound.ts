@@ -40,6 +40,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   thunder: { gain: 0.6, vary: 0.05, voices: 2 },
   shock: { gain: 0.6, vary: 0.04, voices: 2 },
   magnet: { gain: 0.6, vary: 0.04, voices: 2 },
+  zoom: { gain: 0.6, vary: 0.05, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
   rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
   freeze: { gain: 0.6, vary: 0.04, voices: 2 },
@@ -86,6 +87,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "static-pick": { gain: 0.65, vary: 0, voices: 1 },
   "static-death": { gain: 0.7, vary: 0, voices: 2 },
   "static-win": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-death": { gain: 0.7, vary: 0, voices: 2 },
+  "flash-win": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-special": { gain: 0.65, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */
