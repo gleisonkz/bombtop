@@ -6,7 +6,7 @@ import { characterGuide } from "./character-guide";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
-import { freshReload, toggleDebug, versionLabel, debugOn } from "./dev-tools";
+import { freshReload, liteOn, toggleDebug, toggleLite, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt, titleBomberArt } from "./sheet-art";
 
@@ -92,6 +92,12 @@ export class Menu {
     const debugBtn = button(debugLabel(debugOn(location.search, storage)), () => {
       debugBtn.textContent = debugLabel(toggleDebug(storage));
     }, "link");
+    // Lite mode (on by itself on smart TVs): applies on the reload it triggers.
+    const liteLabel = `Modo leve: ${liteOn(navigator.userAgent, location.search, storage) ? "ligado" : "desligado"}`;
+    const liteBtn = button(liteLabel, () => {
+      toggleLite(navigator.userAgent, storage);
+      location.reload();
+    }, "link");
 
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
@@ -125,6 +131,7 @@ export class Menu {
       el("div", { class: "menu-foot" }, [
         el("span", { text: versionLabel(__APP_VERSION__) }),
         debugBtn,
+        liteBtn,
         button("Atualizar jogo", () => void freshReload(), "link"),
       ]),
     ]);

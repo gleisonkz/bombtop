@@ -17,6 +17,29 @@ export function toggleDebug(store: Store): boolean {
   return on;
 }
 
+const LITE_KEY = "bombtop.lite";
+/** Lite mode draws at this many pixels per screen pixel (the screen stretches it). */
+export const LITE_RESOLUTION = 0.6;
+/** Smart TV browsers (Samsung Tizen, LG webOS, others saying so): slow GPUs, weak CPUs. */
+const TV_BROWSER = /SMART-TV|SmartTV|Tizen|Web0S|webOS|HbbTV|BRAVIA|NetCast/i;
+
+/**
+ * Lite mode (fewer pixels and frames, no backdrop effects) for weak screens: on by itself in a smart TV's browser,
+ * ?lite in the address anywhere, and the menu's switch overrides the guess.
+ */
+export function liteOn(userAgent: string, search: string, store: Store): boolean {
+  if (new URLSearchParams(search).has("lite")) return true;
+  const set = store.get(LITE_KEY);
+  return set === null ? TV_BROWSER.test(userAgent) : set === "1";
+}
+
+/** Flips the menu's lite switch; returns the new state. */
+export function toggleLite(userAgent: string, store: Store): boolean {
+  const on = !liteOn(userAgent, "", store);
+  store.set(LITE_KEY, on ? "1" : "0");
+  return on;
+}
+
 export function versionLabel(version: string): string {
   return `versão ${version.slice(0, 7)}`;
 }

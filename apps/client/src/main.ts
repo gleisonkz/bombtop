@@ -24,16 +24,22 @@ import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { button, el, storage } from "./ui/dom";
+import { LITE_RESOLUTION, liteOn } from "./ui/dev-tools";
 import { Listener } from "./audio/cues";
 import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
 
 const app = new Application();
+// Lite mode (smart TV browsers, ?lite, or the menu's switch): fewer pixels, stretched by the screen, and 30 frames a
+// second, no backdrop animations or particles.
+const lite = liteOn(navigator.userAgent, location.search, storage);
+document.documentElement.classList.toggle("lite", lite);
 // Render at the device's pixel density: the arena is vector drawn, so any scale stays sharp.
-await app.init({ backgroundAlpha: 0, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
+await app.init({ backgroundAlpha: 0, antialias: false, resolution: lite ? LITE_RESOLUTION : window.devicePixelRatio || 1, autoDensity: true });
+if (lite) app.ticker.maxFPS = 30;
 document.getElementById("app")!.appendChild(app.canvas);
 
-const renderer = new Renderer();
+const renderer = new Renderer(lite);
 app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 // Art loads in the background; the intro waits for it so it never plays with placeholder shapes.

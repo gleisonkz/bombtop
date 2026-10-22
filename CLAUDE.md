@@ -30,6 +30,9 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   `MAX_WATCHERS`, any time, even mid-match; lobbies show how many screens watch (`LobbyInfo.watchers`). For that the
   server never locks a room: one in a match or full is taken out of public matchmaking with `setPrivate` instead
   (`BattleRoom.refreshListing`), which still lets a code join.
+- **Lite mode (weak screens):** on by itself in smart TV browsers (`liteOn` in `ui/dev-tools.ts`: Tizen, webOS…), with
+  `?lite`, or from the menu's "Modo leve" switch (reloads). Draws at `LITE_RESOLUTION` (0.6) pixels per screen pixel, the
+  screen stretching it, at 30 frames a second, with no particles and no backdrop animations or filters (`html.lite`).
 - **Couch play (one screen, a controller each):** "🎮 Vários controles (mesma tela)" in the menu (shown on computers, and on
   touch screens once a controller is plugged in). The screen hosts a `LocalHost` room; the keyboard and the first controller
   are player one, and every other controller gets its own local seat (`LocalHost.seat`) through `CouchSeats`

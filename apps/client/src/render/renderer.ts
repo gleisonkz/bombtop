@@ -162,7 +162,9 @@ export class Renderer {
     style: { fill: 0xffffff, fontFamily: "monospace", fontSize: 8, stroke: { color: 0, width: 2 } },
   });
 
-  constructor() {
+  /** `lite`: weak screens (smart TVs): text drawn at less detail, no particles. */
+  constructor(private readonly lite = false) {
+    if (lite) this.banner.resolution = this.clock.resolution = 1.5;
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
@@ -365,6 +367,7 @@ export class Renderer {
 
   /** Sparks, debris and smoke over everything. */
   private drawParticles(g: Graphics): void {
+    if (this.lite) return;
     for (const p of this.fx.particles) {
       const k = p.age / p.life;
       if (p.kind === "smoke") g.circle(p.x, p.y, p.size * (1 + k)).fill({ color: p.color, alpha: 0.35 * (1 - k) });
