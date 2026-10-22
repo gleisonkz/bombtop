@@ -46,6 +46,12 @@ Ordem: **regra (shared) → sprite → código do cliente → som → telas → 
 Nome no PixelLab: `"<Nome> HD"`. Confira as 4 direções antes de animar: se o rosto, emblema ou
 proporção estiverem errados, refaça agora (todas as animações herdam o corpo base).
 
+**Lado ou costas errados, frente boa** (o Pikachu saiu com as costas e a cauda no corpo e olho e bochecha na
+cabeça de lado): não gere de novo no modo padrão. Crie `"<Nome> HD v3"` com `create_character` `mode: "v3"`,
+`reference_image_url` = a frente boa, `n_directions: 4` e uma descrição dizendo como é o lado (perfil, um olho, cauda
+atrás) e as costas (sem rosto); custa 4 gerações e gira o mesmo desenho. As animações de frente já feitas continuam
+valendo (é o mesmo desenho); refaça só lado e costas no personagem v3.
+
 ### Animações (`animate_character`)
 
 Sempre com esqueleto. Os modos `template` e `v3` só de texto redesenham cada quadro e perdem detalhes
