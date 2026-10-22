@@ -89,7 +89,7 @@ describe("revealing items", () => {
     placePlayerAt(s, "p1", 5, 5);
     placeBomb(s, "p1");
     placePlayerAt(s, "p1", 1, 1);
-    run(s, FUSE_TICKS);
+    run(s, FUSE_TICKS + FLAME_TICKS); // the block burns away first
     expect(getTile(s, 6, 5)).toBe(Tile.Empty);
     expect(s.items).toEqual([{ x: 6, y: 5, kind: ItemKind.Fire }]);
   });

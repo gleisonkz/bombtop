@@ -64,6 +64,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 | Item / feature | File | Notes |
 |---|---|---|
 | fire, bomb, speed, full fire | `items.ts` | caps: 8 fire, 8 bombs, 2x speed |
+| burning blocks | `bombs.ts` | a block caught by fire stays solid, burning, while its flame lasts (`Flame.block`) and is gone with it: nobody walks into a fire that is still burning where a block was |
 | dropping on death | `items.ts` | a player who dies scatters the power-ups they carried (read off their stats; full fire comes back as fire) onto random open floor, and keeps only the starting stats |
 | kick | `kick.ts` | push into a resting bomb; slides at 2x walk speed |
 | remote | `bombs.ts` | action detonates oldest; normal fuse if owner dies |

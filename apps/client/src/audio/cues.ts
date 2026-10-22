@@ -60,8 +60,13 @@ export function soundCues(prev: View, next: View): Cue[] {
   const { width, tiles } = next.grid;
   const changed = (from: (t: Tile) => boolean, to: Tile) =>
     tiles.findIndex((t, i) => t === to && from(prev.grid.tiles[i]!));
-  const broken = changed((t) => t === Tile.Block, Tile.Empty);
-  if (broken >= 0) cues.push({ name: "break", x: mid(broken % width) });
+  // A block blown up by fire breaks as the fire reaches it (it burns away later, silently);
+  // one smashed some other way (a Kamehameha, a Rasengan) breaks as it goes.
+  const burning = new Set(prev.flames.filter((f) => f.block).map((f) => key(f.x, f.y)));
+  const lit = fresh.find((f) => f.block);
+  const smashed = tiles.findIndex((t, i) => t === Tile.Empty && prev.grid.tiles[i] === Tile.Block && !burning.has(key(i % width, Math.floor(i / width))));
+  if (lit) cues.push({ name: "break", x: mid(lit.x) });
+  else if (smashed >= 0) cues.push({ name: "break", x: mid(smashed % width) });
   const wall = changed((t) => t !== Tile.Wall, Tile.Wall);
   if (wall >= 0) cues.push({ name: "wall", x: mid(wall % width) });
 

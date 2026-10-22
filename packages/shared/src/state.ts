@@ -178,6 +178,8 @@ export interface Flame {
   ttl: number;
   /** Player whose bomb made this flame (for kill credit). */
   ownerId?: string;
+  /** A blown-up block burning on this tile: it stays solid until the flame dies, then it is gone. */
+  block?: true;
 }
 
 /** A special's shot, kept a few ticks so clients can draw it. */

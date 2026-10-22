@@ -59,6 +59,19 @@ describe("soundCues", () => {
     expect(names(v, next)).toEqual(["break", "wall"]);
   });
 
+  it("hears a blown-up block break when the fire reaches it, not when it has burned away", () => {
+    const v = view();
+    const i = (x: number, y: number) => y * v.grid.width + x;
+    v.grid.tiles[i(3, 1)] = Tile.Block;
+    const lit = later(v, (n) => n.flames.push({ x: 3, y: 1, ttl: 30, block: true }));
+    expect(names(v, lit)).toEqual(["explode", "break"]);
+    const gone = later(lit, (n) => {
+      n.flames = [];
+      n.grid.tiles[i(3, 1)] = Tile.Empty;
+    });
+    expect(names(lit, gone)).toEqual([]);
+  });
+
   it("hears kicks and punches by bombs starting to move", () => {
     const v = view();
     v.bombs.push(bomb(3, 1), bomb(5, 1));
