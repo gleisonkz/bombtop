@@ -277,7 +277,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** A web shot up, yanked out of the card, swinging back in and landing crouched (scripts/build-spider-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/spider-lobby.png", width: 2880, height: 200, frameW: 180, frameH: 200, anchorX: 91, anchorY: 195 } },
     /** His thrust hand, where the web leaves (the back view hides it: over his shoulder). */
     muzzle: { side: [42.5, -74], down: [-8.5, -39], up: [0, -84.2] },
     /** The blue of his suit's sides and legs (his red is the suit itself). */

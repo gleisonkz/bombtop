@@ -130,6 +130,9 @@ custom proportions head 1.8), laid out by `scripts/build-character-sheet.py spid
 own skeletons (his short arms only reach the sides of his head when carrying). The web (strand, splat, cocoon round
 whoever it wraps up) is drawn by the renderer (`drawWeb`, `cocoon`, `webbedLook`). The intro seats him in a seventh seat,
 dressed in red (`Intro.colors`). PixelLab's Pro image model refuses franchise characters (concept art); `create_character` does not.
+His lobby (and the title lineup's "walk"): he shoots a web up out of the card, is yanked up after it, swings back in on
+it and lands in his three-point crouch in a puff of dust; poses from our own skeletons (the web splats PixelLab drew at
+his hands taken out), lifted, swung and given their web lines by `scripts/build-spider-lobby.py`.
 Pikachu (fan art) made in PixelLab: "Pikachu HD" (standard mode) drew a good front but a side view mixing his back into a
 side head, so "Pikachu HD v3" rotates that front (`create_character` mode `v3` with the front as reference) for the side and
 back rows; laid out by `scripts/build-character-sheet.py pikachu`. Thunder shock and carry walk posed from our own skeletons;

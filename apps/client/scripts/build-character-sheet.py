@@ -23,7 +23,8 @@
     The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
   spider: sprites/spider.png, character "Spider-Man HD" (180px canvas, chibi proportions per concept/PROMPT-BASE.md;
     cast = the web shot and carry walk posed from our own skeletons, 6 frames each; carry idle = the carry walk's
-    standing frames; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a web strand off the side thrust: the
+    standing frames; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-spider-lobby.py's, in its own image). PixelLab drew a web strand off the side thrust: the
     thrust holds its clean first frame (the game draws the web). The thrusting hand is the "muzzle".
   pikachu: sprites/pikachu.png, character "Pikachu HD v3" (a v3 rotation of "Pikachu HD"'s front, whose own side view
     mixed his back into a side head; the front rows come from "Pikachu HD", the same drawing). cast = the thunder shock

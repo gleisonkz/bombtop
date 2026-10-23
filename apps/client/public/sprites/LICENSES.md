@@ -43,8 +43,9 @@ lobby's clones, smoke and chakra are drawn by `scripts/build-naruto-lobby.py`. F
 ## spider.png
 
 Fan art of Spider-Man (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Spider-Man HD"; web shot and carry walk posed with skeleton v3 from its rotations). Frames laid out by
-`scripts/build-character-sheet.py spider`; rows = `SHEETS.spider`.
+(character "Spider-Man HD"; web shot, carry walk and the lobby poses posed with skeleton v3 from its rotations). The
+lobby's web lines and dust are drawn by `scripts/build-spider-lobby.py`. Frames laid out by
+`scripts/build-character-sheet.py spider`, rows = `SHEETS.spider`. The lobby is its own image, `spider-lobby.png`, laid out by `scripts/build-lobby-image.py spider`.
 
 ## pikachu.png
 

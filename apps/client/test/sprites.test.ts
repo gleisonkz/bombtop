@@ -895,7 +895,7 @@ describe("spider sheet", () => {
 
   it("every row fits inside the image", () => {
     const strips = [spider.idle, spider.walk, spider.cast!, spider.carryIdle!, spider.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, spider.stun!, spider.death!, spider.lobby!]) {
+    for (const s of [...strips, spider.stun!, spider.death!]) {
       expect((s.row + 1) * spider.frameH).toBeLessThanOrEqual(spider.height);
       expect(s.frames * spider.frameW).toBeLessThanOrEqual(spider.width);
     }
@@ -934,4 +934,5 @@ describe("lobby showpieces", () => {
 
   it("goku powers up into a Super Saiyan", () => showpiece("goku"));
   it("naruto calls up his shadow clones", () => showpiece("naruto"));
+  it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
 });
