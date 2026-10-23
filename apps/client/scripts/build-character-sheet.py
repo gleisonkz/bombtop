@@ -52,9 +52,14 @@
     (LANTERN_CAST_UP: PixelLab turned him to face us once his fist went up). cast = willing his bubble (down on one knee, the
     ring fist thrust high, "kneel"), posed from our own skeletons like the carry walk (LANTERN_CAST); the
     bubble itself is build-lantern-bubble.py's art; lobby = a v3 animation, ring fist raised ("lobby9").
+  donatello: sprites/donatello.png, character "Donatello HD" (180px canvas, standard mode). Idle = the still rotation
+    bobbing (the breathing template opened his mouth and puffed breath); death without its garbled first frame; cast =
+    his bo staff spin (both hands on the staff swept round him) and carry walk posed from our own skeletons ("cast6",
+    DONATELLO_CAST); the whirl itself is drawn by the renderer (drawSpin); lobby = a v3 animation twirling the staff
+    overhead, planting it and posing ("lobby13", its first frame the rotation).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -173,6 +178,17 @@ CHARACTERS = {
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 8),
+    ],
+    # cast = his bo staff spin (DONATELLO_CAST)
+    "donatello": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 6),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 12),
     ],
     # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
     "lantern": [
@@ -413,6 +429,31 @@ def bugs_frames(src, folder, d):
     return None
 
 
+# donatello: his posed spin frames over the 9 cast cells, round once more; the front's and back's last frames came out
+# garbled (front) or without the staff (back), so they are skipped
+DONATELLO_CAST = {"south": [0, 1, 2, 3, 4, 0, 1, 2, 3], "east": [0, 1, 2, 3, 4, 5, 0, 1, 2], "north": [0, 1, 2, 3, 4, 0, 1, 2, 3]}
+DONATELLO_CARRY = {"east": [0, 1, 2, 3, 4, 1]}  # donatello, side carry walk: its last frame lost his legs
+
+
+def donatello_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "death":
+        return [load("death", i) for i in range(1, 7)]
+    if folder == "cast":
+        return [load("cast6", i) for i in DONATELLO_CAST[d]]
+    if folder == "carry-walk":
+        return [load("carry-walk", i) for i in DONATELLO_CARRY.get(d, range(6))]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby13", i) for i in range(1, 13)]
+    return None
+
+
 def green_iris(im):
     """John Stewart's eyes as in the cartoon: white, with a glowing green iris. The face was repainted with whole green
     eyes (bright pale green in the middle, emerald at the rim); each such blob in his head becomes a white eye with a
@@ -518,7 +559,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":

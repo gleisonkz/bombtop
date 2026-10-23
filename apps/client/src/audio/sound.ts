@@ -42,6 +42,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   magnet: { gain: 0.6, vary: 0.04, voices: 2 },
   zoom: { gain: 0.6, vary: 0.05, voices: 2 },
   dig: { gain: 0.6, vary: 0.05, voices: 2 },
+  spin: { gain: 0.6, vary: 0.05, voices: 2 },
   bubble: { gain: 0.6, vary: 0.04, voices: 2 },
   pop: { gain: 0.55, vary: 0.06, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
@@ -102,6 +103,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "lantern-death": { gain: 0.7, vary: 0, voices: 2 },
   "lantern-win": { gain: 0.65, vary: 0, voices: 1 },
   "lantern-special": { gain: 0.65, vary: 0, voices: 2 },
+  "donatello-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "donatello-death": { gain: 0.7, vary: 0, voices: 2 },
+  "donatello-win": { gain: 0.65, vary: 0, voices: 1 },
+  "donatello-special": { gain: 0.65, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

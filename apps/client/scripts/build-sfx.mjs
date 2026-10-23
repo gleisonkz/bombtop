@@ -21,7 +21,9 @@
 // flash-inj2/; bugs' (Jeff Bergman) from Looney Tunes Dash! (mobile), board "Bugs Bunny - Looney Tunes Dash! - Character Voices
 // (Mobile)" on the same site (sounds 1456772, 1456763, 1456805, 1456812), under bugs-dash/; the green lantern's (John Stewart, Adetokumboh M'Cormack) from Injustice 2, board "Injustice 2 (PC): John
 // Stewart Voice" on the same site (beware-my-power = sound 54601987, ring-do-your-thing = 54602432, neighborhood = 54602290,
-// problem = 54603189), under lantern-inj2/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// problem = 54603189), under lantern-inj2/; donatello's from Teenage Mutant Ninja Turtles: Shredder's Revenge, board "Teenage Mutant
+// Ninja Turtles: Shredder's Revenge (PC): Donatello Voice" on the same site (pick = sound 56699710, death = 56701401, win = 56707997,
+// special = 56710569), under donnie-sr/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -50,6 +52,7 @@ const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_h
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
 const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
+const DONNIE = (name) => join(SRC, "donnie-sr", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -190,6 +193,22 @@ const RECIPE = {
   "lantern-death": { src: BASS_DOWN, len: 2.0, layer: { src: LANTERN("file0105-well-thats-gonna-be-a-problem"), len: 1.3, gain: -3 } },
   "lantern-win": { src: LANTERN("file0031-thats-how-we-do-it-in-my-neighborhood"), len: 1.8 },
   "lantern-special": { src: LANTERN("file0043-broken-ring-do-your-thing"), len: 1.45 },
+  // Donatello: "Nothing brains and a bo staff can't handle!" when picked, "Ugh! Shell shock!" over the falling bass,
+  // "Cowabunga!" when he wins, "Bo spin!" as he spins his staff
+  "donatello-pick": { src: DONNIE("pick"), len: 2.6 },
+  "donatello-death": { src: BASS_DOWN, len: 2.2, layer: { src: DONNIE("death"), len: 1.9, gain: -3 } },
+  "donatello-win": { src: DONNIE("win"), len: 1.6 },
+  "donatello-special": { src: DONNIE("special"), len: 1.5 },
+  // his staff spin: two quick whooshes round him and the wooden crack of it batting something away
+  spin: {
+    src: CSD("Colossal Impacts", "Woosh Debris.wav"),
+    len: 0.65,
+    tempo: 1.6,
+    layers: [
+      { src: CSD("Colossal Impacts", "Woosh Debris.wav"), len: 0.4, gain: -3, tempo: 1.8, at: 0.2 },
+      { src: K("impact-sounds", "impactWood_medium_002.ogg"), len: 0.3, gain: -4, at: 0.12 },
+    ],
+  },
   // his bubble rising: a force field humming up with a rising tone
   bubble: {
     src: K("sci-fi-sounds", "forceField_000.ogg"),

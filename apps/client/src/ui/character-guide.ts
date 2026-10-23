@@ -12,8 +12,8 @@ interface Info {
   /** A few words on who they are. */
   title: string;
   story: string;
-  /** Their color in the guide, the same as in the title lineup. */
-  color: string;
+  /** Their color in the guide, the same as in the title lineup (null: the character's own colors). */
+  color: string | null;
   special: { name: string; recharge: string; text: string; tips: string[] };
 }
 
@@ -230,6 +230,24 @@ const INFO: Record<CharacterId, Info> = {
         "Ative um instante antes da explosão: 3 s passam rápido.",
         "No último segundo ela pisca: saia do fogo antes de ela estourar.",
         "Dentro dela você fica lento, então não conte com fugir correndo.",
+      ],
+    },
+  },
+  donatello: {
+    name: "Donatello",
+    title: "O gênio do casco roxo",
+    color: null,
+    story:
+      "O cérebro das Tartarugas Ninja: mora no esgoto de Nova York, conserta tudo o que quebra no esconderijo e inventa o que ainda não existe. Enquanto os irmãos usam espadas e nunchakus, ele confia no bo, um bastão comprido que mantém qualquer um à distância. Na arena, fez as contas: bomba que chega perto dele volta para quem mandou.",
+    special: {
+      name: "Giro do bastão",
+      recharge: "20 s",
+      text: "Gira o bo em volta de si: atordoa por 3 s quem estiver colado nele (nas 4 casas vizinhas ou na mesma casa) e rebate cada bomba vizinha 3 casas para longe, na direção em que foi batida, como um soco. O escudo do Capitão virado para ele segura aquele lado e quem fica tonto é ele.",
+      tips: [
+        "Bomba encostada em você? Gire e mande ela de volta para o rival.",
+        "Rival colado: gire, ele fica tonto, e solte a bomba do lado dele.",
+        "Rebate as bombas dos 4 lados de uma vez: ótimo quando te cercam.",
+        "Bomba rebatida não explode no ar: ela cai e aí o pavio volta a correr.",
       ],
     },
   },

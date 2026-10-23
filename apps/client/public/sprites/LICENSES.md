@@ -80,6 +80,12 @@ Fan art of the Green Lantern John Stewart (DC) for this non-commercial project, 
 the ring cast and carry walk posed with skeleton v3 from its rotations). Frames laid out by
 `scripts/build-character-sheet.py lantern`; rows = `SHEETS.lantern`.
 
+## donatello.png
+
+Fan art of Donatello (Teenage Mutant Ninja Turtles, Paramount / Nickelodeon) for this non-commercial project, made in
+PixelLab (pixellab.ai) (character "Donatello HD"; his bo staff spin and carry walk posed from our own skeletons, a lobby
+twirling the staff); laid out by `scripts/build-character-sheet.py donatello`; rows = `SHEETS.donatello`.
+
 ## lantern-bubble.png
 
 Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.

@@ -3,7 +3,7 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -29,6 +29,9 @@ const COLORS = {
   speed: 0xe8352e,
   /** The green lantern's will: emerald light. */
   lantern: 0x4dff6e,
+  /** Donatello's bo staff: wood, and the pale blur of it whirling. */
+  staff: 0x8a5a2b,
+  staffBlur: 0xe8d9b0,
   /** Bugs' tunnel: dug-up earth, its shade and the dark of the holes. */
   dirt: 0x9a6a3c,
   dirtShade: 0x5e3d20,
@@ -782,6 +785,10 @@ export class Renderer {
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
       return this.drawKamehameha(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.ttl);
     }
+    if (b.kind === "spin") {
+      const at = this.lastSeen.get(b.ownerId);
+      return this.drawSpin(g, at?.cx ?? center(b.x), at?.cy ?? center(b.y), BLAST_TICKS - b.ttl);
+    }
     // The magnet's pull and the flash's dash land at once (the one caught, or he, is already there), so they show from the first tick.
     const alpha = beamAlpha(BLAST_TICKS - b.ttl + (b.kind === "magnet" || b.kind === "flash" || b.kind === "tunnel" ? BEAM_DELAY : 0));
     if (alpha <= 0) return;
@@ -926,6 +933,21 @@ export class Renderer {
       const a = -Math.PI / 2 + (k - 2) * 0.55;
       const d = 3 + age * 0.9;
       g.circle(x1 + Math.cos(a) * d, y1 + 4 + Math.sin(a) * d + age * age * 0.03, 1.1).fill({ color: k % 2 ? COLORS.dirt : COLORS.dirtShade, alpha });
+    }
+  }
+
+  /** Donatello's staff spin: his bo whirling round him with a blur trailing it, a whoosh ring swelling out. */
+  private drawSpin(g: Graphics, x: number, y: number, age: number): void {
+    const { angle, ring, alpha } = spinLook(age);
+    if (alpha <= 0) return;
+    const cy = y - 4; // round his waist, not his feet
+    g.circle(x, cy, ring).stroke({ color: 0xffffff, width: 2, alpha: alpha * 0.55 });
+    g.circle(x, cy, ring * 0.8).stroke({ color: COLORS.staffBlur, width: 1, alpha: alpha * 0.4 });
+    for (let k = 3; k >= 0; k--) {
+      const a = angle - k * 0.35;
+      const dx = Math.cos(a) * 13;
+      const dy = Math.sin(a) * 6.5; // the turn seen from above, squashed
+      g.moveTo(x - dx, cy - dy).lineTo(x + dx, cy + dy).stroke({ color: k ? COLORS.staffBlur : COLORS.staff, width: k ? 2 : 2.5, alpha: alpha * (k ? 0.25 / k : 1), cap: "round" });
     }
   }
 

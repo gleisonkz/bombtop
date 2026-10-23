@@ -416,6 +416,34 @@ export const SHEETS = {
     hueBase: [7, 180, 20],
     scale: 0.145,
   },
+  /** Donatello (fan art), made in PixelLab (scripts/build-character-sheet.py donatello lays out its frames). */
+  donatello: {
+    url: "sprites/donatello.png",
+    width: 1992,
+    height: 2772,
+    frameW: 166,
+    frameH: 154,
+    anchorX: 87.5,
+    anchorY: 152,
+    bodyH: 130,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 6 },
+    /** Both hands on his bo, swept round him (the whirl itself is drawn by the renderer, spinLook). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Twirls his bo overhead, plants it and grins. */
+    lobby: { row: 17, frames: 12 },
+    /** His purple bandana and pads (his green skin, shell and staff stay his own). */
+    hues: [250, 300],
+    hueBase: [143, 33, 228],
+    scale: 0.165,
+  },
 
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
@@ -858,6 +886,15 @@ export function tunnelMounds(x0: number, y0: number, x1: number, y1: number, age
     mounds.push({ x: x0 + ux * d, y: y0 + uy * d, r: 2.2 + ((d / 6) % 2) * 0.6 });
   }
   return mounds;
+}
+
+/**
+ * Donatello's staff spin, `age` ticks in: his bo turning round him (two full turns, quick at first and slowing),
+ * a whoosh ring swelling out from him and fading as the spin ends.
+ */
+export function spinLook(age: number): { angle: number; ring: number; alpha: number } {
+  const t = Math.min(1, Math.max(0, age / BLAST_TICKS));
+  return { angle: 4 * Math.PI * (1 - (1 - t) ** 2) + t * 0.5, ring: 10 + 10 * Math.sin(t * Math.PI * 0.75), alpha: 1 - t * t };
 }
 
 /**

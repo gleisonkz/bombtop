@@ -242,7 +242,8 @@ export class Menu {
 
 /**
  * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
- * and Static on his flying disc at its other side; the green lantern and the flash at the far left, bugs munching his carrot at the far right.
+ * and Static on his flying disc at its other side; the green lantern and the flash at the far left, bugs munching his carrot and
+ * donatello (in his own purple) at the far right.
  */
 function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
@@ -260,6 +261,7 @@ function cast(): HTMLElement {
     member(characterArt("thor", blue, "walk"), "far right"),
     member(characterArt("spider", red, "walk"), "edge right"),
     member(characterArt("bugs", blue, "walk"), "edge right"),
+    member(characterArt("donatello", null, "walk"), "edge right"),
   ]);
 }
 

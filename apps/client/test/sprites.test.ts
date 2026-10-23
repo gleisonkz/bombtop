@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -386,6 +386,16 @@ describe("ice blast visuals", () => {
     expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeLessThan(all.length); // still running ahead
     expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeGreaterThan(0);
     for (const m of tunnelMounds(5, 0, 5, 48, 30)) expect(m.x).toBe(5);
+  });
+
+  it("donatello's staff spin turns his bo round him twice, a whoosh ring swelling out and fading", () => {
+    const start = spinLook(0);
+    const end = spinLook(BLAST_TICKS);
+    expect(end.angle - start.angle).toBeGreaterThanOrEqual(4 * Math.PI);
+    for (let t = 1; t <= BLAST_TICKS; t++) expect(spinLook(t).angle).toBeGreaterThan(spinLook(t - 1).angle);
+    expect(spinLook(BLAST_TICKS / 2).ring).toBeGreaterThan(start.ring);
+    expect(start.alpha).toBeGreaterThan(0.5);
+    expect(end.alpha).toBe(0);
   });
 
   it("the flash's dash leaves speed lines from where he left to where he stopped, the tail catching up as they fade", () => {

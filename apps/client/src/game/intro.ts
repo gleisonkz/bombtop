@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 25 * TICK_RATE;
+export const INTRO_TICKS = 27 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -26,8 +26,9 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 1050, to: 1170, card: { name: "Flash", line: "Supervelocidade! Atravessa a fileira num piscar e deixa todo mundo tonto." } },
   { from: 1170, to: 1290, card: { name: "Pernalonga", line: "Toca! Cava por baixo de paredes, blocos e bombas e sai lá na frente." } },
   { from: 1290, to: 1410, card: { name: "Lanterna Verde", line: "Bolha de energia! Fica dentro dela e o fogo não chega nele." } },
+  { from: 1410, to: 1530, card: { name: "Donatello", line: "Giro do bastão! Deixa tonto quem está colado e rebate as bombas pra longe." } },
 ];
-const LOGO_FROM = 1410;
+const LOGO_FROM = 1530;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
@@ -37,13 +38,14 @@ const LOGO_FROM = 1410;
  * back along row 3, the spider walks down row 7 (open since the Kamehameha) and webs Goku, Pikachu steps up
  * from row 8 and shocks the spider, Static steps up into row 7 and drags Pikachu over to him with his magnet, the flash steps up into row 3 and zips through Naruto, the
  * mascot and Thor, bugs digs along row 4 under two pillars and pops out past them, the green lantern
- * sits out his own bomb's fire in his bubble in row 6, then the logo.
+ * sits out his own bomb's fire in his bubble in row 6, donatello plants a bomb, steps up by the ninja and spins his
+ * staff (the ninja left dizzy, the bomb batted down the column), then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
   /** Seats some wear instead of their own (renderer `setColors`): the spider's seventh would be the second's black. */
-  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4]]);
+  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4], ["donatello", 3]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -69,6 +71,8 @@ export class Intro {
     s.players.push({ ...structuredClone(s.players[0]!), id: "bugs", character: "bugs" });
     // And the green lantern in a twelfth, in green (see `colors`).
     s.players.push({ ...structuredClone(s.players[0]!), id: "lantern", character: "lantern" });
+    // And donatello in a thirteenth (his purple bandana is his own: see `ownColors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "donatello", character: "donatello" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
@@ -82,8 +86,9 @@ export class Intro {
     placePlayerAt(s, "flash", 5, 4);
     placePlayerAt(s, "bugs", 1, 4);
     placePlayerAt(s, "lantern", 9, 6);
+    placePlayerAt(s, "donatello", 1, 6);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash, bugs, lantern] = s.players;
+    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash, bugs, lantern, donatello] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
@@ -98,6 +103,8 @@ export class Intro {
     bugs!.facing = "down";
     lantern!.facing = "down";
     lantern!.fireRange = 1;
+    donatello!.facing = "up";
+    donatello!.fireRange = 1;
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -124,6 +131,9 @@ export class Intro {
       new Script("bugs", [{ wait: 1170 }, { face: "right" }, { wait: 10 }, { press: "special" }]),
       // Plants a bomb at his feet and, just before it blows, raises his bubble and sits out its fire.
       new Script("lantern", [{ wait: 1180 }, { press: "bomb" }, { wait: 140 }, { press: "special" }]),
+      // Plants a bomb, steps up next to the ninja and spins: the ninja is left dizzy, the bomb batted down the column
+      // (it blows once the intro is over, out of the frame).
+      new Script("donatello", [{ wait: 1440 }, { press: "bomb" }, { go: "up", tiles: 1 }, { wait: 10 }, { press: "special" }]),
     ];
   }
 
