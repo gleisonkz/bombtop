@@ -197,6 +197,10 @@ describe("Intro", () => {
     expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern"]);
   });
 
+  it("shows every character in its own original colors (each one is there once)", () => {
+    expect(new Intro().state.players.filter((p) => !p.ownColors).map((p) => p.character)).toEqual([]);
+  });
+
   it(`ends after ${INTRO_TICKS / 60} seconds and then stays put`, () => {
     const intro = play();
     expect(intro.state.tick).toBe(INTRO_TICKS);

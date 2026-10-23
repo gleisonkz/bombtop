@@ -2,7 +2,7 @@ import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "p
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
-import { PerColor } from "./per-color";
+import { paintTo, PerColor, skinColor } from "./per-color";
 import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
@@ -83,16 +83,17 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
   const img = base.source.resource as CanvasImageSource;
   const frames = new Map<string, Texture>();
   const paint = (player: number): Texture => {
-    const color = COLORS.players[player] ?? COLORS.players[0]!;
+    const rgb = paintTo(player, COLORS.players);
     const canvas = document.createElement("canvas");
     canvas.width = sheet.width;
     canvas.height = sheet.height;
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(img, 0, 0);
-    const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
-    const rgb = [(color >> 16) & 255, (color >> 8) & 255, color & 255] as const;
-    paintSheet(data.data, sheet, rgb);
-    ctx.putImageData(data, 0, 0);
+    if (rgb) {
+      const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
+      paintSheet(data.data, sheet, rgb);
+      ctx.putImageData(data, 0, 0);
+    }
     const tex = Texture.from(canvas);
     tex.source.scaleMode = sheet.url === SHEETS.bomber.url ? "nearest" : (sheet.scale ?? 1) < 1 ? "linear" : "nearest";
     return tex;
@@ -540,7 +541,7 @@ export class Renderer {
   }
 
   /** Plays a just-killed player's death where they fell, once. */
-  private drawDeath(id: string, player: number, tick: number): void {
+  private drawDeath(id: string, player: number, tick: number, sheetColor = player): void {
     const seen = this.lastSeen.get(id);
     if (!seen) return;
     seen.deadAt ??= tick;
@@ -551,7 +552,7 @@ export class Renderer {
       return;
     }
     const f = skin && deathFrame(skin.sheet, tick - seen.deadAt);
-    if (f) this.placeSprite(skin, id, player, f, seen.cx, seen.cy, 0xffffff);
+    if (f) this.placeSprite(skin, id, sheetColor, f, seen.cx, seen.cy, 0xffffff);
   }
 
   private frame(skin: Skin, player: number, x: number, y: number): Texture {
@@ -652,7 +653,7 @@ export class Renderer {
       const i = this.colors.get(p.id) ?? seat;
       const color = COLORS.players[i % COLORS.players.length]!;
       if (!p.alive) {
-        this.drawDeath(p.id, i, s.tick);
+        this.drawDeath(p.id, i, s.tick, skinColor(p, i));
         const t = p.cart && ring[p.cart.pos];
         if (!t) return;
         const cx = t.x * TILE_PX + TILE_PX / 2;
@@ -688,7 +689,7 @@ export class Renderer {
         const casting = castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
         const shielding = bracing(p, moving);
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
-        this.placeSprite(skin, p.id, i, f, sx, cy, tint);
+        this.placeSprite(skin, p.id, skinColor(p, i), f, sx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });

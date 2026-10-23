@@ -127,7 +127,7 @@ export class LobbyPanel {
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
           el("div", { class: "stage-spot" }, [
-            characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
+            characterArt(member.character, member.ownColors ? null : color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
           ]),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),

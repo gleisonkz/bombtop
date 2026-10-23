@@ -57,8 +57,9 @@ export function characterMoves(sheet: SheetLayout): Move[] {
 
 const painted = new Map<string, Promise<string>>();
 
-/** A sheet repainted in a player color, as an image URL (made once per sheet and color). */
-function sheetUrl(sheet: SheetLayout, color: string): Promise<string> {
+/** A sheet repainted in a player color, as an image URL (made once per sheet and color); null: its original colors. */
+function sheetUrl(sheet: SheetLayout, color: string | null): Promise<string> {
+  if (color === null) return Promise.resolve(`${import.meta.env.BASE_URL}${sheet.url}`);
   const key = `${sheet.url}:${color}`;
   let url = painted.get(key);
   if (!url) {
@@ -86,9 +87,9 @@ function sheetUrl(sheet: SheetLayout, color: string): Promise<string> {
 
 /**
  * A character for the menus: one row of its sheet played in CSS, standing on the
- * bottom of its box (the box moves it around like the old mascot).
+ * bottom of its box (the box moves it around like the old mascot). `color` null: the character's original colors.
  */
-export function characterArt(character: CharacterId, color: string, state: PreviewState | Omit<Move, "label"> = "walk"): HTMLElement {
+export function characterArt(character: CharacterId, color: string | null, state: PreviewState | Omit<Move, "label"> = "walk"): HTMLElement {
   const sheet = CHARACTER_SHEETS[character];
   const pose = typeof state === "string" ? previewPose(sheet, state) : state;
   const span = document.createElement("span");
