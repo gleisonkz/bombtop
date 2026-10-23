@@ -19,7 +19,7 @@ describe("GhostBombs", () => {
   });
 
   it.each([
-    { air: { dir: "right" as const, tilesLeft: 2, progress: 0 } },
+    { air: { dir: "right" as const, span: 3, tilesLeft: 2, progress: 0 } },
     { heldBy: "them" },
   ])("allows placement below an airborne or carried authoritative bomb: %j", (extra) => {
     const g = new GhostBombs("me");

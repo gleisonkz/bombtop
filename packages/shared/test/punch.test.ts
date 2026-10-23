@@ -65,6 +65,15 @@ describe("punch", () => {
     expect(s.flames.some((f) => f.x === 7 && f.y === 5)).toBe(true);
   });
 
+  it("flies one arc over its three tiles, then bounces a tile at a time", () => {
+    const { s, bomb } = setup(3, 5, "right", 4, 5);
+    setTile(s, 7, 5, Tile.Block);
+    press(s, "action");
+    expect(bomb.air).toMatchObject({ span: 3, tilesLeft: 3 });
+    run(s, AIR_TICKS_PER_TILE * 3);
+    expect(bomb.air).toMatchObject({ span: 1, tilesLeft: 1 });
+  });
+
   it("flies over blocks and bounces when landing on one", () => {
     const { s, bomb } = setup(3, 5, "right", 4, 5);
     setTile(s, 5, 5, Tile.Block);

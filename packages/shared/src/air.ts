@@ -4,7 +4,7 @@ import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing,
 
 /** Launches a grounded bomb into the air from its current tile. */
 export function launch(b: Bomb, dir: Facing): void {
-  b.air = { dir, tilesLeft: AIR_DISTANCE, progress: 0 };
+  b.air = { dir, span: AIR_DISTANCE, tilesLeft: AIR_DISTANCE, progress: 0 };
   b.slide = null;
   b.offset = 0;
 }
@@ -80,7 +80,7 @@ export function updateAir(s: MatchState): void {
     if (++air.progress < AIR_TICKS_PER_TILE) continue;
     air.progress = 0;
     // Coming in from across the arena, it comes down on the first tile (as in Super Bomberman 4).
-    if (hop(s, b, air.dir)) air.tilesLeft = 1;
+    if (hop(s, b, air.dir)) air.span = air.tilesLeft = 1;
     if (--air.tilesLeft > 0) continue;
 
     const hit = s.players.find((p) => {
@@ -90,7 +90,7 @@ export function updateAir(s: MatchState): void {
     // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned.
     if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) hit.stun = STUN_TICKS;
     if (hit || getTile(s, b.x, b.y) !== Tile.Empty || bombAt(s, b.x, b.y)) {
-      air.tilesLeft = 1;
+      air.span = air.tilesLeft = 1;
       continue;
     }
     b.air = null;

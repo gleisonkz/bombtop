@@ -1,5 +1,6 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
+import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { PerColor } from "./per-color";
 import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
@@ -633,7 +634,7 @@ export class Renderer {
       const moving = b.air?.dir ?? b.slide;
       const [dx, dy] = moving ? DIR_VECTORS[moving] : [0, 0];
       const t = b.air ? b.air.progress / AIR_TICKS_PER_TILE : b.offset / TILE;
-      const lift = b.air ? Math.sin(t * Math.PI) * 6 + 4 : 0; // hop arc while airborne
+      const lift = b.air ? airLift(b.air) : 0; // one high arc when punched or thrown, small hops when bouncing
       const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
       const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift;
       if (this.bombArt) {

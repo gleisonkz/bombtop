@@ -77,7 +77,7 @@ describe("soundCues", () => {
     v.bombs.push(bomb(3, 1), bomb(5, 1));
     const next = later(v, (n) => {
       n.bombs[0]!.slide = "right";
-      n.bombs[1]!.air = { dir: "down", tilesLeft: 3, progress: 0 };
+      n.bombs[1]!.air = { dir: "down", span: 3, tilesLeft: 3, progress: 0 };
     });
     expect(names(v, next)).toEqual(["kick", "throw"]);
   });

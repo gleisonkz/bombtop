@@ -148,6 +148,8 @@ export interface Bomb {
 
 export interface AirState {
   dir: Facing;
+  /** Tiles the current arc spans: the whole flight when launched, one per bounce. */
+  span: number;
   /** Tiles still to travel before trying to land. */
   tilesLeft: number;
   /** Ticks spent on the current tile hop (0..AIR_TICKS_PER_TILE). */
