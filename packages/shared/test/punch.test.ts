@@ -63,11 +63,21 @@ describe("punch", () => {
     expect(getTileSafe(s, 5, 5)).toBe(Tile.Block);
   });
 
-  it("wraps around the arena edges", () => {
+  it("wraps around the arena edges, landing on the first tile across (as in Super Bomberman 4)", () => {
     const { s, bomb } = setup(9, 5, "right", 10, 5);
     press(s, "action");
     run(s, FLIGHT);
+    expect([bomb.x, bomb.y]).toEqual([1, 5]);
+    expect(bomb.air).toBeNull();
+  });
+
+  it("bounces on from the first tile across when it is taken", () => {
+    const { s, bomb } = setup(9, 5, "right", 10, 5);
+    setTile(s, 1, 5, Tile.Block);
+    press(s, "action");
+    run(s, FLIGHT);
     expect([bomb.x, bomb.y]).toEqual([2, 5]);
+    expect(bomb.air).toBeNull();
   });
 
   it("stuns a player it lands on and bounces off", () => {
@@ -77,6 +87,21 @@ describe("punch", () => {
     run(s, FLIGHT);
     expect(player(s, "p2").stun).toBeGreaterThan(0);
     run(s, AIR_TICKS_PER_TILE);
+    expect([bomb.x, bomb.y]).toEqual([8, 5]);
+  });
+
+  it("bounces off a player carrying a bomb without stunning them", () => {
+    const { s, bomb } = setup(3, 5, "right", 4, 5);
+    placePlayerAt(s, "p2", 7, 5);
+    player(s, "p2").bombCapacity = 2;
+    placeBomb(s, "p2");
+    const carried = s.bombs.at(-1)!;
+    carried.heldBy = "p2";
+    const carrying = { dir: null, bomb: false, hold: true };
+    step(s, { p1: { dir: null, bomb: false, action: true }, p2: carrying });
+    run(s, FLIGHT, { p2: carrying });
+    expect(player(s, "p2").stun).toBe(0);
+    run(s, AIR_TICKS_PER_TILE, { p2: carrying });
     expect([bomb.x, bomb.y]).toEqual([8, 5]);
   });
 
