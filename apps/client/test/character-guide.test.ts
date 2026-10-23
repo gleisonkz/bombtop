@@ -62,6 +62,7 @@ describe("character moves", () => {
   });
 
   it("every playable sheet has the full set", () => {
-    for (const c of CHARACTERS) expect(characterMoves(CHARACTER_SHEETS[c]).length, c).toBe(10);
+    // one more for a sheet with a victory pose of its own (its lobby pose shown apart, "Na sala")
+    for (const c of CHARACTERS) expect(characterMoves(CHARACTER_SHEETS[c]).length, c).toBe(CHARACTER_SHEETS[c].victory ? 11 : 10);
   });
 });

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -386,6 +386,31 @@ describe("ice blast visuals", () => {
     expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeLessThan(all.length); // still running ahead
     expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeGreaterThan(0);
     for (const m of tunnelMounds(5, 0, 5, 48, 30)) expect(m.x).toBe(5);
+  });
+
+  it("penelope's kiss flies as a heart from her hand to where it stopped, then bursts into little hearts", () => {
+    const [first] = kissHearts(0, 10, 80, 10, 0);
+    expect(first!.x).toBeCloseTo(0);
+    const mid = kissHearts(0, 10, 80, 10, 8);
+    expect(mid[0]!.x).toBeGreaterThan(0);
+    expect(mid[0]!.x).toBeLessThan(80);
+    for (const h of mid) expect(h.y).toBeLessThanOrEqual(10 + 4);
+    // landed: a ring of little hearts round the end, fading out with the blast
+    const burst = kissHearts(0, 10, 80, 10, BLAST_TICKS - 6);
+    expect(burst.length).toBeGreaterThan(3);
+    for (const h of burst) expect(Math.hypot(h.x - 80, h.y - 10)).toBeLessThan(16);
+    expect(kissHearts(0, 10, 80, 10, BLAST_TICKS).every((h) => h.alpha === 0)).toBe(true);
+    // straight up the column too
+    for (const h of kissHearts(5, 60, 5, 0, 6)) expect(Math.abs(h.x - 5)).toBeLessThan(4);
+  });
+
+  it("a charmed player has hearts circling over their head, none once it wears off", () => {
+    expect(charmHearts(0, 10)).toEqual([]);
+    const hearts = charmHearts(120, 10);
+    expect(hearts.length).toBe(3);
+    const later = charmHearts(119, 11);
+    expect(later[0]!.dx).not.toBeCloseTo(hearts[0]!.dx, 3); // they move round
+    for (const h of hearts) expect(h.dy).toBeLessThan(0); // above the anchor
   });
 
   it("donatello's staff spin turns his bo round him twice, a whoosh ring swelling out and fading", () => {

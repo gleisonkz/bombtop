@@ -4,7 +4,8 @@
 // Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
 // Freesound (CC0 only), the HQ preview of each: death cry = "Cartoon Scream 1.wav" by tonsil5,
-// https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3).
+// https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3); penelope's kiss = "Cartoon Smooch" by
+// Breviceps, https://freesound.org/s/444493/ (saved as freesound/444493_9159316-hq.mp3).
 // Goku's voice (Japanese, Masako Nozawa) and Kamehameha effects are from Dragon Ball FighterZ (fan use; (c) Bandai Namco /
 // Arc System Works), as ripped on The Sounds Resource: assets 411947 "Goku (Japanese)" and 411912 "Goku", unzipped under dbfz/.
 // Naruto's voice (Japanese, Junko Takeuchi) is from Naruto Shippuden: Ultimate Ninja Storm 2 (PS3; (c) Bandai Namco /
@@ -23,7 +24,8 @@
 // Stewart Voice" on the same site (beware-my-power = sound 54601987, ring-do-your-thing = 54602432, neighborhood = 54602290,
 // problem = 54603189), under lantern-inj2/; donatello's from Teenage Mutant Ninja Turtles: Shredder's Revenge, board "Teenage Mutant
 // Ninja Turtles: Shredder's Revenge (PC): Donatello Voice" on the same site (pick = sound 56699710, death = 56701401, win = 56707997,
-// special = 56710569), under donnie-sr/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// special = 56710569), under donnie-sr/; penelope's from Wacky Races (PC), board "Wacky Races (PC): Penelope Pitstop Voice" on the same
+// site (pick = sound 54437034, death = 54437100, win = 54437054, special = 54437030), under penny-wr/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -53,6 +55,7 @@ const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
 const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
 const DONNIE = (name) => join(SRC, "donnie-sr", `${name}.mp3`);
+const PENNY = (name) => join(SRC, "penny-wr", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -199,6 +202,18 @@ const RECIPE = {
   "donatello-death": { src: BASS_DOWN, len: 2.2, layer: { src: DONNIE("death"), len: 1.9, gain: -3 } },
   "donatello-win": { src: DONNIE("win"), len: 1.6 },
   "donatello-special": { src: DONNIE("special"), len: 1.5 },
+  // Penelope: "Ladies first!" when picked, "Oh my, my makeup!" over the falling bass, "Better luck next time!" when she wins,
+  // "See ya!" as she blows her kiss
+  "penelope-pick": { src: PENNY("pick"), len: 1.6 },
+  "penelope-death": { src: BASS_DOWN, len: 2.7, layer: { src: PENNY("death"), len: 2.7, gain: -3 } },
+  "penelope-win": { src: PENNY("win"), len: 1.8 },
+  "penelope-special": { src: PENNY("special"), len: 1.2 },
+  // her blown kiss: a cartoon smooch and a twinkle as the heart flies off
+  kiss: {
+    src: FS("444493_9159316-hq.mp3"),
+    len: 0.65,
+    layer: { src: CSD("User Interface", "Button Arp Twinkle.wav"), len: 0.6, gain: -8, at: 0.12 },
+  },
   // his staff spin: two quick whooshes round him and the wooden crack of it batting something away
   spin: {
     src: CSD("Colossal Impacts", "Woosh Debris.wav"),

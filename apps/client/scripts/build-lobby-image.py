@@ -6,7 +6,8 @@ whole sheet in its player's color (a phone's memory filled up). Only the menus p
 Takes FRAMES_DIR/lobby/south/<i>.png as a build-<name>-lobby.py script writes them (same canvas for all, the feet of
 frame 0 (standing) on the ground); the cell is the union of what is drawn, centered on the canvas so mirroring stays
 aligned, its anchor between frame 0's feet as build-character-sheet.py takes it. Prints the geometry for SHEETS.
-Usage: python build-lobby-image.py NAME FRAMES_DIR"""
+A victory showpiece is laid out the same way from FRAMES_DIR/victory/south into <name>-victory.png (SHEETS.<name>.victory.image).
+Usage: python build-lobby-image.py NAME FRAMES_DIR [lobby|victory]"""
 import json, sys
 from pathlib import Path
 from PIL import Image
@@ -27,7 +28,8 @@ def body_middle(im):
 
 
 def main():
-    name, src = sys.argv[1], Path(sys.argv[2]) / "lobby" / "south"
+    name, kind = sys.argv[1], sys.argv[3] if len(sys.argv) > 3 else "lobby"
+    src = Path(sys.argv[2]) / kind / "south"
     frames = [Image.open(src / f"{i}.png").convert("RGBA") for i in range(len(list(src.glob("*.png"))))]
     w, h = frames[0].size
     box = None
@@ -41,9 +43,9 @@ def main():
     out = Image.new("RGBA", (cw * len(frames), ch))
     for c, im in enumerate(frames):
         out.alpha_composite(im.crop((left, top, right, bottom)), (c * cw, 0))
-    path = HERE.parent / "public" / "sprites" / f"{name}-lobby.png"
+    path = HERE.parent / "public" / "sprites" / f"{name}-{kind}.png"
     out.save(path)
-    print(json.dumps({"url": f"sprites/{name}-lobby.png", "width": out.width, "height": out.height, "frameW": cw, "frameH": ch,
+    print(json.dumps({"url": f"sprites/{name}-{kind}.png", "width": out.width, "height": out.height, "frameW": cw, "frameH": ch,
                       "anchorX": body_middle(frames[0].crop((left, top, right, bottom))), "anchorY": feet(frames[0]) - top,
                       "frames": len(frames)}))
 

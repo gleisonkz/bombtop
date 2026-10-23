@@ -30,7 +30,7 @@ export class ResultScreen {
       return [
         el("li", { class: ["placing", won && "won", id === me && "me"].filter(Boolean).join(" ") }, [
           el("span", { class: "place", text: MEDALS[place - 1] ?? `${place}º` }),
-          characterArt(m.character, colors.get(id) ?? null, won ? "walk" : "dizzy"),
+          characterArt(m.character, colors.get(id) ?? null, won ? "win" : "dizzy"),
           el("span", { class: "seat-name", text: id === me ? `${m.name} (você)` : m.name }),
           el("span", { class: "seat-sub", text: `${m.wins} 🏆` }),
         ]),
@@ -39,7 +39,7 @@ export class ResultScreen {
 
     const card = el("div", { class: "card" }, [
       el("h2", { class: ["results-title", !winner && "draw"].filter(Boolean).join(" "), text: title }),
-      ...(winner ? [el("div", { class: "champion" }, [characterArt(winner.character, colors.get(winner.id) ?? null, "walk")])] : []),
+      ...(winner ? [el("div", { class: "champion" }, [characterArt(winner.character, colors.get(winner.id) ?? null, "win")])] : []),
       el("ol", { class: "placings" }, rows),
       el("div", { class: "results-timer" }, [el("i")]),
       el("p", { class: "hint", text: "Voltando para a sala…" }),

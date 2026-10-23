@@ -70,6 +70,11 @@ Sempre com esqueleto. Os modos `template` e `v3` só de texto redesenham cada qu
 
 West é o east espelhado pelo jogo (não gere).
 
+**Vitória própria (opcional):** `SheetLayout.victory`, numa imagem separada como o lobby de 16 quadros
+(`build-lobby-image.py NOME PASTA victory`); a tela de resultados toca ela no campeão, e quem não tem usa o lobby.
+Exemplo: a Penélope (`build-penelope-victory.py`). Objeto na mão (bandeira, espada) desenhado pelo PixelLab muda a cada
+quadro: peça a mão vazia e desenhe o objeto no script.
+
 **Esqueleto próprio:** parta dos pontos do próprio personagem parado (as pernas mudam de um para
 outro) e mova só braços/tronco quadro a quadro. Guarde os JSON dos pontos (o do Homem-Aranha ficou em
 `spider-kp/`). O esqueleto tem que bater com a pose do sprite: um walk de modelo sobre um estado de

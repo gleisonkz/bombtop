@@ -226,6 +226,14 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "spin", x: 1.5 }]);
   });
 
+  it("hears penelope's blown kiss, where she blew it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 1, kind: "kiss" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "kiss", x: 1.5 }]);
+  });
+
   it("hears the green lantern's bubble rising round him and giving way", () => {
     const v = view();
     const up = later(v, (n) => {

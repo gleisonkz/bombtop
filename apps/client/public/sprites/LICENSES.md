@@ -90,6 +90,14 @@ Fan art of Donatello (Teenage Mutant Ninja Turtles, Paramount / Nickelodeon) for
 PixelLab (pixellab.ai) (character "Donatello HD"; his bo staff spin and carry walk posed from our own skeletons, a lobby
 twirling the staff); laid out by `scripts/build-character-sheet.py donatello`; rows = `SHEETS.donatello`.
 
+## penelope.png, penelope-lobby.png, penelope-victory.png
+
+Fan art of Penelope Pitstop (Wacky Races, Hanna-Barbera / Warner Bros.) for this non-commercial project, made in
+PixelLab (pixellab.ai) (character "Penelope HD 2"; her blown kiss, carry walk, lobby and victory posed from our own
+skeletons); laid out by `scripts/build-character-sheet.py penelope`; rows = `SHEETS.penelope`. The lobby's glint,
+powder, sparkles and hearts and the victory's checkered flag, sparkles and hearts are our own pixel art
+(`scripts/build-penelope-lobby.py`, `scripts/build-penelope-victory.py`), laid out by `scripts/build-lobby-image.py`.
+
 ## lantern-bubble.png
 
 Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.

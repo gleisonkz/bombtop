@@ -250,13 +250,14 @@ export class Menu {
 
 /**
  * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
- * and Static on his flying disc at its other side; the green lantern and the flash at the far left, bugs munching his carrot and
+ * and Static on his flying disc at its other side; penelope (in her own pink), the green lantern and the flash at the far left, bugs munching his carrot and
  * donatello (in his own purple) at the far right.
  */
 function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
+    member(characterArt("penelope", null, "walk"), "edge left"),
     member(characterArt("lantern", green, "walk"), "edge left"),
     member(characterArt("flash", red, "walk"), "edge left"),
     member(characterArt("naruto", white, "walk"), "edge left"),

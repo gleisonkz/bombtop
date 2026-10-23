@@ -26,6 +26,7 @@ export type CueName =
   | "zoom"
   | "dig"
   | "spin"
+  | "kiss"
   | "bubble"
   | "pop"
   | "kamehameha"
@@ -103,7 +104,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   for (const b of next.blasts) {
     if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
     if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
-    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin" } as const)[b.kind as string] ?? "ice";
+    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss" } as const)[b.kind as string] ?? "ice";
     cues.push({ name, x: mid(b.x) });
   }
 

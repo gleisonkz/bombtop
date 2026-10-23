@@ -61,14 +61,19 @@
     his bo staff spin (both hands on the staff swept round him) and carry walk posed from our own skeletons ("cast6",
     DONATELLO_CAST); the whirl itself is drawn by the renderer (drawSpin); lobby = a v3 animation twirling the staff
     overhead, planting it and posing ("lobby13", its first frame the rotation).
+  penelope: sprites/penelope.png, character "Penelope HD 2" (180px canvas, standard mode; pink helmet and suit). Its side
+    views face left, so they are mirrored (penelope_frames); idle front = the still rotation bobbing (the breathing
+    template shut her eyes); death without its two smeared first frames; cast = her blown kiss and carry walk posed from
+    our own skeletons (the side ones as west); the heart is drawn by the renderer (kissHearts); her lobby is its own
+    image (build-penelope-lobby.py, build-lobby-image.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageOps
 from scipy import ndimage
 
 # (sheet row name, animation folder, direction, frames)
@@ -193,6 +198,16 @@ CHARACTERS = {
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 12),
+    ],
+    # cast = her blown kiss (PENELOPE_CAST); her lobby lives in its own image (build-penelope-lobby.py)
+    "penelope": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 5),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
     ],
     # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
     "lantern": [
@@ -458,6 +473,34 @@ def donatello_frames(src, folder, d):
     return None
 
 
+# penelope: her 8 kiss frames over the 9 cast cells, the last held (the hand thrown out at 4)
+PENELOPE_CAST = [0, 1, 2, 3, 4, 5, 6, 7, 7]
+
+
+def penelope_frames(src, folder, d):
+    """Her frames by sheet folder. Her side views were drawn facing left (rotation, templates and our own west
+    skeletons), so every side frame is mirrored to face right; the breathing template shut her eyes, so idle front is
+    her rotation bobbing; the death's first two frames came out smeared."""
+    side = d == "east"
+    def load(f, i):
+        im = Image.open(src / f / ("west" if side and f in ("cast", "carry-walk") else d) / f"{i}.png").convert("RGBA")
+        return ImageOps.mirror(im) if side else im
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder in ("idle", "walk"):
+        return [load(folder, i) for i in range({"idle": 4, "walk": 6}[folder])]
+    if folder == "death":
+        return [load("death", i) for i in range(2, 7)]
+    if folder == "cast":
+        return [load("cast", i) for i in PENELOPE_CAST]
+    if folder == "carry-walk":
+        return [load("carry-walk", i) for i in range(6)]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
 def green_iris(im):
     """John Stewart's eyes as in the cartoon: white, with a glowing green iris. The face was repainted with whole green
     eyes (bright pale green in the middle, emerald at the rim); each such blob in his head becomes a white eye with a
@@ -563,7 +606,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":

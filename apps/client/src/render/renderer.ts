@@ -3,13 +3,15 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
 
 const COLORS = {
+  heart: 0xff4f9a,
+  heartShine: 0xffd0e6,
   floorA: 0x2f6b3a,
   floorB: 0x2a6234,
   wall: 0x5b5f73,
@@ -728,6 +730,8 @@ export class Renderer {
           top.circle(cx + Math.cos(a) * 6, cy - headroom + Math.sin(a) * 2, 1.2).fill(COLORS.bolt);
         }
       }
+      // Penelope's kiss leaves its victim with hearts going round over their head.
+      for (const h of charmHearts(p.charmed, s.tick)) drawHeart(top, cx + h.dx, cy - headroom + h.dy, h.size, 1);
       // A spark over a player whose special is ready.
       // Goku's ki gathering at his hip while the Kamehameha charges (the side view's sprite draws its own).
       if (p.charge > 0 && (p.facing === "up" || p.facing === "down")) {
@@ -788,6 +792,13 @@ export class Renderer {
     if (b.kind === "spin") {
       const at = this.lastSeen.get(b.ownerId);
       return this.drawSpin(g, at?.cx ?? center(b.x), at?.cy ?? center(b.y), BLAST_TICKS - b.ttl);
+    }
+    // Penelope's kiss flies from the first tick (whoever it charms is stunned at once).
+    if (b.kind === "kiss") {
+      const at = this.lastSeen.get(b.ownerId);
+      const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
+      for (const h of kissHearts(ox, oy, dx ? x1 : ox, dy ? y1 : oy, BLAST_TICKS - b.ttl)) drawHeart(g, h.x, h.y, h.size, h.alpha);
+      return;
     }
     // The magnet's pull and the flash's dash land at once (the one caught, or he, is already there), so they show from the first tick.
     const alpha = beamAlpha(BLAST_TICKS - b.ttl + (b.kind === "magnet" || b.kind === "flash" || b.kind === "tunnel" ? BEAM_DELAY : 0));
@@ -1009,4 +1020,14 @@ export class Renderer {
   showClock(on: boolean): void {
     this.clock.visible = on;
   }
+}
+
+/** A heart `size` px wide centred on (x,y): two round lobes over a point, with a shine on the left lobe. */
+function drawHeart(g: Graphics, x: number, y: number, size: number, alpha: number): void {
+  if (alpha <= 0) return;
+  const r = size / 4;
+  g.circle(x - r, y - r * 0.6, r * 1.05).fill({ color: COLORS.heart, alpha });
+  g.circle(x + r, y - r * 0.6, r * 1.05).fill({ color: COLORS.heart, alpha });
+  g.poly([x - size / 2, y - r * 0.4, x + size / 2, y - r * 0.4, x, y + size / 2]).fill({ color: COLORS.heart, alpha });
+  g.circle(x - r * 1.2, y - r, r * 0.35).fill({ color: COLORS.heartShine, alpha });
 }

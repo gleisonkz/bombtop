@@ -2,9 +2,10 @@ import { TICK_RATE, type CharacterId } from "@bombtop/shared";
 import { CAST_TICKS_PER_FRAME, paintSheet, SHEETS, type SheetLayout, type Strip } from "../render/sprites";
 
 /** The sheet each character is drawn from, in the arena and in the menus. */
-export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku, naruto: SHEETS.naruto, spider: SHEETS.spider, pikachu: SHEETS.pikachu, static: SHEETS.static, flash: SHEETS.flash, bugs: SHEETS.bugs, lantern: SHEETS.lantern, donatello: SHEETS.donatello };
+export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku, naruto: SHEETS.naruto, spider: SHEETS.spider, pikachu: SHEETS.pikachu, static: SHEETS.static, flash: SHEETS.flash, bugs: SHEETS.bugs, lantern: SHEETS.lantern, donatello: SHEETS.donatello, penelope: SHEETS.penelope };
 
-export type PreviewState = "walk" | "idle" | "dizzy";
+/** `walk`: the lobby pose (or walking); `win`: the victory pose (or the lobby pose). */
+export type PreviewState = "walk" | "win" | "idle" | "dizzy";
 
 export const TITLE_BOMBER_SHEET = {
   url: "sprites/bomber-title-fly.png",
@@ -21,10 +22,12 @@ export function titleBomberArt(): HTMLElement {
   return span;
 }
 
-/** A lobby kept in its own image, as a layout of its own: that image's cells, the sheet's colors and size. */
-function lobbySheet(sheet: SheetLayout): SheetLayout | undefined {
-  const lobby = sheet.lobby;
-  return lobby?.image && { ...sheet, ...lobby.image, lobby: { row: lobby.row, frames: lobby.frames } };
+/** A showpiece (lobby or victory) kept in its own image, as a layout of its own: that image's cells, the sheet's colors and size. */
+function ownSheet(sheet: SheetLayout, strip: Strip): SheetLayout | undefined {
+  const show = [sheet.lobby, sheet.victory].find((s) => s === strip);
+  if (!show?.image) return undefined;
+  const { victory: _, ...rest } = sheet;
+  return { ...rest, ...show.image, lobby: { row: show.row, frames: show.frames } };
 }
 
 /**
@@ -32,10 +35,11 @@ function lobbySheet(sheet: SheetLayout): SheetLayout | undefined {
  * `sheet` is set when the row is in another image (a lobby of its own).
  */
 export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number; sheet?: SheetLayout } {
-  const strip = state === "walk" ? (sheet.lobby ?? sheet.walk.down) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
+  const lobby = sheet.lobby ?? sheet.walk.down;
+  const strip = state === "walk" ? lobby : state === "win" ? (sheet.victory ?? lobby) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
   const per = state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
   const pose = { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
-  const own = strip === sheet.lobby && lobbySheet(sheet);
+  const own = ownSheet(sheet, strip);
   return own ? { ...pose, sheet: own } : pose;
 }
 
@@ -54,7 +58,7 @@ export function characterMoves(sheet: SheetLayout): Move[] {
   const move = (label: string, strip: Strip | undefined, ticksPerFrame: number): Move[] => {
     if (!strip) return [];
     const m: Move = { label, row: strip.row, frames: strip.frames, seconds: (strip.frames * ticksPerFrame) / TICK_RATE };
-    const own = strip === sheet.lobby && lobbySheet(sheet);
+    const own = ownSheet(sheet, strip);
     return [own ? { ...m, sheet: own } : m];
   };
   const per = sheet.ticksPerFrame;
@@ -68,7 +72,8 @@ export function characterMoves(sheet: SheetLayout): Move[] {
     ...move("Especial (lado)", sheet.cast?.side, CAST_TICKS_PER_FRAME),
     ...move("Tonto", sheet.stun, per),
     ...move("Derrota", sheet.death, per),
-    ...move("Vitória", sheet.lobby, per),
+    ...(sheet.victory ? move("Na sala", sheet.lobby, per) : []),
+    ...move("Vitória", sheet.victory ?? sheet.lobby, per),
   ];
 }
 

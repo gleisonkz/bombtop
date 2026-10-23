@@ -62,6 +62,8 @@ export interface SheetLayout {
   death?: Strip;
   /** A pose for the menus (lobby seats), facing the camera; in its own image when it has one (`row` is then that image's). */
   lobby?: Strip & { image?: LobbyImage };
+  /** A pose for winning (the results' champion), when not the lobby's; facing the camera, in its own image when it has one. */
+  victory?: Strip & { image?: LobbyImage };
   /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
   cast?: Record<"down" | "up" | "side", Strip>;
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
@@ -461,6 +463,38 @@ export const SHEETS = {
     hues: [250, 300],
     hueBase: [143, 33, 228],
     scale: 0.165,
+  },
+  /** Penelope Pitstop (fan art), made in PixelLab (scripts/build-character-sheet.py penelope lays out its frames). */
+  penelope: {
+    url: "sprites/penelope.png",
+    width: 1656,
+    height: 2686,
+    frameW: 184,
+    frameH: 158,
+    anchorX: 87,
+    anchorY: 156,
+    bodyH: 148,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 5 },
+    /** Blowing a kiss: a hand to her lips, then thrown out (the heart itself is drawn by the renderer, kissHearts). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** A touch-up in her compact mirror, powder, a fluff of her ponytail and a kiss blown at us (scripts/build-penelope-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/penelope-lobby.png", width: 2208, height: 154, frameW: 138, frameH: 154, anchorX: 64, anchorY: 154 } },
+    /** A jump for joy, then a checkered race flag waved over her head, hearts floating up (scripts/build-penelope-victory.py). */
+    victory: { row: 0, frames: 16, image: { url: "sprites/penelope-victory.png", width: 3200, height: 164, frameW: 200, frameH: 164, anchorX: 95, anchorY: 164 } },
+    /** Her lips (the kiss leaves from them; the back view: over her head). */
+    muzzle: { side: [30, -80], down: [0, -76], up: [0, -100] },
+    /** Her pink helmet and suit (her blonde hair, white goggles, gloves and boots stay her own). */
+    hues: [322, 348],
+    hueBase: [235, 77, 133],
+    scale: 0.145,
   },
 
 
@@ -913,6 +947,48 @@ export function tunnelMounds(x0: number, y0: number, x1: number, y1: number, age
 export function spinLook(age: number): { angle: number; ring: number; alpha: number } {
   const t = Math.min(1, Math.max(0, age / BLAST_TICKS));
   return { angle: 4 * Math.PI * (1 - (1 - t) ** 2) + t * 0.5, ring: 10 + 10 * Math.sin(t * Math.PI * 0.75), alpha: 1 - t * t };
+}
+
+/** Ticks penelope's kiss takes to fly from her hand to where it stopped. */
+const KISS_FLIGHT = 14;
+
+/**
+ * Penelope's blown kiss from (x0,y0) to (x1,y1), `age` ticks after it: a heart flying out (quick, then easing in,
+ * bobbing up as it goes) with two little ones trailing, then a ring of little hearts bursting out where it landed and
+ * fading with the blast. `size` is the heart's width in arena pixels.
+ */
+export function kissHearts(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; size: number; alpha: number }[] {
+  const at = (t: number) => {
+    const e = 1 - (1 - Math.min(1, Math.max(0, t))) ** 2;
+    return { x: x0 + (x1 - x0) * e, y: y0 + (y1 - y0) * e - Math.sin(e * Math.PI) * 3 };
+  };
+  if (age < KISS_FLIGHT) {
+    const t = age / KISS_FLIGHT;
+    return [
+      { ...at(t), size: 7, alpha: 1 },
+      { ...at(t - 0.18), size: 3.5, alpha: 0.7 },
+      { ...at(t - 0.34), size: 2.5, alpha: 0.45 },
+    ];
+  }
+  const t = Math.min(1, (age - KISS_FLIGHT) / (BLAST_TICKS - KISS_FLIGHT));
+  const r = 4 + 9 * t;
+  const hearts = Array.from({ length: 6 }, (_, k) => {
+    const a = (k / 6) * Math.PI * 2 - Math.PI / 2;
+    return { x: x1 + Math.cos(a) * r, y: y1 + Math.sin(a) * r - 2 * t, size: 3.5, alpha: 1 - t };
+  });
+  return [{ x: x1, y: y1 - 3 * t, size: 7 + 3 * t, alpha: 1 - t }, ...hearts];
+}
+
+/**
+ * The hearts circling over the head of someone charmed by penelope's kiss, `charmed` ticks left: three of them going
+ * round, offsets from the top of the head (the circle squashed, seen from above), each bobbing.
+ */
+export function charmHearts(charmed: number, tick: number): { dx: number; dy: number; size: number }[] {
+  if (charmed <= 0) return [];
+  return Array.from({ length: 3 }, (_, k) => {
+    const a = tick / 9 + (k * Math.PI * 2) / 3;
+    return { dx: Math.cos(a) * 7, dy: -3 + Math.sin(a) * 2.5 - Math.abs(Math.sin(tick / 6 + k)), size: 3.5 };
+  });
 }
 
 /**

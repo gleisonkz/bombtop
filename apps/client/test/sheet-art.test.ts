@@ -44,6 +44,20 @@ describe("character previews", () => {
     expect(characterMoves(s).find((m) => m.label === "Parado")!.sheet).toBeUndefined();
   });
 
+  it("celebrates a win with its own victory pose when it has one, else its lobby pose", () => {
+    const goku = SHEETS.goku;
+    expect(previewPose(goku, "win")).toEqual(previewPose(goku, "walk"));
+    const image = { url: "sprites/x-victory.png", width: 1600, height: 200, frameW: 100, frameH: 200, anchorX: 50, anchorY: 190 };
+    const s = { ...goku, victory: { row: 0, frames: 16, image } };
+    const win = previewPose(s, "win");
+    expect(win).toMatchObject({ row: 0, frames: 16, sheet: { ...image, hues: goku.hues, scale: goku.scale } });
+    expect(previewPose(s, "walk").sheet!.url).toBe(goku.lobby!.image!.url); // the lobby still plays the lobby
+    const moves = characterMoves(s);
+    expect(moves.find((m) => m.label === "Vitória")!.sheet!.url).toBe(image.url);
+    expect(moves.find((m) => m.label === "Na sala")!.sheet!.url).toBe(goku.lobby!.image!.url);
+    expect(characterMoves(goku).some((m) => m.label === "Na sala")).toBe(false);
+  });
+
   it("falls back to idle when a sheet has no stun row", () => {
     const { stun: _, ...plain } = SHEETS.bomber;
     expect(previewPose(plain, "dizzy").row).toBe(plain.idle.down.row);

@@ -251,8 +251,24 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
-
-
+  penelope: {
+    name: "Penélope Charmosa",
+    title: "A pilota mais charmosa da corrida",
+    color: null,
+    story:
+      "A única garota da Corrida Maluca, ao volante do seu carrinho cor-de-rosa. Vive sendo raptada pelo Tião Gavião, e enquanto a Quadrilha de Morte corre para salvá-la, ela quase sempre escapa sozinha, sem borrar a maquiagem. Na arena, troca o volante pelas bombas e descobriu que um beijinho no ar desarma qualquer rival.",
+    special: {
+      name: "Beijo charmoso",
+      recharge: "20 s",
+      text: "Manda um beijo no ar: um coração voa até 5 casas para a frente e o primeiro jogador que ele acerta fica encantado, com corações rodando na cabeça, sem se mexer por 3 s. Paredes, blocos e bombas param o coração. O escudo do Capitão devolve o beijo para ela.",
+      tips: [
+        "Encantou? Corra e solte uma bomba do lado dele: são 3 s parado.",
+        "Mire pelos corredores: o coração não passa por blocos.",
+        "Cuidado com o Capitão: com o escudo erguido, quem fica encantada é você.",
+        "Beije quem vem correndo atrás de você e ganhe tempo para fugir.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */
