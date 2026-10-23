@@ -1,3 +1,4 @@
+import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
 import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
@@ -19,6 +20,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Green lantern: a bubble around him for BUBBLE_TICKS that no fire gets into (he moves at half speed inside).
  * Bugs: digs a tunnel and comes out ahead (see `tunnel`).
  * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
+ * Donatello: spins his bo staff all around him (see `staffSpin`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -42,6 +44,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     if (!tunnel(s, p)) return false;
   } else if (p.character === "pikachu") {
     thunder(s, p);
+  } else if (p.character === "donatello") {
+    staffSpin(s, p);
   } else if (p.character === "goku") {
     p.charge = KAME_CHARGE;
     p.specialCooldown = KAME_COOLDOWN;
@@ -78,7 +82,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
@@ -151,6 +155,36 @@ function thunder(s: MatchState, p: Player): void {
     }
     s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir, length, ttl: BLAST_TICKS, kind: "thunder" });
   }
+}
+
+/**
+ * Donatello's bo staff spin: stuns every other player on his tile and the four tiles next to him, and bats
+ * each bomb next to him away the way it was hit, as a punch would. A shield facing him stops its side and
+ * the staff stuns him instead.
+ */
+function staffSpin(s: MatchState, p: Player): void {
+  const from = playerTile(p);
+  const stun = (x: number, y: number) => {
+    for (const o of s.players) {
+      if (o === p || !o.alive) continue;
+      const t = playerTile(o);
+      if (t.x === x && t.y === y) o.stun = SPECIAL_STUN_TICKS;
+    }
+  };
+  stun(from.x, from.y);
+  for (const dir of ["up", "down", "left", "right"] as const) {
+    const [dx, dy] = DIR_VECTORS[dir];
+    const x = from.x + dx;
+    const y = from.y + dy;
+    if (shieldAt(s, x, y, dx, dy)) {
+      p.stun = SPECIAL_STUN_TICKS;
+      continue;
+    }
+    stun(x, y);
+    const bomb = bombAt(s, x, y);
+    if (bomb) launch(bomb, dir);
+  }
+  s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length: 1, ttl: BLAST_TICKS, kind: "spin" });
 }
 
 /**
