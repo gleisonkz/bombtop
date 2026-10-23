@@ -9,6 +9,7 @@ import { ItemPreview } from "./item-preview";
 import { freshReload, liteOn, toggleDebug, toggleLite, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt, titleBomberArt } from "./sheet-art";
+import { shrinkToFit } from "./shrink-to-fit";
 
 /** `watch`: this screen only shows the room's match (TV mode), with no seat. */
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string } | { kind: "watch"; code: string };
@@ -157,18 +158,25 @@ export class Menu {
       if (on !== "characters") charPreview.pause();
     };
     items.root.hidden = characters.root.hidden = true;
+    const lineup = cast();
+    const hero = el("div", { class: "hero" }, [
+      lineup,
+      logo,
+      el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
+      el(
+        "ul",
+        { class: "perks" },
+        ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
+      ),
+    ]);
+    // The lineup is wider than the hero beside the card on most computer screens: shrink it to fit.
+    new ResizeObserver(() => {
+      lineup.style.zoom = "";
+      lineup.style.zoom = String(shrinkToFit(lineup.offsetWidth, hero.clientWidth));
+    }).observe(hero);
     this.root = el("div", { class: "screen menu" }, [
       menuBackdrop(),
-      el("div", { class: "hero" }, [
-        cast(),
-        logo,
-        el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
-        el(
-          "ul",
-          { class: "perks" },
-          ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
-        ),
-      ]),
+      hero,
       card,
       items.root,
       characters.root,

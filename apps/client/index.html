@@ -463,7 +463,7 @@
 
       /* Phones in landscape and desktops: hero and card side by side */
       @media (orientation: landscape) and (min-width: 560px) {
-        .menu { grid-template-columns: 1fr minmax(300px, 400px); justify-items: stretch; align-items: center; gap: clamp(16px, 4vw, 56px); }
+        .menu { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); justify-items: stretch; align-items: center; gap: clamp(16px, 4vw, 56px); }
       }
       /* Desktop and iPads sideways: the full title screen */
       @media (orientation: landscape) and (min-width: 1000px) and (min-height: 640px) {
