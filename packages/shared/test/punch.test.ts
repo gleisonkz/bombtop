@@ -44,13 +44,25 @@ describe("punch", () => {
     expect(bomb.air).toBeNull();
   });
 
-  it("airborne bombs do not block and continue their fuse", () => {
+  it("airborne bombs do not block and their fuse pauses (as in Super Bomberman 4)", () => {
     const { s, bomb } = setup(3, 5, "right", 4, 5);
     const fuse = bomb.fuse;
     press(s, "action");
     expect(bombAt(s, 4, 5)).toBeUndefined();
     run(s, AIR_TICKS_PER_TILE);
-    expect(bomb.fuse).toBe(fuse - AIR_TICKS_PER_TILE - 1);
+    expect(bomb.fuse).toBe(fuse);
+  });
+
+  it("a bomb about to go off never explodes in the air, only once it lands", () => {
+    const { s, bomb } = setup(3, 5, "right", 4, 5);
+    bomb.fuse = 2;
+    press(s, "action");
+    run(s, AIR_TICKS_PER_TILE * 3 - 1);
+    expect(s.bombs).toContain(bomb);
+    expect(s.flames).toHaveLength(0);
+    run(s, 3);
+    expect(s.bombs).not.toContain(bomb);
+    expect(s.flames.some((f) => f.x === 7 && f.y === 5)).toBe(true);
   });
 
   it("flies over blocks and bounces when landing on one", () => {
