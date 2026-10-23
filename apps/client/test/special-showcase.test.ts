@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHARACTERS, getTile, Tile, type CharacterId, type MatchState } from "@bombtop/shared";
+import { CHARACTERS, getTile, Tile, TILE, type CharacterId, type MatchState } from "@bombtop/shared";
 import { SHOWCASE_VIEW, specialShowcase } from "../src/game/showcase";
 
 /** Plays one loop of a character's special scene, calling `watch` after every tick. */
@@ -114,6 +114,12 @@ describe("special showcase", () => {
       bombed ||= pulled && rival(s).stun > 0 && s.bombs.some((b) => b.ownerId === "you");
     });
     expect(bombed).toBe(true);
+  });
+
+  it("bugs: boxed in with his own bomb, digs under the blocks and comes out far from it", () => {
+    let out = false;
+    play("bugs", (s) => (out ||= s.bombs.some((b) => b.ownerId === "you") && you(s).px > 7 * TILE && getTile(s, 4, 5) === Tile.Block));
+    expect(out).toBe(true);
   });
 
   it("flash: plants a bomb and zips right through the rival, who is left dizzy in its way", () => {

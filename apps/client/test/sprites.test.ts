@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -348,6 +348,22 @@ describe("ice blast visuals", () => {
     expect(near.r).toBeLessThan(far.r);
     const down = magnetWaves(5, 0, 5, 48, 3);
     for (const w of down) expect(w.x).toBe(5);
+  });
+
+  it("bugs' tunnel heaves up a ridge of dirt mounds from where he went under to where he came out, running ahead fast", () => {
+    const all = tunnelMounds(0, 10, 80, 10, 30);
+    expect(all.length).toBeGreaterThanOrEqual(5);
+    for (const m of all) {
+      expect(m.y).toBe(10); // along the tunnel
+      expect(m.x).toBeGreaterThan(0);
+      expect(m.x).toBeLessThan(80);
+      expect(m.r).toBeGreaterThan(0);
+    }
+    const xs = all.map((m) => m.x);
+    expect(xs).toEqual([...xs].sort((a, b) => a - b)); // in order from the start
+    expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeLessThan(all.length); // still running ahead
+    expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeGreaterThan(0);
+    for (const m of tunnelMounds(5, 0, 5, 48, 30)) expect(m.x).toBe(5);
   });
 
   it("the flash's dash leaves speed lines from where he left to where he stopped, the tail catching up as they fade", () => {

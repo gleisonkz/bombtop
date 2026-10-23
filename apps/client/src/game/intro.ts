@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 21 * TICK_RATE;
+export const INTRO_TICKS = 23 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -24,8 +24,9 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 810, to: 930, card: { name: "Pikachu", line: "Choque do Trovão! Uma descarga em volta deixa tonto quem estiver perto." } },
   { from: 930, to: 1050, card: { name: "Super Choque", line: "Puxão magnético! Arrasta o rival lá de longe pra colado nele, tonto." } },
   { from: 1050, to: 1170, card: { name: "Flash", line: "Supervelocidade! Atravessa a fileira num piscar e deixa todo mundo tonto." } },
+  { from: 1170, to: 1290, card: { name: "Pernalonga", line: "Toca! Cava por baixo de paredes, blocos e bombas e sai lá na frente." } },
 ];
-const LOGO_FROM = 1170;
+const LOGO_FROM = 1290;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
@@ -34,13 +35,13 @@ const LOGO_FROM = 1170;
  * up in row 3, Goku's Kamehameha smashes a row of blocks in row 7, Naruto's Rasengan knocks the mascot
  * back along row 3, the spider walks down row 7 (open since the Kamehameha) and webs Goku, Pikachu steps up
  * from row 8 and shocks the spider, Static steps up into row 7 and drags Pikachu over to him with his magnet, the flash steps up into row 3 and zips through Naruto, the
- * mascot and Thor, then the logo.
+ * mascot and Thor, bugs digs along row 4 under two pillars and pops out past them, then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
   /** Seats some wear instead of their own (renderer `setColors`): the spider's seventh would be the second's black. */
-  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2]]);
+  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -62,6 +63,8 @@ export class Intro {
     s.players.push({ ...structuredClone(s.players[0]!), id: "static", character: "static" });
     // And the flash in a tenth, in red (see `colors`).
     s.players.push({ ...structuredClone(s.players[0]!), id: "flash", character: "flash" });
+    // And bugs in an eleventh, in blue to keep his blue scarf (see `colors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "bugs", character: "bugs" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
@@ -73,8 +76,9 @@ export class Intro {
     placePlayerAt(s, "pikachu", 9, 8);
     placePlayerAt(s, "static", 11, 8);
     placePlayerAt(s, "flash", 5, 4);
+    placePlayerAt(s, "bugs", 1, 4);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash] = s.players;
+    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash, bugs] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
@@ -86,6 +90,7 @@ export class Intro {
     pikachu!.facing = "up";
     zap!.facing = "up";
     flash!.facing = "up";
+    bugs!.facing = "down";
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -108,6 +113,8 @@ export class Intro {
       new Script("static", [{ wait: 930 }, { go: "up", tiles: 1 }, { face: "left" }, { wait: 6 }, { press: "special" }]),
       // Steps up into row 3 and zips right through Naruto, the mascot and Thor.
       new Script("flash", [{ wait: 1050 }, { go: "up", tiles: 1 }, { face: "right" }, { wait: 6 }, { press: "special" }]),
+      // Turns to the pillars in row 4 and digs under them, coming out where the flash stood.
+      new Script("bugs", [{ wait: 1170 }, { face: "right" }, { wait: 10 }, { press: "special" }]),
     ];
   }
 

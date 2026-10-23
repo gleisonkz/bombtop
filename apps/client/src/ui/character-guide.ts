@@ -198,7 +198,25 @@ const INFO: Record<CharacterId, Info> = {
         "O escudo do Capitão virado para você te para na frente dele, e quem fica tonto é você.",
       ],
     },
+  },  bugs: {
+    name: "Pernalonga",
+    title: "O coelho mais esperto do pedaço",
+    color: blue,
+    story:
+      "Mora numa toca que ele mesmo cavou e passa os dias mastigando cenoura e fazendo caçador de bobo. Ouviu falar de uma arena cheia de bombas, achou que era um atalho para Pismo Beach e desceu cavando. Pegou a esquerda errada em Albuquerque, saiu bem no meio da partida e resolveu ficar. Ninguém consegue encurralar quem anda por baixo da terra.",
+    special: {
+      name: "Toca",
+      recharge: "20 s",
+      text: "Cava e some no chão: sai até 5 casas à frente, na casa livre mais longe, passando por baixo de paredes, blocos, bombas e jogadores. Nunca sai em cima de alguém, de uma bomba ou do fogo, e se não houver saída ele fica onde está e não gasta o especial.",
+      tips: [
+        "Encurralado? Solte a bomba e cave: ela explode onde você estava.",
+        "Atravessa uma fileira de blocos inteira sem quebrar nenhum.",
+        "Olhe para onde vai sair: ele escolhe a casa livre mais longe, não a mais segura.",
+        "O escudo do Capitão não para quem está debaixo da terra.",
+      ],
+    },
   },
+
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

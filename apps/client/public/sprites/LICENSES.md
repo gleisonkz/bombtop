@@ -66,6 +66,13 @@ stop, carry walk and the lobby poses posed with skeleton v3 from its rotations).
 bolts and dust are drawn by `scripts/build-flash-lobby.py`. Frames laid out by `scripts/build-character-sheet.py flash`;
 rows = `SHEETS.flash`.
 
+## bugs.png
+
+Fan art of Bugs Bunny (Looney Tunes, Warner Bros.) for this non-commercial project, made in PixelLab (pixellab.ai)
+(characters "Bugs Bunny HD" and "Bugs Bunny HD v3", a v3 rotation of its front for the side and back; popping out of his
+tunnel and carry walk posed with skeleton v3 from its rotations; the lobby's carrot is a v3 animation). Frames laid out by
+`scripts/build-character-sheet.py bugs`; rows = `SHEETS.bugs`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

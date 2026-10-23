@@ -40,9 +40,14 @@
     skidding (FLASH_CAST); carry walk posed from our own skeletons (the back view from a second try, "carry-walk-n":
     the first turned him to face us), carry idle = its standing frames; lobby = 6 south and 5 sprinting east poses from
     our own skeletons ("lobby6", "lobby5") that build-flash-lobby.py turns into his streak across the card (FRAMES_DIR/lobby).
+  bugs: sprites/bugs.png, character "Bugs Bunny HD v3" (a v3 rotation of "Bugs Bunny HD"'s front, whose own side and back
+    views were his front again; front walk, stun, death and lobby from "Bugs Bunny HD"). Idle = the still rotation bobbing
+    (the breathing template shut his eyes); cast = popping out of his tunnel (squashed low, arms flung up, a hand over his
+    brow looking round) and carry walk posed from our own skeletons ("cast6": the side view's first frame came out
+    smudged, BUGS_CAST_SIDE skips it); lobby = a v3 animation munching a carrot ("lobby9", its first frame the rotation).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 from pathlib import Path
@@ -148,6 +153,17 @@ CHARACTERS = {
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
         ("lobby", "lobby", "south", 16),
+    ],
+    # cast = popping out of his tunnel (BUGS_CAST): the dig is instant, so the row starts as he comes up
+    "bugs": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
     ],
 }
 BASE = 400
@@ -358,6 +374,25 @@ def flash_frames(src, folder, d):
     return None
 
 
+BUGS_CAST = [0, 1, 1, 2, 2, 3, 3, 4, 5]  # bugs: his 6 posed frames over the 9 cast cells, squashed low as he comes up
+BUGS_CAST_SIDE = [1, 1, 1, 2, 2, 3, 3, 4, 5]  # bugs, side view: without its smudged first frame
+
+
+def bugs_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast":
+        return [load("cast6", i) for i in (BUGS_CAST_SIDE if d == "east" else BUGS_CAST)]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -382,7 +417,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "thor":

@@ -359,7 +359,36 @@ export const SHEETS = {
     /** White would bleach his whole suit (a ghost of the flash): that player keeps the red. */
     keepFor: [[245, 245, 245]],
     scale: 0.137,
+  },  /** Bugs Bunny (fan art), made in PixelLab (scripts/build-character-sheet.py bugs lays out its frames). */
+  bugs: {
+    url: "sprites/bugs.png",
+    width: 1098,
+    height: 2952,
+    frameW: 122,
+    frameH: 164,
+    anchorX: 64.5,
+    anchorY: 161,
+    bodyH: 155,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Popping out of his tunnel (the dig itself is instant): squashed low, arms flung up, a hand over his brow. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Munching a carrot, then a wave. */
+    lobby: { row: 17, frames: 8 },
+    /** His blue scarf (his gray fur and white gloves stay his own). */
+    hues: [195, 225],
+    hueBase: [63, 122, 162],
+    /** His tall ears take up a third of his height. */
+    scale: 0.145,
   },
+
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",
@@ -743,6 +772,21 @@ export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age:
     out.push({ x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, r: 2 + 5 * t });
   }
   return out;
+}
+
+/**
+ * Bugs' tunnel from (x0,y0) to (x1,y1), `age` ticks after he went under: a ridge of dirt mounds heaved up along it, one
+ * every few pixels between the two holes, running ahead from where he went under faster than the eye can follow.
+ */
+export function tunnelMounds(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; r: number }[] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const ux = len ? (x1 - x0) / len : 0;
+  const uy = len ? (y1 - y0) / len : 0;
+  const mounds: { x: number; y: number; r: number }[] = [];
+  for (let d = 7; d < len - 5 && d <= 7 + (age + 1) * 16; d += 6) {
+    mounds.push({ x: x0 + ux * d, y: y0 + uy * d, r: 2.2 + ((d / 6) % 2) * 0.6 });
+  }
+  return mounds;
 }
 
 /**

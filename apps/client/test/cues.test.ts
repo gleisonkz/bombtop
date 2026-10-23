@@ -210,6 +210,14 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "zoom", x: 1.5 }]);
   });
 
+  it("hears bugs digging in, where he went under", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 4, ttl: BLAST_TICKS - 1, kind: "tunnel" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "dig", x: 1.5 }]);
+  });
+
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {
     const v = view();
     const next = later(v, (n) => {

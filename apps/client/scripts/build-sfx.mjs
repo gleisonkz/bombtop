@@ -18,7 +18,8 @@
 // under mk9/; Static's lines (Phil LaMarr) are cut from Static Shock / Justice League Unlimited scenes on 101soundboards.com, board
 // "Static Shock (TV Show)" (fan use; (c) Warner Bros. / DC), under static-shock/ (to-the-rescue = sound 52736484, impresses-batman =
 // 52736429); the flash's (Taliesin Jaffe) from Injustice 2, board "Injustice 2 (PC): The Flash Voice" on the same site, under
-// flash-inj2/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// flash-inj2/; bugs' (Jeff Bergman) from Looney Tunes Dash! (mobile), board "Bugs Bunny - Looney Tunes Dash! - Character Voices
+// (Mobile)" on the same site (sounds 1456772, 1456763, 1456805, 1456812), under bugs-dash/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -46,6 +47,7 @@ const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV
 const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
+const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
@@ -173,6 +175,23 @@ const RECIPE = {
   "flash-death": { src: BASS_DOWN, len: 2.0, layer: { src: FLASH("ran-right-into-that"), len: 1.9, gain: -3 } },
   "flash-win": { src: FLASH("only-one-fastest"), len: 2.2 },
   "flash-special": { src: FLASH("eat-my-dust"), len: 1.1 },
+  // Bugs: "Yeah, what's up, Doc?" when picked, "Could somebody call an ambulance?" over the falling bass, "Ain't I a
+  // stinker?" when he wins, "I knew I should have taken a left at Albuquerque" as he pops out of his tunnel
+  "bugs-pick": { src: BUGS("yeah-whats-up-doc"), from: 1.0, len: 1.5 },
+  "bugs-death": { src: BASS_DOWN, len: 2.2, layer: { src: BUGS("could-somebody-call-an-ambulance"), len: 2.0, gain: -3 } },
+  "bugs-win": { src: BUGS("and-i-you-stinker"), from: 1.05, len: 1.4 },
+  "bugs-special": { src: BUGS("i-knew-i-should-have-taken-a-left-at-albuquerque"), from: 0.9, len: 2.6 },
+  // bugs' tunnel: quick scrapes of digging, a rumble running under the floor, a pop as he comes out
+  dig: {
+    src: K("impact-sounds", "footstep_snow_000.ogg"),
+    len: 0.8,
+    layers: [
+      { src: K("impact-sounds", "footstep_snow_002.ogg"), len: 0.15, gain: -2, at: 0.09 },
+      { src: K("impact-sounds", "footstep_grass_001.ogg"), len: 0.15, gain: -3, at: 0.18 },
+      { src: CSD("Colossal Impacts", "Woosh Debris.wav"), len: 0.5, gain: -8, lowpass: 500, at: 0.12 },
+      { src: K("interface-sounds", "pluck_002.ogg"), len: 0.25, gain: -2, at: 0.5 },
+    ],
+  },
   // the flash's dash: a whoosh tearing past, a crackle of the Speed Force
   zoom: {
     src: CSD("Colossal Impacts", "Woosh Debris.wav"),
