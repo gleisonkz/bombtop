@@ -45,7 +45,11 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   real viewport, so the big-screen layouts apply and are then scaled.
 - **Menus with a controller:** the first controller walks every screen under `#ui` (menu, guides, lobby, pairing, results):
   d-pad or stick moves a ring (`.pad-focus`) to the nearest button that way (`ui/spatial-focus.ts`), A presses it, B presses
-  the screen's way back (`backButton` in `ui/dom.ts`, `data-pad-back`). `ui/pad-menus.ts` polls `input/pad-nav.ts` each frame:
+  the screen's way back (`backButton` in `ui/dom.ts`, `data-pad-back`), L1/R1 press the `data-pad-prev`/`data-pad-next`
+  arrows of the card the ring is on (a seat's character picker), or of your own seat (`.me`) when the ring is elsewhere.
+  The host steps their bots' characters the same way (arrows on bot seats, `C2S.botCharacter`, `setBotCharacter`: the bot
+  takes a name of its new character). A redrawn screen (the lobby rebuilds its seats) gets the ring back at the same place.
+  `ui/pad-menus.ts` polls `input/pad-nav.ts` each frame:
   a held direction repeats after 400 ms then every 150 ms, A/B share a 300 ms cooldown (no double join, bouncing contacts on
   cheap pads), and a press already down when a screen comes up is ignored. With nothing shown under `#ui` (a match) it does
   nothing. In dev, `window.__padMenus.tick(now)` drives it by hand (automated tabs run rAF at ~2 fps). Played on the TV by

@@ -189,6 +189,10 @@ export class OnlineGame implements GameMode {
     this.room.send(C2S.character, { character });
   }
 
+  pickBotCharacter(id: string, character: CharacterId): void {
+    this.room.send(C2S.botCharacter, { id, character });
+  }
+
   frame(deltaMs: number, nowMs: number): void {
     const t = performance.now();
     this.step(deltaMs, nowMs);

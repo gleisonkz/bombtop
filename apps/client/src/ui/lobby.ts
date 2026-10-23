@@ -33,6 +33,8 @@ export interface LobbyHandlers {
   addBot(level: BotLevel): void;
   removeBot(id: string): void;
   pickCharacter(character: CharacterId): void;
+  /** The host has a bot play another character. */
+  pickBotCharacter(id: string, character: CharacterId): void;
 }
 
 /** Lobby overlay: room code and invite, a seat per player, and the host's start button. */
@@ -116,6 +118,12 @@ export class LobbyPanel {
           ]);
         }
         const you = member.id === me;
+        // Your own character, and the host's bots': the arrows (or L1/R1 on a controller) step through the characters.
+        const pick = you
+          ? (c: CharacterId) => this.handlers.pickCharacter(c)
+          : member.bot && isHost
+            ? (c: CharacterId) => this.handlers.pickBotCharacter(member.id, c)
+            : null;
         const cls = seatClass(member, me);
         const sub = member.bot
           ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
@@ -133,10 +141,10 @@ export class LobbyPanel {
           el("span", { class: "seat-sub", text: sub }),
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
           // Arrows step through the characters, so any number of them fits on a narrow card.
-          el("div", { class: you ? "picker" : "picker spacer" }, [
-            this.pickArrow("‹", "Personagem anterior", you, member.character, -1),
+          el("div", { class: pick ? "picker" : "picker spacer" }, [
+            this.pickArrow("‹", "Personagem anterior", pick, member.character, -1),
             el("span", { class: "pick-name", text: CHARACTER_NAMES[member.character] }),
-            this.pickArrow("›", "Próximo personagem", you, member.character, 1),
+            this.pickArrow("›", "Próximo personagem", pick, member.character, 1),
           ]),
         ]);
       }),
@@ -159,9 +167,17 @@ export class LobbyPanel {
         : "Esperando o anfitrião começar…");
   }
 
-  private pickArrow(text: string, label: string, you: boolean, current: CharacterId, step: 1 | -1): HTMLButtonElement {
-    const b = button(text, () => you && this.handlers.pickCharacter(cycleCharacter(current, step)), "mini pick-arrow");
+  private pickArrow(
+    text: string,
+    label: string,
+    pick: ((c: CharacterId) => void) | null,
+    current: CharacterId,
+    step: 1 | -1,
+  ): HTMLButtonElement {
+    const b = button(text, () => pick?.(cycleCharacter(current, step)), "mini pick-arrow");
     b.setAttribute("aria-label", label);
+    // L1/R1 on a controller press these (PadMenus).
+    if (pick) b.dataset[step < 0 ? "padPrev" : "padNext"] = "";
     return b;
   }
 

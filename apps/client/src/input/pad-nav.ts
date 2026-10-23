@@ -2,7 +2,7 @@ import type { Direction } from "@bombtop/shared";
 import { direction, gamepadAt, type PadState } from "./gamepad";
 
 /** What a controller asks of a menu screen. */
-export type NavCommand = Exclude<Direction, null> | "confirm" | "back";
+export type NavCommand = Exclude<Direction, null> | "confirm" | "back" | "prev" | "next";
 
 const CONFIRM = 0; // A / Cross
 const BACK = 1; // B / Circle
@@ -11,13 +11,19 @@ const REPEAT_AFTER = 400;
 const REPEAT_EVERY = 150;
 /** After A or B, either one is dropped this long: no double join, and a cheap pad's contacts may bounce. */
 const PRESS_COOLDOWN = 300;
+const PREV = 4; // L1 / LB
+const NEXT = 5; // R1 / RB
+/** L1/R1 step through a list (the characters), so they may come quick; this only swallows a bouncing contact. */
+const STEP_DEBOUNCE = 120;
 
-/** Reads a controller for the menus: d-pad or stick to move (repeating while held), A to confirm, B to go back. */
+/** Reads a controller for the menus: d-pad or stick to move (repeating while held), A to confirm, B to go back, L1/R1 to step back and forth. */
 export class PadNav {
   private dir: Direction = null;
   private nextAt = 0;
   /** When A or B count again. */
   private calmAt = 0;
+  /** When L1 or R1 count again. */
+  private stepAt = 0;
   private held = new Set<number>();
 
   constructor(private readonly read: () => PadState | null = gamepadAt(0)) {}
@@ -48,6 +54,11 @@ export class PadNav {
     if (press && now >= this.calmAt) {
       this.calmAt = now + PRESS_COOLDOWN;
       return press;
+    }
+    const step = pressed(PREV) ? "prev" : pressed(NEXT) ? "next" : null;
+    if (step && now >= this.stepAt) {
+      this.stepAt = now + STEP_DEBOUNCE;
+      return step;
     }
     if (!dir) return null;
     if (turned) {

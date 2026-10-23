@@ -65,6 +65,21 @@ describe("PadNav", () => {
     expect(nav.sample(320)).toBe("confirm");
   });
 
+  it("L1 and R1 step back and forth, once per press, with a short debounce", () => {
+    let state = pad([4]);
+    const nav = new PadNav(() => state);
+    expect(nav.sample(0)).toBe("prev");
+    expect(nav.sample(16)).toBeNull(); // held
+    state = pad([]);
+    nav.sample(40);
+    state = pad([5]);
+    expect(nav.sample(60)).toBeNull(); // a bounce
+    state = pad([]);
+    nav.sample(100);
+    state = pad([5]);
+    expect(nav.sample(140)).toBe("next");
+  });
+
   it("a button held from before (the press that opened the screen) does nothing", () => {
     const nav = new PadNav(() => pad([0]));
     nav.reset();

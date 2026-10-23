@@ -219,6 +219,7 @@ const lobby = new LobbyPanel(ui, {
     if (line) sound.play(line, { channel: "pick" });
     online?.pickCharacter(c);
   },
+  pickBotCharacter: (id, c) => online?.pickBotCharacter(id, c),
 });
 
 /** The character picked last time, used when joining the next room. */
