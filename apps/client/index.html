@@ -520,6 +520,21 @@
         .cast .star .title-bomber { --fly-cell: 82px; width: 84px; height: 82px; }
         button.play { min-height: 50px; font-size: 22px; }
       }
+      /* Phones sideways: the menu card fits the height, demo and offline side by side */
+      @media (orientation: landscape) and (max-height: 460px) {
+        .screen.menu { padding-block: 4px; padding-right: 108px; } /* clear of the full-screen and sound buttons */
+        .menu .card { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px 12px; }
+        .menu .card > * { grid-column: 1 / -1; }
+        .menu .card > .demo-btn, .menu .card > .offline-btn { grid-column: auto; }
+        .menu .card > .demo-btn, .menu .card > .offline-btn { font-size: 15px; padding-inline: 6px; white-space: nowrap; }
+        .menu .card button.play { min-height: 46px; }
+        .menu .card .or { display: none; } /* the code box says it already */
+        .menu-foot { gap: 2px 10px; }
+      }
+      @media (orientation: landscape) and (max-height: 380px) {
+        .menu .card input, .menu .card button:not(.link) { min-height: 36px; padding-block: 4px; }
+        .menu .card button.play { min-height: 42px; }
+      }
       @media (pointer: coarse) { .keys-hint { display: none; } html:not(.has-pad) .couch-btn { display: none; } }
       @media (prefers-reduced-motion: reduce) { .spark, .eyes, .pupil, .hero::before, .cast .star, .cast .star .title-bomber i, .menu-bg i, button.play, button.play::after, .seat, .seat .mascot, .seat .mascot svg, .seat .body, .seat .leg, .seat.easy::after, .mascot.sheet i { animation: none; } }
 

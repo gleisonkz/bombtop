@@ -116,7 +116,7 @@ export class Menu {
         button("Ver itens", () => handlers.guide("items"), "ghost"),
         button("Personagens", () => handlers.guide("characters"), "ghost"),
       ]),
-      button("Assistir demo", () => handlers.demo(), "ghost"),
+      button("Assistir demo", () => handlers.demo(), "ghost demo-btn"),
       button("📶 Jogar offline (Wi-Fi)", () => {
         storage.set(NAME_KEY, this.name.value.trim());
         handlers.offline(this.name.value);
