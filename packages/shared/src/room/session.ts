@@ -121,11 +121,9 @@ export class BattleSession {
   /** Host only, in the lobby: seats a computer player of the given level. */
   addBot(requesterId: string, level: BotLevel): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
-    const taken = new Set(this.members.map((m) => m.name));
     const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
-    const free = BOT_NAMES[character].filter((n) => !taken.has(n));
     const random = this.opts.random ?? Math.random;
-    const name = free[Math.floor(random() * free.length)] ?? `Bot ${this.botSeq + 1}`;
+    const name = this.botName(character) ?? `Bot ${this.botSeq + 1}`;
     // A personality no other bot in the room has (there are as many as bot seats).
     const used = new Set(this.members.map((m) => m.persona));
     const personas = BOT_PERSONAS.filter((p) => !used.has(p));
@@ -134,6 +132,24 @@ export class BattleSession {
     this.members.push({ id, name, wins: 0, connected: true, bot: level, character, persona });
     this.pickedAt.set(id, ++this.picks);
     return true;
+  }
+
+  /** Host only, in the lobby: a bot plays another character, under a name of that character's (same level and personality). */
+  setBotCharacter(requesterId: string, botId: string, character: CharacterId): boolean {
+    const m = this.members.find((m) => m.id === botId && m.bot);
+    if (this.phase !== "lobby" || requesterId !== this.hostId || !m) return false;
+    if (m.character === character) return true;
+    m.character = character;
+    m.name = this.botName(character, m.id) ?? m.name;
+    this.pickedAt.set(botId, ++this.picks);
+    return true;
+  }
+
+  /** A name of the character's that no one else in the room has (`self` may keep its own), at random. */
+  private botName(character: CharacterId, self?: string): string | undefined {
+    const taken = new Set(this.members.filter((m) => m.id !== self).map((m) => m.name));
+    const free = BOT_NAMES[character].filter((n) => !taken.has(n));
+    return free[Math.floor((this.opts.random ?? Math.random)() * free.length)];
   }
 
   /** Host only, in the lobby: frees a bot's seat. */

@@ -118,6 +118,20 @@ describe("RoomCore", () => {
     expect(r.seats.at(-1)).toBe(false);
   });
 
+  it("the host changes a bot's character and everyone sees it; junk is ignored", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    r.core.message("a", C2S.addBot, { level: "easy" });
+    const bot = r.lastLobby().members[1]!.id;
+    r.core.message("a", C2S.botCharacter, { id: bot, character: "goku" });
+    expect(r.lastLobby().members[1]!.character).toBe("goku");
+    const before = r.broadcast.length;
+    r.core.message("a", C2S.botCharacter, { id: bot, character: "godzilla" });
+    r.core.message("a", C2S.botCharacter, { id: 7, character: "thor" });
+    r.core.message("a", C2S.botCharacter, null);
+    expect(r.broadcast.length).toBe(before);
+  });
+
   it("ignores junk", () => {
     const r = room();
     r.core.join("a", "Ana", "bomb");

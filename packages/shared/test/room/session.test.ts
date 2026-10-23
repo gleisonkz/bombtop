@@ -326,6 +326,22 @@ describe("bots", () => {
     expect(s.members).toHaveLength(2);
   });
 
+  it("the host changes a bot's character in the lobby, and the bot takes a name of its new character", () => {
+    const s = lobby(2);
+    s.addBot("c1", "easy");
+    const bot = s.members[2]!;
+    const persona = bot.persona;
+    expect(s.setBotCharacter("c1", bot.id, "naruto")).toBe(true);
+    expect(bot.character).toBe("naruto");
+    expect(BOT_NAMES.naruto).toContain(bot.name);
+    expect(bot.persona).toBe(persona);
+    expect(s.setBotCharacter("c2", bot.id, "thor")).toBe(false); // not the host
+    expect(s.setBotCharacter("c1", "c2", "thor")).toBe(false); // not a bot
+    expect(s.setBotCharacter("c1", "nobody", "thor")).toBe(false);
+    s.start("c1");
+    expect(s.setBotCharacter("c1", bot.id, "thor")).toBe(false); // locked mid-match
+  });
+
   it("one person and a bot are enough to start", () => {
     const s = lobby(1);
     s.addBot("c1", "medium");

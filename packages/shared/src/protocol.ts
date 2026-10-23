@@ -21,6 +21,8 @@ export const C2S = {
   addBot: "addBot",
   removeBot: "removeBot",
   character: "character",
+  /** The host has a bot play another character: `{ id, character }`. */
+  botCharacter: "botCharacter",
   /** Connection measurements from a ?debug client, logged on the server. */
   stats: "stats",
   /** Nothing to do: sent during a match when the client has been quiet, so a phone's Wi-Fi radio doesn't doze. */
