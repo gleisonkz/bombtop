@@ -1,4 +1,4 @@
-import { BLAST_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -388,6 +388,35 @@ export const SHEETS = {
     /** His tall ears take up a third of his height. */
     scale: 0.145,
   },
+  /** The green lantern, John Stewart (fan art), made in PixelLab (scripts/build-character-sheet.py lantern lays out its frames). */
+  lantern: {
+    url: "sprites/lantern.png",
+    width: 1170,
+    height: 2898,
+    frameW: 130,
+    frameH: 161,
+    anchorX: 67.5,
+    anchorY: 157,
+    bodyH: 150,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Willing his bubble: the ring fist drawn to his chest, then thrust overhead (the bubble is its own art, BUBBLE). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Ring fist to the sky, then fists on his hips. */
+    lobby: { row: 17, frames: 8 },
+    /** His green suit and boots (his emerald irises sit past this range and keep their green). */
+    hues: [100, 140],
+    hueBase: [7, 180, 20],
+    scale: 0.145,
+  },
+
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
@@ -772,6 +801,42 @@ export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age:
     out.push({ x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, r: 2 + 5 * t });
   }
   return out;
+}
+
+/** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */
+export const BUBBLE = {
+  url: "sprites/lantern-bubble.png",
+  size: 192,
+  rows: { form: 0, loop: 1, pop: 2 },
+  frames: { form: 8, loop: 12, pop: 8 },
+  /** Ticks each frame stays on screen. */
+  ticks: 2,
+  /** Drawn about 28 px across, round a player. */
+  scale: 0.18,
+};
+
+/**
+ * Ticks into a held pose, if any: the captain planted behind his shield, the green lantern kneeling with his ring up in his
+ * bubble (only while he stands still: walking in it, he walks). Drawn with his cast row, held on its last frame.
+ */
+export function bracing(p: Pick<Player, "shield" | "bubble">, moving: boolean): number | undefined {
+  if (p.shield > 0) return SHIELD_TICKS - p.shield;
+  if (p.bubble > 0 && !moving) return BUBBLE_TICKS - p.bubble;
+  return undefined;
+}
+
+/**
+ * How the green lantern's bubble looks with `bubble` ticks left, at `tick`: forming as it rises, shimmering while held
+ * (flickering in its last second), giving way over its last ticks; null with none.
+ */
+export function bubbleLook(bubble: number, tick: number): { row: number; frame: number; alpha: number } | null {
+  if (bubble <= 0) return null;
+  const { rows, frames, ticks } = BUBBLE;
+  const age = BUBBLE_TICKS - bubble;
+  if (age < frames.form * ticks) return { row: rows.form, frame: Math.floor(age / ticks), alpha: 1 };
+  if (bubble <= frames.pop * ticks) return { row: rows.pop, frame: frames.pop - Math.ceil(bubble / ticks), alpha: 1 };
+  const alpha = bubble <= TICK_RATE && Math.floor(tick / 4) % 2 === 0 ? 0.45 : 1;
+  return { row: rows.loop, frame: Math.floor(tick / ticks) % frames.loop, alpha };
 }
 
 /**

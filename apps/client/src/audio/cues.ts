@@ -25,6 +25,8 @@ export type CueName =
   | "magnet"
   | "zoom"
   | "dig"
+  | "bubble"
+  | "pop"
   | "kamehameha"
   | "rasengan"
   | "freeze"
@@ -125,6 +127,8 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("webbed", !was.webbed && p.webbed);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);
+    hear("bubble", !was.bubble && p.bubble);
+    hear("pop", was.bubble && !p.bubble);
     const shout = voiceLine(p.character, "special");
     if (shout) hear(shout, !was.specialCooldown && p.specialCooldown);
   }

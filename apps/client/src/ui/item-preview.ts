@@ -48,6 +48,7 @@ export class ItemPreview {
       r.useFlameArt(),
       r.useKameArt(),
       r.useRasenganArt(),
+      r.useBubbleArt(),
       r.useSpiralArt(),
       ...CHARACTERS.map((c) => r.useSheet(c, CHARACTER_SHEETS[c])),
     ]).catch((e) => console.error("item preview art", e));

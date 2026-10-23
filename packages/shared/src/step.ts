@@ -28,6 +28,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (p.invuln > 0) p.invuln--;
+    if (p.bubble > 0) p.bubble--;
     if (p.specialCooldown > 0) p.specialCooldown--;
     // Planted behind the shield: it wears off on time even if he gets stunned or frozen.
     if (p.shield > 0) {
@@ -76,7 +77,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   for (const p of s.players) {
     const { x, y } = playerTile(p);
     const flame = s.flames.find((f) => f.x === x && f.y === y);
-    if (!flame || !hurt(p)) continue;
+    if (!flame || p.bubble > 0 || !hurt(p)) continue;
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }

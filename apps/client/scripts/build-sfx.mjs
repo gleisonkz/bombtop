@@ -19,7 +19,9 @@
 // "Static Shock (TV Show)" (fan use; (c) Warner Bros. / DC), under static-shock/ (to-the-rescue = sound 52736484, impresses-batman =
 // 52736429); the flash's (Taliesin Jaffe) from Injustice 2, board "Injustice 2 (PC): The Flash Voice" on the same site, under
 // flash-inj2/; bugs' (Jeff Bergman) from Looney Tunes Dash! (mobile), board "Bugs Bunny - Looney Tunes Dash! - Character Voices
-// (Mobile)" on the same site (sounds 1456772, 1456763, 1456805, 1456812), under bugs-dash/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// (Mobile)" on the same site (sounds 1456772, 1456763, 1456805, 1456812), under bugs-dash/; the green lantern's (John Stewart, Adetokumboh M'Cormack) from Injustice 2, board "Injustice 2 (PC): John
+// Stewart Voice" on the same site (beware-my-power = sound 54601987, ring-do-your-thing = 54602432, neighborhood = 54602290,
+// problem = 54603189), under lantern-inj2/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -47,6 +49,7 @@ const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV
 const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
+const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -181,6 +184,27 @@ const RECIPE = {
   "bugs-death": { src: BASS_DOWN, len: 2.2, layer: { src: BUGS("could-somebody-call-an-ambulance"), len: 2.0, gain: -3 } },
   "bugs-win": { src: BUGS("and-i-you-stinker"), from: 1.05, len: 1.4 },
   "bugs-special": { src: BUGS("i-knew-i-should-have-taken-a-left-at-albuquerque"), from: 0.9, len: 2.6 },
+  // The green lantern: "Beware my power!" when picked, "Well, that's gonna be a problem." over the falling bass, "That's how we
+  // do it in my neighborhood." when he wins, "Ring, do your thing!" as his bubble rises
+  "lantern-pick": { src: LANTERN("file0003-broken-beware-my-power"), len: 1.3 },
+  "lantern-death": { src: BASS_DOWN, len: 2.0, layer: { src: LANTERN("file0105-well-thats-gonna-be-a-problem"), len: 1.3, gain: -3 } },
+  "lantern-win": { src: LANTERN("file0031-thats-how-we-do-it-in-my-neighborhood"), len: 1.8 },
+  "lantern-special": { src: LANTERN("file0043-broken-ring-do-your-thing"), len: 1.45 },
+  // his bubble rising: a force field humming up with a rising tone
+  bubble: {
+    src: K("sci-fi-sounds", "forceField_000.ogg"),
+    len: 0.9,
+    layers: [
+      { src: K("digital-audio", "phaserUp6.ogg"), len: 0.5, gain: -6 },
+      { src: K("digital-audio", "powerUp7.ogg"), len: 0.6, gain: -9, at: 0.15 },
+    ],
+  },
+  // and giving way: a glassy crack and a falling zap
+  pop: {
+    src: K("impact-sounds", "impactGlass_light_002.ogg"),
+    len: 0.6,
+    layers: [{ src: K("digital-audio", "phaserDown3.ogg"), len: 0.45, gain: -5, at: 0.03 }],
+  },
   // bugs' tunnel: quick scrapes of digging, a rumble running under the floor, a pop as he comes out
   dig: {
     src: K("impact-sounds", "footstep_snow_000.ogg"),

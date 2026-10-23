@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, BUBBLE_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { Listener, soundCues } from "../src/audio/cues";
 
 function view(): PublicView {
@@ -216,6 +216,25 @@ describe("soundCues", () => {
       n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 4, ttl: BLAST_TICKS - 1, kind: "tunnel" });
     });
     expect(soundCues(v, next)).toEqual([{ name: "dig", x: 1.5 }]);
+  });
+
+  it("hears the green lantern's bubble rising round him and giving way", () => {
+    const v = view();
+    const up = later(v, (n) => {
+      n.players[0]!.bubble = BUBBLE_TICKS;
+    });
+    expect(names(v, up)).toContain("bubble");
+    const held = later(up, (n) => {
+      n.players[0]!.bubble -= 2;
+    });
+    expect(names(up, held)).toEqual([]);
+    const near = later(v, (n) => {
+      n.players[0]!.bubble = 1;
+    });
+    const gone = later(near, (n) => {
+      n.players[0]!.bubble = 0;
+    });
+    expect(names(near, gone)).toEqual(["pop"]);
   });
 
   it("hears an ice blast cast, at the caster, and the player it freezes", () => {

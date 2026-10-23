@@ -105,6 +105,10 @@ export const FLASH_RANGE = 5;
 /** Bugs' tunnel: how far ahead he can dig to come out (under walls, blocks, bombs and players). */
 export const TUNNEL_RANGE = 5;
 
+/** The green lantern's bubble: how long it keeps the fire out (3 s), and its recharge (25 s). */
+export const BUBBLE_TICKS = 180;
+export const BUBBLE_COOLDOWN = 25 * 60;
+
 /** Pikachu's thunder shock: how far each arm of the cross around him reaches. */
 export const THUNDER_RANGE = 2;
 

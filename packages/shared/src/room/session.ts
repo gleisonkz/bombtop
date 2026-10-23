@@ -44,6 +44,7 @@ export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   spider: ["Aranha", "Teia", "Parker", "Queens", "Tarântula", "Viúva", "Tecelão", "Escalador"],
   pikachu: ["Pika", "Faísca", "Choquinho", "Volt", "Trovão", "Bochecha", "Raiozinho", "Amarelinho"],
   flash: ["Barry", "Velocista", "Relâmpago", "Corisco", "Ligeirinho", "Turbo", "Raio Rubro", "Wally"],
+  lantern: ["Hal", "Lanterna", "Anel", "Esmeralda", "Oa", "Guardião", "Facho", "Brilho Verde"],
   bugs: ["Pernalonga", "Orelhudo", "Coelhão", "Doutor", "Cenourinha", "Toca", "Dentuço", "Pé-de-Coelho"],
   static: ["Virgil", "Choque", "Estática", "Faísca", "Dakota", "Gerador", "Curto", "Voltagem"],
 };

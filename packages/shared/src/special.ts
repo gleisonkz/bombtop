@@ -1,6 +1,6 @@
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -16,6 +16,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Bomb mascot: plants a mega bomb on his tile, piercing and twice his fire.
  * Pikachu: a thunder shock all around him (see `thunder`).
  * Flash: a dash at super speed straight ahead (see `superSpeed`).
+ * Green lantern: a bubble around him for BUBBLE_TICKS that no fire gets into (he moves at half speed inside).
  * Bugs: digs a tunnel and comes out ahead (see `tunnel`).
  * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
  */
@@ -33,6 +34,10 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "magnet", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "flash") {
     superSpeed(s, p);
+  } else if (p.character === "lantern") {
+    p.bubble = BUBBLE_TICKS;
+    p.specialCooldown = BUBBLE_COOLDOWN;
+    return true;
   } else if (p.character === "bugs") {
     if (!tunnel(s, p)) return false;
   } else if (p.character === "pikachu") {

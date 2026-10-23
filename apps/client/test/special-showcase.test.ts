@@ -116,6 +116,12 @@ describe("special showcase", () => {
     expect(bombed).toBe(true);
   });
 
+  it("lantern: plants a bomb and sits out its fire in his bubble", () => {
+    let through = false;
+    play("lantern", (s) => (through ||= you(s).bubble > 0 && s.flames.some((f) => f.x === Math.floor(you(s).px / TILE) && f.y === Math.floor(you(s).py / TILE))));
+    expect(through).toBe(true);
+  });
+
   it("bugs: boxed in with his own bomb, digs under the blocks and comes out far from it", () => {
     let out = false;
     play("bugs", (s) => (out ||= s.bombs.some((b) => b.ownerId === "you") && you(s).px > 7 * TILE && getTile(s, 4, 5) === Tile.Block));

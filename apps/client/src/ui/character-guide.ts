@@ -215,7 +215,25 @@ const INFO: Record<CharacterId, Info> = {
         "O escudo do Capitão não para quem está debaixo da terra.",
       ],
     },
+  },  lantern: {
+    name: "Lanterna Verde",
+    title: "O fuzileiro com o anel mais poderoso do universo",
+    color: green,
+    story:
+      "John Stewart era arquiteto e fuzileiro naval quando os Guardiões de Oa o escolheram para usar o anel: alguém sem medo e com uma vontade de ferro. Tudo o que ele imagina vira energia verde, e como bom arquiteto ele constrói com cuidado. Na arena, quando a bomba explode bem embaixo dele, ele só fecha a bolha e espera o fogo passar.",
+    special: {
+      name: "Bolha protetora",
+      recharge: "25 s",
+      text: "Ergue em volta de si uma bolha de energia verde por 3 s: fogo vindo de qualquer lado não entra, nem o da bomba embaixo dele. Dentro dela ele anda na metade da velocidade. A bolha não segura gelo, raio, teia nem os outros especiais.",
+      tips: [
+        "Plante a bomba no meio dos rivais e fique: a bolha te segura no fogo.",
+        "Ative um instante antes da explosão: 3 s passam rápido.",
+        "No último segundo ela pisca: saia do fogo antes de ela estourar.",
+        "Dentro dela você fica lento, então não conte com fugir correndo.",
+      ],
+    },
   },
+
 
 };
 

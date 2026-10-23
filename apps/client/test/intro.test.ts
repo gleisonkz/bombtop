@@ -20,7 +20,7 @@ describe("Intro", () => {
       const key = card?.name ?? (intro.logo() ? "logo" : null);
       if (key && seen[seen.length - 1] !== key) seen.push(key);
     });
-    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "Goku", "Naruto", "Homem-Aranha", "Pikachu", "Super Choque", "Flash", "Pernalonga", "logo"]);
+    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "Goku", "Naruto", "Homem-Aranha", "Pikachu", "Super Choque", "Flash", "Pernalonga", "Lanterna Verde", "logo"]);
   });
 
   it("each card says what the character does", () => {
@@ -29,7 +29,7 @@ describe("Intro", () => {
       const card = intro.card();
       if (card) lines.add(card.line);
     });
-    expect(lines.size).toBe(11);
+    expect(lines.size).toBe(12);
     for (const line of lines) expect(line.length).toBeGreaterThan(10);
   });
 
@@ -140,6 +140,21 @@ describe("Intro", () => {
     expect(under).toBe(true);
   });
 
+  it("the green lantern stands in his own bomb's fire inside his bubble, unhurt", () => {
+    let held = false;
+    play(({ state }) => {
+      const g = state.players.find((p) => p.id === "lantern")!;
+      const t = playerTile(g);
+      held ||= g.bubble > 0 && state.flames.some((f) => f.x === t.x && f.y === t.y);
+    });
+    expect(held).toBe(true);
+    expect(play().state.players.find((p) => p.id === "lantern")!.alive).toBe(true);
+  });
+
+  it("dresses the green lantern in green", () => {
+    expect(new Intro().colors.get("lantern")).toBe(4);
+  });
+
   it("dresses bugs in blue, to keep his blue scarf", () => {
     expect(new Intro().colors.get("bugs")).toBe(3);
   });
@@ -178,8 +193,8 @@ describe("Intro", () => {
     expect(intro.state.players.every((p) => p.alive && p.frozen === 0)).toBe(true);
   });
 
-  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor, green goku, white naruto (his navy jacket), then the spider, pikachu, static, the flash and bugs", () => {
-    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs"]);
+  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor, green goku, white naruto (his navy jacket), then the spider, pikachu, static, the flash, bugs and the green lantern", () => {
+    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern"]);
   });
 
   it(`ends after ${INTRO_TICKS / 60} seconds and then stays put`, () => {

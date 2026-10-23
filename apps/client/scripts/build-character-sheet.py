@@ -45,13 +45,22 @@
     (the breathing template shut his eyes); cast = popping out of his tunnel (squashed low, arms flung up, a hand over his
     brow looking round) and carry walk posed from our own skeletons ("cast6": the side view's first frame came out
     smudged, BUGS_CAST_SIDE skips it); lobby = a v3 animation munching a carrot ("lobby9", its first frame the rotation).
+  lantern: sprites/lantern.png, character "John Stewart HD v3" (180px canvas; "John Stewart HD 2"'s
+    rotations with the face repainted: green eyes, a serious mouth). Its eyes were painted whole green; every frame gets
+    them white with a green iris (green_iris), as in the cartoon, and loses the gray blots PixelLab left in some (no_blots).
+    Idle front = the still rotation bobbing (the breathing template shut his eyes); the back cast holds its first frames
+    (LANTERN_CAST_UP: PixelLab turned him to face us once his fist went up). cast = willing his bubble (down on one knee, the
+    ring fist thrust high, "kneel"), posed from our own skeletons like the carry walk (LANTERN_CAST); the
+    bubble itself is build-lantern-bubble.py's art; lobby = a v3 animation, ring fist raised ("lobby9").
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
+import numpy as np
 from pathlib import Path
 from PIL import Image
+from scipy import ndimage
 
 # (sheet row name, animation folder, direction, frames)
 CHARACTERS = {
@@ -157,6 +166,17 @@ CHARACTERS = {
     # cast = popping out of his tunnel (BUGS_CAST): the dig is instant, so the row starts as he comes up
     "bugs": [
         ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
+    "lantern": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),
         ("death", "death", "south", 7),
@@ -393,6 +413,85 @@ def bugs_frames(src, folder, d):
     return None
 
 
+def green_iris(im):
+    """John Stewart's eyes as in the cartoon: white, with a glowing green iris. The face was repainted with whole green
+    eyes (bright pale green in the middle, emerald at the rim); each such blob in his head becomes a white eye with a
+    round green iris in its middle."""
+    a = np.array(im.convert("RGBA")).astype(int)
+    alpha = a[..., 3] > 0
+    ys, xs = np.nonzero(alpha)
+    if not len(ys):
+        return im
+    head = np.zeros_like(alpha)
+    head[ys.min(): ys.min() + int((ys.max() - ys.min()) * 0.45)] = True
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    eyeish = alpha & head & (g > 150) & (g - r > 25) & (g - b > 20) & (r > 30)
+    lab, n = ndimage.label(eyeish)
+    out = a.copy()
+    for k in range(1, n + 1):
+        blob = lab == k
+        if blob.sum() < 6:
+            continue
+        sl = ndimage.find_objects(blob.astype(int))[0]
+        h, w = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+        cy, cx = ndimage.center_of_mass(blob)
+        yy, xx = np.nonzero(blob)
+        rad = np.hypot((yy - cy) / (h / 2), (xx - cx) / (w / 2))
+        iris = rad < 0.62
+        light = 1 - np.clip(rad / 0.62, 0, 1)
+        # emerald, a hue past his suit's (SHEETS.lantern.hues) so the iris keeps its green in every player color
+        green = np.array([25, 200, 125])[None] * (1 - light[:, None] * 0.6) + np.array([175, 255, 215])[None] * light[:, None] * 0.6
+        out[yy, xx, :3] = np.where(iris[:, None], green, np.array([245, 245, 240])[None]).astype(int)
+        # a small shine on the iris
+        out[int(cy - h * 0.15), int(cx - w * 0.12), :3] = (255, 255, 255)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
+LANTERN_CAST = [0, 1, 2, 3, 4, 5, 5, 5, 5]  # lantern: his 6 kneeling frames over the 9 cast cells, held on the last
+# lantern, back view: PixelLab turned him to face us (twice) as he knelt, so the back row is the first try's ("cast6"):
+# standing, ring fist at his chest
+LANTERN_CAST_UP = [0, 1, 1, 1, 1, 1, 1, 1, 1]
+LANTERN_BLOTS = [(129, 129, 127), (83, 78, 87)]  # flat gray blots PixelLab left beside him in some frames
+LANTERN_GLOVE_SHADE = (173, 168, 179)  # his gloves' shading, which PixelLab also left as blots by his feet
+
+
+def no_blots(im):
+    """Takes out the flat gray blots (LANTERN_BLOTS) PixelLab left in some of his frames: patches of exactly those grays."""
+    a = np.array(im)
+    gray = np.zeros(a.shape[:2], bool)
+    for c in LANTERN_BLOTS:
+        gray |= (np.abs(a[..., :3].astype(int) - c).max(axis=2) <= 6) & (a[..., 3] > 0)
+    lab, n = ndimage.label(gray)
+    sizes = ndimage.sum(gray, lab, range(1, n + 1))
+    for k, size in enumerate(sizes, 1):
+        if size >= 3:
+            a[lab == k] = 0
+    # his gloves' shade gray, where it lies away from any glove: a blot too
+    shade = (np.abs(a[..., :3].astype(int) - LANTERN_GLOVE_SHADE).max(axis=2) <= 6) & (a[..., 3] > 0)
+    white = (a[..., :3].min(axis=2) > 215) & (a[..., 3] > 0)
+    lab, n = ndimage.label(shade)
+    for k in range(1, n + 1):
+        part = lab == k
+        if not (ndimage.binary_dilation(part, iterations=2) & white).any():
+            a[part] = 0
+    return Image.fromarray(a, "RGBA")
+
+
+def lantern_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast":
+        return [load("cast6", i) for i in LANTERN_CAST_UP] if d == "north" else [load("kneel", i) for i in LANTERN_CAST]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
 def ninja_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
@@ -417,9 +516,11 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
+        if character == "lantern":
+            frames = [green_iris(no_blots(im)) for im in frames]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
         if character == "goku":

@@ -12,9 +12,8 @@ export function applyRandomCurse(s: MatchState, p: Player): void {
 }
 
 export function effectiveSpeed(p: Player): number {
-  if (p.curse?.kind === "slow") return SLOW_SPEED;
-  if (p.curse?.kind === "fast") return MAX_SPEED;
-  return p.speed;
+  const speed = p.curse?.kind === "slow" ? SLOW_SPEED : p.curse?.kind === "fast" ? MAX_SPEED : p.speed;
+  return p.bubble > 0 ? speed / 2 : speed; // the green lantern's bubble is heavy going
 }
 
 export function effectiveRange(p: Player): number {

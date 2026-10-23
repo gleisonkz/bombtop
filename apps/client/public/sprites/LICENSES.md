@@ -73,6 +73,17 @@ Fan art of Bugs Bunny (Looney Tunes, Warner Bros.) for this non-commercial proje
 tunnel and carry walk posed with skeleton v3 from its rotations; the lobby's carrot is a v3 animation). Frames laid out by
 `scripts/build-character-sheet.py bugs`; rows = `SHEETS.bugs`.
 
+## lantern.png
+
+Fan art of the Green Lantern John Stewart (DC) for this non-commercial project, made in PixelLab (pixellab.ai) (character
+"John Stewart HD 2", its face repainted with glowing green eyes and a serious mouth and imported as "John Stewart HD v3";
+the ring cast and carry walk posed with skeleton v3 from its rotations). Frames laid out by
+`scripts/build-character-sheet.py lantern`; rows = `SHEETS.lantern`.
+
+## lantern-bubble.png
+
+Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.
+
 ## captain-spiral.png
 
 The spiral of light round the captain's shield, made in PixelLab's VFX Creator ("Captain shield spiral"),

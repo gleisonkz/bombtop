@@ -2,7 +2,7 @@ import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "p
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
 import { PerColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -26,6 +26,8 @@ const COLORS = {
   magnet: 0xb9a4ff,
   /** The flash's suit, for his speed lines. */
   speed: 0xe8352e,
+  /** The green lantern's will: emerald light. */
+  lantern: 0x4dff6e,
   /** Bugs' tunnel: dug-up earth, its shade and the dark of the holes. */
   dirt: 0x9a6a3c,
   dirtShade: 0x5e3d20,
@@ -136,6 +138,9 @@ export class Renderer {
   private rasenArt: { orb: Texture[]; burst: Texture[] } | null = null;
   private readonly rasenSprites: Sprite[] = [];
   private rasenUsed = 0;
+  private bubbleArt: Texture[][] | null = null;
+  private readonly bubbleSprites: Sprite[] = [];
+  private bubbleUsed = 0;
   private readonly itemLayer = new Container();
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
@@ -251,6 +256,40 @@ export class Renderer {
     const row = (r: number) =>
       Array.from({ length: RASENGAN.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * RASENGAN.size, r * RASENGAN.size, RASENGAN.size, RASENGAN.size) }));
     this.rasenArt = { orb: row(RASENGAN.rows.orb), burst: row(RASENGAN.rows.burst) };
+  }
+
+  async useBubbleArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BUBBLE.url}`);
+    base.source.scaleMode = "linear";
+    const row = (r: number, n: number) =>
+      Array.from({ length: n }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * BUBBLE.size, r * BUBBLE.size, BUBBLE.size, BUBBLE.size) }));
+    const { rows, frames } = BUBBLE;
+    this.bubbleArt = [];
+    this.bubbleArt[rows.form] = row(rows.form, frames.form);
+    this.bubbleArt[rows.loop] = row(rows.loop, frames.loop);
+    this.bubbleArt[rows.pop] = row(rows.pop, frames.pop);
+  }
+
+  /** The green lantern's bubble round (x,y), from the art once loaded (else a plain green ring). */
+  private placeBubble(g: Graphics, look: { row: number; frame: number; alpha: number }, x: number, y: number): void {
+    if (!this.bubbleArt) {
+      g.circle(x, y, 13).fill({ color: COLORS.lantern, alpha: 0.15 * look.alpha }).stroke({ color: COLORS.lantern, width: 1.5, alpha: look.alpha });
+      return;
+    }
+    let sprite = this.bubbleSprites[this.bubbleUsed];
+    if (!sprite) {
+      sprite = new Sprite();
+      sprite.anchor.set(0.5);
+      sprite.blendMode = "add";
+      this.bubbleSprites.push(sprite);
+      this.beamLayer.addChild(sprite);
+    }
+    this.bubbleUsed++;
+    sprite.texture = this.bubbleArt[look.row]![look.frame]!;
+    sprite.scale.set(BUBBLE.scale);
+    sprite.alpha = look.alpha;
+    sprite.position.set(x, y);
+    sprite.visible = true;
   }
 
   /** The Rasengan's ball or burst at (x,y), from the art once loaded (else a plain glowing ball). */
@@ -607,6 +646,7 @@ export class Renderer {
 
     const ring = perimeter(width, height);
     this.rasenUsed = 0;
+    this.bubbleUsed = 0;
     s.players.forEach((p, seat) => {
       const i = this.colors.get(p.id) ?? seat;
       const color = COLORS.players[i % COLORS.players.length]!;
@@ -645,7 +685,7 @@ export class Renderer {
       if (skin) {
         const { sheet } = skin;
         const casting = castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
-        const shielding = p.shield > 0 ? SHIELD_TICKS - p.shield : undefined;
+        const shielding = bracing(p, moving);
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
         this.placeSprite(skin, p.id, i, f, sx, cy, tint);
         headroom = sheet.bodyH * (sheet.scale ?? 1);
@@ -700,9 +740,12 @@ export class Renderer {
         const ahead = "burst" in rasen && blast?.length ? TILE_PX * 0.4 : 0;
         this.placeRasengan(top, rasen, hx + dx * ahead, hy + dy * ahead);
       }
+      // The green lantern's bubble round him, his body showing through it.
+      const bubble = bubbleLook(p.bubble, s.tick);
+      if (bubble) this.placeBubble(top, bubble, cx, cy - 4);
       if (p.specialCooldown === 0 && !ice && !web) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet, flash: COLORS.bolt, bugs: COLORS.dirt }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet, flash: COLORS.bolt, bugs: COLORS.dirt, lantern: COLORS.lantern }[character as string] ?? COLORS.ice;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -712,6 +755,7 @@ export class Renderer {
     for (const b of s.blasts) this.drawBlast(top, b);
     for (let i = this.kameUsed; i < this.kameSprites.length; i++) this.kameSprites[i]!.visible = false;
     for (let i = this.rasenUsed; i < this.rasenSprites.length; i++) this.rasenSprites[i]!.visible = false;
+    for (let i = this.bubbleUsed; i < this.bubbleSprites.length; i++) this.bubbleSprites[i]!.visible = false;
     this.drawParticles(top);
     const shake = this.fx.shake;
     this.root.position.set(Math.sin(s.tick * 2.3) * shake, Math.cos(s.tick * 3.1) * shake);

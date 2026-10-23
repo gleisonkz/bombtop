@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -348,6 +348,28 @@ describe("ice blast visuals", () => {
     expect(near.r).toBeLessThan(far.r);
     const down = magnetWaves(5, 0, 5, 48, 3);
     for (const w of down) expect(w.x).toBe(5);
+  });
+
+  it("braces whoever holds a pose: the captain behind his shield, the green lantern kneeling in his bubble unless he walks", () => {
+    expect(bracing({ shield: 0, bubble: 0 }, false)).toBeUndefined();
+    expect(bracing({ shield: SHIELD_TICKS - 10, bubble: 0 }, false)).toBe(10);
+    expect(bracing({ shield: 0, bubble: BUBBLE_TICKS - 25 }, false)).toBe(25);
+    expect(bracing({ shield: 0, bubble: BUBBLE_TICKS - 25 }, true)).toBeUndefined(); // walking in it
+  });
+
+  it("the green lantern's bubble forms, holds shimmering, flickers in its last second and gives way as it ends", () => {
+    expect(bubbleLook(0, 0)).toBeNull();
+    expect(bubbleLook(BUBBLE_TICKS, 0)).toEqual({ row: BUBBLE.rows.form, frame: 0, alpha: 1 });
+    const formed = BUBBLE_TICKS - BUBBLE.frames.form * BUBBLE.ticks;
+    const loop = [0, 1, 2, 3].map((t) => bubbleLook(formed - 30, t * BUBBLE.ticks)!);
+    for (const l of loop) expect(l.row).toBe(BUBBLE.rows.loop);
+    expect(new Set(loop.map((l) => l.frame)).size).toBe(4); // shimmering
+    const lastSecond = Array.from({ length: 20 }, (_, t) => bubbleLook(40, t)!);
+    expect(lastSecond.some((l) => l.alpha < 1)).toBe(true); // flickering
+    expect(bubbleLook(1, 0)).toEqual({ row: BUBBLE.rows.pop, frame: BUBBLE.frames.pop - 1, alpha: 1 });
+    const pops = Array.from({ length: BUBBLE.frames.pop * BUBBLE.ticks }, (_, i) => bubbleLook(BUBBLE.frames.pop * BUBBLE.ticks - i, 0)!);
+    for (const l of pops) expect(l.row).toBe(BUBBLE.rows.pop);
+    expect(pops.map((l) => l.frame)).toEqual([...pops.map((l) => l.frame)].sort((a, b) => a - b));
   });
 
   it("bugs' tunnel heaves up a ridge of dirt mounds from where he went under to where he came out, running ahead fast", () => {
