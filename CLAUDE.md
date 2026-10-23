@@ -39,6 +39,10 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   (`input/couch.ts`): A joins in the lobby, Y changes its character, B leaves, Start on any controller starts the match; in a
   match each sends its own input. Friends' phones can still pair in over Wi-Fi. Meant for a PC on the TV (HDMI) with
   Bluetooth controllers (the Gamepad API reads up to 4).
+- **Big displays (a TV):** every screen under `#ui` grows with CSS `zoom` (`ui/ui-zoom.ts`): as far as both 1440 px of
+  width and 820 px of height (the menu's tallest layout) allow, never below 1 (phones, tablets and laptops unchanged), at
+  most 2x; 1.32x on a 1920x1080 TV. The arena canvas is outside `#ui` and fitted on its own. Media queries still see the
+  real viewport, so the big-screen layouts apply and are then scaled.
 - **Menus with a controller:** the first controller walks every screen under `#ui` (menu, guides, lobby, pairing, results):
   d-pad or stick moves a ring (`.pad-focus`) to the nearest button that way (`ui/spatial-focus.ts`), A presses it, B presses
   the screen's way back (`backButton` in `ui/dom.ts`, `data-pad-back`). `ui/pad-menus.ts` polls `input/pad-nav.ts` each frame:

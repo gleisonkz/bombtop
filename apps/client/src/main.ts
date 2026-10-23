@@ -29,6 +29,7 @@ import { Listener } from "./audio/cues";
 import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
 import { PadMenus } from "./ui/pad-menus";
+import { uiZoom } from "./ui/ui-zoom";
 import { startClientLog } from "./net/client-log";
 
 // Boots, crashes (a page that died in front of the player, as iOS does past its memory) and script errors go to
@@ -359,6 +360,10 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => mode?.keyUp(e.code));
 window.addEventListener("blur", () => mode?.blur());
 window.addEventListener("resize", refit);
+// Big displays (a TV): the screens grow to use the room, the arena canvas outside them is fitted on its own.
+const zoomUi = () => (ui.style.zoom = String(uiZoom(window.innerWidth, window.innerHeight)));
+window.addEventListener("resize", zoomUi);
+zoomUi();
 // A controller on a phone or tablet brings out the couch-play button (hidden on touch screens otherwise).
 window.addEventListener("gamepadconnected", () => document.documentElement.classList.add("has-pad"));
 
