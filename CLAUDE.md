@@ -121,7 +121,10 @@ Naruto (fan art) made in PixelLab ("Naruto HD", same settings as Goku), laid out
 Rasengan dash and carry walk posed from our own skeletons; his idle front and side are the still rotation bobbing
 (the breathing template puffed breath and shut his eyes). The Rasengan (ball in his hand, burst where it strikes) is HD
 art from `scripts/build-rasengan.py` (`RASENGAN`, `rasenganLook`). The title intro seats him in a sixth seat (one more
-than a match holds), pushed onto the intro's state.
+than a match holds), pushed onto the intro's state. His lobby (and the title lineup's "walk"): Shadow Clone Jutsu, a
+hand seal with chakra swirling, two puffs of smoke clearing on two clones beside him, the three striking poses, the
+clones gone in smoke; poses from our own skeletons, the clones, smoke and chakra placed and drawn by
+`scripts/build-naruto-lobby.py` (in `naruto-lobby.png`, its cells wide enough for the clones).
 Spider-Man (fan art) made in PixelLab ("Spider-Man HD", Naruto's settings with a big chibi head per `concept/PROMPT-BASE.md`:
 custom proportions head 1.8), laid out by `scripts/build-character-sheet.py spider`; web shot and carry walk posed from our
 own skeletons (his short arms only reach the sides of his head when carrying). The web (strand, splat, cocoon round

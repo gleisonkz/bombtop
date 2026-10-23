@@ -17,7 +17,8 @@
     face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.
   naruto: sprites/naruto.png, character "Naruto HD" (180px canvas; Rasengan dash and carry walk posed from our own
     skeletons, 6 frames each: 3 running with his hand out, 2 lunging, 1 settling; carry idle = the carry walk's
-    standing frames; lobby = the v3 "victory pose" frames 1..8). The breathing idle blew puffs of breath in the side
+    standing frames; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-naruto-lobby.py's, in its own image). The breathing idle blew puffs of breath in the side
     view and shut his eyes in front: idle front and side are his rotation ("rot/<dir>.png") bobbing a pixel instead.
     The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
   spider: sprites/spider.png, character "Spider-Man HD" (180px canvas, chibi proportions per concept/PROMPT-BASE.md;

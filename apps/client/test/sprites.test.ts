@@ -933,4 +933,5 @@ describe("lobby showpieces", () => {
   };
 
   it("goku powers up into a Super Saiyan", () => showpiece("goku"));
+  it("naruto calls up his shadow clones", () => showpiece("naruto"));
 });

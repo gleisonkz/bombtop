@@ -36,8 +36,9 @@ golden hair, aura, lightning, pebbles and flash are drawn by `scripts/build-goku
 ## naruto.png
 
 Fan art of Naruto (Naruto) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Naruto HD"; Rasengan dash and carry walk posed with skeleton v3 from its rotations). Frames laid out by
-`scripts/build-character-sheet.py naruto`; rows = `SHEETS.naruto`.
+(character "Naruto HD"; Rasengan dash, carry walk and the lobby poses posed with skeleton v3 from its rotations). The
+lobby's clones, smoke and chakra are drawn by `scripts/build-naruto-lobby.py`. Frames laid out by
+`scripts/build-character-sheet.py naruto`, rows = `SHEETS.naruto`. The lobby is its own image, `naruto-lobby.png`, laid out by `scripts/build-lobby-image.py naruto`.
 
 ## spider.png
 

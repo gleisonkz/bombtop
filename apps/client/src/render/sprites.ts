@@ -245,7 +245,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Shadow Clone Jutsu: a hand seal, two clones out of the smoke, poses, and back into smoke (scripts/build-naruto-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/naruto-lobby.png", width: 3296, height: 165, frameW: 206, frameH: 165, anchorX: 103.5, anchorY: 164 } },
     /** His hand in the lunge, where the Rasengan spins (the back view hides it: over his shoulders). */
     muzzle: { side: [49.5, -66.5], down: [0, -52.5], up: [0, -84.7] },
     /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
