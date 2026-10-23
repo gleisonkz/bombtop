@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { TICK_RATE } from "@bombtop/shared";
-import { CHARACTER_SHEETS, previewPose, TITLE_BOMBER_SHEET } from "../src/ui/sheet-art";
+import { CHARACTER_SHEETS, characterMoves, previewPose, TITLE_BOMBER_SHEET } from "../src/ui/sheet-art";
 import { SHEETS } from "../src/render/sprites";
 
 describe("character previews", () => {
@@ -30,6 +30,18 @@ describe("character previews", () => {
     const s = SHEETS.ninja;
     expect(previewPose(s, "walk").row).toBe(s.lobby!.row);
     expect(previewPose(s, "walk").frames).toBe(s.lobby!.frames);
+  });
+
+  it("plays a lobby kept in its own image from that image, in the sheet's colors and size", () => {
+    const s = SHEETS.goku;
+    const image = s.lobby!.image!;
+    const pose = previewPose(s, "walk");
+    expect(pose).toMatchObject({ row: 0, frames: 16 });
+    expect(pose.sheet).toMatchObject({ ...image, hues: s.hues, scale: s.scale });
+    expect(previewPose(s, "idle").sheet).toBeUndefined();
+    const win = characterMoves(s).find((m) => m.label === "Vitória")!;
+    expect(win).toMatchObject({ row: 0, frames: 16, sheet: { url: image.url } });
+    expect(characterMoves(s).find((m) => m.label === "Parado")!.sheet).toBeUndefined();
   });
 
   it("falls back to idle when a sheet has no stun row", () => {

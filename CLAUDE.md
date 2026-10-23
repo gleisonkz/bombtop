@@ -109,7 +109,14 @@ the carry with skeletons from the base rotation instead; the renderer draws the 
 Goku (fan art) made in PixelLab ("Goku HD", standard mode with custom chibi proportions and detailed shading to match
 the others), laid out by `scripts/build-character-sheet.py goku`; Kamehameha and carry walk posed from our own skeletons
 (keypoints fitted to his own rest pose: his legs are longer than Thor's); the beam is HD art from
-`scripts/build-kamehameha.py` (`KAMEHAMEHA`, laid out by `kameSegments`).
+`scripts/build-kamehameha.py` (`KAMEHAMEHA`, laid out by `kameSegments`). His lobby (and the title lineup's "walk") is a
+showpiece: fists clenched, he powers up in white ki with pebbles lifting, screams through a flash into Super Saiyan
+(golden hair, a golden flame aura crackling with lightning), takes his fighting stance and powers down; poses from our
+own skeletons, the gold, aura and lightning drawn over them by `scripts/build-goku-lobby.py`. A 16-frame showpiece
+with effects round the hero lives in its own image (`<name>-lobby.png`, `scripts/build-lobby-image.py <name> FRAMES_DIR`,
+`SheetLayout.lobby.image`), not in the sheet: its bigger cells would widen every cell and add columns to every row, and
+each menu preview paints its whole sheet in the player's color (the title ran out of image memory and dropped previews).
+Only the menus play it (`previewPose`, `characterMoves`). Flash's and Static's lobbies are still sheet rows.
 Naruto (fan art) made in PixelLab ("Naruto HD", same settings as Goku), laid out by `scripts/build-character-sheet.py naruto`;
 Rasengan dash and carry walk posed from our own skeletons; his idle front and side are the still rotation bobbing
 (the breathing template puffed breath and shut his eyes). The Rasengan (ball in his hand, burst where it strikes) is HD

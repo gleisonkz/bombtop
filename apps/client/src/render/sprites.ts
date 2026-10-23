@@ -9,6 +9,20 @@ export interface Strip {
   frames: number;
 }
 
+/**
+ * A lobby showpiece in an image of its own, one row of cells (scripts/build-lobby-image.py): its effects need bigger
+ * cells than the arena's, and only the menus play it, so the sheet each menu preview paints stays small.
+ */
+export interface LobbyImage {
+  url: string;
+  width: number;
+  height: number;
+  frameW: number;
+  frameH: number;
+  anchorX: number;
+  anchorY: number;
+}
+
 /** Where each animation sits on a character sheet (all frames are one fixed cell size). */
 export interface SheetLayout {
   url: string;
@@ -46,8 +60,8 @@ export interface SheetLayout {
   stun?: Strip;
   /** Played once when the player dies. */
   death?: Strip;
-  /** A pose for the menus (lobby seats), facing the camera. */
-  lobby?: Strip;
+  /** A pose for the menus (lobby seats), facing the camera; in its own image when it has one (`row` is then that image's). */
+  lobby?: Strip & { image?: LobbyImage };
   /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
   cast?: Record<"down" | "up" | "side", Strip>;
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
@@ -201,7 +215,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Powering up, a flash, Super Saiyan in a golden aura crackling with lightning, and back (scripts/build-goku-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/goku-lobby.png", width: 2048, height: 207, frameW: 128, frameH: 207, anchorX: 64, anchorY: 194 } },
     /** His hands at the thrust (the back view hides them: over his shoulders). */
     muzzle: { side: [46.5, -67.5], down: [2.5, -34], up: [0, -97] },
     /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */

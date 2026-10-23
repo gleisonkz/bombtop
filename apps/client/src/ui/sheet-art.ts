@@ -21,11 +21,22 @@ export function titleBomberArt(): HTMLElement {
   return span;
 }
 
-/** Which row a preview plays and how fast: the sheet's lobby pose when it has one, else walking; arena timing. */
-export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number } {
+/** A lobby kept in its own image, as a layout of its own: that image's cells, the sheet's colors and size. */
+function lobbySheet(sheet: SheetLayout): SheetLayout | undefined {
+  const lobby = sheet.lobby;
+  return lobby?.image && { ...sheet, ...lobby.image, lobby: { row: lobby.row, frames: lobby.frames } };
+}
+
+/**
+ * Which row a preview plays and how fast: the sheet's lobby pose when it has one, else walking; arena timing.
+ * `sheet` is set when the row is in another image (a lobby of its own).
+ */
+export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number; sheet?: SheetLayout } {
   const strip = state === "walk" ? (sheet.lobby ?? sheet.walk.down) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
   const per = state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
-  return { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
+  const pose = { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
+  const own = strip === sheet.lobby && lobbySheet(sheet);
+  return own ? { ...pose, sheet: own } : pose;
 }
 
 /** One animation of a sheet, as the guide shows it: which row, how many frames, how long one loop lasts. */
@@ -34,12 +45,18 @@ export interface Move {
   row: number;
   frames: number;
   seconds: number;
+  /** The layout to play it from, when not the character's sheet (a lobby in its own image). */
+  sheet?: SheetLayout;
 }
 
 /** Every animation a sheet has, each at the speed the arena plays it. */
 export function characterMoves(sheet: SheetLayout): Move[] {
-  const move = (label: string, strip: Strip | undefined, ticksPerFrame: number): Move[] =>
-    strip ? [{ label, row: strip.row, frames: strip.frames, seconds: (strip.frames * ticksPerFrame) / TICK_RATE }] : [];
+  const move = (label: string, strip: Strip | undefined, ticksPerFrame: number): Move[] => {
+    if (!strip) return [];
+    const m: Move = { label, row: strip.row, frames: strip.frames, seconds: (strip.frames * ticksPerFrame) / TICK_RATE };
+    const own = strip === sheet.lobby && lobbySheet(sheet);
+    return [own ? { ...m, sheet: own } : m];
+  };
   const per = sheet.ticksPerFrame;
   return [
     ...move("Parado", sheet.idle.down, sheet.idleTicksPerFrame ?? per),
@@ -90,8 +107,8 @@ function sheetUrl(sheet: SheetLayout, color: string | null): Promise<string> {
  * bottom of its box (the box moves it around like the old mascot). `color` null: the character's original colors.
  */
 export function characterArt(character: CharacterId, color: string | null, state: PreviewState | Omit<Move, "label"> = "walk"): HTMLElement {
-  const sheet = CHARACTER_SHEETS[character];
-  const pose = typeof state === "string" ? previewPose(sheet, state) : state;
+  const pose = typeof state === "string" ? previewPose(CHARACTER_SHEETS[character], state) : state;
+  const sheet = pose.sheet ?? CHARACTER_SHEETS[character];
   const span = document.createElement("span");
   span.className = `mascot sheet ${character}`;
   const sprite = document.createElement("i");

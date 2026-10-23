@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -775,7 +775,7 @@ describe("goku sheet", () => {
 
   it("every row fits inside the image", () => {
     const strips = [goku.idle, goku.walk, goku.cast!, goku.carryIdle!, goku.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, goku.stun!, goku.death!, goku.lobby!]) {
+    for (const s of [...strips, goku.stun!, goku.death!]) {
       expect((s.row + 1) * goku.frameH).toBeLessThanOrEqual(goku.height);
       expect(s.frames * goku.frameW).toBeLessThanOrEqual(goku.width);
     }
@@ -911,4 +911,26 @@ describe("spider sheet", () => {
     expect(rx).toBeGreaterThan(104);
     expect(lx).toBeLessThan(96);
   });
+});
+
+describe("lobby showpieces", () => {
+  const size = (url: string) => {
+    const png = readFileSync(new URL(`../public/${url}`, import.meta.url));
+    return [png.readUInt32BE(16), png.readUInt32BE(20)];
+  };
+  /**
+   * A 16-frame lobby (scripts/build-<name>-lobby.py) in its own one-row image (build-lobby-image.py) that matches its
+   * PNG, the arena's sheet left at its nine columns.
+   */
+  const showpiece = (name: "goku" | "naruto" | "spider" | "thor") => {
+    const sheet: SheetLayout = SHEETS[name];
+    const image = sheet.lobby!.image!;
+    expect(sheet.lobby).toMatchObject({ row: 0, frames: 16 });
+    expect(size(image.url)).toEqual([image.width, image.height]);
+    expect([image.frameW * 16, image.frameH]).toEqual([image.width, image.height]);
+    expect(size(sheet.url)).toEqual([sheet.width, sheet.height]);
+    expect([sheet.frameW * 9, sheet.frameH * 18]).toEqual([sheet.width, sheet.height]);
+  };
+
+  it("goku powers up into a Super Saiyan", () => showpiece("goku"));
 });

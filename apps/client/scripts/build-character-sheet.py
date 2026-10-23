@@ -5,7 +5,8 @@
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too); then run
     lock-walk-head.py captain: the template side walk redrew his head on every frame (it wobbled, the jaw changed)
   goku: sprites/goku.png, character "Goku HD" (180px canvas; cast = Kamehameha and carry walk posed from our own
-    skeletons; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a glow at his hands in the side
+    skeletons; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-goku-lobby.py's, in its own image). PixelLab drew a glow at his hands in the side
     thrust: that view holds its clean last frame. The hands in the side and front thrust are the "muzzle".
   thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons;
     the back view comes from a second "Thor HD", made in v3 from the first's south/east/west, whose cape

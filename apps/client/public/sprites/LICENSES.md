@@ -29,8 +29,9 @@ Fan art of Thor (Marvel) for this non-commercial project, made in PixelLab (pixe
 ## goku.png
 
 Fan art of Goku (Dragon Ball) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Goku HD"; Kamehameha and carry walk posed with skeleton v3 from its rotations). Frames laid out by
-`scripts/build-character-sheet.py goku`; rows = `SHEETS.goku`.
+(character "Goku HD"; Kamehameha, carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's
+golden hair, aura, lightning, pebbles and flash are drawn by `scripts/build-goku-lobby.py`. Frames laid out by
+`scripts/build-character-sheet.py goku`, rows = `SHEETS.goku`. The lobby is its own image, `goku-lobby.png`, laid out by `scripts/build-lobby-image.py goku`.
 
 ## naruto.png
 
