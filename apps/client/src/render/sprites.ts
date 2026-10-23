@@ -736,6 +736,12 @@ export function rasenganLook(rasengan: number, blast: Pick<Blast, "ttl" | "kind"
   return frame < RASENGAN.frames ? { burst: frame } : null;
 }
 
+/** Flames without those inside a green lantern's bubble: the fire stops at it and goes on past it, drawn round it. */
+export function outsideBubbles<F extends Pick<Flame, "x" | "y">>(flames: F[], players: readonly Pick<Player, "px" | "py" | "bubble" | "alive">[]): F[] {
+  const inside = players.filter((p) => p.alive && p.bubble > 0).map((p) => `${Math.floor(p.px / TILE)},${Math.floor(p.py / TILE)}`);
+  return inside.length ? flames.filter((f) => !inside.includes(`${f.x},${f.y}`)) : flames;
+}
+
 /** Flames without the Kamehameha's own fire along its beam (the beam is drawn over those tiles instead). */
 export function outsideBeams<F extends Pick<Flame, "x" | "y" | "ownerId">>(flames: F[], blasts: readonly Blast[]): F[] {
   const beams = blasts.filter((b) => b.kind === "kamehameha");

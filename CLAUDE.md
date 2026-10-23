@@ -155,7 +155,8 @@ so its front and side were repainted (glowing green eyes, a closed serious mouth
 (`create_character` v3 with every direction given: nothing generated), which every animation is posed on; laid out by
 `scripts/build-character-sheet.py lantern`. His cast (down on one knee, the ring fist thrust high) is held while he stands
 in his bubble (`bracing`, like the captain behind his shield; walking in it, he walks); it and the carry walk are posed
-from our own skeletons (the back view stands, fist at his chest: PixelLab kept turning him to face us as he knelt);
+from our own skeletons (PixelLab kept turning him to face us as he knelt, so the back view is drawn by the sheet script from his still back:
+`back_kneel`);
 lobby a v3 animation. Every frame gets his eyes white with an emerald iris and loses PixelLab's gray blots in the sheet
 script (`green_iris`, `no_blots`). The bubble is its own HD art, `scripts/build-lantern-bubble.py`
 (`BUBBLE`, `bubbleLook`): it forms (sparks rushing in, a ring swelling out), is held (fresnel rim, a honeycomb drifting over

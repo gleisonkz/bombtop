@@ -448,9 +448,41 @@ def green_iris(im):
 
 
 LANTERN_CAST = [0, 1, 2, 3, 4, 5, 5, 5, 5]  # lantern: his 6 kneeling frames over the 9 cast cells, held on the last
-# lantern, back view: PixelLab turned him to face us (twice) as he knelt, so the back row is the first try's ("cast6"):
-# standing, ring fist at his chest
-LANTERN_CAST_UP = [0, 1, 1, 1, 1, 1, 1, 1, 1]
+# lantern, back view: PixelLab turned him to face us (twice) as he knelt, so the back row is drawn here from his still back
+# view (back_kneel): standing, down low, then the ring arm raised beside his head
+LANTERN_CAST_UP = [0, 1, 1, 2, 2, 2, 2, 2, 2]
+
+
+def back_kneel(still, ring):
+    """His back view down on one knee (the body sunk over his legs), with the ring arm (his right, on our right) raised
+    beside his head when `ring`: the hanging arm taken off, a black sleeve and a white fist drawn up, the ring glowing."""
+    from PIL import ImageDraw
+    h = still.height
+    cut = int(h * 0.80)
+    out = Image.new("RGBA", still.size)
+    out.alpha_composite(still.crop((0, cut, still.width, h)), (0, cut))
+    out.alpha_composite(still.crop((0, 0, still.width, cut)), (0, 9))
+    if not ring:
+        return out
+    a = np.array(out)
+    for y in range(112, 152):
+        a[y, 117:] = 0
+        xs = np.nonzero(a[y, :, 3])[0]
+        if len(xs) and xs.max() >= 110:
+            a[y, xs.max()] = (8, 8, 8, 255)  # his side's outline where the arm hung
+    out = Image.fromarray(a, "RGBA")
+    d = ImageDraw.Draw(out)
+    s, (hx, hy) = (118, 106), (140, 58)
+    d.line([s, (hx, hy)], fill=(8, 8, 8, 255), width=15)
+    d.line([s, (hx, hy)], fill=(26, 26, 28, 255), width=11)
+    d.line([(s[0] + 3, s[1] - 2), (hx + 3, hy + 2)], fill=(55, 55, 60, 255), width=2)
+    d.ellipse((hx - 11, hy - 14, hx + 11, hy + 8), fill=(8, 8, 8, 255))
+    d.ellipse((hx - 9, hy - 12, hx + 9, hy + 6), fill=(245, 245, 245, 255))
+    d.ellipse((hx - 1, hy - 4, hx + 9, hy + 6), fill=LANTERN_GLOVE_SHADE + (255,))
+    d.ellipse((hx - 9, hy - 12, hx + 5, hy + 2), fill=(245, 245, 245, 255))
+    d.ellipse((hx - 5, hy - 19, hx + 5, hy - 9), fill=(110, 255, 140, 255))
+    d.ellipse((hx - 2, hy - 16, hx + 2, hy - 12), fill=(235, 255, 240, 255))
+    return out
 LANTERN_BLOTS = [(129, 129, 127), (83, 78, 87)]  # flat gray blots PixelLab left beside him in some frames
 LANTERN_GLOVE_SHADE = (173, 168, 179)  # his gloves' shading, which PixelLab also left as blots by his feet
 
@@ -484,7 +516,11 @@ def lantern_frames(src, folder, d):
         still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
         return [bob(still, dy) for dy in BOB]
     if folder == "cast":
-        return [load("cast6", i) for i in LANTERN_CAST_UP] if d == "north" else [load("kneel", i) for i in LANTERN_CAST]
+        if d == "north":
+            still = Image.open(src.parent / "rot" / "north.png").convert("RGBA")
+            poses = [still, back_kneel(still, False), back_kneel(still, True)]
+            return [poses[i] for i in LANTERN_CAST_UP]
+        return [load("kneel", i) for i in LANTERN_CAST]
     if folder == "carry-idle":
         return [load("carry-walk", i) for i in (0, 0, 3, 3)]
     if folder == "lobby":

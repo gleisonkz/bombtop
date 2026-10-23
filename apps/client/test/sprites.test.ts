@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -733,6 +733,16 @@ describe("kameSegments", () => {
     const parts = kameSegments(0, 0, 70, 0);
     for (const p of parts.filter((q) => q.kind === "body")) expect(p.x + 8).toBeLessThanOrEqual(70);
     expect(Math.max(...parts.filter((q) => q.kind === "body").map((p) => p.x)) + 8).toBe(70); // and leaves no gap
+  });
+});
+
+describe("outsideBubbles", () => {
+  it("drops the fire inside the green lantern's bubble: it stops at it and goes on past it", () => {
+    const at = (x: number, y: number) => ({ px: x * TILE + TILE / 2, py: y * TILE + TILE / 2 });
+    const flames = [{ x: 3, y: 3 }, { x: 4, y: 3 }, { x: 5, y: 3 }];
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 30, alive: true }])).toEqual([flames[0], flames[2]]);
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 0, alive: true }])).toEqual(flames);
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 30, alive: false }])).toEqual(flames);
   });
 });
 
