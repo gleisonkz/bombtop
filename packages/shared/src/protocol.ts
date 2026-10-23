@@ -36,6 +36,8 @@ export interface LobbyMember {
   wins: number;
   connected: boolean;
   character: CharacterId;
+  /** Wears the character's original colors (first to pick it, see `firstPickers`); otherwise the seat color. */
+  ownColors?: true;
   /** Set for computer players: their difficulty. */
   bot?: BotLevel;
   /** Computer players: their personality (what they go for, how careful they are). */

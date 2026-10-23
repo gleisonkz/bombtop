@@ -10,6 +10,7 @@ import {
   TICK_RATE,
   CHARACTERS,
   DEFAULT_CHARACTER,
+  firstPickers,
   type BotLevel,
   BOT_PERSONAS,
   type CharacterId,
@@ -71,6 +72,9 @@ export class BattleSession {
   private inputs = new Map<string, InputQueue>();
   private bots = new Map<string, Bot>();
   private botSeq = 0;
+  /** When each member picked their character (a running count): the first on a character wears its original colors. */
+  private pickedAt = new Map<string, number>();
+  private picks = 0;
 
   constructor(private readonly opts: SessionOptions = {}) {}
 
@@ -83,6 +87,7 @@ export class BattleSession {
     if (this.phase !== "lobby" || this.members.length >= MAX_PLAYERS) return false;
     if (this.members.some((m) => m.id === id)) return true;
     this.members.push({ id, name, wins: 0, connected: true, character });
+    this.pickedAt.set(id, ++this.picks);
     return true;
   }
 
@@ -90,12 +95,20 @@ export class BattleSession {
   setCharacter(id: string, character: CharacterId): boolean {
     const m = this.members.find((m) => m.id === id && !m.bot);
     if (this.phase !== "lobby" || !m) return false;
+    if (m.character !== character) this.pickedAt.set(id, ++this.picks);
     m.character = character;
     return true;
   }
 
+  /** Members wearing their character's original colors: the first, in pick order, on each character. */
+  private ownColors(): Set<string> {
+    const at = (id: string) => this.pickedAt.get(id) ?? 0;
+    return firstPickers([...this.members].sort((a, b) => at(a.id) - at(b.id)));
+  }
+
   leave(id: string): void {
     this.members = this.members.filter((m) => m.id !== id);
+    this.pickedAt.delete(id);
     this.inputs.delete(id);
     const p = this.match?.players.find((p) => p.id === id);
     if (p) {
@@ -116,7 +129,9 @@ export class BattleSession {
     const used = new Set(this.members.map((m) => m.persona));
     const personas = BOT_PERSONAS.filter((p) => !used.has(p));
     const persona = personas[Math.floor(random() * personas.length)] ?? BOT_PERSONAS[0]!;
-    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character, persona });
+    const id = `bot-${++this.botSeq}`;
+    this.members.push({ id, name, wins: 0, connected: true, bot: level, character, persona });
+    this.pickedAt.set(id, ++this.picks);
     return true;
   }
 
@@ -125,6 +140,7 @@ export class BattleSession {
     if (this.phase !== "lobby" || requesterId !== this.hostId) return false;
     if (!this.members.some((m) => m.id === botId && m.bot)) return false;
     this.members = this.members.filter((m) => m.id !== botId);
+    this.pickedAt.delete(botId);
     return true;
   }
 
@@ -137,10 +153,11 @@ export class BattleSession {
   }
 
   lobbyInfo(code: string): LobbyInfo {
+    const own = this.ownColors();
     return {
       phase: this.phase,
       hostId: this.hostId ?? null,
-      members: this.members.map((m) => ({ ...m })),
+      members: this.members.map((m) => ({ ...m, ...(own.has(m.id) && { ownColors: true as const }) })),
       // In the lobby, show what is coming next; otherwise what is being played.
       stage: this.phase === "lobby" ? this.nextStage : this.stage,
       code,
@@ -160,6 +177,7 @@ export class BattleSession {
       seed,
       playerIds: this.members.map((m) => m.id),
       characters: Object.fromEntries(this.members.map((m) => [m.id, m.character])),
+      ownColors: this.ownColors(),
       stage: this.stage,
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });

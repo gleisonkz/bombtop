@@ -12,6 +12,7 @@ import {
 } from "./constants";
 import { createRng } from "./rng";
 import { buildStage, type StageId } from "./stage";
+import { firstPickers } from "./own-colors";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
@@ -23,6 +24,8 @@ export interface MatchOptions {
   stage?: StageId;
   /** Each player's character (default: the bomb). */
   characters?: Record<string, CharacterId>;
+  /** Players in their character's original colors (default: the first seat on each character, see `firstPickers`). */
+  ownColors?: Iterable<string>;
 }
 
 export function createMatch(opts: MatchOptions): MatchState {
@@ -48,6 +51,9 @@ export function createMatch(opts: MatchOptions): MatchState {
     }
   }
 
+  const character = (id: string): CharacterId => opts.characters?.[id] ?? DEFAULT_CHARACTER;
+  const own = new Set(opts.ownColors ?? firstPickers(playerIds.map((id) => ({ id, character: character(id) }))));
+
   return {
     tick: 0,
     rng: (seed ^ 0x85ebca6b) >>> 0,
@@ -69,7 +75,8 @@ export function createMatch(opts: MatchOptions): MatchState {
       canPunch: false,
       canGlove: false,
       stun: 0,
-      character: opts.characters?.[id] ?? DEFAULT_CHARACTER,
+      character: character(id),
+      ...(own.has(id) && { ownColors: true as const }),
       frozen: 0,
       webbed: 0,
       bubble: 0,

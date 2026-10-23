@@ -59,7 +59,7 @@ describe("lobby", () => {
       stage: "classic",
       code: "ROOM1",
       members: [
-        { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb" },
+        { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb", ownColors: true },
         { id: "c2", name: "Player 2", wins: 0, connected: true, character: "bomb" },
       ],
     });

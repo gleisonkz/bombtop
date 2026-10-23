@@ -80,6 +80,8 @@ export interface Player {
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
   character: CharacterId;
+  /** Drawn in the character's original colors (first to pick it, see `firstPickers`); otherwise in the seat color. */
+  ownColors?: true;
   /** Ticks left frozen by an ice blast (no movement or actions; flames still kill). */
   frozen: number;
   /** Ticks left wrapped in the spider's web (no movement or actions; flames still kill). */

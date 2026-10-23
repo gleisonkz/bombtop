@@ -19,6 +19,7 @@ export { createRng, nextRandom } from "./rng";
 export { Bot, BOT_LEVELS, BOT_PERSONAS, botInput, heading, type BotLevel, type BotPersona } from "./bot";
 export * from "./special";
 export * from "./delta";
+export * from "./own-colors";
 export * from "./room/session";
 export * from "./room/input-queue";
 export * from "./room/snapshot-stream";
