@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -21,6 +21,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Bugs: digs a tunnel and comes out ahead (see `tunnel`).
  * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
  * Donatello: spins his bo staff all around him (see `staffSpin`).
+ * Penelope: blows a kiss the same way that charms the first player within KISS_RANGE tiles, stunned.
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -32,6 +33,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "spider") {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "penelope") {
+    blast(s, "kiss", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "static") {
     blast(s, "magnet", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "flash") {
@@ -86,6 +89,7 @@ const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | 
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
+  kiss: { range: KISS_RANGE, strike: (p) => (p.stun = p.charmed = SPECIAL_STUN_TICKS) },
   magnet: {
     range: MAGNET_RANGE,
     // The tiles between are clear (the blast stopped at the first thing in its way), so the pull always lands.

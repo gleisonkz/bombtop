@@ -19,6 +19,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   for (const p of s.players) {
     if (p.frozen > 0) p.frozen--;
     if (p.webbed > 0) p.webbed--;
+    if (p.charmed > 0) p.charmed--;
   }
 
   for (const p of s.players) {

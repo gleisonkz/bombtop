@@ -46,6 +46,7 @@ export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   pikachu: ["Pika", "Faísca", "Choquinho", "Volt", "Trovão", "Bochecha", "Raiozinho", "Amarelinho"],
   flash: ["Barry", "Velocista", "Relâmpago", "Corisco", "Ligeirinho", "Turbo", "Raio Rubro", "Wally"],
   lantern: ["Hal", "Lanterna", "Anel", "Esmeralda", "Oa", "Guardião", "Facho", "Brilho Verde"],
+  penelope: ["Penélope", "Penny", "Charmosa", "Pit", "Rosinha", "Diva", "Piloto", "Lady"],
   donatello: ["Donnie", "Don", "Bastão", "Gênio", "Casco", "Roxo", "Inventor", "Bo"],
   bugs: ["Pernalonga", "Orelhudo", "Coelhão", "Doutor", "Cenourinha", "Toca", "Dentuço", "Pé-de-Coelho"],
   static: ["Virgil", "Choque", "Estática", "Faísca", "Dakota", "Gerador", "Curto", "Voltagem"],

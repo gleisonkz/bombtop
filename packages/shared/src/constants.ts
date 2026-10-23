@@ -95,6 +95,8 @@ export const BOLT_RANGE = 5;
 /** The spider's web shot: reach in tiles and how long it keeps the first player hit wrapped up. */
 export const WEB_RANGE = 5;
 export const WEB_TICKS = 4 * TICK_RATE;
+/** Penelope's blown kiss: how far it flies; whoever it charms is stunned SPECIAL_STUN_TICKS. */
+export const KISS_RANGE = 5;
 
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;

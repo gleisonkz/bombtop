@@ -79,6 +79,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       ...(own.has(id) && { ownColors: true as const }),
       frozen: 0,
       webbed: 0,
+      charmed: 0,
       bubble: 0,
       specialCooldown: 0,
       shield: 0,
