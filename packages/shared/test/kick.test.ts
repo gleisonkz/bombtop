@@ -86,4 +86,12 @@ describe("kick", () => {
     hold(s, null, 90);
     expect(b.y).toBe(9);
   });
+
+  it("kicks a bomb reached off-lane, lining up first", () => {
+    const s = withKick();
+    const b = bombAt(s, 2, 1);
+    hold(s, "down", 3); // a little below row 1's center; (2,2) is a pillar
+    hold(s, "right", 10);
+    expect(b.slide).toBe("right");
+  });
 });
