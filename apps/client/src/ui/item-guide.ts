@@ -1,6 +1,6 @@
 import { ITEM_WEIGHTS, ItemKind } from "@bombtop/shared";
 import { ITEMS, itemCell } from "../render/sprites";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 
 const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   [ItemKind.Bomb]: {
@@ -116,7 +116,7 @@ export function itemGuide(hooks: ItemGuideHooks): { root: HTMLElement; open(): v
   const root = el("div", { class: "card guide" }, [
     el("h2", { text: "Itens" }),
     el("div", { class: "guide-body" }, [list, detail]),
-    button("Voltar", hooks.close, "primary"),
+    backButton("Voltar", hooks.close, "primary"),
   ]);
   return { root, open: () => select(current) };
 }

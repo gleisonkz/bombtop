@@ -1,7 +1,7 @@
 import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 import { lobbySlots, seatClass } from "./lobby-slots";
 import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
@@ -62,7 +62,7 @@ export class LobbyPanel {
     this.root = el("div", { class: "screen lobby" }, [
       el("div", { class: "lobby-shell" }, [
         el("header", { class: "lobby-head card" }, [
-          button("← Sair", handlers.leave, "ghost leave"),
+          backButton("← Sair", handlers.leave, "ghost leave"),
           el("div", { class: "lobby-title" }, [el("h2", { text: "Sala" }), this.stage]),
           el("div", { class: "code-box" }, [this.codeLabel, this.code]),
           invite,

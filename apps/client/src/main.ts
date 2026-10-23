@@ -28,6 +28,7 @@ import { LITE_RESOLUTION, liteOn } from "./ui/dev-tools";
 import { Listener } from "./audio/cues";
 import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
 import { TouchControls } from "./ui/touch-controls";
+import { PadMenus } from "./ui/pad-menus";
 import { startClientLog } from "./net/client-log";
 
 // Boots, crashes (a page that died in front of the player, as iOS does past its memory) and script errors go to
@@ -342,7 +343,14 @@ watchAccount((a) => {
   invite = null;
 });
 
-app.ticker.add((ticker) => mode?.frame(ticker.deltaMS, performance.now()));
+// Menus, lobby and guides with a controller (the TV): d-pad moves, A presses, B goes back.
+const padMenus = new PadMenus(ui);
+if (import.meta.env.DEV) Object.assign(window, { __padMenus: padMenus });
+app.ticker.add((ticker) => {
+  const now = performance.now();
+  mode?.frame(ticker.deltaMS, now);
+  padMenus.tick(now);
+});
 
 window.addEventListener("keydown", (e) => {
   if (e.target instanceof HTMLInputElement) return; // typing in the menu

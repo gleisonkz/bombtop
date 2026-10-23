@@ -39,6 +39,13 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   (`input/couch.ts`): A joins in the lobby, Y changes its character, B leaves, Start on any controller starts the match; in a
   match each sends its own input. Friends' phones can still pair in over Wi-Fi. Meant for a PC on the TV (HDMI) with
   Bluetooth controllers (the Gamepad API reads up to 4).
+- **Menus with a controller:** the first controller walks every screen under `#ui` (menu, guides, lobby, pairing, results):
+  d-pad or stick moves a ring (`.pad-focus`) to the nearest button that way (`ui/spatial-focus.ts`), A presses it, B presses
+  the screen's way back (`backButton` in `ui/dom.ts`, `data-pad-back`). `ui/pad-menus.ts` polls `input/pad-nav.ts` each frame:
+  a held direction repeats after 400 ms then every 150 ms, A/B share a 300 ms cooldown (no double join, bouncing contacts on
+  cheap pads), and a press already down when a screen comes up is ignored. With nothing shown under `#ui` (a match) it does
+  nothing. In dev, `window.__padMenus.tick(now)` drives it by hand (automated tabs run rAF at ~2 fps). Played on the TV by
+  streaming this PC with Sunshine + Moonlight (the controller paired to the TV reaches Chrome as an Xbox 360 pad via ViGEmBus).
 
 ## Layout
 

@@ -2,7 +2,7 @@ import { CHARACTERS, type CharacterId } from "@bombtop/shared";
 import type { SoundName } from "../audio/sound";
 import { voiceLine } from "../audio/voices";
 import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 import { CHARACTER_SHEETS, characterArt, characterMoves } from "./sheet-art";
 
 const [white, , red, blue, green] = PLAYER_COLORS;
@@ -344,7 +344,7 @@ export function characterGuide(hooks: CharacterGuideHooks): { root: HTMLElement;
   const root = el("div", { class: "card guide chars" }, [
     el("h2", { text: "Personagens" }),
     el("div", { class: "guide-body" }, [list, detail]),
-    button("Voltar", hooks.close, "primary"),
+    backButton("Voltar", hooks.close, "primary"),
   ]);
   return { root, open: () => select(current) };
 }

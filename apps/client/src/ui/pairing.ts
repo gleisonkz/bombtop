@@ -1,6 +1,6 @@
 import { PeerLink, type LocalHost, type Wire } from "../net/local-host";
 import { guestPairing, hostPairing } from "../net/rtc-pair";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 
 /** The pairing code as a QR code (our own generated SVG markup). */
 async function qrCode(text: string): Promise<HTMLElement> {
@@ -82,7 +82,7 @@ export class Pairing {
 
   constructor(parent: HTMLElement) {
     this.root = el("div", { class: "screen pair" }, [
-      el("div", { class: "card pair-card" }, [this.title, this.hint, this.body, button("Cancelar", () => this.cancel(), "ghost")]),
+      el("div", { class: "card pair-card" }, [this.title, this.hint, this.body, backButton("Cancelar", () => this.cancel(), "ghost")]),
     ]);
     this.root.hidden = true;
     parent.appendChild(this.root);
