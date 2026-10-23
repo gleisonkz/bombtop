@@ -23,8 +23,9 @@ Fan art of Captain America (Marvel) for this non-commercial project, made in Pix
 ## thor.png
 
 Fan art of Thor (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Thor HD"; cast and carry walk posed with skeleton v3 from its rotations). Frames laid out by
-`scripts/build-character-sheet.py thor`; rows = `SHEETS.thor`.
+(character "Thor HD"; cast, carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's
+lightning, shockwave, dust and the struck hammer's head are drawn by `scripts/build-thor-lobby.py`. Frames laid out by
+`scripts/build-character-sheet.py thor`, rows = `SHEETS.thor`. The lobby is its own image, `thor-lobby.png`, laid out by `scripts/build-lobby-image.py thor`.
 
 ## goku.png
 

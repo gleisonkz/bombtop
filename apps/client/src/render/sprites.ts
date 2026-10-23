@@ -186,7 +186,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Mjolnir raised, struck by lightning, crackling, then slammed down in a shockwave (scripts/build-thor-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/thor-lobby.png", width: 2880, height: 204, frameW: 180, frameH: 204, anchorX: 91, anchorY: 191 } },
     /** The navy armor (the silver helmet and chest discs sit just past it, at hue 229). */
     hues: [205, 226],
     hueBase: [47, 56, 73],

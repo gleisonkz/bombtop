@@ -796,7 +796,7 @@ describe("thor sheet", () => {
 
   it("every row fits inside the image", () => {
     const strips = [thor.idle, thor.walk, thor.cast!, thor.carryIdle!, thor.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, thor.stun!, thor.death!, thor.lobby!]) {
+    for (const s of [...strips, thor.stun!, thor.death!]) {
       expect((s.row + 1) * thor.frameH).toBeLessThanOrEqual(thor.height);
       expect(s.frames * thor.frameW).toBeLessThanOrEqual(thor.width);
     }
@@ -935,4 +935,5 @@ describe("lobby showpieces", () => {
   it("goku powers up into a Super Saiyan", () => showpiece("goku"));
   it("naruto calls up his shadow clones", () => showpiece("naruto"));
   it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
+  it("thor calls lightning down onto his hammer and slams it into the ground", () => showpiece("thor"));
 });

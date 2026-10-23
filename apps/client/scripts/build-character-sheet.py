@@ -11,7 +11,8 @@
   thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons;
     the back view comes from a second "Thor HD", made in v3 from the first's south/east/west, whose cape
     covers his back (the first one's hung in front of him),
-    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8).
+    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-thor-lobby.py's, in its own image).
     PixelLab drew sparks round the thrust hammer that clash with the game's own bolt: the thrust holds its
     first frame (clean in front and back; in the side view cut off at the hammer's face). The hammer's
     face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.

@@ -104,6 +104,10 @@ ninja made in PixelLab ("Ice ninja HD4", 180px canvas like the others; frames la
 (PixelLab "Shield" state + v3 interpolation), and a spiral of light loops round him (PixelLab VFX, `scripts/build-captain-spiral.py`, `SPIRAL`).
 Thor (fan art) made in PixelLab ("Thor HD", 180px canvas), laid out by `scripts/build-character-sheet.py thor`; his cast (hammer overhead,
 then thrust forward) and carry walk are posed from our own skeletons; the bolt is drawn by the renderer (`boltPoints`).
+His lobby (and the title lineup's "walk"): Mjolnir raised to the sky, a bolt comes down onto it, he crackles with it,
+then slams it into the ground (a flash, a shockwave, lightning running along the ground, dust and stones); poses from
+our own skeletons (the slam from a second try: the first tore his cape; PixelLab smeared the struck hammer's head, so
+the head from his rest frame is put in its place), the effects drawn by `scripts/build-thor-lobby.py`.
 PixelLab's filter blocks character states that mention a bomb (and blocked a "Carry" state of Thor outright): pose
 the carry with skeletons from the base rotation instead; the renderer draws the held bomb over the head anyway.
 Goku (fan art) made in PixelLab ("Goku HD", standard mode with custom chibi proportions and detailed shading to match
