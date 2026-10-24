@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 33 * TICK_RATE;
+export const INTRO_TICKS = 36 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -29,8 +29,9 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 1410, to: 1530, card: { name: "Donatello", line: "Giro do bastão! Deixa tonto quem está colado e rebate as bombas pra longe." } },
   { from: 1530, to: 1650, card: { name: "Penélope Charmosa", line: "Beijo charmoso! Manda um beijinho e quem leva fica encantado, parado." } },
   { from: 1650, to: 1880, card: { name: "Pantera Cor-de-Rosa", line: "Na ponta dos pés! Some da vista dos rivais e planta a bomba sem ninguém ver." } },
+  { from: 1880, to: 2040, card: { name: "Harry Potter", line: "Expecto Patronum! O cervo prateado galopa e deixa tonto todo mundo no caminho." } },
 ];
-const LOGO_FROM = 1880;
+const LOGO_FROM = 2040;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
@@ -43,13 +44,14 @@ const LOGO_FROM = 1880;
  * sits out his own bomb's fire in his bubble in row 6, donatello plants a bomb, steps up by the ninja and spins his
  * staff (the ninja left dizzy, the bomb batted down the column), penelope steps into row 5 and blows the captain a kiss
  * (he is left charmed), the pink panther tiptoes out of sight into row 7, leaves a bomb between goku and the spider
- * and slips back out (the intro shows him faint), then the logo.
+ * and slips back out (the intro shows him faint), harry steps down into row 3 and casts his patronus: the stag leaves
+ * naruto and the flash dizzy at once, then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
   /** Seats some wear instead of their own (renderer `setColors`): the spider's seventh would be the second's black. */
-  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4], ["donatello", 3], ["panther", 3]]);
+  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4], ["donatello", 3], ["panther", 3], ["harry", 2]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -81,6 +83,8 @@ export class Intro {
     s.players.push({ ...structuredClone(s.players[0]!), id: "penelope", character: "penelope" });
     // And the pink panther in a fifteenth, in blue to keep his blue scarf (see `colors`).
     s.players.push({ ...structuredClone(s.players[0]!), id: "panther", character: "panther" });
+    // And harry in a sixteenth, in red to keep his robe's red lining (see `colors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "harry", character: "harry" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "ninja", 2, 5);
@@ -97,8 +101,9 @@ export class Intro {
     placePlayerAt(s, "donatello", 1, 6);
     placePlayerAt(s, "penelope", 11, 6);
     placePlayerAt(s, "panther", 5, 8);
+    placePlayerAt(s, "harry", 3, 2);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash, bugs, lantern, donatello, penelope, panther] = s.players;
+    const [captain, bomb, ninja, thor, goku, naruto, spider, pikachu, zap, flash, bugs, lantern, donatello, penelope, panther, harry] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     ninja!.facing = "right";
@@ -118,6 +123,7 @@ export class Intro {
     penelope!.facing = "up";
     panther!.facing = "up";
     panther!.fireRange = 1;
+    harry!.facing = "down";
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -150,6 +156,8 @@ export class Intro {
       // Steps up into row 5, turns to the captain down the corridor and blows him a kiss: he is left charmed.
       new Script("penelope", [{ wait: 1540 }, { go: "up", tiles: 1 }, { face: "left" }, { wait: 6 }, { press: "special" }]),
       // Tiptoes out of sight, up into row 7 between goku and the spider, leaves a bomb there and slips back down.
+      // Steps down into row 3, turns along it and casts his patronus: the stag runs through naruto and the flash.
+      new Script("harry", [{ wait: 1890 }, { go: "down", tiles: 1 }, { face: "right" }, { wait: 6 }, { press: "special" }]),
       new Script("panther", [{ wait: 1650 }, { press: "special" }, { go: "up", tiles: 1 }, { go: "left", tiles: 1 }, { press: "bomb" }, { go: "right", tiles: 1 }, { go: "down", tiles: 1 }]),
     ];
   }

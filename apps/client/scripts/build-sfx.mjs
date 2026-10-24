@@ -27,7 +27,10 @@
 // special = 56710569), under donnie-sr/; penelope's from Wacky Races (PC), board "Wacky Races (PC): Penelope Pitstop Voice" on the same
 // site (pick = sound 54437034, death = 54437100, win = 54437054, special = 54437030), under penny-wr/; the pink panther, who hardly ever speaks: Henry Mancini's theme (fan use; (c) MGM), "The Pink Panther Theme Song
 // (Original Version)" = sound 3052251 and its ending = 66635185, and his one line from the cartoon "Pink Ice" (Rich Little) on the
-// board "Pink Panther talking" (sound 37195343), under pink/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// board "Pink Panther talking" (sound 37195343), under pink/; harry's (Daniel Radcliffe) from the films on the same site,
+// "I solemnly swear that I'm up to no good" = sound 4589182, "Expecto Patronum!" = 12713471, "Mischief managed" = 12897333,
+// and his cry from Harry Potter and the Deathly Hallows Part 2 (PC), board "Harry Potter Voice" (sound 54091890), under harry/;
+// the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -59,6 +62,7 @@ const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
 const DONNIE = (name) => join(SRC, "donnie-sr", `${name}.mp3`);
 const PENNY = (name) => join(SRC, "penny-wr", `${name}.mp3`);
 const PINK = (name) => join(SRC, "pink", `${name}.mp3`);
+const HARRY = (name) => join(SRC, "harry", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -217,6 +221,12 @@ const RECIPE = {
   "panther-death": { src: BASS_DOWN, len: 2.2, layer: { src: PINK("talking"), from: 12.65, len: 1.7, gain: -3 } },
   "panther-win": { src: PINK("theme-end"), len: 4.6 },
   "panther-special": { src: PINK("theme-orig"), from: 4.05, len: 2.5 },
+  // Harry: "I solemnly swear that I'm up to no good" when picked, his cry over the falling bass, "Mischief managed" when
+  // he wins, "Expecto Patronum!" as his stag charges out
+  "harry-pick": { src: HARRY("swear1"), len: 2.6 },
+  "harry-death": { src: BASS_DOWN, len: 2.0, layer: { src: HARRY("ah-54091890"), len: 1.1, gain: -3 } },
+  "harry-win": { src: HARRY("mischief2"), len: 1.9 },
+  "harry-special": { src: HARRY("patronum2"), len: 3.0 },
   // her blown kiss: a cartoon smooch and a twinkle as the heart flies off
   kiss: {
     src: FS("444493_9159316-hq.mp3"),

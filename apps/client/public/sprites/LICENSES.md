@@ -105,6 +105,14 @@ Fan art of the Pink Panther (DePatie-Freleng / MGM) for this non-commercial proj
 laid out by `scripts/build-character-sheet.py panther`; rows = `SHEETS.panther`. The lobby (tiptoeing in, then
 "shh") is laid out by `scripts/build-panther-lobby.py` and `scripts/build-lobby-image.py`.
 
+## harry.png, harry-lobby.png, harry-victory.png, patronus.png
+
+Fan art of Harry Potter (J. K. Rowling / Warner Bros.) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Harry Potter HD v3b", its front retouched by hand: a shorter wand, the scar; his spell and carry walk posed
+from our own skeletons, a lobby swirling the wand and a victory jump); laid out by `scripts/build-character-sheet.py harry`;
+rows = `SHEETS.harry`. The stag is a PixelLab image (`scripts/build-patronus.py`); the lobby's stag run and sparkles and the
+victory's golden snitch are laid out and drawn by `scripts/build-harry-lobby.py` and `scripts/build-lobby-image.py`.
+
 ## lantern-bubble.png
 
 Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.

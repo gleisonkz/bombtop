@@ -116,6 +116,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "panther-death": { gain: 0.7, vary: 0, voices: 2 },
   "panther-win": { gain: 0.6, vary: 0, voices: 1 },
   "panther-special": { gain: 0.6, vary: 0, voices: 2 },
+  "harry-pick": { gain: 0.7, vary: 0, voices: 1 },
+  "harry-death": { gain: 0.7, vary: 0, voices: 2 },
+  "harry-win": { gain: 0.7, vary: 0, voices: 1 },
+  "harry-special": { gain: 0.7, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

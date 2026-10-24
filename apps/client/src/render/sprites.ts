@@ -526,6 +526,38 @@ export const SHEETS = {
     scale: 0.152,
   },
 
+  /** Harry Potter (fan art), "Harry Potter HD v3b" in PixelLab (scripts/build-character-sheet.py harry). */
+  harry: {
+    url: "sprites/harry.png",
+    width: 1368,
+    height: 2856,
+    frameW: 152,
+    frameH: 168,
+    anchorX: 78.5,
+    anchorY: 164,
+    bodyH: 157,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Expecto patronum: the wand swung up, then thrust out (the stag is its own art, PATRONUS). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** His wand swirled overhead, the spell shouted, his stag bounding across in front of him (scripts/build-harry-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/harry-lobby.png", width: 4800, height: 176, frameW: 300, frameH: 176, anchorX: 150, anchorY: 165 } },
+    /** A jump for joy, the golden snitch snatched out of the air and held up in his fist (scripts/build-harry-lobby.py). */
+    victory: { row: 0, frames: 16, image: { url: "sprites/harry-victory.png", width: 4192, height: 200, frameW: 262, frameH: 200, anchorX: 131, anchorY: 200 } },
+    /** The red lining of his robe (his blush and scar, a redder hue, stay his own). */
+    hues: [1, 6],
+    hueBase: [161, 45, 38],
+    keepFor: [[232, 74, 74]],
+    scale: 0.137,
+  },
+
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
@@ -1021,6 +1053,30 @@ export function kissHearts(x0: number, y0: number, x1: number, y1: number, age: 
     return { x: x1 + Math.cos(a) * r, y: y1 + Math.sin(a) * r - 2 * t, size: 3.5, alpha: 1 - t };
   });
   return [{ x: x1, y: y1 - 3 * t, size: 7 + 3 * t, alpha: 1 - t }, ...hearts];
+}
+
+/** Harry's patronus, a silver stag galloping (side view, facing right): scripts/build-patronus.py. */
+export const PATRONUS = { url: "sprites/patronus.png", width: 96, height: 96, anchorX: 48, anchorY: 84, scale: 0.3 };
+/** Ticks the stag takes to gallop to where it stopped; it fades out over the rest of the blast. */
+const PATRONUS_RUN = 24;
+
+/**
+ * Harry's stag from (x0,y0) to (x1,y1), `age` ticks after he cast it: galloping there in two bounding leaps (its feet on
+ * the path between them), a trail of sparkles behind it, then standing there fading into light. Null once it is gone.
+ */
+export function patronusLook(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; alpha: number; flip: boolean; sparkles: { x: number; y: number; size: number; alpha: number }[] } | null {
+  if (age >= BLAST_TICKS) return null;
+  const at = (k: number) => {
+    const t = Math.min(1, Math.max(0, k / PATRONUS_RUN));
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t - Math.abs(Math.sin(t * Math.PI * 2)) * 5, t };
+  };
+  const { x, y } = at(age);
+  const fading = Math.max(0, age - PATRONUS_RUN) / (BLAST_TICKS - PATRONUS_RUN);
+  const sparkles = Array.from({ length: 5 }, (_, k) => {
+    const back = at(age - 2 - k * 2);
+    return { x: back.x, y: back.y + 3 + ((k * 5) % 4) - 2, size: 1.6 - k * 0.2, alpha: (1 - k / 5) * (1 - fading) };
+  });
+  return { x, y, alpha: 0.9 * (1 - fading * 0.9), flip: x1 < x0, sparkles };
 }
 
 /**

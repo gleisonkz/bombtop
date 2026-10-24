@@ -3,7 +3,7 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -11,6 +11,8 @@ export const TILE_PX = 16;
 
 const COLORS = {
   heart: 0xff4f9a,
+  /** The glow round harry's stag and its sparkles. */
+  patronus: 0xbfe8ff,
   /** The puff the pink panther leaves as he slips out of sight. */
   sneakPuff: 0xf7a6cf,
   heartShine: 0xffd0e6,
@@ -146,6 +148,9 @@ export class Renderer {
   /** Naruto's Rasengan (the ball in his hand, the burst where it strikes), over the players too. */
   private rasenArt: { orb: Texture[]; burst: Texture[] } | null = null;
   private readonly rasenSprites: Sprite[] = [];
+  private patronusArt: Texture | null = null;
+  private readonly patronusSprites: Sprite[] = [];
+  private patronusUsed = 0;
   private rasenUsed = 0;
   private bubbleArt: Texture[][] | null = null;
   private readonly bubbleSprites: Sprite[] = [];
@@ -289,6 +294,37 @@ export class Renderer {
     this.bubbleArt[rows.form] = row(rows.form, frames.form);
     this.bubbleArt[rows.loop] = row(rows.loop, frames.loop);
     this.bubbleArt[rows.pop] = row(rows.pop, frames.pop);
+  }
+
+  async usePatronusArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${PATRONUS.url}`);
+    base.source.scaleMode = "nearest";
+    this.patronusArt = base;
+  }
+
+  /** Harry's stag galloping along his patronus (its feet on the path), glowing, with sparkles trailing it. */
+  private drawPatronus(g: Graphics, x0: number, y0: number, x1: number, y1: number, age: number): void {
+    const look = patronusLook(x0, y0, x1, y1, age);
+    if (!look) return;
+    for (const s of look.sparkles) g.circle(s.x, s.y - 4, s.size).fill({ color: COLORS.patronus, alpha: s.alpha });
+    g.ellipse(look.x, look.y - 9, 13, 9).fill({ color: COLORS.patronus, alpha: 0.18 * look.alpha });
+    if (!this.patronusArt) {
+      g.ellipse(look.x, look.y - 7, 8, 5).fill({ color: 0xffffff, alpha: look.alpha });
+      return;
+    }
+    let sprite = this.patronusSprites[this.patronusUsed];
+    if (!sprite) {
+      sprite = new Sprite(this.patronusArt);
+      sprite.anchor.set(PATRONUS.anchorX / PATRONUS.width, PATRONUS.anchorY / PATRONUS.height);
+      sprite.blendMode = "add";
+      this.patronusSprites.push(sprite);
+      this.beamLayer.addChild(sprite);
+    }
+    this.patronusUsed++;
+    sprite.scale.set(look.flip ? -PATRONUS.scale : PATRONUS.scale, PATRONUS.scale);
+    sprite.alpha = look.alpha;
+    sprite.position.set(look.x, look.y);
+    sprite.visible = true;
   }
 
   /** The green lantern's bubble round (x,y), from the art once loaded (else a plain green ring). */
@@ -782,9 +818,11 @@ export class Renderer {
     });
 
     this.kameUsed = 0;
+    this.patronusUsed = 0;
     for (const b of s.blasts) this.drawBlast(top, b);
     for (let i = this.kameUsed; i < this.kameSprites.length; i++) this.kameSprites[i]!.visible = false;
     for (let i = this.rasenUsed; i < this.rasenSprites.length; i++) this.rasenSprites[i]!.visible = false;
+    for (let i = this.patronusUsed; i < this.patronusSprites.length; i++) this.patronusSprites[i]!.visible = false;
     for (let i = this.bubbleUsed; i < this.bubbleSprites.length; i++) this.bubbleSprites[i]!.visible = false;
     this.drawParticles(top);
     const shake = this.fx.shake;
@@ -813,6 +851,13 @@ export class Renderer {
     if (b.kind === "spin") {
       const at = this.lastSeen.get(b.ownerId);
       return this.drawSpin(g, at?.cx ?? center(b.x), at?.cy ?? center(b.y), BLAST_TICKS - b.ttl);
+    }
+    // Harry's stag runs out from him from the first tick (whoever is in its way is stunned at once).
+    if (b.kind === "patronus") {
+      const at = this.lastSeen.get(b.ownerId);
+      const ox = at?.cx ?? center(b.x);
+      const oy = (at?.cy ?? center(b.y)) + 6;
+      return this.drawPatronus(g, ox, oy, dx ? x1 : ox, dy ? y1 + 6 : oy, BLAST_TICKS - b.ttl);
     }
     // Penelope's kiss flies from the first tick (whoever it charms is stunned at once).
     if (b.kind === "kiss") {

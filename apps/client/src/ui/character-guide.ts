@@ -287,6 +287,24 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  harry: {
+    name: "Harry Potter",
+    title: "O menino que sobreviveu",
+    color: "#e84a4a",
+    story:
+      "Bruxo da Grifinória, apanhador do time de quadribol e dono da cicatriz em forma de raio mais famosa de Hogwarts. Aprendeu com o professor Lupin um feitiço que pouquíssimos alunos conseguem: o Patrono, um cervo prateado de pura luz. Na arena, troca os dementadores pelos rivais. A capa vermelha fica na cor do jogador.",
+    special: {
+      name: "Expecto Patronum",
+      recharge: "20 s",
+      text: "Conjura o Patrono: um cervo prateado galopa até 5 casas para a frente, pulando por cima das bombas, e deixa tontos por 3 s todos os jogadores no caminho, não só o primeiro. Paredes e blocos param o cervo, e o escudo do Capitão virado para ele também.",
+      tips: [
+        "Rivais enfileirados no corredor? Um cervo só pega todos.",
+        "O cervo pula as bombas: mire por cima delas em quem está atrás.",
+        "Atordoou? Corra e solte uma bomba do lado: são 3 s parado.",
+        "O Capitão com o escudo erguido segura o cervo: espere ele baixar.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */
