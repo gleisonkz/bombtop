@@ -297,6 +297,8 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
 - Client sends input only on change/button press; server buffers button taps between ticks. While quiet in a match it sends
   a `beat` every 50 ms (`net/keep-awake.ts`): a phone that only listens lets its Wi-Fi doze, and the ?debug logs showed
   Android phones getting the 30 Hz snapshots in bursts 150-600 ms apart with a 10 ms ping, pinning the render delay at 250 ms.
+- In the arena the human players' names float over their heads (`render/name-tags.ts`, `Renderer.setNames`: ours in
+  yellow, bots untagged, hidden with a sneaking rival).
 - Client renders other players snapshots in the past, interpolated, by an adaptive delay (`net/adaptive-delay.ts`: ~1 snapshot gap + jitter room, 40-250 ms; past the newest snapshot walking players walk on, `net/carry-on.ts`). Own player, bombs and kicks are predicted (`net/prediction.ts`, `ghost-bombs.ts`, `kick-prediction.ts`); bombs, flames, blocks and items are drawn from the latest snapshot run ahead by our input lead (`net/world-ahead.ts`), so explosions land on time.
 - Clocks, one contract per mode: a client's own frame loop (`loop/fixed-step.ts`) runs at most 5 ticks a frame and drops
   the rest (only its local view slows); the offline host (`loop/tick-clock.ts`) is authoritative for every phone, so it

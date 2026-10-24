@@ -37,6 +37,7 @@ import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
 import { debugNet, NetHud, NetStats } from "../ui/net-hud";
+import { nameTags } from "../render/name-tags";
 import { crumb } from "../net/client-log";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
@@ -145,6 +146,7 @@ export class OnlineGame implements GameMode {
       }
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
+      ctx.renderer.setNames(nameTags(info.members, watching ? null : room.sessionId));
       // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
       ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
@@ -366,6 +368,7 @@ export class OnlineGame implements GameMode {
     this.hud?.dispose();
     this.panel.hide();
     this.ctx.renderer.showBanner("");
+    this.ctx.renderer.setNames(new Map()); // the menus' scenes go untagged
     if (!this.leaving) {
       this.leaving = true;
       this.couch?.leaveAll();

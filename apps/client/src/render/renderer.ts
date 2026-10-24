@@ -9,6 +9,9 @@ import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DE
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
 
+/** `headroom` reaches a little over the drawn head (room for a held bomb's fuse): a player's name sits this much lower. */
+const TAG_DROP = 5;
+
 const COLORS = {
   heart: 0xff4f9a,
   /** The glow round harry's stag and its sparkles. */
@@ -209,13 +212,50 @@ export class Renderer {
     style: { fill: 0xffffff, fontFamily: "monospace", fontSize: 8, stroke: { color: 0, width: 2 } },
   });
 
+  /** The human players' names over their heads (setNames), one text each, over everything but the banner. */
+  private readonly tagLayer = new Container();
+  private readonly tags = new Map<string, Text>();
+  private names = new Map<string, { text: string; me: boolean }>();
+
+  /** Whose names to draw over their heads in the arena (name-tags.ts); empty in the menus' scenes. */
+  setNames(names: Map<string, { text: string; me: boolean }>): void {
+    this.names = names;
+    for (const [id, tag] of this.tags) {
+      if (names.has(id)) continue;
+      tag.destroy();
+      this.tags.delete(id);
+    }
+  }
+
+  /** A player's name over their head (`top`: where their head ends), faded with them. */
+  private placeTag(id: string, x: number, top: number, alpha: number): void {
+    const name = this.names.get(id);
+    if (!name) return;
+    let tag = this.tags.get(id);
+    if (!tag) {
+      tag = new Text({
+        text: "",
+        resolution: this.lite ? 1.5 : 4,
+        style: { fill: 0xffffff, fontFamily: "Lilita One, sans-serif", fontSize: 6, stroke: { color: 0x15152a, width: 1.5 } },
+      });
+      tag.anchor.set(0.5, 1);
+      this.tags.set(id, tag);
+      this.tagLayer.addChild(tag);
+    }
+    if (tag.text !== name.text) tag.text = name.text;
+    tag.style.fill = name.me ? 0xffd23f : 0xffffff;
+    tag.position.set(x, top - 1);
+    tag.alpha = alpha;
+    tag.visible = true;
+  }
+
   /** `lite`: weak screens (smart TVs): text drawn at less detail, no particles. */
   constructor(private readonly lite = false) {
     if (lite) this.banner.resolution = this.clock.resolution = 1.5;
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.world, this.burnLayer, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.world, this.burnLayer, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.tagLayer, this.banner, this.clock);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -713,6 +753,7 @@ export class Renderer {
     const top = this.overlay.clear();
     for (const sprite of this.sprites.values()) sprite.visible = false;
     for (const sprite of this.truckSprites.values()) sprite.visible = false;
+    for (const tag of this.tags.values()) tag.visible = false;
     for (const sprite of this.bombSprites) sprite.visible = false;
     let bombs = 0;
     const { width, height } = s.grid;
@@ -858,6 +899,8 @@ export class Renderer {
         for (const [x0, y0, x1, y1] of c.back) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.webShade, width: 0.8, alpha: 0.8 });
         for (const [x0, y0, x1, y1] of c.strands) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1, alpha: 0.95 });
       }
+      // the sprite stands 6 px below the tile's center (placeSprite); kept on the stage over the top row
+      this.placeTag(p.id, cx, Math.max(7, cy + 6 - headroom - (carrying ? 9 : 0) + TAG_DROP), seen);
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
       // Thor's bolt, Pikachu's shock, Static's pull and the flash's dash leave their victims crackling while stunned.
       if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet" || b.kind === "flash") && b.ownerId !== p.id) && !ice) {
