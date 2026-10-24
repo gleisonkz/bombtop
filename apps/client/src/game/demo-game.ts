@@ -23,6 +23,7 @@ export class DemoGame implements GameMode {
     const s = this.demo.state;
     this.ctx.fit(s.grid.width, s.grid.height);
     this.ctx.renderer.setCharacters(new Map(s.players.map((p) => [p.id, p.character])));
+    this.ctx.renderer.setViewer(null);
     this.ctx.renderer.showBanner("");
   }
 

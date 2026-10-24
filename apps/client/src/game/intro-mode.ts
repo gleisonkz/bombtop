@@ -48,6 +48,7 @@ export class IntroMode implements GameMode {
     const s = this.intro.state;
     ctx.fit(INTRO_VIEW.width, INTRO_VIEW.height, INTRO_VIEW.x, INTRO_VIEW.y);
     ctx.renderer.setCharacters(new Map(s.players.map((p) => [p.id, p.character])));
+    ctx.renderer.setViewer(null);
     ctx.renderer.setColors(this.intro.colors);
     ctx.renderer.showBanner("");
     ctx.renderer.showClock(false);

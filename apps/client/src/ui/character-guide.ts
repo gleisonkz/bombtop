@@ -269,6 +269,24 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  panther: {
+    name: "Pantera Cor-de-Rosa",
+    title: "O felino mais elegante (e calado) dos desenhos",
+    color: "#3d7bf2",
+    story:
+      "Nasceu na abertura de um filme de detetive sobre um diamante rosa e escapou para os desenhos: um felino cor-de-rosa que quase nunca fala, resolve tudo com calma e anda na ponta dos pés ao som do próprio tema. Na arena, ninguém o vê chegar: quando você nota, a bomba já está do seu lado. O cachecol azul fica na cor do jogador.",
+    special: {
+      name: "Na ponta dos pés",
+      recharge: "20 s",
+      text: "Sai de fininho e some da tela dos rivais por 4 s (só um sopro de fumaça rosa onde ele estava). Anda na velocidade de sempre e pode soltar bombas; na sua tela ele aparece transparente. Os bots perdem ele de vista. O fogo continua pegando ele.",
+      tips: [
+        "Some, chegue perto e solte a bomba ao lado do rival antes de ele te ver.",
+        "Use para fugir de quem te persegue: ele perde você de vista.",
+        "Ele reaparece aos poucos no último meio segundo: já esteja longe.",
+        "Invisível não é imortal: cuidado com o fogo das próprias bombas.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

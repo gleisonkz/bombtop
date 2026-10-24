@@ -94,6 +94,14 @@ export class Fx {
     }
   }
 
+  /** A small cloud of `color` smoke at stage point (x, y): the pink panther slipping out of sight. */
+  puff(x: number, y: number, color: number): void {
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      this.add("smoke", x + Math.cos(a) * 3, y + Math.sin(a) * 2, Math.cos(a) * 0.25, Math.sin(a) * 0.15 - 0.1, 24 + this.random() * 12, 2.5 + this.random() * 1.5, [color]);
+    }
+  }
+
   private smoke(tx: number, ty: number): void {
     const [cx, cy] = this.center(tx, ty);
     this.add("smoke", cx + (this.random() - 0.5) * 6, cy, (this.random() - 0.5) * 0.3, -0.25 - this.random() * 0.2, 30 + this.random() * 20, 3 + this.random() * 2, [0x5a5a66]);

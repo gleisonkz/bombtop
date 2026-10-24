@@ -3,7 +3,7 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -11,6 +11,8 @@ export const TILE_PX = 16;
 
 const COLORS = {
   heart: 0xff4f9a,
+  /** The puff the pink panther leaves as he slips out of sight. */
+  sneakPuff: 0xf7a6cf,
   heartShine: 0xffd0e6,
   floorA: 0x2f6b3a,
   floorB: 0x2a6234,
@@ -235,6 +237,18 @@ export class Renderer {
   }
 
   private colors = new Map<string, number>();
+
+  /**
+   * Whose eyes this screen sees through: a sneaking pink panther is gone for everyone else. null for screens that only
+   * watch or show several players at once (TV, demo, intro, couch), which see him faint.
+   */
+  setViewer(id: string | null): void {
+    this.viewer = id;
+  }
+
+  private viewer: string | null = null;
+  /** Who was sneaking last frame, for the puff as he slips away. */
+  private sneaking = new Set<string>();
 
   private character(id: string): CharacterId {
     return this.characters.get(id) ?? DEFAULT_CHARACTER;
@@ -671,8 +685,14 @@ export class Renderer {
       const cx = (ux / TILE) * TILE_PX;
       const cy = (uy / TILE) * TILE_PX;
       this.lastSeen.set(p.id, { cx, cy, deadAt: null });
+      // The pink panther tiptoeing: a puff as he slips away, then gone for his rivals (faint for himself and watchers).
+      if (p.sneak > 0 && !this.sneaking.has(p.id) && !this.lite) this.fx.puff(cx, cy - 6, COLORS.sneakPuff);
+      if (p.sneak > 0) this.sneaking.add(p.id);
+      else this.sneaking.delete(p.id);
+      const seen = sneakAlpha(p, this.viewer);
+      if (seen === 0) return;
       if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
-      g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 });
+      g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
       if (p.mount) {
         g.ellipse(cx, cy + 3, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
@@ -693,8 +713,9 @@ export class Renderer {
         const { sheet } = skin;
         const casting = castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
         const shielding = bracing(p, moving);
-        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, tick });
+        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, sneaking: p.sneak > 0, tick });
         this.placeSprite(skin, p.id, skinColor(p, i), f, sx, cy, tint);
+        this.sprite(p.id).alpha = seen;
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });

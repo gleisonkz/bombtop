@@ -25,7 +25,9 @@
 // problem = 54603189), under lantern-inj2/; donatello's from Teenage Mutant Ninja Turtles: Shredder's Revenge, board "Teenage Mutant
 // Ninja Turtles: Shredder's Revenge (PC): Donatello Voice" on the same site (pick = sound 56699710, death = 56701401, win = 56707997,
 // special = 56710569), under donnie-sr/; penelope's from Wacky Races (PC), board "Wacky Races (PC): Penelope Pitstop Voice" on the same
-// site (pick = sound 54437034, death = 54437100, win = 54437054, special = 54437030), under penny-wr/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
+// site (pick = sound 54437034, death = 54437100, win = 54437054, special = 54437030), under penny-wr/; the pink panther, who hardly ever speaks: Henry Mancini's theme (fan use; (c) MGM), "The Pink Panther Theme Song
+// (Original Version)" = sound 3052251 and its ending = 66635185, and his one line from the cartoon "Pink Ice" (Rich Little) on the
+// board "Pink Panther talking" (sound 37195343), under pink/; the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -56,6 +58,7 @@ const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
 const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
 const DONNIE = (name) => join(SRC, "donnie-sr", `${name}.mp3`);
 const PENNY = (name) => join(SRC, "penny-wr", `${name}.mp3`);
+const PINK = (name) => join(SRC, "pink", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -208,6 +211,12 @@ const RECIPE = {
   "penelope-death": { src: BASS_DOWN, len: 2.7, layer: { src: PENNY("death"), len: 2.7, gain: -3 } },
   "penelope-win": { src: PENNY("win"), len: 1.8 },
   "penelope-special": { src: PENNY("special"), len: 1.2 },
+  // The pink panther hardly ever speaks: his theme's saxophone when picked, "This isn't quite cricket." over the falling
+  // bass, the theme's last flourish when he wins, and its creeping bass ("dum-dum... dum-dum") as he tiptoes out of sight
+  "panther-pick": { src: PINK("theme-orig"), from: 12.1, len: 3.6 },
+  "panther-death": { src: BASS_DOWN, len: 2.2, layer: { src: PINK("talking"), from: 12.65, len: 1.7, gain: -3 } },
+  "panther-win": { src: PINK("theme-end"), len: 4.6 },
+  "panther-special": { src: PINK("theme-orig"), from: 4.05, len: 2.5 },
   // her blown kiss: a cartoon smooch and a twinkle as the heart flies off
   kiss: {
     src: FS("444493_9159316-hq.mp3"),

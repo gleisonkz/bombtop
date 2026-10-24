@@ -154,7 +154,7 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** The player color (by seat) each character wears in their scene, as in the menus: the ninja in ice blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2 };
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
@@ -268,6 +268,17 @@ const SPECIALS: Record<CharacterId, Scene> = {
     // Blows him a kiss from afar: he is left charmed, hearts going round his head.
     you: [{ wait: 30 }, { press: "special" }],
     seconds: 5,
+  },
+  panther: {
+    characters: { you: "panther", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 8, 5);
+      you.facing = "right";
+    },
+    // Tiptoes out of sight (shown faint here), creeps up on him, leaves a bomb by him and slips away.
+    you: [{ wait: 30 }, { press: "special" }, { wait: 10 }, { go: "right", tiles: 3 }, { press: "bomb" }, { go: "left", tiles: 1 }, { go: "up", tiles: 1 }],
+    seconds: 6,
   },
   donatello: {
     characters: { you: "donatello", rival: "naruto" },

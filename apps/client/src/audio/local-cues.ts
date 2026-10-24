@@ -4,7 +4,7 @@ import { soundCues, type Cue, type CueName } from "./cues";
 /** Sounds of our own button presses, played before the server confirms them. */
 const OWN: ReadonlySet<CueName> = new Set<CueName>([
   "place", "throw", "jump", "dash", "ice", "web", "thunder", "shock", "magnet", "zoom", "dig", "spin", "kiss", "bubble", "kamehameha", "rasengan", "mega",
-  "bomb-special", "ninja-special", "captain-special", "thor-special", "spider-special", "pikachu-special", "flash-special", "bugs-special", "lantern-special", "donatello-special", "penelope-special",
+  "bomb-special", "ninja-special", "captain-special", "thor-special", "spider-special", "pikachu-special", "flash-special", "bugs-special", "lantern-special", "donatello-special", "penelope-special", "panther-special",
 ]);
 
 /**

@@ -497,6 +497,35 @@ export const SHEETS = {
     scale: 0.145,
   },
 
+  /** The pink panther (fan art), "Pink Panther HD 4" in PixelLab (scripts/build-character-sheet.py panther). */
+  panther: {
+    url: "sprites/panther.png",
+    width: 1092,
+    height: 2601,
+    frameW: 156,
+    frameH: 153,
+    anchorX: 78.5,
+    anchorY: 149,
+    bodyH: 141,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His tiptoe, paws before his chest: walked through while he sneaks out of sight (playerFrame's `sneaking`). */
+    cast: strips(8, 9, 10, 6),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Tiptoeing in from the left, then a finger to his lips and a sly look (scripts/build-panther-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/panther-lobby.png", width: 4288, height: 150, frameW: 268, frameH: 150, anchorX: 134, anchorY: 149 } },
+    /** His blue scarf (his pink fur, yellow eyes and nose stay his own). */
+    hues: [182, 222],
+    hueBase: [18, 178, 214],
+    scale: 0.152,
+  },
+
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
@@ -889,6 +918,21 @@ export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age:
   return out;
 }
 
+/** How see-through the sneaking panther is to himself and to screens that only watch. */
+export const SNEAK_FAINT = 0.35;
+/** Ticks over which he fades back in for everyone before his tiptoe ends. */
+const SNEAK_FADE = 30;
+
+/**
+ * How visible player `p` is on the screen of `viewer` (null: a screen that only watches, or several players at once):
+ * a sneaking panther is gone for his rivals and faint for himself and for watchers, and fades back in at the end.
+ */
+export function sneakAlpha(p: Pick<Player, "id" | "sneak">, viewer: string | null): number {
+  if (p.sneak <= 0) return 1;
+  const back = Math.max(0, 1 - p.sneak / SNEAK_FADE);
+  return viewer === null || viewer === p.id ? Math.max(SNEAK_FAINT, back) : back;
+}
+
 /** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */
 export const BUBBLE = {
   url: "sprites/lantern-bubble.png",
@@ -1094,12 +1138,18 @@ export function playerFrame(
     stunned,
     casting,
     shielding,
+    sneaking,
     tick,
-  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; shielding?: number | undefined; tick: number },
+  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; shielding?: number | undefined; sneaking?: boolean; tick: number },
 ): FrameRect {
   if (stunned && sheet.stun) return cell(sheet, sheet.stun, Math.floor(tick / sheet.ticksPerFrame) % sheet.stun.frames);
   const view = facing === "left" || facing === "right" ? "side" : facing;
   const flip = view === "side" && facing !== sheet.side;
+  // The pink panther's cast row is his tiptoe: walked through while he sneaks, its first frame while he stands.
+  if (sneaking && sheet.cast && !carrying) {
+    const strip = sheet.cast[view];
+    return { ...cell(sheet, strip, moving ? Math.floor(tick / sheet.ticksPerFrame) % strip.frames : 0), flip };
+  }
   if (sheet.cast && shielding !== undefined) {
     const strip = sheet.cast[view];
     return { ...cell(sheet, strip, Math.min(Math.floor(shielding / CAST_TICKS_PER_FRAME), strip.frames - 1)), flip };

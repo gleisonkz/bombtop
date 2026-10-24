@@ -1,10 +1,23 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
+
+  it("tiptoes on the cast row while sneaking: cycling it as he walks, its first frame standing", () => {
+    const sheet = SHEETS.panther;
+    const cols = new Set<number>();
+    for (let tick = 0; tick < 120; tick++) {
+      const f = playerFrame(sheet, { facing: "down", moving: true, carrying: false, sneaking: true, tick });
+      expect(f.y).toBe(sheet.cast!.down.row * sheet.frameH);
+      cols.add(f.x);
+    }
+    expect(cols.size).toBe(sheet.cast!.down.frames);
+    const still = playerFrame(sheet, { facing: "right", moving: false, carrying: false, sneaking: true, tick: 50 });
+    expect(still).toMatchObject({ x: 0, y: sheet.cast!.side.row * sheet.frameH });
+  });
 
   it("stands on the idle frame of the facing direction", () => {
     const f = playerFrame(foozle, { facing: "down", moving: false, carrying: false, tick: 99 });
@@ -961,4 +974,28 @@ describe("lobby showpieces", () => {
   it("naruto calls up his shadow clones", () => showpiece("naruto"));
   it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
   it("thor calls lightning down onto his hammer and slams it into the ground", () => showpiece("thor"));
+});
+
+describe("sneakAlpha", () => {
+  it("shows a player who is not sneaking", () => {
+    expect(sneakAlpha({ id: "p1", sneak: 0 }, "p2")).toBe(1);
+  });
+
+  it("hides a sneaking panther from his rivals", () => {
+    expect(sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, "p2")).toBe(0);
+  });
+
+  it("shows him faint to himself and to a screen that only watches", () => {
+    const faint = sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, "p1");
+    expect(faint).toBeGreaterThan(0);
+    expect(faint).toBeLessThan(0.6);
+    expect(sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, null)).toBe(faint);
+  });
+
+  it("fades back in for everyone over his last half second", () => {
+    const rival = [30, 20, 10, 1].map((left) => sneakAlpha({ id: "p1", sneak: left }, "p2"));
+    expect(rival[0]).toBe(0);
+    for (let i = 1; i < rival.length; i++) expect(rival[i]).toBeGreaterThan(rival[i - 1]!);
+    expect(rival[3]).toBeLessThan(1);
+  });
 });

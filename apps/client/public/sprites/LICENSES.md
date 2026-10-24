@@ -98,6 +98,13 @@ skeletons); laid out by `scripts/build-character-sheet.py penelope`; rows = `SHE
 powder, sparkles and hearts and the victory's checkered flag, sparkles and hearts are our own pixel art
 (`scripts/build-penelope-lobby.py`, `scripts/build-penelope-victory.py`), laid out by `scripts/build-lobby-image.py`.
 
+## panther.png, panther-lobby.png
+
+Fan art of the Pink Panther (DePatie-Freleng / MGM) for this non-commercial project, made in PixelLab (pixellab.ai)
+(character "Pink Panther HD 4"; his tiptoe and carry walk posed from our own skeletons, a lobby going "shh");
+laid out by `scripts/build-character-sheet.py panther`; rows = `SHEETS.panther`. The lobby (tiptoeing in, then
+"shh") is laid out by `scripts/build-panther-lobby.py` and `scripts/build-lobby-image.py`.
+
 ## lantern-bubble.png
 
 Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.

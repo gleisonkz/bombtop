@@ -66,9 +66,14 @@
     template shut her eyes); death without its two smeared first frames; cast = her blown kiss and carry walk posed from
     our own skeletons (the side ones as west); the heart is drawn by the renderer (kissHearts); her lobby is its own
     image (build-penelope-lobby.py, build-lobby-image.py).
+  panther: sprites/panther.png, character "Pink Panther HD 4" (180px canvas, standard mode; yellow eyes, magenta nose,
+    light pink muzzle and belly, blue scarf, which takes the player's color). Idle = the still rotation bobbing (the
+    breathing template opened his mouth and puffed breath); PixelLab drew a floor shadow under him, taken out
+    (no_floor_shadow); cast = his tiptoe and carry walk posed from our own skeletons ("sneak"), the tiptoe walked through
+    while he sneaks; his lobby is its own image (build-panther-lobby.py, build-lobby-image.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -206,6 +211,16 @@ CHARACTERS = {
         ("stun", "hit", "south", 6),
         ("death", "death", "south", 5),
         ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+    ],
+    # cast = his tiptoe (our own skeletons), walked through while he sneaks; his lobby lives in its own image
+    "panther": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "sneak", "south", 6), ("cast.side", "sneak", "east", 6), ("cast.up", "sneak", "north", 6),
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
     ],
@@ -501,6 +516,33 @@ def penelope_frames(src, folder, d):
     return None
 
 
+def panther_frames(src, folder, d):
+    """His frames by sheet folder. The breathing template opened his mouth and puffed breath, so idle is his rotation
+    bobbing; carry idle is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+def no_floor_shadow(im):
+    """PixelLab drew a gray shadow ellipse under the pink panther's feet: the grays low in the frame go."""
+    a = np.array(im.convert("RGBA")).astype(int)
+    alpha = a[..., 3] > 0
+    if not alpha.any():
+        return im
+    ys = np.nonzero(alpha)[0]
+    low = np.zeros_like(alpha)
+    low[ys.max() - int((ys.max() - ys.min()) * 0.2):] = True
+    rgb = a[..., :3]
+    gray = (rgb.max(-1) - rgb.min(-1) < 36) & (rgb.mean(-1) > 110) & (rgb.mean(-1) < 215)
+    a[alpha & low & gray] = 0
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
 def green_iris(im):
     """John Stewart's eyes as in the cartoon: white, with a glowing green iris. The face was repainted with whole green
     eyes (bright pale green in the middle, emerald at the rim); each such blob in his head becomes a white eye with a
@@ -606,11 +648,13 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":
             frames = [green_iris(no_blots(im)) for im in frames]
+        if character == "panther":
+            frames = [no_floor_shadow(im) for im in frames]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
         if character == "goku":

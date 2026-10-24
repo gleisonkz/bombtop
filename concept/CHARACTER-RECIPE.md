@@ -43,6 +43,11 @@ Ordem: **regra (shared) → sprite → código do cliente → som → telas → 
 | `detail` | `high detail` |
 | `proportions` | `{"type": "custom", "head_size": 1.8, "arms_length": 0.8, "legs_length": 0.75, "shoulder_width": 0.9, "hip_width": 0.9}` |
 
+**Fan art: descreva o rosto da referência.** Antes de gerar, olhe uma imagem do personagem original e escreva os traços
+do rosto (cor e forma dos olhos, sobrancelhas, nariz, focinho, orelhas, barriga). Só o nome dá um genérico: a Pantera
+Cor-de-Rosa saiu um gato fofo até a descrição dizer "olhos redondos amarelos, nariz triangular rosa-escuro, focinho e
+barriga rosa-claro".
+
 Nome no PixelLab: `"<Nome> HD"`. Confira as 4 direções antes de animar: se o rosto, emblema ou
 proporção estiverem errados, refaça agora (todas as animações herdam o corpo base).
 

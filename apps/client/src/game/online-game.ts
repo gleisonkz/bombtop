@@ -140,6 +140,8 @@ export class OnlineGame implements GameMode {
       }
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
+      // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
+      ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
       if (info.phase !== "results") ctx.renderer.showBanner("");
       // Shown on the results phase's lobby update, which carries the new win counts.

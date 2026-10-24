@@ -65,6 +65,7 @@ const art = Promise.allSettled([
   renderer.useSheet("lantern", SHEETS.lantern).catch((e) => console.error("lantern sheet", e)),
   renderer.useSheet("donatello", SHEETS.donatello).catch((e) => console.error("donatello sheet", e)),
   renderer.useSheet("penelope", SHEETS.penelope).catch((e) => console.error("penelope sheet", e)),
+  renderer.useSheet("panther", SHEETS.panther).catch((e) => console.error("panther sheet", e)),
   renderer.useBubbleArt().catch((e) => console.error("bubble art", e)),
   renderer.useMascots().catch((e) => console.error("mascot", e)),
   renderer.useBombArt().catch((e) => console.error("bomb art", e)),
