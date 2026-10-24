@@ -79,32 +79,55 @@ export function characterMoves(sheet: SheetLayout): Move[] {
 
 const painted = new Map<string, Promise<string>>();
 
-/** A sheet repainted in a player color, as an image URL (made once per sheet and color); null: its original colors. */
-function sheetUrl(sheet: SheetLayout, color: string | null): Promise<string> {
+/**
+ * One row of a sheet repainted in a player color, as an image URL (made once per row and color); null: the whole sheet in
+ * its original colors. Only the row a preview plays is repainted: a phone took seconds over whole sheets on opening.
+ */
+function sheetUrl(sheet: SheetLayout, color: string | null, row: number): Promise<string> {
   if (color === null) return Promise.resolve(`${import.meta.env.BASE_URL}${sheet.url}`);
-  const key = `${sheet.url}:${color}`;
+  const key = `${sheet.url}:${row}:${color}`;
   let url = painted.get(key);
   if (!url) {
-    url = (async () => {
-      const img = new Image();
-      img.src = `${import.meta.env.BASE_URL}${sheet.url}`;
-      await img.decode();
+    url = queue(async () => {
+      const img = await loaded(sheet.url);
       const canvas = document.createElement("canvas");
       canvas.width = sheet.width;
-      canvas.height = sheet.height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
-      const data = ctx.getImageData(0, 0, sheet.width, sheet.height);
+      canvas.height = sheet.frameH;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true })!; // read back on the CPU, not from the GPU
+      ctx.drawImage(img, 0, row * sheet.frameH, sheet.width, sheet.frameH, 0, 0, sheet.width, sheet.frameH);
+      const data = ctx.getImageData(0, 0, sheet.width, sheet.frameH);
       const rgb = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) as [number, number, number];
       paintSheet(data.data, sheet, rgb);
       ctx.putImageData(data, 0, 0);
-      const url = canvas.toDataURL();
+      // toBlob encodes off the page's thread (toDataURL held a phone's menu up)
+      const blob = await new Promise<Blob | null>((done) => canvas.toBlob(done));
       canvas.width = canvas.height = 0; // iOS keeps a canvas's pixels until it is shrunk
-      return url;
-    })();
+      if (!blob) throw new Error("preview not encoded");
+      return URL.createObjectURL(blob);
+    });
     painted.set(key, url);
   }
   return url;
+}
+
+let line: Promise<unknown> = Promise.resolve();
+
+/**
+ * Runs the paint jobs one after another, each in a task of its own: all at once they held a phone's page up for seconds
+ * as the menu opened (and its freeze watch fired).
+ */
+function queue<T>(job: () => Promise<T>): Promise<T> {
+  const run = line.then(() => new Promise((next) => setTimeout(next))).then(job);
+  line = run.catch(() => {});
+  return run;
+}
+
+/** A sheet's image, decoded (not kept: a phone's memory holds few whole sheets). */
+async function loaded(src: string): Promise<HTMLImageElement> {
+  const im = new Image();
+  im.src = `${import.meta.env.BASE_URL}${src}`;
+  await im.decode();
+  return im;
 }
 
 /**
@@ -121,10 +144,11 @@ export function characterArt(character: CharacterId, color: string | null, state
     "--fw": `${sheet.frameW}px`,
     "--fh": `${sheet.frameH}px`,
     "--sw": `${sheet.width}px`,
-    "--sh": `${sheet.height}px`,
+    // a painted preview is its one row only
+    "--sh": `${color === null ? sheet.height : sheet.frameH}px`,
     "--ax": `${sheet.anchorX}px`,
     "--ay": `${sheet.anchorY}px`,
-    "--row": `${pose.row}`,
+    "--row": `${color === null ? pose.row : 0}`,
     "--frames": `${pose.frames}`,
     "--dur": `${pose.seconds}s`,
     // Same size relative to each other as in the arena; each box zooms with --k.
@@ -132,7 +156,7 @@ export function characterArt(character: CharacterId, color: string | null, state
   };
   for (const [k, v] of Object.entries(vars)) sprite.style.setProperty(k, v);
   span.appendChild(sprite);
-  sheetUrl(sheet, color)
+  sheetUrl(sheet, color, pose.row)
     .then((url) => (sprite.style.backgroundImage = `url(${url})`))
     .catch((e) => console.error("character preview", e));
   return span;

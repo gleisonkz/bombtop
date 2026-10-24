@@ -1301,16 +1301,33 @@ export function recolor(px: Uint8ClampedArray, from: readonly Rgb[], to: Rgb): v
  */
 export function shadeHues(px: Uint8ClampedArray, range: readonly [number, number], base: Rgb, to: Rgb): void {
   const ref = luma(base);
+  eachColor(px, (c) => {
+    const [h, s] = toHsl(c);
+    if (s < 0.2 || !inHues(h, range)) return null;
+    const k = luma(c) / ref;
+    const shade = (v: number) => (k <= 1 ? v * k : v + (255 - v) * Math.min(1, (k - 1) * 0.8));
+    return [shade(to[0]), shade(to[1]), shade(to[2])];
+  });
+}
+
+/**
+ * Repaints every opaque pixel by what `paint` makes of its color (null: left as it is), working each color out once:
+ * pixel art repeats a few dozen colors over millions of pixels (a phone took seconds repainting the menus' sheets).
+ */
+function eachColor(px: Uint8ClampedArray, paint: (c: Rgb) => Rgb | null): void {
+  const seen = new Map<number, Rgb | null>();
   for (let i = 0; i < px.length; i += 4) {
     if (px[i + 3] === 0) continue;
-    const c: Rgb = [px[i]!, px[i + 1]!, px[i + 2]!];
-    const [h, s] = toHsl(c);
-    if (s < 0.2 || !inHues(h, range)) continue;
-    const k = luma(c) / ref;
-    for (let ch = 0; ch < 3; ch++) {
-      const v = to[ch]!;
-      px[i + ch] = k <= 1 ? v * k : v + (255 - v) * Math.min(1, (k - 1) * 0.8);
+    const key = (px[i]! << 16) | (px[i + 1]! << 8) | px[i + 2]!;
+    let out = seen.get(key);
+    if (out === undefined) {
+      out = paint([px[i]!, px[i + 1]!, px[i + 2]!]);
+      seen.set(key, out);
     }
+    if (!out) continue;
+    px[i] = out[0];
+    px[i + 1] = out[1];
+    px[i + 2] = out[2];
   }
 }
 
@@ -1371,16 +1388,12 @@ function fromHsl(h: number, s: number, l: number): [number, number, number] {
  */
 export function paintHues(px: Uint8ClampedArray, range: readonly [number, number], to: Rgb): void {
   const [th, ts, tl] = toHsl(to);
-  for (let i = 0; i < px.length; i += 4) {
-    if (px[i + 3] === 0) continue;
-    const [h, s, l] = toHsl([px[i]!, px[i + 1]!, px[i + 2]!]);
-    if (s < 0.2 || !inHues(h, range)) continue;
+  eachColor(px, (c) => {
+    const [h, s, l] = toHsl(c);
+    if (s < 0.2 || !inHues(h, range)) return null;
     const lit = Math.min(1, Math.max(0, l + (tl - 0.5) * 0.6));
-    const [r, g, b] = fromHsl(th, s * ts, lit);
-    px[i] = r;
-    px[i + 1] = g;
-    px[i + 2] = b;
-  }
+    return fromHsl(th, s * ts, lit);
+  });
 }
 
 interface Pos {

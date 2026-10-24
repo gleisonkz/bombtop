@@ -25,14 +25,18 @@ export class PadMenus {
 
   /** One poll (each frame). */
   tick(now: number): void {
+    const cmd = this.nav.sample(now);
+    const lost = !!this.ringed && !this.ringed.isConnected;
+    // Nothing pressed and no ring to put back: the buttons on screen are not looked up (every frame, that cost a phone
+    // seconds on the menu).
+    if (!cmd && !lost) return;
     const targets = this.targets();
     if (targets.length === 0) {
       this.nav.reset(); // the press that ends a match must not also press a button on the screen after it
       return this.ring(null);
     }
     // The screen was redrawn (the lobby rebuilds its seats on every change): the ring goes back to the same place.
-    if (this.ringed && !this.ringed.isConnected) this.ring(targets[Math.min(this.ringedAt, targets.length - 1)]!);
-    const cmd = this.nav.sample(now);
+    if (lost) this.ring(targets[Math.min(this.ringedAt, targets.length - 1)]!);
     if (!cmd) return;
     const at = targets.indexOf(document.activeElement as HTMLElement);
     if (cmd === "back") return targets.find((t) => t.matches("[data-pad-back]"))?.click();
