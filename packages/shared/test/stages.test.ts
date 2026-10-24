@@ -22,13 +22,13 @@ describe("stages", () => {
     expect(s.grid.floor.every((f) => f === Floor.Normal)).toBe(true);
   });
 
-  it("conveyor has belts on rows 3 (right) and 7 (left), kept free of blocks", () => {
+  it("conveyor has belts on rows 3 (right) and 9 (left), kept free of blocks", () => {
     const s = stage("conveyor", 1);
     expect(getFloor(s, 5, 3)).toBe(Floor.ConveyorRight);
-    expect(getFloor(s, 5, 7)).toBe(Floor.ConveyorLeft);
-    for (let x = 1; x <= 11; x++) {
+    expect(getFloor(s, 5, 9)).toBe(Floor.ConveyorLeft);
+    for (let x = 1; x <= 13; x++) {
       expect(getTile(s, x, 3)).toBe(Tile.Empty);
-      expect(getTile(s, x, 7)).toBe(Tile.Empty);
+      expect(getTile(s, x, 9)).toBe(Tile.Empty);
     }
   });
 
@@ -53,16 +53,16 @@ describe("conveyor belts", () => {
 
   it("add to the player's own movement", () => {
     const s = stage("conveyor");
-    placePlayerAt(s, "p1", 5, 7);
+    placePlayerAt(s, "p1", 5, 9);
     hold(s, "left", 1);
     expect(player(s).px).toBeLessThan(center(5) - 16);
   });
 
   it("stop players at walls", () => {
     const s = stage("conveyor");
-    placePlayerAt(s, "p1", 9, 3);
+    placePlayerAt(s, "p1", 11, 3);
     run(s, 200);
-    expect(player(s).px).toBe(center(11));
+    expect(player(s).px).toBe(center(13));
   });
 });
 

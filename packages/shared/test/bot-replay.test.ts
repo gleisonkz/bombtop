@@ -43,14 +43,14 @@ function replay(level: BotLevel, loaded: boolean, ticks: number): string {
 
 describe("bot replays", () => {
   it("medium bots play the same seeded match", () => {
-    expect(replay("medium", false, 4000)).toMatchInlineSnapshot(`"1740:94d7ad13"`);
+    expect(replay("medium", false, 4000)).toMatchInlineSnapshot(`"3050:747db432"`);
   });
 
   it("hard bots play the same seeded match", () => {
-    expect(replay("hard", false, 4000)).toMatchInlineSnapshot(`"1820:201248e4"`);
+    expect(replay("hard", false, 4000)).toMatchInlineSnapshot(`"2748:229dfa01"`);
   });
 
   it("hard bots with every power-up (bombs everywhere, chains) play the same seeded match", () => {
-    expect(replay("hard", true, 4000)).toMatchInlineSnapshot(`"1682:4349c045"`);
+    expect(replay("hard", true, 4000)).toMatchInlineSnapshot(`"2298:81686fe6"`);
   });
 });

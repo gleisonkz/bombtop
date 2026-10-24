@@ -74,7 +74,7 @@ describe("BattleRoom over the network", () => {
     a.send(C2S.start);
     const [sa, sb] = await Promise.all([snapA, snapB]);
     expect(sa.players.map((p) => p.id)).toEqual([a.sessionId, b.sessionId]);
-    expect(sb.grid.width).toBe(13);
+    expect(sb.grid.width).toBe(15);
     expect("rng" in sa).toBe(false);
 
     // Input travels to the simulation.

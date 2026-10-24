@@ -85,7 +85,7 @@ describe("punch", () => {
   });
 
   it("wraps around the arena edges, landing on the first tile across (as in Super Bomberman 4)", () => {
-    const { s, bomb } = setup(9, 5, "right", 10, 5);
+    const { s, bomb } = setup(11, 5, "right", 12, 5);
     press(s, "action");
     run(s, FLIGHT);
     expect([bomb.x, bomb.y]).toEqual([1, 5]);
@@ -93,7 +93,7 @@ describe("punch", () => {
   });
 
   it("bounces on from the first tile across when it is taken", () => {
-    const { s, bomb } = setup(9, 5, "right", 10, 5);
+    const { s, bomb } = setup(11, 5, "right", 12, 5);
     setTile(s, 1, 5, Tile.Block);
     press(s, "action");
     run(s, FLIGHT);

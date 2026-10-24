@@ -8,7 +8,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 - **Language:** TypeScript end-to-end, pnpm monorepo. No Rust/WASM (CPU is not the bottleneck; network is).
 - **Simulation:** `packages/shared` — pure, deterministic, fixed tick (`TICK_RATE`), integer/tile math, no I/O.
   Runs authoritatively on the server (the client reuses it to predict its own player).
-- **Players:** max 5 per match (`MAX_PLAYERS`), 13x11 arena. May grow later.
+- **Players:** max 5 per match (`MAX_PLAYERS`), 15x13 arena: 13x11 to play in inside its walls, as in Super Bomberman 4 (`DEFAULT_WIDTH`, `DEFAULT_HEIGHT`).
 - **Mode:** battle mode only (no story mode for now).
 - **Mechanics:** all classic ones are in scope — bombs, fire, speed, kick, punch, glove/throw,
   remote bomb, pierce bomb, skull/virus, mounts, revenge cart, stage gimmicks.

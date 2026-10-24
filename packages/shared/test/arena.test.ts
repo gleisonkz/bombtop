@@ -15,28 +15,28 @@ describe("arena", () => {
     expect(createMatch({ seed: 1, playerIds: ids, revenge: true }).revenge).toBe(true);
   });
 
-  it("creates a 13x11 arena by default", () => {
+  it("creates a 15x13 arena by default: 13x11 to play in inside its walls, as in Super Bomberman 4", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
-    expect(s.grid.width).toBe(13);
-    expect(s.grid.height).toBe(11);
+    expect(s.grid.width).toBe(15);
+    expect(s.grid.height).toBe(13);
   });
 
   it("surrounds the arena with indestructible walls", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
-    for (let x = 0; x < 13; x++) {
+    for (let x = 0; x < 15; x++) {
       expect(getTile(s, x, 0)).toBe(Tile.Wall);
-      expect(getTile(s, x, 10)).toBe(Tile.Wall);
+      expect(getTile(s, x, 12)).toBe(Tile.Wall);
     }
-    for (let y = 0; y < 11; y++) {
+    for (let y = 0; y < 13; y++) {
       expect(getTile(s, 0, y)).toBe(Tile.Wall);
-      expect(getTile(s, 12, y)).toBe(Tile.Wall);
+      expect(getTile(s, 14, y)).toBe(Tile.Wall);
     }
   });
 
   it("places pillars on even interior coordinates", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
     expect(getTile(s, 2, 2)).toBe(Tile.Wall);
-    expect(getTile(s, 10, 8)).toBe(Tile.Wall);
+    expect(getTile(s, 12, 10)).toBe(Tile.Wall);
     expect(getTile(s, 1, 1)).not.toBe(Tile.Wall);
     expect(getTile(s, 3, 2)).not.toBe(Tile.Wall);
   });
@@ -44,7 +44,7 @@ describe("arena", () => {
   it("treats out-of-bounds as wall", () => {
     const s = createMatch({ seed: 1, playerIds: ids });
     expect(getTile(s, -1, 3)).toBe(Tile.Wall);
-    expect(getTile(s, 13, 3)).toBe(Tile.Wall);
+    expect(getTile(s, 15, 3)).toBe(Tile.Wall);
   });
 
   it("spawns up to 5 players on distinct spawn points", () => {

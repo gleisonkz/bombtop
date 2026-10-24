@@ -18,8 +18,8 @@ export const TILE = 256;
 /** Movement per tick at base speed (units). 16 => 3.75 tiles/s at 60 ticks/s. */
 export const BASE_SPEED = 16;
 
-export const DEFAULT_WIDTH = 13;
-export const DEFAULT_HEIGHT = 11;
+export const DEFAULT_WIDTH = 15;
+export const DEFAULT_HEIGHT = 13;
 
 /** Chance (0..1) that a free tile starts with a destructible block. */
 export const DEFAULT_BLOCK_DENSITY = 0.75;
@@ -144,11 +144,11 @@ export const SHIELD_TICKS = 3 * TICK_RATE;
 /** Ticks a blast stays on screen. */
 export const BLAST_TICKS = 36;
 
-/** Spawn tiles for the default 13x11 arena, in player order. */
+/** Spawn tiles for the default 15x13 arena (13x11 inside its walls, as in Super Bomberman 4), in player order. */
 export const SPAWN_POINTS: readonly { x: number; y: number }[] = [
   { x: 1, y: 1 },
-  { x: 11, y: 9 },
-  { x: 11, y: 1 },
-  { x: 1, y: 9 },
-  { x: 6, y: 5 },
+  { x: 13, y: 11 },
+  { x: 13, y: 1 },
+  { x: 1, y: 11 },
+  { x: 7, y: 5 },
 ];

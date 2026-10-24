@@ -53,9 +53,9 @@ describe("sudden death", () => {
 
   it("skips tiles that are already walls without waiting", () => {
     const s = atSuddenDeath();
-    // The outer interior ring has 36 tiles; the next ring starts on pillar (2,2),
-    // which is skipped, so the 37th fall lands on (3,2).
-    run(s, PRESSURE_INTERVAL * 36 + 1);
+    // The outer interior ring has 44 tiles; the next ring starts on pillar (2,2),
+    // which is skipped, so the 45th fall lands on (3,2).
+    run(s, PRESSURE_INTERVAL * 44 + 1);
     expect(getTile(s, 3, 2)).toBe(Tile.Wall);
   });
 
