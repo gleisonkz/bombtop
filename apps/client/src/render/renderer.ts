@@ -909,7 +909,8 @@ export class Renderer {
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
     this.clock.position.set((width * TILE_PX) / 2, 3);
-    const left = Math.max(0, Math.ceil((ROUND_TICKS - s.tick) / TICK_RATE));
+    // sudden death: at the round's end, or sooner once only bots are left (pressureAt)
+    const left = Math.max(0, Math.ceil(((s.pressureAt ?? ROUND_TICKS) - s.tick) / TICK_RATE));
     this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";
   }
 

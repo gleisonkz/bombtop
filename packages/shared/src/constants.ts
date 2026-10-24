@@ -57,6 +57,8 @@ export const DASH_SPEED = BASE_SPEED * 3;
 
 /** Round length before sudden death starts. */
 export const ROUND_TICKS = 3 * 60 * TICK_RATE;
+/** Once only bots are left in a match, sudden death comes this soon (they also go all out: botHeat). */
+export const BOTS_ONLY_HURRY = 30 * TICK_RATE;
 /** Ticks the results screen stays up before the room goes back to the lobby. */
 export const RESULTS_TICKS = 6 * TICK_RATE;
 

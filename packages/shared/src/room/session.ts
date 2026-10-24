@@ -1,5 +1,6 @@
 import {
   RESULTS_TICKS,
+  BOTS_ONLY_HURRY,
   Bot,
   createMatch,
   matchResult,
@@ -235,7 +236,10 @@ export class BattleSession {
 
     const inputs: Record<string, PlayerInput> = {};
     for (const [id, queue] of this.inputs) inputs[id] = queue.take(this.match.tick);
-    for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match);
+    // once the humans are out, the bots go all out (botHeat): nobody waits out a long bots-only standoff
+    const humansAlive = this.match.players.some((p) => p.alive && !this.bots.has(p.id));
+    if (!humansAlive && this.match.pressureAt > this.match.tick + BOTS_ONLY_HURRY) this.match.pressureAt = this.match.tick + BOTS_ONLY_HURRY;
+    for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match, humansAlive);
     step(this.match, inputs);
 
     const result = matchResult(this.match);

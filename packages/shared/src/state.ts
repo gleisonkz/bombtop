@@ -223,6 +223,8 @@ export interface MatchState {
   rng: number;
   /** Sudden death: how many spiral tiles have been processed. */
   pressure: number;
+  /** Tick sudden death starts at: ROUND_TICKS, or sooner once only bots are left (BOTS_ONLY_HURRY). */
+  pressureAt: number;
   /** Whether dead players get revenge carts. */
   revenge: boolean;
   grid: Grid;
