@@ -27,7 +27,8 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 address, shown under "Salas nesta rede" in the offline dialog, and has a link `/wifi/<code>` (`wifiUrl`; its QR code is
 what "Chamar amigos" shows, guests can show it too) that opens the game straight into the room. A friend knocks with its
 WebRTC offer (`offerToHost`, STUN on), the host answers (`answerFriend`) and the match still runs phone to phone. The two
-QR codes stay for no internet ("Sem internet?" buttons). `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
+QR codes stay for no internet ("Sem internet?" buttons). Which way the phones' connection runs (`net/rtc-route.ts`, read off the WebRTC stats: "Wi-Fi direto" or "pela
+internet") shows with ?debug and goes in the 5 s connection reports, which an offline match sends over `POST /net`. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
   so it opens without internet once visited.
 - **TV mode (watching):** the 📺 button next to "Entrar" in the menu watches the room of the typed code; the address
   becomes `/tv/<code>` (`net/invite.ts`; rewritten in `render.yaml`, like `/wifi/*`), so a reload watches again. The TV joins with

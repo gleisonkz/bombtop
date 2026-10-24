@@ -1,5 +1,6 @@
 import type { Wire } from "./local-host";
 import { decodeSignal, encodeSignal } from "./rtc-signal";
+import { routeOf } from "./rtc-route";
 
 /** No STUN/TURN: offline play is phones on the same Wi-Fi (or one's hotspot), reached directly. */
 const CONFIG: RTCConfiguration = { iceServers: [] };
@@ -55,6 +56,7 @@ function channelWire(pc: RTCPeerConnection, channel: RTCDataChannel): Promise<Wi
         pc.close();
         close();
       },
+      route: () => pc.getStats().then(routeOf, () => null),
     };
     if (channel.readyState === "open") resolve(wire);
     else channel.addEventListener("open", () => resolve(wire), { once: true });

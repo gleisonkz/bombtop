@@ -254,13 +254,13 @@ const menu = new Menu(ui, {
         const host = new LocalHost();
         const link = host.hostLink(who, savedCharacter());
         const beacon = listOffline(host, who);
-        playOffline(link, () => pairing.invite(beacon.id, host));
+        playOffline(link, () => pairing.invite(beacon.id, host), null, offlineReports(() => beacon.id ?? "offline", who));
       },
       (id) => joinOffline(id, who),
       () => {
         pairing
           .join(who, savedCharacter())
-          .then((link) => playOffline(link, null))
+          .then((link) => playOffline(link, null, null, offlineReports(() => "offline", who)))
           .catch(() => menu.show());
       },
       () => menu.show(),
@@ -334,13 +334,22 @@ function listOffline(host: LocalHost, who: string): LanBeacon {
 function joinOffline(id: string, who: string): void {
   pairing
     .joinRoom(id, who, savedCharacter(), lan)
-    .then((link) => playOffline(link, () => pairing.invite(id, null)))
+    .then((link) => playOffline(link, () => pairing.invite(id, null), null, offlineReports(() => id, who)))
     .catch(() => menu.show());
 }
 
-function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null): void {
+/**
+ * An offline match's connection reports go to the server's log over HTTP when there is internet (room `code()`, the
+ * room's listing code or "offline"), as an online room's do (deploy/vps/README.md).
+ */
+function offlineReports(code: () => string, player: string): (stats: object) => void {
+  const url = `${SERVER_URL.replace(/^ws/, "http").replace(/\/$/, "")}/net`;
+  return (stats) => void fetch(url, { method: "POST", body: JSON.stringify({ room: code(), player, ...stats }), keepalive: true }).catch(() => {});
+}
+
+function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null, report?: (stats: object) => void): void {
   lobby.setOffline({ pair, couch: !!couch });
-  online = OnlineGame.over(link, ctx, lobby, couch);
+  online = OnlineGame.over(link, ctx, lobby, couch, report);
   menu.hide();
   setMode(online);
 }

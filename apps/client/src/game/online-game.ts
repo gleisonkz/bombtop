@@ -110,9 +110,14 @@ export class OnlineGame implements GameMode {
   }
 
   /** A match in a room reached some other way (offline: hosted on a phone nearby; `couch`: more controllers here). */
-  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel, couch: CouchSeats | null = null): OnlineGame {
-    return new OnlineGame(link, ctx, panel, couch);
+  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel, couch: CouchSeats | null = null, report?: (stats: object) => void): OnlineGame {
+    const game = new OnlineGame(link, ctx, panel, couch);
+    game.report = report ?? null;
+    return game;
   }
+
+  /** Where the 5 s connection reports go when the room is not on the server (offline: POST /net). */
+  private report: ((stats: object) => void) | null = null;
 
   private constructor(
     private readonly room: RoomLink,
@@ -168,8 +173,14 @@ export class OnlineGame implements GameMode {
     let n = 0;
     this.pinger = setInterval(() => {
       room.ping((ms) => (this.stats.ping = ms));
+      // offline: which way the phones' connection runs
+      void room.route?.().then((r) => (this.stats.route = r));
       // Every 5 s of a match the numbers go to the server's log, so nobody has to send screenshots.
-      if (++n % 5 === 0 && this.lobby?.phase === "playing") room.send(C2S.stats, { ...this.stats.report(navigator.userAgent), ...memoryUse() });
+      if (++n % 5 === 0 && this.lobby?.phase === "playing") {
+        const stats = { ...this.stats.report(navigator.userAgent), ...memoryUse() };
+        if (this.report) this.report(stats);
+        else room.send(C2S.stats, stats);
+      }
     }, 1000);
     // Handlers are attached: ask for the current state (earlier broadcasts were dropped).
     room.send(C2S.sync);

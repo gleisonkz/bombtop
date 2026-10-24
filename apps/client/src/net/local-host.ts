@@ -1,5 +1,6 @@
 import { MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
 import type { LanRoomInfo } from "./lan";
+import { worstRoute, type Route } from "./rtc-route";
 import type { RoomLink } from "./room-link";
 import { TickClock } from "../loop/tick-clock";
 
@@ -9,6 +10,8 @@ export interface Wire {
   onMessage(callback: (data: string) => void): void;
   onClose(callback: () => void): void;
   close(): void;
+  /** Which way the connection runs (a WebRTC data channel tells; see rtc-route.ts). */
+  route?(): Promise<Route | null>;
 }
 
 /** Wire messages besides the room's own (C2S/S2C) ones. */
@@ -90,6 +93,8 @@ export class LocalHost {
       onMessage: (type, cb) => listen(handlers, type, cb),
       onLeave: (cb) => leaveHandlers.push(cb),
       ping: (cb) => cb(0),
+      // on this device: the friends' connections are what count
+      route: () => Promise.all([...this.wires.values()].map((w) => w.route?.() ?? null)).then(worstRoute),
       leave: async () => {
         left(id);
         for (const cb of leaveHandlers) cb(1000);
@@ -219,6 +224,10 @@ export class PeerLink implements RoomLink {
     const n = ++this.pingSeq;
     this.pings.set(n, callback);
     this.wire.send(JSON.stringify([PING, [n, performance.now()]]));
+  }
+
+  route(): Promise<Route | null> {
+    return this.wire.route?.() ?? Promise.resolve(null);
   }
 
   async leave(): Promise<void> {

@@ -1,9 +1,12 @@
+import type { Route } from "../net/rtc-route";
 import { debugOn } from "./dev-tools";
 import { el, storage } from "./dom";
 
 /** A second's worth of what the connection looked like on this screen. */
 export class NetStats {
   ping: number | null = null;
+  /** An offline match: which way the connection between the phones runs (null online). */
+  route: Route | null = null;
   private elapsed = 0;
   private frames = 0;
   private late = 0;
@@ -27,9 +30,10 @@ export class NetStats {
   }
 
   /** What goes to the server's log; starts the worst-gap window over. */
-  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; slow: number; missed: number; work: number; jumpMe: number; jumpOthers: number; ua: string } {
+  report(ua: string): { ping?: number; delay: number; fps: number; late: number; gap: number; slow: number; missed: number; work: number; jumpMe: number; jumpOthers: number; ua: string; route?: Route["via"] } {
     const out = {
       ...(this.ping === null ? {} : { ping: this.ping }),
+      ...(this.route ? { route: this.route.via } : {}),
       delay: Math.round(this.delay),
       fps: this.shown.fps,
       late: this.shown.late,
@@ -72,7 +76,9 @@ export class NetStats {
 
   summary(): string {
     const ping = this.ping === null ? "–" : Math.round(this.ping);
-    return `ping ${ping} ms · atraso ${Math.round(this.delay)} ms · ${this.shown.fps} fps · ${this.shown.late} quadros sem snapshot`;
+    const rtt = this.route?.rtt === undefined ? "" : ` (${this.route.rtt} ms)`;
+    const route = this.route ? ` · ${this.route.via === "wifi" ? "Wi-Fi direto" : "pela internet"}${rtt}` : "";
+    return `ping ${ping} ms · atraso ${Math.round(this.delay)} ms · ${this.shown.fps} fps · ${this.shown.late} quadros sem snapshot${route}`;
   }
 }
 

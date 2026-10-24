@@ -149,6 +149,22 @@ describe("LocalHost", () => {
     expect(closed).toEqual([1]);
   });
 
+  it("tells which way each connection runs: a friend reads its own wire's, the host the worst of its friends'", async () => {
+    const host = new LocalHost();
+    const me = host.hostLink("Ana", "bomb");
+    const [hostA, guestA] = wires();
+    const [hostB, guestB] = wires();
+    Object.assign(hostA, { route: async () => ({ via: "wifi", rtt: 5 }) });
+    Object.assign(hostB, { route: async () => ({ via: "internet", rtt: 180 }) });
+    Object.assign(guestA, { route: async () => ({ via: "wifi", rtt: 5 }) });
+    host.addPeer(hostA);
+    host.addPeer(hostB);
+    const bia = await PeerLink.join(guestA, "Bia", "bomb");
+    await PeerLink.join(guestB, "Caio", "bomb");
+    expect(await bia.route()).toEqual({ via: "wifi", rtt: 5 });
+    expect(await me.route!()).toEqual({ via: "internet", rtt: 180 });
+  });
+
   it("pings answer over the wire", async () => {
     const host = new LocalHost();
     host.hostLink("Ana", "bomb");

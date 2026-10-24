@@ -16,6 +16,17 @@ describe("NetStats", () => {
     expect(s.summary()).toContain("30 fps · 0 quadros");
   });
 
+  it("an offline match shows which way its connection runs, and sends it in its report", () => {
+    const s = new NetStats();
+    s.route = { via: "wifi", rtt: 6 };
+    expect(s.summary()).toContain("Wi-Fi direto (6 ms)");
+    expect(s.report("ua")).toMatchObject({ route: "wifi" });
+    s.route = { via: "internet" };
+    expect(s.summary()).toContain("pela internet");
+    expect(s.report("ua")).toMatchObject({ route: "internet" });
+    expect(new NetStats().report("ua")).not.toHaveProperty("route");
+  });
+
   it("shows a dash before the first ping comes back", () => {
     expect(new NetStats().summary()).toContain("ping – ms");
   });
