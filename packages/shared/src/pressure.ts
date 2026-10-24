@@ -1,4 +1,4 @@
-import { PRESSURE_INTERVAL, ROUND_TICKS } from "./constants";
+import { PRESSURE_INTERVAL } from "./constants";
 import { getTile, playerTile, setTile, Tile, type MatchState } from "./state";
 
 /** Interior tiles in a clockwise spiral from the top-left corner inward. */
@@ -18,9 +18,9 @@ export function pressureOrder(width: number, height: number): { x: number; y: nu
   return out;
 }
 
-/** After ROUND_TICKS, drops a wall on the next spiral tile every PRESSURE_INTERVAL ticks. */
+/** From `pressureAt` (ROUND_TICKS, or sooner once only bots are left), drops a wall on the next spiral tile every PRESSURE_INTERVAL ticks. */
 export function updatePressure(s: MatchState): void {
-  const elapsed = s.tick - ROUND_TICKS - 1;
+  const elapsed = s.tick - s.pressureAt - 1;
   if (elapsed < 0 || elapsed % PRESSURE_INTERVAL !== 0) return;
 
   const order = pressureOrder(s.grid.width, s.grid.height);
@@ -28,16 +28,20 @@ export function updatePressure(s: MatchState): void {
     s.pressure++;
   }
   const target = order[s.pressure];
-  if (!target) return;
-  s.pressure++;
-
-  const { x, y } = target;
-  setTile(s, x, y, Tile.Wall);
-  s.bombs = s.bombs.filter((b) => !(b.x === x && b.y === y && !b.air));
-  s.items = s.items.filter((i) => !(i.x === x && i.y === y));
+  if (target) {
+    s.pressure++;
+    const { x, y } = target;
+    setTile(s, x, y, Tile.Wall);
+    s.bombs = s.bombs.filter((b) => !(b.x === x && b.y === y && !b.air));
+    s.items = s.items.filter((i) => !(i.x === x && i.y === y));
+    // a block burning there would clear its tile when its flame died, taking the wall with it
+    s.flames = s.flames.filter((f) => !(f.x === x && f.y === y));
+  }
+  // Crushed: no mount or invulnerability saves you. Whoever stands inside any fallen wall counts, not only under the one
+  // falling now: a player half across a tile's edge as it fell ended up inside it, alive, and the match never ended.
   for (const p of s.players) {
     const t = playerTile(p);
-    if (t.x === x && t.y === y) p.alive = false; // crushed: no mount or invulnerability saves you
+    if (p.alive && getTile(s, t.x, t.y) === Tile.Wall) p.alive = false;
   }
 }
 

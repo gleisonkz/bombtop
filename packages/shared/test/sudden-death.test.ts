@@ -68,6 +68,24 @@ describe("sudden death", () => {
     expect(player(s).alive).toBe(false);
   });
 
+  it("whoever ends up inside a fallen wall (half across its edge when it fell) is crushed too: the match always ends", () => {
+    const s = atSuddenDeath();
+    placePlayerAt(s, "p1", 5, 5);
+    s.grid.tiles[5 * s.grid.width + 5] = Tile.Wall; // a wall already down where p1 stands
+    step(s); // the next wall falls elsewhere (the spiral's first tile)
+    expect(player(s).alive).toBe(false);
+    expect(player(s, "p2").alive).toBe(true);
+  });
+
+  it("a wall falling on a burning block stays when its flame dies out (it used to leave a hole the match never closed)", () => {
+    const s = atSuddenDeath();
+    const [first] = pressureOrder(s.grid.width, s.grid.height);
+    s.grid.tiles[first!.y * s.grid.width + first!.x] = Tile.Block;
+    s.flames.push({ x: first!.x, y: first!.y, ttl: 20, ownerId: "p1", block: true } as (typeof s.flames)[number]);
+    run(s, 40);
+    expect(getTile(s, first!.x, first!.y)).toBe(Tile.Wall);
+  });
+
   it("a falling wall destroys bombs and items under it", () => {
     const s = atSuddenDeath();
     placePlayerAt(s, "p2", 1, 1);
