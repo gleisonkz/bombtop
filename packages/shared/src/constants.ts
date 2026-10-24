@@ -117,6 +117,9 @@ export const TRUCK_TICKS_PER_TILE = 4;
 export const TRUCK_TICKS = TRUCK_RANGE * TRUCK_TICKS_PER_TILE;
 export const TRUCK_COOLDOWN = 25 * TICK_RATE;
 
+/** Pelé's kick: how far the ball flies; the first player it hits is knocked down, stunned SPECIAL_STUN_TICKS. */
+export const BALL_RANGE = 7;
+
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;
 

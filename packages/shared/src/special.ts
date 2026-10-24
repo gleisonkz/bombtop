@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, BALL_RANGE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -24,6 +24,8 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Penelope: blows a kiss the same way that charms the first player within KISS_RANGE tiles, stunned.
  * Pink panther: tiptoes out of the rivals' sight for SNEAK_TICKS.
  * Harry: expecto patronum, his stag gallops straight ahead (see `patronus`).
+ * Pelé: kicks a ball the same way that knocks down the first player within BALL_RANGE tiles, stunned; a bomb in its way is
+ *   kicked off sliding.
  * Optimus: roll out, turns into his truck and drives straight ahead (see `updateTruck`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
@@ -36,6 +38,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "spider") {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "pele") {
+    blast(s, "ball", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "penelope") {
     blast(s, "kiss", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "harry") {
@@ -106,6 +110,7 @@ const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | 
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
   kiss: { range: KISS_RANGE, strike: (p) => (p.stun = p.charmed = SPECIAL_STUN_TICKS) },
+  ball: { range: BALL_RANGE, strike: (p) => ((p.stun = SPECIAL_STUN_TICKS), (p.charge = p.rasengan = p.truck = 0)) },
   magnet: {
     range: MAGNET_RANGE,
     // The tiles between are clear (the blast stopped at the first thing in its way), so the pull always lands.
@@ -127,7 +132,10 @@ function blast(s: MatchState, kind: keyof typeof BLASTS, ownerId: string, from: 
   for (let i = 1; i <= range; i++) {
     const tx = from.x + dx * i;
     const ty = from.y + dy * i;
-    if (getTile(s, tx, ty) !== Tile.Empty || bombAt(s, tx, ty)) break;
+    const bomb = bombAt(s, tx, ty);
+    // pelé's ball kicks a bomb in its way off sliding (and stops there)
+    if (bomb && kind === "ball" && getTile(s, tx, ty) === Tile.Empty && !bomb.air && !bomb.heldBy) bomb.slide = dir;
+    if (getTile(s, tx, ty) !== Tile.Empty || bomb) break;
     length = i;
     const shield = shieldAt(s, tx, ty, dx, dy);
     if (shield) {
