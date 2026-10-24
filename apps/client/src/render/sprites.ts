@@ -587,6 +587,34 @@ export const SHEETS = {
   },
 
 
+  pele: {
+    url: "sprites/pele.png",
+    width: 1098,
+    height: 2839,
+    frameW: 122,
+    frameH: 167,
+    anchorX: 61.5,
+    anchorY: 154,
+    bodyH: 152,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His kick: the leg drawn back, struck through, followed through high (the ball is its own art, BALL). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Keepy-uppy, the ball sent up and away, and his jump punching the air in a shower of confetti (scripts/build-pele-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/pele-lobby.png", width: 4800, height: 230, frameW: 300, frameH: 230, anchorX: 150.5, anchorY: 226 } },
+    /** His blue shorts (the CBF crest's blue goes with them). */
+    hues: [205, 230],
+    hueBase: [30, 72, 137],
+    scale: 0.142,
+  },
+
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png",
@@ -1425,4 +1453,36 @@ export function truckLook(p: Pick<Player, "truck" | "facing">, tick: number): { 
   if (p.truck <= 0 || p.truck > TRUCK_TICKS) return null;
   const view = p.facing === "down" ? "down" : p.facing === "up" ? "up" : "side";
   return { view, flip: p.facing === "left", frame: Math.floor(tick / TRUCK_FRAME_TICKS) % TRUCK.frames };
+}
+
+/** Pelé's soccer ball (scripts/build-ball.py): one 32 px frame, spun by the renderer. */
+export const BALL = { url: "sprites/ball.png", size: 32, scale: 0.32 };
+/** Ticks the ball takes per tile on its way (fast: a kick). */
+const BALL_TICKS_PER_TILE = 1.5;
+
+/**
+ * Pelé's ball `age` ticks after the kick, from his feet (x0,y0) to where it stopped (x1,y1) `length` tiles off: flying
+ * there in an arc, spinning, then dropping back a little off whatever stopped it, bouncing low, and fading out before
+ * its blast is gone (null then). `lift`: how high it is (its shadow stays on the ground).
+ */
+export function ballLook(x0: number, y0: number, x1: number, y1: number, length: number, age: number): { x: number; y: number; lift: number; spin: number; alpha: number } | null {
+  if (age >= BLAST_TICKS) return null;
+  const flight = Math.max(4, length * BALL_TICKS_PER_TILE);
+  const spin = age * 0.7;
+  const alpha = Math.min(1, (BLAST_TICKS - age) / 10);
+  if (age < flight) {
+    const t = age / flight;
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, lift: Math.sin(Math.PI * t) * (3 + length), spin, alpha };
+  }
+  // the rebound: back off what it hit, two low bounces
+  const after = Math.min(1, (age - flight) / 14);
+  const len = Math.hypot(x1 - x0, y1 - y0) || 1;
+  const back = 6 * after;
+  return {
+    x: x1 - ((x1 - x0) / len) * back,
+    y: y1 - ((y1 - y0) / len) * back,
+    lift: Math.abs(Math.sin(Math.PI * 2 * after)) * 3 * (1 - after),
+    spin: flight * 0.7 + (age - flight) * 0.25 * (1 - after),
+    alpha,
+  };
 }

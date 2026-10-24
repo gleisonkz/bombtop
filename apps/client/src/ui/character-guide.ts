@@ -325,6 +325,25 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  pele: {
+    name: "Pelé",
+    title: "O Rei do Futebol",
+    color: "#f2c61f",
+    story:
+      "Edson Arantes do Nascimento, o Rei. Fez mais de mil gols, foi tricampeão do mundo com a seleção e transformou a camisa amarela e a 10 em lenda. Na arena ele troca a bomba pelo pé: domina, levanta a cabeça e manda a bola onde quer. O short azul fica na cor do jogador.",
+    special: {
+      name: "Chute de craque",
+      recharge: "20 s",
+      text: "Chuta uma bola reta para a frente, até 7 casas. O primeiro jogador que ela acerta cai tonto por 3 s. Se uma bomba estiver no caminho, a bola chuta a bomba e ela sai deslizando para longe. Paredes e blocos seguram a bola, e o escudo do Capitão devolve o chute em quem chutou.",
+      tips: [
+        "Alcance de 7 casas: acerte o rival lá do outro lado do corredor.",
+        "Tem uma bomba entre vocês? Chute nela: a bola manda a bomba deslizando na direção do rival.",
+        "Rival tonto? Corra e solte uma bomba do lado dele: são 3 s parado.",
+        "Bloco no caminho segura a bola: limpe o corredor antes.",
+        "Cuidado com o Capitão de escudo erguido: a bola volta em você.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

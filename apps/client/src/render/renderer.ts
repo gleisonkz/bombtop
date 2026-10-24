@@ -3,7 +3,7 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -157,6 +157,10 @@ export class Renderer {
   private patronusArt: Record<"side" | "down" | "up", Texture[]> | null = null;
   private readonly patronusSprites: Sprite[] = [];
   private patronusUsed = 0;
+  /** Pelé's balls in flight. */
+  private ballArt: Texture | null = null;
+  private readonly ballSprites: Sprite[] = [];
+  private ballUsed = 0;
   /** Optimus's truck, one per player driving it, among the players (sorted by depth with them). */
   private truckArt: Record<"side" | "down" | "up", Texture[]> | null = null;
   private readonly truckSprites = new Map<string, Sprite>();
@@ -353,6 +357,44 @@ export class Renderer {
     const { size, frames, rows } = PATRONUS;
     const row = (r: number) => Array.from({ length: frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * size, r * size, size, size) }));
     this.patronusArt = { side: row(rows.side), down: row(rows.down), up: row(rows.up) };
+  }
+
+  async useBallArt(): Promise<void> {
+    const tex: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BALL.url}`);
+    tex.source.scaleMode = "nearest";
+    this.ballArt = tex;
+  }
+
+  /** Pelé's ball flying from his feet to where it stopped (its shadow on the ground under it), then rebounding. */
+  private drawBall(g: Graphics, b: Blast): void {
+    const [dx, dy] = DIR_VECTORS[b.dir];
+    const center = (t: number) => t * TILE_PX + TILE_PX / 2;
+    const at = this.lastSeen.get(b.ownerId);
+    const ox = (at?.cx ?? center(b.x)) + dx * 5;
+    const oy = (at?.cy ?? center(b.y)) + 4 + dy * 4;
+    const x1 = center(b.x + dx * b.length) - dx * 4;
+    const y1 = center(b.y + dy * b.length) + 4 - dy * 4;
+    const look = ballLook(ox, oy, dx ? x1 : ox, dy ? y1 : oy, b.length, BLAST_TICKS - b.ttl);
+    if (!look) return;
+    g.ellipse(look.x, look.y + 2, 3, 1.2).fill({ color: 0x000000, alpha: 0.3 * look.alpha });
+    if (!this.ballArt) {
+      g.circle(look.x, look.y - look.lift, 3).fill({ color: 0xffffff, alpha: look.alpha }).stroke({ color: 0x000000, width: 0.8 });
+      return;
+    }
+    let sprite = this.ballSprites[this.ballUsed];
+    if (!sprite) {
+      sprite = new Sprite(this.ballArt);
+      sprite.anchor.set(0.5);
+      this.ballSprites.push(sprite);
+      this.beamLayer.addChild(sprite);
+    }
+    this.ballUsed++;
+    sprite.texture = this.ballArt;
+    sprite.scale.set(BALL.scale);
+    sprite.rotation = look.spin;
+    sprite.alpha = look.alpha;
+    sprite.position.set(look.x, look.y - look.lift);
+    sprite.visible = true;
   }
 
   async useTruckArt(): Promise<void> {
@@ -941,7 +983,9 @@ export class Renderer {
 
     this.kameUsed = 0;
     this.patronusUsed = 0;
+    this.ballUsed = 0;
     for (const b of s.blasts) this.drawBlast(top, b);
+    for (let i = this.ballUsed; i < this.ballSprites.length; i++) this.ballSprites[i]!.visible = false;
     for (let i = this.kameUsed; i < this.kameSprites.length; i++) this.kameSprites[i]!.visible = false;
     for (let i = this.rasenUsed; i < this.rasenSprites.length; i++) this.rasenSprites[i]!.visible = false;
     for (let i = this.patronusUsed; i < this.patronusSprites.length; i++) this.patronusSprites[i]!.visible = false;
@@ -960,7 +1004,9 @@ export class Renderer {
   /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
   private drawBlast(g: Graphics, b: Blast): void {
     if (b.kind === "thunder") return this.drawThunder(g, b);
-    if (b.length === 0 || b.kind === "rasengan") return; // the rasengan is drawn with its caster
+    if (b.kind === "ball") return this.drawBall(g, b);
+    // the rasengan is drawn with its caster, as optimus's truck stands in for him
+    if (b.length === 0 || b.kind === "rasengan" || b.kind === "truck") return;
     const [dx, dy] = DIR_VECTORS[b.dir];
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
     const x1 = center(b.x + dx * b.length);

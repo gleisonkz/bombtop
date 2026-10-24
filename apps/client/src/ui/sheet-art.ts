@@ -2,7 +2,7 @@ import { TICK_RATE, type CharacterId } from "@bombtop/shared";
 import { CAST_TICKS_PER_FRAME, paintSheet, SHEETS, type SheetLayout, type Strip } from "../render/sprites";
 
 /** The sheet each character is drawn from, in the arena and in the menus. */
-export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku, naruto: SHEETS.naruto, spider: SHEETS.spider, pikachu: SHEETS.pikachu, static: SHEETS.static, flash: SHEETS.flash, bugs: SHEETS.bugs, lantern: SHEETS.lantern, donatello: SHEETS.donatello, penelope: SHEETS.penelope, panther: SHEETS.panther, harry: SHEETS.harry, optimus: SHEETS.optimus };
+export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS.bomber, ninja: SHEETS.ninja, captain: SHEETS.captain, thor: SHEETS.thor, goku: SHEETS.goku, naruto: SHEETS.naruto, spider: SHEETS.spider, pikachu: SHEETS.pikachu, static: SHEETS.static, flash: SHEETS.flash, bugs: SHEETS.bugs, lantern: SHEETS.lantern, donatello: SHEETS.donatello, penelope: SHEETS.penelope, panther: SHEETS.panther, harry: SHEETS.harry, optimus: SHEETS.optimus, pele: SHEETS.pele };
 
 /** `walk`: the lobby pose (or walking); `win`: the victory pose (or the lobby pose). */
 export type PreviewState = "walk" | "win" | "idle" | "dizzy";

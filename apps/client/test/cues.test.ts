@@ -260,6 +260,14 @@ describe("soundCues", () => {
     expect(soundCues(drive, back)).toEqual([{ name: "transform", x: 4.5 }]);
   });
 
+  it("hears pelé's ball kicked off, where he kicked it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 5, ttl: BLAST_TICKS - 1, kind: "ball" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "kickball", x: 2.5 }]);
+  });
+
   it("hears the green lantern's bubble rising round him and giving way", () => {
     const v = view();
     const up = later(v, (n) => {

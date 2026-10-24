@@ -113,6 +113,13 @@ from our own skeletons, a lobby swirling the wand and a victory jump); laid out 
 rows = `SHEETS.harry`. The stag is a PixelLab image (`scripts/build-patronus.py`); the lobby's stag run and sparkles and the
 victory's golden snitch are laid out and drawn by `scripts/build-harry-lobby.py` and `scripts/build-lobby-image.py`.
 
+## pele.png, pele-lobby.png, ball.png
+
+Fan art of Pelé (Edson Arantes do Nascimento) in the 1970 Brazil kit, for this non-commercial project, made in PixelLab
+(pixellab.ai) (character "Pele HD"; his kick, carry walk, keepy-uppy and jump posed from our own skeletons); laid out by
+`scripts/build-character-sheet.py pele`; rows = `SHEETS.pele`. The ball is a PixelLab image (`scripts/build-ball.py`); the
+lobby's ball and confetti are drawn by `scripts/build-pele-lobby.py`, laid out by `scripts/build-lobby-image.py`.
+
 ## optimus.png, optimus-lobby.png, truck.png
 
 Fan art of Optimus Prime (Hasbro / Takara Tomy) for this non-commercial project, made in PixelLab (pixellab.ai) (character

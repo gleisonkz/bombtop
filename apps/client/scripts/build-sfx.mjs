@@ -35,6 +35,10 @@
 // Sounds: Transformers (2007)"), "Autobots, roll out!" = 480880, "Till all are one" = 480883 and his groan = 24039769 (board
 // "Optimus Prime Soundboard"), his transforming = the cartoon's sound, 24139864 "Transform OG" (board "Transform Soundboard"),
 // his truck's engine = 24039944 "Optimus Prime Rev"; the site's clips start with a short tag, cut off (from), under optimus/;
+// pelé, who left no game voice there, is heard through Galvão Bueno's commentary on the same site, board "Galvão
+// Soundboard": "O homem é gênio, é uma fera, é uma lenda do esporte!" = sound 24015411, "Olha o gol!" = 24015287, "É tetra!"
+// = 24015278, "Ai, ai, ai, ai" = 24015337, under pele/; his kick = "Soccer Ball Kick" by bittermelonheart (CC0),
+// https://freesound.org/s/555042/ (saved as freesound/555042_11910076-hq.mp3);
 // the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -69,6 +73,7 @@ const PENNY = (name) => join(SRC, "penny-wr", `${name}.mp3`);
 const PINK = (name) => join(SRC, "pink", `${name}.mp3`);
 const HARRY = (name) => join(SRC, "harry", `${name}.mp3`);
 const OPTIMUS = (name) => join(SRC, "optimus", `${name}.mp3`);
+const PELE = (name) => join(SRC, "pele", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -239,6 +244,12 @@ const RECIPE = {
   "optimus-death": { src: BASS_DOWN, len: 2.2, layer: { src: OPTIMUS("24039769-optimus-prime-uhuhua"), from: 4.45, len: 1.7, gain: -3 } },
   "optimus-win": { src: OPTIMUS("480883-until-that-day-till-all-are-one"), from: 3.7, len: 2.9 },
   "optimus-special": { src: OPTIMUS("480880-autobots-roll-out"), from: 1.1, len: 2.5 },
+  "pele-pick": { src: PELE("24015411-galvao-lenda"), from: 0.26, len: 4.0 },
+  "pele-death": { src: PELE("24015337-galvao-ai-ai-ai-ai"), from: 0.92, len: 1.15 },
+  "pele-win": { src: PELE("24015278-e-tetra-e-tetra"), from: 1.66, len: 2.6 },
+  "pele-special": { src: PELE("24015287-galvao-olha-o-gol"), from: 0.87, len: 1.9 },
+  // pelé's kick: a ball struck hard
+  kickball: { src: FS("555042_11910076-hq.mp3"), len: 0.6 },
   // optimus turning into his truck (or back): the cartoon's transforming sound; the truck's engine roaring off
   transform: { src: OPTIMUS("24139864-transform-og"), from: 0.8, len: 1.25 },
   truck: { src: OPTIMUS("24039944-optimus-prime-rev"), from: 0.7, len: 1.3 },

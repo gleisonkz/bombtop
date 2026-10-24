@@ -1054,3 +1054,21 @@ describe("optimus's truck", () => {
     expect(frames).toEqual(new Set(Array.from({ length: TRUCK.frames }, (_, f) => f))); // its wheels turning, its cab rocking
   });
 });
+
+describe("pelé's ball", () => {
+  it("flies from his feet to where it stopped in a few ticks, spinning and bouncing, then drops back off it and fades", async () => {
+    const { ballLook } = await import("../src/render/sprites");
+    const start = ballLook(0, 0, 112, 0, 7, 0)!;
+    expect(start.x).toBeCloseTo(0);
+    const mid = ballLook(0, 0, 112, 0, 7, 5)!;
+    expect(mid.x).toBeGreaterThan(0);
+    expect(mid.x).toBeLessThan(112);
+    const arrived = ballLook(0, 0, 112, 0, 7, 12)!;
+    expect(arrived.x).toBeLessThanOrEqual(112);
+    expect(arrived.x).toBeGreaterThan(100);
+    expect(ballLook(0, 0, 112, 0, 7, 3)!.spin).not.toBe(ballLook(0, 0, 112, 0, 7, 4)!.spin);
+    expect(ballLook(0, 0, 112, 0, 7, 30)!.alpha).toBeLessThan(1);
+    expect(ballLook(0, 0, 112, 0, 7, BLAST_TICKS)).toBeNull();
+    expect(ballLook(0, 0, 112, 0, 7, 4)!.lift).toBeGreaterThan(0); // in the air on its way
+  });
+});

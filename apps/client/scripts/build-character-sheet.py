@@ -82,9 +82,14 @@
     turning into his truck: the crouching template, down then back up (OPTIMUS_CAST; the side's last frame smeared, so it
     stops at the fourth); the truck itself is its own art (build-truck.py); carry walk posed from our own skeletons (the
     back view asked "seen from behind"); his lobby is its own image (build-optimus-lobby.py).
+  pele: sprites/pele.png, character "Pele HD" (180px canvas, standard mode; the 1970 Brazil kit: yellow jersey with a
+    green collar and cuffs, blue shorts, which take the player's color, white socks, black cleats). Idle front = the
+    still rotation bobbing (the breathing template shut his eyes); cast = his kick and carry walk posed from our own
+    skeletons (the kick asked "at empty air": PixelLab drew a ball of its own, and the ball is the renderer's, BALL);
+    his lobby is its own image (build-pele-lobby.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -252,6 +257,16 @@ CHARACTERS = {
         ("stun", "stun", "south", 6),
         ("death", "death", "south", 7),
         ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+    ],
+    # cast = his kick (our own skeletons, no ball: the renderer draws it); his lobby lives in its own image
+    "pele": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "kick", "south", 9), ("cast.side", "kick", "east", 9), ("cast.up", "kick", "north", 9),
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
     ],
@@ -586,6 +601,18 @@ def optimus_frames(src, folder, d):
     return None
 
 
+def pele_frames(src, folder, d):
+    """His frames by sheet folder: idle front is his rotation bobbing (the breathing template shut his eyes); carry idle
+    is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    return None
+
+
 def no_floor_shadow(im):
     """PixelLab drew a gray shadow ellipse under the pink panther's feet: the grays low in the frame go."""
     a = np.array(im.convert("RGBA")).astype(int)
@@ -706,7 +733,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":

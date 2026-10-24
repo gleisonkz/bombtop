@@ -154,7 +154,7 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** The player color (by seat) each character wears in their scene, as in the menus: the ninja in ice blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3 };
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3, pele: 3 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
@@ -277,6 +277,17 @@ const SPECIALS: Record<CharacterId, Scene> = {
       you.facing = "right";
     },
     // Expecto patronum down the corridor: his stag runs through his rival, leaving him dizzy.
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  pele: {
+    characters: { you: "pele", rival: "captain" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    // His kick down the corridor: the ball knocks his rival down from afar.
     you: [{ wait: 30 }, { press: "special" }],
     seconds: 5,
   },
