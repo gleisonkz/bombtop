@@ -3,8 +3,8 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
-import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
 export const TILE_PX = 16;
@@ -13,6 +13,9 @@ const COLORS = {
   heart: 0xff4f9a,
   /** The glow round harry's stag and its sparkles. */
   patronus: 0xbfe8ff,
+  energon: 0x7fd0ff,
+  exhaust: 0x8c8c96,
+  truck: 0xd8262e,
   /** The puff the pink panther leaves as he slips out of sight. */
   sneakPuff: 0xf7a6cf,
   heartShine: 0xffd0e6,
@@ -151,6 +154,14 @@ export class Renderer {
   private patronusArt: Record<"side" | "down" | "up", Texture[]> | null = null;
   private readonly patronusSprites: Sprite[] = [];
   private patronusUsed = 0;
+  /** Optimus's truck, one per player driving it, among the players (sorted by depth with them). */
+  private truckArt: Record<"side" | "down" | "up", Texture[]> | null = null;
+  private readonly truckSprites = new Map<string, Sprite>();
+  /** Who is turning into the truck, and who drives it: each change bursts into plates and sparks. */
+  private shifting = new Set<string>();
+  private driving = new Set<string>();
+  /** Last tick each truck puffed exhaust. */
+  private exhaustAt = new Map<string, number>();
   private rasenUsed = 0;
   private bubbleArt: Texture[][] | null = null;
   private readonly bubbleSprites: Sprite[] = [];
@@ -302,6 +313,70 @@ export class Renderer {
     const { size, frames, rows } = PATRONUS;
     const row = (r: number) => Array.from({ length: frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * size, r * size, size, size) }));
     this.patronusArt = { side: row(rows.side), down: row(rows.down), up: row(rows.up) };
+  }
+
+  async useTruckArt(): Promise<void> {
+    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${TRUCK.url}`);
+    base.source.scaleMode = "nearest";
+    const { w, h, frames, rows } = TRUCK;
+    const row = (r: number) => Array.from({ length: frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * w, r * h, w, h) }));
+    this.truckArt = { side: row(rows.side), down: row(rows.down), up: row(rows.up) };
+  }
+
+  /**
+   * Optimus turning into his truck and driving it: a blue glow as he turns, plates and sparks bursting when he becomes
+   * the truck and when he turns back, the truck (rumbling, puffing exhaust from its stacks, speed lines behind it)
+   * in his place while he drives, its wheels turning. True while the truck stands in for him.
+   */
+  private drawTruck(g: Graphics, p: Pick<PublicView["players"][number], "id" | "truck" | "facing">, cx: number, cy: number, tick: number, alpha: number): boolean {
+    if (p.truck > TRUCK_TICKS) {
+      const t = 1 - (p.truck - TRUCK_TICKS) / 12;
+      g.circle(cx, cy - 6, 6 + t * 6).fill({ color: COLORS.energon, alpha: 0.12 + 0.2 * t });
+      g.circle(cx, cy - 6, 3 + t * 3).fill({ color: 0xffffff, alpha: 0.15 * t });
+      if (!this.shifting.has(p.id) && !this.lite) this.fx.transform(cx, cy - 8);
+      this.shifting.add(p.id);
+    } else this.shifting.delete(p.id);
+    const look = truckLook(p, tick);
+    if (!look) {
+      if (this.driving.has(p.id) && !this.lite) this.fx.transform(cx, cy - 6);
+      this.driving.delete(p.id);
+      return false;
+    }
+    if (!this.driving.has(p.id) && !this.lite) this.fx.transform(cx, cy - 6);
+    this.driving.add(p.id);
+    const [dx, dy] = DIR_VECTORS[p.facing];
+    // speed lines behind it
+    for (let k = 0; k < 3; k++) {
+      const off = (k - 1) * 5 - 6;
+      const len = 6 + ((tick + k * 3) % 5);
+      const bx = cx - dx * 12;
+      const by = cy - dy * 8;
+      if (dx) g.moveTo(bx, by + off).lineTo(bx - dx * len, by + off).stroke({ color: 0xffffff, width: 1, alpha: 0.55 * alpha });
+      else g.moveTo(bx + off + 6, by).lineTo(bx + off + 6, by - dy * len).stroke({ color: 0xffffff, width: 1, alpha: 0.55 * alpha });
+    }
+    // exhaust from the stacks, now and then
+    if (!this.lite && tick - (this.exhaustAt.get(p.id) ?? -99) >= 5) {
+      this.exhaustAt.set(p.id, tick);
+      this.fx.puff(cx - dx * 6, cy - 20 - dy * 4, COLORS.exhaust);
+    }
+    if (!this.truckArt) {
+      g.roundRect(cx - 10, cy - 12, 20, 14, 3).fill({ color: COLORS.truck, alpha }).stroke({ color: 0x000000, width: 1 });
+      return true;
+    }
+    let sprite = this.truckSprites.get(p.id);
+    if (!sprite) {
+      sprite = new Sprite();
+      sprite.anchor.set(TRUCK.anchorX / TRUCK.w, TRUCK.anchorY / TRUCK.h);
+      this.truckSprites.set(p.id, sprite);
+      this.people.addChild(sprite);
+    }
+    sprite.texture = this.truckArt[look.view][look.frame]!;
+    sprite.scale.set(look.flip ? -TRUCK.scale : TRUCK.scale, TRUCK.scale);
+    sprite.position.set(cx, cy + 6);
+    sprite.zIndex = cy;
+    sprite.alpha = alpha;
+    sprite.visible = true;
+    return true;
   }
 
   /** Harry's stag galloping along his patronus (its feet on the path), glowing, with sparkles trailing it. */
@@ -637,6 +712,7 @@ export class Renderer {
     const g = this.world.clear();
     const top = this.overlay.clear();
     for (const sprite of this.sprites.values()) sprite.visible = false;
+    for (const sprite of this.truckSprites.values()) sprite.visible = false;
     for (const sprite of this.bombSprites) sprite.visible = false;
     let bombs = 0;
     const { width, height } = s.grid;
@@ -754,7 +830,7 @@ export class Renderer {
         const shielding = bracing(p, moving);
         const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, sneaking: p.sneak > 0, tick });
         this.placeSprite(skin, p.id, skinColor(p, i), f, sx, cy, tint);
-        this.sprite(p.id).alpha = seen;
+        this.sprite(p.id).alpha = character === "optimus" && this.drawTruck(top, p, cx, cy, s.tick, seen) ? 0 : seen;
         headroom = sheet.bodyH * (sheet.scale ?? 1);
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });

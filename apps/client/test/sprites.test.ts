@@ -1030,3 +1030,27 @@ describe("sneakAlpha", () => {
     expect(rival[3]).toBeLessThan(1);
   });
 });
+
+describe("optimus's truck", () => {
+  it("his cast runs while he turns into the truck, and on from TRUCK_SHIFT as he turns back where it stopped", async () => {
+    const { castTicks } = await import("../src/render/sprites");
+    const { TRUCK_SHIFT, TRUCK_TICKS } = await import("@bombtop/shared");
+    expect(castTicks({ charge: 0, rasengan: 0, truck: TRUCK_SHIFT + TRUCK_TICKS }, undefined)).toBe(0);
+    expect(castTicks({ charge: 0, rasengan: 0, truck: TRUCK_TICKS + 1 }, undefined)).toBe(TRUCK_SHIFT - 1);
+    expect(castTicks({ charge: 0, rasengan: 0, truck: 0 }, { kind: "truck", ttl: BLAST_TICKS })).toBe(TRUCK_SHIFT);
+  });
+
+  it("is drawn only while he drives: from the side (flipped going left), its front coming down, its back going up", async () => {
+    const { truckLook } = await import("../src/render/sprites");
+    const { TRUCK_TICKS } = await import("@bombtop/shared");
+    expect(truckLook({ truck: 0, facing: "right" }, 0)).toBeNull();
+    expect(truckLook({ truck: TRUCK_TICKS + 1, facing: "right" }, 0)).toBeNull(); // still turning into it
+    expect(truckLook({ truck: TRUCK_TICKS, facing: "right" }, 0)).toMatchObject({ view: "side", flip: false });
+    expect(truckLook({ truck: 5, facing: "left" }, 0)).toMatchObject({ view: "side", flip: true });
+    expect(truckLook({ truck: 5, facing: "down" }, 0)).toMatchObject({ view: "down", flip: false });
+    expect(truckLook({ truck: 5, facing: "up" }, 0)).toMatchObject({ view: "up", flip: false });
+    const { TRUCK } = await import("../src/render/sprites");
+    const frames = new Set(Array.from({ length: 24 }, (_, t) => truckLook({ truck: 5, facing: "right" }, t)!.frame));
+    expect(frames).toEqual(new Set(Array.from({ length: TRUCK.frames }, (_, f) => f))); // its wheels turning, its cab rocking
+  });
+});

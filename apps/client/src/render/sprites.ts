@@ -1,4 +1,4 @@
-import { BLAST_TICKS, blastLife, PATRONUS_FADE, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -557,6 +557,34 @@ export const SHEETS = {
     keepFor: [[232, 74, 74]],
     scale: 0.137,
   },
+  optimus: {
+    url: "sprites/optimus.png",
+    width: 1566,
+    height: 3094,
+    frameW: 174,
+    frameH: 182,
+    anchorX: 90.5,
+    anchorY: 169,
+    bodyH: 164,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Turning into his truck: down into a crouch, then (where it stopped) back up (the truck is its own art, TRUCK). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** His eyes flare, he bursts into his truck, which drives off the card and brakes back in, and he rises with his fist high (scripts/build-optimus-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/optimus-lobby.png", width: 5120, height: 182, frameW: 320, frameH: 182, anchorX: 160, anchorY: 166 } },
+    /** His helmet, hands, thighs' plates and boots (the blue of his eyes and windows, a paler cyan, stay his own). */
+    hues: [200, 240],
+    hueBase: [5, 80, 174],
+    keepFor: [[245, 245, 245], [232, 74, 74]],
+    scale: 0.134,
+  },
 
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
@@ -799,22 +827,23 @@ export function beamAlpha(ticks: number): number {
 }
 
 /** Ticks before a blast in which its cast already ran (Goku's charge, Naruto's dash). */
-const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS };
+const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS, truck: TRUCK_SHIFT };
 
 /**
  * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
  * beam leaves on the thrust frame, KAME_CHARGE in), Naruto's from the start of his Rasengan dash (it
- * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, the others' from their
- * blast; undefined when not casting.
+ * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, Optimus's while he turns into his truck
+ * (and on from TRUCK_SHIFT as he turns back where it stopped), the others' from their blast; undefined when not casting.
  */
 export function castTicks(
-  p: Pick<Player, "charge" | "rasengan">,
+  p: Pick<Player, "charge" | "rasengan"> & Partial<Pick<Player, "truck">>,
   blast: (Pick<Blast, "ttl" | "kind"> & Partial<Pick<Blast, "length">>) | undefined,
   mega?: Pick<Bomb, "fuse">,
 ): number | undefined {
   if (p.charge > 0) return KAME_CHARGE - p.charge;
   if (mega) return FUSE_TICKS - mega.fuse;
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
+  if (p.truck && p.truck > TRUCK_TICKS) return TRUCK_SHIFT + TRUCK_TICKS - p.truck;
   if (!blast) return undefined;
   return (WINDUP[blast.kind] ?? 0) + blastLife({ kind: blast.kind, length: blast.length ?? 0 }) - blast.ttl;
 }
@@ -1368,4 +1397,19 @@ export function between(from: Pos, to: Pos, alpha: number): Pos {
   const jumped = Math.abs(to.px - from.px) + Math.abs(to.py - from.py) >= TILE;
   const a = alpha > 1 && jumped ? 1 : alpha;
   return { px: from.px + (to.px - from.px) * a, py: from.py + (to.py - from.py) * a };
+}
+
+/**
+ * Optimus's truck (scripts/build-truck.py): one row per view, seen from the side (a flat profile facing right), its front
+ * (coming down) and its back (going up), FRAMES frames driving each (the side's wheels turning, the cab rocking), its
+ * wheels on the anchor's line.
+ */
+export const TRUCK = { url: "sprites/truck.png", w: 128, h: 96, frames: 4, rows: { side: 0, down: 1, up: 2 }, anchorX: 64, anchorY: 90, scale: 0.26 };
+const TRUCK_FRAME_TICKS = 2;
+
+/** The truck as he drives (null while he is not driving): the view his facing shows, and its driving frame. */
+export function truckLook(p: Pick<Player, "truck" | "facing">, tick: number): { view: "side" | "down" | "up"; flip: boolean; frame: number } | null {
+  if (p.truck <= 0 || p.truck > TRUCK_TICKS) return null;
+  const view = p.facing === "down" ? "down" : p.facing === "up" ? "up" : "side";
+  return { view, flip: p.facing === "left", frame: Math.floor(tick / TRUCK_FRAME_TICKS) % TRUCK.frames };
 }

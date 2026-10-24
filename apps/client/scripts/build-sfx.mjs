@@ -31,6 +31,10 @@
 // board "Pink Panther talking" (sound 37195343), under pink/; harry's (Daniel Radcliffe) from the films on the same site,
 // "I solemnly swear that I'm up to no good" = sound 4589182, "Expecto Patronum!" = 12713471, "Mischief managed" = 12897333,
 // and his cry from Harry Potter and the Deathly Hallows Part 2 (PC), board "Harry Potter Voice" (sound 54091890), under harry/;
+// optimus prime's (Peter Cullen) from the films, on the same site: "I am Optimus Prime" = sound 11758 (board "Optimus Prime
+// Sounds: Transformers (2007)"), "Autobots, roll out!" = 480880, "Till all are one" = 480883 and his groan = 24039769 (board
+// "Optimus Prime Soundboard"), his transforming = the cartoon's sound, 24139864 "Transform OG" (board "Transform Soundboard"),
+// his truck's engine = 24039944 "Optimus Prime Rev"; the site's clips start with a short tag, cut off (from), under optimus/;
 // the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -64,6 +68,7 @@ const DONNIE = (name) => join(SRC, "donnie-sr", `${name}.mp3`);
 const PENNY = (name) => join(SRC, "penny-wr", `${name}.mp3`);
 const PINK = (name) => join(SRC, "pink", `${name}.mp3`);
 const HARRY = (name) => join(SRC, "harry", `${name}.mp3`);
+const OPTIMUS = (name) => join(SRC, "optimus", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -230,6 +235,13 @@ const RECIPE = {
   "harry-special": { src: HARRY("patronum2"), len: 3.0 },
   // harry's stag: hooves galloping off (Freesound 197212 "Horse Gallop - Loopable" by HebronTheatre, CC0) under a bright
   // shimmer of light, fading as it runs to the far wall
+  "optimus-pick": { src: OPTIMUS("11758-i-am-optimus-prime"), len: 3.8 },
+  "optimus-death": { src: BASS_DOWN, len: 2.2, layer: { src: OPTIMUS("24039769-optimus-prime-uhuhua"), from: 4.45, len: 1.7, gain: -3 } },
+  "optimus-win": { src: OPTIMUS("480883-until-that-day-till-all-are-one"), from: 3.7, len: 2.9 },
+  "optimus-special": { src: OPTIMUS("480880-autobots-roll-out"), from: 1.1, len: 2.5 },
+  // optimus turning into his truck (or back): the cartoon's transforming sound; the truck's engine roaring off
+  transform: { src: OPTIMUS("24139864-transform-og"), from: 0.8, len: 1.25 },
+  truck: { src: OPTIMUS("24039944-optimus-prime-rev"), from: 0.7, len: 1.3 },
   gallop: {
     src: FS("197212_3001728-hq.mp3"),
     from: 0.6,

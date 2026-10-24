@@ -77,9 +77,14 @@
     out, and carry walk, posed from our own skeletons (the back views asked "seen from behind": they turned to face us);
     the stag itself is its own art (build-patronus.py); his lobby (its raise and swirl posed from our own skeletons too)
     and victory are their own images (build-harry-lobby.py).
+  optimus: sprites/optimus.png, character "Optimus Prime HD" (180px canvas, standard mode; the classic red and blue
+    robot: blue helmet, silver faceplate, red chest with its truck windows; the blue takes the player's color). Cast =
+    turning into his truck: the crouching template, down then back up (OPTIMUS_CAST; the side's last frame smeared, so it
+    stops at the fourth); the truck itself is its own art (build-truck.py); carry walk posed from our own skeletons (the
+    back view asked "seen from behind"); his lobby is its own image (build-optimus-lobby.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -239,6 +244,16 @@ CHARACTERS = {
         ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+    ],
+    # cast = turning into his truck (the crouching template down and back up); the truck is its own art
+    "optimus": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
     ],
     # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
     "lantern": [
@@ -556,6 +571,21 @@ def harry_frames(src, folder, d):
     return None
 
 
+# optimus: his crouch frames over the 9 cast cells: down into the truck while he turns (cells 0-2, TRUCK_SHIFT), then
+# from the deepest back up as he turns back where it stopped (cells 3-8)
+OPTIMUS_CAST = [1, 2, 3, 3, 3, 2, 2, 1, 0]
+
+
+def optimus_frames(src, folder, d):
+    """His frames by sheet folder: the cast is his crouch down and back up; carry idle is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast":
+        return [load("crouch", i) for i in OPTIMUS_CAST]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    return None
+
+
 def no_floor_shadow(im):
     """PixelLab drew a gray shadow ellipse under the pink panther's feet: the grays low in the frame go."""
     a = np.array(im.convert("RGBA")).astype(int)
@@ -676,7 +706,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":

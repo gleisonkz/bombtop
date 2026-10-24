@@ -45,6 +45,8 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   spin: { gain: 0.6, vary: 0.05, voices: 2 },
   kiss: { gain: 0.6, vary: 0.05, voices: 2 },
   gallop: { gain: 0.65, vary: 0.04, voices: 2 },
+  transform: { gain: 0.7, vary: 0.03, voices: 2 },
+  truck: { gain: 0.65, vary: 0.04, voices: 2 },
   bubble: { gain: 0.6, vary: 0.04, voices: 2 },
   pop: { gain: 0.55, vary: 0.06, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
@@ -121,6 +123,10 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "harry-death": { gain: 0.7, vary: 0, voices: 2 },
   "harry-win": { gain: 0.7, vary: 0, voices: 1 },
   "harry-special": { gain: 0.7, vary: 0, voices: 2 },
+  "optimus-pick": { gain: 0.75, vary: 0, voices: 1 },
+  "optimus-death": { gain: 0.75, vary: 0, voices: 2 },
+  "optimus-win": { gain: 0.75, vary: 0, voices: 1 },
+  "optimus-special": { gain: 0.75, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */

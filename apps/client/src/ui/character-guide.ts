@@ -306,6 +306,25 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  optimus: {
+    name: "Optimus Prime",
+    title: "O líder dos Autobots",
+    color: "#2456c8",
+    story:
+      "Líder dos Autobots, robôs vindos do planeta Cybertron que se disfarçam de veículos. Por baixo do capacete azul e da máscara prateada bate a centelha de um herói que defende quem não pode se defender, e ele leva a Matriz da Liderança no peito. Quando a coisa aperta, vira um caminhão vermelho e passa por cima. O azul da armadura fica na cor do jogador.",
+    special: {
+      name: "Autobots, rolar!",
+      recharge: "25 s",
+      text: "Se transforma no caminhão onde está e acelera reto por até 6 casas, sem obedecer o controle. Quem estiver na frente vai sendo empurrado pelo para-choque e fica tonto por 3 s; se não tiver para onde empurrar (parede, bloco, bomba ou outro jogador atrás), o caminhão para ali. Uma bomba no caminho sai deslizando, um bloco é esmagado e queima, e o escudo do Capitão virado para ele para o caminhão e deixa o Optimus tonto.",
+      tips: [
+        "Encurrale: empurre o rival até a parede e solte uma bomba do lado enquanto ele está tonto.",
+        "Leva o rival junto: pode arrastar alguém para dentro do fogo de uma bomba prestes a explodir.",
+        "Bomba na frente? O caminhão chuta ela para longe: use para mandar bombas no rival.",
+        "Ele se transforma parado por um instante: não use com fogo chegando.",
+        "Abre caminho: o caminhão esmaga um bloco na frente.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

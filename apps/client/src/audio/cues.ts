@@ -1,4 +1,4 @@
-import { BLAST_TICKS, blastLife, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
@@ -28,6 +28,8 @@ export type CueName =
   | "spin"
   | "kiss"
   | "gallop"
+  | "transform"
+  | "truck"
   | "bubble"
   | "pop"
   | "kamehameha"
@@ -105,7 +107,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   for (const b of next.blasts) {
     if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < blastLife(b) - elapsed) continue;
     if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
-    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss", patronus: "gallop" } as const)[b.kind as string] ?? "ice";
+    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss", patronus: "gallop", truck: "transform" } as const)[b.kind as string] ?? "ice";
     cues.push({ name, x: mid(b.x) });
   }
 
@@ -130,6 +132,9 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("webbed", !was.webbed && p.webbed);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);
+    // Optimus: transforming, his truck pulling away (transforming back is heard by its blast)
+    hear("transform", !was.truck && p.truck);
+    hear("truck", was.truck > TRUCK_TICKS && p.truck > 0 && p.truck <= TRUCK_TICKS);
     hear("bubble", !was.bubble && p.bubble);
     hear("pop", was.bubble && !p.bubble);
     const shout = voiceLine(p.character, "special");

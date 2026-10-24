@@ -242,6 +242,24 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "gallop", x: 1.5 }]);
   });
 
+  it("hears optimus transform, his truck's engine roar as it pulls away, and him transform back where it stopped", async () => {
+    const { TRUCK_SHIFT, TRUCK_TICKS } = await import("@bombtop/shared");
+    const v = view();
+    const shift = later(v, (n) => {
+      n.players[0]!.truck = TRUCK_SHIFT + TRUCK_TICKS;
+    });
+    expect(names(v, shift)).toContain("transform");
+    const drive = later(shift, (n) => {
+      n.players[0]!.truck = TRUCK_TICKS - 1;
+    });
+    expect(names(shift, drive)).toEqual(["truck"]);
+    const back = later(drive, (n) => {
+      n.players[0]!.truck = 0;
+      n.blasts.push({ ownerId: "a", x: 4, y: 1, dir: "right", length: 0, ttl: BLAST_TICKS - 1, kind: "truck" });
+    });
+    expect(soundCues(drive, back)).toEqual([{ name: "transform", x: 4.5 }]);
+  });
+
   it("hears the green lantern's bubble rising round him and giving way", () => {
     const v = view();
     const up = later(v, (n) => {

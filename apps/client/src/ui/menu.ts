@@ -251,7 +251,7 @@ export class Menu {
 /**
  * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
  * and Static on his flying disc at its other side; harry, penelope (in her own pink), the green lantern and the flash at the far left, bugs munching his carrot,
- * donatello (in his own purple) and the pink panther at the far right.
+ * donatello (in his own purple), the pink panther and optimus at the far right.
  */
 function cast(): HTMLElement {
   const [white, , red, blue, green] = PLAYER_COLORS;
@@ -273,6 +273,7 @@ function cast(): HTMLElement {
     member(characterArt("bugs", blue, "walk"), "edge right"),
     member(characterArt("donatello", null, "walk"), "edge right"),
     member(characterArt("panther", blue, "walk"), "edge right"),
+    member(characterArt("optimus", blue, "walk"), "edge right"),
   ]);
 }
 

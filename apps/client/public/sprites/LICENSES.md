@@ -113,6 +113,14 @@ from our own skeletons, a lobby swirling the wand and a victory jump); laid out 
 rows = `SHEETS.harry`. The stag is a PixelLab image (`scripts/build-patronus.py`); the lobby's stag run and sparkles and the
 victory's golden snitch are laid out and drawn by `scripts/build-harry-lobby.py` and `scripts/build-lobby-image.py`.
 
+## optimus.png, optimus-lobby.png, truck.png
+
+Fan art of Optimus Prime (Hasbro / Takara Tomy) for this non-commercial project, made in PixelLab (pixellab.ai) (character
+"Optimus Prime HD"; his crouch from PixelLab's crouching template, his carry walk and raised fist posed from our own
+skeletons); laid out by `scripts/build-character-sheet.py optimus`; rows = `SHEETS.optimus`. The truck is three PixelLab
+images (side, front, back: `scripts/build-truck.py`); the lobby's glow, plates, sparks, speed lines, exhaust and dust are
+drawn by `scripts/build-optimus-lobby.py`, laid out by `scripts/build-lobby-image.py`.
+
 ## lantern-bubble.png
 
 Our own art: the green lantern's bubble forming, held and giving way, drawn by `scripts/build-lantern-bubble.py`.
