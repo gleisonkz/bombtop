@@ -605,7 +605,13 @@
       .pair-qr svg { width: 100%; height: 100%; display: block; }
       .pair-cam { width: min(240px, 60vmin); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; border: 3px solid var(--ink); background: #000; }
       .pair-paste { width: 100%; font-size: 14px; }
-      .pair-slot { font-size: 14px; color: var(--muted); }
+      .pair-slot { font-size: 14px; color: var(--muted); margin: 0; }
+      .pair-sub { font-size: 14px; margin: 6px 0 0; color: var(--muted); font-weight: 600; }
+      .pair-rooms { display: grid; gap: 6px; width: 100%; max-height: 40vh; overflow: auto; }
+      .pair-room { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; text-align: left; }
+      .pair-room-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .pair-room-state { font-size: 13px; opacity: 0.8; flex: none; }
+      .pair-code { font-family: var(--display); font-size: 28px; letter-spacing: 4px; margin: 0; }
       .offline-btn { width: 100%; }
       @media (orientation: landscape) and (max-height: 500px) {
         .pair-card { width: min(720px, 100%); padding: 10px 14px; gap: 6px; }

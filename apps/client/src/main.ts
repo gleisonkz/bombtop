@@ -18,7 +18,9 @@ import { CouchSeats } from "./input/couch";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
-import { codeFromUrl, tvCodeFromUrl } from "./net/invite";
+import { codeFromUrl, tvCodeFromUrl, wifiCodeFromUrl } from "./net/invite";
+import { LanBeacon, lanPost } from "./net/lan";
+import { answerFriend } from "./net/rtc-pair";
 import { GuideRoute } from "./net/guide-route";
 import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
@@ -248,8 +250,11 @@ const menu = new Menu(ui, {
     pairing.choose(
       () => {
         const host = new LocalHost();
-        playOffline(host.hostLink(who, savedCharacter()), () => void pairing.hostPair(host));
+        const link = host.hostLink(who, savedCharacter());
+        const beacon = listOffline(host, who);
+        playOffline(link, () => pairing.invite(beacon.id, host));
       },
+      (id) => joinOffline(id, who),
       () => {
         pairing
           .join(who, savedCharacter())
@@ -257,14 +262,17 @@ const menu = new Menu(ui, {
           .catch(() => menu.show());
       },
       () => menu.show(),
+      lan,
     );
   },
   couch: (name) => {
     // This screen hosts the room (no server); the first controller (or the keyboard) is player one and
     // every other controller joins with A. Friends' phones can still pair in over Wi-Fi.
     const host = new LocalHost();
-    const link = host.hostLink(account?.name ?? name, savedCharacter());
-    playOffline(link, () => void pairing.hostPair(host), new CouchSeats(host, undefined, () => online?.start()));
+    const who = account?.name ?? name;
+    const link = host.hostLink(who, savedCharacter());
+    const beacon = listOffline(host, who);
+    playOffline(link, () => pairing.invite(beacon.id, host), new CouchSeats(host, undefined, () => online?.start()));
   },
   guide: (open) => {
     if (open) guideRoutes[open].opened();
@@ -305,6 +313,29 @@ async function enterRoom(choice: OnlineChoice, name: string): Promise<void> {
 
 // Offline (Wi-Fi): this phone hosts the room, or joins a friend's phone (no server, no internet).
 const pairing = new Pairing(ui);
+// With internet the server lists offline rooms on each network and passes the phones' handshake (net/lan.ts).
+const lan = lanPost(SERVER_URL);
+
+/** Lists `host`'s room while it is open, and lets in every friend who knocks (from the list or the room's link). */
+function listOffline(host: LocalHost, who: string): LanBeacon {
+  const beacon = new LanBeacon(lan, () => host.listing(who), async (offer) => {
+    const { answer, wire } = await answerFriend(offer);
+    void wire.then((w) => host.addPeer(w)).catch(() => {});
+    return answer;
+  });
+  void beacon.start();
+  host.onClose(() => void beacon.stop());
+  return beacon;
+}
+
+/** Joins the offline room `id` on a friend's phone, found through the server. */
+function joinOffline(id: string, who: string): void {
+  pairing
+    .joinRoom(id, who, savedCharacter(), lan)
+    .then((link) => playOffline(link, () => pairing.invite(id, null)))
+    .catch(() => menu.show());
+}
+
 function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null): void {
   lobby.setOffline({ pair, couch: !!couch });
   online = OnlineGame.over(link, ctx, lobby, couch);
@@ -316,6 +347,9 @@ function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeat
 let invite = codeFromUrl(location.href);
 // A TV address (/tv/CODE), or a reload of one: watch that room again.
 const tvCode = tvCodeFromUrl(location.href);
+// A friend's offline room link (/wifi/CODE, its QR code): straight into it. The link is used up: back to /.
+const wifiCode = wifiCodeFromUrl(location.href);
+if (wifiCode) history.replaceState(null, "", "/");
 // Back button while in a room: leave it.
 window.addEventListener("popstate", () => {
   if (route.wentBack()) void online?.leave();
@@ -327,6 +361,9 @@ if (guideInAddress()) menu.showGuide(guideInAddress());
 if (tvCode) {
   menu.hide();
   void enterRoom({ kind: "watch", code: tvCode }, "");
+} else if (wifiCode) {
+  menu.hide();
+  joinOffline(wifiCode, storage.get("bombtop.name") ?? "");
 } else if (!invite && !guideInAddress() && introDue(tabStore)) {
   menu.hide();
   void art.then(() => {

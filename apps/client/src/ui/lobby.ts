@@ -81,14 +81,14 @@ export class LobbyPanel {
   /** TV mode: this screen only shows the room (no seat): no start or invite, a word on what it is for. */
   setWatching(watching: boolean): void {
     this.watching = watching;
-    this.inviteBtn.hidden = watching;
+    this.inviteBtn.hidden = watching || (!!this.offline && !this.offline.pair);
   }
 
   /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen), or back to an online one (null). */
   setOffline(offline: { pair: (() => void) | null; couch?: boolean } | null): void {
     this.offline = offline;
     this.codeLabel.textContent = offline?.couch ? "Mesma tela" : offline ? "Partida offline" : "Código da sala";
-    this.inviteBtn.textContent = offline ? "Adicionar amigo" : "Convidar amigos";
+    this.inviteBtn.textContent = offline ? "Chamar amigos" : "Convidar amigos";
     this.inviteBtn.hidden = !!offline && !offline.pair;
   }
 

@@ -3,6 +3,8 @@ const PARAM = "sala";
 const ROUTE = /^\/sala\/([^/]+)\/?$/;
 /** A TV watching a room (no seat): /tv/<code>. */
 const TV_ROUTE = /^\/tv\/([^/]+)\/?$/;
+/** A friend's offline (Wi-Fi) room, found through the server: /wifi/<code> (net/lan.ts). */
+const WIFI_ROUTE = /^\/wifi\/([A-Za-z0-9]{4,8})\/?$/;
 /** Colyseus room ids: short url-safe strings. */
 const CODE = /^[A-Za-z0-9_-]{1,32}$/;
 
@@ -33,6 +35,18 @@ export function tvUrl(pageHref: string, code: string): string {
 export function tvCodeFromUrl(href: string): string | null {
   const code = TV_ROUTE.exec(new URL(href).pathname)?.[1];
   return code && CODE.test(code) ? code : null;
+}
+
+/** Link that opens the game on a friend's phone and joins this phone's offline room. */
+export function wifiUrl(pageHref: string, code: string): string {
+  const url = new URL(inviteUrl(pageHref, code));
+  url.pathname = `/wifi/${code}`;
+  return url.toString();
+}
+
+/** Offline room code of a /wifi/ link, or null. */
+export function wifiCodeFromUrl(href: string): string | null {
+  return WIFI_ROUTE.exec(new URL(href).pathname)?.[1]?.toUpperCase() ?? null;
 }
 
 /** The same address without the room: back to the menu. */

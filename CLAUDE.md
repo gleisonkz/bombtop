@@ -22,10 +22,15 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   no STUN: same Wi-Fi or a phone's hotspot) and play through `PeerLink`. No signaling server: the phones swap two QR codes
   (host's offer, friend's answer; `net/rtc-signal.ts` deflates the SDP), read with the camera (`jsqr`) or pasted as text
   (`ui/pairing.ts`). The camera is opened before the offer is made: with it on, browsers share the real LAN address instead
-  of an mDNS name. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
+  of an mDNS name. With internet the server also introduces the phones (`apps/server/src/lan.ts`, `POST /lan/<op>`; client
+`net/lan.ts`): the host's room is listed (`LanBeacon`, a beat a second) to phones reaching the server from the same public
+address, shown under "Salas nesta rede" in the offline dialog, and has a link `/wifi/<code>` (`wifiUrl`; its QR code is
+what "Chamar amigos" shows, guests can show it too) that opens the game straight into the room. A friend knocks with its
+WebRTC offer (`offerToHost`, STUN on), the host answers (`answerFriend`) and the match still runs phone to phone. The two
+QR codes stay for no internet ("Sem internet?" buttons). `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
   so it opens without internet once visited.
 - **TV mode (watching):** the 📺 button next to "Entrar" in the menu watches the room of the typed code; the address
-  becomes `/tv/<code>` (`net/invite.ts`; rewritten in `render.yaml`), so a reload watches again. The TV joins with
+  becomes `/tv/<code>` (`net/invite.ts`; rewritten in `render.yaml`, like `/wifi/*`), so a reload watches again. The TV joins with
   `{ watch: true }`: `RoomCore.watch` gives it every broadcast but no seat (only `sync` is heard from it), up to
   `MAX_WATCHERS`, any time, even mid-match; lobbies show how many screens watch (`LobbyInfo.watchers`). For that the
   server never locks a room: one in a match or full is taken out of public matchmaking with `setPrivate` instead

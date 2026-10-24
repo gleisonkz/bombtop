@@ -46,3 +46,15 @@ describe("invite links", () => {
     expect(inviteText("https://x.app/sala/abc")).toContain("https://x.app/sala/abc");
   });
 });
+
+describe("wifi room links", () => {
+  it("a friend's offline room has a link of its own, read back case-blind", async () => {
+    const { wifiUrl, wifiCodeFromUrl } = await import("../src/net/invite");
+    expect(wifiUrl("https://x.app/sala/abc?a=1", "K7QM")).toBe("https://x.app/wifi/K7QM");
+    expect(wifiCodeFromUrl("https://x.app/wifi/K7QM")).toBe("K7QM");
+    expect(wifiCodeFromUrl("https://x.app/wifi/k7qm/")).toBe("K7QM");
+    expect(wifiCodeFromUrl("https://x.app/wifi/")).toBeNull();
+    expect(wifiCodeFromUrl("https://x.app/wifi/a%3Cb")).toBeNull();
+    expect(codeFromUrl("https://x.app/wifi/K7QM")).toBeNull();
+  });
+});

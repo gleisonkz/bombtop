@@ -92,3 +92,38 @@ export async function guestPairing(offer: string): Promise<{ code: string; wire:
     cancel: () => pc.close(),
   };
 }
+
+/**
+ * Paired through the server (net/lan.ts) the phones are online, so a STUN server also gives each its public
+ * address: phones the Wi-Fi keeps from seeing each other directly may still meet through the router.
+ */
+const ONLINE_CONFIG: RTCConfiguration = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+/** A friend's side, paired through the server: their offer (to knock with), and the wire once the host answers. */
+export async function offerToHost(): Promise<{ offer: string; connect(answer: string): Promise<Wire>; cancel(): void }> {
+  const pc = new RTCPeerConnection(ONLINE_CONFIG);
+  const channel = pc.createDataChannel("bombtop", { ordered: true });
+  await pc.setLocalDescription(await pc.createOffer());
+  await gathered(pc);
+  return {
+    offer: pc.localDescription!.sdp,
+    connect: async (answer) => {
+      await pc.setRemoteDescription({ type: "answer", sdp: answer });
+      return channelWire(pc, channel);
+    },
+    cancel: () => pc.close(),
+  };
+}
+
+/** The host's side of a knock: the answer to send back, and the friend's wire once it opens. */
+export async function answerFriend(offer: string): Promise<{ answer: string; wire: Promise<Wire> }> {
+  const pc = new RTCPeerConnection(ONLINE_CONFIG);
+  const channel = new Promise<RTCDataChannel>((resolve) => pc.addEventListener("datachannel", (e) => resolve(e.channel)));
+  await pc.setRemoteDescription({ type: "offer", sdp: offer });
+  await pc.setLocalDescription(await pc.createAnswer());
+  await gathered(pc);
+  // A friend who never connects (gave up, other network) is let go.
+  const timeout = setTimeout(() => pc.connectionState !== "connected" && pc.close(), 30_000);
+  const wire = channel.then((c) => channelWire(pc, c)).finally(() => clearTimeout(timeout));
+  return { answer: pc.localDescription!.sdp, wire };
+}

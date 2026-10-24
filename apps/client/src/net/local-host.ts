@@ -1,4 +1,5 @@
-import { RoomCore, TICK_RATE } from "@bombtop/shared";
+import { MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
+import type { LanRoomInfo } from "./lan";
 import type { RoomLink } from "./room-link";
 import { TickClock } from "../loop/tick-clock";
 
@@ -41,6 +42,7 @@ export class LocalHost {
   private seq = 0;
   private timer: ReturnType<typeof setInterval> | undefined;
   private closed = false;
+  private closeListeners: (() => void)[] = [];
 
   constructor() {
     this.core = new RoomCore(OFFLINE_CODE, {
@@ -129,10 +131,22 @@ export class LocalHost {
     this.core.update();
   }
 
+  /** Called once the room is closed. */
+  onClose(cb: () => void): void {
+    this.closeListeners.push(cb);
+  }
+
+  /** What the room's listing on the server shows (net/lan.ts), as hosted by `name`. */
+  listing(name: string): LanRoomInfo {
+    const { members, phase } = this.core.session;
+    return { name, players: members.length, max: MAX_PLAYERS, playing: phase !== "lobby" };
+  }
+
   /** Ends the room: every friend is let go. */
   close(): void {
     if (this.closed) return;
     this.closed = true;
+    for (const cb of this.closeListeners) cb();
     clearInterval(this.timer);
     this.links.clear();
     for (const wire of this.wires.values()) wire.close();

@@ -139,6 +139,16 @@ describe("LocalHost", () => {
     expect(left).toHaveLength(1);
   });
 
+  it("tells whoever listens when the room closes, and what it holds meanwhile", async () => {
+    const host = new LocalHost();
+    const me = host.hostLink("Ana", "bomb");
+    const closed: number[] = [];
+    host.onClose(() => closed.push(1));
+    expect(host.listing("Ana")).toEqual({ name: "Ana", players: 1, max: 5, playing: false });
+    await me.leave();
+    expect(closed).toEqual([1]);
+  });
+
   it("pings answer over the wire", async () => {
     const host = new LocalHost();
     host.hostLink("Ana", "bomb");

@@ -1,5 +1,7 @@
 import { PeerLink, type LocalHost, type Wire } from "../net/local-host";
-import { guestPairing, hostPairing } from "../net/rtc-pair";
+import { wifiUrl } from "../net/invite";
+import { lanKnock, lanRooms, type LanPost, type LanRoom } from "../net/lan";
+import { guestPairing, hostPairing, offerToHost } from "../net/rtc-pair";
 import { backButton, button, el } from "./dom";
 
 /** The pairing code as a QR code (our own generated SVG markup). */
@@ -57,10 +59,23 @@ function pasteBox(onCode: (code: string) => void): HTMLElement {
   return input;
 }
 
-function copyButton(code: string): HTMLButtonElement {
-  const b = button("Copiar código", () => {
+function copyButton(code: string, label = "Copiar código"): HTMLButtonElement {
+  const b = button(label, () => {
     void navigator.clipboard?.writeText(code).then(() => (b.textContent = "Copiado!"));
   }, "ghost mini-ghost");
+  return b;
+}
+
+/** How often the list of rooms on this network is asked again. */
+const ROOMS_EVERY_MS = 2000;
+
+/** One room on this network, a tap away. */
+function roomRow(room: LanRoom, enter: (id: string) => void): HTMLElement {
+  const full = room.players >= room.max;
+  const state = room.playing ? "em partida" : full ? "cheia" : `${room.players}/${room.max}`;
+  const b = button("", () => enter(room.id), "pair-room");
+  b.replaceChildren(el("span", { class: "pair-room-name", text: `Sala de ${room.name || "alguém"}` }), el("span", { class: "pair-room-state", text: state }));
+  b.disabled = room.playing || full;
   return b;
 }
 
@@ -74,6 +89,8 @@ export class Pairing {
   private readonly title = el("h2");
   private readonly hint = el("p", { class: "pair-hint" });
   private readonly body = el("div", { class: "pair-body" });
+  /** The room list's refreshes, stopped when the dialog closes. */
+  private timers: ReturnType<typeof setTimeout>[] = [];
   /** Cameras to turn off when the dialog closes. */
   private cameras: (() => void)[] = [];
   /** Half-made connections to drop if the pairing is cancelled. */
@@ -88,13 +105,81 @@ export class Pairing {
     parent.appendChild(this.root);
   }
 
-  /** First screen: host here, or join a friend's. */
-  choose(host: () => void, join: () => void, back: () => void): void {
+  /**
+   * First screen: host here, pick a room open on this network (listed by the server, refreshed while shown), or
+   * join a friend's by the two QR codes (no internet).
+   */
+  choose(host: () => void, enter: (id: string) => void, join: () => void, back: () => void, post: LanPost): void {
     this.open("Jogar offline", "Todos no mesmo Wi-Fi (ou no roteador de um dos celulares). Um celular cria a partida, os outros entram nele.", back);
+    const list = el("div", { class: "pair-rooms" }, [el("p", { class: "pair-slot", text: "Procurando salas nesta rede…" })]);
+    const go = (id: string) => (this.close(false), enter(id));
+    const refresh = async () => {
+      const rooms = await lanRooms(post);
+      if (this.root.hidden || !list.isConnected) return;
+      list.replaceChildren(
+        ...(rooms.length
+          ? rooms.map((r) => roomRow(r, go))
+          : [el("p", { class: "pair-slot", text: "Nenhuma sala nesta rede ainda." })]),
+      );
+      this.timers.push(setTimeout(() => void refresh(), ROOMS_EVERY_MS));
+    };
+    void refresh();
     this.body.replaceChildren(
-      button("Criar partida aqui", () => (this.close(), host()), "primary big"),
-      button("Entrar na partida de um amigo", () => (this.close(), join()), "big"),
+      button("Criar partida aqui", () => (this.close(false), host()), "primary big"),
+      el("h3", { class: "pair-sub", text: "Salas nesta rede" }),
+      list,
+      button("Sem internet? Entrar por QR code", () => (this.close(false), join()), "ghost mini-ghost"),
     );
+  }
+
+  /**
+   * The room's link as a QR code (a friend's camera opens it straight into the room) and its code `id`. On the
+   * host's phone `host` also pairs by two QR codes, straight away when there is no internet (no code).
+   */
+  invite(id: string | null, host: LocalHost | null): void {
+    if (!id) return void (host && this.hostPair(host));
+    const url = wifiUrl(location.href, id);
+    this.open(
+      "Chamar amigos",
+      "Os amigos apontam a câmera do celular pra este código, ou abrem Jogar offline e tocam na sua sala.",
+      () => {},
+    );
+    void qrCode(url).then((qr) => {
+      if (this.root.hidden) return;
+      this.body.replaceChildren(
+        qr,
+        el("p", { class: "pair-code", text: id }),
+        copyButton(url, "Copiar link"),
+        ...(host ? [button("Sem internet? Parear por código", () => void this.hostPair(host), "ghost mini-ghost")] : []),
+      );
+    });
+  }
+
+  /** On a friend's phone: joins room `id` through the server (its link, or picked in the list). */
+  joinRoom(id: string, name: string, character: string, post: LanPost): Promise<PeerLink> {
+    return new Promise((resolve, reject) => {
+      this.open("Entrar na sala", `Entrando na sala ${id}…`, () => reject(new Error("cancelado")));
+      void (async () => {
+        const pairing = await offerToHost();
+        this.pending.push(pairing.cancel);
+        const answer = await lanKnock(post, id, pairing.offer);
+        if (this.root.hidden) return;
+        this.hint.textContent = "Conectando pelo Wi-Fi…";
+        const wire = await Promise.race([
+          pairing.connect(answer),
+          new Promise<never>((_, no) => setTimeout(() => no(new Error("Os celulares não se acharam: estão no mesmo Wi-Fi?")), 15_000)),
+        ]);
+        this.hint.textContent = "Conectado! Entrando…";
+        const link = await PeerLink.join(wire, name, character);
+        this.close(false);
+        resolve(link);
+      })().catch((err: Error) => {
+        if (this.root.hidden) return;
+        for (const drop of this.pending) drop();
+        this.pending = [];
+        this.hint.textContent = `Não deu pra entrar: ${err.message}.`;
+      });
+    });
   }
 
   /** On the host's phone: pair one more friend into `host`. */
@@ -186,6 +271,8 @@ export class Pairing {
   private close(cancelled = true): void {
     for (const stop of this.cameras) stop();
     this.cameras = [];
+    for (const t of this.timers) clearTimeout(t);
+    this.timers = [];
     if (cancelled) {
       for (const drop of this.pending) drop();
       const cb = this.onCancel;
