@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -22,6 +22,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Static: a magnet pull the same way that drags the first player within MAGNET_RANGE tiles next to him, stunned.
  * Donatello: spins his bo staff all around him (see `staffSpin`).
  * Penelope: blows a kiss the same way that charms the first player within KISS_RANGE tiles, stunned.
+ * Pink panther: tiptoes out of the rivals' sight for SNEAK_TICKS.
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -35,6 +36,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "penelope") {
     blast(s, "kiss", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "panther") {
+    p.sneak = SNEAK_TICKS;
   } else if (p.character === "static") {
     blast(s, "magnet", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "flash") {

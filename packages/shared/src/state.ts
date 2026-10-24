@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -88,6 +88,8 @@ export interface Player {
   webbed: number;
   /** Ticks left charmed by penelope's kiss (drawn with hearts; the stun is what holds them). */
   charmed: number;
+  /** Ticks left of the pink panther tiptoeing out of sight (rivals do not see him; bots do not hunt him). */
+  sneak: number;
   /** Ticks left inside the green lantern's bubble (no fire gets in; he moves at half speed). */
   bubble: number;
   /** Ticks until the special can be used again. */

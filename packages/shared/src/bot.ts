@@ -274,7 +274,7 @@ export class Bot {
   }
 
   private towardRival(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
-    const rivals = s.players.filter((o) => o.id !== p.id && o.alive).map(playerTile);
+    const rivals = s.players.filter((o) => o.id !== p.id && o.alive && o.sneak === 0).map(playerTile);
     let best: Node | undefined;
     let bestDist = Infinity;
     for (const n of nodes) {
@@ -452,7 +452,7 @@ function bombValue(s: MatchState, p: Player, x: number, y: number): number {
   const tiles = blast(s, { x, y, range: effectiveRange(p), type: p.bombType });
   for (const [tx, ty] of tiles) {
     if (getTile(s, tx, ty) === Tile.Block) value += 1;
-    if (s.players.some((o) => o.id !== p.id && o.alive && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
+    if (s.players.some((o) => o.id !== p.id && o.alive && o.sneak === 0 && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
   }
   return value;
 }

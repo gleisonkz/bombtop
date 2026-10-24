@@ -80,6 +80,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       frozen: 0,
       webbed: 0,
       charmed: 0,
+      sneak: 0,
       bubble: 0,
       specialCooldown: 0,
       shield: 0,

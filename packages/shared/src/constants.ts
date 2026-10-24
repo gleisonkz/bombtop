@@ -97,6 +97,8 @@ export const WEB_RANGE = 5;
 export const WEB_TICKS = 4 * TICK_RATE;
 /** Penelope's blown kiss: how far it flies; whoever it charms is stunned SPECIAL_STUN_TICKS. */
 export const KISS_RANGE = 5;
+/** How long the pink panther tiptoes out of sight (4 s). */
+export const SNEAK_TICKS = 240;
 
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;
