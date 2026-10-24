@@ -47,6 +47,7 @@ export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   flash: ["Barry", "Velocista", "Relâmpago", "Corisco", "Ligeirinho", "Turbo", "Raio Rubro", "Wally"],
   lantern: ["Hal", "Lanterna", "Anel", "Esmeralda", "Oa", "Guardião", "Facho", "Brilho Verde"],
   penelope: ["Penélope", "Penny", "Charmosa", "Pit", "Rosinha", "Diva", "Piloto", "Lady"],
+  optimus: ["Optimus", "Prime", "Autobot", "Comboio", "Líder", "Matriz", "Cybertron", "Orion"],
   harry: ["Harry", "Potter", "Eleito", "Bruxo", "Grifinório", "Apanhador", "Cicatriz", "Patrono"],
   panther: ["Pantera", "Rosa", "Pink", "Sorrateira", "Felino", "Na Ponta", "Tiptoe", "Pinky"],
   donatello: ["Donnie", "Don", "Bastão", "Gênio", "Casco", "Roxo", "Inventor", "Bo"],

@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -100,6 +100,11 @@ export interface Player {
   charge: number;
   /** Ticks left in Naruto's Rasengan dash (he runs `facing`, deaf to the stick; see `updateRasengan`). */
   rasengan: number;
+  /**
+   * Ticks left of Optimus's "roll out": while above TRUCK_TICKS he turns into his truck where he stands, then he drives
+   * `facing`, deaf to the stick (see `updateTruck`).
+   */
+  truck: number;
   curse: Curse | null;
   mount: MountKind | null;
   /** Ticks left of post-hit invulnerability. */
@@ -210,7 +215,7 @@ export interface Blast {
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus";
+export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus" | "truck";
 
 export interface MatchState {
   tick: number;

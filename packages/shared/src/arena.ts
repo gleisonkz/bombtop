@@ -86,6 +86,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       shield: 0,
       charge: 0,
       rasengan: 0,
+      truck: 0,
       curse: null,
       mount: null,
       invuln: 0,

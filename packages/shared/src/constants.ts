@@ -105,6 +105,16 @@ export const PATRONUS_COOLDOWN = 25 * TICK_RATE;
 export const PATRONUS_TICKS_PER_TILE = 4;
 export const PATRONUS_FADE = 24;
 
+/**
+ * Optimus's "roll out": he turns into his truck where he stands for TRUCK_SHIFT ticks, then drives up to TRUCK_RANGE
+ * tiles straight ahead, TRUCK_TICKS_PER_TILE ticks a tile, shoving whoever is in front along; 25 s recharge.
+ */
+export const TRUCK_SHIFT = 12;
+export const TRUCK_RANGE = 6;
+export const TRUCK_TICKS_PER_TILE = 4;
+export const TRUCK_TICKS = TRUCK_RANGE * TRUCK_TICKS_PER_TILE;
+export const TRUCK_COOLDOWN = 25 * TICK_RATE;
+
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;
 

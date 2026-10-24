@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -24,6 +24,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Penelope: blows a kiss the same way that charms the first player within KISS_RANGE tiles, stunned.
  * Pink panther: tiptoes out of the rivals' sight for SNEAK_TICKS.
  * Harry: expecto patronum, his stag gallops straight ahead (see `patronus`).
+ * Optimus: roll out, turns into his truck and drives straight ahead (see `updateTruck`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -40,6 +41,13 @@ export function useSpecial(s: MatchState, p: Player): boolean {
   } else if (p.character === "harry") {
     patronus(s, p);
     p.specialCooldown = PATRONUS_COOLDOWN;
+    return true;
+  } else if (p.character === "optimus") {
+    const { x, y } = playerTile(p);
+    p.px = tileCenter(x);
+    p.py = tileCenter(y);
+    p.truck = TRUCK_SHIFT + TRUCK_TICKS;
+    p.specialCooldown = TRUCK_COOLDOWN;
     return true;
   } else if (p.character === "panther") {
     p.sneak = SNEAK_TICKS;
@@ -93,7 +101,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin" | "patronus">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin" | "patronus" | "truck">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
@@ -368,6 +376,55 @@ export function updateRasengan(s: MatchState, p: Player): void {
   if (--p.rasengan === 0) {
     const { x, y } = playerTile(p);
     s.blasts.push({ ownerId: p.id, x, y, dir: p.facing, length: 0, ttl: BLAST_TICKS, kind: "rasengan" });
+  }
+}
+
+/**
+ * One tick of Optimus's truck. First he turns into it where he stands, then he drives. On each tile center he looks at
+ * the tile ahead: a wall stops him, a block is crushed (burns away like a blown-up block) and stops him, a bomb is
+ * rammed off sliding and stops him, a shield facing him stops him, stunned. A player there is shoved one tile on,
+ * stunned, while the tile beyond is free; pinned (a wall, block, bomb or player behind them), they stop him.
+ */
+export function updateTruck(s: MatchState, p: Player): void {
+  if (p.truck > TRUCK_TICKS) {
+    p.truck--;
+    return;
+  }
+  const [dx, dy] = DIR_VECTORS[p.facing];
+  if (p.truck % TRUCK_TICKS_PER_TILE === 0) {
+    const { x, y } = playerTile(p);
+    const tx = x + dx;
+    const ty = y + dy;
+    const tile = getTile(s, tx, ty);
+    const bomb = bombAt(s, tx, ty);
+    const shield = shieldAt(s, tx, ty, dx, dy);
+    const hit = others(s, p, tx, ty);
+    let stop = !!shield || tile !== Tile.Empty || !!bomb;
+    if (shield) p.stun = SPECIAL_STUN_TICKS;
+    else if (tile === Tile.Block) addFlame(s, tx, ty, p.id, true);
+    else if (bomb && tile === Tile.Empty && !bomb.air && !bomb.heldBy) bomb.slide = p.facing;
+    else if (hit) {
+      const nx = tx + dx;
+      const ny = ty + dy;
+      if (getTile(s, nx, ny) !== Tile.Empty || bombAt(s, nx, ny) || others(s, hit, nx, ny)) stop = true;
+      else {
+        hit.px = tileCenter(nx);
+        hit.py = tileCenter(ny);
+      }
+      hit.stun = SPECIAL_STUN_TICKS;
+      hit.charge = hit.rasengan = hit.truck = 0;
+    }
+    if (stop) {
+      p.truck = 0;
+      s.blasts.push({ ownerId: p.id, x, y, dir: p.facing, length: 1, ttl: BLAST_TICKS, kind: "truck" });
+      return;
+    }
+  }
+  p.px += (dx * TILE) / TRUCK_TICKS_PER_TILE;
+  p.py += (dy * TILE) / TRUCK_TICKS_PER_TILE;
+  if (--p.truck === 0) {
+    const { x, y } = playerTile(p);
+    s.blasts.push({ ownerId: p.id, x, y, dir: p.facing, length: 0, ttl: BLAST_TICKS, kind: "truck" });
   }
 }
 

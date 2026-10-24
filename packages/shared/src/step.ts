@@ -8,7 +8,7 @@ import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
-import { kamehameha, updateBlasts, updateRasengan, useSpecial } from "./special";
+import { kamehameha, updateBlasts, updateRasengan, updateTruck, useSpecial } from "./special";
 import { playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
@@ -39,15 +39,19 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     }
     if (p.stun > 0) {
       p.stun--;
-      p.charge = p.rasengan = 0;
+      p.charge = p.rasengan = p.truck = 0;
       continue;
     }
     if (p.frozen > 0 || p.webbed > 0) {
-      p.charge = p.rasengan = 0;
+      p.charge = p.rasengan = p.truck = 0;
       continue;
     }
     if (p.rasengan > 0) {
       updateRasengan(s, p);
+      continue;
+    }
+    if (p.truck > 0) {
+      updateTruck(s, p);
       continue;
     }
     if (p.charge > 0) {
