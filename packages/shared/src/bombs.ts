@@ -29,9 +29,10 @@ export function updateBombs(s: MatchState): void {
   updateSlides(s);
   updateAir(s);
 
-  // A flying bomb's fuse waits for it to land (as in Super Bomberman 4): it never goes off in the air.
+  // A flying bomb's fuse waits for it to land, and a carried one's while it is held (as in Super Bomberman 4): it never
+  // goes off in the air nor in the hands.
   for (const b of s.bombs) {
-    if (!b.air) b.fuse--;
+    if (!b.air && !b.heldBy) b.fuse--;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0);
   while (queue.length > 0) {

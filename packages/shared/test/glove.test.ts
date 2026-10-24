@@ -45,6 +45,16 @@ describe("glove", () => {
     expect(s.bombs[0]!.heldBy).toBe("p1");
   });
 
+  it("a carried bomb's fuse waits while it is held, as in Super Bomberman: it never goes off in the hands", () => {
+    const s = gloveMatch();
+    lift(s);
+    const fuse = s.bombs[0]!.fuse;
+    carry(s, FUSE_TICKS + 30);
+    expect(s.bombs[0]!.heldBy).toBe("p1");
+    expect(s.bombs[0]!.fuse).toBe(fuse);
+    expect(player(s).alive).toBe(true);
+  });
+
   it("letting go of the button throws it three tiles in the facing direction", () => {
     const s = gloveMatch();
     lift(s);
@@ -75,14 +85,14 @@ describe("glove", () => {
     expect(s.bombs[0]!.heldBy).toBeNull();
   });
 
-  it("a held bomb follows its holder while its fuse continues", () => {
+  it("a held bomb follows its holder, its fuse waiting", () => {
     const s = gloveMatch();
     lift(s);
     const b = s.bombs[0]!;
     const fuse = b.fuse;
     carry(s, 32, "down"); // 2 tiles at base speed
     expect([b.x, b.y]).toEqual([3, 7]);
-    expect(b.fuse).toBe(fuse - 32);
+    expect(b.fuse).toBe(fuse);
   });
 
   it("holding a bomb does not place new ones", () => {

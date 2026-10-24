@@ -51,6 +51,6 @@ describe("bot replays", () => {
   });
 
   it("hard bots with every power-up (bombs everywhere, chains) play the same seeded match", () => {
-    expect(replay("hard", true, 4000)).toMatchInlineSnapshot(`"2298:81686fe6"`);
+    expect(replay("hard", true, 4000)).toMatchInlineSnapshot(`"2298:ea07899a"`);
   });
 });
