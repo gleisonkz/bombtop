@@ -14,7 +14,10 @@ Public URL: `wss://187-127-63-110.sslip.io` (Caddy terminates TLS, proxies to `1
 - Connection reports from every player in a match (every 5 s: ping, render delay, fps, frames without a
   snapshot, worst gap between snapshots, the page's memory `mem` MB (Chrome only) and the device's `dm` GB,
   user agent): `/opt/bombtop/logs/net-YYYY-MM-DD.jsonl`, one JSON line each (`LOG_DIR` in `bombtop.service`).
-  `?debug` only adds the readout on screen.
+  `?debug` only adds the readout on screen. Offline (Wi-Fi) matches have no room here: their phones send the same
+  reports over HTTP when they have internet (`POST /net`, `offlineNetRoute`), logged as room `wifi:<code>` with
+  `route`: `wifi` (the phones talk straight over the Wi-Fi or through its router) or `internet` (out and back: a phone on
+  mobile data, or a Wi-Fi keeping its devices apart).
 - Pages' own events, from every visitor (`POST /log`, `apps/server/src/client-log.ts`; at most 20 a minute an
   address): `/opt/bombtop/logs/client-YYYY-MM-DD.jsonl`. `boot` = a page opened (path, screen size, device
   memory, build `v`, user agent); `crash` = the last page died in front of the player without closing (what
