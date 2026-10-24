@@ -1,8 +1,8 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
@@ -39,6 +39,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "kiss", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "harry") {
     patronus(s, p);
+    p.specialCooldown = PATRONUS_COOLDOWN;
+    return true;
   } else if (p.character === "panther") {
     p.sneak = SNEAK_TICKS;
   } else if (p.character === "static") {
@@ -229,27 +231,46 @@ function superSpeed(s: MatchState, p: Player): void {
 }
 
 /**
- * Harry's patronus: a silver stag gallops up to PATRONUS_RANGE tiles straight ahead, leaping over bombs, and stuns
- * every player in its way (not only the first); walls and blocks stop it, and so does a shield facing it (the captain
- * holds, nobody behind him is touched).
+ * Harry's patronus: a silver stag gallops straight ahead until a wall or block, leaping over bombs, PATRONUS_TICKS_PER_TILE
+ * ticks a tile, and stuns every player it reaches on the way (not only the first: see `updateBlasts`). A shield facing it
+ * stops it there (the captain holds, nobody behind him is touched).
  */
 function patronus(s: MatchState, p: Player): void {
   const from = playerTile(p);
   const [dx, dy] = DIR_VECTORS[p.facing];
   let length = 0;
-  for (let i = 1; i <= PATRONUS_RANGE; i++) {
+  for (let i = 1; ; i++) {
     const tx = from.x + dx * i;
     const ty = from.y + dy * i;
-    if (getTile(s, tx, ty) !== Tile.Empty) break;
+    if (getTile(s, tx, ty) !== Tile.Empty) break; // out of the arena counts as wall
     length = i;
     if (shieldAt(s, tx, ty, dx, dy)) break;
-    for (const o of s.players) {
-      if (o === p || !o.alive || playerTile(o).x !== tx || playerTile(o).y !== ty) continue;
-      o.stun = SPECIAL_STUN_TICKS;
-      o.charge = o.rasengan = 0;
-    }
   }
-  s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length, ttl: BLAST_TICKS, kind: "patronus" });
+  const blast = { ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length, ttl: 0, kind: "patronus" as const };
+  blast.ttl = blastLife(blast);
+  s.blasts.push(blast);
+}
+
+/** How many ticks a blast stays: harry's stag as long as its run and its fading, every other one BLAST_TICKS. */
+export function blastLife(b: Pick<Blast, "kind" | "length">): number {
+  return b.kind === "patronus" ? b.length * PATRONUS_TICKS_PER_TILE + PATRONUS_FADE : BLAST_TICKS;
+}
+
+/** The stag reaching a new tile stuns whoever stands there (the captain's shield stopped it short already). */
+function gallop(s: MatchState, b: Blast): void {
+  const age = blastLife(b) - b.ttl;
+  if (age % PATRONUS_TICKS_PER_TILE !== 0) return;
+  const i = age / PATRONUS_TICKS_PER_TILE;
+  if (i < 1 || i > b.length) return;
+  const [dx, dy] = DIR_VECTORS[b.dir];
+  const tx = b.x + dx * i;
+  const ty = b.y + dy * i;
+  if (shieldAt(s, tx, ty, dx, dy)) return;
+  for (const o of s.players) {
+    if (o.id === b.ownerId || !o.alive || playerTile(o).x !== tx || playerTile(o).y !== ty) continue;
+    o.stun = SPECIAL_STUN_TICKS;
+    o.charge = o.rasengan = 0;
+  }
 }
 
 /**
@@ -352,6 +373,9 @@ export function updateRasengan(s: MatchState, p: Player): void {
 
 /** Blasts fade after BLAST_TICKS. */
 export function updateBlasts(s: MatchState): void {
-  for (const b of s.blasts) b.ttl--;
+  for (const b of s.blasts) {
+    b.ttl--;
+    if (b.kind === "patronus") gallop(s, b);
+  }
   s.blasts = s.blasts.filter((b) => b.ttl > 0);
 }

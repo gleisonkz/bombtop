@@ -2,19 +2,20 @@ import { describe, expect, it } from "vitest";
 import {
   CHARACTERS,
   createMatch,
-  PATRONUS_RANGE,
+  PATRONUS_COOLDOWN,
+  PATRONUS_TICKS_PER_TILE,
+  blastLife,
   placeBomb,
   placePlayerAt,
   setTile,
   SHIELD_TICKS,
-  SPECIAL_COOLDOWN,
   SPECIAL_STUN_TICKS,
   step,
   Tile,
   TICK_RATE,
   type MatchState,
 } from "../src";
-import { player } from "./helpers";
+import { player, run } from "./helpers";
 
 /** p1 (harry) at (2,5) facing right; the others at the given columns of row 5. */
 function line(...xs: number[]): MatchState {
@@ -33,21 +34,49 @@ describe("harry's expecto patronum", () => {
     expect(CHARACTERS).toContain("harry");
   });
 
-  it(`his stag gallops ${PATRONUS_RANGE} tiles ahead and stuns everyone in its way for 3 seconds, not only the first`, () => {
-    const s = line(4, 2 + PATRONUS_RANGE);
+  it("his stag gallops ahead until a wall and stuns everyone in its way for 3 seconds, not only the first", () => {
+    const s = line(4, 13);
     cast(s);
-    expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1);
-    expect(player(s, "p3").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1);
+    run(s, 11 * PATRONUS_TICKS_PER_TILE);
+    expect(player(s, "p2").stun).toBeGreaterThan(SPECIAL_STUN_TICKS - 11 * PATRONUS_TICKS_PER_TILE);
+    expect(player(s, "p3").stun).toBeGreaterThan(SPECIAL_STUN_TICKS - 11 * PATRONUS_TICKS_PER_TILE);
     expect(player(s).stun).toBe(0);
   });
 
-  it("does not reach past its range, nor through a block or a wall", () => {
-    const far = line(3 + PATRONUS_RANGE);
+  it("stuns each one as the stag reaches them, not before", () => {
+    const s = line(10);
+    cast(s);
+    run(s, 4 * PATRONUS_TICKS_PER_TILE);
+    expect(player(s, "p2").stun).toBe(0);
+    run(s, 5 * PATRONUS_TICKS_PER_TILE);
+    expect(player(s, "p2").stun).toBeGreaterThan(SPECIAL_STUN_TICKS - 2 * PATRONUS_TICKS_PER_TILE);
+  });
+
+  it("catches whoever steps into its path before it gets there", () => {
+    const s = line(9);
+    cast(s);
+    placePlayerAt(s, "p2", 6, 5);
+    run(s, 5 * PATRONUS_TICKS_PER_TILE);
+    expect(player(s, "p2").stun).toBeGreaterThan(0);
+  });
+
+  it("stays on screen while it runs, then a little longer as it fades", () => {
+    const s = line(13);
+    cast(s);
+    expect(s.blasts[0]!.ttl).toBe(blastLife(s.blasts[0]!) - 1); // one tick gone with the cast
+    expect(blastLife(s.blasts[0]!)).toBeGreaterThan(11 * PATRONUS_TICKS_PER_TILE);
+  });
+
+  it("runs right across the arena, but not through a block or a wall", () => {
+    const far = line(13);
     cast(far);
-    expect(player(far, "p2").stun).toBe(0);
+    run(far, 11 * PATRONUS_TICKS_PER_TILE);
+    expect(player(far, "p2").stun).toBeGreaterThan(0);
+    expect(far.blasts[0]).toMatchObject({ kind: "patronus", length: 11 });
     const blocked = line(6);
     setTile(blocked, 4, 5, Tile.Block);
     cast(blocked);
+    run(blocked, 6 * PATRONUS_TICKS_PER_TILE);
     expect(player(blocked, "p2").stun).toBe(0);
   });
 
@@ -57,6 +86,7 @@ describe("harry's expecto patronum", () => {
     placeBomb(s, "p2");
     placePlayerAt(s, "p2", 5, 5);
     cast(s);
+    run(s, 3 * PATRONUS_TICKS_PER_TILE);
     expect(player(s, "p2").stun).toBeGreaterThan(0);
   });
 
@@ -67,10 +97,10 @@ describe("harry's expecto patronum", () => {
     expect(s.blasts).toEqual([expect.objectContaining({ ownerId: "p1", dir: "right", length: 3, kind: "patronus" })]);
   });
 
-  it(`recharges for ${SPECIAL_COOLDOWN / TICK_RATE} seconds`, () => {
+  it(`recharges for ${PATRONUS_COOLDOWN / TICK_RATE} seconds (it reaches far)`, () => {
     const s = line(9);
     cast(s);
-    expect(player(s).specialCooldown).toBe(SPECIAL_COOLDOWN);
+    expect(player(s).specialCooldown).toBe(PATRONUS_COOLDOWN);
   });
 
   it("a captain's shield facing it stops the stag there, and nobody behind him is touched", () => {
@@ -82,6 +112,7 @@ describe("harry's expecto patronum", () => {
     player(s, "p2").facing = "left";
     player(s, "p2").shield = SHIELD_TICKS;
     cast(s);
+    run(s, 5 * PATRONUS_TICKS_PER_TILE);
     expect(player(s, "p2").stun).toBe(0);
     expect(player(s, "p3").stun).toBe(0);
     expect(s.blasts[0]).toMatchObject({ kind: "patronus", length: 2 });

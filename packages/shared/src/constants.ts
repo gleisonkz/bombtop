@@ -99,8 +99,11 @@ export const WEB_TICKS = 4 * TICK_RATE;
 export const KISS_RANGE = 5;
 /** How long the pink panther tiptoes out of sight (4 s). */
 export const SNEAK_TICKS = 240;
-/** How far harry's patronus (a silver stag) gallops. */
-export const PATRONUS_RANGE = 5;
+/** Harry's patronus (a silver stag) gallops on until a wall or block: its recharge is longer (25 s). */
+export const PATRONUS_COOLDOWN = 25 * TICK_RATE;
+/** How fast the stag gallops (ticks a tile), and how long it lingers, fading, where it stopped. */
+export const PATRONUS_TICKS_PER_TILE = 4;
+export const PATRONUS_FADE = 24;
 
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;
