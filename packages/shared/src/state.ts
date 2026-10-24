@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther"] as const;
+export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -210,7 +210,7 @@ export interface Blast {
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss";
+export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus";
 
 export interface MatchState {
   tick: number;

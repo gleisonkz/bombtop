@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_RANGE, TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
@@ -23,6 +23,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Donatello: spins his bo staff all around him (see `staffSpin`).
  * Penelope: blows a kiss the same way that charms the first player within KISS_RANGE tiles, stunned.
  * Pink panther: tiptoes out of the rivals' sight for SNEAK_TICKS.
+ * Harry: expecto patronum, his stag gallops straight ahead (see `patronus`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
@@ -36,6 +37,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     blast(s, "web", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "penelope") {
     blast(s, "kiss", p.id, playerTile(p), p.facing, true);
+  } else if (p.character === "harry") {
+    patronus(s, p);
   } else if (p.character === "panther") {
     p.sneak = SNEAK_TICKS;
   } else if (p.character === "static") {
@@ -88,7 +91,7 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 }
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
-const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
+const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin" | "patronus">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
   ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
@@ -223,6 +226,30 @@ function superSpeed(s: MatchState, p: Player): void {
   p.px = tileCenter(from.x + dx * land);
   p.py = tileCenter(from.y + dy * land);
   s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length: land, ttl: BLAST_TICKS, kind: "flash" });
+}
+
+/**
+ * Harry's patronus: a silver stag gallops up to PATRONUS_RANGE tiles straight ahead, leaping over bombs, and stuns
+ * every player in its way (not only the first); walls and blocks stop it, and so does a shield facing it (the captain
+ * holds, nobody behind him is touched).
+ */
+function patronus(s: MatchState, p: Player): void {
+  const from = playerTile(p);
+  const [dx, dy] = DIR_VECTORS[p.facing];
+  let length = 0;
+  for (let i = 1; i <= PATRONUS_RANGE; i++) {
+    const tx = from.x + dx * i;
+    const ty = from.y + dy * i;
+    if (getTile(s, tx, ty) !== Tile.Empty) break;
+    length = i;
+    if (shieldAt(s, tx, ty, dx, dy)) break;
+    for (const o of s.players) {
+      if (o === p || !o.alive || playerTile(o).x !== tx || playerTile(o).y !== ty) continue;
+      o.stun = SPECIAL_STUN_TICKS;
+      o.charge = o.rasengan = 0;
+    }
+  }
+  s.blasts.push({ ownerId: p.id, x: from.x, y: from.y, dir: p.facing, length, ttl: BLAST_TICKS, kind: "patronus" });
 }
 
 /**

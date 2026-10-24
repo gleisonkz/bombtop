@@ -99,6 +99,8 @@ export const WEB_TICKS = 4 * TICK_RATE;
 export const KISS_RANGE = 5;
 /** How long the pink panther tiptoes out of sight (4 s). */
 export const SNEAK_TICKS = 240;
+/** How far harry's patronus (a silver stag) gallops. */
+export const PATRONUS_RANGE = 5;
 
 /** Static's magnet pull: reach in tiles (the first player in it is dragged next to him and stunned). */
 export const MAGNET_RANGE = 5;
