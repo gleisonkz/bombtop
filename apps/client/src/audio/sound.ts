@@ -44,6 +44,7 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   dig: { gain: 0.6, vary: 0.05, voices: 2 },
   spin: { gain: 0.6, vary: 0.05, voices: 2 },
   kiss: { gain: 0.6, vary: 0.05, voices: 2 },
+  gallop: { gain: 0.65, vary: 0.04, voices: 2 },
   bubble: { gain: 0.6, vary: 0.04, voices: 2 },
   pop: { gain: 0.55, vary: 0.06, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },

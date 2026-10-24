@@ -295,10 +295,11 @@ const INFO: Record<CharacterId, Info> = {
       "Bruxo da Grifinória, apanhador do time de quadribol e dono da cicatriz em forma de raio mais famosa de Hogwarts. Aprendeu com o professor Lupin um feitiço que pouquíssimos alunos conseguem: o Patrono, um cervo prateado de pura luz. Na arena, troca os dementadores pelos rivais. A capa vermelha fica na cor do jogador.",
     special: {
       name: "Expecto Patronum",
-      recharge: "20 s",
-      text: "Conjura o Patrono: um cervo prateado galopa até 5 casas para a frente, pulando por cima das bombas, e deixa tontos por 3 s todos os jogadores no caminho, não só o primeiro. Paredes e blocos param o cervo, e o escudo do Capitão virado para ele também.",
+      recharge: "25 s",
+      text: "Conjura o Patrono: um cervo prateado sai galopando para a frente até bater numa parede ou bloco, pulando por cima das bombas, e deixa tonto por 3 s cada jogador que ele alcança no caminho, não só o primeiro. O escudo do Capitão virado para ele segura o cervo.",
       tips: [
         "Rivais enfileirados no corredor? Um cervo só pega todos.",
+        "O cervo atravessa o mapa: mire num corredor comprido e pegue quem estiver lá no fundo.",
         "O cervo pula as bombas: mire por cima delas em quem está atrás.",
         "Atordoou? Corra e solte uma bomba do lado: são 3 s parado.",
         "O Capitão com o escudo erguido segura o cervo: espere ele baixar.",

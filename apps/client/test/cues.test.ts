@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, BUBBLE_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { blastLife, BLAST_TICKS, BUBBLE_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { Listener, soundCues } from "../src/audio/cues";
 
 function view(): PublicView {
@@ -232,6 +232,14 @@ describe("soundCues", () => {
       n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 1, kind: "kiss" });
     });
     expect(soundCues(v, next)).toEqual([{ name: "kiss", x: 1.5 }]);
+  });
+
+  it("hears harry's stag galloping off, where he cast it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 9, ttl: blastLife({ kind: "patronus", length: 9 }) - 1, kind: "patronus" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "gallop", x: 1.5 }]);
   });
 
   it("hears the green lantern's bubble rising round him and giving way", () => {

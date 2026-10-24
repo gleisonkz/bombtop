@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
@@ -27,6 +27,7 @@ export type CueName =
   | "dig"
   | "spin"
   | "kiss"
+  | "gallop"
   | "bubble"
   | "pop"
   | "kamehameha"
@@ -102,9 +103,9 @@ export function soundCues(prev: View, next: View): Cue[] {
 
   // The kamehameha and the rasengan are heard from the start of their charge or dash (see below).
   for (const b of next.blasts) {
-    if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
+    if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < blastLife(b) - elapsed) continue;
     if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
-    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss" } as const)[b.kind as string] ?? "ice";
+    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss", patronus: "gallop" } as const)[b.kind as string] ?? "ice";
     cues.push({ name, x: mid(b.x) });
   }
 

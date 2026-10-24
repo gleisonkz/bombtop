@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
 import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
@@ -417,27 +417,34 @@ describe("ice blast visuals", () => {
     for (const h of kissHearts(5, 60, 5, 0, 6)) expect(Math.abs(h.x - 5)).toBeLessThan(4);
   });
 
-  it("harry's stag gallops from him to where it stopped in leaps, then fades into sparkles", () => {
-    const start = patronusLook(0, 20, 80, 20, 0)!;
+  it("harry's stag gallops from him the way he cast it, all the way to where it stopped, then fades into sparkles", () => {
+    const run = 40; // ticks it takes to get there
+    const start = patronusLook(0, 20, 160, 20, "right", run, 0)!;
     expect(start.x).toBeCloseTo(0);
-    const mid = patronusLook(0, 20, 80, 20, 8)!;
-    expect(mid.x).toBeGreaterThan(0);
-    expect(mid.x).toBeLessThan(80);
-    // bounding: never below the path, off the ground mid-leap
-    const ys = Array.from({ length: 20 }, (_, i) => patronusLook(0, 20, 80, 20, i)!.y);
+    const mid = patronusLook(0, 20, 160, 20, "right", run, 20)!;
+    expect(mid.x).toBeCloseTo(80, 0); // a steady gallop
+    // bounding along: never below the path
+    const ys = Array.from({ length: run }, (_, i) => patronusLook(0, 20, 160, 20, "right", run, i)!.y);
     expect(Math.max(...ys)).toBeLessThanOrEqual(20);
-    expect(Math.min(...ys)).toBeLessThan(18);
-    // it leaves a trail of sparkles behind it
+    expect(Math.min(...ys)).toBeLessThan(19);
+    // its legs go round the gallop frames as it runs
+    const frames = new Set(Array.from({ length: run }, (_, i) => patronusLook(0, 20, 160, 20, "right", run, i)!.frame));
+    expect(frames.size).toBe(PATRONUS.frames);
+    // a trail of sparkles behind it
     expect(mid.sparkles.length).toBeGreaterThan(2);
     for (const s of mid.sparkles) expect(s.x).toBeLessThanOrEqual(mid.x + 1);
-    // there, then fading out by the end of the blast
-    const end = patronusLook(0, 20, 80, 20, BLAST_TICKS - 4)!;
-    expect(end.x).toBeCloseTo(80);
+    // there, then fading out
+    const end = patronusLook(0, 20, 160, 20, "right", run, run + PATRONUS_FADE - 4)!;
+    expect(end.x).toBeCloseTo(160);
     expect(end.alpha).toBeLessThan(0.6);
-    expect(patronusLook(0, 20, 80, 20, BLAST_TICKS)).toBeNull();
-    // running left it faces left
-    expect(patronusLook(80, 20, 0, 20, 5)!.flip).toBe(true);
-    expect(mid.flip).toBe(false);
+    expect(patronusLook(0, 20, 160, 20, "right", run, run + PATRONUS_FADE)).toBeNull();
+    // seen from the side running left or right, from the front running down, from behind running up
+    expect(mid).toMatchObject({ view: "side", flip: false });
+    expect(patronusLook(160, 20, 0, 20, "left", run, 5)).toMatchObject({ view: "side", flip: true });
+    expect(patronusLook(20, 0, 20, 160, "down", run, 5)).toMatchObject({ view: "down", flip: false });
+    const up = patronusLook(20, 160, 20, 0, "up", run, 20)!;
+    expect(up).toMatchObject({ view: "up" });
+    expect(up.y).toBeLessThan(160);
     expect(PATRONUS.url).toContain("patronus");
   });
 

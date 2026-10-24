@@ -5,7 +5,8 @@
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
 // Freesound (CC0 only), the HQ preview of each: death cry = "Cartoon Scream 1.wav" by tonsil5,
 // https://freesound.org/people/tonsil5/sounds/416840/ (saved as freesound/416840_8247784-hq.mp3); penelope's kiss = "Cartoon Smooch" by
-// Breviceps, https://freesound.org/s/444493/ (saved as freesound/444493_9159316-hq.mp3).
+// Breviceps, https://freesound.org/s/444493/ (saved as freesound/444493_9159316-hq.mp3); harry's stag galloping = "Horse Gallop -
+// Loopable" by HebronTheatre, https://freesound.org/s/197212/ (saved as freesound/197212_3001728-hq.mp3).
 // Goku's voice (Japanese, Masako Nozawa) and Kamehameha effects are from Dragon Ball FighterZ (fan use; (c) Bandai Namco /
 // Arc System Works), as ripped on The Sounds Resource: assets 411947 "Goku (Japanese)" and 411912 "Goku", unzipped under dbfz/.
 // Naruto's voice (Japanese, Junko Takeuchi) is from Naruto Shippuden: Ultimate Ninja Storm 2 (PS3; (c) Bandai Namco /
@@ -227,6 +228,14 @@ const RECIPE = {
   "harry-death": { src: BASS_DOWN, len: 2.0, layer: { src: HARRY("ah-54091890"), len: 1.1, gain: -3 } },
   "harry-win": { src: HARRY("mischief2"), len: 1.9 },
   "harry-special": { src: HARRY("patronum2"), len: 3.0 },
+  // harry's stag: hooves galloping off (Freesound 197212 "Horse Gallop - Loopable" by HebronTheatre, CC0) under a bright
+  // shimmer of light, fading as it runs to the far wall
+  gallop: {
+    src: FS("197212_3001728-hq.mp3"),
+    from: 0.6,
+    len: 1.8,
+    layer: { src: S("Epic Stock Media - Anime Game", "DSGNStngr_Power Up Bright Positive Successful Light Saturation Crash Shimmer 05_ESM_AG.wav"), len: 1.8, gain: -9 },
+  },
   // her blown kiss: a cartoon smooch and a twinkle as the heart flies off
   kiss: {
     src: FS("444493_9159316-hq.mp3"),

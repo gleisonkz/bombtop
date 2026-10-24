@@ -75,7 +75,8 @@
     short and the scar painted on, rotated in v3 mode; the red of his robe's lining takes the player's color). Idle = the
     still rotation bobbing (the breathing template puffed breath); cast = expecto patronum, the wand swung up then thrust
     out, and carry walk, posed from our own skeletons (the back views asked "seen from behind": they turned to face us);
-    the stag itself is its own art (build-patronus.py); his lobby and victory are their own images (build-harry-lobby.py).
+    the stag itself is its own art (build-patronus.py); his lobby (its raise and swirl posed from our own skeletons too)
+    and victory are their own images (build-harry-lobby.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
 Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry FRAMES_DIR public/sprites/<name>.png

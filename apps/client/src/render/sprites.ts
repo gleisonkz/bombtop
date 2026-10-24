@@ -1,4 +1,4 @@
-import { BLAST_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, PATRONUS_FADE, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -547,8 +547,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** His wand swirled overhead, the spell shouted, his stag bounding across in front of him (scripts/build-harry-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/harry-lobby.png", width: 4800, height: 176, frameW: 300, frameH: 176, anchorX: 150, anchorY: 165 } },
+    /** His wand lit and swirled overhead, thrust out, and his stag galloping once round him (scripts/build-harry-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/harry-lobby.png", width: 4320, height: 171, frameW: 270, frameH: 171, anchorX: 135, anchorY: 157 } },
     /** A jump for joy, the golden snitch snatched out of the air and held up in his fist (scripts/build-harry-lobby.py). */
     victory: { row: 0, frames: 16, image: { url: "sprites/harry-victory.png", width: 4192, height: 200, frameW: 262, frameH: 200, anchorX: 131, anchorY: 200 } },
     /** The red lining of his robe (his blush and scar, a redder hue, stay his own). */
@@ -809,14 +809,14 @@ const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE
  */
 export function castTicks(
   p: Pick<Player, "charge" | "rasengan">,
-  blast: Pick<Blast, "ttl" | "kind"> | undefined,
+  blast: (Pick<Blast, "ttl" | "kind"> & Partial<Pick<Blast, "length">>) | undefined,
   mega?: Pick<Bomb, "fuse">,
 ): number | undefined {
   if (p.charge > 0) return KAME_CHARGE - p.charge;
   if (mega) return FUSE_TICKS - mega.fuse;
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
   if (!blast) return undefined;
-  return (WINDUP[blast.kind] ?? 0) + BLAST_TICKS - blast.ttl;
+  return (WINDUP[blast.kind] ?? 0) + blastLife({ kind: blast.kind, length: blast.length ?? 0 }) - blast.ttl;
 }
 
 /**
@@ -1055,28 +1055,35 @@ export function kissHearts(x0: number, y0: number, x1: number, y1: number, age: 
   return [{ x: x1, y: y1 - 3 * t, size: 7 + 3 * t, alpha: 1 - t }, ...hearts];
 }
 
-/** Harry's patronus, a silver stag galloping (side view, facing right): scripts/build-patronus.py. */
-export const PATRONUS = { url: "sprites/patronus.png", width: 96, height: 96, anchorX: 48, anchorY: 84, scale: 0.3 };
-/** Ticks the stag takes to gallop to where it stopped; it fades out over the rest of the blast. */
-const PATRONUS_RUN = 24;
+/**
+ * Harry's patronus, a silver stag galloping (scripts/build-patronus.py): one row per view (side facing right, front
+ * running at us, back running away), `frames` gallop frames each, its feet at (anchorX, anchorY) of a cell.
+ */
+export const PATRONUS = { url: "sprites/patronus.png", size: 96, frames: 8, rows: { side: 0, down: 1, up: 2 }, anchorX: 48, anchorY: 84, scale: 0.3 };
+/** Ticks a gallop frame lasts. */
+const PATRONUS_FRAME_TICKS = 3;
 
 /**
- * Harry's stag from (x0,y0) to (x1,y1), `age` ticks after he cast it: galloping there in two bounding leaps (its feet on
- * the path between them), a trail of sparkles behind it, then standing there fading into light. Null once it is gone.
+ * Harry's stag from (x0,y0) to (x1,y1), running `dir`, `age` ticks after he cast it: a steady gallop there in `run`
+ * ticks (bounding a little, its legs going round the gallop frames), a trail of sparkles behind it, then standing there
+ * fading into light for PATRONUS_FADE ticks. Null once it is gone.
  */
-export function patronusLook(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; alpha: number; flip: boolean; sparkles: { x: number; y: number; size: number; alpha: number }[] } | null {
-  if (age >= BLAST_TICKS) return null;
+export function patronusLook(x0: number, y0: number, x1: number, y1: number, dir: Facing, run: number, age: number):
+  { x: number; y: number; alpha: number; flip: boolean; view: "side" | "down" | "up"; frame: number; sparkles: { x: number; y: number; size: number; alpha: number }[] } | null {
+  if (age >= run + PATRONUS_FADE) return null;
   const at = (k: number) => {
-    const t = Math.min(1, Math.max(0, k / PATRONUS_RUN));
-    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t - Math.abs(Math.sin(t * Math.PI * 2)) * 5, t };
+    const t = run > 0 ? Math.min(1, Math.max(0, k / run)) : 1;
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t - Math.abs(Math.sin((k / (PATRONUS_FRAME_TICKS * PATRONUS.frames)) * Math.PI * 2)) * 2 };
   };
-  const { x, y } = at(age);
-  const fading = Math.max(0, age - PATRONUS_RUN) / (BLAST_TICKS - PATRONUS_RUN);
+  const { x, y } = at(Math.min(age, run));
+  const fading = Math.max(0, age - run) / PATRONUS_FADE;
   const sparkles = Array.from({ length: 5 }, (_, k) => {
-    const back = at(age - 2 - k * 2);
+    const back = at(Math.min(age, run) - 2 - k * 3);
     return { x: back.x, y: back.y + 3 + ((k * 5) % 4) - 2, size: 1.6 - k * 0.2, alpha: (1 - k / 5) * (1 - fading) };
   });
-  return { x, y, alpha: 0.9 * (1 - fading * 0.9), flip: x1 < x0, sparkles };
+  const view = dir === "up" || dir === "down" ? dir : "side";
+  const frame = Math.floor(Math.min(age, run) / PATRONUS_FRAME_TICKS) % PATRONUS.frames;
+  return { x, y, alpha: 0.9 * (1 - fading * 0.9), flip: dir === "left", view, frame, sparkles };
 }
 
 /**
