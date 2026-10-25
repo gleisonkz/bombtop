@@ -1,7 +1,8 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { Fx } from "./fx";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { loadFlameArt, type FlameArt } from "./flame-art";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, boltOrigin, boltPoints, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -78,7 +79,7 @@ async function loadSkin(sheet: SheetLayout): Promise<Skin> {
     paintSheet(data.data, sheet, rgb);
     ctx.putImageData(data, 0, 0);
     const tex = Texture.from(canvas);
-    tex.source.scaleMode = sheet.url === SHEETS.bomber.url ? "nearest" : (sheet.scale ?? 1) < 1 ? "linear" : "nearest";
+    tex.source.scaleMode = (sheet.scale ?? 1) < 1 ? "linear" : "nearest";
     return tex;
   });
   return { sheet, sources, frames: new Map() };
@@ -135,7 +136,7 @@ export class Renderer {
   private bombArt: Map<string, Texture> | null = null;
   private readonly bombSprites: Sprite[] = [];
   /** Flame textures by piece, one per stage of the flame's life, once loaded. */
-  private flameArt: Record<FlamePiece["kind"], Texture[]> | null = null;
+  private flameArt: FlameArt | null = null;
   private readonly flameSprites: Sprite[] = [];
   private itemArt: Map<ItemKind, Texture[]> | null = null;
   private readonly itemSprites: Sprite[] = [];
@@ -249,11 +250,8 @@ export class Renderer {
   }
 
   async useFlameArt(): Promise<void> {
-    const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${FLAMES.url}`);
-    base.source.scaleMode = "linear"; // drawn at half size
-    const row = (r: number) =>
-      Array.from({ length: FLAMES.frames }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * FLAMES.size, r * FLAMES.size, FLAMES.size, FLAMES.size) }));
-    this.flameArt = { center: row(FLAMES.rows.center), mid: row(FLAMES.rows.mid), end: row(FLAMES.rows.end) };
+    if (this.flameArt) return;
+    this.flameArt = await loadFlameArt();
   }
 
   /** Draws the arena (grass, blocks, walls) with the tile art instead of flat colors. */
@@ -335,7 +333,11 @@ export class Renderer {
         this.flameLayer.addChild(sprite);
       }
       const piece = flamePiece(burning, f.x, f.y);
-      sprite.texture = art[piece.kind][flameFrame(f.ttl)]!;
+      sprite.scale.set(piece.kind === "center" ? FLAMES.centerScale : FLAMES.scale);
+      let frames = art.end;
+      if (piece.kind === "mid") frames = art.mid[flameVariant(f.x, f.y)]!;
+      if (piece.kind === "center") frames = art.center[flameConnections(burning, f.x, f.y)]!;
+      sprite.texture = frames[flameFrame(f.ttl)]!;
       sprite.rotation = piece.rot;
       sprite.position.set((f.x + 0.5) * TILE_PX, (f.y + 0.5) * TILE_PX);
       sprite.visible = true;

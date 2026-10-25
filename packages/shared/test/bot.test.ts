@@ -107,6 +107,15 @@ describe("Bot levels", () => {
     }
   });
 
+  it("does not trap itself with its own bombs across known regression seeds", () => {
+    for (const seed of [8, 20, 64, 72]) {
+      const s = createMatch({ seed, playerIds: ["bot", "idle"], revenge: false });
+      const bot = new Bot("bot", "hard");
+      for (let i = 0; i < 60 * TICK_RATE && player(s, "bot").alive; i++) step(s, { bot: bot.input(s) });
+      expect(player(s, "bot").alive, `seed ${seed}`).toBe(true);
+    }
+  });
+
   it("harder bots react faster", () => {
     const thinkTicks = (level: "easy" | "hard") => {
       const s = emptyMatch();

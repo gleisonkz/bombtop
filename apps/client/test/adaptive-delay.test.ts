@@ -47,6 +47,51 @@ describe("AdaptiveDelay", () => {
     expect(feed(new AdaptiveDelay(), [1], 3000)).toBe(40);
   });
 
+  it("releases isolated 400 ms spikes within two seconds of steady arrivals", () => {
+    const d = new AdaptiveDelay();
+    feed(d, [33], 600);
+    const recoveredAt = 600 * 33 + 400;
+    d.observe(recoveredAt);
+    const recovered = feed(d, [33], 60, recoveredAt);
+    expect(recovered).toBeLessThan(210);
+    expect(feed(d, [33], 600, recoveredAt + 60 * 33)).toBeLessThan(60);
+  });
+
+  it("refreshes jitter room for recurring 4G bursts while an isolated spike recovers", () => {
+    const isolated = new AdaptiveDelay();
+    const recurring = new AdaptiveDelay();
+    feed(isolated, [33], 600);
+    feed(recurring, [33], 600);
+    let t = 600 * 33;
+    for (let cycle = 0; cycle < 6; cycle++) {
+      for (const gap of [400, 2, ...Array<number>(48).fill(33)]) {
+        t += gap;
+        recurring.observe(t);
+      }
+    }
+    feed(isolated, [400], 1, 600 * 33);
+    feed(isolated, [33], Math.floor((t - 600 * 33 - 400) / 33), 600 * 33 + 400);
+    expect(recurring.ms).toBeGreaterThan(isolated.ms + 60);
+    expect(recurring.ms).toBeGreaterThan(150);
+  });
+
+  it("keeps render time monotonic through compressed arrivals and smooth within bounds", () => {
+    const d = new AdaptiveDelay();
+    feed(d, [33], 600);
+    let t = 600 * 33;
+    for (const gap of [400, 0, 0, 1, 2, ...Array<number>(100).fill(33), 600, 0, 2]) {
+      const previous = d.ms;
+      const renderAt = t - previous;
+      t += gap;
+      d.observe(t);
+      expect(t - d.ms).toBeGreaterThanOrEqual(renderAt);
+      expect(d.ms - previous).toBeLessThanOrEqual(Math.min(10, gap));
+      expect(previous - d.ms).toBeLessThanOrEqual(1);
+      expect(d.ms).toBeGreaterThanOrEqual(40);
+      expect(d.ms).toBeLessThanOrEqual(250);
+    }
+  });
+
   it("moves gradually, faster up than down, so the picture never jumps", () => {
     const d = new AdaptiveDelay();
     const settled = feed(d, [33], 600);

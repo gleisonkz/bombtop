@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  AIR_TICKS_PER_TILE,
   createMatch,
+  detonateRemote,
   FLAME_TICKS,
   FUSE_TICKS,
   getTile,
@@ -68,20 +70,39 @@ describe("placing bombs", () => {
 });
 
 describe("explosions", () => {
-  it("detonates remote bombs with flames after three seconds", () => {
+  it("keeps remote bombs armed until manually detonated", () => {
     const s = emptyMatch();
     s.players[0]!.bombType = "remote";
     moveTo(s, "p1", 5, 5);
     expect(placeBomb(s, "p1")).toBe(true);
     moveTo(s, "p1", 1, 1);
-    run(s, FUSE_TICKS - 1);
+    run(s, FUSE_TICKS * 2);
     expect(s.bombs).toHaveLength(1);
-    expect(s.bombs[0]!.fuse).toBe(1);
+    expect(s.bombs[0]!.fuse).toBe(FUSE_TICKS);
+    expect(hasFlame(s, 5, 5)).toBe(false);
+
+    expect(detonateRemote(s, "p1")).toBe(true);
     step(s);
     expect(s.bombs).toHaveLength(0);
     for (const [x, y] of [[5, 5], [4, 5], [6, 5], [5, 4], [5, 6]]) {
       expect(hasFlame(s, x!, y!)).toBe(true);
     }
+  });
+
+  it("detonates an undetonated remote bomb caught in another blast", () => {
+    const s = emptyMatch();
+    s.players[0]!.bombType = "remote";
+    moveTo(s, "p1", 5, 5);
+    placeBomb(s, "p1");
+    moveTo(s, "p2", 5, 6);
+    placeBomb(s, "p2");
+    moveTo(s, "p1", 1, 1);
+    moveTo(s, "p2", 11, 9);
+
+    run(s, FUSE_TICKS);
+
+    expect(s.bombs).toHaveLength(0);
+    expect(hasFlame(s, 5, 4)).toBe(true);
   });
   it("explodes when the fuse runs out", () => {
     const s = emptyMatch();
@@ -149,6 +170,33 @@ describe("explosions", () => {
     run(s, FUSE_TICKS - 10);
     expect(s.bombs).toHaveLength(0);
     expect(hasFlame(s, 9, 5)).toBe(true);
+  });
+
+  it("detonates a newly placed bomb on an existing flame immediately", () => {
+    const s = emptyMatch();
+    moveTo(s, "p1", 5, 5);
+    s.flames.push({ x: 5, y: 5, ttl: FLAME_TICKS, ownerId: "p2" });
+    expect(placeBomb(s, "p1")).toBe(true);
+    moveTo(s, "p1", 1, 1);
+
+    step(s);
+
+    expect(s.bombs).toHaveLength(0);
+    expect(hasFlame(s, 5, 4)).toBe(true);
+  });
+
+  it("detonates a bomb that lands on an existing flame", () => {
+    const s = emptyMatch();
+    moveTo(s, "p1", 4, 5);
+    expect(placeBomb(s, "p1")).toBe(true);
+    moveTo(s, "p1", 1, 1);
+    s.bombs[0]!.air = { dir: "right", tilesLeft: 1, progress: AIR_TICKS_PER_TILE - 1 };
+    s.flames.push({ x: 5, y: 5, ttl: FLAME_TICKS, ownerId: "p2" });
+
+    step(s);
+
+    expect(s.bombs).toHaveLength(0);
+    expect(hasFlame(s, 5, 4)).toBe(true);
   });
 
   it("kills players standing in flames", () => {

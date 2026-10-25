@@ -4,6 +4,8 @@ import type { Direction, InputAck, PlayerInput } from "../index";
 const WINDOW = 180;
 /** Extra ticks of slack on top of the worst recent lateness. */
 const MARGIN = 1;
+/** Recover at most one tick of buffering per six server ticks. */
+const RECOVERY_INTERVAL = 6;
 
 interface Pending {
   input: PlayerInput;
@@ -14,14 +16,15 @@ interface Pending {
 /**
  * One player's inputs on the server (a jitter buffer). The client stamps each
  * input with its own tick; the server applies it a short, adaptive delay
- * later, so each one is held for exactly as many ticks as the client held it.
- * That is what the client's prediction assumes, so network jitter no longer
- * pulls the predicted player back (no "teleports").
+ * later, preserving client durations except during bounded delay recovery
+ * or when overdue transitions must be spread across simulation ticks.
+ * Steady timing matches client prediction; recovery can cause small corrections.
  */
 export class InputQueue {
   private pending: Pending[] = [];
   private lags: { at: number; lag: number }[] = [];
   private offset: number | null = null;
+  private lastRecovery: number | null = null;
   private dir: Direction = null;
   private alt: Direction = null;
   private bomb = false;
@@ -41,8 +44,10 @@ export class InputQueue {
     return this.offset ?? 0;
   }
 
-  /** An input arriving at server tick `now`, stamped with the client tick it was made on (untimed: apply at once). */
+  /** An input arriving at server tick `now`, stamped with its client tick (untimed: eligible at once). */
   push(input: PlayerInput, seq: number, clientTick: number | undefined, now: number): void {
+    // Reject old or repeated inputs before they can affect the lag estimate.
+    if (seq > 0 && (seq <= this.seq || this.pending.some((p) => p.seq === seq))) return;
     let due = now;
     if (clientTick !== undefined) {
       this.lags.push({ at: now, lag: now - clientTick });
@@ -50,8 +55,6 @@ export class InputQueue {
       if (this.offset === null || target > this.offset) this.offset = target;
       due = Math.max(now, clientTick + this.offset);
     }
-    // Numbered inputs apply in the client's order: an old or repeated one is dropped.
-    if (seq > 0 && (seq <= this.seq || this.pending.some((p) => p.seq === seq))) return;
     const at = seq > 0 ? this.pending.findIndex((p) => p.seq > seq) : -1;
     this.pending.splice(at < 0 ? this.pending.length : at, 0, { input, seq, due });
     for (let i = 1; i < this.pending.length; i++) this.pending[i]!.due = Math.max(this.pending[i]!.due, this.pending[i - 1]!.due);
@@ -60,7 +63,8 @@ export class InputQueue {
   /** The input to apply on server tick `now`. */
   take(now: number): PlayerInput {
     this.shrink(now);
-    while (this.pending.length && this.pending[0]!.due <= now) {
+    this.catchUpMovement(now);
+    if (this.pending.length && this.pending[0]!.due <= now) {
       const { input, seq } = this.pending.shift()!;
       this.dir = input.dir;
       this.alt = input.alt ?? null;
@@ -81,20 +85,32 @@ export class InputQueue {
 
   private target(now: number): number {
     this.lags = this.lags.filter((l) => now - l.at < WINDOW);
+    if (!this.lags.length) return this.offset ?? 0;
     return Math.max(...this.lags.map((l) => l.lag)) + MARGIN;
   }
 
+  private catchUpMovement(now: number): void {
+    const first = this.pending[0];
+    const next = this.pending[1];
+    if (!first || !next || first.due >= now || next.due > now) return;
+    const input = first.input;
+    if (input.bomb || input.action || input.special || next.input.bomb || next.input.action || next.input.special) return;
+    if (!!input.hold !== this.hold || !!next.input.hold !== this.hold) return;
+    this.pending.shift();
+  }
+
   /**
-   * Once the network calms down, drop the extra delay — but only while the
-   * player stands still, where waiting a few ticks less changes nothing.
+   * Recover gradually even during movement. Shift all due times equally to
+   * preserve order. Only overdue movement may coalesce; action/hold edges
+   * retain separate simulation ticks.
    */
   private shrink(now: number): void {
-    if (this.offset === null || this.dir !== null || !this.lags.length) return;
+    if (this.offset === null) return;
     const excess = this.offset - this.target(now);
     if (excess <= 0) return;
-    const room = this.pending.length ? this.pending[0]!.due - now : excess;
-    const cut = Math.min(excess, room);
-    if (cut <= 0) return;
+    if (this.lastRecovery !== null && now - this.lastRecovery < RECOVERY_INTERVAL) return;
+    const cut = Math.min(excess, 1);
+    this.lastRecovery = now;
     this.offset -= cut;
     for (const p of this.pending) p.due -= cut;
   }

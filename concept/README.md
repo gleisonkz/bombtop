@@ -1,20 +1,16 @@
-# Bombtop — identidade visual dos personagens
+# Bombtop — conceitos e identidade visual
 
-Esta pasta guarda os conceitos e as referências da família visual dos personagens. Os sprites utilizados pelo jogo continuam em `apps/client/public/sprites/`.
+A família visual **v1** segue a arte de menu aprovada em [bomber/menu-flight-source.png](bomber/menu-flight-source.png): arcade 2D premium, proporções compactas de brinquedo, gradientes suaves controlados, reflexos limpos e contorno escuro contínuo. Sem aparência pixelada.
 
-## Direção visual v0.1
+- [CHARACTER-IDENTITY.md](CHARACTER-IDENTITY.md): invariantes da família, identidade exclusiva do Bomber e critérios de aceitação.
+- [characters.identity.json](characters.identity.json): contrato reutilizável estruturado, referências relativas a esta pasta, materiais, paleta aproximada, workflow e grades separadas de master/runtime.
+- [PROMPT-BASE.md](PROMPT-BASE.md): prompt v1 para gerar outros personagens sem copiar os traços exclusivos do Bomber.
+- [bomber/README.md](bomber/README.md): documentação operacional do Bomber; verificar sua sincronização com a exportação final.
 
-- Referência de linguagem: `references/bomberman-card-reference.png` (cartão ilustrado de Bomberman). Usar apenas como inspiração de proporções e leitura; desenhar personagens e detalhes originais.
-- Arquétipo: herói de ação de brinquedo, simpático e energético, com silhueta arredondada e compacta.
-- Cabeça/capacete grande: aproximadamente 40–45% da altura visível. Face em visor/máscara expressiva, olhos simples e legíveis.
-- Corpo curto e robusto, ombros arredondados, mãos/luvas grandes, pernas curtas e botas largas. Pés firmes no mesmo plano.
-- Contorno escuro contínuo, grandes formas e poucos detalhes pequenos; volumes destacados por até três valores por material, sem gradientes fotográficos.
-- Projeção 3/4 levemente frontal, corpo inteiro, expressão determinada e amigável. A escala e a pose devem parecer da mesma linha de bonecos entre personagens.
-- A identidade individual muda pela paleta, símbolo original, roupa, capacete e acessórios; as proporções, acabamento, luz e volume seguem o mesmo padrão.
-- Conceito de apresentação: ilustração limpa, personagem isolado, fundo transparente. Sem texto, cenário, moldura, logo ou acessórios cortados.
+O contrato refinado usa master 1872 × 5472 (9 × 19 células de 208 × 288) e mantém gameplay runtime 936 × 2592 (9 × 18 células de 104 × 144), escala 0,22, corpo 100 px e âncora (52, 140). Cada quadro master é reduzido individualmente com Lanczos antes de montar o atlas. O menu aprovado continua fonte 1152 × 1152 e runtime 768 × 768, ambos 3 × 3. Novos desenhos fornecem o detalhe; ampliar arte antiga não atende ao pedido.
 
-## Piloto
+Esses documentos registram direção aprovada e contrato de produção; a validação dos assets finais cabe ao coordenador. Fontes ficam em concept; texturas usadas pelo jogo ficam em apps/client/public/sprites. Não interpretar documentação como prova de regeneração ou integração concluída.
 
-`base-character.png` é o primeiro teste dessa linguagem, um **herói genérico original** usado para validar proporção e acabamento. Não é um sprite de produção, não substitui o Capitão nem o ninja e não deve ser conectado ao renderer antes de aprovar o estilo.
+## Histórico
 
-O prompt reutilizável está em `PROMPT-BASE.md`. Para gerar cada personagem, mantenha o bloco de regras fixas e substitua somente as variáveis de identidade. Depois de aprovar a linguagem, derivar os sprites na grade e nos anchors reais de `apps/client/src/render/sprites.ts`, preservando quadros de animação e perspectiva.
+[Cartão de proporções](references/bomberman-card-reference.png) e [identidade histórica](references/bomb-identity-2026.png) permanecem como contexto. A versão v0.1 e seu piloto textual Bombtop Vanguard antecedem a aprovação atual; o arquivo base-character.png não existe nesta pasta. A restrição antiga a dois/três valores de sombra foi substituída pelo acabamento suave aprovado. Usar referências históricas apenas como inspiração, sem copiar personagens ou marcas licenciados.

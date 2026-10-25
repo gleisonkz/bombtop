@@ -52,13 +52,26 @@ in HD: drawn on a design grid at high resolution and scaled down, so edges are s
 - `bombs.png` — `build-bombs.py`. Cells (128px): normal, pierce, remote.
 - `items.png` — `build-items.py` (bomb items reuse bombs.png). Columns (192px): one per item,
   order = `ITEMS.order` in `src/render/sprites.ts`; rows: plain, then 3 frames of a glint.
-- `flames.png` — `build-flames.py`. Rows (128px): fireball center, arm segment, arm tip; columns: 5 stages.
+- `flames.png` — original AI-generated art for Bombtop, created with the built-in image generator using the implemented bombs as a style reference. Source and prompt: `concept/flames/flames-volume-source.png` and `volume-generation.txt`. Packed by `build-flames.py`; six rows of 128px cells: fireball center, four arm variants, terminal tip; five lifetime stages. Textures are isolated and clamped at runtime to prevent atlas bleeding.
 - `kamehameha.png` — `build-kamehameha.py`, Goku's beam. Rows (128px): ball of ki, beam segment (tiles
   seamlessly), head; columns: 8 looping frames.
 - `rasengan.png` — `build-rasengan.py`, Naruto's Rasengan. Rows (128px): the spinning ball (8 looping frames),
   the burst where it strikes (8 frames, played once).
 - `tiles.png` — `build-tiles.py`. Cells (128px): grass A (plain, flowers, pebbles), grass B (darker),
   breakable block, inner pillar, border wall. Order = `TILES.cells`.
-- `bomber.png` — `build-bomber.py`, the bomb mascot: a demolition trooper with an iron bomb for a head, drawn as
-  pixel art (a 3D puppet posed per frame, flat shading bands, reduced to the pixel grid without blending);
-  rows = `SHEETS.bomber`.
+
+## Bomber regenerated sheet (2026-10-25)
+
+Original Bombtop character, regenerated with OpenAI's built-in image generation using
+the project's previous Bomber as the visual reference: black bomb head, amber eyes,
+violet armor and red cape. Source: `concept/bomber/bomber-sheet.png` (936 x 2736,
+RGBA, 9 columns, 19 rows of 104 x 144 cells). The first 18 rows match `SHEETS.bomber`;
+the last contains nine distinct menu-flight poses. Dedicated generated carry poses
+keep both arms raised; the renderer supplies the carried bomb.
+
+`scripts/pack-bomber.py` exports `bomber-atlas.png` (arena/lobby) from the compiled
+source and `bomber-title-fly.png` (768 x 768, 3 x 3 menu loop) from the regenerated
+`concept/bomber/menu-flight-source.png` (1152 x 1152). The menu source preserves
+HD details and transparent padding; the compiled sheet includes matching thumbnails.
+`scripts/build-bomber.py` is the historical procedural generator, not the source
+of the current art. See `concept/bomber/README.md` for the frame inventory.

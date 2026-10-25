@@ -25,6 +25,17 @@ export interface MatchOptions {
   characters?: Record<string, CharacterId>;
 }
 
+const CLASSIC_ITEM_COUNTS: readonly [ItemKind, number][] = [
+  [ItemKind.Bomb, 8],
+  [ItemKind.Fire, 5],
+  [ItemKind.Speed, 3],
+  [ItemKind.Egg, 2],
+  [ItemKind.Glove, 2],
+  [ItemKind.Punch, 2],
+  [ItemKind.Kick, 3],
+  [ItemKind.Skull, 1],
+];
+
 export function createMatch(opts: MatchOptions): MatchState {
   const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = false, stage = "classic" } = opts;
   if (playerIds.length > MAX_PLAYERS) {
@@ -53,7 +64,7 @@ export function createMatch(opts: MatchOptions): MatchState {
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
     revenge,
-    items: hideItems(tiles, width, seed),
+    items: hideItems(tiles, width, seed, stage),
     grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
     players: playerIds.map((id, i) => ({
       id,
@@ -104,8 +115,27 @@ function safeTiles(width: number): Set<number> {
  * Picks which blocks hide power-ups. Uses its own PRNG stream so adding item
  * kinds never changes the block layout of a seed.
  */
-function hideItems(tiles: Tile[], width: number, seed: number): Item[] {
+function shuffle<T>(values: T[], rng: () => number): void {
+  for (let i = values.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [values[i], values[j]] = [values[j]!, values[i]!];
+  }
+}
+
+function hideItems(tiles: Tile[], width: number, seed: number, stage: StageId): Item[] {
   const rng = createRng(seed ^ 0x9e3779b9);
+  if (stage === "classic") {
+    const blocks = tiles.flatMap((tile, i) => tile === Tile.Block ? [i] : []);
+    const pool = CLASSIC_ITEM_COUNTS.flatMap(([kind, count]) => Array<ItemKind>(count).fill(kind));
+    shuffle(blocks, rng);
+    shuffle(pool, rng);
+    return pool.slice(0, blocks.length).map((kind, i) => ({
+      x: blocks[i]! % width,
+      y: Math.floor(blocks[i]! / width),
+      kind,
+    }));
+  }
+
   const kinds = Object.entries(ITEM_WEIGHTS) as [ItemKind, number][];
   const total = kinds.reduce((sum, [, w]) => sum + w, 0);
   const items: Item[] = [];

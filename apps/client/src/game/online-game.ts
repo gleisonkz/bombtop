@@ -4,6 +4,7 @@ import { winnerVoice } from "../audio/voices";
 import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { between } from "../render/sprites";
+import { RemoteMotion } from "../render/remote-motion";
 import { Standings } from "./standings";
 import {
   C2S,
@@ -61,6 +62,7 @@ export class OnlineGame implements GameMode {
   private readonly buffer = new SnapshotBuffer(this.delay.ms);
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private readonly predictor: Predictor;
+  private readonly remoteMotion: RemoteMotion;
   private readonly listener = new Listener();
   private readonly worldListener = new Listener();
   /** Connection readout (?debug), with its ping timer. */
@@ -114,11 +116,13 @@ export class OnlineGame implements GameMode {
     private readonly panel: LobbyPanel,
   ) {
     this.predictor = new Predictor(room.sessionId);
+    this.remoteMotion = new RemoteMotion(room.sessionId);
     this.ghosts = new GhostBombs(room.sessionId);
     this.blastGhosts = new GhostBlasts(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
+        this.remoteMotion.reset();
         this.ghosts.clear();
         this.pickups = new GhostPickups();
         this.kicks.clear();
@@ -202,9 +206,10 @@ export class OnlineGame implements GameMode {
     const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
     this.ctx.sound.cues(this.echo.filter(heard, nowMs), width);
     this.ctx.sound.cues(this.worldListener.hear(world).filter((c) => WORLD_CUES.has(c.name)), width);
-    const prev = new Map(sample.from.players.map((p) => [p.id, { px: p.px, py: p.py }]));
+    const others = this.remoteMotion.sample(sample, nowMs);
+    const prev = new Map(others.players.map((p) => [p.id, { px: p.px, py: p.py }]));
     const { bombs, flames, grid, items, blasts } = world;
-    const mixed = { ...sample.to, tick: world.tick, bombs, flames, grid, items, blasts };
+    const mixed = { ...others, tick: world.tick, bombs, flames, grid, items, blasts };
     let view = this.blastGhosts.apply(this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (me) {
@@ -215,14 +220,14 @@ export class OnlineGame implements GameMode {
     }
     view = this.pickups.apply(view, nowMs);
     if (!me) {
-      this.measureJumps(view, prev, sample.alpha, null);
-      return this.ctx.renderer.draw(view, prev, sample.alpha);
+      this.measureJumps(view, prev, 1, null);
+      return this.ctx.renderer.draw(view, prev, 1);
     }
     if (import.meta.env.DEV) Object.assign(window, { __me: me });
     prev.set(me.id, { px: me.px, py: me.py });
     const players = view.players.map((p) => (p.id === me.id ? me : p));
-    this.measureJumps({ ...view, players }, prev, sample.alpha, me.id);
-    this.ctx.renderer.draw({ ...view, players }, prev, sample.alpha);
+    this.measureJumps({ ...view, players }, prev, 1, me.id);
+    this.ctx.renderer.draw({ ...view, players }, prev, 1);
   }
 
   /** Where each player was drawn last frame, to report teleports in debug mode. */

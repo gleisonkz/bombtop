@@ -4,9 +4,35 @@ import { createMatch, getTile, ItemKind, playerTile, SPAWN_POINTS, Tile } from "
 const ids = ["p1", "p2", "p3", "p4", "p5"];
 
 describe("arena", () => {
-  it("hides no eggs: mounts are off for now", () => {
-    for (let seed = 1; seed <= 200; seed++) {
-      expect(createMatch({ seed, playerIds: ids }).items.some((i) => i.kind === ItemKind.Egg)).toBe(false);
+  it("distributes the classic battle item inventory including two eggs", () => {
+    const match = createMatch({ seed: 17, playerIds: ids, blockDensity: 1 });
+    const counts = Object.fromEntries(
+      [...new Set(match.items.map((item) => item.kind))].map((kind) => [kind, match.items.filter((item) => item.kind === kind).length]),
+    );
+
+    expect(counts).toEqual({
+      [ItemKind.Bomb]: 8,
+      [ItemKind.Fire]: 5,
+      [ItemKind.Speed]: 3,
+      [ItemKind.Egg]: 2,
+      [ItemKind.Glove]: 2,
+      [ItemKind.Punch]: 2,
+      [ItemKind.Kick]: 3,
+      [ItemKind.Skull]: 1,
+    });
+    expect(match.items).toHaveLength(26);
+    expect(new Set(match.items.map((item) => `${item.x},${item.y}`)).size).toBe(match.items.length);
+    expect(match.items.every(({ x, y }) => getTile(match, x, y) === Tile.Block)).toBe(true);
+  });
+
+  it("keeps hidden item placement deterministic and bounded by existing blocks", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const opts = { seed, playerIds: ids, blockDensity: 0.3 };
+      const a = createMatch(opts);
+      const b = createMatch(opts);
+      expect(a.items).toEqual(b.items);
+      expect(a.items.length).toBeLessThanOrEqual(a.grid.tiles.filter((tile) => tile === Tile.Block).length);
+      expect(new Set(a.items.map(({ x, y }) => `${x},${y}`)).size).toBe(a.items.length);
     }
   });
 

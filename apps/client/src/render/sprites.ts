@@ -240,16 +240,15 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14,
   },
-  /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
-    url: "sprites/bomber-atlas.png",
+    url: "sprites/bomber-atlas.png?v=20261025-hd-family-v1",
     width: 936,
     height: 2592,
     frameW: 104,
     frameH: 144,
     anchorX: 52,
     anchorY: 140,
-    bodyH: 110,
+    bodyH: 100,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -268,7 +267,7 @@ export const SHEETS = {
     hueBase: [106, 71, 145],
     /** White would bleach his armor into the steel round his head: that player keeps the violet. */
     keepFor: [[245, 245, 245]],
-    scale: 0.2,
+    scale: 0.22,
   },
 } satisfies Record<string, SheetLayout>;
 
@@ -369,15 +368,25 @@ export function mascotDeath(ticks: number) {
 
 /** Explosion flames: rows of square cells per piece, one column per stage of the flame's life. */
 export const FLAMES = {
-  url: "sprites/flames.png",
+  url: "sprites/flames.png?v=20261025-sculpted-flames-v5-connected",
   size: 128,
   frames: 5,
-  rows: { center: 0, mid: 1, end: 2 },
-  /** Drawn size: one cell per tile. */
-  scale: 0.125,
+  variants: 4,
+  rows: { center: 0, mid: 1, end: 5 },
+  scale: 16 / 128,
+  centerScale: 20 / 128,
 };
 
 export type FlamePiece = { kind: keyof typeof FLAMES.rows; rot: number };
+
+export function flameConnections(burning: (x: number, y: number) => boolean, x: number, y: number): number {
+  return Number(burning(x + 1, y)) | (Number(burning(x, y + 1)) << 1) | (Number(burning(x - 1, y)) << 2) | (Number(burning(x, y - 1)) << 3);
+}
+
+export function flameVariant(x: number, y: number): number {
+  const value = x + 3 * y + Math.floor(x / 4) + 2 * Math.floor(y / 4);
+  return ((value % FLAMES.variants) + FLAMES.variants) % FLAMES.variants;
+}
 
 /**
  * Which piece a flame tile shows, from its burning neighbours: the fireball where
@@ -385,7 +394,8 @@ export type FlamePiece = { kind: keyof typeof FLAMES.rows; rot: number };
  * Mid and end cells point right with the join on the left; `rot` turns them.
  */
 export function flamePiece(burning: (x: number, y: number) => boolean, x: number, y: number): FlamePiece {
-  const [l, r, u, d] = [burning(x - 1, y), burning(x + 1, y), burning(x, y - 1), burning(x, y + 1)];
+  const connections = flameConnections(burning, x, y);
+  const [l, r, u, d] = [Boolean(connections & 4), Boolean(connections & 1), Boolean(connections & 8), Boolean(connections & 2)];
   const q = Math.PI / 2;
   if ((l || r) === (u || d)) return { kind: "center", rot: 0 };
   if (l && r) return { kind: "mid", rot: 0 };

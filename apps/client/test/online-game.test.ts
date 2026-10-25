@@ -57,7 +57,7 @@ describe("online snapshot rendering", () => {
     return snap;
   }
 
-  it("does not invent bot movement while waiting for the next snapshot", () => {
+  it("continues recent walking while waiting for the next snapshot", () => {
     receive(60, 864);
     now += 1000 / 30;
     receive(62);
@@ -66,7 +66,8 @@ describe("online snapshot rendering", () => {
     const [view, prev, alpha] = draw.mock.calls.at(-1)!;
     const bot = view.players.find((p: { id: string }) => p.id === "bot");
     const from = prev.get("bot");
-    expect(from.px + (bot.px - from.px) * alpha).toBe(896);
+    expect(from.px + (bot.px - from.px) * alpha).toBeGreaterThan(896);
+    expect(bot.px).toBeLessThanOrEqual(896 + 15 * 16);
   });
 
   it("keeps confirmed bombs and lethal flames until the server removes them", () => {
@@ -87,6 +88,25 @@ describe("online snapshot rendering", () => {
     const [cleared] = draw.mock.calls.at(-1)!;
     expect(cleared.bombs).toEqual([]);
     expect(cleared.flames).toEqual([]);
+  });
+
+  it("softens a small correction after extrapolating without changing the snapshot", () => {
+    receive(60, 864);
+    now += 1000 / 30;
+    receive(62, 896);
+    now += 150;
+    game.frame(0, now);
+    const [before, positions, alpha] = draw.mock.calls.at(-1)!;
+    const bot = before.players[1];
+    const drawnX = positions.get("bot").px + (bot.px - positions.get("bot").px) * alpha;
+    now += 1000 / 30;
+    const recovered = receive(72, 928);
+    const original = structuredClone(recovered);
+    game.frame(0, now);
+    const [view, prev, mix] = draw.mock.calls.at(-1)!;
+    const afterX = prev.get("bot").px + (view.players[1].px - prev.get("bot").px) * mix;
+    expect(Math.abs(afterX - drawnX)).toBeLessThan(16);
+    expect(recovered).toEqual(original);
   });
 
   it("retires a rejected placement as soon as its input is acknowledged", () => {

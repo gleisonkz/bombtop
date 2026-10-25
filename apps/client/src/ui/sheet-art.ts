@@ -7,13 +7,13 @@ export const CHARACTER_SHEETS: Record<CharacterId, SheetLayout> = { bomb: SHEETS
 export type PreviewState = "walk" | "idle" | "dizzy";
 
 export const TITLE_BOMBER_SHEET = {
-  url: "sprites/bomber-title-fly.png",
-  columns: 4,
-  rows: 2,
-  frames: 8,
+  url: "sprites/bomber-title-fly.png?v=20261025-clean-menu-hd",
+  columns: 3,
+  rows: 3,
+  frames: 9,
 } as const;
 
-/** Bomber's dedicated eight-frame airborne loop for the title-screen hero. */
+/** Bomber's dedicated nine-frame cape-and-flame loop for the title-screen hero. */
 export function titleBomberArt(): HTMLElement {
   const span = document.createElement("span");
   span.className = "mascot title-bomber";

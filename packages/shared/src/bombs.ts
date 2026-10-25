@@ -3,7 +3,7 @@ import { updateAir } from "./air";
 import { effectiveRange } from "./curse";
 import { updateSlides } from "./kick";
 import { shieldAt } from "./special";
-import { bombAt, getTile, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
+import { bombAt, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
@@ -28,9 +28,9 @@ export function updateBombs(s: MatchState): void {
   updateAir(s);
 
   for (const b of s.bombs) {
-    b.fuse--;
+    if (b.type !== "remote") b.fuse--;
   }
-  const queue = s.bombs.filter((b) => b.fuse <= 0);
+  const queue = s.bombs.filter((b) => b.fuse <= 0 || (!b.air && !b.heldBy && hasFlame(s, b.x, b.y)));
   while (queue.length > 0) {
     explode(s, queue.shift()!, queue);
   }

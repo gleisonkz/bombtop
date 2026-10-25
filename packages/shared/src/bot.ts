@@ -1,6 +1,6 @@
 import { FUSE_TICKS, PRESSURE_INTERVAL, ROUND_TICKS, TILE } from "./constants";
 import { pressureOrder } from "./pressure";
-import { effectiveRange, effectiveSpeed } from "./curse";
+import { cursedDirection, effectiveRange, effectiveSpeed } from "./curse";
 import {
   bombAt,
   DIR_VECTORS,
@@ -80,7 +80,7 @@ export class Bot {
     const out = this.choose(s);
     const p = s.players.find((q) => q.id === this.id);
     this.stride = out.dir && p ? { dir: out.dir, px: p.px, py: p.py } : null;
-    return out;
+    return p ? { ...out, dir: cursedDirection(p, out.dir) } : out;
   }
 
   private choose(s: MatchState): PlayerInput {
@@ -93,8 +93,23 @@ export class Bot {
     // Survival first, every tick, on every level: may cross tiles that burn later.
     if (!safe(here.x, here.y)) {
       this.goal = null;
-      const escape = reach(s, p, danger, this.tune.margin, false);
-      const out = escape.find((n) => safe(n.x, n.y)) ?? latestToBurn(escape, danger, k);
+      const preferred = reach(s, p, danger, this.tune.margin, false, true);
+      let out = preferred.find((n) => safe(n.x, n.y));
+      if (!out) {
+        const escape = reach(s, p, danger, this.tune.margin, false);
+        out = escape.find((n) => safe(n.x, n.y)) ?? latestToBurn(escape, danger, k);
+      }
+      if (out && s.bombs.some((b) => b.ownerId === this.id)) {
+        const conservative = dangerMap(s, this.id, undefined, true);
+        if (conservative.has(k(out.x, out.y))) {
+          const alternatives = reach(s, p, conservative, this.tune.margin, false, true);
+          out = alternatives.find((n) => !conservative.has(k(n.x, n.y)));
+          if (!out) {
+            const fallback = reach(s, p, conservative, this.tune.margin, false);
+            out = fallback.find((n) => !conservative.has(k(n.x, n.y))) ?? latestToBurn(fallback, conservative, k);
+          }
+        }
+      }
       return { dir: out ? heading(p, out.first.x, out.first.y) : null, bomb: false };
     }
 
@@ -150,9 +165,10 @@ export class Bot {
     const mine = s.bombs.filter((b) => b.ownerId === p.id).length;
     const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(p.bombCapacity, t.bombs);
     if (canBomb) {
-      const after = dangerMap(s, p.id, ownBomb(p, here));
+      const possible = ownBomb(p, here);
+      const after = dangerMap(s, p.id, possible);
       const worth = bombValue(s, p, here.x, here.y) > 0 || (t.cunning && this.traps(s, p, after));
-      if (worth && this.canEscape(s, p, after)) return { dir: null, bomb: true };
+      if (worth && this.canEscape(s, p, dangerMap(s, p.id, possible, true))) return { dir: null, bomb: true };
     }
 
     // Where to next: a power-up, a spot to bomb from, or a rival.
@@ -199,7 +215,7 @@ export function botInput(s: MatchState, id: string, level: BotLevel = "hard"): P
 }
 
 /** Ticks until each tile burns (0 = burning now). Tiles not in the map are safe. */
-function dangerMap(s: MatchState, me: string, extra?: Bomb): Danger {
+function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = false): Danger {
   const w = s.grid.width;
   const danger: Danger = new Map();
   const mark = (x: number, y: number, t: number) => {
@@ -214,7 +230,8 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb): Danger {
   const when = new Map<Bomb, number>();
   for (const b of bombs) when.set(b, b.type === "remote" ? (b.ownerId === me ? FUSE_TICKS : REMOTE_THREAT) : b.fuse);
   const occ = occupancy(s);
-  const blasts = new Map(bombs.map((b) => [b, blast(s, b, occ)]));
+  const unblocked = { ...occ, items: new Set<number>() };
+  const blasts = new Map(bombs.map((b) => [b, blast(s, b, b.ownerId === me && unblockedExtra ? unblocked : occ)]));
   // Bombs by tile, in field order (sliding ones can share a tile).
   const at = new Map<number, Bomb[]>();
   for (const b of bombs) {
@@ -296,7 +313,7 @@ function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">, occ =
  * Every tile the player can get to, nearest first. A tile on fire, or one
  * that would burn before the player is through it, is not entered.
  */
-function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict: boolean): Node[] {
+function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict: boolean, avoidSkulls = strict): Node[] {
   const skulls = new Set(s.items.filter((i) => i.kind === ItemKind.Skull).map((i) => i.y * s.grid.width + i.x));
   const w = s.grid.width;
   const start = playerTile(p);
@@ -317,7 +334,7 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
       const burns = danger.get(k);
       const through = (n.steps + 2) * perStep + lag + margin;
       if (burns !== undefined && (strict || burns <= through)) continue;
-      if (strict && skulls.has(k)) continue; // curses are not worth it
+      if (avoidSkulls && skulls.has(k)) continue;
       seen.add(k);
       out.push({ x, y, steps: n.steps + 1, first: n.steps === 0 ? { x, y } : n.first });
     }

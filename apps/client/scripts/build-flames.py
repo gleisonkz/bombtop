@@ -1,91 +1,132 @@
-"""Explosion flame sheet in HD: rows center / mid / end, FRAMES columns of 128x128 (a 32-unit
-design grid at 4 px per unit, computed at 2x and scaled down).
-Usage: python build-flames.py public/sprites/flames.png preview.png  (needs Pillow, numpy)
-Mid and end point right (end tip on the right); the renderer rotates them.
-The noise is periodic in x so neighbouring tiles join seamlessly."""
-import math, random, sys
+from pathlib import Path
+import sys
+
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
-U, PX, SS, FRAMES = 32, 4, 2, 5
-N = U * PX * SS
-K = N / U
-C = U / 2
-STOPS = [  # (heat, rgb): smooth gradient from the dark rim to the white-hot core
-    (0.00, (110, 18, 8)),
-    (0.16, (214, 52, 28)),
-    (0.40, (255, 122, 26)),
-    (0.64, (255, 210, 63)),
-    (0.84, (255, 248, 210)),
-    (1.00, (255, 255, 240)),
-]
-# Per frame: band half-width at the joins, core boost, flicker phase.
-LIFE = [(7.5, 1.35, 0.0), (11.5, 1.15, 0.9), (10.5, 1.0, 2.1), (8.0, 0.85, 3.3), (5.0, 0.68, 4.4)]
 
-rnd = random.Random(7)
-# Periodic 2D noise: integer wave numbers repeat every tile, so joins line up.
-WAVES = [(rnd.randint(1, 4), rnd.randint(-3, 3), rnd.uniform(0, 6.3), rnd.uniform(0.4, 1.0)) for _ in range(7)]
-WSUM = sum(a for *_, a in WAVES)
+ROOT = Path(__file__).resolve().parents[1]
+SIZE = 128
+FRAMES = 5
+VARIANTS = 4
+ROWS = 6
+SOURCE = ROOT.parents[1] / "concept/flames/flames-volume-source.png"
+SOURCE_SIZE = (1145, 1374)
+Y_EDGES = (0, 344, 566, 793, 1010, 1215, 1374)
+BODY_X = (0, 260, 507, 738, 955, 1145)
+CENTER_X = (0, 286, 540, 774, 968, 1145)
+END_X = (0, 292, 546, 775, 985, 1145)
+CENTER_DIAMETERS = (118, 120, 113, 100, 84)
+JOIN_WIDTH = 12
 
-ys, xs = np.mgrid[0:N, 0:N]
-X, Y = (xs + 0.5) / K, (ys + 0.5) / K
 
-def noise(x, y, t):
-    v = sum(a * np.sin(2 * math.pi * (k * x + l * y) / U + ph + t * (1 + k)) for k, l, ph, a in WAVES)
-    return v / WSUM
+def main_silhouette(image: Image.Image) -> Image.Image:
+    pixels = np.asarray(image).copy()
+    labels, count = ndimage.label(pixels[:, :, 3] > 24)
+    if not count:
+        raise ValueError("Empty flame source cell")
+    sizes = np.bincount(labels.ravel())
+    sizes[0] = 0
+    mask = ndimage.binary_dilation(labels == sizes.argmax(), iterations=2)
+    pixels[~mask] = 0
+    return Image.fromarray(pixels)
 
-def wave(x, phase):
-    return 0.9 * np.sin(2 * math.pi * x / U * 2 + phase) + 0.6 * np.sin(2 * math.pi * x / U * 3 - phase * 1.7)
 
-def band(x, y, w, phase):
-    half = w + wave(x, phase) * 0.6 + noise(x, y, phase) * w * 0.28
-    h = np.where(half > 0, 1 - np.abs(y - C) / np.maximum(half, 1e-6), -1)
-    return np.where(h > 0, h + 0.12 * noise(x * 2, y, phase * 2), h)
+def source_cell(source: Image.Image, frame: int, row: int) -> Image.Image:
+    edges = BODY_X
+    if row == 0:
+        edges = CENTER_X
+    elif row == ROWS - 1:
+        edges = END_X
+    image = main_silhouette(source.crop((edges[frame] + 2, Y_EDGES[row] + 2, edges[frame + 1] - 2, Y_EDGES[row + 1] - 2)))
+    if row == 0:
+        image = image.crop(image.getbbox())
+        image.thumbnail((CENTER_DIAMETERS[frame], CENTER_DIAMETERS[frame]), Image.Resampling.LANCZOS)
+        target = Image.new("RGBA", (SIZE, SIZE))
+        target.alpha_composite(image, ((SIZE - image.width) // 2, (SIZE - image.height) // 2))
+        return target
+    alpha = np.asarray(image.getchannel("A"))
+    _, xs = np.where(alpha > 64)
+    right = int(xs.max()) + 1 if row < ROWS - 1 else image.width
+    image = image.crop((int(xs.min()), 0, right, image.height))
+    return image.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
-def color(h):
-    """Heat to RGBA: a smooth ramp, and an alpha that fades in over the rim."""
-    col = np.zeros(h.shape + (3,))
-    hh = np.clip(h, 0, 1) ** 1.7  # keep the white core small, most of the flame orange and yellow
-    for (t0, c0), (t1, c1) in zip(STOPS, STOPS[1:]):
-        f = np.clip((hh - t0) / (t1 - t0), 0, 1)[..., None]
-        seg = (hh >= t0) & (hh <= t1)
-        col = np.where(seg[..., None], np.array(c0) * (1 - f) + np.array(c1) * f, col)
-    alpha = np.clip(h / 0.05, 0, 1) * 255
-    return np.dstack([col, alpha])
 
-def draw(kind, frame):
-    w, boost, phase = LIFE[frame]
-    if kind == "mid":
-        h = band(X, Y, w, phase)
-    elif kind == "end":
-        cx = U * 0.62 - (11.5 - w) * 0.6
-        r = w * 1.05 + noise(X, Y, phase) * w * 0.3
-        bulb = np.where(r > 0, 1 - np.hypot(X - cx, Y - C) / np.maximum(r, 1e-6), -1)
-        h = np.maximum(np.where(X <= cx, band(X, Y, w, phase), -1), bulb)
-    else:
-        h = np.maximum(band(X, Y, w, phase), band(Y, X, w, phase + 1.3))
-        r = w * 1.6 + w * 0.22 * np.sin(phase * 2 + np.arctan2(Y - C, X - C) * 6)
-        h = np.maximum(h, 1 - np.hypot(X - C, Y - C) / r)
-    h = np.where(h > 0, h * boost, h)
-    img = Image.fromarray(np.clip(color(h), 0, 255).astype(np.uint8), "RGBA")
-    return img.resize((U * PX, U * PX), Image.LANCZOS)
+def compatible_joins(cells: list[Image.Image]) -> list[Image.Image]:
+    pixels = [np.asarray(cell, dtype=float).copy() for cell in cells]
+    edges = [edge for cell in pixels[:VARIANTS] for edge in (cell[:, 0], cell[:, -1])]
+    profile = max(edges, key=lambda edge: np.sum(edge[:, 3] * edge[:, 1])).copy()
+    weights = (profile[:, :3] @ np.array([0.2126, 0.7152, 0.0722])) ** 3 * profile[:, 3]
+    center_y = int(round(np.average(np.arange(SIZE), weights=weights)))
+    shifted = np.zeros_like(profile)
+    shift = SIZE // 2 - center_y
+    start, end = max(0, shift), min(SIZE, SIZE + shift)
+    shifted[start:end] = profile[start - shift:end - shift]
+    profile = shifted
+    profile[profile[:, 3] > 220, 3] = 255
+    for row, cell in enumerate(pixels):
+        for distance in range(JOIN_WIDTH):
+            t = distance / (JOIN_WIDTH - 1)
+            weight = t * t * (3 - 2 * t)
+            cell[:, distance] = profile * (1 - weight) + cell[:, distance] * weight
+            if row < VARIANTS:
+                cell[:, -1 - distance] = profile * (1 - weight) + cell[:, -1 - distance] * weight
+    return [Image.fromarray(np.clip(cell, 0, 255).astype(np.uint8)) for cell in pixels]
 
-S = U * PX
-sheet = Image.new("RGBA", (S * FRAMES, S * 3))
-for row, kind in enumerate(["center", "mid", "end"]):
-    for f in range(FRAMES):
-        sheet.paste(draw(kind, f), (f * S, row * S))
-sheet.save(sys.argv[1])
-if len(sys.argv) > 2:  # preview: a cross of range 2 per frame, on grass
-    prev = Image.new("RGBA", (FRAMES * S * 5, S * 5), (47, 107, 58, 255))
-    for f in range(FRAMES):
-        def put(kind, gx, gy, rot):
-            r = ["center", "mid", "end"].index(kind)
-            tile = sheet.crop((f * S, r * S, (f + 1) * S, (r + 1) * S)).rotate(rot)
-            prev.alpha_composite(tile, (f * S * 5 + gx * S, gy * S))
-        put("center", 2, 2, 0)
-        put("mid", 3, 2, 0); put("end", 4, 2, 0)
-        put("mid", 1, 2, 180); put("end", 0, 2, 180)
-        put("mid", 2, 1, 90); put("end", 2, 0, 90)
-        put("mid", 2, 3, 270); put("end", 2, 4, 270)
-    prev.resize((prev.width // 4, prev.height // 4), Image.LANCZOS).save(sys.argv[2])
+
+def build_sheet() -> Image.Image:
+    source = Image.open(SOURCE).convert("RGBA")
+    if source.size != SOURCE_SIZE:
+        raise ValueError(f"Unexpected flame source size: {source.size}")
+    sheet = Image.new("RGBA", (SIZE * FRAMES, SIZE * ROWS))
+    for frame in range(FRAMES):
+        cells = [source_cell(source, frame, row) for row in range(ROWS)]
+        cells[1:] = compatible_joins(cells[1:])
+        for row, cell in enumerate(cells):
+            sheet.alpha_composite(cell, (frame * SIZE, row * SIZE))
+    return sheet
+
+
+def build_preview(sheet: Image.Image, reach: int = 4) -> Image.Image:
+    tile = 16
+    drawn = 16
+    side = reach * 2 + 1
+    preview = Image.new("RGBA", (FRAMES * tile * side, tile * side), (24, 60, 30, 255))
+    for frame in range(FRAMES):
+        def cell(row: int) -> Image.Image:
+            part = sheet.crop((frame * SIZE, row * SIZE, (frame + 1) * SIZE, (row + 1) * SIZE))
+            return part.resize((drawn, drawn), Image.Resampling.LANCZOS)
+
+        center = cell(0).resize((20, 20), Image.Resampling.LANCZOS)
+        end = cell(ROWS - 1)
+        offset_x = frame * tile * side
+
+        def put(image: Image.Image, gx: int, gy: int, rotation: int = 0) -> None:
+            if rotation:
+                image = image.rotate(rotation, expand=False)
+            x = offset_x + gx * tile + (tile - image.width) // 2
+            y = gy * tile + (tile - image.height) // 2
+            preview.alpha_composite(image, (x, y))
+
+        put(center, reach, reach)
+        for distance in range(1, reach + 1):
+            for dx, dy, rotation in ((1, 0, 0), (-1, 0, 180), (0, -1, 90), (0, 1, 270)):
+                gx, gy = reach + dx * distance, reach + dy * distance
+                variant = (gx + 3 * gy + gx // 4 + 2 * (gy // 4)) % VARIANTS
+                part = end if distance == reach else cell(1 + variant)
+                put(part, gx, gy, rotation)
+
+    return preview.resize((preview.width * 3, preview.height * 3), Image.Resampling.NEAREST)
+
+
+def main() -> None:
+    output = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "public/sprites/flames.png"
+    sheet = build_sheet()
+    sheet.save(output)
+    if len(sys.argv) > 2:
+        build_preview(sheet).save(sys.argv[2])
+
+
+if __name__ == "__main__":
+    main()

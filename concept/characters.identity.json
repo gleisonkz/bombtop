@@ -1,0 +1,321 @@
+{
+  "schemaVersion": "1.0.0",
+  "familyVersion": "1.0",
+  "language": "pt-BR",
+  "status": "approved_visual_identity; production_contract_pending_coordinator_validation",
+  "references": [
+    {
+      "path": "bomber/menu-flight-source.png",
+      "role": "approved_primary_visual_reference",
+      "requiredAttachment": true
+    },
+    {
+      "path": "references/bomberman-card-reference.png",
+      "role": "historical_proportion_inspiration_only"
+    },
+    {
+      "path": "references/bomb-identity-2026.png",
+      "role": "historical_identity_context_only"
+    }
+  ],
+  "familyStyle": {
+    "medium": "Premium smoothly shaded 2D arcade illustration; compact rounded action-toy heroes; no pixel-art look",
+    "invariants": [
+      "Consistent head/body/glove/boot scale across the cast",
+      "Short sturdy legs, compact torso, rounded shoulders, large gloves and boots",
+      "Readable silhouette at small runtime size",
+      "Smooth controlled gradients, clean highlights and crisp antialiased edges",
+      "Continuous darker outlines; consistent light and materials across views"
+    ],
+    "variableIdentity": [
+      "Head or helmet design",
+      "Eye or visor shape",
+      "Costume and material assignment",
+      "Palette",
+      "Original emblem",
+      "Accessories",
+      "Personality"
+    ]
+  },
+  "ratios": {
+    "status": "approximate art-direction targets, not pixel measurements of flying poses",
+    "standingBodyHeightExcludes": [
+      "flame",
+      "cape extensions",
+      "effects"
+    ],
+    "headHeightToStandingBody": [
+      0.4,
+      0.45
+    ],
+    "torsoHeightToStandingBody": [
+      0.22,
+      0.28
+    ],
+    "gloveWidthToHeadWidth": [
+      0.24,
+      0.32
+    ],
+    "bootWidthToHeadWidth": [
+      0.28,
+      0.38
+    ],
+    "rule": "Maintain one approved neutral model across all poses; perspective foreshortening is allowed, anatomy drift is not."
+  },
+  "lighting": {
+    "key": "upper left/front",
+    "shadows": "soft controlled form gradients with defined contact shadows",
+    "highlights": "clean small specular highlights on hard shells; broad soft highlights on fabric",
+    "emission": "local warm light only for emissive identity features; no ambient halo on empty alpha"
+  },
+  "linework": {
+    "outer": "continuous near-black/dark local-color contour, strongest at silhouette",
+    "inner": "thinner clean material and joint separations",
+    "edge": "crisp antialiased curves, no jagged pixel staircase or blurry fringe",
+    "weight": "consistent relative to character size across directions"
+  },
+  "materials": {
+    "hardShell": "rounded polished painted metal/toy shell, smooth gradient and restrained glossy highlight",
+    "armor": "rounded satin armor with clear panel volume",
+    "fabric": "soft broad folds, controlled gradients, less glossy than shell",
+    "gold": "warm gold with small bright bevel highlights",
+    "emissive": "bright pale core and amber/orange rim, attached to intended feature"
+  },
+  "palette": {
+    "classification": "approximate artDirection; visually estimated, not exact sampled or mandatory global palette",
+    "colors": {
+      "outline": "#17121D",
+      "shellBlack": "#252830",
+      "shellHighlight": "#656A72",
+      "armorViolet": "#49304F",
+      "armorLight": "#735071",
+      "capeRed": "#D71928",
+      "capeShadow": "#800F22",
+      "gloveRed": "#C91C2A",
+      "gold": "#E7A82E",
+      "amber": "#FFAD16",
+      "flameCore": "#FFF7B0",
+      "flameOrange": "#FF6A00"
+    }
+  },
+  "bomberIdentity": {
+    "id": "bomber",
+    "head": "spherical black bomb shell; no human face",
+    "eyes": "two sharp inward-slanted amber slit eyes with pale luminous cores",
+    "wick": "short top wick in gold collar, lit yellow/orange flame",
+    "armor": "deep violet compact armor",
+    "cape": "red flowing cape attached behind shoulders",
+    "gloves": "large red armored gloves",
+    "boots": "chunky violet boots with warm gold trim",
+    "emblem": "small original gold hexagonal chest emblem",
+    "rearView": "back of bomb head and cape; no front eyes or chest emblem visible through body",
+    "carry": "both arms raised to support renderer-owned carried object; do not bake bomb into character",
+    "familyBoundary": "Bomb head, amber eyes, flame, violet armor, red cape and gold hex emblem belong to Bomber only; do not force these on other characters."
+  },
+  "negativeConstraints": [
+    "No pixelated look, nearest-neighbor staircase or fake upscale of old drawings",
+    "No flat-only two/three-value restriction: smooth controlled gradients are approved",
+    "No photoreal anatomy, thin limbs, tiny head or proportion drift",
+    "No text, labels, watermark, banners, showcase composition or floor shadow",
+    "No baked checkerboard, matte background, stray fragments or neighboring-frame pieces",
+    "No clipped flame, cape, gloves or boots",
+    "No duplicated identical frames presented as newly drawn animation",
+    "No unintended extra limbs, eyes or emblems on rear views",
+    "No copied franchise marks or costumes"
+  ],
+  "workflow": {
+    "reference_attachment": "required: attach actual approved primary image pixels via supported image editing/reference mechanism; a path or text description alone does not transmit the image",
+    "newCharacters": "Use family invariants plus a separate identity record; replace Bomber-specific traits and attach approved new-character concept before animation production.",
+    "production": "Draw new high-detail poses matching approved finish; do not upscale old low-detail art and claim regeneration.",
+    "alpha": "true transparent RGBA; zero alpha outside intended silhouette/effects, no opaque matte or detached contamination",
+    "verification": [
+      "Parse JSON and verify reference paths",
+      "Check PNG dimensions, grid, alpha bounds and per-cell margins",
+      "Review front/right/back identity and real pose differences",
+      "Verify stable anchors, carry pose and runtime readability",
+      "Coordinator validates actual final exported sheets and renderer contract before marking production complete"
+    ]
+  },
+  "animationGrid": {
+    "status": "refined production contract; actual final output must be verified by coordinator",
+    "indexing": "zero-based rows, left-to-right columns; unused cells transparent",
+    "views": "front/right/back; renderer mirrors right for left",
+    "master": {
+      "path": "bomber/bomber-sheet.png",
+      "cell": [
+        208,
+        288
+      ],
+      "columns": 9,
+      "rows": 19,
+      "size": [
+        1872,
+        5472
+      ],
+      "anchor": [
+        104,
+        280
+      ],
+      "bodyHeight": 200,
+      "runtimeAsset": false,
+      "lastRow": "menu pose inventory only; gameplay export excludes row 18"
+    },
+    "runtimeGameplay": {
+      "cell": [
+        104,
+        144
+      ],
+      "columns": 9,
+      "rows": 18,
+      "size": [
+        936,
+        2592
+      ],
+      "anchor": [
+        52,
+        140
+      ],
+      "bodyHeight": 100,
+      "scale": 0.22,
+      "nominalDisplayedBodyHeight": 22,
+      "purpose": "preserve mobile GPU/memory texture budget"
+    },
+    "export": {
+      "filter": "Lanczos",
+      "method": "crop and downsample EACH master frame independently by 0.5, then assemble runtime atlas",
+      "reason": "avoid neighboring-cell bleed; never resample entire packed sheet",
+      "quality": "detail comes from new drawings, not fake upscaling"
+    },
+    "menu": {
+      "approvedSource": {
+        "path": "bomber/menu-flight-source.png",
+        "size": [
+          1152,
+          1152
+        ],
+        "cell": [
+          384,
+          384
+        ],
+        "columns": 3,
+        "rows": 3,
+        "poses": 9,
+        "preserveApprovedArt": true
+      },
+      "runtime": {
+        "size": [
+          768,
+          768
+        ],
+        "cell": [
+          256,
+          256
+        ],
+        "columns": 3,
+        "rows": 3,
+        "poses": 9
+      },
+      "anchorRule": "consistent registered flight pivot per cell; verify against exporter rather than invent a foot anchor for flying poses"
+    },
+    "rows": [
+      {
+        "rows": [
+          0,
+          1,
+          2
+        ],
+        "action": "idle",
+        "views": [
+          "front",
+          "right",
+          "back"
+        ],
+        "framesPerRow": 4
+      },
+      {
+        "rows": [
+          3,
+          4,
+          5
+        ],
+        "action": "walk",
+        "views": [
+          "front",
+          "right",
+          "back"
+        ],
+        "framesPerRow": 6
+      },
+      {
+        "rows": [
+          6
+        ],
+        "action": "dizzy",
+        "framesPerRow": 6
+      },
+      {
+        "rows": [
+          7
+        ],
+        "action": "defeat_fall_explosion_smoke",
+        "framesPerRow": 7
+      },
+      {
+        "rows": [
+          8,
+          9,
+          10
+        ],
+        "action": "special",
+        "views": [
+          "front",
+          "right",
+          "back"
+        ],
+        "framesPerRow": 9
+      },
+      {
+        "rows": [
+          11,
+          12,
+          13
+        ],
+        "action": "carry_idle",
+        "views": [
+          "front",
+          "right",
+          "back"
+        ],
+        "framesPerRow": 4
+      },
+      {
+        "rows": [
+          14,
+          15,
+          16
+        ],
+        "action": "carry_walk",
+        "views": [
+          "front",
+          "right",
+          "back"
+        ],
+        "framesPerRow": 6
+      },
+      {
+        "rows": [
+          17
+        ],
+        "action": "lobby_celebration",
+        "framesPerRow": 8
+      },
+      {
+        "rows": [
+          18
+        ],
+        "action": "menu_flight_inventory",
+        "framesPerRow": 9
+      }
+    ]
+  }
+}

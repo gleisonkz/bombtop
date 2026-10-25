@@ -2,8 +2,7 @@ import { Floor } from "./state";
 
 export type StageId = "classic" | "conveyor" | "warp";
 
-/** Stages played in turn, match after match. Belts and warps still work, but are out of the rotation for now. */
-export const STAGES: readonly StageId[] = ["classic"];
+export const STAGES: readonly StageId[] = ["classic", "conveyor", "warp"];
 
 export interface StageLayout {
   floor: Floor[];

@@ -50,4 +50,16 @@ describe("carryOn", () => {
     carryOn(from, to, 100);
     expect(to).toEqual(before);
   });
+
+  it.each(["stun", "frozen", "shield", "charge", "rasengan", "jumpTicks", "dashTicks"] as const)("does not extrapolate %s movement", (status) => {
+    const { from, to } = moved(32, 0);
+    to.players[0]![status] = 5;
+    expect(posOf(carryOn(from, to, 150))).toEqual(posOf(to));
+  });
+
+  it("does not extrapolate a mounted player", () => {
+    const { from, to } = moved(32, 0);
+    to.players[0]!.mount = "dasher";
+    expect(posOf(carryOn(from, to, 150))).toEqual(posOf(to));
+  });
 });

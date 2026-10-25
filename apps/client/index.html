@@ -169,16 +169,17 @@
       .cast .far .mascot.sheet { width: 54px; height: 60px; --k: 2.1; filter: brightness(0.85); }
       .cast .star .mascot.sheet { width: 120px; height: 118px; --k: 4.6; filter: drop-shadow(0 6px 0 #0006); }
       .cast .star .title-bomber { --fly-cell: 118px; position: relative; display: block; width: 120px; height: 118px; filter: drop-shadow(0 6px 0 #0006); }
-      .cast .star .title-bomber i { position: absolute; left: 50%; bottom: 0; width: var(--fly-cell); height: var(--fly-cell); translate: -50% 0; background: url("/sprites/bomber-title-fly.png") no-repeat 0 0 / calc(var(--fly-cell) * 4) calc(var(--fly-cell) * 2); image-rendering: auto; animation: title-bomber-fly 1.12s steps(1) infinite; }
+      .cast .star .title-bomber i { position: absolute; left: 50%; bottom: 0; width: var(--fly-cell); height: var(--fly-cell); translate: -50% 0; background: url("/sprites/bomber-title-fly.png?v=20261025-clean-menu-hd") no-repeat 0 0 / calc(var(--fly-cell) * 3) calc(var(--fly-cell) * 3); image-rendering: auto; animation: title-bomber-fly 1.26s steps(1) infinite; }
       @keyframes title-bomber-fly {
-        0%, 12.49% { background-position: 0 0; }
-        12.5%, 24.99% { background-position: calc(var(--fly-cell) * -1) 0; }
-        25%, 37.49% { background-position: calc(var(--fly-cell) * -2) 0; }
-        37.5%, 49.99% { background-position: calc(var(--fly-cell) * -3) 0; }
-        50%, 62.49% { background-position: 0 calc(var(--fly-cell) * -1); }
-        62.5%, 74.99% { background-position: calc(var(--fly-cell) * -1) calc(var(--fly-cell) * -1); }
-        75%, 87.49% { background-position: calc(var(--fly-cell) * -2) calc(var(--fly-cell) * -1); }
-        87.5%, 100% { background-position: calc(var(--fly-cell) * -3) calc(var(--fly-cell) * -1); }
+        0%, 11.10% { background-position: 0 0; }
+        11.11%, 22.21% { background-position: calc(var(--fly-cell) * -1) 0; }
+        22.22%, 33.32% { background-position: calc(var(--fly-cell) * -2) 0; }
+        33.33%, 44.43% { background-position: 0 calc(var(--fly-cell) * -1); }
+        44.44%, 55.54% { background-position: calc(var(--fly-cell) * -1) calc(var(--fly-cell) * -1); }
+        55.55%, 66.65% { background-position: calc(var(--fly-cell) * -2) calc(var(--fly-cell) * -1); }
+        66.66%, 77.76% { background-position: 0 calc(var(--fly-cell) * -2); }
+        77.77%, 88.87% { background-position: calc(var(--fly-cell) * -1) calc(var(--fly-cell) * -2); }
+        88.88%, 100% { background-position: calc(var(--fly-cell) * -2) calc(var(--fly-cell) * -2); }
       }
       .cast .near { margin-inline: -10px; }
       .cast .far.left { margin-right: -6px; } .cast .far.right { margin-left: -6px; }

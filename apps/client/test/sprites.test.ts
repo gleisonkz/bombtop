@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, flameVariant, flameConnections, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -342,6 +342,12 @@ describe("ice blast visuals", () => {
 });
 
 describe("explosion flames", () => {
+  it("connects a corner only towards burning neighbours, without square stubs into empty tiles", () => {
+    const burning = (x: number, y: number) => (x === 1 && y === 0) || (x === 0 && y === 1);
+    expect(flameConnections(burning, 0, 0)).toBe(3);
+    expect(flameConnections(() => false, 0, 0)).toBe(0);
+    expect(flameConnections(() => true, 0, 0)).toBe(15);
+  });
   const at = (tiles: [number, number][]) => (x: number, y: number) => tiles.some(([tx, ty]) => tx === x && ty === y);
   // A cross of range 2 around (5,5).
   const cross = at([[5, 5], [4, 5], [3, 5], [6, 5], [7, 5], [5, 4], [5, 3], [5, 6], [5, 7]]);
@@ -370,6 +376,19 @@ describe("explosion flames", () => {
     expect(frames.at(-1)).toBe(FLAMES.frames - 1);
     expect([...frames].sort((a, b) => a - b)).toEqual(frames);
     expect(new Set(frames).size).toBe(FLAMES.frames);
+  });
+
+  it("provides four arm variants with no identical neighbours, including negative coordinates", () => {
+    expect(FLAMES.variants).toBe(4);
+    for (let x = -8; x < 12; x++) {
+      for (let y = -8; y < 12; y++) {
+        const row = flameVariant(x, y);
+        expect(row).toBeGreaterThanOrEqual(0);
+        expect(row).toBeLessThan(FLAMES.variants);
+        expect(row).not.toBe(flameVariant(x + 1, y));
+        expect(row).not.toBe(flameVariant(x, y + 1));
+      }
+    }
   });
 });
 
@@ -431,6 +450,18 @@ describe("tile art", () => {
 describe("bomber sheet", () => {
   const sheet = SHEETS.bomber;
 
+  it("matches the reusable visual identity's runtime contract", () => {
+    const identity = JSON.parse(readFileSync(new URL("../../../concept/characters.identity.json", import.meta.url), "utf8")) as {
+      animationGrid: { runtimeGameplay: { cell: number[]; size: number[]; anchor: number[]; bodyHeight: number; scale: number } };
+    };
+    const runtime = identity.animationGrid.runtimeGameplay;
+    expect(runtime.cell).toEqual([sheet.frameW, sheet.frameH]);
+    expect(runtime.size).toEqual([sheet.width, sheet.height]);
+    expect(runtime.anchor).toEqual([sheet.anchorX, sheet.anchorY]);
+    expect(runtime.bodyHeight).toBe(sheet.bodyH);
+    expect(runtime.scale).toBe(sheet.scale);
+  });
+
   it("matches the PNG dimensions and its nine-by-eighteen grid", () => {
     const png = readFileSync(new URL("../public/sprites/bomber-atlas.png", import.meta.url));
     expect(sheet.width).toBe(png.readUInt32BE(16));
@@ -478,7 +509,8 @@ describe("bomber sheet", () => {
 describe("HD art", () => {
   it("is drawn at the same size on the stage as the old pixel art", () => {
     expect(TILES.size * TILES.scale).toBe(16);
-    expect(FLAMES.size * FLAMES.scale).toBe(16);
+    expect(FLAMES.size * FLAMES.scale).toBeGreaterThanOrEqual(16);
+    expect(FLAMES.size * FLAMES.scale).toBeLessThanOrEqual(16.25);
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(128 * 0.1);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku

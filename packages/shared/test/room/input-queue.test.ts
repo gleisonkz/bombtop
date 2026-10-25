@@ -12,6 +12,106 @@ function run(q: InputQueue, from: number, ticks: number) {
 }
 
 describe("InputQueue", () => {
+  it("drains overdue movement even when a new direction arrives every tick", () => {
+    const q = new InputQueue();
+    let seq = 0;
+    for (let t = 0; t < 20; t++) q.push(go(t % 2 ? "down" : "right"), ++seq, t, 100);
+    for (let now = 140; now < 240; now++) {
+      q.push(go(now % 2 ? "down" : "right"), ++seq, now - 120, now);
+      q.take(now);
+    }
+    expect(q.ack.seq).toBeGreaterThanOrEqual(seq - 2);
+  });
+
+  it("gradually recovers a 21-tick offset during continuous movement", () => {
+    const q = new InputQueue();
+    q.push(go("right"), 1, 0, 20);
+    let seq = 1;
+    let previous = q.delay;
+    let lastCut = -6;
+    const applied: number[] = [];
+    for (let now = 20; now < 400; now++) {
+      if (now >= 24 && now % 4 === 0) {
+        q.push(go(seq % 2 ? "down" : "right"), ++seq, now - 3, now);
+      }
+      q.take(now);
+      expect(previous - q.delay).toBeGreaterThanOrEqual(0);
+      expect(previous - q.delay).toBeLessThanOrEqual(1);
+      if (q.delay < previous) {
+        expect(now - lastCut).toBeGreaterThanOrEqual(6);
+        lastCut = now;
+      }
+      if (now === 199) expect(q.delay).toBe(21);
+      previous = q.delay;
+      if (q.ack.seq !== applied.at(-1)) applied.push(q.ack.seq);
+    }
+    expect(q.delay).toBe(4);
+    expect(applied.filter((value) => value > 0)).toEqual(
+      Array.from({ length: q.ack.seq }, (_, i) => i + 1),
+    );
+    expect(q.ack.seq).toBeGreaterThan(seq - 3);
+  });
+
+  it("plays an overdue burst one transition per tick without merging taps", () => {
+    const q = new InputQueue();
+    const inputs: PlayerInput[] = [
+      { dir: "right", alt: "up", bomb: true, action: true, special: true, hold: true },
+      go("down"),
+      { dir: "left", bomb: true, action: true, special: true, hold: true },
+      go(null),
+    ];
+    inputs.forEach((input, i) => q.push(input, i + 1, i, 20));
+    for (let i = 0; i < inputs.length; i++) {
+      expect(q.take(40 + i)).toMatchObject(inputs[i]!);
+      expect(q.ack).toEqual({ seq: i + 1, ticks: 1 });
+    }
+    expect(q.take(44)).toMatchObject({ dir: null, bomb: false, action: false });
+    expect(q.ack).toEqual({ seq: 4, ticks: 2 });
+  });
+
+  it("preserves separate untimed taps arriving between simulation ticks", () => {
+    const q = new InputQueue();
+    q.push(go("right", true), 1, undefined, 0);
+    q.push(go(null), 2, undefined, 0);
+    q.push(go("left", true), 3, undefined, 0);
+    expect(q.take(0)).toMatchObject({ dir: "right", bomb: true });
+    expect(q.take(1)).toMatchObject({ dir: null, bomb: false });
+    expect(q.take(2)).toMatchObject({ dir: "left", bomb: true });
+    expect(q.take(3).bomb).toBe(false);
+  });
+
+  it("keeps the offset finite when all idle lag samples expire", () => {
+    const q = new InputQueue();
+    q.push(go(null), 1, 0, 20);
+    run(q, 20, 220);
+    expect(Number.isFinite(q.delay)).toBe(true);
+    q.push(go("right"), 2, 237, 240);
+    run(q, 240, 150);
+    expect(q.delay).toBe(4);
+    expect(q.ack.seq).toBe(2);
+  });
+
+  it("rejects applied stale sequences before recording their lateness", () => {
+    const q = new InputQueue();
+    q.push(go("right"), 1, 100, 103);
+    run(q, 103, 2);
+    q.push(go("left"), 1, 0, 105);
+    expect(q.delay).toBe(4);
+    q.push(go("down"), 2, 103, 106);
+    expect(q.delay).toBe(4);
+    expect(q.take(107).dir).toBe("down");
+  });
+
+  it("rejects pending duplicate sequences before recording their lateness", () => {
+    const q = new InputQueue();
+    q.push(go("right"), 1, 100, 103);
+    q.push(go("left"), 1, 0, 103);
+    expect(q.delay).toBe(4);
+    q.push(go("down"), 2, 101, 104);
+    expect(q.delay).toBe(4);
+    expect(run(q, 104, 2)).toEqual(["right", "down"]);
+  });
+
   it("applies an untimed input at once and keeps it held", () => {
     const q = new InputQueue();
     q.push(go("right"), 1, undefined, 0);

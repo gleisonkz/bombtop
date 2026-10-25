@@ -1,25 +1,35 @@
-# Prompt-base — família Bombtop v0.1
+# Prompt-base — família Bombtop v1
 
-## Variáveis do personagem
+Fonte normativa: [identidade](CHARACTER-IDENTITY.md) e [contrato JSON](characters.identity.json). Anexar a imagem real [menu aprovado do Bomber](bomber/menu-flight-source.png) pelo mecanismo de referência/edição da ferramenta. Para personagens novos, anexar também seu conceito aprovado quando existir.
 
-- **PERSONAGEM:** [nome / arquétipo]
-- **IDENTIDADE:** [cores, roupa, capacete, marcas e acessórios exclusivos]
-- **TRAÇO EXPRESSIVO:** [personalidade, olhos/visor, pose]
+## Variáveis
+
+- CHARACTER: nome e arquétipo original.
+- IDENTITY: cabeça/olhos, roupa, materiais, paleta, emblema, acessórios.
+- PERSONALITY: expressão e atitude.
+- DELIVERABLE: conceito isolado, quadros de uma ação, ou folha de produção com inventário explícito.
+- GRID: dimensões, células, direções, número de quadros, margens e âncoras do contrato aprovado. Não pedir folha de animação sem esse bloco.
 
 ## Prompt reutilizável
 
-Use the provided Bomberman trading-card image **only** as a visual reference for the round, compact 1990s Japanese action-toy character proportions and finish. Create ONE entirely ORIGINAL full-body character concept for the game Bombtop: **[PERSONAGEM]**, with **[IDENTIDADE]** and **[TRAÇO EXPRESSIVO]**.
+Use the attached approved Bombtop Bomber menu-flight artwork as the actual visual reference for FAMILY STYLE and rendering quality. Create original character [CHARACTER], with [IDENTITY] and [PERSONALITY]. Do not transfer Bomber-specific bomb head, amber eyes, burning wick, violet armor, red cape or gold hexagonal chest emblem to other characters unless explicitly requested in their identity.
 
-STRICT SHARED CHARACTER FAMILY STYLE: adorable but battle-ready super-deformed action hero; huge perfectly rounded helmet/head making about 40–45% of total standing height; large clean face visor with a simple expressive eye shape; very compact barrel-shaped torso; short sturdy legs; big rounded gloves and oversized toy-like boots; round shoulders, chunky readable silhouette. All anatomical parts share the same visual scale and soft rounded geometry. Three-quarter front view with both boots planted on the same horizontal line. Confident friendly stance, arms naturally relaxed. Clean thick near-black outer contours, polished 2D cel-shaded retro Japanese game illustration, saturated but curated colors, solid materials with two or three distinct shadow/highlight shapes, consistent top-left lighting, crisp edges. Face and silhouette instantly readable as a small game character. Entire character centered and fully visible with generous breathing room.
+Premium smoothly shaded 2D arcade illustration, compact rounded action-toy proportions: oversized head, short sturdy legs, compact torso, rounded shoulders, large rounded gloves and chunky boots. Neutral standing head height is approximately 40–45 percent of body height excluding flame and extended accessories; allow pose foreshortening without changing anatomy. Preserve the approved model across front, right and back views.
 
-Keep the exact same body/head/hand/boot proportions, camera angle, outline weight, lighting direction and rendering vocabulary for EVERY new character. Change only the unique costume, palette, emblem, mask, equipment and personality indicated in variables. Do not copy an existing licensed character, specific franchise logo or identifiable costume; reinterpret the rounded toy-hero language with original designs.
+Continuous darker outer outlines, thinner clean inner separations, crisp antialiased curves. Smooth controlled gradients and clean highlights matching the attached approved image. Upper-left/front key light; polished shell, satin armor and softer cloth folds retain distinct material responses. Saturated curated color and readable small-scale silhouette. No pixel-art look. Do not flatten the approved rendering into a two- or three-value-only treatment.
 
-Single isolated character on true transparent RGBA background. NO scene, glow, floor shadow, printed texture, labels, UI, watermark, card layout, borders, extra characters, weapon effects, anti-aliased blurry contours, cropped limbs, elongated realistic anatomy, tiny heads, thin human hands or skinny legs. This is a CONCEPT illustration for style approval, not an animation sheet or pixel-art sprite.
+Deliver [DELIVERABLE] using [GRID]. True transparent RGBA, isolated complete poses, stable registered anchors and generous transparent margins. No scene, floor shadow, text, banners, watermark, baked checkerboard, matte, stray fragments, neighboring-frame contamination, clipped accessories, extra limbs or copied franchise costume. Real newly drawn action changes in every intended animation frame; no identical repeats disguised as animation and no fake upscale of old art.
 
-## Piloto de teste
+## Identidade Bomber pronta para uso
 
-- **PERSONAGEM:** Bombtop Vanguard, original universal base hero.
-- **IDENTIDADE:** bright cobalt and ivory rounded helmet, turquoise angular face visor with two warm golden eye shapes, red-orange scarf/tab, teal chest clasp, slate blue short suit, rounded ivory gloves and boots, no franchise marks.
-- **TRAÇO EXPRESSIVO:** confident welcoming posture; compact toy-like silhouette, round rather than angular.
+CHARACTER: Bomber. IDENTITY: spherical black bomb head, two inward-slanted glowing amber slit eyes with pale cores, short lit wick with gold collar and yellow/orange flame, deep violet armor, red armored gloves, flowing red cape, chunky violet boots with gold trim, small original gold hexagonal chest emblem. Back views show only rear shell and cape, without front eyes/chest emblem. Carried bombs remain renderer-owned; carry poses hold both arms raised without a baked-in bomb.
 
-Salvar como `concept/base-character.png`. Avaliar principalmente cabeça, espessura dos membros, volume das botas e proximidade estilística com o Capitão e o ninja atuais. Se aprovado, manter o prompt fixo nas próximas variações.
+## Grade refinada
+
+Master: células 208 × 288, 9 colunas × 19 linhas, total 1872 × 5472; âncora (104, 280), corpo nominal 200 px. Gameplay runtime: células 104 × 144, 9 × 18, total 936 × 2592; âncora (52, 140), corpo 100 px, escala 0,22. Recortar e reduzir cada quadro master separadamente com Lanczos antes de montar o runtime; não reduzir a folha inteira. Consultar inventário por linha no JSON. Linha 18 do master é inventário do voo, excluída do gameplay.
+
+Menu aprovado permanece em 1152 × 1152, 3 × 3 células de 384; runtime em 768 × 768, células de 256, mesmas nove poses. A grade especifica produção, não prova conclusão: validar o resultado real antes de integrar.
+
+## Histórico v0.1
+
+O piloto textual Bombtop Vanguard e o cartão histórico exploravam proporções. A referência aprovada atual governa o acabamento v1; as antigas restrições de sombreamento em dois/três valores deixam de valer. Preservar somente a intenção de personagens originais compactos e coerentes.

@@ -6,10 +6,10 @@ import { SHEETS } from "../src/render/sprites";
 describe("character previews", () => {
   it("uses the dedicated flying Bomber on the title screen", () => {
     expect(TITLE_BOMBER_SHEET).toEqual({
-      url: "sprites/bomber-title-fly.png",
-      columns: 4,
-      rows: 2,
-      frames: 8,
+      url: "sprites/bomber-title-fly.png?v=20261025-clean-menu-hd",
+      columns: 3,
+      rows: 3,
+      frames: 9,
     });
   });
 
