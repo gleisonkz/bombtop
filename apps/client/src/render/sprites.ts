@@ -1,4 +1,4 @@
-import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -581,12 +581,41 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Keepy-uppy, the ball sent up and away, and his jump punching the air in a shower of confetti (scripts/build-pele-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/pele-lobby.png", width: 4800, height: 230, frameW: 300, frameH: 230, anchorX: 150.5, anchorY: 226 } },
+    /** Keepy-uppy, the ball sent up out of the card, then headed away as it comes back down, in confetti (scripts/build-pele-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/pele-lobby.png", width: 4800, height: 226, frameW: 300, frameH: 226, anchorX: 150.5, anchorY: 226 } },
     /** His blue shorts (the CBF crest's blue goes with them). */
     hues: [205, 230],
     hueBase: [30, 72, 137],
     scale: 0.142,
+  },
+
+  lula: {
+    url: "sprites/lula.png",
+    width: 1386,
+    height: 3384,
+    frameW: 154,
+    frameH: 188,
+    anchorX: 77.5,
+    anchorY: 184,
+    bodyH: 172,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His promise: he bends over and sets the picanha down in front of him (the picanha is an item, ItemKind.Picanha). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** The "L" raised high, laughing. */
+    lobby: { row: 17, frames: 8 },
+    /** His red t-shirt (the yellow star and the reds of his face stay his own: build-character-sheet.py face_reds). */
+    hues: [336, 6],
+    hueBase: [217, 45, 29],
+    keepFor: [[232, 74, 74]],
+    scale: 0.126,
   },
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
@@ -800,6 +829,7 @@ export const ITEMS = {
     ItemKind.Glove,
     ItemKind.Skull,
     ItemKind.Egg,
+    ItemKind.Picanha,
   ] satisfies ItemKind[],
 };
 
@@ -828,6 +858,9 @@ export function beamAlpha(ticks: number): number {
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
 }
 
+/** Lula's cast: his 9 frames setting the picanha down, once. */
+const LULA_CAST_TICKS = 9 * CAST_TICKS_PER_FRAME;
+
 /** Ticks before a blast in which its cast already ran (Goku's charge, Naruto's dash). */
 const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS, truck: TRUCK_SHIFT };
 
@@ -835,13 +868,18 @@ const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE
  * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
  * beam leaves on the thrust frame, KAME_CHARGE in), Naruto's from the start of his Rasengan dash (it
  * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, Optimus's while he turns into his truck
- * (and on from TRUCK_SHIFT as he turns back where it stopped), the others' from their blast; undefined when not casting.
+ * (and on from TRUCK_SHIFT as he turns back where it stopped), lula's from when he sets his picanha down (it leaves no
+ * blast), the others' from their blast; undefined when not casting.
  */
 export function castTicks(
-  p: Pick<Player, "charge" | "rasengan"> & Partial<Pick<Player, "truck">>,
+  p: Pick<Player, "charge" | "rasengan"> & Partial<Pick<Player, "truck" | "character" | "specialCooldown">>,
   blast: (Pick<Blast, "ttl" | "kind"> & Partial<Pick<Blast, "length">>) | undefined,
   mega?: Pick<Bomb, "fuse">,
 ): number | undefined {
+  if (p.character === "lula" && p.specialCooldown !== undefined) {
+    const t = SPECIAL_COOLDOWN - p.specialCooldown;
+    return t >= 0 && t < LULA_CAST_TICKS ? t : undefined;
+  }
   if (p.charge > 0) return KAME_CHARGE - p.charge;
   if (mega) return FUSE_TICKS - mega.fuse;
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;

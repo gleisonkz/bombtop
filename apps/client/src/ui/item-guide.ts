@@ -57,6 +57,11 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
       "Dá para reconhecer quem está amaldiçoado: fica piscando roxo.",
     ],
   },
+  [ItemKind.Picanha]: {
+    name: "Picanha",
+    text: "A promessa do Lula: parece um item, mas quem pega fica parado, decepcionado, por 3 s. Só aparece quando o Lula usa o especial.",
+    tips: ["O Lula passa por cima da própria picanha sem pegar.", "Fogo queima a picanha como qualquer item."],
+  },
   [ItemKind.Egg]: {
     name: "Ovo",
     text: "Uma montaria que aguenta uma explosão por você. Cada uma tem um poder no botão de ação: pular, correr ou chutar.",

@@ -59,7 +59,7 @@ describe("item generation", () => {
     for (let seed = 1; seed <= 200; seed++) {
       for (const i of createMatch({ seed, playerIds: ids }).items) kinds.add(i.kind);
     }
-    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Egg)));
+    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Egg && k !== ItemKind.Picanha)));
   });
 
   it("hides enough bombs and fire for a full room: over one of each per player", () => {

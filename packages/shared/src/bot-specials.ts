@@ -40,6 +40,9 @@ export interface SpecialPlan {
   plan?(c: SpecialContext): Aim;
 }
 
+/** How far down a line lula leaves his picanha for a rival. */
+const PICANHA_REACH = 4;
+
 const FACINGS: Facing[] = ["up", "down", "left", "right"];
 
 /** The bot's facing first: a shot that needs no turn wins ties. */
@@ -192,6 +195,29 @@ export const SPECIAL_PLANS: Partial<Record<CharacterId, SpecialPlan>> = {
     },
   },
   pikachu: { attack: (c) => around(c, THUNDER_RANGE, true) },
+  lula: {
+    // Leaves the picanha on the free tile toward a fresh rival 2 to PICANHA_REACH tiles down a clear line: they come for it.
+    attack(c) {
+      for (const f of facings(c.p)) {
+        const [dx, dy] = DIR_VECTORS[f];
+        const nx = c.here.x + dx;
+        const ny = c.here.y + dy;
+        if (getTile(c.s, nx, ny) !== Tile.Empty || bombAt(c.s, nx, ny) || hasFlame(c.s, nx, ny) || playerOn(c, nx, ny)) continue;
+        if (c.s.items.some((i) => i.x === nx && i.y === ny)) continue;
+        for (let i = 2; i <= PICANHA_REACH; i++) {
+          const x = c.here.x + dx * i;
+          const y = c.here.y + dy * i;
+          if (getTile(c.s, x, y) !== Tile.Empty || bombAt(c.s, x, y)) break;
+          const o = playerOn(c, x, y);
+          if (o) {
+            if (fresh(o)) return f;
+            break;
+          }
+        }
+      }
+      return undefined;
+    },
+  },
   donatello: { attack: (c) => around(c, 1, false) },
   panther: {
     // Slips out of sight when closing in on a rival.

@@ -71,6 +71,7 @@ const art = Promise.allSettled([
   renderer.useSheet("optimus", SHEETS.optimus).catch((e) => console.error("optimus sheet", e)),
   renderer.useTruckArt().catch((e) => console.error("truck art", e)),
   renderer.useSheet("pele", SHEETS.pele).catch((e) => console.error("pele sheet", e)),
+  renderer.useSheet("lula", SHEETS.lula).catch((e) => console.error("lula sheet", e)),
   renderer.useBallArt().catch((e) => console.error("ball art", e)),
   renderer.useBubbleArt().catch((e) => console.error("bubble art", e)),
   renderer.usePatronusArt().catch((e) => console.error("patronus art", e)),

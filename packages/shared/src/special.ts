@@ -2,7 +2,7 @@ import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
 import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, BALL_RANGE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
+import { bombAt, DIR_VECTORS, getTile, hasFlame, ItemKind, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
@@ -26,6 +26,7 @@ const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right"
  * Harry: expecto patronum, his stag gallops straight ahead (see `patronus`).
  * Pelé: kicks a ball the same way that knocks down the first player within BALL_RANGE tiles, stunned; a bomb in its way is
  *   kicked off sliding.
+ * Lula: a promise of picanha, left on the tile in front of him (see `picanha`).
  * Optimus: roll out, turns into his truck and drives straight ahead (see `updateTruck`).
  */
 export function useSpecial(s: MatchState, p: Player): boolean {
@@ -76,6 +77,8 @@ export function useSpecial(s: MatchState, p: Player): boolean {
     p.px = tileCenter(x);
     p.py = tileCenter(y);
     p.rasengan = RASENGAN_TICKS;
+  } else if (p.character === "lula") {
+    if (!picanha(s, p)) return false;
   } else if (p.character === "bomb") {
     const { x, y } = playerTile(p);
     if (bombAt(s, x, y)) return false;
@@ -440,4 +443,24 @@ export function updateBlasts(s: MatchState): void {
     if (b.kind === "patronus") gallop(s, b);
   }
   s.blasts = s.blasts.filter((b) => b.ttl > 0);
+}
+
+/**
+ * Lula's promise of picanha, left on the open tile in front of him: it looks like a power-up, and whoever but him picks it
+ * up is let down, stunned (`collectItems`). Not on a wall, block, bomb, item, flame or player: then nothing is used.
+ */
+function picanha(s: MatchState, p: Player): boolean {
+  const { x, y } = playerTile(p);
+  const [dx, dy] = DIR_VECTORS[p.facing];
+  const tx = x + dx;
+  const ty = y + dy;
+  const taken =
+    getTile(s, tx, ty) !== Tile.Empty ||
+    bombAt(s, tx, ty) ||
+    hasFlame(s, tx, ty) ||
+    s.items.some((i) => i.x === tx && i.y === ty) ||
+    s.players.some((o) => o.alive && playerTile(o).x === tx && playerTile(o).y === ty);
+  if (taken) return false;
+  s.items.push({ x: tx, y: ty, kind: ItemKind.Picanha, owner: p.id });
+  return true;
 }

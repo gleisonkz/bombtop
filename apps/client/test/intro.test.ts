@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHARACTERS, getTile, playerTile, Tile, TILE } from "@bombtop/shared";
+import { CHARACTERS, getTile, ItemKind, playerTile, Tile, TILE } from "@bombtop/shared";
 import { Intro, INTRO_TICKS, INTRO_VIEW, introDue } from "../src/game/intro";
 
 /** Runs the intro, calling `each` after every tick. */
@@ -20,7 +20,7 @@ describe("Intro", () => {
       const key = card?.name ?? (intro.logo() ? "logo" : null);
       if (key && seen[seen.length - 1] !== key) seen.push(key);
     });
-    expect(seen).toEqual(["Bomba", "Capitão América", "Thor", "Goku", "Naruto", "Homem-Aranha", "Pikachu", "Super Choque", "Flash", "Pernalonga", "Lanterna Verde", "Donatello", "Penélope Charmosa", "Pantera Cor-de-Rosa", "Harry Potter", "Optimus Prime", "Pelé", "logo"]);
+    expect(seen).toEqual(["Bomba", "Capitão América", "Thor", "Goku", "Naruto", "Homem-Aranha", "Pikachu", "Super Choque", "Flash", "Pernalonga", "Lanterna Verde", "Donatello", "Penélope Charmosa", "Pantera Cor-de-Rosa", "Harry Potter", "Optimus Prime", "Pelé", "Lula", "logo"]);
   });
 
   it("each card says what the character does", () => {
@@ -29,7 +29,7 @@ describe("Intro", () => {
       const card = intro.card();
       if (card) lines.add(card.line);
     });
-    expect(lines.size).toBe(17);
+    expect(lines.size).toBe(18);
     for (const line of lines) expect(line.length).toBeGreaterThan(10);
   });
 
@@ -219,6 +219,21 @@ describe("Intro", () => {
     for (const id of ["pele", "spider"]) expect(play().state.players.find((p) => p.id === id)!.alive).toBe(true);
   });
 
+  it("lula leaves a picanha in front of donatello, who steps down for it and is let down, stunned", () => {
+    let left = false;
+    let letDown = false;
+    play(({ state }) => {
+      left ||= state.items.some((i) => i.kind === ItemKind.Picanha && i.owner === "lula" && i.x === 1 && i.y === 6);
+      letDown ||= left && state.players.find((p) => p.id === "donatello")!.stun > 0 && !state.items.some((i) => i.kind === ItemKind.Picanha);
+    });
+    expect(left).toBe(true);
+    expect(letDown).toBe(true);
+  });
+
+  it("dresses lula in red, to keep his red shirt", () => {
+    expect(new Intro().colors.get("lula")).toBe(2);
+  });
+
   it("dresses the pink panther in blue, to keep his blue scarf", () => {
     expect(new Intro().colors.get("panther")).toBe(3);
   });
@@ -265,8 +280,8 @@ describe("Intro", () => {
     expect(intro.state.players.every((p) => p.alive)).toBe(true);
   });
 
-  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red spider, blue thor, green goku, white naruto (his navy jacket), then pikachu, static, the flash, bugs, the green lantern, donatello, penelope, the pink panther, harry, optimus and pelé", () => {
-    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "spider", "thor", "goku", "naruto", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele"]);
+  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red spider, blue thor, green goku, white naruto (his navy jacket), then pikachu, static, the flash, bugs, the green lantern, donatello, penelope, the pink panther, harry, optimus, pelé and lula", () => {
+    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "spider", "thor", "goku", "naruto", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele", "lula"]);
   });
 
   it("shows every character in its own original colors (each one is there once)", () => {

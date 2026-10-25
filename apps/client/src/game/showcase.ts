@@ -142,6 +142,14 @@ const SCENES: Record<ItemKind, Scene> = {
     you: [{ go: "right", tiles: 5 }, { go: "left", tiles: 4 }],
     seconds: 5,
   },
+  [ItemKind.Picanha]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      s.items.push({ x: 6, y: 5, kind: ItemKind.Picanha, owner: "rival" });
+    },
+    you: [{ go: "right", tiles: 3 }],
+    seconds: 5,
+  },
   [ItemKind.Egg]: {
     setup(s, you) {
       placePlayerAt(s, "you", 5, 5);
@@ -154,7 +162,7 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** The player color (by seat) each character wears in their scene, as in the menus: thor in blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3, pele: 3 };
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3, pele: 3, lula: 2 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
@@ -269,6 +277,19 @@ const SPECIALS: Record<CharacterId, Scene> = {
     // Expecto patronum down the corridor: his stag runs through his rival, leaving him dizzy.
     you: [{ wait: 30 }, { press: "special" }],
     seconds: 5,
+  },
+  lula: {
+    characters: { you: "lula", rival: "goku" },
+    setup(s, you, rival) {
+      placePlayerAt(s, "you", 5, 5);
+      placePlayerAt(s, "rival", 9, 5);
+      you.facing = "right";
+      rival.facing = "left";
+    },
+    // His promise: a picanha left in the corridor; his rival walks up for it and is let down, stunned.
+    you: [{ wait: 30 }, { press: "special" }, { go: "up", tiles: 1 }],
+    rival: [{ wait: 80 }, { go: "left", tiles: 3 }],
+    seconds: 6,
   },
   pele: {
     characters: { you: "pele", rival: "captain" },

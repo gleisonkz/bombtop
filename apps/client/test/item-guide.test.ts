@@ -5,7 +5,11 @@ import { ITEMS } from "../src/render/sprites";
 
 describe("item guide", () => {
   it("describes every item in play, in the art's order", () => {
-    expect(ITEM_GUIDE.map((i) => i.kind)).toEqual(ITEMS.order.filter((k) => k !== ItemKind.Egg));
+    expect(ITEM_GUIDE.map((i) => i.kind)).toEqual(ITEMS.order.filter((k) => k !== ItemKind.Egg && k !== ItemKind.Picanha));
+  });
+
+  it("leaves out lula's picanha: it never comes out of a block (the character guide tells of it)", () => {
+    expect(ITEM_GUIDE.some((i) => i.kind === ItemKind.Picanha)).toBe(false);
   });
 
   it("leaves out the egg while mounts are off", () => {

@@ -326,6 +326,25 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  lula: {
+    name: "Lula",
+    title: "O Companheiro da Picanha",
+    color: red,
+    story:
+      "Luiz Inácio Lula da Silva, o metalúrgico do ABC que virou presidente do Brasil. Fala de churrasco como ninguém e vive prometendo picanha pra todo mundo. Na arena ele cumpre a promessa do jeito dele. A camiseta vermelha fica na cor do jogador.",
+    special: {
+      name: "Promessa de picanha",
+      recharge: "20 s",
+      text: "Deixa uma picanha na casa da frente. Ela parece um item como qualquer outro, mas quem pegar fica parado, decepcionado, por 3 s. O Lula passa por cima da própria picanha sem pegar, e o fogo queima ela como qualquer item. Só funciona numa casa livre: sem bloco, bomba, item ou jogador.",
+      tips: [
+        "Deixe a picanha no caminho do rival: quem vai atrás de item cai direitinho.",
+        "Rival parado? Corra e solte uma bomba do lado dele: são 3 s sem sair do lugar.",
+        "Bots adoram item: largue a picanha onde eles passam.",
+        "Use num corredor apertado: o rival que quiser passar vai ter que pegar.",
+        "Cuidado com o fogo: uma explosão queima a picanha antes de alguém pegar.",
+      ],
+    },
+  },
 };
 
 /** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */

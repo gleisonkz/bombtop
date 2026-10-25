@@ -84,9 +84,14 @@
     still rotation bobbing (the breathing template shut his eyes); cast = his kick and carry walk posed from our own
     skeletons (the kick asked "at empty air": PixelLab drew a ball of its own, and the ball is the renderer's, BALL);
     his lobby is its own image (build-pele-lobby.py).
+  lula: sprites/lula.png, character "Lula HD V2" (180px canvas, v3 mode: curly white-gray hair, gray beard, red t-shirt
+    with a yellow star, which takes the player's color, gray pants). Idle front and side = the still rotation bobbing (the
+    breathing template frowned and puffed breath); cast = setting the picanha down and carry walk posed from our own
+    skeletons (PixelLab drew a gray lump of its own on the floor in the side view: cut off, the picanha is the item's);
+    lobby = a v3 animation, the "L" raised high.
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele|lula FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -256,6 +261,17 @@ CHARACTERS = {
         ("cast.down", "kick", "south", 9), ("cast.side", "kick", "east", 9), ("cast.up", "kick", "north", 9),
         ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
         ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+    ],
+    # cast = setting the picanha down (our own skeletons; the picanha is the item's); lobby = the "L" raised high
+    "lula": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+        ("lobby", "lobby", "south", 8),
     ],
     # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
     "lantern": [
@@ -600,6 +616,67 @@ def pele_frames(src, folder, d):
     return None
 
 
+LULA_CAST_SIDE = [0, 1, 2, 2, 2, 2, 7, 8, 8]
+
+
+def lula_frames(src, folder, d):
+    """His frames by sheet folder: idle front and side are his rotation bobbing; the side cast loses the gray lump PixelLab
+    put on the floor ahead of him; carry idle is the carry walk held; the lobby skips its reference frame."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast" and d == "east":  # without the frames where his hands hold the lump
+        first = load("cast", 0)
+        front = first.getchannel("A").crop((0, int(first.height * 0.75), first.width, first.height)).getbbox()[2] - 1
+        return [no_lump(load("cast", i), front) for i in LULA_CAST_SIDE]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby", i) for i in range(1, 9)]
+    return None
+
+
+LULA_RED = (336, 6)  # the hues of his red shirt, which take the player's color (SHEETS.lula.hues)
+
+
+def face_reds(im):
+    """The reds of lula's face (his lips, blush and the shading round his eyes) fall in his shirt's hues: each red patch
+    too small to be the shirt, or up among his head, is turned a little toward orange, out of them, so only the shirt takes the player's color."""
+    a = np.array(im)
+    rgb = a[..., :3].astype(float) / 255
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    l = (mx + mn) / 2
+    d = mx - mn
+    sat = np.where(d == 0, 0, d / np.maximum(1e-6, 1 - np.abs(2 * l - 1)))
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    hue = np.where(mx == r, ((g - b) / np.maximum(d, 1e-6)) % 6, np.where(mx == g, (b - r) / np.maximum(d, 1e-6) + 2, (r - g) / np.maximum(d, 1e-6) + 4)) * 60
+    red = (a[..., 3] > 0) & (sat >= 0.2) & (d > 0) & ((hue >= LULA_RED[0]) | (hue <= LULA_RED[1]))
+    lab, n = ndimage.label(red)
+    if n:
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+        ys = ndimage.mean(np.mgrid[0 : a.shape[0], 0 : a.shape[1]][0], lab, range(1, n + 1))
+        top, bottom = np.nonzero(a[..., 3])[0][[0, -1]]
+        high = (np.asarray(ys) - top) < (bottom - top) * 0.42  # up among his head
+        small = np.isin(lab, 1 + np.flatnonzero((sizes < 120) | high)) & red
+        for y, x in zip(*np.nonzero(small)):
+            h, ll, ss = colorsys.rgb_to_hls(*rgb[y, x])
+            a[y, x, :3] = [round(v * 255) for v in colorsys.hls_to_rgb(10 / 360, ll, ss)]
+    return Image.fromarray(a)
+
+
+def no_lump(im, front):
+    """Takes out the gray lump PixelLab drew ahead of lula, low in the side cast: whatever is cut off from his body, and
+    anything low past `front` (the toes of his standing feet)."""
+    a = np.array(im)
+    lab, n = ndimage.label(a[..., 3] > 0)
+    if n > 1:
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+        a[(lab > 0) & (lab != 1 + int(np.argmax(sizes))), 3] = 0
+    a[int(a.shape[0] * 0.75):, front:, 3] = 0
+    return Image.fromarray(a)
+
+
 def no_floor_shadow(im):
     """PixelLab drew a gray shadow ellipse under the pink panther's feet: the grays low in the frame go."""
     a = np.array(im.convert("RGBA")).astype(int)
@@ -710,13 +787,15 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames, "lula": lula_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":
             frames = [green_iris(no_blots(im)) for im in frames]
         if character == "panther":
             frames = [no_floor_shadow(im) for im in frames]
+        if character == "lula":
+            frames = [face_reds(im) for im in frames]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
         if character == "goku":

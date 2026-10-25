@@ -8,7 +8,7 @@ import { characterArt } from "./sheet-art";
 import { cycleCharacter } from "./character-cycle";
 import type { Placing } from "../game/standings";
 
-const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", captain: "Capitão América", thor: "Thor", goku: "Goku", naruto: "Naruto", spider: "Homem-Aranha", pikachu: "Pikachu", static: "Super Choque", flash: "Flash", bugs: "Pernalonga", lantern: "Lanterna Verde", donatello: "Donatello", penelope: "Penélope Charmosa", panther: "Pantera Cor-de-Rosa", harry: "Harry Potter", optimus: "Optimus Prime", pele: "Pelé" };
+const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", captain: "Capitão América", thor: "Thor", goku: "Goku", naruto: "Naruto", spider: "Homem-Aranha", pikachu: "Pikachu", static: "Super Choque", flash: "Flash", bugs: "Pernalonga", lantern: "Lanterna Verde", donatello: "Donatello", penelope: "Penélope Charmosa", panther: "Pantera Cor-de-Rosa", harry: "Harry Potter", optimus: "Optimus Prime", pele: "Pelé", lula: "Lula" };
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
   classic: "Clássica",

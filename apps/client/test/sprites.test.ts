@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, TICK_RATE, TILE, Tile } from "@bombtop/shared";
 import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
@@ -744,6 +744,14 @@ describe("rasenganLook", () => {
 });
 
 describe("castTicks", () => {
+  it("lula's runs from when he uses his special (it leaves no blast: the picanha is an item)", () => {
+    const lula = { charge: 0, rasengan: 0, character: "lula" as const };
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN }, undefined)).toBe(0);
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN - 10 }, undefined)).toBe(10);
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN - 9 * CAST_TICKS_PER_FRAME }, undefined)).toBeUndefined();
+    expect(castTicks({ charge: 0, rasengan: 0, character: "pele", specialCooldown: SPECIAL_COOLDOWN }, undefined)).toBeUndefined();
+  });
+
   const still = { charge: 0, rasengan: 0 };
   it("runs goku's cast from the start of his charge: the beam leaves on the thrust frame", () => {
     expect(castTicks({ charge: KAME_CHARGE, rasengan: 0 }, undefined)).toBe(0);

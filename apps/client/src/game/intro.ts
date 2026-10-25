@@ -5,7 +5,7 @@ import { Script } from "./showcase";
 export const INTRO_VIEW = { x: 1, y: 2, width: 11, height: 7 };
 
 /** How long the intro lasts. */
-export const INTRO_TICKS = 42 * TICK_RATE;
+export const INTRO_TICKS = 45 * TICK_RATE;
 
 export interface IntroCard {
   name: string;
@@ -31,8 +31,11 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 1880, to: 2040, card: { name: "Harry Potter", line: "Expecto Patronum! O cervo prateado galopa e deixa tonto todo mundo no caminho." } },
   { from: 2040, to: 2210, card: { name: "Optimus Prime", line: "Autobots, rolar! Vira caminhão e leva no para-choque quem estiver na frente." } },
   { from: 2210, to: 2390, card: { name: "Pelé", line: "Chute de craque! A bola vai longe e derruba quem estiver na frente." } },
+  { from: 2390, to: 2570, card: { name: "Lula", line: "Promessa de picanha! Deixa uma picanha no chão, e quem pega fica parado, decepcionado." } },
 ];
-const LOGO_FROM = 2390;
+const LOGO_FROM = 2570;
+/** Ticks donatello waits after his spin before stepping down onto lula's picanha. */
+const DONATELLO_PICANHA = 1020;
 
 /**
  * The title intro: the characters walk on one by one and show their moves in a real match
@@ -48,13 +51,14 @@ const LOGO_FROM = 2390;
  * and slips back out (the intro shows him faint), harry steps down into row 3 and casts his patronus: the stag leaves
  * naruto and the flash dizzy at once, optimus steps along row 5 and rolls out: his truck shoves the captain down the
  * corridor until he is pinned against penelope, dizzy, pelé steps up into row 7 and kicks his ball down it, knocking the
- * spider down four tiles off, then the logo.
+ * spider down four tiles off, lula steps up column 1 and leaves a picanha in front of donatello, who steps down for it and
+ * is let down, stunned, then the logo.
  * Every playable character has its moment here (a test checks it): a new one gets a card and a move.
  */
 export class Intro {
   readonly state: MatchState;
   /** Seats some wear instead of their own (renderer `setColors`): pikachu's seventh would be the second's black. */
-  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4], ["donatello", 3], ["panther", 3], ["harry", 2], ["optimus", 3], ["pele", 3]]);
+  readonly colors = new Map([["spider", 2], ["pikachu", 3], ["static", 3], ["flash", 2], ["bugs", 3], ["lantern", 4], ["donatello", 3], ["panther", 3], ["harry", 2], ["optimus", 3], ["pele", 3], ["lula", 2]]);
   private readonly scripts: Script[];
 
   constructor() {
@@ -90,6 +94,8 @@ export class Intro {
     s.players.push({ ...structuredClone(s.players[0]!), id: "optimus", character: "optimus" });
     // And pelé in a seventeenth, in blue to keep his blue shorts (see `colors`).
     s.players.push({ ...structuredClone(s.players[0]!), id: "pele", character: "pele" });
+    // And lula in an eighteenth, in red to keep his red shirt (see `colors`).
+    s.players.push({ ...structuredClone(s.players[0]!), id: "lula", character: "lula" });
     s.items = [];
     placePlayerAt(s, "bomb", 7, 5);
     placePlayerAt(s, "captain", 11, 5);
@@ -108,8 +114,9 @@ export class Intro {
     placePlayerAt(s, "harry", 3, 2);
     placePlayerAt(s, "optimus", 2, 5);
     placePlayerAt(s, "pele", 3, 8);
+    placePlayerAt(s, "lula", 1, 8);
     for (let x = 3; x <= 7; x++) setTile(s, x, 7, Tile.Block); // for the Kamehameha to smash
-    const [captain, bomb, spider, thor, goku, naruto, pikachu, zap, flash, bugs, lantern, donatello, penelope, panther, harry, optimus, pele] = s.players;
+    const [captain, bomb, spider, thor, goku, naruto, pikachu, zap, flash, bugs, lantern, donatello, penelope, panther, harry, optimus, pele, lula] = s.players;
     bomb!.facing = "down";
     bomb!.fireRange = 1;
     captain!.facing = "left";
@@ -131,6 +138,7 @@ export class Intro {
     harry!.facing = "down";
     optimus!.facing = "right";
     pele!.facing = "up";
+    lula!.facing = "up";
     this.state = s;
     this.scripts = [
       // Plants its mega bomb on (7,5), climbs out of its reach and back down to row 3 once it has blown.
@@ -157,7 +165,8 @@ export class Intro {
       new Script("lantern", [{ wait: 1180 }, { press: "bomb" }, { wait: 140 }, { press: "special" }]),
       // Plants a bomb, steps up next to optimus and spins: optimus is left dizzy, the bomb batted down the column
       // (it lands out of the frame and is dropped there).
-      new Script("donatello", [{ wait: 1440 }, { press: "bomb" }, { go: "up", tiles: 1 }, { wait: 10 }, { press: "special" }]),
+      // Later, steps down for the picanha lula left him and is let down, stunned.
+      new Script("donatello", [{ wait: 1440 }, { press: "bomb" }, { go: "up", tiles: 1 }, { wait: 10 }, { press: "special" }, { wait: DONATELLO_PICANHA }, { go: "down", tiles: 1 }]),
       // Steps up into row 5, turns to the captain down the corridor and blows him a kiss: he is left charmed.
       new Script("penelope", [{ wait: 1540 }, { go: "up", tiles: 1 }, { face: "left" }, { wait: 6 }, { press: "special" }]),
       // Tiptoes out of sight, up into row 7 between goku and the spider, leaves a bomb there and slips back down.
@@ -167,6 +176,8 @@ export class Intro {
       new Script("optimus", [{ wait: 2050 }, { go: "right", tiles: 1 }, { wait: 6 }, { press: "special" }]),
       // Steps up into row 7 and kicks his ball down it: the spider, four tiles off, is knocked down.
       new Script("pele", [{ wait: 2220 }, { go: "up", tiles: 1 }, { face: "right" }, { wait: 6 }, { press: "special" }]),
+      // Steps up column 1 and leaves a picanha on the tile in front of donatello.
+      new Script("lula", [{ wait: 2400 }, { go: "up", tiles: 1 }, { wait: 10 }, { press: "special" }]),
       new Script("panther", [{ wait: 1650 }, { press: "special" }, { go: "up", tiles: 1 }, { go: "left", tiles: 1 }, { press: "bomb" }, { go: "right", tiles: 1 }, { go: "down", tiles: 1 }]),
     ];
   }

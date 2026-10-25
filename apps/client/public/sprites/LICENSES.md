@@ -112,6 +112,13 @@ Fan art of Pelé (Edson Arantes do Nascimento) in the 1970 Brazil kit, for this 
 `scripts/build-character-sheet.py pele`; rows = `SHEETS.pele`. The ball is a PixelLab image (`scripts/build-ball.py`); the
 lobby's ball and confetti are drawn by `scripts/build-pele-lobby.py`, laid out by `scripts/build-lobby-image.py`.
 
+## lula.png
+
+Caricature of Luiz Inácio Lula da Silva for this non-commercial project, made in PixelLab (pixellab.ai) (character
+"Lula HD V2", after a vinyl toy of him: red t-shirt with a yellow star; his setting the picanha down and carry walk posed
+from our own skeletons, his "L" raised high a v3 animation); laid out by `scripts/build-character-sheet.py lula`; rows =
+`SHEETS.lula`. The picanha he leaves is an item in `items.png` (`build-items.py`).
+
 ## optimus.png, optimus-lobby.png, truck.png
 
 Fan art of Optimus Prime (Hasbro / Takara Tomy) for this non-commercial project, made in PixelLab (pixellab.ai) (character

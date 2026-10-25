@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Bot, createMatch, placePlayerAt, setTile, step, Tile, type BotLevel, type CharacterId, type MatchState } from "../src";
+import { Bot, createMatch, ItemKind, placePlayerAt, setTile, step, Tile, type BotLevel, type CharacterId, type MatchState } from "../src";
 import { player, run } from "./helpers";
 
 /** p1 (`me`) at (mx,my), p2 (`them`) at (rx,ry); no blocks. */
@@ -207,5 +207,26 @@ describe("bots use their special: by level", () => {
     expect(medium).toBeGreaterThan(hard);
     expect(easy).toBeGreaterThan(medium);
     expect(easy).toBeLessThan(600);
+  });
+});
+
+describe("bots use their special: lula's picanha", () => {
+  it("lula leaves a picanha on the tile toward a rival coming down a clear line", () => {
+    const s = duel("lula", 3, 5, 7, 5);
+    s.items = [];
+    player(s).facing = "up";
+    const input = think(s);
+    expect(input.special).toBe(true);
+    expect(input.dir).toBe("right");
+    step(s, { p1: input });
+    expect(s.items).toContainEqual(expect.objectContaining({ x: 4, y: 5, kind: ItemKind.Picanha }));
+  });
+
+  it("not with the rival right next to him, past 4 tiles, or with something on the tile", () => {
+    for (const [rx, fill] of [[4, false], [8, false], [7, true]] as const) {
+      const s = duel("lula", 3, 5, rx, 5);
+      s.items = fill ? [{ x: 4, y: 5, kind: ItemKind.Fire }] : [];
+      expect(think(s).special).toBeFalsy();
+    }
   });
 });

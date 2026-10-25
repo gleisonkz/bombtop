@@ -72,7 +72,7 @@ describe("botLevel", () => {
 
 describe("characterId", () => {
   it("accepts only known characters, bare or in a message", () => {
-    expect(CHARACTERS).toEqual(["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele"]);
+    expect(CHARACTERS).toEqual(["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele", "lula"]);
     expect(characterId("thor")).toBe("thor");
     expect(characterId("ninja")).toBeNull(); // a removed character (an old saved pick) is no character
     expect(characterId("captain")).toBe("captain");

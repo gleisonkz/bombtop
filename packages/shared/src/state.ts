@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele"] as const;
+export const CHARACTERS = ["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele", "lula"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -177,6 +177,8 @@ export enum ItemKind {
   Skull = "skull",
   FullFire = "fullFire",
   Egg = "egg",
+  /** Lula's promise of picanha: looks like a power-up; whoever but him picks it up is let down, stunned. Never in a block. */
+  Picanha = "picanha",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
@@ -184,6 +186,8 @@ export interface Item {
   x: number;
   y: number;
   kind: ItemKind;
+  /** Who left it there (lula's picanha): they walk over it. */
+  owner?: string;
 }
 
 export interface Flame {

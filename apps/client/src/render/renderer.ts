@@ -72,6 +72,7 @@ const COLORS = {
     [ItemKind.Skull]: 0x6a0dad,
     [ItemKind.FullFire]: 0xffd23f,
     [ItemKind.Egg]: 0xfff3e0,
+    [ItemKind.Picanha]: 0xb03e2c,
   } satisfies Record<ItemKind, number>,
 };
 

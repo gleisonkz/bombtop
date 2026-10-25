@@ -38,6 +38,9 @@
 // Soundboard": "O homem é gênio, é uma fera, é uma lenda do esporte!" = sound 24015411, "Olha o gol!" = 24015287, "É tetra!"
 // = 24015278, "Ai, ai, ai, ai" = 24015337, under pele/; his kick = "Soccer Ball Kick" by bittermelonheart (CC0),
 // https://freesound.org/s/555042/ (saved as freesound/555042_11910076-hq.mp3);
+// lula's own lines, clips of his speeches on myinstants.com, under lula/: "Bora, gente, pra rua!"
+// (lula-bora-pra-rua-gente), "Você vai voltar a comer picanha" (vai-voltar-a-comer-picanha), "Eu vou comer picanha e vou
+// tomar uma cerveja" (lula-picanha-e-cerveja_3zSp50v), "Por favor, me ajude!" (lula-por-favor-me-ajuda_5UqDBWj);
 // the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -72,6 +75,7 @@ const PINK = (name) => join(SRC, "pink", `${name}.mp3`);
 const HARRY = (name) => join(SRC, "harry", `${name}.mp3`);
 const OPTIMUS = (name) => join(SRC, "optimus", `${name}.mp3`);
 const PELE = (name) => join(SRC, "pele", `${name}.mp3`);
+const LULA = (name) => join(SRC, "lula", `${name}.mp3`);
 const BUGS = (name) => join(SRC, "bugs-dash", `${name}.mp3`);
 const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
@@ -235,6 +239,10 @@ const RECIPE = {
   "pele-death": { src: PELE("24015337-galvao-ai-ai-ai-ai"), from: 0.92, len: 1.15 },
   "pele-win": { src: PELE("24015278-e-tetra-e-tetra"), from: 1.66, len: 2.6 },
   "pele-special": { src: PELE("24015287-galvao-olha-o-gol"), from: 0.87, len: 1.9 },
+  "lula-pick": { src: LULA("lula-bora-pra-rua-gente"), len: 1.35 },
+  "lula-death": { src: LULA("lula-por-favor-me-ajuda_5UqDBWj"), len: 3.65 },
+  "lula-win": { src: LULA("lula-picanha-e-cerveja_3zSp50v"), len: 4.85 },
+  "lula-special": { src: LULA("vai-voltar-a-comer-picanha"), len: 1.98 },
   // pelé's kick: a ball struck hard
   kickball: { src: FS("555042_11910076-hq.mp3"), len: 0.6 },
   // optimus turning into his truck (or back): the cartoon's transforming sound; the truck's engine roaring off
