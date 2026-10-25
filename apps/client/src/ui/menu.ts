@@ -94,17 +94,22 @@ export class Menu {
       b.append(el("span", { text: name }), el("small", { text: state }));
       return b;
     };
-    const onOff = (on: boolean) => (on ? "ligado" : "desligado");
+    // A switch's look: green when on, red when off.
+    const setOn = (b: HTMLButtonElement, on: boolean) => {
+      b.classList.toggle("on", on);
+      b.classList.toggle("off", !on);
+      b.querySelector("small")!.textContent = on ? "ligado" : "desligado";
+      return b;
+    };
     // Debug mode: a connection readout in game, also logged on the server for us to read.
-    const debugBtn = tool("Modo debug", onOff(debugOn(location.search, storage)), (b) => {
-      b.querySelector("small")!.textContent = onOff(toggleDebug(storage));
-    });
+    const debugBtn = setOn(tool("Modo debug", "", (b) => setOn(b, toggleDebug(storage))), debugOn(location.search, storage));
     // Lite mode (on by itself on smart TVs): applies on the reload it triggers.
-    const liteBtn = tool("Modo leve", onOff(liteOn(navigator.userAgent, location.search, storage)), () => {
+    const liteBtn = setOn(tool("Modo leve", "", () => {
       toggleLite(navigator.userAgent, storage);
       location.reload();
-    });
+    }), liteOn(navigator.userAgent, location.search, storage));
     const freshBtn = tool("Atualizar", "jogo", () => void freshReload());
+    freshBtn.classList.add("fresh"); // an action, not a switch: blue
 
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });

@@ -217,6 +217,12 @@
       .menu-foot .tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
       button.tool { display: grid; place-content: center; gap: 1px; min-height: 52px; padding: 6px 4px; font-size: 15px; line-height: 1.1; }
       button.tool small { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+      button.tool.on { background: #2ecc7126; border-color: #2ecc71; color: #c9f7dc; }
+      button.tool.on small { color: #4be38c; }
+      button.tool.off { border-color: #ff5d5d66; }
+      button.tool.off small { color: #ff8a8a; }
+      button.tool.fresh { background: #5fb8f51f; border-color: #5fb8f5; color: #d6efff; }
+      button.tool.fresh small { color: #8fd0ff; }
       .menu-foot .version { font-size: 11px; color: var(--muted); opacity: 0.7; }
 
       /* Tablets upright: more room, bigger hero */
@@ -549,6 +555,9 @@
         button.big:hover:not(:disabled):not(:active) { box-shadow: 0 6px 0 var(--ink), 0 0 0 4px #ffd23f33; }
         button.play:hover:not(:disabled):not(:active) { animation: none; transform: translateY(-3px) scale(1.02); box-shadow: 0 7px 0 var(--ink), 0 0 0 6px #ffd23f66, 0 0 36px #ffd23faa; filter: brightness(1.1); }
         button.ghost:hover:not(:disabled):not(:active) { background: #ffffff14; color: var(--text); border-color: #ffffff66; box-shadow: none; filter: none; }
+        button.tool.on:hover:not(:disabled):not(:active) { background: #2ecc7140; border-color: #4be38c; }
+        button.tool.off:hover:not(:disabled):not(:active) { border-color: #ff8a8a; }
+        button.tool.fresh:hover:not(:disabled):not(:active) { background: #5fb8f540; border-color: #9fe3ff; }
         button.mini:hover:not(:disabled):not(:active) { transform: translateY(-1px); box-shadow: 0 3px 0 var(--ink); }
         button.kick-bot:hover:not(:active) { background: var(--danger); color: #fff; box-shadow: none; transform: scale(1.1); }
         button.mute:hover:not(:active) { background: #fff; transform: scale(1.06); box-shadow: 0 4px 0 var(--ink); }
