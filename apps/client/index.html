@@ -213,9 +213,11 @@
       .account:empty { display: none; }
       .account > button { min-height: 38px; font-size: 15px; padding: 6px 12px; }
       .account > button:only-child { flex: 1; }
-      .menu-foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; font-size: 11px; color: var(--muted); opacity: 0.7; }
-      button.link { min-height: 0; padding: 0; border: 0; box-shadow: none; background: none; color: inherit; font: inherit; font-size: 11px; text-decoration: underline; cursor: pointer; }
-      button.link:active:not(:disabled) { transform: none; box-shadow: none; }
+      .menu-foot { display: grid; gap: 6px; justify-items: center; margin-top: 2px; }
+      .menu-foot .tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+      button.tool { display: grid; place-content: center; gap: 1px; min-height: 52px; padding: 6px 4px; font-size: 15px; line-height: 1.1; }
+      button.tool small { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+      .menu-foot .version { font-size: 11px; color: var(--muted); opacity: 0.7; }
 
       /* Tablets upright: more room, bigger hero */
       @media (min-width: 600px) and (min-height: 800px) {
@@ -530,10 +532,11 @@
         .menu .card > .demo-btn, .menu .card > .offline-btn { font-size: 15px; padding-inline: 6px; white-space: nowrap; }
         .menu .card button.play { min-height: 46px; }
         .menu .card .or { display: none; } /* the code box says it already */
-        .menu-foot { gap: 2px 10px; }
+        .menu-foot { gap: 4px; }
+        button.tool { min-height: 42px; padding-block: 3px; font-size: 14px; }
       }
       @media (orientation: landscape) and (max-height: 380px) {
-        .menu .card input, .menu .card button:not(.link) { min-height: 36px; padding-block: 4px; }
+        .menu .card input, .menu .card button:not(.tool) { min-height: 36px; padding-block: 4px; }
         .menu .card button.play { min-height: 42px; }
       }
       @media (pointer: coarse) { .keys-hint { display: none; } html:not(.has-pad) .couch-btn { display: none; } }
@@ -546,7 +549,6 @@
         button.big:hover:not(:disabled):not(:active) { box-shadow: 0 6px 0 var(--ink), 0 0 0 4px #ffd23f33; }
         button.play:hover:not(:disabled):not(:active) { animation: none; transform: translateY(-3px) scale(1.02); box-shadow: 0 7px 0 var(--ink), 0 0 0 6px #ffd23f66, 0 0 36px #ffd23faa; filter: brightness(1.1); }
         button.ghost:hover:not(:disabled):not(:active) { background: #ffffff14; color: var(--text); border-color: #ffffff66; box-shadow: none; filter: none; }
-        button.link:hover:not(:disabled):not(:active) { transform: none; box-shadow: none; filter: none; color: var(--accent); }
         button.mini:hover:not(:disabled):not(:active) { transform: translateY(-1px); box-shadow: 0 3px 0 var(--ink); }
         button.kick-bot:hover:not(:active) { background: var(--danger); color: #fff; box-shadow: none; transform: scale(1.1); }
         button.mute:hover:not(:active) { background: #fff; transform: scale(1.06); box-shadow: 0 4px 0 var(--ink); }

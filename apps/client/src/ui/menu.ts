@@ -88,17 +88,23 @@ export class Menu {
     tvBtn!.title = "Assistir na TV (só mostra a partida da sala)";
     tvBtn!.setAttribute("aria-label", "Assistir na TV");
 
+    // A tool button: its name over its state ("ligado"/"desligado").
+    const tool = (name: string, state: string, onClick: (b: HTMLButtonElement) => void) => {
+      const b = button("", () => onClick(b), "ghost tool");
+      b.append(el("span", { text: name }), el("small", { text: state }));
+      return b;
+    };
+    const onOff = (on: boolean) => (on ? "ligado" : "desligado");
     // Debug mode: a connection readout in game, also logged on the server for us to read.
-    const debugLabel = (on: boolean) => `Modo debug: ${on ? "ligado" : "desligado"}`;
-    const debugBtn = button(debugLabel(debugOn(location.search, storage)), () => {
-      debugBtn.textContent = debugLabel(toggleDebug(storage));
-    }, "link");
+    const debugBtn = tool("Modo debug", onOff(debugOn(location.search, storage)), (b) => {
+      b.querySelector("small")!.textContent = onOff(toggleDebug(storage));
+    });
     // Lite mode (on by itself on smart TVs): applies on the reload it triggers.
-    const liteLabel = `Modo leve: ${liteOn(navigator.userAgent, location.search, storage) ? "ligado" : "desligado"}`;
-    const liteBtn = button(liteLabel, () => {
+    const liteBtn = tool("Modo leve", onOff(liteOn(navigator.userAgent, location.search, storage)), () => {
       toggleLite(navigator.userAgent, storage);
       location.reload();
-    }, "link");
+    });
+    const freshBtn = tool("Atualizar", "jogo", () => void freshReload());
 
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
@@ -128,12 +134,10 @@ export class Menu {
         handlers.couch(this.name.value);
       }, "ghost couch-btn"),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
-      // Tools for us, kept small: version, debug readout, reload past a stale cache.
+      // Tools: debug readout, lite mode, reload past a stale cache; the version under them.
       el("div", { class: "menu-foot" }, [
-        el("span", { text: versionLabel(__APP_VERSION__) }),
-        debugBtn,
-        liteBtn,
-        button("Atualizar jogo", () => void freshReload(), "link"),
+        el("div", { class: "tools" }, [debugBtn, liteBtn, freshBtn]),
+        el("span", { class: "version", text: versionLabel(__APP_VERSION__) }),
       ]),
     ]);
     const preview = new ItemPreview();
