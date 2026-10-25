@@ -217,9 +217,9 @@ const RECIPE = {
   "penelope-death": { src: BASS_DOWN, len: 2.7, layer: { src: PENNY("death"), len: 2.7, gain: -3 } },
   "penelope-win": { src: PENNY("win"), len: 1.8 },
   "penelope-special": { src: PENNY("special"), len: 1.2 },
-  // The pink panther hardly ever speaks: his theme's saxophone when picked, "This isn't quite cricket." over the falling
-  // bass, the theme's last flourish when he wins, and its creeping bass ("dum-dum... dum-dum") as he tiptoes out of sight
-  "panther-pick": { src: PINK("theme-orig"), from: 12.1, len: 3.6 },
+  // The pink panther hardly ever speaks: his theme's saxophone when picked (its whole first phrase, up to the rest), "This
+  // isn't quite cricket." over the falling bass, the theme's last flourish when he wins, and its creeping bass ("dum-dum... dum-dum") as he tiptoes out of sight
+  "panther-pick": { src: PINK("theme-orig"), from: 12.1, len: 7.9 },
   "panther-death": { src: BASS_DOWN, len: 2.2, layer: { src: PINK("talking"), from: 12.65, len: 1.7, gain: -3 } },
   "panther-win": { src: PINK("theme-end"), len: 4.6 },
   "panther-special": { src: PINK("theme-orig"), from: 4.05, len: 2.5 },
