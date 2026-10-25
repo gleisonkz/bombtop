@@ -265,7 +265,7 @@ cuffs, blue shorts, which take the player's color, white socks, black cleats), l
 kick and carry walk are posed from our own skeletons; the kick was asked "at empty air" (the first try drew a ball of its
 own, and the ball is the renderer's: `BALL`, `ballLook`, a PixelLab image cleared of its shadow by `scripts/build-ball.py`,
 flying in an arc, spinning, rebounding off what stopped it), heard as `kickball` (Freesound, CC0). His lobby: keepy-uppy,
-the ball sent up out of the card, and his jump punching the air in green and yellow confetti (`scripts/build-pele-lobby.py`).
+the ball sent up out of the card, then headed away as it comes back down, in green and yellow confetti (`scripts/build-pele-lobby.py`).
 The intro seats him in a seventeenth seat, in blue, kicking his ball down row 7 into the spider (42 s now); the title
 lineup has him at the far left.
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
