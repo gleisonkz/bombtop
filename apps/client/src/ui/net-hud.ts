@@ -82,7 +82,7 @@ export class NetStats {
   }
 }
 
-/** Connection readout in a corner, for testing on phones: open the game with ?debug. */
+/** Connection readout, for testing on phones: open the game with ?debug. Kept off the arena where the screen allows. */
 export class NetHud {
   private readonly box = el("div", { class: "net-hud" });
 
@@ -91,7 +91,8 @@ export class NetHud {
   }
 
   show(): void {
-    this.box.textContent = this.stats.summary();
+    // one span a reading: a line on top of upright screens, stacked in the free side column of sideways ones
+    this.box.replaceChildren(...this.stats.summary().split(" · ").map((text) => el("span", { text })));
   }
 
   dispose(): void {
