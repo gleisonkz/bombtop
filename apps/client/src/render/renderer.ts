@@ -2,6 +2,7 @@ import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "p
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
+import { scoreSlots } from "./score-bar";
 import { paintTo, PerColor, skinColor } from "./per-color";
 import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
@@ -254,13 +255,86 @@ export class Renderer {
     tag.visible = true;
   }
 
+  /** The score bar on the top wall: each player's head and rounds won (setScore; none in the menus' scenes). */
+  private readonly scoreLayer = new Container();
+  private score: readonly { id: string; wins: number }[] | null = null;
+  private readonly scoreHeads = new Map<string, Sprite>();
+  private readonly scoreWins = new Map<string, Text>();
+  /** Heads cut out of each character's first idle frame, by character and color. */
+  private readonly heads = new Map<string, Texture>();
+
+  /** Rounds won so far, in seat order (null: no score bar). */
+  setScore(rows: readonly { id: string; wins: number }[] | null): void {
+    this.score = rows;
+    for (const [id, head] of this.scoreHeads) {
+      if (rows?.some((r) => r.id === id)) continue;
+      head.destroy();
+      this.scoreWins.get(id)!.destroy();
+      this.scoreHeads.delete(id);
+      this.scoreWins.delete(id);
+    }
+  }
+
+  /** A character's head in a color: the top of its first idle frame facing us. */
+  private head(skin: Skin, character: CharacterId, color: number): Texture {
+    const key = `${character}:${color}`;
+    let tex = this.heads.get(key);
+    if (!tex) {
+      const { sheet } = skin;
+      const h = Math.round(sheet.bodyH * (character === "bomb" ? 0.62 : 0.5)); // the mascot's bomb of a head is bigger
+      const w = Math.min(sheet.frameW, Math.round(sheet.bodyH * 0.62));
+      const x = Math.max(0, Math.min(sheet.frameW - w, Math.round(sheet.anchorX - w / 2)));
+      const y = sheet.idle.down.row * sheet.frameH + Math.max(0, Math.round(sheet.anchorY - sheet.bodyH));
+      tex = new Texture({ source: skin.sources.get(color).source, frame: new Rectangle(x, y, w, h) });
+      this.heads.set(key, tex);
+    }
+    return tex;
+  }
+
+  private drawScore(s: PublicView): void {
+    this.scoreLayer.visible = !!this.score;
+    if (!this.score) return;
+    const xs = scoreSlots(this.score.length, s.grid.width * TILE_PX);
+    this.score.forEach(({ id, wins }, k) => {
+      const i = s.players.findIndex((p) => p.id === id);
+      const p = s.players[i];
+      let head = this.scoreHeads.get(id);
+      let text = this.scoreWins.get(id);
+      if (!head || !text) {
+        head = new Sprite();
+        head.anchor.set(0.5);
+        text = new Text({
+          text: "",
+          resolution: this.lite ? 1.5 : 4,
+          style: { fill: 0xffffff, fontFamily: "Lilita One, sans-serif", fontSize: 10, stroke: { color: 0x15152a, width: 2 } },
+        });
+        text.anchor.set(0, 0.5);
+        this.scoreHeads.set(id, head);
+        this.scoreWins.set(id, text);
+        this.scoreLayer.addChild(head, text);
+      }
+      const character = this.character(id);
+      const skin = this.skins.get(character);
+      head.visible = !!skin && !!p;
+      if (skin && p) {
+        head.texture = this.head(skin, character, skinColor(p, i));
+        head.scale.set(13 / head.texture.height);
+      }
+      head.position.set(xs[k]! - 5, TILE_PX / 2);
+      text.text = String(wins);
+      text.position.set(xs[k]! + 3, TILE_PX / 2);
+      // out of this round: faded
+      head.alpha = text.alpha = p?.alive ? 1 : 0.4;
+    });
+  }
+
   /** `lite`: weak screens (smart TVs): text drawn at less detail, no particles. */
   constructor(private readonly lite = false) {
     if (lite) this.banner.resolution = this.clock.resolution = 1.5;
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.world, this.burnLayer, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.tagLayer, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.world, this.burnLayer, this.itemLayer, this.flameLayer, this.people, this.beamLayer, this.overlay, this.scoreLayer, this.tagLayer, this.banner, this.clock);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -937,7 +1011,9 @@ export class Renderer {
         for (const [x0, y0, x1, y1] of c.strands) top.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.web, width: 1, alpha: 0.95 });
       }
       // the sprite stands 6 px below the tile's center (placeSprite); kept on the stage over the top row
-      this.placeTag(p.id, cx, Math.max(7, cy + 6 - headroom - (carrying ? 9 : 0) + TAG_DROP), seen);
+      const over = cy + 6 - headroom - (carrying ? 9 : 0) + TAG_DROP;
+      // on the top row the score bar holds the wall: the name goes under their feet instead
+      this.placeTag(p.id, cx, this.score && over < TILE_PX + 7 ? cy + 15 : Math.max(7, over), seen);
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
       // Thor's bolt, Pikachu's shock, Static's pull and the flash's dash leave their victims crackling while stunned.
       if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet" || b.kind === "flash") && b.ownerId !== p.id)) {
@@ -991,6 +1067,7 @@ export class Renderer {
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
     this.clock.position.set((width * TILE_PX) / 2, 3);
+    this.drawScore(s);
     // sudden death: at the round's end, or sooner once only bots are left (pressureAt)
     const left = Math.max(0, Math.ceil(((s.pressureAt ?? ROUND_TICKS) - s.tick) / TICK_RATE));
     this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";

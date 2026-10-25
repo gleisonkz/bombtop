@@ -34,7 +34,7 @@ describe("online snapshot rendering", () => {
       onLeave: vi.fn(), ping: vi.fn(), leave: async () => undefined,
     };
     const ctx = {
-      renderer: { draw, setCharacters: vi.fn(), setViewer: vi.fn(), setNames: vi.fn(), showBanner: vi.fn() },
+      renderer: { draw, setCharacters: vi.fn(), setViewer: vi.fn(), setNames: vi.fn(), setScore: vi.fn(), showBanner: vi.fn() },
       sound: { play: vi.fn(), cues: vi.fn() },
       touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(),
     } as unknown as ModeContext;

@@ -147,12 +147,13 @@ export class OnlineGame implements GameMode {
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
       ctx.renderer.setNames(nameTags(info.members, watching ? null : room.sessionId));
+      ctx.renderer.setScore(info.members.map((m) => ({ id: m.id, wins: m.wins })));
       // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
       ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
       if (info.phase !== "results") ctx.renderer.showBanner("");
       // Shown on the results phase's lobby update, which carries the new win counts.
-      else if (this.result) this.showResults(this.result.winnerId);
+      else if (this.result) this.showResults(this.result);
     });
     // Whole snapshots now and then; in between, only what changed.
     const snapshots = new DeltaReceiver<Snapshot>();
@@ -167,7 +168,7 @@ export class OnlineGame implements GameMode {
       // The winner's own cheer, once the announcer and jingle are done.
       const cheer = winnerVoice(result.winnerId, this.lobby?.members ?? []);
       if (cheer) setTimeout(() => ctx.sound.play(cheer), WIN_CHEER_MS);
-      this.showResults(result.winnerId);
+      this.showResults(result);
     });
     room.onLeave(() => {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
@@ -340,10 +341,10 @@ export class OnlineGame implements GameMode {
     if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
   }
 
-  private showResults(winnerId: string | null): void {
+  private showResults({ winnerId, setOver }: ResultMessage): void {
     if (!this.lobby) return;
     const ids = this.lobby.members.map((m) => m.id);
-    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId);
+    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId, setOver);
   }
 
   /** Token to take this seat back after a reload. */
@@ -369,6 +370,7 @@ export class OnlineGame implements GameMode {
     this.panel.hide();
     this.ctx.renderer.showBanner("");
     this.ctx.renderer.setNames(new Map()); // the menus' scenes go untagged
+    this.ctx.renderer.setScore(null);
     if (!this.leaving) {
       this.leaving = true;
       this.couch?.leaveAll();

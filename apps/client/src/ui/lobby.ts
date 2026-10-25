@@ -197,9 +197,9 @@ export class LobbyPanel {
     }
   }
 
-  /** The match is over: who won and everyone's place, until the room is back in the lobby. */
-  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null): void {
-    this.results.show(placings, info.members, me, winnerId);
+  /** A round is over: who won and everyone's place, until the next round (or, the match won, the lobby). */
+  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null, setOver: boolean): void {
+    this.results.show(placings, info.members, me, winnerId, setOver);
   }
 
   hide(): void {

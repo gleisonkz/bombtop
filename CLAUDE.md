@@ -15,6 +15,11 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
 - **Server:** Colyseus (Node), authoritative. Client interpolates snapshots (prediction: todo).
 - **Client:** Vite + PixiJS + vite-plugin-pwa. Touch d-pad (fixed cross, slide between arrows; default) or stick (appears under the thumb), switched any time from the ☰ match menu (`ui/match-menu.ts`, which also leaves the match) + gamepad + keyboard.
 - **Auth/data:** Supabase (Google login; profiles/ranking todo). Optional: unset = guest-only.
+- **Matches:** first to `WINS_TO_WIN` (5) rounds, as in Super Bomberman 4: after a round's results (`RESULTS_TICKS`) the
+  next one starts by itself (`BattleSession.startRound`); only the round that wins the match (`ResultMessage.setOver`), or
+  fewer than two players left, goes back to the lobby. The score starts from zero on each match from the lobby. In the
+  arena a score bar on the top wall shows each player's head and rounds won, either side of the clock
+  (`render/score-bar.ts`, `Renderer.setScore`; a name on the top row goes under its player's feet).
 - **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in `render.yaml`), and so does the character guide at `/personagens` (`ui/character-guide.ts`: each character's story, special with tips, voice lines, every sheet animation via `characterMoves`, and their special played live in a small arena, `specialShowcase` in `game/showcase.ts`; heard through `audio/cues.ts`). A new character needs an entry there too (`test/character-guide.test.ts` fails otherwise).
 - **Anti-cheat:** server authority; client only sends inputs.
 - **Offline (Wi-Fi) play:** "Jogar offline" in the menu. One phone hosts: `LocalHost` (`net/local-host.ts`) runs `RoomCore`
