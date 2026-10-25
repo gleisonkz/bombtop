@@ -74,7 +74,7 @@ describe("BattleRoom over the network", () => {
     a.send(C2S.start);
     const [sa, sb] = await Promise.all([snapA, snapB]);
     expect(sa.players.map((p) => p.id)).toEqual([a.sessionId, b.sessionId]);
-    expect(sb.grid.width).toBe(13);
+    expect(sb.grid.width).toBe(15);
     expect("rng" in sa).toBe(false);
 
     // Input travels to the simulation.
@@ -120,6 +120,42 @@ describe("BattleRoom over the network", () => {
     await Promise.all([a.leave(), b.leave()]);
   });
 
+  it("a TV joins by code mid-match to watch: it gets the match without taking a seat", async () => {
+    const a = await client().create(ROOM_NAME, { private: true, name: "Ana" });
+    const b = await client().joinById(a.roomId, { name: "Bia" });
+    const started = next<LobbyInfo>(a, S2C.lobby, (l) => l.phase === "playing");
+    a.send(C2S.start);
+    await started;
+
+    const tv = await client().joinById(a.roomId, { watch: true });
+    const lobby = next<LobbyInfo>(tv, S2C.lobby, (l) => l.phase === "playing");
+    const snap = next<PublicView>(tv, S2C.snapshot);
+    tv.send(C2S.sync);
+    const [l, s] = await Promise.all([lobby, snap]);
+    expect(l.members.map((m) => m.name)).toEqual(["Ana", "Bia"]);
+    expect(l.watchers).toBe(1);
+    expect(s.players).toHaveLength(2);
+
+    // It cannot play.
+    tv.send(C2S.input, { dir: "left", bomb: true, seq: 1 });
+    await expect(client().joinById(a.roomId, { name: "Late" })).rejects.toThrow();
+    await Promise.all([a.leave(), b.leave(), tv.leave()]);
+  });
+
+  it("a public room in a match is not matched to new players, but stays joinable by code to watch", async () => {
+    const a = await client().joinOrCreate(ROOM_NAME, { name: "A" });
+    const b = await client().joinOrCreate(ROOM_NAME, { name: "B" });
+    expect(b.roomId).toBe(a.roomId);
+    const started = next<LobbyInfo>(a, S2C.lobby, (l) => l.phase === "playing");
+    a.send(C2S.start);
+    await started;
+    const c = await client().joinOrCreate(ROOM_NAME, { name: "C" });
+    expect(c.roomId).not.toBe(a.roomId);
+    const tv = await client().joinById(a.roomId, { watch: true });
+    expect(tv.roomId).toBe(a.roomId);
+    await Promise.all([a.leave(), b.leave(), c.leave(), tv.leave()]);
+  });
+
   it("sanitizes names", async () => {
     const r = await client().create(ROOM_NAME, { name: "  \u0000Zé  " });
     const pending = next<LobbyInfo>(r, S2C.lobby);
@@ -130,10 +166,10 @@ describe("BattleRoom over the network", () => {
   });
 
   it("takes the character picked on joining and lets the player change it", async () => {
-    const r = await client().create(ROOM_NAME, { name: "N", character: "ninja" });
+    const r = await client().create(ROOM_NAME, { name: "N", character: "thor" });
     const joined = next<LobbyInfo>(r, S2C.lobby);
     r.send(C2S.sync);
-    expect((await joined).members[0]!.character).toBe("ninja");
+    expect((await joined).members[0]!.character).toBe("thor");
     const changed = next<LobbyInfo>(r, S2C.lobby, (l) => l.members[0]!.character === "bomb");
     r.send(C2S.character, { character: "bomb" });
     await changed;

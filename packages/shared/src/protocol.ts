@@ -1,4 +1,4 @@
-import { BOT_LEVELS, type BotLevel } from "./bot";
+import { BOT_LEVELS, type BotLevel, type BotPersona } from "./bot";
 import type { MatchResult } from "./pressure";
 import { CHARACTERS, type CharacterId, type Direction, type PlayerInput } from "./state";
 import type { StageId } from "./stage";
@@ -21,6 +21,8 @@ export const C2S = {
   addBot: "addBot",
   removeBot: "removeBot",
   character: "character",
+  /** The host has a bot play another character: `{ id, character }`. */
+  botCharacter: "botCharacter",
   /** Connection measurements from a ?debug client, logged on the server. */
   stats: "stats",
   /** Nothing to do: sent during a match when the client has been quiet, so a phone's Wi-Fi radio doesn't doze. */
@@ -36,8 +38,12 @@ export interface LobbyMember {
   wins: number;
   connected: boolean;
   character: CharacterId;
+  /** Wears the character's original colors (first to pick it, see `firstPickers`); otherwise the seat color. */
+  ownColors?: true;
   /** Set for computer players: their difficulty. */
   bot?: BotLevel;
+  /** Computer players: their personality (what they go for, how careful they are). */
+  persona?: BotPersona;
 }
 
 export interface LobbyInfo {
@@ -47,9 +53,12 @@ export interface LobbyInfo {
   stage: StageId;
   /** Room id; doubles as the private-room code. */
   code: string;
+  /** Screens watching without a seat (TV mode). */
+  watchers?: number;
 }
 
-export type ResultMessage = MatchResult & { over: true };
+/** A round's end; `setOver` when its winner has won the match (the room goes back to the lobby). */
+export type ResultMessage = MatchResult & { over: true; setOver: boolean };
 
 const DIRS = new Set<Direction>(["up", "down", "left", "right"]);
 

@@ -4,18 +4,33 @@ import type { CharacterId } from "@bombtop/shared";
 export type VoiceMoment = "pick" | "death" | "win" | "special";
 
 type Lines<C extends string> = `${C}-${"pick" | "death" | "win"}`;
-export type VoiceName = Lines<CharacterId> | `${"bomb" | "ninja" | "captain" | "thor"}-special`;
+export type VoiceName = Lines<CharacterId> | `${"bomb" | "captain" | "thor" | "spider" | "pikachu" | "flash" | "bugs" | "lantern" | "donatello" | "penelope" | "panther" | "harry" | "optimus" | "pele" | "lula"}-special`;
 
 const lines = <C extends CharacterId>(c: C) => ({ pick: `${c}-pick`, death: `${c}-death`, win: `${c}-win` }) as const;
 
-/** Characters' own voices. Goku and Naruto shout over their special's own sound (kamehameha, rasengan), so no special line. */
+/**
+ * Characters' own voices. Goku and Naruto shout over their special's own sound (kamehameha, rasengan), so no special line;
+ * Static's special is heard as his magnet's crackle.
+ */
 export const VOICE_LINES: Record<CharacterId, Partial<Record<VoiceMoment, VoiceName>>> = {
   bomb: { ...lines("bomb"), special: "bomb-special" },
-  ninja: { ...lines("ninja"), special: "ninja-special" },
   captain: { ...lines("captain"), special: "captain-special" },
   thor: { ...lines("thor"), special: "thor-special" },
   goku: lines("goku"),
   naruto: lines("naruto"),
+  spider: { ...lines("spider"), special: "spider-special" },
+  pikachu: { ...lines("pikachu"), special: "pikachu-special" },
+  static: lines("static"),
+  flash: { ...lines("flash"), special: "flash-special" },
+  bugs: { ...lines("bugs"), special: "bugs-special" },
+  lantern: { ...lines("lantern"), special: "lantern-special" },
+  donatello: { ...lines("donatello"), special: "donatello-special" },
+  penelope: { ...lines("penelope"), special: "penelope-special" },
+  panther: { ...lines("panther"), special: "panther-special" },
+  harry: { ...lines("harry"), special: "harry-special" },
+  optimus: { ...lines("optimus"), special: "optimus-special" },
+  pele: { ...lines("pele"), special: "pele-special" },
+  lula: { ...lines("lula"), special: "lula-special" },
 };
 
 export function voiceLine(character: CharacterId, moment: VoiceMoment): VoiceName | null {

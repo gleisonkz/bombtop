@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TICK_RATE } from "@bombtop/shared";
+import { STAGES, TICK_RATE } from "@bombtop/shared";
 import { DEMO_PAUSE, DemoMatch } from "../src/game/demo";
 
 describe("demo match", () => {
@@ -31,6 +31,6 @@ describe("demo match", () => {
     demo.advance();
     expect(demo.state).not.toBe(first);
     expect(demo.winner).toBeUndefined();
-    expect(demo.stage).toBe("classic");
+    expect(demo.stage).toBe(STAGES[1 % STAGES.length]);
   });
 });

@@ -14,35 +14,67 @@ import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { MatchMenu } from "./ui/match-menu";
 import { Pairing } from "./ui/pairing";
+import { CouchSeats } from "./input/couch";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
-import { codeFromUrl } from "./net/invite";
+import { codeFromUrl, tvCodeFromUrl, wifiCodeFromUrl } from "./net/invite";
+import { LanBeacon, lanPost } from "./net/lan";
+import { answerFriend } from "./net/rtc-pair";
 import { GuideRoute } from "./net/guide-route";
 import { browserAddress, RoomRoute } from "./net/room-route";
 import { SeatMemory, tabStore } from "./net/seat";
 import { signInWithGoogle, signOut, supabase, watchAccount, type Account } from "./net/auth";
 import { button, el, storage } from "./ui/dom";
+import { LITE_RESOLUTION, liteOn } from "./ui/dev-tools";
 import { Listener } from "./audio/cues";
-import { Menu, type Guide } from "./ui/menu";
-import { isTouchDevice, TouchControls } from "./ui/touch-controls";
+import { Menu, type Guide, type OnlineChoice } from "./ui/menu";
+import { TouchControls } from "./ui/touch-controls";
+import { PadMenus } from "./ui/pad-menus";
+import { uiZoom } from "./ui/ui-zoom";
+import { startClientLog } from "./net/client-log";
+
+// Boots, crashes (a page that died in front of the player, as iOS does past its memory) and script errors go to
+// the game server's log (client-<date>.jsonl, deploy/vps/README.md).
+startClientLog(SERVER_URL, __APP_VERSION__, storage);
 
 const app = new Application();
+// Lite mode (smart TV browsers, ?lite, or the menu's switch): fewer pixels, stretched by the screen, and 30 frames a
+// second, no backdrop animations or particles.
+const lite = liteOn(navigator.userAgent, location.search, storage);
+document.documentElement.classList.toggle("lite", lite);
 // Render at the device's pixel density: the arena is vector drawn, so any scale stays sharp.
-await app.init({ backgroundAlpha: 0, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
+await app.init({ backgroundAlpha: 0, antialias: false, resolution: lite ? LITE_RESOLUTION : window.devicePixelRatio || 1, autoDensity: true });
+if (lite) app.ticker.maxFPS = 30;
 document.getElementById("app")!.appendChild(app.canvas);
 
-const renderer = new Renderer();
+const renderer = new Renderer(lite);
 app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 // Art loads in the background; the intro waits for it so it never plays with placeholder shapes.
 const art = Promise.allSettled([
-  renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e)),
   renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e)),
   renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e)),
   renderer.useSheet("thor", SHEETS.thor).catch((e) => console.error("thor sheet", e)),
   renderer.useSheet("goku", SHEETS.goku).catch((e) => console.error("goku sheet", e)),
   renderer.useSheet("naruto", SHEETS.naruto).catch((e) => console.error("naruto sheet", e)),
+  renderer.useSheet("spider", SHEETS.spider).catch((e) => console.error("spider sheet", e)),
+  renderer.useSheet("pikachu", SHEETS.pikachu).catch((e) => console.error("pikachu sheet", e)),
+  renderer.useSheet("static", SHEETS.static).catch((e) => console.error("static sheet", e)),
+  renderer.useSheet("flash", SHEETS.flash).catch((e) => console.error("flash sheet", e)),
+  renderer.useSheet("bugs", SHEETS.bugs).catch((e) => console.error("bugs sheet", e)),
+  renderer.useSheet("lantern", SHEETS.lantern).catch((e) => console.error("lantern sheet", e)),
+  renderer.useSheet("donatello", SHEETS.donatello).catch((e) => console.error("donatello sheet", e)),
+  renderer.useSheet("penelope", SHEETS.penelope).catch((e) => console.error("penelope sheet", e)),
+  renderer.useSheet("panther", SHEETS.panther).catch((e) => console.error("panther sheet", e)),
+  renderer.useSheet("harry", SHEETS.harry).catch((e) => console.error("harry sheet", e)),
+  renderer.useSheet("optimus", SHEETS.optimus).catch((e) => console.error("optimus sheet", e)),
+  renderer.useTruckArt().catch((e) => console.error("truck art", e)),
+  renderer.useSheet("pele", SHEETS.pele).catch((e) => console.error("pele sheet", e)),
+  renderer.useSheet("lula", SHEETS.lula).catch((e) => console.error("lula sheet", e)),
+  renderer.useBallArt().catch((e) => console.error("ball art", e)),
+  renderer.useBubbleArt().catch((e) => console.error("bubble art", e)),
+  renderer.usePatronusArt().catch((e) => console.error("patronus art", e)),
   renderer.useMascots().catch((e) => console.error("mascot", e)),
   renderer.useBombArt().catch((e) => console.error("bomb art", e)),
   renderer.useFlameArt().catch((e) => console.error("flame art", e)),
@@ -71,15 +103,6 @@ function refit(): void {
   app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
   app.stage.scale.set(scale);
   app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
-}
-
-/** Phones: hide the browser bars and hold landscape. Must run inside a tap handler. */
-function goFullscreen(): void {
-  if (!isTouchDevice() || document.fullscreenElement) return;
-  document.documentElement
-    .requestFullscreen?.({ navigationUI: "hide" })
-    .then(() => (screen.orientation as ScreenOrientation & { lock?(o: string): Promise<void> }).lock?.("landscape"))
-    .catch(() => undefined); // unsupported (iOS Safari) or refused: keep playing windowed
 }
 
 const sound = new Sound(new WebAudioBackend(import.meta.env.BASE_URL), storage);
@@ -129,7 +152,23 @@ function showMute(): void {
   muteToggle.textContent = sound.muted ? "Ligar som" : "Sem som";
 }
 showMute();
-document.body.appendChild(el("div", { class: "sound" }, [muteBtn, soundPanel]));
+// Full screen (computers: a notebook on the TV over HDMI); phones play from the installed app, already full screen.
+const FULL = '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="#15152a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const WINDOWED = '<path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="#15152a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+const fullBtn = button("", () => {
+  if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+  else void document.documentElement.requestFullscreen().catch(() => {});
+}, "mute full-btn");
+const showFull = () => {
+  const on = !!document.fullscreenElement;
+  fullBtn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${on ? WINDOWED : FULL}</svg>`; // static markup
+  fullBtn.setAttribute("aria-label", on ? "Sair da tela cheia" : "Tela cheia");
+  fullBtn.title = on ? "Sair da tela cheia" : "Tela cheia";
+};
+showFull();
+fullBtn.hidden = !document.fullscreenEnabled;
+document.addEventListener("fullscreenchange", showFull);
+document.body.appendChild(el("div", { class: "sound" }, [el("div", { class: "corner-btns" }, [fullBtn, muteBtn]), soundPanel]));
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
@@ -169,6 +208,7 @@ const ctx: ModeContext = {
   renderer,
   sound,
   touch: touch.input,
+  specialCooldown: (ticks) => touch.setSpecialCooldown(ticks),
   fit,
   exit: (message) => {
     route.left();
@@ -180,19 +220,17 @@ const ctx: ModeContext = {
 
 let online: OnlineGame | null = null;
 const lobby = new LobbyPanel(ui, {
-  start: () => {
-    goFullscreen();
-    online?.start();
-  },
+  start: () => online?.start(),
   leave: () => void online?.leave(),
   addBot: (level) => online?.addBot(level),
   removeBot: (id) => online?.removeBot(id),
   pickCharacter: (c) => {
     storage.set(CHARACTER_KEY, c);
     const line = voiceLine(c, "pick");
-    if (line) sound.play(line);
+    if (line) sound.play(line, { channel: "pick" });
     online?.pickCharacter(c);
   },
+  pickBotCharacter: (id, c) => online?.pickBotCharacter(id, c),
 });
 
 /** The character picked last time, used when joining the next room. */
@@ -201,7 +239,7 @@ const savedCharacter = () => characterId(storage.get(CHARACTER_KEY)) ?? DEFAULT_
 
 let account: Account | null = null;
 
-// The free server sleeps when idle: poke it now so it is awake by the time the player clicks.
+// Open the way to the server now (DNS, TLS) so joining is quicker when the player clicks.
 fetch(SERVER_URL, { mode: "no-cors" }).catch(() => {});
 
 const menu = new Menu(ui, {
@@ -217,16 +255,29 @@ const menu = new Menu(ui, {
     pairing.choose(
       () => {
         const host = new LocalHost();
-        playOffline(host.hostLink(who, savedCharacter()), () => void pairing.hostPair(host));
+        const link = host.hostLink(who, savedCharacter());
+        const beacon = listOffline(host, who);
+        playOffline(link, () => pairing.invite(beacon.id, host), null, offlineReports(() => beacon.id ?? "offline", who));
       },
+      (id) => joinOffline(id, who),
       () => {
         pairing
           .join(who, savedCharacter())
-          .then((link) => playOffline(link, null))
+          .then((link) => playOffline(link, null, null, offlineReports(() => "offline", who)))
           .catch(() => menu.show());
       },
       () => menu.show(),
+      lan,
     );
+  },
+  couch: (name) => {
+    // This screen hosts the room (no server); the first controller (or the keyboard) is player one and
+    // every other controller joins with A. Friends' phones can still pair in over Wi-Fi.
+    const host = new LocalHost();
+    const who = account?.name ?? name;
+    const link = host.hostLink(who, savedCharacter());
+    const beacon = listOffline(host, who);
+    playOffline(link, () => pairing.invite(beacon.id, host), new CouchSeats(host, undefined, () => online?.start()));
   },
   guide: (open) => {
     if (open) guideRoutes[open].opened();
@@ -235,43 +286,84 @@ const menu = new Menu(ui, {
   },
   hear: (name) => sound.play(name),
   hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width),
-  online: async (choice, name) => {
-    goFullscreen();
-    menu.setBusy(true);
-    try {
-      const character = savedCharacter();
-      const who = account ? { name: account.name, token: account.token, character } : { name, character };
-      const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
-      lobby.setOffline(null);
-      online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
-      route.entered(online.code);
-      seats.remember(online.code, online.seatToken);
-      menu.hide();
-      setMode(online);
-    } catch (err) {
-      console.error(err);
-      route.left();
-      seats.forget();
-      menu.show(
-        choice.kind === "join"
-          ? "Não foi possível entrar: confira o código (a sala pode estar cheia ou em partida)."
-          : "Não foi possível conectar ao servidor.",
-      );
-    }
-  },
+  online: (choice, name) => void enterRoom(choice, name),
 });
+
+/** Joins a room online: as a player, or as a TV watching it (`watch`). */
+async function enterRoom(choice: OnlineChoice, name: string): Promise<void> {
+  menu.setBusy(true);
+  try {
+    const character = savedCharacter();
+    const who = account ? { name: account.name, token: account.token, character } : { name, character };
+    const seat = choice.kind === "join" ? seats.tokenFor(choice.code) : null;
+    lobby.setOffline(null);
+    online = await OnlineGame.connect(choice, who, ctx, lobby, seat);
+    route.entered(online.code, online.watching);
+    if (!online.watching) seats.remember(online.code, online.seatToken);
+    menu.hide();
+    setMode(online);
+  } catch (err) {
+    console.error(err);
+    route.left();
+    seats.forget();
+    menu.show(
+      choice.kind === "join"
+        ? "Não foi possível entrar: confira o código (a sala pode estar cheia ou em partida)."
+        : choice.kind === "watch"
+          ? "Não foi possível assistir: confira o código da sala."
+          : "Não foi possível conectar ao servidor.",
+    );
+  }
+}
 
 // Offline (Wi-Fi): this phone hosts the room, or joins a friend's phone (no server, no internet).
 const pairing = new Pairing(ui);
-function playOffline(link: RoomLink, pair: (() => void) | null): void {
-  lobby.setOffline({ pair });
-  online = OnlineGame.over(link, ctx, lobby);
+// With internet the server lists offline rooms on each network and passes the phones' handshake (net/lan.ts).
+const lan = lanPost(SERVER_URL);
+
+/** Lists `host`'s room while it is open, and lets in every friend who knocks (from the list or the room's link). */
+function listOffline(host: LocalHost, who: string): LanBeacon {
+  const beacon = new LanBeacon(lan, () => host.listing(who), async (offer) => {
+    const { answer, wire } = await answerFriend(offer);
+    void wire.then((w) => host.addPeer(w)).catch(() => {});
+    return answer;
+  });
+  void beacon.start();
+  host.onClose(() => void beacon.stop());
+  return beacon;
+}
+
+/** Joins the offline room `id` on a friend's phone, found through the server. */
+function joinOffline(id: string, who: string): void {
+  pairing
+    .joinRoom(id, who, savedCharacter(), lan)
+    .then((link) => playOffline(link, () => pairing.invite(id, null), null, offlineReports(() => id, who)))
+    .catch(() => menu.show());
+}
+
+/**
+ * An offline match's connection reports go to the server's log over HTTP when there is internet (room `code()`, the
+ * room's listing code or "offline"), as an online room's do (deploy/vps/README.md).
+ */
+function offlineReports(code: () => string, player: string): (stats: object) => void {
+  const url = `${SERVER_URL.replace(/^ws/, "http").replace(/\/$/, "")}/net`;
+  return (stats) => void fetch(url, { method: "POST", body: JSON.stringify({ room: code(), player, ...stats }), keepalive: true }).catch(() => {});
+}
+
+function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null, report?: (stats: object) => void): void {
+  lobby.setOffline({ pair, couch: !!couch });
+  online = OnlineGame.over(link, ctx, lobby, couch, report);
   menu.hide();
   setMode(online);
 }
 
 // An invite link, or a reload inside a room: join it.
 let invite = codeFromUrl(location.href);
+// A TV address (/tv/CODE), or a reload of one: watch that room again.
+const tvCode = tvCodeFromUrl(location.href);
+// A friend's offline room link (/wifi/CODE, its QR code): straight into it. The link is used up: back to /.
+const wifiCode = wifiCodeFromUrl(location.href);
+if (wifiCode) history.replaceState(null, "", "/");
 // Back button while in a room: leave it.
 window.addEventListener("popstate", () => {
   if (route.wentBack()) void online?.leave();
@@ -280,7 +372,13 @@ window.addEventListener("popstate", () => {
 if (guideInAddress()) menu.showGuide(guideInAddress());
 
 // Once per session the title intro plays before the menu (not when arriving by an invite link or on the guide).
-if (!invite && !guideInAddress() && introDue(tabStore)) {
+if (tvCode) {
+  menu.hide();
+  void enterRoom({ kind: "watch", code: tvCode }, "");
+} else if (wifiCode) {
+  menu.hide();
+  joinOffline(wifiCode, storage.get("bombtop.name") ?? "");
+} else if (!invite && !guideInAddress() && introDue(tabStore)) {
   menu.hide();
   void art.then(() => {
     if (mode) return; // the player got somewhere else meanwhile
@@ -302,7 +400,14 @@ watchAccount((a) => {
   invite = null;
 });
 
-app.ticker.add((ticker) => mode?.frame(ticker.deltaMS, performance.now()));
+// Menus, lobby and guides with a controller (the TV): d-pad moves, A presses, B goes back.
+const padMenus = new PadMenus(ui);
+if (import.meta.env.DEV) Object.assign(window, { __padMenus: padMenus });
+app.ticker.add((ticker) => {
+  const now = performance.now();
+  mode?.frame(ticker.deltaMS, now);
+  padMenus.tick(now);
+});
 
 window.addEventListener("keydown", (e) => {
   if (e.target instanceof HTMLInputElement) return; // typing in the menu
@@ -311,5 +416,11 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => mode?.keyUp(e.code));
 window.addEventListener("blur", () => mode?.blur());
 window.addEventListener("resize", refit);
+// Big displays (a TV): the screens grow to use the room, the arena canvas outside them is fitted on its own.
+const zoomUi = () => (ui.style.zoom = String(uiZoom(window.innerWidth, window.innerHeight)));
+window.addEventListener("resize", zoomUi);
+zoomUi();
+// A controller on a phone or tablet brings out the couch-play button (hidden on touch screens otherwise).
+window.addEventListener("gamepadconnected", () => document.documentElement.classList.add("has-pad"));
 
 refit();

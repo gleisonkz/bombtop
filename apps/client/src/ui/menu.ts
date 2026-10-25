@@ -6,11 +6,13 @@ import { characterGuide } from "./character-guide";
 import { connectingText } from "./connecting";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
-import { freshReload, toggleDebug, versionLabel, debugOn } from "./dev-tools";
+import { freshReload, liteOn, toggleDebug, toggleLite, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt, titleBomberArt } from "./sheet-art";
+import { shrinkToFit } from "./shrink-to-fit";
 
-export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string };
+/** `watch`: this screen only shows the room's match (TV mode), with no seat. */
+export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string } | { kind: "watch"; code: string };
 
 export interface MenuHandlers {
   online(choice: OnlineChoice, name: string): void;
@@ -18,6 +20,8 @@ export interface MenuHandlers {
   demo(): void;
   /** Play with friends nearby over Wi-Fi, no internet (the typed name is theirs). */
   offline(name: string): void;
+  /** Play on this one screen, a controller per player (the TV mode). */
+  couch(name: string): void;
   /** A guide (items or characters) was opened, or closed (null) from its buttons. */
   guide(open: Guide | null): void;
   /** A sound to play from the character guide: a voice line, or the scene shown. */
@@ -67,19 +71,45 @@ export class Menu {
       go({ kind: "join", code });
     });
     this.code.addEventListener("keydown", (e) => e.key === "Enter" && joinByCode());
+    // TV mode: this screen shows the room's match to the couch, with no seat.
+    const watchByCode = () => {
+      const code = this.code.value.trim();
+      if (!code) return this.showError("Digite o código da sala para assistir na TV.");
+      go({ kind: "watch", code });
+    };
 
     this.buttons = [
       button("▶  Jogar agora", () => go({ kind: "public" }), "primary big play"),
       button("Criar sala com amigos", () => go({ kind: "create" }), "create"),
       button("Entrar", joinByCode),
+      button("📺", watchByCode, "tv-btn"),
     ];
-    const [publicBtn, createBtn, joinBtn] = this.buttons;
+    const [publicBtn, createBtn, joinBtn, tvBtn] = this.buttons;
+    tvBtn!.title = "Assistir na TV (só mostra a partida da sala)";
+    tvBtn!.setAttribute("aria-label", "Assistir na TV");
 
+    // A tool button: its name over its state ("ligado"/"desligado").
+    const tool = (name: string, state: string, onClick: (b: HTMLButtonElement) => void) => {
+      const b = button("", () => onClick(b), "ghost tool");
+      b.append(el("span", { text: name }), el("small", { text: state }));
+      return b;
+    };
+    // A switch's look: green when on, red when off.
+    const setOn = (b: HTMLButtonElement, on: boolean) => {
+      b.classList.toggle("on", on);
+      b.classList.toggle("off", !on);
+      b.querySelector("small")!.textContent = on ? "ligado" : "desligado";
+      return b;
+    };
     // Debug mode: a connection readout in game, also logged on the server for us to read.
-    const debugLabel = (on: boolean) => `Modo debug: ${on ? "ligado" : "desligado"}`;
-    const debugBtn = button(debugLabel(debugOn(location.search, storage)), () => {
-      debugBtn.textContent = debugLabel(toggleDebug(storage));
-    }, "link");
+    const debugBtn = setOn(tool("Modo debug", "", (b) => setOn(b, toggleDebug(storage))), debugOn(location.search, storage));
+    // Lite mode (on by itself on smart TVs): applies on the reload it triggers.
+    const liteBtn = setOn(tool("Modo leve", "", () => {
+      toggleLite(navigator.userAgent, storage);
+      location.reload();
+    }), liteOn(navigator.userAgent, location.search, storage));
+    const freshBtn = tool("Atualizar", "jogo", () => void freshReload());
+    freshBtn.classList.add("fresh"); // an action, not a switch: blue
 
     this.handlers = handlers;
     const logo = el("h1", { class: "logo", text: "BOMB" });
@@ -91,24 +121,28 @@ export class Menu {
       publicBtn,
       createBtn,
       el("div", { class: "or", text: "ou entre com um código" }),
-      el("div", { class: "row" }, [this.code, joinBtn]),
+      el("div", { class: "row" }, [this.code, joinBtn, tvBtn]),
       this.status,
       this.error,
       el("div", { class: "row extras" }, [
         button("Ver itens", () => handlers.guide("items"), "ghost"),
         button("Personagens", () => handlers.guide("characters"), "ghost"),
       ]),
-      button("Assistir demo", () => handlers.demo(), "ghost"),
+      button("Assistir demo", () => handlers.demo(), "ghost demo-btn"),
       button("📶 Jogar offline (Wi-Fi)", () => {
         storage.set(NAME_KEY, this.name.value.trim());
         handlers.offline(this.name.value);
       }, "ghost offline-btn"),
+      // Shown on computers, and on touch screens once a controller is plugged in (index.html).
+      button("🎮 Vários controles (mesma tela)", () => {
+        storage.set(NAME_KEY, this.name.value.trim());
+        handlers.couch(this.name.value);
+      }, "ghost couch-btn"),
       el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
-      // Tools for us, kept small: version, debug readout, reload past a stale cache.
+      // Tools: debug readout, lite mode, reload past a stale cache; the version under them.
       el("div", { class: "menu-foot" }, [
-        el("span", { text: versionLabel(__APP_VERSION__) }),
-        debugBtn,
-        button("Atualizar jogo", () => void freshReload(), "link"),
+        el("div", { class: "tools" }, [debugBtn, liteBtn, freshBtn]),
+        el("span", { class: "version", text: versionLabel(__APP_VERSION__) }),
       ]),
     ]);
     const preview = new ItemPreview();
@@ -133,18 +167,25 @@ export class Menu {
       if (on !== "characters") charPreview.pause();
     };
     items.root.hidden = characters.root.hidden = true;
+    const lineup = cast();
+    const hero = el("div", { class: "hero" }, [
+      lineup,
+      logo,
+      el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
+      el(
+        "ul",
+        { class: "perks" },
+        ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
+      ),
+    ]);
+    // The lineup is wider than the hero beside the card on most computer screens: shrink it to fit.
+    new ResizeObserver(() => {
+      lineup.style.zoom = "";
+      lineup.style.zoom = String(shrinkToFit(lineup.offsetWidth, hero.clientWidth));
+    }).observe(hero);
     this.root = el("div", { class: "screen menu" }, [
       menuBackdrop(),
-      el("div", { class: "hero" }, [
-        cast(),
-        logo,
-        el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
-        el(
-          "ul",
-          { class: "perks" },
-          ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
-        ),
-      ]),
+      hero,
       card,
       items.root,
       characters.root,
@@ -216,17 +257,33 @@ export class Menu {
   }
 }
 
-/** The lineup on the title screen: the mascot in front, players in their arena colors at its sides. */
+/**
+ * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
+ * and Static on his flying disc at its other side; pelé, harry, penelope (in her own pink), the green lantern and the flash at the far left, bugs munching his carrot,
+ * donatello (in his own purple), the pink panther, optimus and lula at the far right.
+ */
 function cast(): HTMLElement {
-  const [white, , , blue, green] = PLAYER_COLORS;
+  const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
-    member(characterArt("naruto", white, "walk"), "edge left"),
-    member(characterArt("goku", green, "walk"), "far left"),
-    member(characterArt("ninja", blue, "walk"), "near left"),
+    member(characterArt("pele", blue, "walk"), "edge left"),
+    member(characterArt("harry", red, "walk"), "edge left"),
+    member(characterArt("penelope", null, "walk"), "edge left"),
+    member(characterArt("lantern", green, "walk"), "edge left"),
+    member(characterArt("flash", red, "walk"), "edge left"),
+    member(characterArt("naruto", white, "walk"), "far left"),
+    member(characterArt("goku", green, "walk"), "near left"),
     member(titleBomberArt(), "star"),
+    member(characterArt("pikachu", blue, "walk"), "front"),
+    member(characterArt("static", blue, "walk"), "front left"),
     member(characterArt("captain", white, "walk"), "near right"),
     member(characterArt("thor", blue, "walk"), "far right"),
+    member(characterArt("spider", red, "walk"), "edge right"),
+    member(characterArt("bugs", blue, "walk"), "edge right"),
+    member(characterArt("donatello", null, "walk"), "edge right"),
+    member(characterArt("panther", blue, "walk"), "edge right"),
+    member(characterArt("optimus", blue, "walk"), "edge right"),
+    member(characterArt("lula", red, "walk"), "edge right"),
   ]);
 }
 

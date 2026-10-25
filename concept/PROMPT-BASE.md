@@ -1,5 +1,7 @@
 # Prompt-base — família Bombtop v1
 
+Para integrar personagens, especiais, sons e telas, seguir o roteiro operacional de [CHARACTER-RECIPE.md](CHARACTER-RECIPE.md). A identidade e o acabamento aprovados abaixo governam o visual; os contratos de grade e as animações devem ser definidos para cada entrega.
+
 Fonte normativa: [identidade](CHARACTER-IDENTITY.md) e [contrato JSON](characters.identity.json). Anexar a imagem real [menu aprovado do Bomber](bomber/menu-flight-source.png) pelo mecanismo de referência/edição da ferramenta. Para personagens novos, anexar também seu conceito aprovado quando existir.
 
 ## Variáveis
@@ -10,7 +12,7 @@ Fonte normativa: [identidade](CHARACTER-IDENTITY.md) e [contrato JSON](character
 - DELIVERABLE: conceito isolado, quadros de uma ação, ou folha de produção com inventário explícito.
 - GRID: dimensões, células, direções, número de quadros, margens e âncoras do contrato aprovado. Não pedir folha de animação sem esse bloco.
 
-## Prompt reutilizável
+## A. Descrição do PixelLab (`create_character`)
 
 Use the attached approved Bombtop Bomber menu-flight artwork as the actual visual reference for FAMILY STYLE and rendering quality. Create original character [CHARACTER], with [IDENTITY] and [PERSONALITY]. Do not transfer Bomber-specific bomb head, amber eyes, burning wick, violet armor, red cape or gold hexagonal chest emblem to other characters unless explicitly requested in their identity.
 

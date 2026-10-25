@@ -1,4 +1,4 @@
-import { BLAST_TICKS, FUSE_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type BlastKind, type Bomb, type PublicView } from "@bombtop/shared";
 import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
@@ -17,11 +17,23 @@ export type CueName =
   | "jump"
   | "dash"
   | "warp"
-  | "ice"
+  | "web"
+  | "webbed"
   | "thunder"
+  | "shock"
+  | "magnet"
+  | "zoom"
+  | "dig"
+  | "spin"
+  | "kiss"
+  | "gallop"
+  | "transform"
+  | "kickball"
+  | "truck"
+  | "bubble"
+  | "pop"
   | "kamehameha"
   | "rasengan"
-  | "freeze"
   | "hurry"
   | "mega"
   | VoiceName;
@@ -35,6 +47,21 @@ export interface Cue {
 }
 
 type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "blasts" | "pressure">;
+
+/** The sound each blast makes as it starts (the kamehameha and the rasengan are heard from their charge or dash). */
+const BLAST_CUES: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, CueName> = {
+  lightning: "thunder",
+  thunder: "shock",
+  web: "web",
+  magnet: "magnet",
+  flash: "zoom",
+  tunnel: "dig",
+  spin: "spin",
+  kiss: "kiss",
+  patronus: "gallop",
+  truck: "transform",
+  ball: "kickball",
+};
 
 const key = (x: number, y: number) => `${x},${y}`;
 const bombKey = (b: Bomb) => `${b.ownerId}@${key(b.x, b.y)}`;
@@ -50,16 +77,23 @@ export function soundCues(prev: View, next: View): Cue[] {
 
   const oldFlames = new Set(prev.flames.map((f) => key(f.x, f.y)));
   const fresh = next.flames.filter((f) => !oldFlames.has(key(f.x, f.y)));
-  if (fresh.length) {
-    const x = fresh.reduce((sum, f) => sum + f.x, 0) / fresh.length;
-    cues.push({ name: "explode", x: mid(x), size: fresh.length });
+  // A block set burning on its own (a Kamehameha, a Rasengan) breaks without a bomb going off.
+  const blast = fresh.filter((f) => !f.block);
+  if (blast.length) {
+    const x = blast.reduce((sum, f) => sum + f.x, 0) / blast.length;
+    cues.push({ name: "explode", x: mid(x), size: blast.length });
   }
 
   const { width, tiles } = next.grid;
   const changed = (from: (t: Tile) => boolean, to: Tile) =>
     tiles.findIndex((t, i) => t === to && from(prev.grid.tiles[i]!));
-  const broken = changed((t) => t === Tile.Block, Tile.Empty);
-  if (broken >= 0) cues.push({ name: "break", x: mid(broken % width) });
+  // A block breaks as it starts burning (it burns away later, silently); one cleared some other way
+  // (sudden death, a scripted scene) breaks as it goes.
+  const burning = new Set(prev.flames.filter((f) => f.block).map((f) => key(f.x, f.y)));
+  const lit = fresh.find((f) => f.block);
+  const smashed = tiles.findIndex((t, i) => t === Tile.Empty && prev.grid.tiles[i] === Tile.Block && !burning.has(key(i % width, Math.floor(i / width))));
+  if (lit) cues.push({ name: "break", x: mid(lit.x) });
+  else if (smashed >= 0) cues.push({ name: "break", x: mid(smashed % width) });
   const wall = changed((t) => t !== Tile.Wall, Tile.Wall);
   if (wall >= 0) cues.push({ name: "wall", x: mid(wall % width) });
 
@@ -85,8 +119,9 @@ export function soundCues(prev: View, next: View): Cue[] {
 
   // The kamehameha and the rasengan are heard from the start of their charge or dash (see below).
   for (const b of next.blasts) {
-    if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < BLAST_TICKS - elapsed) continue;
-    cues.push({ name: b.kind === "lightning" ? "thunder" : "ice", x: mid(b.x) });
+    if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < blastLife(b) - elapsed) continue;
+    if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
+    cues.push({ name: BLAST_CUES[b.kind], x: mid(b.x) });
   }
 
   for (const p of next.players) {
@@ -106,9 +141,14 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("jump", !was.jumpTicks && p.jumpTicks);
     hear("warp", !was.warpLock && p.warpLock);
     hear("dash", !was.dashTicks && p.dashTicks);
-    hear("freeze", !was.frozen && p.frozen);
+    hear("webbed", !was.webbed && p.webbed);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);
+    // Optimus: transforming, his truck pulling away (transforming back is heard by its blast)
+    hear("transform", !was.truck && p.truck);
+    hear("truck", was.truck > TRUCK_TICKS && p.truck > 0 && p.truck <= TRUCK_TICKS);
+    hear("bubble", !was.bubble && p.bubble);
+    hear("pop", was.bubble && !p.bubble);
     const shout = voiceLine(p.character, "special");
     if (shout) hear(shout, !was.specialCooldown && p.specialCooldown);
   }

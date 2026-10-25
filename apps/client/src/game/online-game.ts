@@ -25,6 +25,7 @@ import {
 } from "@bombtop/shared";
 import { Listener, type CueName } from "../audio/cues";
 import { actionCues, EchoFilter } from "../audio/local-cues";
+import type { CouchSeats } from "../input/couch";
 import { GamepadInput } from "../input/gamepad";
 import { KeepAwake } from "../net/keep-awake";
 import { ARROWS, KeyboardInput, mergeInputs, WASD } from "../input/keyboard";
@@ -36,7 +37,9 @@ import { Predictor } from "../net/prediction";
 import { serverUrl } from "../net/server-url";
 import { SnapshotBuffer } from "../net/snapshot-buffer";
 import type { LobbyPanel } from "../ui/lobby";
-import { debugNet, NetHud } from "../ui/net-hud";
+import { debugNet, NetHud, NetStats } from "../ui/net-hud";
+import { nameTags } from "../render/name-tags";
+import { crumb } from "../net/client-log";
 import type { OnlineChoice } from "../ui/menu";
 import type { GameMode, ModeContext } from "./mode";
 
@@ -66,11 +69,14 @@ export class OnlineGame implements GameMode {
   private readonly listener = new Listener();
   private readonly worldListener = new Listener();
   /** Connection readout (?debug), with its ping timer. */
-  private readonly hud = debugNet() ? new NetHud() : null;
+  /** How the connection and this screen are doing, reported to the server's log by every player (gaps, stalls). */
+  private readonly stats = new NetStats();
+  /** The same numbers on screen, with ?debug. */
+  private readonly hud = debugNet() ? new NetHud(this.stats) : null;
   private pinger: ReturnType<typeof setInterval> | undefined;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
-  /** Our ice blast and the items we walk onto, shown before the server confirms them. */
+  /** Our special's blast and the items we walk onto, shown before the server confirms them. */
   private readonly blastGhosts: GhostBlasts;
   private pickups = new GhostPickups();
   private readonly kicks = new KickPrediction();
@@ -96,6 +102,7 @@ export class OnlineGame implements GameMode {
     }
     const base = { name: who.name, character: who.character };
     const options = who.token ? { ...base, token: who.token } : base;
+    if (choice.kind === "watch") return new OnlineGame(await client.joinById(choice.code, { watch: true }), ctx, panel, null, true);
     const room =
       choice.kind === "public"
         ? await client.joinOrCreate(ROOM_NAME, options)
@@ -105,21 +112,32 @@ export class OnlineGame implements GameMode {
     return new OnlineGame(room, ctx, panel);
   }
 
-  /** A match in a room reached some other way (offline: hosted on a phone nearby). */
-  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel): OnlineGame {
-    return new OnlineGame(link, ctx, panel);
+  /** A match in a room reached some other way (offline: hosted on a phone nearby; `couch`: more controllers here). */
+  static over(link: RoomLink, ctx: ModeContext, panel: LobbyPanel, couch: CouchSeats | null = null, report?: (stats: object) => void): OnlineGame {
+    const game = new OnlineGame(link, ctx, panel, couch);
+    game.report = report ?? null;
+    return game;
   }
+
+  /** Where the 5 s connection reports go when the room is not on the server (offline: POST /net). */
+  private report: ((stats: object) => void) | null = null;
 
   private constructor(
     private readonly room: RoomLink,
     private readonly ctx: ModeContext,
     private readonly panel: LobbyPanel,
+    /** Other players on this screen, one per extra controller (couch play). */
+    private readonly couch: CouchSeats | null = null,
+    /** TV mode: this screen only shows the match (no seat, no input). */
+    readonly watching = false,
   ) {
+    panel.setWatching(watching);
     this.predictor = new Predictor(room.sessionId);
     this.remoteMotion = new RemoteMotion(room.sessionId);
     this.ghosts = new GhostBombs(room.sessionId);
     this.blastGhosts = new GhostBlasts(room.sessionId);
     room.onMessage(S2C.lobby, (info: LobbyInfo) => {
+      if (info.phase !== this.lobby?.phase) crumb(`${watching ? "tv" : "sala"} ${info.phase} (${info.members.length})`);
       if (info.phase === "playing" && this.lobby?.phase !== "playing") {
         this.predictor.reset();
         this.remoteMotion.reset();
@@ -132,10 +150,14 @@ export class OnlineGame implements GameMode {
       }
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
+      ctx.renderer.setNames(nameTags(info.members, watching ? null : room.sessionId));
+      ctx.renderer.setScore(info.members.map((m) => ({ id: m.id, wins: m.wins })));
+      // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
+      ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
       if (info.phase !== "results") ctx.renderer.showBanner("");
       // Shown on the results phase's lobby update, which carries the new win counts.
-      else if (this.result) this.showResults(this.result.winnerId);
+      else if (this.result) this.showResults(this.result);
     });
     // Whole snapshots now and then; in between, only what changed.
     const snapshots = new DeltaReceiver<Snapshot>();
@@ -150,20 +172,23 @@ export class OnlineGame implements GameMode {
       // The winner's own cheer, once the announcer and jingle are done.
       const cheer = winnerVoice(result.winnerId, this.lobby?.members ?? []);
       if (cheer) setTimeout(() => ctx.sound.play(cheer), WIN_CHEER_MS);
-      this.showResults(result.winnerId);
+      this.showResults(result);
     });
     room.onLeave(() => {
       if (!this.leaving) ctx.exit("Conexão com a sala encerrada.");
     });
-    const hud = this.hud;
-    if (hud) {
-      let n = 0;
-      this.pinger = setInterval(() => {
-        room.ping((ms) => (hud.stats.ping = ms));
-        // Every 5 s the numbers go to the server's log, so nobody has to send screenshots.
-        if (++n % 5 === 0) room.send(C2S.stats, hud.stats.report(navigator.userAgent));
-      }, 1000);
-    }
+    let n = 0;
+    this.pinger = setInterval(() => {
+      room.ping((ms) => (this.stats.ping = ms));
+      // offline: which way the phones' connection runs
+      void room.route?.().then((r) => (this.stats.route = r));
+      // Every 5 s of a match the numbers go to the server's log, so nobody has to send screenshots.
+      if (++n % 5 === 0 && this.lobby?.phase === "playing") {
+        const stats = { ...this.stats.report(navigator.userAgent), ...memoryUse() };
+        if (this.report) this.report(stats);
+        else room.send(C2S.stats, stats);
+      }
+    }, 1000);
     // Handlers are attached: ask for the current state (earlier broadcasts were dropped).
     room.send(C2S.sync);
   }
@@ -184,11 +209,14 @@ export class OnlineGame implements GameMode {
     this.room.send(C2S.character, { character });
   }
 
+  pickBotCharacter(id: string, character: CharacterId): void {
+    this.room.send(C2S.botCharacter, { id, character });
+  }
+
   frame(deltaMs: number, nowMs: number): void {
-    if (!this.hud) return this.step(deltaMs, nowMs);
     const t = performance.now();
     this.step(deltaMs, nowMs);
-    this.hud.stats.work(performance.now() - t);
+    this.stats.work(performance.now() - t);
   }
 
   /** One frame: inputs for the ticks due, then the screen. */
@@ -197,10 +225,8 @@ export class OnlineGame implements GameMode {
 
     const sample = this.buffer.sample(nowMs);
     if (!sample) return this.hud?.show();
-    if (this.hud) {
-      this.hud.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
-      this.hud.show();
-    }
+    this.stats.frame(deltaMs, sample.pastMs > 0, this.buffer.delayMs);
+    this.hud?.show();
     const world = this.latest!;
     const width = sample.to.grid.width;
     const heard = this.listener.hear(sample.to).filter((c) => !WORLD_CUES.has(c.name));
@@ -219,6 +245,7 @@ export class OnlineGame implements GameMode {
       this.echo.played(got, nowMs);
     }
     view = this.pickups.apply(view, nowMs);
+    this.ctx.specialCooldown?.(me?.specialCooldown ?? 0);
     if (!me) {
       this.measureJumps(view, prev, 1, null);
       return this.ctx.renderer.draw(view, prev, 1);
@@ -230,11 +257,10 @@ export class OnlineGame implements GameMode {
     this.ctx.renderer.draw({ ...view, players }, prev, 1);
   }
 
-  /** Where each player was drawn last frame, to report teleports in debug mode. */
+  /** Where each player was drawn last frame, to report teleports. */
   private drawn = new Map<string, { px: number; py: number }>();
 
   private measureJumps(view: PublicView, prev: Map<string, { px: number; py: number }>, alpha: number, me: string | null): void {
-    if (!this.hud) return;
     let mine = 0;
     let others = 0;
     for (const p of view.players) {
@@ -247,7 +273,7 @@ export class OnlineGame implements GameMode {
       if (p.id === me) mine = Math.max(mine, tiles);
       else others = Math.max(others, tiles);
     }
-    this.hud.stats.jumps(mine, others);
+    this.stats.jumps(mine, others);
   }
 
   private playing(): boolean {
@@ -256,6 +282,8 @@ export class OnlineGame implements GameMode {
 
   /** Sends input only when it changes or a button is pressed; the server keeps the held direction. */
   private sendInput(): void {
+    if (this.watching) return;
+    this.couch?.tick(this.lobby?.phase ?? null, this.lobby?.members.map((m) => m.character) ?? []);
     const input = mergeInputs([...this.inputs.map((k) => k.sample()), this.pad.sample(), this.ctx.touch.sample()]);
     const actor = (input.bomb || input.action || input.special) && this.playing() ? this.predictor.predict(this.latest!) : null;
     const t = this.predictor.clock;
@@ -279,9 +307,10 @@ export class OnlineGame implements GameMode {
     const now = performance.now();
     // A blast we already predicted is still recharging on the server's side: don't cast it twice.
     const casting = this.blastGhosts.active(now);
-    const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => c.name !== "ice" || !casting);
+    const shot = (c: { name: string }) => c.name === "web";
+    const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => !shot(c) || !casting);
     for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now, me.bombType, seq);
-    const blast = cues.some((c) => c.name === "ice") ? predictBlast(this.latest!, me) : null;
+    const blast = cues.some(shot) ? predictBlast(this.latest!, me) : null;
     if (blast) this.blastGhosts.add(blast, now);
     this.ctx.sound.cues(cues, this.latest!.grid.width);
     this.echo.played(cues, now);
@@ -307,7 +336,7 @@ export class OnlineGame implements GameMode {
   private received(snap: Snapshot): void {
     if (!this.buffer.latest) this.ctx.fit(snap.grid.width, snap.grid.height);
     const now = performance.now();
-    this.hud?.stats.arrival(now);
+    this.stats.arrival(now);
     this.delay.observe(now);
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
@@ -318,10 +347,10 @@ export class OnlineGame implements GameMode {
     if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
   }
 
-  private showResults(winnerId: string | null): void {
+  private showResults({ winnerId, setOver }: ResultMessage): void {
     if (!this.lobby) return;
     const ids = this.lobby.members.map((m) => m.id);
-    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId);
+    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId, setOver);
   }
 
   /** Token to take this seat back after a reload. */
@@ -336,6 +365,7 @@ export class OnlineGame implements GameMode {
 
   async leave(): Promise<void> {
     this.leaving = true;
+    this.couch?.leaveAll();
     await this.room.leave().catch(() => undefined);
     this.ctx.exit();
   }
@@ -345,9 +375,20 @@ export class OnlineGame implements GameMode {
     this.hud?.dispose();
     this.panel.hide();
     this.ctx.renderer.showBanner("");
+    this.ctx.renderer.setNames(new Map()); // the menus' scenes go untagged
+    this.ctx.renderer.setScore(null);
+    this.ctx.specialCooldown?.(0);
     if (!this.leaving) {
       this.leaving = true;
+      this.couch?.leaveAll();
       void this.room.leave().catch(() => undefined);
     }
   }
+}
+
+/** The page's script memory (MB, Chrome only) and the device's (GB), for the log: a phone near its limit crashes. */
+function memoryUse(): { mem?: number; dm?: number } {
+  const heap = (performance as { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize;
+  const dm = (navigator as { deviceMemory?: number }).deviceMemory;
+  return { ...(heap ? { mem: Math.round(heap / 2 ** 20) } : {}), ...(dm ? { dm } : {}) };
 }

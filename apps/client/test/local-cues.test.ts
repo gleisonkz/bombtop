@@ -18,19 +18,19 @@ describe("actionCues", () => {
     expect(actionCues(v, p, { dir: null, bomb: true, action: true, special: true })).toEqual([]);
   });
 
-  it("suppresses input while frozen beyond the next thaw tick", () => {
+  it("suppresses input while webbed beyond the next tick it comes loose", () => {
     const v = view();
     const p = me(v);
-    p.frozen = 2;
+    p.webbed = 2;
     expect(actionCues(v, p, { dir: null, bomb: true, special: true })).toEqual([]);
   });
 
-  it("allows placement on the tick that frozen reaches zero", () => {
+  it("allows placement on the tick the web comes loose", () => {
     const v = view();
     const p = me(v);
-    p.frozen = 1;
+    p.webbed = 1;
     expect(actionCues(v, p, { dir: null, bomb: true })).toEqual([{ name: "place", x: 1.5 }]);
-    expect(p.frozen).toBe(1);
+    expect(p.webbed).toBe(1);
   });
 
   it("hears our own bomb the moment the button is pressed", () => {

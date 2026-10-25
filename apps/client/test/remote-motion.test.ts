@@ -83,4 +83,14 @@ describe("remote motion recovery", () => {
     expect(view.flames).toBe(sample.to.flames);
     expect(view.items).toBe(sample.to.items);
   });
+
+  it.each(["webbed", "truck"] as const)("does not smooth %s positions from the updated simulation", (status) => {
+    const motion = new RemoteMotion("me");
+    motion.sample(frame(), 0);
+    const next = frame(4, 960);
+    next.from = structuredClone(next.to);
+    next.pastMs = 0;
+    next.to.players[1]![status] = 5;
+    expect(xOf(motion.sample(next, 16))).toBe(960);
+  });
 });

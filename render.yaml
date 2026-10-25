@@ -22,6 +22,14 @@ services:
       - type: rewrite
         source: /sala/*
         destination: /index.html
+      # A TV watching a room (/tv/<code>).
+      - type: rewrite
+        source: /tv/*
+        destination: /index.html
+      # A friend's offline (Wi-Fi) room (/wifi/<code>).
+      - type: rewrite
+        source: /wifi/*
+        destination: /index.html
       # So are the item and character guides.
       - type: rewrite
         source: /itens

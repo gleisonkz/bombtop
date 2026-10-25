@@ -3,16 +3,16 @@ import { BLAST_TICKS, createMatch, ItemKind, publicView, TICK_RATE, TILE, type P
 import { actionCues } from "../src/audio/local-cues";
 import { GhostBlasts, GhostPickups, predictBlast } from "../src/net/own-actions";
 
-function view(character: "ninja" | "bomb" | "goku" | "naruto" = "ninja"): PublicView {
+function view(character: "thor" | "bomb" | "goku" | "naruto" = "thor"): PublicView {
   return publicView(createMatch({ seed: 1, playerIds: ["me", "them"], blockDensity: 0, characters: { me: character } }));
 }
 const me = (v: PublicView): Player => structuredClone(v.players[0]!);
 const TICK_MS = 1000 / TICK_RATE;
 
-describe("ice blast, predicted", () => {
+describe("special blast, predicted", () => {
   it("is heard the moment the button is pressed, when the special is ready", () => {
     const v = view();
-    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["ice", "ninja-special"]);
+    expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["thunder", "thor-special"]);
   });
 
   it("stays quiet while recharging", () => {
@@ -36,7 +36,7 @@ describe("ice blast, predicted", () => {
 
   it("goku's kamehameha is heard at once but makes no blast until its charge is done", () => {
     const v = view("goku");
-    v.blasts.push({ ownerId: "them", x: 5, y: 5, dir: "up", length: 1, ttl: 10, kind: "ice" });
+    v.blasts.push({ ownerId: "them", x: 5, y: 5, dir: "up", length: 1, ttl: 10, kind: "lightning" });
     expect(predictBlast(v, me(v))).toBeNull();
     expect(actionCues(v, me(v), { dir: null, bomb: false, special: true }).map((c) => c.name)).toEqual(["kamehameha"]);
   });

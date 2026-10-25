@@ -2,7 +2,8 @@ import { mkdtempSync, readFileSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { NetLog, netReport, TickCost } from "../src/net-log";
+import { Readable } from "node:stream";
+import { NetLog, netReport, offlineNetRoute, TickCost } from "../src/net-log";
 
 describe("netReport", () => {
   it("keeps the measurements, as bounded numbers", () => {
@@ -54,5 +55,41 @@ describe("TickCost", () => {
     c.add(0.3);
     expect(c.take()).toBe(14);
     expect(c.take()).toBe(0);
+  });
+});
+
+describe("offline reports (POST /net)", () => {
+  const req = (body: string, ip = "1.2.3.4") => {
+    const r = Readable.from([Buffer.from(body)]) as Readable & { headers: Record<string, string>; socket: { remoteAddress: string } };
+    r.headers = { "x-forwarded-for": ip };
+    r.socket = { remoteAddress: "127.0.0.1" };
+    return r;
+  };
+  const res = () => {
+    const out = { status: 0 };
+    return Object.assign(out, { writeHead: (s: number) => void (out.status = s), end: () => {} });
+  };
+
+  it("keeps the route an offline match's connection runs", () => {
+    expect(netReport({ ping: 9, route: "wifi" })).toEqual({ ping: 9, route: "wifi" });
+    expect(netReport({ ping: 9, route: "moon" })).toEqual({ ping: 9 });
+  });
+
+  it("logs an offline match's reports beside the online ones, by room and player, so many a minute an address", async () => {
+    const lines: unknown[] = [];
+    let now = 0;
+    const handle = offlineNetRoute({ write: (who, r) => void lines.push({ ...who, ...r }) }, () => now);
+    const r = res();
+    await handle(req(JSON.stringify({ room: "K7QM", player: "Gil", ping: 12, route: "internet", junk: 1 })), r);
+    expect(r.status).toBe(204);
+    expect(lines).toEqual([{ room: "wifi:K7QM", player: "Gil", ping: 12, route: "internet" }]);
+    await handle(req("nope"), res());
+    await handle(req(JSON.stringify({ room: "x".repeat(99), player: "y".repeat(99), ping: 1 })), res());
+    expect(lines.at(-1)).toMatchObject({ room: `wifi:${"x".repeat(16)}`, player: "y".repeat(24) });
+    for (let i = 0; i < 40; i++) await handle(req(JSON.stringify({ room: "A", player: "B", ping: i })), res());
+    expect(lines.length).toBeLessThan(35);
+    now = 61_000;
+    await handle(req(JSON.stringify({ room: "A", player: "B", ping: 1 })), res());
+    expect(lines.at(-1)).toMatchObject({ ping: 1 });
   });
 });

@@ -15,7 +15,7 @@ export function carryOn<V extends PublicView>(from: V, to: V, ms: number): V {
   const s = to as unknown as MatchState;
   const players = to.players.map((p) => {
     const was = from.players.find((q) => q.id === p.id);
-    if (!was || !p.alive || p.stun > 0 || p.frozen > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
+    if (!was || !p.alive || p.stun > 0 || p.webbed > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.truck > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
     const dx = p.px - was.px;
     const dy = p.py - was.py;
     if (dx === 0 && dy === 0) return p;

@@ -57,7 +57,7 @@ export class RemoteMotion {
   }
 
   private canCorrect(view: PublicView, p: Player, target: Pick<Player, "px" | "py">, drawn: Pick<Player, "px" | "py">): boolean {
-    if (!p.alive || p.stun || p.frozen || p.shield || p.charge || p.rasengan || p.mount || p.jumpTicks || p.dashTicks) return false;
+    if (!p.alive || p.stun || p.webbed || p.shield || p.charge || p.rasengan || p.truck || p.mount || p.jumpTicks || p.dashTicks) return false;
     if (Math.abs(drawn.px - target.px) + Math.abs(drawn.py - target.py) > TILE / 2) return false;
     const x = Math.floor(target.px / TILE);
     const y = Math.floor(target.py / TILE);

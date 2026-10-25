@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "../../src";
-import { BattleSession, BOT_NAMES, RESULTS_TICKS } from "../../src";
+import { BattleSession, BOT_NAMES, BOT_PERSONAS, RESULTS_TICKS, WINS_TO_WIN } from "../../src";
 
 function lobby(n: number) {
   const s = new BattleSession({ seed: () => 1, blockDensity: 0 });
@@ -59,7 +59,7 @@ describe("lobby", () => {
       stage: "classic",
       code: "ROOM1",
       members: [
-        { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb" },
+        { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb", ownColors: true },
         { id: "c2", name: "Player 2", wins: 0, connected: true, character: "bomb" },
       ],
     });
@@ -67,20 +67,20 @@ describe("lobby", () => {
 
   it("each player picks a character: the bomb unless chosen on joining, changeable in the lobby", () => {
     const s = lobby(1);
-    s.join("c2", "Ninja", "ninja");
-    expect(s.members.map((m) => m.character)).toEqual(["bomb", "ninja"]);
-    expect(s.setCharacter("c1", "ninja")).toBe(true);
-    expect(s.members[0]!.character).toBe("ninja");
-    expect(s.setCharacter("nobody", "ninja")).toBe(false);
+    s.join("c2", "Thor", "thor");
+    expect(s.members.map((m) => m.character)).toEqual(["bomb", "thor"]);
+    expect(s.setCharacter("c1", "thor")).toBe(true);
+    expect(s.members[0]!.character).toBe("thor");
+    expect(s.setCharacter("nobody", "thor")).toBe(false);
     s.start("c1");
     expect(s.setCharacter("c1", "bomb")).toBe(false); // locked mid-match
   });
 
   it("plays each member as the character they picked", () => {
     const s = lobby(2);
-    s.setCharacter("c2", "ninja");
+    s.setCharacter("c2", "thor");
     s.start("c1");
-    expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "ninja"]);
+    expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "thor"]);
   });
 
   it("rejects joins during a match", () => {
@@ -185,27 +185,75 @@ describe("playing", () => {
     expect(s.match!.players[1]!.alive).toBe(false);
   });
 
-  it("ends the round when one player is left, then returns to the lobby", () => {
+  it("ends the round when one player is left, then the next round starts by itself", () => {
     const s = playing();
+    const first = s.match;
     const { x, y } = playerTile(s.match!.players[1]!);
     s.match!.revenge = false;
     s.match!.flames.push({ x, y, ttl: FLAME_TICKS });
     const out = s.tick();
-    expect(out.result).toEqual({ over: true, winnerId: "c1" });
+    expect(out.result).toEqual({ over: true, winnerId: "c1", setOver: false });
     expect(s.phase).toBe("results");
     for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
-    expect(s.phase).toBe("lobby");
-    expect(s.match).toBeNull();
+    expect(s.phase).toBe("playing");
+    expect(s.match).not.toBe(first);
+    expect(s.match!.players.every((p) => p.alive)).toBe(true);
   });
 
   it("keeps score across rounds", () => {
     const s = playing();
+    winRound(s, "c1");
+    winRound(s, "c2");
+    winRound(s, "c1");
+    expect(s.members.map((m) => m.wins)).toEqual([2, 1]);
+  });
+
+  it(`whoever wins ${WINS_TO_WIN} rounds wins the match, and the room goes back to the lobby`, () => {
+    const s = playing();
+    for (let i = 1; i < WINS_TO_WIN; i++) expect(winRound(s, "c2")).toMatchObject({ setOver: false });
+    expect(winRound(s, "c2")).toEqual({ over: true, winnerId: "c2", setOver: true });
+    expect(s.phase).toBe("lobby");
+    expect(s.match).toBeNull();
+    expect(s.lobbyInfo("X").members.find((m) => m.id === "c2")!.wins).toBe(WINS_TO_WIN); // the final score stays up in the lobby
+  });
+
+  it("a draw scores nobody, and play goes on", () => {
+    const s = playing();
     s.match!.revenge = false;
-    s.match!.players[1]!.alive = false;
-    s.tick();
-    expect(s.members.find((m) => m.id === "c1")!.wins).toBe(1);
+    for (const p of s.match!.players) p.alive = false;
+    expect(s.tick().result).toEqual({ over: true, winnerId: null, setOver: false });
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.phase).toBe("playing");
+    expect(s.members.map((m) => m.wins)).toEqual([0, 0]);
+  });
+
+  it("a new match from the lobby starts the score from zero", () => {
+    const s = playing();
+    for (let i = 0; i < WINS_TO_WIN; i++) winRound(s, "c1");
+    s.start("c1");
+    expect(s.members.map((m) => m.wins)).toEqual([0, 0]);
+  });
+
+  it("with fewer than two players left, the room goes back to the lobby instead of another round", () => {
+    const s = playing(3);
+    s.leave("c3");
+    winRound(s, "c1");
+    expect(s.phase).toBe("playing");
+    s.leave("c2");
+    s.tick(); // c1 is the last one standing
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.phase).toBe("lobby");
   });
 });
+
+/** Everyone but `winner` drops dead; the round's result, after its results screen has run out. */
+function winRound(s: BattleSession, winner: string) {
+  s.match!.revenge = false;
+  for (const p of s.match!.players) if (p.id !== winner) p.alive = false;
+  const { result } = s.tick();
+  for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+  return result;
+}
 
 describe("snapshots", () => {
   it("are emitted every other tick while playing", () => {
@@ -279,23 +327,45 @@ describe("bots", () => {
     expect(s.setCharacter(s.members[1]!.id, "bomb")).toBe(false);
   });
 
+  it("gives the bots in a room different personalities", () => {
+    const s = lobby(1);
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "medium");
+    const personas = s.members.slice(1).map((m) => m.persona);
+    expect(personas.every((p) => p && BOT_PERSONAS.includes(p))).toBe(true);
+    expect(new Set(personas).size).toBe(personas.length);
+  });
+
   it("gives each bot its own name", () => {
     const s = lobby(1);
     for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "medium");
     expect(new Set(s.members.map((m) => m.name)).size).toBe(MAX_PLAYERS);
   });
 
-  it("names each bot after its character: a ninja name, Capitão something, a Norse name for thor, a Dragon Ball name for goku, a fuse word for the mascot", () => {
+  it("names each bot after its character: Capitão something, a Norse name for thor, a Dragon Ball name for goku, a fuse word for the mascot", () => {
     const s = lobby(1);
     for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
     for (const m of s.members.slice(1)) {
-      if (m.character === "ninja") expect(BOT_NAMES.ninja).toContain(m.name);
       if (m.character === "captain") expect(m.name).toMatch(/^Capitão \S/);
       if (m.character === "thor") expect(BOT_NAMES.thor).toContain(m.name);
       if (m.character === "goku") expect(BOT_NAMES.goku).toContain(m.name);
       if (m.character === "bomb") expect(BOT_NAMES.bomb).toContain(m.name);
     }
     expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(4);
+  });
+
+  it("a bot plays a character drawn at random, none already in the room", () => {
+    const first = (r: number) => {
+      const s = new BattleSession({ seed: () => 1, random: () => r });
+      s.join("c1", "P1", "bomb");
+      s.addBot("c1", "easy");
+      return s.members[1]!.character;
+    };
+    expect(first(0)).not.toBe("bomb");
+    expect(first(0)).not.toBe(first(0.99));
+    const s = new BattleSession({ seed: () => 1, random: () => 0.5 });
+    s.join("c1", "P1");
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
+    expect(new Set(s.members.map((m) => m.character)).size).toBe(MAX_PLAYERS);
   });
 
   it("picks the bot names at random", () => {
@@ -316,6 +386,22 @@ describe("bots", () => {
     expect(s.removeBot("c1", "c2")).toBe(false);
     expect(s.removeBot("c1", bot)).toBe(true);
     expect(s.members).toHaveLength(2);
+  });
+
+  it("the host changes a bot's character in the lobby, and the bot takes a name of its new character", () => {
+    const s = lobby(2);
+    s.addBot("c1", "easy");
+    const bot = s.members[2]!;
+    const persona = bot.persona;
+    expect(s.setBotCharacter("c1", bot.id, "naruto")).toBe(true);
+    expect(bot.character).toBe("naruto");
+    expect(BOT_NAMES.naruto).toContain(bot.name);
+    expect(bot.persona).toBe(persona);
+    expect(s.setBotCharacter("c2", bot.id, "thor")).toBe(false); // not the host
+    expect(s.setBotCharacter("c1", "c2", "thor")).toBe(false); // not a bot
+    expect(s.setBotCharacter("c1", "nobody", "thor")).toBe(false);
+    s.start("c1");
+    expect(s.setBotCharacter("c1", bot.id, "thor")).toBe(false); // locked mid-match
   });
 
   it("one person and a bot are enough to start", () => {

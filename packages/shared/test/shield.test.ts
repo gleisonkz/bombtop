@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   createMatch,
-  FREEZE_TICKS,
   FUSE_TICKS,
   placeBomb,
   placePlayerAt,
   setTile,
   SHIELD_TICKS,
   SPECIAL_COOLDOWN,
+  SPECIAL_STUN_TICKS,
   step,
   Tile,
   type Facing,
@@ -15,13 +15,13 @@ import {
 } from "../src";
 import { hold, player, run } from "./helpers";
 
-/** Captain (p1) at (7,5) facing `facing`; p2 (a bomb) and p3 (a ninja) parked out of the way. */
+/** Captain (p1) at (7,5) facing `facing`; p2 (a bomb) and p3 (thor) parked out of the way. */
 function arena(facing: Facing = "left"): MatchState {
   const s = createMatch({
     seed: 1,
     playerIds: ["p1", "p2", "p3"],
     blockDensity: 0,
-    characters: { p1: "captain", p2: "bomb", p3: "ninja" },
+    characters: { p1: "captain", p2: "bomb", p3: "thor" },
   });
   placePlayerAt(s, "p1", 7, 5);
   placePlayerAt(s, "p2", 1, 1);
@@ -136,8 +136,8 @@ describe("captain shield", () => {
   });
 });
 
-describe("captain shield vs the ninja's ice", () => {
-  /** Ninja (p3) at (2,5) facing right, captain at (5,5) with the shield up. */
+describe("captain shield vs thor's lightning", () => {
+  /** Thor (p3) at (2,5) facing right, captain at (5,5) with the shield up. */
   function standoff(captainFacing: Facing) {
     const s = arena(captainFacing);
     placePlayerAt(s, "p1", 5, 5);
@@ -150,17 +150,17 @@ describe("captain shield vs the ninja's ice", () => {
   it("bounces a blast hitting the shield back at whoever is in its way", () => {
     const s = standoff("left");
     special(s, "p3");
-    expect(player(s).frozen).toBe(0);
-    expect(player(s, "p3").frozen).toBe(FREEZE_TICKS);
+    expect(player(s).stun).toBe(0);
+    expect(player(s, "p3").stun).toBe(SPECIAL_STUN_TICKS);
     expect(s.blasts).toEqual([
       expect.objectContaining({ ownerId: "p3", x: 2, y: 5, dir: "right", length: 3 }),
       expect.objectContaining({ ownerId: "p1", x: 5, y: 5, dir: "left", length: 3 }),
     ]);
   });
 
-  it("is frozen like anyone else when the blast comes from the side or behind", () => {
+  it("is stunned like anyone else when the blast comes from the side or behind", () => {
     const s = standoff("right");
     special(s, "p3");
-    expect(player(s).frozen).toBe(FREEZE_TICKS);
+    expect(player(s).stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1);
   });
 });

@@ -1,43 +1,106 @@
 """Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
-  ninja: sprites/ninja.png, character "Ice ninja HD4" (180px canvas; cast = the ice cast posed from our own
-    skeletons with the ice drawn over it by build-ninja-cast.py; carry walk posed from our own skeletons, carry idle =
-    its standing frames; lobby = the v3 "hand seal" frames 1..8)
-  captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too)
+  captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too); then run
+    lock-walk-head.py captain: the template side walk redrew his head on every frame (it wobbled, the jaw changed)
   goku: sprites/goku.png, character "Goku HD" (180px canvas; cast = Kamehameha and carry walk posed from our own
-    skeletons; lobby = the v3 "victory pose" frames 1..8). PixelLab drew a glow at his hands in the side
+    skeletons; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-goku-lobby.py's, in its own image). PixelLab drew a glow at his hands in the side
     thrust: that view holds its clean last frame. The hands in the side and front thrust are the "muzzle".
   thor: sprites/thor.png, character "Thor HD" (180px canvas; cast and carry walk posed from our own skeletons;
     the back view comes from a second "Thor HD", made in v3 from the first's south/east/west, whose cape
     covers his back (the first one's hung in front of him),
-    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8).
+    carry idle = the carry walk's standing frames, lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-thor-lobby.py's, in its own image).
     PixelLab drew sparks round the thrust hammer that clash with the game's own bolt: the thrust holds its
     first frame (clean in front and back; in the side view cut off at the hammer's face). The hammer's
     face in the side and front thrust frames is printed as "muzzle" (from the anchor) for the bolt to leave from.
   naruto: sprites/naruto.png, character "Naruto HD" (180px canvas; Rasengan dash and carry walk posed from our own
     skeletons, 6 frames each: 3 running with his hand out, 2 lunging, 1 settling; carry idle = the carry walk's
-    standing frames; lobby = the v3 "victory pose" frames 1..8). The breathing idle blew puffs of breath in the side
+    standing frames; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-naruto-lobby.py's, in its own image). The breathing idle blew puffs of breath in the side
     view and shut his eyes in front: idle front and side are his rotation ("rot/<dir>.png") bobbing a pixel instead.
     The hand in the side and front lunge is the "muzzle" (where the Rasengan spins).
+  spider: sprites/spider.png, character "Spider-Man HD" (180px canvas, chibi proportions per concept/PROMPT-BASE.md;
+    cast = the web shot and carry walk posed from our own skeletons, 6 frames each; carry idle = the carry walk's
+    standing frames; lobby = the v3 "victory pose" frames 1..8, since replaced in the menus by
+    build-spider-lobby.py's, in its own image). PixelLab drew a web strand off the side thrust: the
+    thrust holds its clean first frame (the game draws the web). The thrusting hand is the "muzzle".
+  pikachu: sprites/pikachu.png, character "Pikachu HD v3" (a v3 rotation of "Pikachu HD"'s front, whose own side view
+    mixed his back into a side head; the front rows come from "Pikachu HD", the same drawing). cast = the thunder shock
+    and carry walk posed from our own skeletons, 6 frames each (crouch gathering the charge, then arms flung out
+    crackling); carry idle = the carry walk's standing frames; lobby = the v3 "victory pose" frames 1..8. Idle side and
+    back are his rotation bobbing (the breathing template puffed breath and shut his eye); the stun skips frame 3 (a
+    grey smudge).
+  static: sprites/static.png, character "Static Shock HD v3" (a v3 rotation of "Static Shock HD 2"'s front, side and side
+    mirrored, for a back view: the first drew his front twice). cast = the magnet pull and carry walk posed from our own
+    skeletons, 6 frames each (the back view only gathering: see STATIC_CAST_UP) (hands gathered at his chest, both pushed out ahead as the field leaves, fists yanked back
+    pulling the catch in); carry idle = the carry walk's standing frames; lobby = 14 poses from our own skeletons
+    ("lobby14": charging sparks, jumping, surfing with arms spread) that build-static-lobby.py lifts onto his flying
+    disc (FRAMES_DIR/lobby). His pushed-out hands are the "muzzle".
+  flash: sprites/flash.png, character "Flash HD" (180px canvas). cast = the skid stop after his dash, posed from our own
+    skeletons (crouched, leaning back, arms flung out, then up again): the dash itself is instant, so the row starts
+    skidding (FLASH_CAST); carry walk posed from our own skeletons (the back view from a second try, "carry-walk-n":
+    the first turned him to face us), carry idle = its standing frames; lobby = 6 south and 5 sprinting east poses from
+    our own skeletons ("lobby6", "lobby5") that build-flash-lobby.py turns into his streak across the card (FRAMES_DIR/lobby).
+  bugs: sprites/bugs.png, character "Bugs Bunny HD v3" (a v3 rotation of "Bugs Bunny HD"'s front, whose own side and back
+    views were his front again; front walk, stun, death and lobby from "Bugs Bunny HD"). Idle = the still rotation bobbing
+    (the breathing template shut his eyes); cast = popping out of his tunnel (squashed low, arms flung up, a hand over his
+    brow looking round) and carry walk posed from our own skeletons ("cast6": the side view's first frame came out
+    smudged, BUGS_CAST_SIDE skips it); lobby = a v3 animation munching a carrot ("lobby9", its first frame the rotation).
+  lantern: sprites/lantern.png, character "John Stewart HD v3" (180px canvas; "John Stewart HD 2"'s
+    rotations with the face repainted: green eyes, a serious mouth). Its eyes were painted whole green; every frame gets
+    them white with a green iris (green_iris), as in the cartoon, and loses the gray blots PixelLab left in some (no_blots).
+    Idle front = the still rotation bobbing (the breathing template shut his eyes); the back cast holds its first frames
+    (LANTERN_CAST_UP: PixelLab turned him to face us once his fist went up). cast = willing his bubble (down on one knee, the
+    ring fist thrust high, "kneel"), posed from our own skeletons like the carry walk (LANTERN_CAST); the
+    bubble itself is build-lantern-bubble.py's art; lobby = a v3 animation, ring fist raised ("lobby9").
+  donatello: sprites/donatello.png, character "Donatello HD" (180px canvas, standard mode). Idle = the still rotation
+    bobbing (the breathing template opened his mouth and puffed breath); death without its garbled first frame; cast =
+    his bo staff spin (both hands on the staff swept round him) and carry walk posed from our own skeletons ("cast6",
+    DONATELLO_CAST); the whirl itself is drawn by the renderer (drawSpin); lobby = a v3 animation twirling the staff
+    overhead, planting it and posing ("lobby13", its first frame the rotation).
+  penelope: sprites/penelope.png, character "Penelope HD 2" (180px canvas, standard mode; pink helmet and suit). Its side
+    views face left, so they are mirrored (penelope_frames); idle front = the still rotation bobbing (the breathing
+    template shut her eyes); death without its two smeared first frames; cast = her blown kiss and carry walk posed from
+    our own skeletons (the side ones as west); the heart is drawn by the renderer (kissHearts); her lobby is its own
+    image (build-penelope-lobby.py, build-lobby-image.py).
+  panther: sprites/panther.png, character "Pink Panther HD 4" (180px canvas, standard mode; yellow eyes, magenta nose,
+    light pink muzzle and belly, blue scarf, which takes the player's color). Idle = the still rotation bobbing (the
+    breathing template opened his mouth and puffed breath); PixelLab drew a floor shadow under him, taken out
+    (no_floor_shadow); cast = his tiptoe and carry walk posed from our own skeletons ("sneak"), the tiptoe walked through
+    while he sneaks; his lobby is its own image (build-panther-lobby.py, build-lobby-image.py).
+  harry: sprites/harry.png, character "Harry Potter HD v3b" (180px canvas: a standard-mode front with its long wand cut
+    short and the scar painted on, rotated in v3 mode; the red of his robe's lining takes the player's color). Idle = the
+    still rotation bobbing (the breathing template puffed breath); cast = expecto patronum, the wand swung up then thrust
+    out, and carry walk, posed from our own skeletons (the back views asked "seen from behind": they turned to face us);
+    the stag itself is its own art (build-patronus.py); his lobby (its raise and swirl posed from our own skeletons too)
+    and victory are their own images (build-harry-lobby.py).
+  optimus: sprites/optimus.png, character "Optimus Prime HD" (180px canvas, standard mode; the classic red and blue
+    robot: blue helmet, silver faceplate, red chest with its truck windows; the blue takes the player's color). Cast =
+    turning into his truck: the crouching template, down then back up (OPTIMUS_CAST; the side's last frame smeared, so it
+    stops at the fourth); the truck itself is its own art (build-truck.py); carry walk posed from our own skeletons (the
+    back view asked "seen from behind"); his lobby is its own image (build-optimus-lobby.py).
+  pele: sprites/pele.png, character "Pele HD" (180px canvas, standard mode; the 1970 Brazil kit: yellow jersey with a
+    green collar and cuffs, blue shorts, which take the player's color, white socks, black cleats). Idle front = the
+    still rotation bobbing (the breathing template shut his eyes); cast = his kick and carry walk posed from our own
+    skeletons (the kick asked "at empty air": PixelLab drew a ball of its own, and the ball is the renderer's, BALL);
+    his lobby is its own image (build-pele-lobby.py).
+  lula: sprites/lula.png, character "Lula HD V2" (180px canvas, v3 mode: curly white-gray hair, gray beard, red t-shirt
+    with a yellow star, which takes the player's color, gray pants). Idle front and side = the still rotation bobbing (the
+    breathing template frowned and puffed breath); cast = setting the picanha down and carry walk posed from our own
+    skeletons (PixelLab drew a gray lump of its own on the floor in the side view: cut off, the picanha is the item's);
+    lobby = a v3 animation, the "L" raised high.
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele|lula FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
+import numpy as np
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageOps
+from scipy import ndimage
 
 # (sheet row name, animation folder, direction, frames)
 CHARACTERS = {
-    "ninja": [
-        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
-        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
-        ("stun", "hit", "south", 6),
-        ("death", "death", "south", 7),
-        ("cast.down", "castice", "south", 9), ("cast.side", "castice", "east", 9), ("cast.up", "castice", "north", 9),
-        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
-        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
-        ("lobby", "lobby", "south", 8),
-    ],
     # cast = raising the shield (skeleton-posed brace); "up" is the back view without the shield, the
     # renderer draws the big shield in front of him.
     "captain": [
@@ -75,6 +138,144 @@ CHARACTERS = {
     # cast = Rasengan: dashing with his hand out (frames 0-2, RASENGAN_TICKS), the lunge as it strikes (3+)
     "naruto": [
         ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the web shot: hand pulled back (frames 0-4), thrust forward as the web leaves (frame 5, BEAM_DELAY)
+    "spider": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the thunder shock: crouched gathering the charge (cells 0-4), arms flung out as it bursts (cell 5, BEAM_DELAY)
+    "pikachu": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = the magnet pull: hands gathered (cells 0-4), pushed out as the field leaves (cell 5, BEAM_DELAY), yanked back
+    "static": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 14),
+    ],
+    # cast = the skid stop after the dash (FLASH_CAST)
+    "flash": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 16),
+    ],
+    # cast = popping out of his tunnel (BUGS_CAST): the dig is instant, so the row starts as he comes up
+    "bugs": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = his bo staff spin (DONATELLO_CAST)
+    "donatello": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 6),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+        ("lobby", "lobby", "south", 12),
+    ],
+    # cast = her blown kiss (PENELOPE_CAST); her lobby lives in its own image (build-penelope-lobby.py)
+    "penelope": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 5),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+    ],
+    # cast = his tiptoe (our own skeletons), walked through while he sneaks; his lobby lives in its own image
+    "panther": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "sneak", "south", 6), ("cast.side", "sneak", "east", 6), ("cast.up", "sneak", "north", 6),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+    ],
+    # cast = expecto patronum: the wand swung up, then thrust out and held (our own skeletons); lobby and victory are images
+    "harry": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle-rot", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "hit", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
+    ],
+    # cast = turning into his truck (the crouching template down and back up); the truck is its own art
+    "optimus": [
+        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+    ],
+    # cast = his kick (our own skeletons, no ball: the renderer draws it); his lobby lives in its own image
+    "pele": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "kick", "south", 9), ("cast.side", "kick", "east", 9), ("cast.up", "kick", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+    ],
+    # cast = setting the picanha down (our own skeletons; the picanha is the item's); lobby = the "L" raised high
+    "lula": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle-rot", "east", 4), ("idle.up", "idle", "north", 4),
+        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
+        ("stun", "stun", "south", 6),
+        ("death", "death", "south", 7),
+        ("cast.down", "cast", "south", 9), ("cast.side", "cast", "east", 9), ("cast.up", "cast", "north", 9),
+        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
+        ("carryWalk.down", "carry", "south", 6), ("carryWalk.side", "carry", "east", 6), ("carryWalk.up", "carry", "north", 6),
+        ("lobby", "lobby", "south", 8),
+    ],
+    # cast = willing his bubble: down on one knee, the ring fist thrust high (LANTERN_CAST); held while he stands in it
+    "lantern": [
+        ("idle.down", "idle-rot", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
         ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
         ("stun", "hit", "south", 6),
         ("death", "death", "south", 7),
@@ -218,9 +419,353 @@ def naruto_frames(src, folder, d):
     return None
 
 
-def ninja_frames(src, folder, d):
+# spider: his 6 posed cast frames over the 9 cast cells, thrust (posed frame 3) on cell THRUST; the front's
+# frame 2 came out with a smudge over an eye, so it is skipped
+SPIDER_CAST = {"south": [0, 1, 1, 1, 1, 3, 4, 4, 4], "east": [0, 1, 2, 2, 2, 3, 3, 3, 3], "north": [0, 1, 2, 2, 2, 3, 4, 4, 4]}
+SPIDER_WRIST = (81, 126)  # spider: the thrusting hand in the front thrust, on PixelLab's 180px canvas (its skeleton)
+
+
+def spider_frames(src, folder, d):
     """His frames by sheet folder, from what was downloaded (see the docstring)."""
     load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast":
+        return [load("cast6", i) for i in SPIDER_CAST[d]]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
+PIKA_CAST = [0, 1, 1, 2, 2, 3, 4, 4, 5]  # pikachu: his 6 posed cast frames over the 9 cast cells, burst on cell THRUST
+PIKA_STUN = [0, 1, 2, 2, 4, 5]  # pikachu: the stun without its smudged frame 3
+
+
+def pikachu_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "hit":
+        return [load("hit", i) for i in PIKA_STUN]
+    if folder == "cast":
+        return [load("cast6", i) for i in PIKA_CAST]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
+STATIC_CAST = [0, 1, 1, 2, 2, 3, 4, 5, 5]  # static: his 6 posed cast frames over the 9 cast cells, push on cell THRUST
+# static, back view: PixelLab turned him to face us once his hands left his chest (twice), so the back cast holds the
+# first three frames of a second try ("cast6n": gathering at his chest), the push hidden in front of him anyway
+STATIC_CAST_UP = [0, 1, 1, 2, 2, 2, 2, 1, 0]
+STATIC_HANDS = (90, 111)  # static: his pushed-out hands in the front cast, on PixelLab's 180px canvas (its skeleton)
+
+
+def static_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast" and d == "north":
+        return [load("cast6n", i) for i in STATIC_CAST_UP]
+    if folder == "cast":
+        return [load("cast6", i) for i in STATIC_CAST]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+FLASH_CAST = [1, 1, 1, 2, 2, 3, 3, 4, 5]  # flash: his 6 posed skid frames over the 9 cast cells, skidding from the first
+
+
+def flash_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    carry = "carry-walk-n" if d == "north" else "carry-walk"
+    if folder == "cast":
+        return [load("cast6", i) for i in FLASH_CAST]
+    if folder == "carry-walk":
+        return [load(carry, i) for i in range(6)]
+    if folder == "carry-idle":
+        return [load(carry, i) for i in (0, 0, 3, 3)]
+    return None
+
+
+BUGS_CAST = [0, 1, 1, 2, 2, 3, 3, 4, 5]  # bugs: his 6 posed frames over the 9 cast cells, squashed low as he comes up
+BUGS_CAST_SIDE = [1, 1, 1, 2, 2, 3, 3, 4, 5]  # bugs, side view: without its smudged first frame
+
+
+def bugs_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast":
+        return [load("cast6", i) for i in (BUGS_CAST_SIDE if d == "east" else BUGS_CAST)]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby9", i) for i in range(1, 9)]
+    return None
+
+
+# donatello: his posed spin frames over the 9 cast cells, round once more; the front's and back's last frames came out
+# garbled (front) or without the staff (back), so they are skipped
+DONATELLO_CAST = {"south": [0, 1, 2, 3, 4, 0, 1, 2, 3], "east": [0, 1, 2, 3, 4, 5, 0, 1, 2], "north": [0, 1, 2, 3, 4, 0, 1, 2, 3]}
+DONATELLO_CARRY = {"east": [0, 1, 2, 3, 4, 1]}  # donatello, side carry walk: its last frame lost his legs
+
+
+def donatello_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "death":
+        return [load("death", i) for i in range(1, 7)]
+    if folder == "cast":
+        return [load("cast6", i) for i in DONATELLO_CAST[d]]
+    if folder == "carry-walk":
+        return [load("carry-walk", i) for i in DONATELLO_CARRY.get(d, range(6))]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby13", i) for i in range(1, 13)]
+    return None
+
+
+# penelope: her 8 kiss frames over the 9 cast cells, the last held (the hand thrown out at 4)
+PENELOPE_CAST = [0, 1, 2, 3, 4, 5, 6, 7, 7]
+
+
+def penelope_frames(src, folder, d):
+    """Her frames by sheet folder. Her side views were drawn facing left (rotation, templates and our own west
+    skeletons), so every side frame is mirrored to face right; the breathing template shut her eyes, so idle front is
+    her rotation bobbing; the death's first two frames came out smeared."""
+    side = d == "east"
+    def load(f, i):
+        im = Image.open(src / f / ("west" if side and f in ("cast", "carry-walk") else d) / f"{i}.png").convert("RGBA")
+        return ImageOps.mirror(im) if side else im
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder in ("idle", "walk"):
+        return [load(folder, i) for i in range({"idle": 4, "walk": 6}[folder])]
+    if folder == "death":
+        return [load("death", i) for i in range(2, 7)]
+    if folder == "cast":
+        return [load("cast", i) for i in PENELOPE_CAST]
+    if folder == "carry-walk":
+        return [load("carry-walk", i) for i in range(6)]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+def panther_frames(src, folder, d):
+    """His frames by sheet folder. The breathing template opened his mouth and puffed breath, so idle is his rotation
+    bobbing; carry idle is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+def harry_frames(src, folder, d):
+    """His frames by sheet folder. The breathing template puffed breath, so idle is his rotation bobbing; carry idle is
+    the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "carry-idle":
+        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+# optimus: his crouch frames over the 9 cast cells: down into the truck while he turns (cells 0-2, TRUCK_SHIFT), then
+# from the deepest back up as he turns back where it stopped (cells 3-8)
+OPTIMUS_CAST = [1, 2, 3, 3, 3, 2, 2, 1, 0]
+
+
+def optimus_frames(src, folder, d):
+    """His frames by sheet folder: the cast is his crouch down and back up; carry idle is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "cast":
+        return [load("crouch", i) for i in OPTIMUS_CAST]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+def pele_frames(src, folder, d):
+    """His frames by sheet folder: idle front is his rotation bobbing (the breathing template shut his eyes); carry idle
+    is the carry walk held."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    return None
+
+
+LULA_CAST_SIDE = [0, 1, 2, 2, 2, 2, 7, 8, 8]
+
+
+def lula_frames(src, folder, d):
+    """His frames by sheet folder: idle front and side are his rotation bobbing; the side cast loses the gray lump PixelLab
+    put on the floor ahead of him; carry idle is the carry walk held; the lobby skips its reference frame."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast" and d == "east":  # without the frames where his hands hold the lump
+        first = load("cast", 0)
+        front = first.getchannel("A").crop((0, int(first.height * 0.75), first.width, first.height)).getbbox()[2] - 1
+        return [no_lump(load("cast", i), front) for i in LULA_CAST_SIDE]
+    if folder == "carry-idle":
+        return [load("carry", i) for i in (0, 0, 3, 3)]
+    if folder == "lobby":
+        return [load("lobby", i) for i in range(1, 9)]
+    return None
+
+
+LULA_RED = (336, 6)  # the hues of his red shirt, which take the player's color (SHEETS.lula.hues)
+
+
+def face_reds(im):
+    """The reds of lula's face (his lips, blush and the shading round his eyes) fall in his shirt's hues: each red patch
+    too small to be the shirt, or up among his head, is turned a little toward orange, out of them, so only the shirt takes the player's color."""
+    a = np.array(im)
+    rgb = a[..., :3].astype(float) / 255
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    l = (mx + mn) / 2
+    d = mx - mn
+    sat = np.where(d == 0, 0, d / np.maximum(1e-6, 1 - np.abs(2 * l - 1)))
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    hue = np.where(mx == r, ((g - b) / np.maximum(d, 1e-6)) % 6, np.where(mx == g, (b - r) / np.maximum(d, 1e-6) + 2, (r - g) / np.maximum(d, 1e-6) + 4)) * 60
+    red = (a[..., 3] > 0) & (sat >= 0.2) & (d > 0) & ((hue >= LULA_RED[0]) | (hue <= LULA_RED[1]))
+    lab, n = ndimage.label(red)
+    if n:
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+        ys = ndimage.mean(np.mgrid[0 : a.shape[0], 0 : a.shape[1]][0], lab, range(1, n + 1))
+        top, bottom = np.nonzero(a[..., 3])[0][[0, -1]]
+        high = (np.asarray(ys) - top) < (bottom - top) * 0.42  # up among his head
+        small = np.isin(lab, 1 + np.flatnonzero((sizes < 120) | high)) & red
+        for y, x in zip(*np.nonzero(small)):
+            h, ll, ss = colorsys.rgb_to_hls(*rgb[y, x])
+            a[y, x, :3] = [round(v * 255) for v in colorsys.hls_to_rgb(10 / 360, ll, ss)]
+    return Image.fromarray(a)
+
+
+def no_lump(im, front):
+    """Takes out the gray lump PixelLab drew ahead of lula, low in the side cast: whatever is cut off from his body, and
+    anything low past `front` (the toes of his standing feet)."""
+    a = np.array(im)
+    lab, n = ndimage.label(a[..., 3] > 0)
+    if n > 1:
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1))
+        a[(lab > 0) & (lab != 1 + int(np.argmax(sizes))), 3] = 0
+    a[int(a.shape[0] * 0.75):, front:, 3] = 0
+    return Image.fromarray(a)
+
+
+def no_floor_shadow(im):
+    """PixelLab drew a gray shadow ellipse under the pink panther's feet: the grays low in the frame go."""
+    a = np.array(im.convert("RGBA")).astype(int)
+    alpha = a[..., 3] > 0
+    if not alpha.any():
+        return im
+    ys = np.nonzero(alpha)[0]
+    low = np.zeros_like(alpha)
+    low[ys.max() - int((ys.max() - ys.min()) * 0.2):] = True
+    rgb = a[..., :3]
+    gray = (rgb.max(-1) - rgb.min(-1) < 36) & (rgb.mean(-1) > 110) & (rgb.mean(-1) < 215)
+    a[alpha & low & gray] = 0
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
+def green_iris(im):
+    """John Stewart's eyes as in the cartoon: white, with a glowing green iris. The face was repainted with whole green
+    eyes (bright pale green in the middle, emerald at the rim); each such blob in his head becomes a white eye with a
+    round green iris in its middle."""
+    a = np.array(im.convert("RGBA")).astype(int)
+    alpha = a[..., 3] > 0
+    ys, xs = np.nonzero(alpha)
+    if not len(ys):
+        return im
+    head = np.zeros_like(alpha)
+    head[ys.min(): ys.min() + int((ys.max() - ys.min()) * 0.45)] = True
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    eyeish = alpha & head & (g > 150) & (g - r > 25) & (g - b > 20) & (r > 30)
+    lab, n = ndimage.label(eyeish)
+    out = a.copy()
+    for k in range(1, n + 1):
+        blob = lab == k
+        if blob.sum() < 6:
+            continue
+        sl = ndimage.find_objects(blob.astype(int))[0]
+        h, w = sl[0].stop - sl[0].start, sl[1].stop - sl[1].start
+        cy, cx = ndimage.center_of_mass(blob)
+        yy, xx = np.nonzero(blob)
+        rad = np.hypot((yy - cy) / (h / 2), (xx - cx) / (w / 2))
+        iris = rad < 0.62
+        light = 1 - np.clip(rad / 0.62, 0, 1)
+        # emerald, a hue past his suit's (SHEETS.lantern.hues) so the iris keeps its green in every player color
+        green = np.array([25, 200, 125])[None] * (1 - light[:, None] * 0.6) + np.array([175, 255, 215])[None] * light[:, None] * 0.6
+        out[yy, xx, :3] = np.where(iris[:, None], green, np.array([245, 245, 240])[None]).astype(int)
+        # a small shine on the iris
+        out[int(cy - h * 0.15), int(cx - w * 0.12), :3] = (255, 255, 255)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
+LANTERN_CAST = [0, 1, 2, 3, 4, 5, 5, 5, 5]  # lantern: his 6 kneeling frames over the 9 cast cells, held on the last
+# lantern, back view: PixelLab turned him to face us (twice) as he knelt with our skeletons, so the back row is a v3
+# animation asked "seen from behind" ("kneelback": 7 frames, the first his still back), held with the fist up
+LANTERN_CAST_UP = [1, 2, 3, 4, 5, 5, 5, 5, 5]
+LANTERN_BLOTS = [(129, 129, 127), (83, 78, 87)]  # flat gray blots PixelLab left beside him in some frames
+LANTERN_GLOVE_SHADE = (173, 168, 179)  # his gloves' shading, which PixelLab also left as blots by his feet
+
+
+def no_blots(im):
+    """Takes out the flat gray blots (LANTERN_BLOTS) PixelLab left in some of his frames: patches of exactly those grays."""
+    a = np.array(im)
+    gray = np.zeros(a.shape[:2], bool)
+    for c in LANTERN_BLOTS:
+        gray |= (np.abs(a[..., :3].astype(int) - c).max(axis=2) <= 6) & (a[..., 3] > 0)
+    lab, n = ndimage.label(gray)
+    sizes = ndimage.sum(gray, lab, range(1, n + 1))
+    for k, size in enumerate(sizes, 1):
+        if size >= 3:
+            a[lab == k] = 0
+    # his gloves' shade gray, where it lies away from any glove: a blot too
+    shade = (np.abs(a[..., :3].astype(int) - LANTERN_GLOVE_SHADE).max(axis=2) <= 6) & (a[..., 3] > 0)
+    white = (a[..., :3].min(axis=2) > 215) & (a[..., 3] > 0)
+    lab, n = ndimage.label(shade)
+    for k in range(1, n + 1):
+        part = lab == k
+        if not (ndimage.binary_dilation(part, iterations=2) & white).any():
+            a[part] = 0
+    return Image.fromarray(a, "RGBA")
+
+
+def lantern_frames(src, folder, d):
+    """His frames by sheet folder, from what was downloaded (see the docstring)."""
+    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
+    if folder == "idle-rot":
+        still = Image.open(src.parent / "rot" / f"{d}.png").convert("RGBA")
+        return [bob(still, dy) for dy in BOB]
+    if folder == "cast":
+        if d == "north":
+            return [load("kneelback", i) for i in LANTERN_CAST_UP]
+        return [load("kneel", i) for i in LANTERN_CAST]
     if folder == "carry-idle":
         return [load("carry-walk", i) for i in (0, 0, 3, 3)]
     if folder == "lobby":
@@ -242,9 +787,15 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames, "lula": lula_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
+        if character == "lantern":
+            frames = [green_iris(no_blots(im)) for im in frames]
+        if character == "panther":
+            frames = [no_floor_shadow(im) for im in frames]
+        if character == "lula":
+            frames = [face_reds(im) for im in frames]
         if character == "thor":
             frames = thor_cast(folder, d, frames)
         if character == "goku":
@@ -324,6 +875,37 @@ def main():
             "side": [sx - ax, sy - ay],
             "down": [dx - ax, dy - ay],
             # the back view hides his hand in front of him: the ball shows over his shoulder
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
+        }
+    if character == "spider":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        # the front frames sit on the work canvas centered, feet on the baseline (see above)
+        first = Image.open(src / "cast6" / "south" / "0.png")
+        wx = (BASE - first.width) // 2 + SPIDER_WRIST[0] - left
+        wy = int(BASE * 0.75) - feet(first.convert("RGBA")) + SPIDER_WRIST[1] - top
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [wx - ax, wy - ay],
+            # the back view hides his hand in front of him: the web leaves from over his shoulder
+            "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
+        }
+    if character == "static":
+        names = [name for name, _ in rows]
+        ax, ay = info["anchorX"], info["anchorY"]
+        side = rows[names.index("cast.side")][1][THRUST].crop((left, top, right, bottom))
+        sx, sy = hands_side(side)
+        first = Image.open(src / "cast6" / "south" / "0.png")
+        wx = (BASE - first.width) // 2 + STATIC_HANDS[0] - left
+        wy = int(BASE * 0.75) - feet(first.convert("RGBA")) + STATIC_HANDS[1] - top
+        sb = side.getchannel("A").getbbox()
+        info["muzzle"] = {
+            "side": [sx - ax, sy - ay],
+            "down": [wx - ax, wy - ay],
+            # the back view hides his hands in front of him: the field leaves from over his shoulders
             "up": [0, sb[1] + (sb[3] - sb[1]) * 0.45 - ay],
         }
     print(json.dumps(info))

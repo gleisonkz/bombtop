@@ -1,6 +1,8 @@
-import { FUSE_TICKS, PRESSURE_INTERVAL, ROUND_TICKS, TILE } from "./constants";
+import { FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
 import { pressureOrder } from "./pressure";
 import { cursedDirection, effectiveRange, effectiveSpeed } from "./curse";
+import { createRng } from "./rng";
+import { SPECIAL_PLANS, type SpecialContext } from "./bot-specials";
 import {
   bombAt,
   DIR_VECTORS,
@@ -21,7 +23,8 @@ import {
  * knows where each blast will land and when, and gets out of the way. Between
  * "thoughts" (more often on harder levels) it picks what to do next: grab a
  * power-up, break blocks, or go after a rival, and it only drops a bomb when
- * it can still get away from it.
+ * it can still get away from it. Each bot has a personality (what it goes for, how
+ * careful it is) and its own dice, so no two bots, nor two matches, play alike.
  */
 
 export type BotLevel = "easy" | "medium" | "hard";
@@ -40,15 +43,77 @@ interface Tuning {
   hunt: boolean;
   /** Drops bombs that leave a rival nowhere to run. */
   cunning: boolean;
+  /** Ticks a chance to use the special must last before the bot takes it (up to twice as long). */
+  react: number;
+  /** Chance it then takes it (otherwise it waits again); fired up, it takes more. */
+  use: number;
 }
 
-const TUNING: Record<BotLevel, Tuning> = {
-  easy: { think: 18, margin: 28, bombs: 1, itemReach: 5, hunt: false, cunning: false },
-  medium: { think: 7, margin: 16, bombs: 2, itemReach: 9, hunt: true, cunning: false },
-  hard: { think: 1, margin: 10, bombs: 99, itemReach: 14, hunt: true, cunning: true },
+/** What a bot is like: what it goes for first, how careful and how predictable it is. */
+export type BotPersona = "hunter" | "collector" | "demolisher" | "cautious" | "wildcard";
+export const BOT_PERSONAS: readonly BotPersona[] = ["hunter", "collector", "demolisher", "cautious", "wildcard"];
+
+interface Traits {
+  /** Head start, in steps, given to each kind of goal when choosing (higher = preferred). */
+  item: number;
+  block: number;
+  rival: number;
+  /** Walks this many times further for a power-up. */
+  greed: number;
+  /** Goes after rivals even on levels that otherwise don't. */
+  hunts: boolean;
+  /** Extra ticks of safety wanted before dropping a bomb (never when running: that only narrows the way out). */
+  caution: number;
+  /** Thinks this many times slower. */
+  slow: number;
+  /** Random steps added to each goal's distance (how unpredictable). */
+  noise: number;
+  /** Chance, per thought, of strolling somewhere instead. */
+  wander: number;
+}
+
+const PERSONAS: Record<BotPersona, Traits> = {
+  hunter: { item: 0, block: 0, rival: 4, greed: 1, hunts: true, caution: 0, slow: 1, noise: 2, wander: 0 },
+  collector: { item: 5, block: 1, rival: -2, greed: 2.5, hunts: false, caution: 2, slow: 1, noise: 2, wander: 0.05 },
+  demolisher: { item: 1, block: 4, rival: -1, greed: 1, hunts: false, caution: 0, slow: 1, noise: 2, wander: 0 },
+  cautious: { item: 2, block: 1, rival: -3, greed: 1, hunts: false, caution: 10, slow: 1.5, noise: 2, wander: 0.05 },
+  wildcard: { item: 1, block: 1, rival: 1, greed: 1.5, hunts: true, caution: 0, slow: 1, noise: 7, wander: 0.2 },
 };
 
+const TUNING: Record<BotLevel, Tuning> = {
+  easy: { think: 18, margin: 28, bombs: 1, itemReach: 5, hunt: false, cunning: false, react: 45, use: 0.4 },
+  medium: { think: 7, margin: 16, bombs: 2, itemReach: 9, hunt: true, cunning: false, react: 12, use: 0.8 },
+  hard: { think: 1, margin: 10, bombs: 99, itemReach: 14, hunt: true, cunning: true, react: 0, use: 1 },
+};
+
+/**
+ * How fired up the bots are, 0 to BOT_HEAT_MAX: they warm up a step at a time as a match drags on, and are at their
+ * hottest once no human is left (nobody wants to watch two careful bots circle each other until the walls fall in).
+ * Hotter, every bot hunts, cares less for power-ups, thinks faster, keeps more bombs out, sets traps (from 2) and stops
+ * strolling; how safe it keeps from its own bombs never changes.
+ */
+export const BOT_HEAT_MAX = 3;
+const HEAT_FROM = 45 * TICK_RATE;
+const HEAT_STEP = 30 * TICK_RATE;
+
+export function botHeat(tick: number, humansAlive: boolean): number {
+  if (!humansAlive) return BOT_HEAT_MAX;
+  if (tick < HEAT_FROM) return 0;
+  return Math.min(BOT_HEAT_MAX, 1 + Math.floor((tick - HEAT_FROM) / HEAT_STEP));
+}
+
 const FACINGS: Facing[] = ["up", "down", "left", "right"];
+/** A bot's mood (see Bot.mood) lasts this long, up to twice as long. */
+const MOOD_TICKS = 120;
+
+/** How much a mood fancies tile (x, y), in [0, 1): a hash, the same for as long as the mood lasts. */
+function tileFancy(mood: number, x: number, y: number): number {
+  let h = Math.imul(mood ^ Math.imul(x + 1, 73856093) ^ Math.imul(y + 1, 19349663), 2654435761);
+  h ^= h >>> 15;
+  h = Math.imul(h, 2246822519);
+  h ^= h >>> 13;
+  return (h >>> 0) / 4294967296;
+}
 /** A rival's remote bomb can go off at any moment: assume this soon. */
 const REMOTE_THREAT = 20;
 
@@ -63,20 +128,39 @@ interface Node {
 
 export class Bot {
   private readonly tune: Tuning;
+  private readonly traits: Traits;
+  /** This bot's own dice (deterministic: the same seed plays the same match). */
+  private readonly random: () => number;
   private goal: { x: number; y: number } | null = null;
   private nextThink = 0;
+  /**
+   * The bot's mood: how much it fancies each tile, rerolled every few seconds. Fresh dice at every thought
+   * would flip its goal tick after tick (a hard bot thinks every tick) and leave it dithering by its bombs.
+   */
+  private mood = 0;
+  private moodUntil = 0;
+  /** This tick's heat (botHeat). */
+  private heat = 0;
+  /** A chance to use the special (attack or defence) seen since tick `since`, seen last on `last`, taken after `wait`. */
+  private readonly gates = { attack: { since: 0, last: -2, wait: 0 }, defend: { since: 0, last: -2, wait: 0 } };
   /** Last direction sent and where we were then: a step under way. */
   private stride: { dir: Facing; px: number; py: number } | null = null;
 
   constructor(
     readonly id: string,
     readonly level: BotLevel = "medium",
+    readonly persona: BotPersona = "demolisher",
+    seed = 0,
   ) {
-    this.tune = TUNING[level];
+    this.traits = PERSONAS[persona];
+    const base = TUNING[level];
+    this.tune = { ...base, hunt: base.hunt || this.traits.hunts };
+    this.random = createRng(seed);
   }
 
-  /** This tick's input. */
-  input(s: MatchState): PlayerInput {
+  /** This tick's input; `humansAlive` false once only bots are left (they go all out: botHeat). */
+  input(s: MatchState, humansAlive = true): PlayerInput {
+    this.heat = botHeat(s.tick, humansAlive);
     const out = this.choose(s);
     const p = s.players.find((q) => q.id === this.id);
     this.stride = out.dir && p ? { dir: out.dir, px: p.px, py: p.py } : null;
@@ -110,8 +194,15 @@ export class Bot {
           }
         }
       }
+      // A defensive special can still save a bot with no safe walking destination.
+      const saved = out && safe(out.x, out.y) ? null : this.special(s, p, danger, "defend");
+      if (saved) return saved;
       return { dir: out ? heading(p, out.first.x, out.first.y) : null, bomb: false };
     }
+
+    // A chance to use the special on a rival is taken as soon as the bot reacts to it.
+    const attack = this.special(s, p, danger, "attack");
+    if (attack) return attack;
 
     // Finish a step before rethinking: plans made halfway, from whichever tile we happen to
     // be on, flip at every tile edge and the bot dithers back and forth across it.
@@ -120,7 +211,8 @@ export class Bot {
     // Everything else only walks through tiles that are safe for good.
     const nodes = reach(s, p, danger, this.tune.margin, true);
     if (s.tick >= this.nextThink) {
-      this.nextThink = s.tick + this.tune.think;
+      const think = (this.tune.think * this.traits.slow) / (1 + this.heat);
+      this.nextThink = s.tick + Math.round(think + this.random() * think * 0.5);
       const act = this.decide(s, p, danger, nodes);
       if (act) return act;
     }
@@ -162,28 +254,118 @@ export class Bot {
     const remote = s.bombs.find((b) => b.ownerId === p.id && b.type === "remote" && !b.air && !b.heldBy);
     if (remote && bombValue(s, p, remote.x, remote.y) > 0) return { dir: null, bomb: false, action: true };
 
+    const planned = this.special(s, p, danger, "plan", nodes);
+    if (planned) return planned;
+
     const mine = s.bombs.filter((b) => b.ownerId === p.id).length;
-    const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(p.bombCapacity, t.bombs);
+    const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(p.bombCapacity, t.bombs + this.heat);
     if (canBomb) {
       const possible = ownBomb(p, here);
       const after = dangerMap(s, p.id, possible);
-      const worth = bombValue(s, p, here.x, here.y) > 0 || (t.cunning && this.traps(s, p, after));
+      const worth = bombValue(s, p, here.x, here.y) > 0 || ((t.cunning || this.heat >= 2) && this.traps(s, p, after));
       if (worth && this.canEscape(s, p, dangerMap(s, p.id, possible, true))) return { dir: null, bomb: true };
     }
 
-    // Where to next: a power-up, a spot to bomb from, or a rival.
-    const items = new Set(s.items.filter((i) => i.kind !== ItemKind.Skull).map((i) => k(i.x, i.y)));
-    const pick =
-      nodes.find((n) => n.steps > 0 && n.steps <= t.itemReach && items.has(k(n.x, n.y)) && safe(n.x, n.y)) ??
-      (canBomb ? nodes.find((n) => n.steps > 0 && safe(n.x, n.y) && bombValue(s, p, n.x, n.y) > 0) : undefined) ??
-      (t.hunt ? this.towardRival(s, p, nodes, safe) : undefined);
+    // Where to next: a power-up, a spot to bomb from, or a rival, weighed by personality and a little luck;
+    // now and then just a stroll.
+    const pick = this.heat === 0 && this.random() < this.traits.wander ? this.stroll(nodes, safe) : this.pickGoal(s, p, nodes, safe, canBomb);
     this.goal = pick ? { x: pick.x, y: pick.y } : null;
     return null;
   }
 
+  /** The best goal: each candidate's distance, less its kind's head start, plus some noise. */
+  private pickGoal(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean, canBomb: boolean): Node | undefined {
+    const t = this.tune;
+    const tr = this.traits;
+    const k = (x: number, y: number) => y * s.grid.width + x;
+    const items = new Set(s.items.filter((i) => i.kind !== ItemKind.Skull).map((i) => k(i.x, i.y)));
+    if (s.tick >= this.moodUntil) {
+      this.mood = Math.floor(this.random() * 2 ** 32);
+      this.moodUntil = s.tick + MOOD_TICKS + Math.floor(this.random() * MOOD_TICKS);
+    }
+    let best: Node | undefined;
+    let bestScore = Infinity;
+    const consider = (n: Node | undefined, headStart: number) => {
+      if (!n) return;
+      const score = n.steps - headStart + tileFancy(this.mood, n.x, n.y) * tr.noise;
+      if (score < bestScore) {
+        best = n;
+        bestScore = score;
+      }
+    };
+    let spots = 0;
+    for (const n of nodes) {
+      if (n.steps === 0 || !safe(n.x, n.y)) continue;
+      if (items.has(k(n.x, n.y)) && n.steps <= (t.itemReach * tr.greed) / (1 + this.heat)) consider(n, tr.item - this.heat * 2);
+      // The nearest few spots to bomb from (looking further costs time and changes little).
+      else if (canBomb && spots < 6 && bombValue(s, p, n.x, n.y) > 0) {
+        spots++;
+        consider(n, tr.block);
+      }
+    }
+    if (t.hunt || this.heat > 0) consider(this.towardRival(s, p, nodes, safe), Math.max(tr.rival, 0) + this.heat * 4);
+    return best;
+  }
+
+  /** Somewhere safe nearby, at random. */
+  private stroll(nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
+    const near = nodes.filter((n) => n.steps > 0 && n.steps <= 6 && safe(n.x, n.y));
+    return near[Math.floor(this.random() * near.length)];
+  }
+
+  /**
+   * The special, if its character's plan (SPECIAL_PLANS) says now: turned toward where it aims and fired in the same tick.
+   * Attacks and defences wait for the bot to react (its level's `react`); plans come on thoughts, paced already.
+   */
+  private special(s: MatchState, p: Player, danger: Danger, hook: "attack" | "defend" | "plan", nodes: Node[] = []): PlayerInput | null {
+    if (p.specialCooldown > 0 || p.sneak > 0 || p.bubble > 0) return null;
+    const check = SPECIAL_PLANS[p.character]?.[hook];
+    if (!check) return null;
+    const w = s.grid.width;
+    const c: SpecialContext = {
+      s,
+      p,
+      here: playerTile(p),
+      danger,
+      safe: (x, y) => !danger.has(y * w + x),
+      rivals: s.players.filter((o) => o.id !== p.id && o.alive && o.sneak === 0),
+      hunting: this.tune.hunt || this.heat > 0,
+      nodes,
+      escapes: (b) => this.canEscape(s, p, dangerMap(s, p.id, b, true)),
+      bombValue: (x, y, range, type) => bombValue(s, p, x, y, range, type),
+      crushSoon: (x, y) => crushSoon(s, x, y),
+    };
+    const aim = check(c);
+    if (aim === undefined) return null;
+    if (hook !== "plan" && !this.reacted(hook, s.tick)) return null;
+    // Walking toward the aim turns the bot (a step that way included): only when that step is safe too.
+    const turn = aim === null || aim === p.facing ? null : aim;
+    if (turn) {
+      const [dx, dy] = DIR_VECTORS[turn];
+      const x = c.here.x + dx;
+      const y = c.here.y + dy;
+      if (hook !== "defend" && getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y) && !c.safe(x, y)) return null;
+    }
+    return { dir: turn, bomb: false, special: true };
+  }
+
+  /** Whether a chance to use the special has lasted long enough for the bot to react (seen on every tick since). */
+  private reacted(hook: "attack" | "defend", tick: number): boolean {
+    const g = this.gates[hook];
+    if (g.last !== tick - 1) {
+      const base = this.tune.react / (1 + this.heat);
+      g.since = tick;
+      g.wait = base > 0 ? Math.round(base + this.random() * base) : 0;
+    }
+    g.last = tick;
+    if (tick - g.since < g.wait) return false;
+    g.last = -2; // decided: the next chance starts over
+    return this.random() < this.tune.use + this.heat * 0.2;
+  }
+
   /** With the bomb down (`after`), a safe tile must still be within reach in time. */
   private canEscape(s: MatchState, p: Player, after: Danger): boolean {
-    return reach(s, p, after, this.tune.margin, false).some((n) => !after.has(n.y * s.grid.width + n.x));
+    return reach(s, p, after, this.tune.margin + (this.heat >= 2 ? 0 : this.traits.caution), false).some((n) => !after.has(n.y * s.grid.width + n.x));
   }
 
   /** Whether the bomb would leave some rival with no safe tile to run to. */
@@ -194,7 +376,7 @@ export class Bot {
   }
 
   private towardRival(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
-    const rivals = s.players.filter((o) => o.id !== p.id && o.alive).map(playerTile);
+    const rivals = s.players.filter((o) => o.id !== p.id && o.alive && o.sneak === 0).map(playerTile);
     let best: Node | undefined;
     let bestDist = Infinity;
     for (const n of nodes) {
@@ -262,7 +444,7 @@ const PRESSURE_LOOKAHEAD = 40;
 
 /** Sudden death: the next walls to fall, with the ticks until each lands. */
 function pressureDanger(s: MatchState, mark: (x: number, y: number, t: number) => void): void {
-  const startsIn = ROUND_TICKS + 1 - s.tick;
+  const startsIn = s.pressureAt + 1 - s.tick;
   if (startsIn > PRESSURE_LOOKAHEAD * PRESSURE_INTERVAL) return;
   const sinceStart = -startsIn;
   const firstIn = startsIn > 0 ? startsIn : (PRESSURE_INTERVAL - (sinceStart % PRESSURE_INTERVAL)) % PRESSURE_INTERVAL;
@@ -274,6 +456,16 @@ function pressureDanger(s: MatchState, mark: (x: number, y: number, t: number) =
     mark(x, y, firstIn + n * PRESSURE_INTERVAL);
     n++;
   }
+}
+
+/** Whether a sudden-death wall lands on (x, y) within CRUSH_SOON ticks. */
+const CRUSH_SOON = 4 * TICK_RATE;
+function crushSoon(s: MatchState, x: number, y: number): boolean {
+  let soon = false;
+  pressureDanger(s, (wx, wy, t) => {
+    if (wx === x && wy === y && t <= CRUSH_SOON) soon = true;
+  });
+  return soon;
 }
 
 /** Tiles holding a resting bomb, or an item (tile keys y * width + x): looked up instead of searched. */
@@ -368,12 +560,12 @@ function ownBomb(p: Player, at: { x: number; y: number }): Bomb {
 }
 
 /** What a bomb at (x, y) would hit: blocks to break and rivals to catch. */
-function bombValue(s: MatchState, p: Player, x: number, y: number): number {
+function bombValue(s: MatchState, p: Player, x: number, y: number, range = effectiveRange(p), type = p.bombType): number {
   let value = 0;
-  const tiles = blast(s, { x, y, range: effectiveRange(p), type: p.bombType });
+  const tiles = blast(s, { x, y, range, type });
   for (const [tx, ty] of tiles) {
     if (getTile(s, tx, ty) === Tile.Block) value += 1;
-    if (s.players.some((o) => o.id !== p.id && o.alive && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
+    if (s.players.some((o) => o.id !== p.id && o.alive && o.sneak === 0 && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
   }
   return value;
 }

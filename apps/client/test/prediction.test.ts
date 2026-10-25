@@ -117,10 +117,10 @@ describe("Predictor", () => {
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);
   });
 
-  it("does not move a frozen player", () => {
+  it("does not move a player wrapped in the spider's web", () => {
     const p = new Predictor("me");
     const snap = snapshot();
-    snap.players[0]!.frozen = 100;
+    snap.players[0]!.webbed = 100;
     p.step(input("right"));
     p.step(input("right"));
     expect(p.predict(snap)!.px).toBe(snap.players[0]!.px);

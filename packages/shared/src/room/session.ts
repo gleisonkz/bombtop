@@ -1,5 +1,7 @@
 import {
   RESULTS_TICKS,
+  WINS_TO_WIN,
+  BOTS_ONLY_HURRY,
   Bot,
   createMatch,
   matchResult,
@@ -10,13 +12,15 @@ import {
   TICK_RATE,
   CHARACTERS,
   DEFAULT_CHARACTER,
+  firstPickers,
   type BotLevel,
+  BOT_PERSONAS,
   type CharacterId,
   type LobbyInfo,
   type LobbyMember,
-  type MatchResult,
   type MatchState,
   type PlayerInput,
+  type ResultMessage,
   type Snapshot,
   type RoomPhase,
   type StageId,
@@ -29,17 +33,29 @@ export const SNAPSHOT_EVERY = 2;
 
 export interface TickOutput {
   snapshot?: Snapshot;
-  result?: MatchResult & { over: true };
+  result?: ResultMessage;
 }
 
 /** Names for computer players, by the character they play; each bot draws one not taken yet. */
 export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   bomb: ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"],
-  ninja: ["Hanzo", "Kenji", "Ryu", "Kage", "Hayate", "Shiro", "Akira", "Yuki"],
   captain: ["Capitão Bravo", "Capitão Trovão", "Capitão Estrela", "Capitão Valente", "Capitão Águia", "Capitão Brasil", "Capitão Escudo", "Capitão Liberdade"],
   goku: ["Kakaroto", "Son", "Kaio", "Saiyajin", "Kame", "Nimbus", "Shenlong", "Genki"],
   naruto: ["Konoha", "Dattebayo", "Ichiraku", "Kurama", "Hokage", "Uzumaki", "Rasen", "Ramen"],
   thor: ["Thorvald", "Bjorn", "Ragnar", "Ulfric", "Sigurd", "Leif", "Eirik", "Halvar"],
+  spider: ["Aranha", "Teia", "Parker", "Queens", "Tarântula", "Viúva", "Tecelão", "Escalador"],
+  pikachu: ["Pika", "Faísca", "Choquinho", "Volt", "Trovão", "Bochecha", "Raiozinho", "Amarelinho"],
+  flash: ["Barry", "Velocista", "Relâmpago", "Corisco", "Ligeirinho", "Turbo", "Raio Rubro", "Wally"],
+  lantern: ["Hal", "Lanterna", "Anel", "Esmeralda", "Oa", "Guardião", "Facho", "Brilho Verde"],
+  penelope: ["Penélope", "Penny", "Charmosa", "Pit", "Rosinha", "Diva", "Piloto", "Lady"],
+  lula: ["Lula", "Luiz Inácio", "Barba", "Companheiro", "Presidente", "Sapo Barbudo", "Lulinha", "Petista"],
+  pele: ["Pelé", "Rei", "Edson", "Dico", "Camisa 10", "Craque", "Santista", "Tricampeão"],
+  optimus: ["Optimus", "Prime", "Autobot", "Comboio", "Líder", "Matriz", "Cybertron", "Orion"],
+  harry: ["Harry", "Potter", "Eleito", "Bruxo", "Grifinório", "Apanhador", "Cicatriz", "Patrono"],
+  panther: ["Pantera", "Rosa", "Pink", "Sorrateira", "Felino", "Na Ponta", "Tiptoe", "Pinky"],
+  donatello: ["Donnie", "Don", "Bastão", "Gênio", "Casco", "Roxo", "Inventor", "Bo"],
+  bugs: ["Pernalonga", "Orelhudo", "Coelhão", "Doutor", "Cenourinha", "Toca", "Dentuço", "Pé-de-Coelho"],
+  static: ["Virgil", "Choque", "Estática", "Faísca", "Dakota", "Gerador", "Curto", "Voltagem"],
 };
 
 export interface SessionOptions {
@@ -61,9 +77,14 @@ export class BattleSession {
   stage: StageId = STAGES[0]!;
   private round = 0;
   private resultsLeft = 0;
+  /** The last round's winner won the match: after its results, back to the lobby. */
+  private setOver = false;
   private inputs = new Map<string, InputQueue>();
   private bots = new Map<string, Bot>();
   private botSeq = 0;
+  /** When each member picked their character (a running count): the first on a character wears its original colors. */
+  private pickedAt = new Map<string, number>();
+  private picks = 0;
 
   constructor(private readonly opts: SessionOptions = {}) {}
 
@@ -76,6 +97,7 @@ export class BattleSession {
     if (this.phase !== "lobby" || this.members.length >= MAX_PLAYERS) return false;
     if (this.members.some((m) => m.id === id)) return true;
     this.members.push({ id, name, wins: 0, connected: true, character });
+    this.pickedAt.set(id, ++this.picks);
     return true;
   }
 
@@ -83,12 +105,20 @@ export class BattleSession {
   setCharacter(id: string, character: CharacterId): boolean {
     const m = this.members.find((m) => m.id === id && !m.bot);
     if (this.phase !== "lobby" || !m) return false;
+    if (m.character !== character) this.pickedAt.set(id, ++this.picks);
     m.character = character;
     return true;
   }
 
+  /** Members wearing their character's original colors: the first, in pick order, on each character. */
+  private ownColors(): Set<string> {
+    const at = (id: string) => this.pickedAt.get(id) ?? 0;
+    return firstPickers([...this.members].sort((a, b) => at(a.id) - at(b.id)));
+  }
+
   leave(id: string): void {
     this.members = this.members.filter((m) => m.id !== id);
+    this.pickedAt.delete(id);
     this.inputs.delete(id);
     const p = this.match?.players.find((p) => p.id === id);
     if (p) {
@@ -100,12 +130,39 @@ export class BattleSession {
   /** Host only, in the lobby: seats a computer player of the given level. */
   addBot(requesterId: string, level: BotLevel): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
-    const taken = new Set(this.members.map((m) => m.name));
-    const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
-    const free = BOT_NAMES[character].filter((n) => !taken.has(n));
-    const name = free[Math.floor((this.opts.random ?? Math.random)() * free.length)] ?? `Bot ${this.botSeq + 1}`;
-    this.members.push({ id: `bot-${++this.botSeq}`, name, wins: 0, connected: true, bot: level, character });
+    const random = this.opts.random ?? Math.random;
+    // a character drawn at random, one nobody in the room plays yet (any, once all are taken)
+    const playing = new Set(this.members.map((m) => m.character));
+    const free = CHARACTERS.filter((c) => !playing.has(c));
+    const pool = free.length ? free : CHARACTERS;
+    const character = pool[Math.floor(random() * pool.length)]!;
+    const name = this.botName(character) ?? `Bot ${this.botSeq + 1}`;
+    // A personality no other bot in the room has (there are as many as bot seats).
+    const used = new Set(this.members.map((m) => m.persona));
+    const personas = BOT_PERSONAS.filter((p) => !used.has(p));
+    const persona = personas[Math.floor(random() * personas.length)] ?? BOT_PERSONAS[0]!;
+    const id = `bot-${++this.botSeq}`;
+    this.members.push({ id, name, wins: 0, connected: true, bot: level, character, persona });
+    this.pickedAt.set(id, ++this.picks);
     return true;
+  }
+
+  /** Host only, in the lobby: a bot plays another character, under a name of that character's (same level and personality). */
+  setBotCharacter(requesterId: string, botId: string, character: CharacterId): boolean {
+    const m = this.members.find((m) => m.id === botId && m.bot);
+    if (this.phase !== "lobby" || requesterId !== this.hostId || !m) return false;
+    if (m.character === character) return true;
+    m.character = character;
+    m.name = this.botName(character, m.id) ?? m.name;
+    this.pickedAt.set(botId, ++this.picks);
+    return true;
+  }
+
+  /** A name of the character's that no one else in the room has (`self` may keep its own), at random. */
+  private botName(character: CharacterId, self?: string): string | undefined {
+    const taken = new Set(this.members.filter((m) => m.id !== self).map((m) => m.name));
+    const free = BOT_NAMES[character].filter((n) => !taken.has(n));
+    return free[Math.floor((this.opts.random ?? Math.random)() * free.length)];
   }
 
   /** Host only, in the lobby: frees a bot's seat. */
@@ -113,6 +170,7 @@ export class BattleSession {
     if (this.phase !== "lobby" || requesterId !== this.hostId) return false;
     if (!this.members.some((m) => m.id === botId && m.bot)) return false;
     this.members = this.members.filter((m) => m.id !== botId);
+    this.pickedAt.delete(botId);
     return true;
   }
 
@@ -125,10 +183,11 @@ export class BattleSession {
   }
 
   lobbyInfo(code: string): LobbyInfo {
+    const own = this.ownColors();
     return {
       phase: this.phase,
       hostId: this.hostId ?? null,
-      members: this.members.map((m) => ({ ...m })),
+      members: this.members.map((m) => ({ ...m, ...(own.has(m.id) && { ownColors: true as const }) })),
       // In the lobby, show what is coming next; otherwise what is being played.
       stage: this.phase === "lobby" ? this.nextStage : this.stage,
       code,
@@ -139,8 +198,16 @@ export class BattleSession {
     return STAGES[this.round % STAGES.length]!;
   }
 
+  /** The host starts a match from the lobby: rounds until someone has won WINS_TO_WIN of them. */
   start(requesterId: string): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
+    for (const m of this.members) m.wins = 0;
+    this.startRound();
+    return true;
+  }
+
+  private startRound(): void {
+    this.setOver = false;
     this.stage = this.nextStage;
     this.round++;
     const seed = this.opts.seed?.() ?? Math.floor(Math.random() * 2 ** 32);
@@ -148,13 +215,14 @@ export class BattleSession {
       seed,
       playerIds: this.members.map((m) => m.id),
       characters: Object.fromEntries(this.members.map((m) => [m.id, m.character])),
+      ownColors: this.ownColors(),
       stage: this.stage,
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });
     this.inputs.clear();
-    this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot)]));
+    // Each bot gets its own dice for this match, from the match's seed: replays stay the same, matches don't.
+    this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot, m.persona, seed ^ hashId(m.id))]));
     this.phase = "playing";
-    return true;
   }
 
   /** An input from a player; `clientTick` (when sent) lets the server hold it exactly as long as the client did. */
@@ -174,8 +242,10 @@ export class BattleSession {
   tick(): TickOutput {
     if (this.phase === "results") {
       if (--this.resultsLeft <= 0) {
-        this.phase = "lobby";
-        this.match = null;
+        if (this.setOver || this.members.length < 2 || this.hostId === undefined) {
+          this.phase = "lobby";
+          this.match = null;
+        } else this.startRound();
       }
       return {};
     }
@@ -183,19 +253,30 @@ export class BattleSession {
 
     const inputs: Record<string, PlayerInput> = {};
     for (const [id, queue] of this.inputs) inputs[id] = queue.take(this.match.tick);
-    for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match);
+    // once the humans are out, the bots go all out (botHeat): nobody waits out a long bots-only standoff
+    const humansAlive = this.match.players.some((p) => p.alive && !this.bots.has(p.id));
+    if (!humansAlive && this.match.pressureAt > this.match.tick + BOTS_ONLY_HURRY) this.match.pressureAt = this.match.tick + BOTS_ONLY_HURRY;
+    for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match, humansAlive);
     step(this.match, inputs);
 
     const result = matchResult(this.match);
     const out: TickOutput = {};
     if (result.over) {
-      out.result = result;
       const winner = this.members.find((m) => m.id === result.winnerId);
       if (winner) winner.wins++;
+      this.setOver = !!winner && winner.wins >= WINS_TO_WIN;
+      out.result = { ...result, setOver: this.setOver };
       this.phase = "results";
       this.resultsLeft = RESULTS_TICKS;
     }
     if (result.over || this.match.tick % SNAPSHOT_EVERY === 0) out.snapshot = this.snapshot(this.match);
     return out;
   }
+}
+
+/** A string's FNV-1a hash (a bot's id, to give each bot different dice from one match seed). */
+function hashId(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
 }

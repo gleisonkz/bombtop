@@ -1,14 +1,14 @@
-import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type CharacterId, type LobbyInfo } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 import { lobbySlots, seatClass } from "./lobby-slots";
 import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
 import { cycleCharacter } from "./character-cycle";
 import type { Placing } from "../game/standings";
 
-const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", ninja: "Ninja", captain: "Capitão América", thor: "Thor", goku: "Goku", naruto: "Naruto" };
+const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", captain: "Capitão América", thor: "Thor", goku: "Goku", naruto: "Naruto", spider: "Homem-Aranha", pikachu: "Pikachu", static: "Super Choque", flash: "Flash", bugs: "Pernalonga", lantern: "Lanterna Verde", donatello: "Donatello", penelope: "Penélope Charmosa", panther: "Pantera Cor-de-Rosa", harry: "Harry Potter", optimus: "Optimus Prime", pele: "Pelé", lula: "Lula" };
 
 const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
   classic: "Clássica",
@@ -18,12 +18,23 @@ const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
 
 export const LEVEL_NAMES: Record<BotLevel, string> = { easy: "Fácil", medium: "Médio", hard: "Difícil" };
 
+/** Bot personalities, as shown on their seats. */
+export const PERSONA_NAMES: Record<BotPersona, string> = {
+  hunter: "Caçador",
+  collector: "Coletor",
+  demolisher: "Demolidor",
+  cautious: "Cauteloso",
+  wildcard: "Imprevisível",
+};
+
 export interface LobbyHandlers {
   start(): void;
   leave(): void;
   addBot(level: BotLevel): void;
   removeBot(id: string): void;
   pickCharacter(character: CharacterId): void;
+  /** The host has a bot play another character. */
+  pickBotCharacter(id: string, character: CharacterId): void;
 }
 
 /** Lobby overlay: room code and invite, a seat per player, and the host's start button. */
@@ -37,8 +48,12 @@ export class LobbyPanel {
   private readonly results: ResultScreen;
   private readonly codeLabel = el("small", { text: "Código da sala" });
   private readonly inviteBtn: HTMLButtonElement;
-  /** Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone). */
-  private offline: { pair: (() => void) | null } | null = null;
+  /**
+   * Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone).
+   * `couch`: players also join on this same screen with their controllers.
+   */
+  private offline: { pair: (() => void) | null; couch?: boolean } | null = null;
+  private watching = false;
 
   constructor(
     parent: HTMLElement,
@@ -49,7 +64,7 @@ export class LobbyPanel {
     this.root = el("div", { class: "screen lobby" }, [
       el("div", { class: "lobby-shell" }, [
         el("header", { class: "lobby-head card" }, [
-          button("← Sair", handlers.leave, "ghost leave"),
+          backButton("← Sair", handlers.leave, "ghost leave"),
           el("div", { class: "lobby-title" }, [el("h2", { text: "Sala" }), this.stage]),
           el("div", { class: "code-box" }, [this.codeLabel, this.code]),
           invite,
@@ -63,19 +78,25 @@ export class LobbyPanel {
     this.results = new ResultScreen(parent);
   }
 
-  /** An offline room (`pair` adds a friend, on the host's phone), or back to an online one (null). */
-  setOffline(offline: { pair: (() => void) | null } | null): void {
+  /** TV mode: this screen only shows the room (no seat): no start or invite, a word on what it is for. */
+  setWatching(watching: boolean): void {
+    this.watching = watching;
+    this.inviteBtn.hidden = watching || (!!this.offline && !this.offline.pair);
+  }
+
+  /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen), or back to an online one (null). */
+  setOffline(offline: { pair: (() => void) | null; couch?: boolean } | null): void {
     this.offline = offline;
-    this.codeLabel.textContent = offline ? "Partida offline" : "Código da sala";
-    this.inviteBtn.textContent = offline ? "Adicionar amigo" : "Convidar amigos";
+    this.codeLabel.textContent = offline?.couch ? "Mesma tela" : offline ? "Partida offline" : "Código da sala";
+    this.inviteBtn.textContent = offline ? "Chamar amigos" : "Convidar amigos";
     this.inviteBtn.hidden = !!offline && !offline.pair;
   }
 
   update(info: LobbyInfo, me: string): void {
     this.root.hidden = info.phase !== "lobby";
     if (info.phase !== "results") this.results.hide();
-    this.code.textContent = this.offline ? "Wi-Fi" : info.code;
-    this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}`;
+    this.code.textContent = this.offline?.couch ? "🎮" : this.offline ? "Wi-Fi" : info.code;
+    this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}${info.watchers ? ` • 📺 ${info.watchers}` : ""}`;
     const isHost = info.hostId === me;
     this.seats.replaceChildren(
       ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
@@ -84,7 +105,7 @@ export class LobbyPanel {
           return el("div", { class: "seat empty add-bot" }, [
             tag,
             el("span", { class: "seat-name", text: "Vaga livre" }),
-            el("span", { class: "seat-sub", text: "Chamar um bot:" }),
+            el("span", { class: "seat-sub", text: this.offline?.couch ? "Aperte A num controle, ou chame um bot:" : "Chamar um bot:" }),
             ...BOT_LEVELS.map((level) => button(LEVEL_NAMES[level], () => this.handlers.addBot(level), `mini ${level}`)),
           ]);
         }
@@ -97,9 +118,15 @@ export class LobbyPanel {
           ]);
         }
         const you = member.id === me;
+        // Your own character, and the host's bots': the arrows (or L1/R1 on a controller) step through the characters.
+        const pick = you
+          ? (c: CharacterId) => this.handlers.pickCharacter(c)
+          : member.bot && isHost
+            ? (c: CharacterId) => this.handlers.pickBotCharacter(member.id, c)
+            : null;
         const cls = seatClass(member, me);
         const sub = member.bot
-          ? `🤖 ${LEVEL_NAMES[member.bot]} • ${member.wins} 🏆`
+          ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
           : member.connected
             ? `${you ? "você • " : ""}${member.wins} 🏆`
             : "reconectando…";
@@ -108,16 +135,16 @@ export class LobbyPanel {
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
           el("div", { class: "stage-spot" }, [
-            characterArt(member.character, color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
+            characterArt(member.character, member.ownColors ? null : color, !member.connected ? "dizzy" : member.bot === "easy" ? "idle" : "walk"),
           ]),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
           // Arrows step through the characters, so any number of them fits on a narrow card.
-          el("div", { class: you ? "picker" : "picker spacer" }, [
-            this.pickArrow("‹", "Personagem anterior", you, member.character, -1),
+          el("div", { class: pick ? "picker" : "picker spacer" }, [
+            this.pickArrow("‹", "Personagem anterior", pick, member.character, -1),
             el("span", { class: "pick-name", text: CHARACTER_NAMES[member.character] }),
-            this.pickArrow("›", "Próximo personagem", you, member.character, 1),
+            this.pickArrow("›", "Próximo personagem", pick, member.character, 1),
           ]),
         ]);
       }),
@@ -125,18 +152,32 @@ export class LobbyPanel {
     const enough = info.members.length >= 2;
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
-    this.status.textContent = !enough
+    if (this.watching) {
+      this.startBtn.hidden = true;
+      this.status.textContent = "📺 Modo TV: esta tela mostra a partida. Cada um joga pelo seu celular (ou controle) com o código da sala.";
+      return;
+    }
+    const couch = this.offline?.couch ? "🎮 Controles: A entra, Y troca o personagem, B sai, Start começa. " : "";
+    this.status.textContent = couch + (!enough
       ? isHost
         ? "Convide a galera ou coloque bots nas vagas!"
         : "Esperando mais jogadores…"
       : isHost
         ? "Todo mundo pronto? Bora!"
-        : "Esperando o anfitrião começar…";
+        : "Esperando o anfitrião começar…");
   }
 
-  private pickArrow(text: string, label: string, you: boolean, current: CharacterId, step: 1 | -1): HTMLButtonElement {
-    const b = button(text, () => you && this.handlers.pickCharacter(cycleCharacter(current, step)), "mini pick-arrow");
+  private pickArrow(
+    text: string,
+    label: string,
+    pick: ((c: CharacterId) => void) | null,
+    current: CharacterId,
+    step: 1 | -1,
+  ): HTMLButtonElement {
+    const b = button(text, () => pick?.(cycleCharacter(current, step)), "mini pick-arrow");
     b.setAttribute("aria-label", label);
+    // L1/R1 on a controller press these (PadMenus).
+    if (pick) b.dataset[step < 0 ? "padPrev" : "padNext"] = "";
     return b;
   }
 
@@ -156,9 +197,9 @@ export class LobbyPanel {
     }
   }
 
-  /** The match is over: who won and everyone's place, until the room is back in the lobby. */
-  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null): void {
-    this.results.show(placings, info.members, me, winnerId);
+  /** A round is over: who won and everyone's place, until the next round (or, the match won, the lobby). */
+  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null, setOver: boolean): void {
+    this.results.show(placings, info.members, me, winnerId, setOver);
   }
 
   hide(): void {

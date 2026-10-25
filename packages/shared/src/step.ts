@@ -8,15 +8,18 @@ import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
-import { kamehameha, updateBlasts, updateRasengan, useSpecial } from "./special";
+import { kamehameha, updateBlasts, updateRasengan, updateTruck, useSpecial } from "./special";
 import { playerTile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   s.tick++;
   const living = s.players.filter((p) => p.alive);
-  // Thawed before anyone acts, so a freeze lasts the same whoever moved first.
-  for (const p of s.players) if (p.frozen > 0) p.frozen--;
+  // Worn off before anyone acts, so a web or charm lasts the same whoever moved first.
+  for (const p of s.players) {
+    if (p.webbed > 0) p.webbed--;
+    if (p.charmed > 0) p.charmed--;
+  }
 
   for (const p of s.players) {
     const input = inputs[p.id];
@@ -25,23 +28,29 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (p.invuln > 0) p.invuln--;
+    if (p.bubble > 0) p.bubble--;
+    if (p.sneak > 0) p.sneak--;
     if (p.specialCooldown > 0) p.specialCooldown--;
-    // Planted behind the shield: it wears off on time even if he gets stunned or frozen.
+    // Planted behind the shield: it wears off on time even if he gets stunned.
     if (p.shield > 0) {
       p.shield--;
       continue;
     }
     if (p.stun > 0) {
       p.stun--;
-      p.charge = p.rasengan = 0;
+      p.charge = p.rasengan = p.truck = 0;
       continue;
     }
-    if (p.frozen > 0) {
-      p.charge = p.rasengan = 0;
+    if (p.webbed > 0) {
+      p.charge = p.rasengan = p.truck = 0;
       continue;
     }
     if (p.rasengan > 0) {
       updateRasengan(s, p);
+      continue;
+    }
+    if (p.truck > 0) {
+      updateTruck(s, p);
       continue;
     }
     if (p.charge > 0) {
@@ -73,7 +82,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   for (const p of s.players) {
     const { x, y } = playerTile(p);
     const flame = s.flames.find((f) => f.x === x && f.y === y);
-    if (!flame || !hurt(p)) continue;
+    if (!flame || p.bubble > 0 || !hurt(p)) continue;
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }

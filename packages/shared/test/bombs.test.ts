@@ -12,6 +12,7 @@ import {
   setTile,
   step,
   Tile,
+  tileCenter,
   type MatchState,
 } from "../src";
 
@@ -151,10 +152,35 @@ describe("explosions", () => {
     moveTo(s, "p1", 5, 5);
     placeBomb(s, "p1");
     moveTo(s, "p1", 1, 1);
-    run(s, FUSE_TICKS);
+    run(s, FUSE_TICKS + FLAME_TICKS);
     expect(getTile(s, 7, 5)).toBe(Tile.Empty);
     expect(getTile(s, 8, 5)).toBe(Tile.Block);
     expect(hasFlame(s, 8, 5)).toBe(false);
+  });
+
+  it("a blown-up block stays solid while it burns and is gone when its flame dies, not before", () => {
+    const s = emptyMatch();
+    s.players[0]!.fireRange = 2;
+    setTile(s, 7, 5, Tile.Block);
+    moveTo(s, "p1", 5, 5);
+    placeBomb(s, "p1");
+    moveTo(s, "p1", 1, 1);
+    moveTo(s, "p2", 7, 6); // diagonal to the bomb, right below the block
+    run(s, FUSE_TICKS);
+    expect(hasFlame(s, 7, 5)).toBe(true);
+    expect(getTile(s, 7, 5)).toBe(Tile.Block);
+    // Walking up into it: the burning block holds them back until it and its flame go together.
+    const p2 = s.players[1]!;
+    for (let t = 0; t < FLAME_TICKS - 1; t++) {
+      step(s, { p2: { dir: "up", bomb: false } });
+      expect(getTile(s, 7, 5)).toBe(Tile.Block);
+    }
+    step(s, { p2: { dir: "up", bomb: false } });
+    expect(hasFlame(s, 7, 5)).toBe(false);
+    expect(getTile(s, 7, 5)).toBe(Tile.Empty);
+    for (let t = 0; t < 30; t++) step(s, { p2: { dir: "up", bomb: false } });
+    expect(p2.alive).toBe(true);
+    expect(p2.py).toBeLessThan(tileCenter(6));
   });
 
   it("detonates other bombs caught in the flames (chain reaction)", () => {
@@ -190,7 +216,7 @@ describe("explosions", () => {
     moveTo(s, "p1", 4, 5);
     expect(placeBomb(s, "p1")).toBe(true);
     moveTo(s, "p1", 1, 1);
-    s.bombs[0]!.air = { dir: "right", tilesLeft: 1, progress: AIR_TICKS_PER_TILE - 1 };
+    s.bombs[0]!.air = { dir: "right", tilesLeft: 1, span: 1, progress: AIR_TICKS_PER_TILE - 1 };
     s.flames.push({ x: 5, y: 5, ttl: FLAME_TICKS, ownerId: "p2" });
 
     step(s);

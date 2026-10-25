@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  FLAME_TICKS,
   CHARACTERS,
   createMatch,
   placeBomb,
@@ -7,7 +8,7 @@ import {
   playerTile,
   RASENGAN_PUSH,
   RASENGAN_RANGE,
-  RASENGAN_STUN_TICKS,
+  SPECIAL_STUN_TICKS,
   RASENGAN_TICKS,
   setTile,
   SHIELD_TICKS,
@@ -56,7 +57,7 @@ describe("naruto rasengan", () => {
     rush(s);
     expect(playerTile(player(s))).toEqual({ x: 2, y: 5 });
     expect(playerTile(player(s, "p2"))).toEqual({ x: 3 + RASENGAN_PUSH, y: 5 });
-    expect(player(s, "p2").stun).toBeGreaterThan(RASENGAN_STUN_TICKS - RASENGAN_TICKS);
+    expect(player(s, "p2").stun).toBeGreaterThan(SPECIAL_STUN_TICKS - RASENGAN_TICKS);
     expect(s.blasts).toEqual([expect.objectContaining({ ownerId: "p1", dir: "right", length: 1, kind: "rasengan" })]);
   });
 
@@ -67,13 +68,16 @@ describe("naruto rasengan", () => {
     expect(playerTile(player(s, "p2"))).toEqual({ x: 4, y: 5 });
   });
 
-  it("breaks a block in his way and stops there", () => {
+  it("breaks a block in his way and stops there: it burns away like a blown-up block", () => {
     const s = duel(5);
     setTile(s, 3, 5, Tile.Block);
     rush(s);
-    expect(s.grid.tiles[5 * s.grid.width + 3]).toBe(Tile.Empty);
+    expect(s.grid.tiles[5 * s.grid.width + 3]).toBe(Tile.Block);
+    expect(s.flames).toContainEqual(expect.objectContaining({ x: 3, y: 5, block: true }));
     expect(playerTile(player(s))).toEqual({ x: 2, y: 5 });
     expect(player(s).rasengan).toBe(0);
+    run(s, FLAME_TICKS);
+    expect(s.grid.tiles[5 * s.grid.width + 3]).toBe(Tile.Empty);
   });
 
   it("walls and bombs stop him", () => {

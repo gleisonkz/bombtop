@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, FUSE_TICKS, getTile, MEGA_COOLDOWN, placeBomb, placePlayerAt, setTile, step, Tile, TICK_RATE, type MatchState } from "../src";
+import { createMatch, FLAME_TICKS, FUSE_TICKS, getTile, MEGA_COOLDOWN, placeBomb, placePlayerAt, setTile, step, Tile, TICK_RATE, type MatchState } from "../src";
 import { hold, player, run } from "./helpers";
 
-/** p1 (the bomb mascot) at (3,5), p2 (ninja) far away. */
+/** p1 (the bomb mascot) at (3,5), p2 (thor) far away. */
 function arena(): MatchState {
-  const s = createMatch({ seed: 1, playerIds: ["p1", "p2"], blockDensity: 0, characters: { p1: "bomb", p2: "ninja" } });
+  const s = createMatch({ seed: 1, playerIds: ["p1", "p2"], blockDensity: 0, characters: { p1: "bomb", p2: "thor" } });
   placePlayerAt(s, "p1", 3, 5);
   placePlayerAt(s, "p2", 11, 1);
   return s;
@@ -37,10 +37,11 @@ describe("bomb mascot's mega bomb", () => {
     setTile(s, 5, 5, Tile.Block);
     cast(s);
     run(s, FUSE_TICKS);
-    expect(getTile(s, 4, 5)).toBe(Tile.Empty);
-    expect(getTile(s, 5, 5)).toBe(Tile.Empty);
     expect(s.flames).toContainEqual(expect.objectContaining({ x: 3 + range * 2, y: 5 }));
     expect(s.flames).not.toContainEqual(expect.objectContaining({ x: 4 + range * 2, y: 5 }));
+    run(s, FLAME_TICKS); // the blocks burn away with their flames
+    expect(getTile(s, 4, 5)).toBe(Tile.Empty);
+    expect(getTile(s, 5, 5)).toBe(Tile.Empty);
   });
 
   it("does nothing while a bomb already sits on his tile, and keeps the recharge", () => {

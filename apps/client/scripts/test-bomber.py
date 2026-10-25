@@ -21,6 +21,13 @@ class BomberArtTests(unittest.TestCase):
         with Image.open(PACK.SOURCE) as sheet:
             self.assertEqual(sheet.size, (1872, 5472))
 
+    def test_enlarged_menu_previews_use_native_master_pixels(self):
+        output = ROOT / "public/sprites/bomber-menu-atlas.png"
+        with Image.open(PACK.SOURCE) as source, Image.open(output) as preview:
+            self.assertEqual(preview.size, (1872, 5184))
+            self.assertEqual(preview.tobytes(), source.crop((0, 0, 1872, 5184)).tobytes())
+        self.assertLess(output.stat().st_size, 4 * 1024 * 1024, "Menu atlas must fit the existing PWA precache limit")
+
     def test_menu_frames_do_not_contain_detached_neighbor_fragments(self):
         with Image.open(PACK.SOURCE) as sheet:
             for col in range(9):

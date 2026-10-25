@@ -12,7 +12,7 @@ function withKick() {
 function bombAt(s: ReturnType<typeof emptyMatch>, x: number, y: number) {
   placePlayerAt(s, "p2", x, y);
   placeBomb(s, "p2");
-  placePlayerAt(s, "p2", 11, 9);
+  placePlayerAt(s, "p2", 13, 11);
   return s.bombs.at(-1)!;
 }
 
@@ -38,7 +38,7 @@ describe("kick", () => {
     hold(s, "right", 20);
     expect(b.slide).toBe("right");
     hold(s, null, 90);
-    expect(b.x).toBe(11);
+    expect(b.x).toBe(13);
     expect(b.slide).toBeNull();
   });
 
@@ -76,7 +76,7 @@ describe("kick", () => {
     hold(s, "right", 20);
     run(s, FUSE_TICKS);
     expect(s.bombs).not.toContain(b);
-    expect(hasFlame(s, 11, 1)).toBe(true);
+    expect(hasFlame(s, 13, 1)).toBe(true);
   });
 
   it("kicks vertically too", () => {
@@ -84,6 +84,14 @@ describe("kick", () => {
     const b = bombAt(s, 1, 3);
     hold(s, "down", 20);
     hold(s, null, 90);
-    expect(b.y).toBe(9);
+    expect(b.y).toBe(11);
+  });
+
+  it("kicks a bomb reached off-lane, lining up first", () => {
+    const s = withKick();
+    const b = bombAt(s, 2, 1);
+    hold(s, "down", 3); // a little below row 1's center; (2,2) is a pillar
+    hold(s, "right", 10);
+    expect(b.slide).toBe("right");
   });
 });

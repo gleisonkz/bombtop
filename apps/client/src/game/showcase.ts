@@ -25,7 +25,7 @@ export const SHOWCASE_VIEW = { x: 1, y: 3, width: 11, height: 5 };
 export type Step = { go: Facing; tiles: number } | { press: "bomb" | "action" | "special" } | { face: Facing } | { wait: number } | { holdBomb: number };
 
 interface Scene {
-  /** Who plays "you" and "rival" (the mascot and the ninja when left out). */
+  /** Who plays "you" and "rival" (the mascot and thor when left out). */
   characters?: { you: CharacterId; rival: CharacterId };
   /** Puts players, blocks and powers in place on an empty arena. */
   setup(s: MatchState, you: Player, rival: Player): void;
@@ -137,9 +137,17 @@ const SCENES: Record<ItemKind, Scene> = {
     setup(s, you) {
       placePlayerAt(s, "you", 2, 5);
       placePlayerAt(s, "rival", 7, 5);
-      you.curse = { kind: "slow", ticks: 10 * TICK_RATE };
+      you.curse = { kind: "slow" };
     },
     you: [{ go: "right", tiles: 5 }, { go: "left", tiles: 4 }],
+    seconds: 5,
+  },
+  [ItemKind.Picanha]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      s.items.push({ x: 6, y: 5, kind: ItemKind.Picanha, owner: "rival" });
+    },
+    you: [{ go: "right", tiles: 3 }],
     seconds: 5,
   },
   [ItemKind.Egg]: {
@@ -153,13 +161,13 @@ const SCENES: Record<ItemKind, Scene> = {
   },
 };
 
-/** The player color (by seat) each character wears in their scene, as in the menus: the ninja in ice blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, ninja: 3, captain: 0, thor: 3, goku: 4, naruto: 0 };
+/** The player color (by seat) each character wears in their scene, as in the menus: thor in blue, Goku in green. */
+const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3, pele: 3, lula: 2 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
   bomb: {
-    characters: { you: "bomb", rival: "ninja" },
+    characters: { you: "bomb", rival: "thor" },
     setup(s, you) {
       placePlayerAt(s, "you", 3, 5);
       you.fireRange = 2;
@@ -169,16 +177,6 @@ const SPECIALS: Record<CharacterId, Scene> = {
     you: [{ wait: 20 }, { press: "special" }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
     target: [7, 5],
     seconds: 5,
-  },
-  ninja: {
-    characters: { you: "ninja", rival: "bomb" },
-    setup(s, you) {
-      placePlayerAt(s, "you", 3, 5);
-      placePlayerAt(s, "rival", 6, 5);
-      you.facing = "right";
-    },
-    you: [{ wait: 30 }, { press: "special" }],
-    seconds: 4,
   },
   captain: {
     characters: { you: "captain", rival: "bomb" },
@@ -207,12 +205,13 @@ const SPECIALS: Record<CharacterId, Scene> = {
     characters: { you: "goku", rival: "bomb" },
     setup(s, you) {
       placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 6, 5);
       you.facing = "right";
-      blocks(s, [3, 5], [4, 5], [5, 5], [6, 5], [7, 5]);
+      blocks(s, [3, 5], [4, 5], [5, 5]);
     },
+    // Blasts through the blocks into the rival behind them, who is left dizzy.
     you: [{ wait: 30 }, { press: "special" }],
-    target: [7, 5],
-    seconds: 4,
+    seconds: 5,
   },
   naruto: {
     characters: { you: "naruto", rival: "thor" },
@@ -223,6 +222,156 @@ const SPECIALS: Record<CharacterId, Scene> = {
     },
     you: [{ wait: 30 }, { press: "special" }],
     seconds: 4,
+  },
+  spider: {
+    characters: { you: "spider", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    // Web him from afar, run up, leave a bomb by him and get out of its way.
+    you: [{ wait: 30 }, { press: "special" }, { wait: 20 }, { go: "right", tiles: 3 }, { press: "bomb" }, { go: "left", tiles: 2 }, { go: "up", tiles: 1 }],
+    seconds: 5,
+  },
+  pikachu: {
+    characters: { you: "pikachu", rival: "naruto" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 5, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "down";
+    },
+    // The rival comes close, he shocks it, drops a bomb by it and runs.
+    you: [{ wait: 40 }, { press: "special" }, { wait: 20 }, { go: "right", tiles: 1 }, { press: "bomb" }, { go: "left", tiles: 1 }, { go: "up", tiles: 1 }],
+    seconds: 5,
+  },
+  static: {
+    characters: { you: "static", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    // Drag him over from afar, leave a bomb by him and get out of its way.
+    you: [{ wait: 30 }, { press: "special" }, { wait: 15 }, { press: "bomb" }, { go: "left", tiles: 1 }, { go: "up", tiles: 1 }],
+    seconds: 5,
+  },
+  penelope: {
+    characters: { you: "penelope", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    // Blows him a kiss from afar: he is left charmed, hearts going round his head.
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  harry: {
+    characters: { you: "harry", rival: "naruto" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 5, 5);
+      you.facing = "right";
+    },
+    // Expecto patronum down the corridor: his stag runs through his rival, leaving him dizzy.
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  lula: {
+    characters: { you: "lula", rival: "goku" },
+    setup(s, you, rival) {
+      placePlayerAt(s, "you", 5, 5);
+      placePlayerAt(s, "rival", 9, 5);
+      you.facing = "right";
+      rival.facing = "left";
+    },
+    // His promise: a picanha left in the corridor; his rival walks up for it and is let down, stunned.
+    you: [{ wait: 30 }, { press: "special" }, { go: "up", tiles: 1 }],
+    rival: [{ wait: 80 }, { go: "left", tiles: 3 }],
+    seconds: 6,
+  },
+  pele: {
+    characters: { you: "pele", rival: "captain" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 7, 5);
+      you.facing = "right";
+    },
+    // His kick down the corridor: the ball knocks his rival down from afar.
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  optimus: {
+    characters: { you: "optimus", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 5, 5);
+      you.facing = "right";
+    },
+    // Roll out: he turns into his truck and drives down the corridor, shoving his rival along, left dizzy where it stops.
+    you: [{ wait: 30 }, { press: "special" }],
+    seconds: 5,
+  },
+  panther: {
+    characters: { you: "panther", rival: "goku" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 8, 5);
+      you.facing = "right";
+    },
+    // Tiptoes out of sight (shown faint here), creeps up on him, leaves a bomb by him and slips away.
+    you: [{ wait: 30 }, { press: "special" }, { wait: 10 }, { go: "right", tiles: 3 }, { press: "bomb" }, { go: "left", tiles: 1 }, { go: "up", tiles: 1 }],
+    seconds: 6,
+  },
+  donatello: {
+    characters: { you: "donatello", rival: "naruto" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 3, 3);
+      you.facing = "down";
+    },
+    // Plants a bomb, steps up off it next to his rival and spins: the rival is left dizzy and the bomb flies far off.
+    you: [{ wait: 20 }, { press: "bomb" }, { go: "up", tiles: 1 }, { wait: 10 }, { press: "special" }],
+    seconds: 5,
+  },
+  lantern: {
+    characters: { you: "lantern", rival: "thor" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 4, 5);
+      placePlayerAt(s, "rival", 8, 3);
+      you.facing = "down";
+      you.fireRange = 2;
+    },
+    // Plants a bomb at his feet and stays put: his bubble rises just before it blows and the fire cannot get in.
+    you: [{ wait: 20 }, { press: "bomb" }, { wait: 140 }, { press: "special" }],
+    seconds: 6,
+  },
+  bugs: {
+    characters: { you: "bugs", rival: "spider" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 9, 3);
+      you.facing = "right";
+      you.fireRange = 2;
+      // Boxed in on every side: the only way out is under.
+      blocks(s, [2, 5], [4, 5], [3, 4], [3, 6]);
+    },
+    // Plants a bomb in his box and digs out under the blocks, far from it.
+    you: [{ wait: 30 }, { press: "bomb" }, { wait: 10 }, { press: "special" }],
+    seconds: 5,
+  },
+  flash: {
+    characters: { you: "flash", rival: "naruto" },
+    setup(s, you) {
+      placePlayerAt(s, "you", 2, 5);
+      placePlayerAt(s, "rival", 4, 5);
+      you.facing = "right";
+      you.fireRange = 2;
+    },
+    // Plants a bomb and zips right through the rival, who is left dizzy in its way.
+    you: [{ wait: 30 }, { press: "bomb" }, { wait: 6 }, { press: "special" }],
+    seconds: 5,
   },
 };
 
@@ -320,7 +469,7 @@ export class Showcase {
 
   private reset(): void {
     const scene = this.scene;
-    const s = createMatch({ seed: 1, playerIds: ["you", "rival"], blockDensity: 0, revenge: false, characters: scene.characters ?? { you: "bomb", rival: "ninja" } });
+    const s = createMatch({ seed: 1, playerIds: ["you", "rival"], blockDensity: 0, revenge: false, characters: scene.characters ?? { you: "bomb", rival: "thor" } });
     s.items = [];
     const [you, rival] = s.players as [Player, Player];
     // The rival waits out of the way unless the scene needs it.

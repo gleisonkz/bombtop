@@ -15,7 +15,7 @@ import type { Cue } from "../audio/cues";
 
 const TICK_MS = 1000 / TICK_RATE;
 
-/** The ice blast our special makes right now, worked out with the server's rules; null when it is not ready. */
+/** The blast our special makes right now, worked out with the server's rules; null when it is not ready. */
 export function predictBlast(view: PublicView, me: Player): Blast | null {
   const players = view.players.map((p) => (p.id === me.id ? structuredClone(me) : structuredClone(p)));
   const s = { ...structuredClone(view), players, rng: 0 } as MatchState;
@@ -26,7 +26,7 @@ export function predictBlast(view: PublicView, me: Player): Blast | null {
 }
 
 /**
- * Our own ice blast, drawn (cast animation and beam) the moment the button is
+ * Our own special's blast, drawn (cast animation and beam) the moment the button is
  * pressed instead of a round trip later; the server's copy takes over once it arrives.
  */
 export class GhostBlasts {

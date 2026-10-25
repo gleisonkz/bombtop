@@ -1,4 +1,5 @@
-"""Power-up sheet in HD: one 192x192 column per item (order = ITEMS.order in render/sprites.ts),
+"""The first power-up sheet (items.png is now packed from concept art by pack-concept-items.py, which
+takes only the picanha icon from here). Power-up sheet in HD: one 192x192 column per item (order = ITEMS.order in render/sprites.ts),
 rows = plain, then 3 frames of a glint sweeping across the plate. Designed on a 48-unit grid
 (4 px per unit). Each item is a beveled plate in its own color with a glossy icon on top; the
 bomb items reuse the bombs from bombs.png (run build-bombs.py first).
@@ -15,8 +16,9 @@ PLATES = {
     "bomb": "#3d7bf2", "fire": "#e84a4a", "fullFire": "#f5b700", "speed": "#3cba54",
     "kick": "#8e5ae0", "remote": "#4a5578", "pierce": "#23a9b5", "punch": "#f08a24",
     "glove": "#a0703c", "skull": "#2a1838", "egg": "#ec8cc0",
+    "picanha": "#d9822b",
 }
-ORDER = ["bomb", "fire", "fullFire", "speed", "kick", "remote", "pierce", "punch", "glove", "skull", "egg"]
+ORDER = ["bomb", "fire", "fullFire", "speed", "kick", "remote", "pierce", "punch", "glove", "skull", "egg", "picanha"]
 
 def rgb(h):
     return np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)], float)
@@ -169,6 +171,22 @@ def icon_egg():
         shape(c, lambda d, x=x, y=y, r=r: d.ellipse(c.box(x, y, r, r), fill=255), (90, 190, 80), outline=0, radius=r * 0.8, gloss=False)
     return c.done()
 
+def icon_picanha():
+    """Lula's promise: a juicy picanha on a skewer, its fat cap on top, grill marks across it."""
+    c = Canvas(UNITS, PX)
+    c.d.line(c.pts([(6, 42), (42, 6)]), fill=INK, width=int(c.k * 2.2))
+    c.d.line(c.pts([(6, 42), (42, 6)]), fill=(205, 205, 215, 255), width=int(c.k * 1.1))
+    def meat(d):
+        d.polygon(c.pts([(8, 21), (20, 10), (37, 14), (41, 28), (31, 39), (10, 34)]), fill=255)
+    shape(c, meat, (176, 62, 44), radius=7)
+    def fat(d):
+        d.polygon(c.pts([(8, 21), (20, 10), (37, 14), (38.5, 19), (21, 15.5), (10, 26)]), fill=255)
+    shape(c, fat, (250, 238, 205), outline=0, radius=2, gloss=False)
+    for x in (17, 24, 31):
+        c.d.line(c.pts([(x - 4, 34), (x + 4, 21)]), fill=(70, 26, 18, 255), width=int(c.k * 1.3))
+    c.d.line(c.pts([(37, 11), (42, 6)]), fill=(205, 205, 215, 255), width=int(c.k * 1.1))
+    return c.done()
+
 def bomb_icon(sheet, col):
     """A bomb from bombs.png (128px cells), trimmed and scaled to fill the plate."""
     cell = sheet.crop((col * 128, 0, col * 128 + 128, 128))
@@ -194,6 +212,7 @@ def main():
         "bomb": bomb_icon(bombs, 0), "pierce": bomb_icon(bombs, 1), "remote": bomb_icon(bombs, 2),
         "fire": icon_fire(), "fullFire": icon_full_fire(), "speed": icon_speed(), "kick": icon_kick(),
         "punch": icon_punch(), "glove": icon_glove(), "skull": icon_skull(), "egg": icon_egg(),
+        "picanha": icon_picanha(),
     }
     sheet = Image.new("RGBA", (SIZE * len(ORDER), SIZE * FRAMES))
     for col, kind in enumerate(ORDER):
@@ -208,4 +227,5 @@ def main():
         prev.alpha_composite(sheet.crop((0, 2 * SIZE, SIZE * len(ORDER), 3 * SIZE)), (0, SIZE))
         prev.resize((prev.width // 2, prev.height // 2), Image.LANCZOS).save(sys.argv[3])
 
-main()
+if __name__ == "__main__":
+    main()

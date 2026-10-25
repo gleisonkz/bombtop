@@ -6,12 +6,14 @@ import {
   ITEM_CHANCE,
   ITEM_WEIGHTS,
   MAX_PLAYERS,
+  ROUND_TICKS,
   SPAWN_POINTS,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
 } from "./constants";
 import { createRng } from "./rng";
 import { buildStage, type StageId } from "./stage";
+import { firstPickers } from "./own-colors";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
@@ -23,6 +25,8 @@ export interface MatchOptions {
   stage?: StageId;
   /** Each player's character (default: the bomb). */
   characters?: Record<string, CharacterId>;
+  /** Players in their character's original colors (default: the first seat on each character, see `firstPickers`). */
+  ownColors?: Iterable<string>;
 }
 
 const CLASSIC_ITEM_COUNTS: readonly [ItemKind, number][] = [
@@ -59,10 +63,14 @@ export function createMatch(opts: MatchOptions): MatchState {
     }
   }
 
+  const character = (id: string): CharacterId => opts.characters?.[id] ?? DEFAULT_CHARACTER;
+  const own = new Set(opts.ownColors ?? firstPickers(playerIds.map((id) => ({ id, character: character(id) }))));
+
   return {
     tick: 0,
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
+    pressureAt: ROUND_TICKS,
     revenge,
     items: hideItems(tiles, width, seed, stage),
     grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
@@ -80,12 +88,17 @@ export function createMatch(opts: MatchOptions): MatchState {
       canPunch: false,
       canGlove: false,
       stun: 0,
-      character: opts.characters?.[id] ?? DEFAULT_CHARACTER,
-      frozen: 0,
+      character: character(id),
+      ...(own.has(id) && { ownColors: true as const }),
+      webbed: 0,
+      charmed: 0,
+      sneak: 0,
+      bubble: 0,
       specialCooldown: 0,
       shield: 0,
       charge: 0,
       rasengan: 0,
+      truck: 0,
       curse: null,
       mount: null,
       invuln: 0,

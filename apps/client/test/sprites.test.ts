@@ -1,10 +1,23 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, boltOrigin, boltPoints, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, flameVariant, flameConnections, beamAlpha, frozenLook, iceBlock, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues } from "../src/render/sprites";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, flameVariant, flameConnections, beamAlpha, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
+
+  it("tiptoes on the cast row while sneaking: cycling it as he walks, its first frame standing", () => {
+    const sheet = SHEETS.panther;
+    const cols = new Set<number>();
+    for (let tick = 0; tick < 120; tick++) {
+      const f = playerFrame(sheet, { facing: "down", moving: true, carrying: false, sneaking: true, tick });
+      expect(f.y).toBe(sheet.cast!.down.row * sheet.frameH);
+      cols.add(f.x);
+    }
+    expect(cols.size).toBe(sheet.cast!.down.frames);
+    const still = playerFrame(sheet, { facing: "right", moving: false, carrying: false, sneaking: true, tick: 50 });
+    expect(still).toMatchObject({ x: 0, y: sheet.cast!.side.row * sheet.frameH });
+  });
 
   it("stands on the idle frame of the facing direction", () => {
     const f = playerFrame(foozle, { facing: "down", moving: false, carrying: false, tick: 99 });
@@ -97,10 +110,10 @@ describe("MotionTracker", () => {
   });
 });
 
-describe("ninja sheet", () => {
-  const ninja = SHEETS.ninja;
+describe("a PixelLab character sheet", () => {
+  const sheet = SHEETS.pikachu;
   const at = (facing: "up" | "down" | "left" | "right", o: { moving?: boolean; stunned?: boolean; tick?: number } = {}) =>
-    playerFrame(ninja, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
+    playerFrame(sheet, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
 
   it("walks with 6 frames in each direction, mirroring east for west", () => {
     const xs = new Set<number>();
@@ -111,7 +124,7 @@ describe("ninja sheet", () => {
   });
 
   it("shows the hit reaction while stunned, whatever the facing", () => {
-    expect(at("up", { stunned: true }).y).toBe(ninja.stun!.row * ninja.frameH);
+    expect(at("up", { stunned: true }).y).toBe(sheet.stun!.row * sheet.frameH);
     expect(at("left", { stunned: true }).flip).toBe(false);
   });
 
@@ -126,28 +139,28 @@ describe("ninja sheet", () => {
   });
 
   it("holds the bomb overhead: carry rows while carrying", () => {
-    const carry = (moving: boolean) => playerFrame(ninja, { facing: "down", moving, carrying: true, tick: 0 }).y;
-    expect(carry(false)).toBe(ninja.carryIdle!.down.row * ninja.frameH);
-    expect(carry(true)).toBe(ninja.carryWalk!.down.row * ninja.frameH);
+    const carry = (moving: boolean) => playerFrame(sheet, { facing: "down", moving, carrying: true, tick: 0 }).y;
+    expect(carry(false)).toBe(sheet.carryIdle!.down.row * sheet.frameH);
+    expect(carry(true)).toBe(sheet.carryWalk!.down.row * sheet.frameH);
   });
 
   it("every row fits inside the image", () => {
-    const strips = [ninja.idle, ninja.walk, ninja.cast!, ninja.carryIdle!, ninja.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, ninja.stun!, ninja.death!, ninja.lobby!]) {
-      expect((s.row + 1) * ninja.frameH).toBeLessThanOrEqual(ninja.height);
-      expect(s.frames * ninja.frameW).toBeLessThanOrEqual(ninja.width);
+    const strips = [sheet.idle, sheet.walk, sheet.cast!, sheet.carryIdle!, sheet.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, sheet.stun!, sheet.death!, sheet.lobby!]) {
+      expect((s.row + 1) * sheet.frameH).toBeLessThanOrEqual(sheet.height);
+      expect(s.frames * sheet.frameW).toBeLessThanOrEqual(sheet.width);
     }
   });
 });
 
 describe("deathFrame", () => {
-  const ninja = SHEETS.ninja;
-  const last = ninja.death!.frames * ninja.ticksPerFrame;
+  const sheet = SHEETS.pikachu;
+  const last = sheet.death!.frames * sheet.ticksPerFrame;
 
   it("plays the death row once, then the body is gone", () => {
-    expect(deathFrame(ninja, 0)).toEqual({ x: 0, y: ninja.death!.row * ninja.frameH, flip: false });
-    expect(deathFrame(ninja, last - 1)!.x).toBe((ninja.death!.frames - 1) * ninja.frameW);
-    expect(deathFrame(ninja, last + 30)).toBeNull();
+    expect(deathFrame(sheet, 0)).toEqual({ x: 0, y: sheet.death!.row * sheet.frameH, flip: false });
+    expect(deathFrame(sheet, last - 1)!.x).toBe((sheet.death!.frames - 1) * sheet.frameW);
+    expect(deathFrame(sheet, last + 30)).toBeNull();
   });
 
   it("has nothing to play on sheets without a death row", () => {
@@ -169,6 +182,18 @@ describe("paintHues", () => {
     const [dr] = px.slice(4, 7);
     expect(dr!).toBeLessThan(r!); // dark stays darker
     expect([...px.slice(8)]).toEqual([230, 190, 150, 255]);
+  });
+
+  it("takes a range that wraps past 360 (reds), leaving the hues outside it", () => {
+    const px = new Uint8ClampedArray([
+      210, 56, 53, 255, // red, hue ~1
+      111, 31, 49, 255, // dark crimson, hue ~345
+      248, 231, 40, 255, // yellow boots: untouched
+    ]);
+    paintHues(px, [335, 12], [61, 123, 242]);
+    expect(px[2]!).toBeGreaterThan(px[0]!);
+    expect(px[6]!).toBeGreaterThan(px[4]!);
+    expect([...px.slice(8)]).toEqual([248, 231, 40, 255]);
   });
 
   it("turns them grey for an unsaturated player color", () => {
@@ -281,24 +306,24 @@ describe("mascot in the arena", () => {
   });
 });
 
-describe("ice blast visuals", () => {
-  const ninja = SHEETS.ninja;
-  const cast = ninja.cast!;
+describe("special cast visuals", () => {
+  const sheet = SHEETS.pikachu;
+  const cast = sheet.cast!;
   const frame = (facing: "up" | "down" | "left" | "right", casting: number) =>
-    playerFrame(ninja, { facing, moving: true, carrying: false, casting, tick: 0 });
+    playerFrame(sheet, { facing, moving: true, carrying: false, casting, tick: 0 });
 
   it("plays the cast row for the facing direction, mirroring east for west", () => {
-    expect(frame("down", 0).y).toBe(cast.down.row * ninja.frameH);
-    expect(frame("up", 0).y).toBe(cast.up.row * ninja.frameH);
-    expect(frame("left", 0)).toMatchObject({ y: cast.side.row * ninja.frameH, flip: true });
+    expect(frame("down", 0).y).toBe(cast.down.row * sheet.frameH);
+    expect(frame("up", 0).y).toBe(cast.up.row * sheet.frameH);
+    expect(frame("left", 0)).toMatchObject({ y: cast.side.row * sheet.frameH, flip: true });
     const last = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME - 1);
-    expect(last.x).toBe((cast.down.frames - 1) * ninja.frameW);
-    expect(last.x + ninja.frameW).toBeLessThanOrEqual(ninja.width);
+    expect(last.x).toBe((cast.down.frames - 1) * sheet.frameW);
+    expect(last.x + sheet.frameW).toBeLessThanOrEqual(sheet.width);
   });
 
   it("goes back to walking once the cast is over", () => {
     const after = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME);
-    expect(after.y).toBe(ninja.walk.down.row * ninja.frameH);
+    expect(after.y).toBe(sheet.walk.down.row * sheet.frameH);
   });
 
   it("the beam appears when the hands thrust forward and fades out", () => {
@@ -320,24 +345,173 @@ describe("ice blast visuals", () => {
     for (const [x] of down) expect(Math.abs(x - 5)).toBeLessThanOrEqual(4);
   });
 
-  it("frozen players turn icy, and the ice flickers in its last second", () => {
-    expect(frozenLook(0, 0)).toBeNull();
-    const solid = Array.from({ length: 30 }, (_, t) => frozenLook(FREEZE_TICKS, t)!);
-    expect(new Set(solid.map((l) => l.block))).toEqual(new Set([true]));
-    expect(solid[0]!.tint).not.toBe(0xffffff);
-    const melting = Array.from({ length: 30 }, (_, t) => frozenLook(30, t)!.block);
-    expect(new Set(melting)).toEqual(new Set([true, false]));
+  it("the magnet pull sends rings of force from the one pulled back to the caster, shrinking as they arrive", () => {
+    const at = (age: number) => magnetWaves(0, 10, 64, 10, age);
+    const waves = at(4);
+    expect(waves.length).toBeGreaterThanOrEqual(2);
+    for (const w of waves) {
+      expect(w.y).toBe(10);
+      expect(w.x).toBeGreaterThanOrEqual(0);
+      expect(w.x).toBeLessThanOrEqual(64);
+    }
+    // Each ring moves toward the caster tick by tick.
+    expect(at(5)[0]!.x).toBeLessThan(waves[0]!.x);
+    const near = waves.reduce((a, b) => (a.x < b.x ? a : b));
+    const far = waves.reduce((a, b) => (a.x > b.x ? a : b));
+    expect(near.r).toBeLessThan(far.r);
+    const down = magnetWaves(5, 0, 5, 48, 3);
+    for (const w of down) expect(w.x).toBe(5);
   });
 
-  it("the ice block hugs the body: from just over the head to just under the feet", () => {
+  it("braces whoever holds a pose: the captain behind his shield, the green lantern kneeling in his bubble unless he walks", () => {
+    expect(bracing({ shield: 0, bubble: 0 }, false)).toBeUndefined();
+    expect(bracing({ shield: SHIELD_TICKS - 10, bubble: 0 }, false)).toBe(10);
+    expect(bracing({ shield: 0, bubble: BUBBLE_TICKS - 25 }, false)).toBe(25);
+    expect(bracing({ shield: 0, bubble: BUBBLE_TICKS - 25 }, true)).toBeUndefined(); // walking in it
+  });
+
+  it("the green lantern's bubble forms, holds shimmering, flickers in its last second and gives way as it ends", () => {
+    expect(bubbleLook(0, 0)).toBeNull();
+    expect(bubbleLook(BUBBLE_TICKS, 0)).toEqual({ row: BUBBLE.rows.form, frame: 0, alpha: 1 });
+    const formed = BUBBLE_TICKS - BUBBLE.frames.form * BUBBLE.ticks;
+    const loop = [0, 1, 2, 3].map((t) => bubbleLook(formed - 30, t * BUBBLE.ticks)!);
+    for (const l of loop) expect(l.row).toBe(BUBBLE.rows.loop);
+    expect(new Set(loop.map((l) => l.frame)).size).toBe(4); // shimmering
+    const lastSecond = Array.from({ length: 20 }, (_, t) => bubbleLook(40, t)!);
+    expect(lastSecond.some((l) => l.alpha < 1)).toBe(true); // flickering
+    expect(bubbleLook(1, 0)).toEqual({ row: BUBBLE.rows.pop, frame: BUBBLE.frames.pop - 1, alpha: 1 });
+    const pops = Array.from({ length: BUBBLE.frames.pop * BUBBLE.ticks }, (_, i) => bubbleLook(BUBBLE.frames.pop * BUBBLE.ticks - i, 0)!);
+    for (const l of pops) expect(l.row).toBe(BUBBLE.rows.pop);
+    expect(pops.map((l) => l.frame)).toEqual([...pops.map((l) => l.frame)].sort((a, b) => a - b));
+  });
+
+  it("bugs' tunnel heaves up a ridge of dirt mounds from where he went under to where he came out, running ahead fast", () => {
+    const all = tunnelMounds(0, 10, 80, 10, 30);
+    expect(all.length).toBeGreaterThanOrEqual(5);
+    for (const m of all) {
+      expect(m.y).toBe(10); // along the tunnel
+      expect(m.x).toBeGreaterThan(0);
+      expect(m.x).toBeLessThan(80);
+      expect(m.r).toBeGreaterThan(0);
+    }
+    const xs = all.map((m) => m.x);
+    expect(xs).toEqual([...xs].sort((a, b) => a - b)); // in order from the start
+    expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeLessThan(all.length); // still running ahead
+    expect(tunnelMounds(0, 10, 80, 10, 1).length).toBeGreaterThan(0);
+    for (const m of tunnelMounds(5, 0, 5, 48, 30)) expect(m.x).toBe(5);
+  });
+
+  it("penelope's kiss flies as a heart from her hand to where it stopped, then bursts into little hearts", () => {
+    const [first] = kissHearts(0, 10, 80, 10, 0);
+    expect(first!.x).toBeCloseTo(0);
+    const mid = kissHearts(0, 10, 80, 10, 8);
+    expect(mid[0]!.x).toBeGreaterThan(0);
+    expect(mid[0]!.x).toBeLessThan(80);
+    for (const h of mid) expect(h.y).toBeLessThanOrEqual(10 + 4);
+    // landed: a ring of little hearts round the end, fading out with the blast
+    const burst = kissHearts(0, 10, 80, 10, BLAST_TICKS - 6);
+    expect(burst.length).toBeGreaterThan(3);
+    for (const h of burst) expect(Math.hypot(h.x - 80, h.y - 10)).toBeLessThan(16);
+    expect(kissHearts(0, 10, 80, 10, BLAST_TICKS).every((h) => h.alpha === 0)).toBe(true);
+    // straight up the column too
+    for (const h of kissHearts(5, 60, 5, 0, 6)) expect(Math.abs(h.x - 5)).toBeLessThan(4);
+  });
+
+  it("harry's stag gallops from him the way he cast it, all the way to where it stopped, then fades into sparkles", () => {
+    const run = 40; // ticks it takes to get there
+    const start = patronusLook(0, 20, 160, 20, "right", run, 0)!;
+    expect(start.x).toBeCloseTo(0);
+    const mid = patronusLook(0, 20, 160, 20, "right", run, 20)!;
+    expect(mid.x).toBeCloseTo(80, 0); // a steady gallop
+    // bounding along: never below the path
+    const ys = Array.from({ length: run }, (_, i) => patronusLook(0, 20, 160, 20, "right", run, i)!.y);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(20);
+    expect(Math.min(...ys)).toBeLessThan(19);
+    // its legs go round the gallop frames as it runs
+    const frames = new Set(Array.from({ length: run }, (_, i) => patronusLook(0, 20, 160, 20, "right", run, i)!.frame));
+    expect(frames.size).toBe(PATRONUS.frames);
+    // a trail of sparkles behind it
+    expect(mid.sparkles.length).toBeGreaterThan(2);
+    for (const s of mid.sparkles) expect(s.x).toBeLessThanOrEqual(mid.x + 1);
+    // there, then fading out
+    const end = patronusLook(0, 20, 160, 20, "right", run, run + PATRONUS_FADE - 4)!;
+    expect(end.x).toBeCloseTo(160);
+    expect(end.alpha).toBeLessThan(0.6);
+    expect(patronusLook(0, 20, 160, 20, "right", run, run + PATRONUS_FADE)).toBeNull();
+    // seen from the side running left or right, from the front running down, from behind running up
+    expect(mid).toMatchObject({ view: "side", flip: false });
+    expect(patronusLook(160, 20, 0, 20, "left", run, 5)).toMatchObject({ view: "side", flip: true });
+    expect(patronusLook(20, 0, 20, 160, "down", run, 5)).toMatchObject({ view: "down", flip: false });
+    const up = patronusLook(20, 160, 20, 0, "up", run, 20)!;
+    expect(up).toMatchObject({ view: "up" });
+    expect(up.y).toBeLessThan(160);
+    expect(PATRONUS.url).toContain("patronus");
+  });
+
+  it("a charmed player has hearts circling over their head, none once it wears off", () => {
+    expect(charmHearts(0, 10)).toEqual([]);
+    const hearts = charmHearts(120, 10);
+    expect(hearts.length).toBe(3);
+    const later = charmHearts(119, 11);
+    expect(later[0]!.dx).not.toBeCloseTo(hearts[0]!.dx, 3); // they move round
+    for (const h of hearts) expect(h.dy).toBeLessThan(0); // above the anchor
+  });
+
+  it("donatello's staff spin turns his bo round him twice, a whoosh ring swelling out and fading", () => {
+    const start = spinLook(0);
+    const end = spinLook(BLAST_TICKS);
+    expect(end.angle - start.angle).toBeGreaterThanOrEqual(4 * Math.PI);
+    for (let t = 1; t <= BLAST_TICKS; t++) expect(spinLook(t).angle).toBeGreaterThan(spinLook(t - 1).angle);
+    expect(spinLook(BLAST_TICKS / 2).ring).toBeGreaterThan(start.ring);
+    expect(start.alpha).toBeGreaterThan(0.5);
+    expect(end.alpha).toBe(0);
+  });
+
+  it("the flash's dash leaves speed lines from where he left to where he stopped, the tail catching up as they fade", () => {
+    const at = (age: number) => speedLines(0, 10, 80, 10, age);
+    const lines = at(0);
+    expect(lines.length).toBeGreaterThanOrEqual(3);
+    for (const l of lines) {
+      expect(l.y0).toBe(l.y1); // along the dash
+      expect(l.x1).toBeCloseTo(80, 0);
+      expect(l.x0).toBeGreaterThanOrEqual(0);
+    }
+    expect(new Set(lines.map((l) => l.y0)).size).toBe(lines.length); // side by side
+    expect(Math.min(...at(10).map((l) => l.x0))).toBeGreaterThan(Math.min(...lines.map((l) => l.x0)));
+    for (const l of speedLines(5, 0, 5, 48, 3)) expect(l.x0).toBe(l.x1);
+  });
+
+});
+
+describe("spider web", () => {
+  it("a webbed player struggles in place, and the web loosens (flickers) in its last second", () => {
+    expect(webbedLook(0, 0)).toBeNull();
+    const tight = Array.from({ length: 30 }, (_, t) => webbedLook(WEB_TICKS, t)!);
+    expect(new Set(tight.map((l) => l.wraps))).toEqual(new Set([true]));
+    expect(new Set(tight.map((l) => l.shake)).size).toBeGreaterThan(1);
+    for (const l of tight) expect(Math.abs(l.shake)).toBeLessThanOrEqual(1);
+    const loose = Array.from({ length: 30 }, (_, t) => webbedLook(30, t)!.wraps);
+    expect(new Set(loose)).toEqual(new Set([true, false]));
+  });
+
+  it("the cocoon wraps the body from over the head to the feet, strands crossing it", () => {
     const body = 21;
-    const b = iceBlock(100, 50, body);
+    const c = cocoon(100, 50, body);
     const feet = 50 + 6;
-    expect(b.y).toBeGreaterThanOrEqual(feet - body - 3);
-    expect(b.y).toBeLessThan(feet - body);
-    expect(b.y + b.h).toBeGreaterThan(feet);
-    expect(b.y + b.h).toBeLessThanOrEqual(feet + 3);
-    expect(b.x + b.w / 2).toBe(100);
+    expect(c.y).toBeLessThan(feet - body);
+    expect(c.y + c.h).toBeGreaterThan(feet);
+    expect(c.x + c.w / 2).toBe(100);
+    expect(c.strands.length).toBeGreaterThanOrEqual(5);
+    expect(c.back.length).toBeGreaterThanOrEqual(2);
+    for (const [x0, y0, x1, y1] of [...c.strands, ...c.back]) {
+      for (const [x, y] of [[x0, y0], [x1, y1]] as const) {
+        expect(x).toBeGreaterThanOrEqual(c.x);
+        expect(x).toBeLessThanOrEqual(c.x + c.w);
+        expect(y).toBeGreaterThanOrEqual(c.y);
+        expect(y).toBeLessThanOrEqual(c.y + c.h);
+      }
+      expect(y1).not.toBe(y0); // slanted, wound round him
+    }
   });
 });
 
@@ -429,6 +603,15 @@ describe("tile art", () => {
     expect(tileCell(Tile.Block, 3, 1, w, h)).toBe(TILES.cells.block);
   });
 
+  it("a blown-up block burns away in six frames over its flame's life: struck, ablaze, breaking, collapsing, embers, ash", () => {
+    expect(TILES.cells.burn).toHaveLength(6);
+    const frames = Array.from({ length: FLAME_TICKS }, (_, i) => burnCell(FLAME_TICKS - i));
+    expect(frames[0]).toBe(TILES.cells.burn[0]);
+    expect(frames.at(-1)).toBe(TILES.cells.burn.at(-1));
+    expect([...frames].sort((a, b) => a - b)).toEqual(frames);
+    expect(new Set(frames)).toEqual(new Set(TILES.cells.burn));
+  });
+
   it("grass alternates two shades like a lawn, with the odd flower patch", () => {
     const a = tileCell(Tile.Empty, 1, 1, w, h);
     const b = tileCell(Tile.Empty, 2, 1, w, h);
@@ -514,7 +697,6 @@ describe("HD art", () => {
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(128 * 0.1);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
-    expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
   });
 });
 
@@ -588,12 +770,20 @@ describe("rasenganLook", () => {
     expect(rasenganLook(0, struck(0))).toEqual({ burst: 0 });
     expect(rasenganLook(0, struck(5))).toEqual({ burst: 2 });
     expect(rasenganLook(0, struck(2 * RASENGAN.frames))).toBeNull();
-    expect(rasenganLook(0, { ttl: BLAST_TICKS, kind: "ice" })).toBeNull();
+    expect(rasenganLook(0, { ttl: BLAST_TICKS, kind: "lightning" })).toBeNull();
     expect(rasenganLook(0, undefined)).toBeNull();
   });
 });
 
 describe("castTicks", () => {
+  it("lula's runs from when he uses his special (it leaves no blast: the picanha is an item)", () => {
+    const lula = { charge: 0, rasengan: 0, character: "lula" as const };
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN }, undefined)).toBe(0);
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN - 10 }, undefined)).toBe(10);
+    expect(castTicks({ ...lula, specialCooldown: SPECIAL_COOLDOWN - 9 * CAST_TICKS_PER_FRAME }, undefined)).toBeUndefined();
+    expect(castTicks({ charge: 0, rasengan: 0, character: "pele", specialCooldown: SPECIAL_COOLDOWN }, undefined)).toBeUndefined();
+  });
+
   const still = { charge: 0, rasengan: 0 };
   it("runs goku's cast from the start of his charge: the beam leaves on the thrust frame", () => {
     expect(castTicks({ charge: KAME_CHARGE, rasengan: 0 }, undefined)).toBe(0);
@@ -616,7 +806,7 @@ describe("castTicks", () => {
   });
 
   it("other casts start with their blast", () => {
-    expect(castTicks(still, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
+    expect(castTicks(still, { ttl: BLAST_TICKS - 3, kind: "lightning" })).toBe(3);
     expect(castTicks(still, undefined)).toBeUndefined();
   });
 });
@@ -645,6 +835,16 @@ describe("kameSegments", () => {
   });
 });
 
+describe("outsideBubbles", () => {
+  it("drops the fire inside the green lantern's bubble: it stops at it and goes on past it", () => {
+    const at = (x: number, y: number) => ({ px: x * TILE + TILE / 2, py: y * TILE + TILE / 2 });
+    const flames = [{ x: 3, y: 3 }, { x: 4, y: 3 }, { x: 5, y: 3 }];
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 30, alive: true }])).toEqual([flames[0], flames[2]]);
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 0, alive: true }])).toEqual(flames);
+    expect(outsideBubbles(flames, [{ ...at(4, 3), bubble: 30, alive: false }])).toEqual(flames);
+  });
+});
+
 describe("outsideBeams", () => {
   it("drops the kamehameha's own fire along its beam, which is drawn instead", () => {
     const beam = { ownerId: "g", x: 2, y: 3, dir: "right", length: 2, ttl: 30, kind: "kamehameha" } as const;
@@ -655,7 +855,7 @@ describe("outsideBeams", () => {
       { x: 3, y: 3, ttl: 5, ownerId: "other" },
     ];
     expect(outsideBeams(flames, [beam])).toEqual([flames[2], flames[3]]);
-    expect(outsideBeams(flames, [{ ...beam, kind: "ice" }])).toEqual(flames);
+    expect(outsideBeams(flames, [{ ...beam, kind: "lightning" }])).toEqual(flames);
   });
 });
 
@@ -664,7 +864,7 @@ describe("goku sheet", () => {
 
   it("every row fits inside the image", () => {
     const strips = [goku.idle, goku.walk, goku.cast!, goku.carryIdle!, goku.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, goku.stun!, goku.death!, goku.lobby!]) {
+    for (const s of [...strips, goku.stun!, goku.death!]) {
       expect((s.row + 1) * goku.frameH).toBeLessThanOrEqual(goku.height);
       expect(s.frames * goku.frameW).toBeLessThanOrEqual(goku.width);
     }
@@ -685,7 +885,7 @@ describe("thor sheet", () => {
 
   it("every row fits inside the image", () => {
     const strips = [thor.idle, thor.walk, thor.cast!, thor.carryIdle!, thor.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, thor.stun!, thor.death!, thor.lobby!]) {
+    for (const s of [...strips, thor.stun!, thor.death!]) {
       expect((s.row + 1) * thor.frameH).toBeLessThanOrEqual(thor.height);
       expect(s.frames * thor.frameW).toBeLessThanOrEqual(thor.width);
     }
@@ -733,9 +933,9 @@ describe("captain sheet and shield", () => {
     }
   });
 
-  it("stands about as tall as the ninja on screen", () => {
-    const tall = (s: typeof captain | typeof SHEETS.ninja) => s.bodyH * s.scale;
-    expect(Math.abs(tall(captain) - tall(SHEETS.ninja))).toBeLessThan(2);
+  it("stands about as tall as pikachu on screen", () => {
+    const tall = (s: typeof captain | typeof SHEETS.pikachu) => s.bodyH * s.scale;
+    expect(Math.abs(tall(captain) - tall(SHEETS.pikachu))).toBeLessThan(2);
   });
 
   it("raises the shield with the brace row and holds its last frame while the shield is up", () => {
@@ -755,5 +955,140 @@ describe("captain sheet and shield", () => {
   it("the spiral sheet holds a row behind him and a row in front", () => {
     expect(SPIRAL.frames * SPIRAL.frameW).toBeLessThanOrEqual(SPIRAL.width);
     expect(Math.max(SPIRAL.rows.behind, SPIRAL.rows.front) + 1).toBe(SPIRAL.height / SPIRAL.frameH);
+  });
+});
+
+describe("pikachu sheet", () => {
+  const pikachu = SHEETS.pikachu;
+
+  it("every row fits inside the image", () => {
+    const strips = [pikachu.idle, pikachu.walk, pikachu.cast!, pikachu.carryIdle!, pikachu.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, pikachu.stun!, pikachu.death!, pikachu.lobby!]) {
+      expect((s.row + 1) * pikachu.frameH).toBeLessThanOrEqual(pikachu.height);
+      expect(s.frames * pikachu.frameW).toBeLessThanOrEqual(pikachu.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    expect(Math.abs(pikachu.bodyH * pikachu.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  });
+
+  it("only his blue scarf takes the player's color", () => {
+    expect(pikachu.hues).toEqual([205, 240]);
+    expect(pikachu.hueBase).toEqual([34, 82, 149]);
+  });
+});
+
+describe("spider sheet", () => {
+  const spider = SHEETS.spider;
+
+  it("every row fits inside the image", () => {
+    const strips = [spider.idle, spider.walk, spider.cast!, spider.carryIdle!, spider.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, spider.stun!, spider.death!]) {
+      expect((s.row + 1) * spider.frameH).toBeLessThanOrEqual(spider.height);
+      expect(s.frames * spider.frameW).toBeLessThanOrEqual(spider.width);
+    }
+  });
+
+  it("stands about as tall as the captain on screen", () => {
+    expect(Math.abs(spider.bodyH * spider.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  });
+
+  it("the web leaves from his thrust hand, out in front of him, on whichever side he faces", () => {
+    const [rx] = boltOrigin(spider, "right", 100, 50);
+    const [lx] = boltOrigin(spider, "left", 100, 50);
+    expect(rx).toBeGreaterThan(104);
+    expect(lx).toBeLessThan(96);
+  });
+});
+
+describe("lobby showpieces", () => {
+  const size = (url: string) => {
+    const png = readFileSync(new URL(`../public/${url}`, import.meta.url));
+    return [png.readUInt32BE(16), png.readUInt32BE(20)];
+  };
+  /**
+   * A 16-frame lobby (scripts/build-<name>-lobby.py) in its own one-row image (build-lobby-image.py) that matches its
+   * PNG, the arena's sheet left at its nine columns.
+   */
+  const showpiece = (name: "goku" | "naruto" | "spider" | "thor") => {
+    const sheet: SheetLayout = SHEETS[name];
+    const image = sheet.lobby!.image!;
+    expect(sheet.lobby).toMatchObject({ row: 0, frames: 16 });
+    expect(size(image.url)).toEqual([image.width, image.height]);
+    expect([image.frameW * 16, image.frameH]).toEqual([image.width, image.height]);
+    expect(size(sheet.url)).toEqual([sheet.width, sheet.height]);
+    expect([sheet.frameW * 9, sheet.frameH * 18]).toEqual([sheet.width, sheet.height]);
+  };
+
+  it("goku powers up into a Super Saiyan", () => showpiece("goku"));
+  it("naruto calls up his shadow clones", () => showpiece("naruto"));
+  it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
+  it("thor calls lightning down onto his hammer and slams it into the ground", () => showpiece("thor"));
+});
+
+describe("sneakAlpha", () => {
+  it("shows a player who is not sneaking", () => {
+    expect(sneakAlpha({ id: "p1", sneak: 0 }, "p2")).toBe(1);
+  });
+
+  it("hides a sneaking panther from his rivals", () => {
+    expect(sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, "p2")).toBe(0);
+  });
+
+  it("shows him faint to himself and to a screen that only watches", () => {
+    const faint = sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, "p1");
+    expect(faint).toBeGreaterThan(0);
+    expect(faint).toBeLessThan(0.6);
+    expect(sneakAlpha({ id: "p1", sneak: SNEAK_TICKS - 30 }, null)).toBe(faint);
+  });
+
+  it("fades back in for everyone over his last half second", () => {
+    const rival = [30, 20, 10, 1].map((left) => sneakAlpha({ id: "p1", sneak: left }, "p2"));
+    expect(rival[0]).toBe(0);
+    for (let i = 1; i < rival.length; i++) expect(rival[i]).toBeGreaterThan(rival[i - 1]!);
+    expect(rival[3]).toBeLessThan(1);
+  });
+});
+
+describe("optimus's truck", () => {
+  it("his cast runs while he turns into the truck, and on from TRUCK_SHIFT as he turns back where it stopped", async () => {
+    const { castTicks } = await import("../src/render/sprites");
+    const { TRUCK_SHIFT, TRUCK_TICKS } = await import("@bombtop/shared");
+    expect(castTicks({ charge: 0, rasengan: 0, truck: TRUCK_SHIFT + TRUCK_TICKS }, undefined)).toBe(0);
+    expect(castTicks({ charge: 0, rasengan: 0, truck: TRUCK_TICKS + 1 }, undefined)).toBe(TRUCK_SHIFT - 1);
+    expect(castTicks({ charge: 0, rasengan: 0, truck: 0 }, { kind: "truck", ttl: BLAST_TICKS })).toBe(TRUCK_SHIFT);
+  });
+
+  it("is drawn only while he drives: from the side (flipped going left), its front coming down, its back going up", async () => {
+    const { truckLook } = await import("../src/render/sprites");
+    const { TRUCK_TICKS } = await import("@bombtop/shared");
+    expect(truckLook({ truck: 0, facing: "right" }, 0)).toBeNull();
+    expect(truckLook({ truck: TRUCK_TICKS + 1, facing: "right" }, 0)).toBeNull(); // still turning into it
+    expect(truckLook({ truck: TRUCK_TICKS, facing: "right" }, 0)).toMatchObject({ view: "side", flip: false });
+    expect(truckLook({ truck: 5, facing: "left" }, 0)).toMatchObject({ view: "side", flip: true });
+    expect(truckLook({ truck: 5, facing: "down" }, 0)).toMatchObject({ view: "down", flip: false });
+    expect(truckLook({ truck: 5, facing: "up" }, 0)).toMatchObject({ view: "up", flip: false });
+    const { TRUCK } = await import("../src/render/sprites");
+    const frames = new Set(Array.from({ length: 24 }, (_, t) => truckLook({ truck: 5, facing: "right" }, t)!.frame));
+    expect(frames).toEqual(new Set(Array.from({ length: TRUCK.frames }, (_, f) => f))); // its wheels turning, its cab rocking
+  });
+});
+
+describe("pelé's ball", () => {
+  it("flies from his feet to where it stopped in a few ticks, spinning and bouncing, then drops back off it and fades", async () => {
+    const { ballLook } = await import("../src/render/sprites");
+    const start = ballLook(0, 0, 112, 0, 7, 0)!;
+    expect(start.x).toBeCloseTo(0);
+    const mid = ballLook(0, 0, 112, 0, 7, 5)!;
+    expect(mid.x).toBeGreaterThan(0);
+    expect(mid.x).toBeLessThan(112);
+    const arrived = ballLook(0, 0, 112, 0, 7, 12)!;
+    expect(arrived.x).toBeLessThanOrEqual(112);
+    expect(arrived.x).toBeGreaterThan(100);
+    expect(ballLook(0, 0, 112, 0, 7, 3)!.spin).not.toBe(ballLook(0, 0, 112, 0, 7, 4)!.spin);
+    expect(ballLook(0, 0, 112, 0, 7, 30)!.alpha).toBeLessThan(1);
+    expect(ballLook(0, 0, 112, 0, 7, BLAST_TICKS)).toBeNull();
+    expect(ballLook(0, 0, 112, 0, 7, 4)!.lift).toBeGreaterThan(0); // in the air on its way
   });
 });

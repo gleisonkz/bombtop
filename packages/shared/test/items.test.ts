@@ -54,26 +54,26 @@ describe("item generation", () => {
     expect(a.items).not.toEqual(c.items);
   });
 
-  it("produces every power-up kind in play", () => {
+  it("produces every supported power-up kind on varied stages", () => {
     const kinds = new Set<ItemKind>();
     for (let seed = 1; seed <= 200; seed++) {
-      for (const i of createMatch({ seed, playerIds: ids }).items) kinds.add(i.kind);
+      for (const i of createMatch({ seed, playerIds: ids, stage: "conveyor" }).items) kinds.add(i.kind);
     }
-    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Egg)));
+    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Picanha)));
   });
 
-  it("hides enough bombs and fire for a full room: over one of each per player", () => {
+  it("hides eight bombs and five fire upgrades for a full classic room", () => {
     const five = ["a", "b", "c", "d", "e"];
     const count = { bomb: 0, fire: 0 };
     const N = 200;
     for (let seed = 1; seed <= N; seed++) {
-      for (const i of createMatch({ seed, playerIds: five }).items) {
+      for (const i of createMatch({ seed, playerIds: five, blockDensity: 1 }).items) {
         if (i.kind === ItemKind.Bomb) count.bomb++;
         if (i.kind === ItemKind.Fire) count.fire++;
       }
     }
-    expect(count.bomb / N / five.length).toBeGreaterThan(1.2);
-    expect(count.fire / N / five.length).toBeGreaterThan(1.2);
+    expect(count.bomb).toBe(N * 8);
+    expect(count.fire).toBe(N * 5);
   });
 
   it("has no items in an arena without blocks", () => {
@@ -89,7 +89,7 @@ describe("revealing items", () => {
     placePlayerAt(s, "p1", 5, 5);
     placeBomb(s, "p1");
     placePlayerAt(s, "p1", 1, 1);
-    run(s, FUSE_TICKS);
+    run(s, FUSE_TICKS + FLAME_TICKS); // the block burns away first
     expect(getTile(s, 6, 5)).toBe(Tile.Empty);
     expect(s.items).toEqual([{ x: 6, y: 5, kind: ItemKind.Fire }]);
   });

@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   BASE_SPEED,
   createMatch,
-  CURSE_TICKS,
   CURSES,
   FUSE_TICKS,
   ItemKind,
@@ -18,7 +17,7 @@ import { center, emptyMatch, hold, player, press, run } from "./helpers";
 function cursed(kind: CurseKind) {
   const s = emptyMatch();
   placePlayerAt(s, "p1", 5, 5);
-  player(s).curse = { kind, ticks: CURSE_TICKS };
+  player(s).curse = { kind };
   return s;
 }
 
@@ -29,7 +28,6 @@ describe("skull", () => {
     step(s);
     const curse = player(s).curse!;
     expect(CURSES).toContain(curse.kind);
-    expect(curse.ticks).toBeGreaterThan(CURSE_TICKS - 2);
   });
 
   it("the random curse is deterministic per match seed", () => {
@@ -44,10 +42,10 @@ describe("skull", () => {
     expect(kinds.size).toBeGreaterThan(3);
   });
 
-  it("curses wear off", () => {
+  it("never wears off by itself: only passing it on or another item ends it", () => {
     const s = cursed("slow");
-    run(s, CURSE_TICKS);
-    expect(player(s).curse).toBeNull();
+    run(s, 60 * 60);
+    expect(player(s).curse).toEqual({ kind: "slow" });
   });
 
   it("slow forces a crawl", () => {
@@ -92,12 +90,43 @@ describe("skull", () => {
     expect(s.bombs[0]!.range).toBe(1);
   });
 
-  it("spreads to players who touch the cursed one", () => {
+  it("passes to a player who touches the cursed one, who is rid of it", () => {
     const s = cursed("reverse");
     placePlayerAt(s, "p2", 5, 5);
     step(s);
+    expect(player(s, "p2").curse).toEqual({ kind: "reverse", from: "p1" });
+    expect(player(s).curse).toBeNull();
+  });
+
+  it("does not bounce straight back while they still touch, but can once they have parted", () => {
+    const s = cursed("reverse");
+    placePlayerAt(s, "p2", 5, 5);
+    run(s, 20);
     expect(player(s, "p2").curse?.kind).toBe("reverse");
+    expect(player(s).curse).toBeNull();
+    placePlayerAt(s, "p2", 7, 5);
+    step(s);
+    placePlayerAt(s, "p2", 5, 5);
+    step(s);
     expect(player(s).curse?.kind).toBe("reverse");
+    expect(player(s, "p2").curse).toBeNull();
+  });
+
+  it("two cursed players touching keep their own curses", () => {
+    const s = cursed("reverse");
+    placePlayerAt(s, "p2", 5, 5);
+    player(s, "p2").curse = { kind: "slow" };
+    step(s);
+    expect(player(s).curse?.kind).toBe("reverse");
+    expect(player(s, "p2").curse?.kind).toBe("slow");
+  });
+
+  it("picking up any other item cures it", () => {
+    const s = cursed("weakFire");
+    s.items.push({ x: 6, y: 5, kind: ItemKind.Bomb });
+    hold(s, "right", 30);
+    expect(player(s).bombCapacity).toBe(2);
+    expect(player(s).curse).toBeNull();
   });
 
   it("dead players neither spread nor catch curses", () => {

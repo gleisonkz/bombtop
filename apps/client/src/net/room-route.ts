@@ -1,4 +1,4 @@
-import { codeFromUrl, inviteUrl, withoutInvite } from "./invite";
+import { codeFromUrl, inviteUrl, tvCodeFromUrl, tvUrl, withoutInvite } from "./invite";
 
 /** The page address and its history (window.location + history in the browser). */
 export interface Address {
@@ -18,19 +18,24 @@ export class RoomRoute {
 
   constructor(private readonly address: Address) {}
 
-  entered(code: string): void {
+  /** `tv`: watching it, at /tv/CODE (a reload watches again). */
+  entered(code: string, tv = false): void {
     this.code = code;
-    if (codeFromUrl(this.address.href) !== code) this.address.push(inviteUrl(this.address.href, code));
+    if (this.inAddress() !== code) this.address.push((tv ? tvUrl : inviteUrl)(this.address.href, code));
   }
 
   left(): void {
     this.code = null;
-    if (codeFromUrl(this.address.href)) this.address.replace(withoutInvite(this.address.href));
+    if (this.inAddress()) this.address.replace(withoutInvite(this.address.href));
   }
 
   /** In a room, but the address moved off it (back button). */
   wentBack(): boolean {
-    return this.code !== null && codeFromUrl(this.address.href) !== this.code;
+    return this.code !== null && this.inAddress() !== this.code;
+  }
+
+  private inAddress(): string | null {
+    return codeFromUrl(this.address.href) ?? tvCodeFromUrl(this.address.href);
   }
 }
 

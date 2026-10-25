@@ -54,7 +54,8 @@ export class GamepadInput {
   }
 }
 
-function direction(pad: PadState): Direction {
+/** The d-pad, or the left stick past a dead zone (its dominant axis). */
+export function direction(pad: PadState): Direction {
   const dpad = DPAD.find(([i]) => pad.buttons[i]?.pressed);
   if (dpad) return dpad[1];
   const [x = 0, y = 0] = pad.axes;

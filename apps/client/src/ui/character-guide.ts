@@ -2,18 +2,18 @@ import { CHARACTERS, type CharacterId } from "@bombtop/shared";
 import type { SoundName } from "../audio/sound";
 import { voiceLine } from "../audio/voices";
 import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
-import { button, el } from "./dom";
+import { backButton, button, el } from "./dom";
 import { CHARACTER_SHEETS, characterArt, characterMoves } from "./sheet-art";
 
-const [white, , , blue, green] = PLAYER_COLORS;
+const [white, , red, blue, green] = PLAYER_COLORS;
 
 interface Info {
   name: string;
   /** A few words on who they are. */
   title: string;
   story: string;
-  /** Their color in the guide, the same as in the title lineup. */
-  color: string;
+  /** Their color in the guide, the same as in the title lineup (null: the character's own colors). */
+  color: string | null;
   special: { name: string; recharge: string; text: string; tips: string[] };
 }
 
@@ -36,24 +36,6 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
-  ninja: {
-    name: "Ninja",
-    title: "O guerreiro do gelo",
-    color: blue,
-    story:
-      "Treinado num templo escondido nas montanhas geladas, aprendeu a esfriar o ar com as mãos antes de aprender a andar. Fala pouco, observa muito e ataca uma vez só. Entrou na arena para provar que paciência e sangue frio vencem qualquer explosão.",
-    special: {
-      name: "Raio de gelo",
-      recharge: "20 s",
-      text: "Lança gelo 4 casas em linha reta à frente. O primeiro jogador atingido fica congelado por 5 s: não anda nem solta bombas, mas o fogo ainda pega.",
-      tips: [
-        "Congele e solte uma bomba do lado: congelado não foge.",
-        "Fique na mesma linha do rival, a até 4 casas, antes de apertar.",
-        "Cuidado com o Capitão: o escudo devolve o gelo para você.",
-        "Use para segurar quem está fugindo pela linha de fogo de uma bomba.",
-      ],
-    },
-  },
   captain: {
     name: "Capitão América",
     title: "O sentinela da liberdade",
@@ -63,11 +45,11 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Escudo",
       recharge: "20 s",
-      text: "Ergue o escudo por 3 s, parado e virado para a frente. Fogo e gelo que vêm na direção do escudo param nele e voltam: o fogo de uma bomba à frente vai duas vezes mais longe do outro lado, e raios voltam em quem atirou.",
+      text: "Ergue o escudo por 3 s, parado e virado para a frente. Fogo e golpes que vêm na direção do escudo param nele e voltam: o fogo de uma bomba à frente vai duas vezes mais longe do outro lado, e raios voltam em quem atirou.",
       tips: [
         "Vire para o perigo antes de apertar: com o escudo erguido você não gira.",
         "Só protege a frente: fogo pelos lados ou pelas costas ainda te pega.",
-        "Devolve o gelo do Ninja, o raio do Thor e o Kamehameha do Goku em quem mandou.",
+        "Devolve o raio do Thor, a teia do Homem-Aranha e o Kamehameha do Goku em quem mandou.",
         "O Naruto que bater no escudo fica tonto em vez de você.",
       ],
     },
@@ -99,11 +81,12 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Kamehameha",
       recharge: "30 s",
-      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. Só as paredes param.",
+      text: "Carrega o ki por um instante, parado (ficar tonto cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. O primeiro jogador atingido fica tonto por 3 s, sem andar nem agir. Paredes param o raio.",
       tips: [
         "Use para abrir corredores e limpar blocos rapidamente.",
         "Enquanto carrega você fica parado: nunca use com fogo vindo na sua direção.",
-        "O raio não machuca jogadores nem detona bombas.",
+        "Atravessa blocos: acerta quem se esconde atrás deles.",
+        "O raio não detona bombas.",
         "A recarga é a mais longa (30 s): se errar, jogue com calma até voltar.",
       ],
     },
@@ -117,7 +100,7 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Rasengan",
       recharge: "20 s",
-      text: "Avança 3 casas em linha reta com a esfera de chakra. O primeiro jogador que ele acertar é arremessado até 2 casas e fica tonto por 2 s. Um bloco no caminho quebra e para a corrida; paredes e bombas também param.",
+      text: "Avança 3 casas em linha reta com a esfera de chakra. O primeiro jogador que ele acertar é arremessado até 2 casas e fica tonto por 3 s. Um bloco no caminho quebra e para a corrida; paredes e bombas também param.",
       tips: [
         "Empurre o rival para dentro do fogo da sua bomba.",
         "É uma fuga rápida: 3 casas num piscar de olhos para sair da linha de uma explosão.",
@@ -126,10 +109,246 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
+  spider: {
+    name: "Homem-Aranha",
+    title: "O amigo da vizinhança",
+    color: red,
+    story:
+      "Um garoto do Queens que ganhou os poderes de uma aranha e aprendeu cedo que grandes poderes trazem grandes responsabilidades. Na arena ele não para de falar nem de pular, e sempre tem uma piada pronta. Quando a coisa aperta, um jato de teia resolve: quem leva fica grudado esperando a bomba chegar.",
+    special: {
+      name: "Teia",
+      recharge: "20 s",
+      text: "Dispara teia 5 casas em linha reta à frente. O primeiro jogador atingido fica enrolado num casulo por 4 s: não anda nem solta bombas, mas o fogo ainda pega.",
+      tips: [
+        "Prenda e solte uma bomba do lado: enrolado não foge.",
+        "Alcança 5 casas: acerte de longe e chegue com a bomba antes de a teia soltar.",
+        "Blocos, bombas e paredes param a teia: atire pelos corredores abertos.",
+        "O escudo do Capitão devolve a teia: quem fica grudado é você.",
+      ],
+    },
+  },
+  pikachu: {
+    name: "Pikachu",
+    title: "O ratinho elétrico",
+    color: blue,
+    story:
+      "Saiu da floresta atrás de um bom desafio e descobriu que a arena é cheia de rivais para chocar. Pequeno, rápido e teimoso, guarda eletricidade nas bochechas vermelhas e solta tudo de uma vez quando alguém chega perto demais. O lenço azul foi presente de um velho treinador, e ele não tira por nada.",
+    special: {
+      name: "Choque do Trovão",
+      recharge: "20 s",
+      text: "Solta uma descarga em volta de si: todo jogador até 2 casas de distância, para cima, para baixo e para os lados, fica tonto por 3 s. Blocos, bombas e paredes param o choque.",
+      tips: [
+        "Pega todo mundo ao redor de uma vez: ótimo quando te cercam.",
+        "Não atravessa blocos: use nos corredores abertos.",
+        "Tonto por 3 s dá tempo de soltar uma bomba do lado e sair.",
+        "O escudo do Capitão virado para você devolve o choque: quem fica tonto é você.",
+      ],
+    },
+  },
+  static: {
+    name: "Super Choque",
+    title: "O herói elétrico de Dakota",
+    color: blue,
+    story:
+      "Virgil era só um garoto de Dakota até respirar o gás do Big Bang e sair de lá cheio de eletricidade. Agora controla o magnetismo, voa numa tampa de bueiro e não perde uma piada nem no meio da briga. Descobriu que a arena é o melhor treino que existe: tem metal, faísca e rival para todo lado.",
+    special: {
+      name: "Puxão Magnético",
+      recharge: "20 s",
+      text: "Lança um campo magnético em linha reta: o primeiro jogador até 5 casas à frente é arrastado até a casa colada nele e fica tonto por 3 s. Blocos, bombas e paredes param o campo.",
+      tips: [
+        "Puxe e solte uma bomba na hora: ele chega tonto bem do seu lado.",
+        "Funciona de longe (5 casas): tire o rival de um esconderijo no fim do corredor.",
+        "Só o primeiro da linha é puxado: quem vem atrás fica onde está.",
+        "O escudo do Capitão devolve o campo: quem é arrastado até ele, tonto, é você.",
+      ],
+    },
+  },
+  flash: {
+    name: "Flash",
+    title: "O homem mais rápido do mundo",
+    color: red,
+    story:
+      "Barry Allen era um perito criminal que vivia chegando atrasado, até um raio cair no laboratório dele numa noite de tempestade. Acordou ligado à Força de Aceleração e nunca mais se atrasou para nada. Na arena ele chega antes da bomba explodir, antes do rival perceber e às vezes antes até da partida começar.",
+    special: {
+      name: "Supervelocidade",
+      recharge: "20 s",
+      text: "Dispara num piscar até 5 casas em linha reta, atravessando quem estiver no caminho: todo jogador que ele passa fica tonto por 3 s. Para antes de blocos, bombas e paredes, e nunca termina em cima de alguém.",
+      tips: [
+        "Solte uma bomba e atravesse o rival: ele fica tonto bem na linha do fogo.",
+        "É também a melhor fuga do jogo: 5 casas num piscar, para longe da explosão.",
+        "Pega todo mundo da fileira de uma vez, não só o primeiro.",
+        "O escudo do Capitão virado para você te para na frente dele, e quem fica tonto é você.",
+      ],
+    },
+  },  bugs: {
+    name: "Pernalonga",
+    title: "O coelho mais esperto do pedaço",
+    color: blue,
+    story:
+      "Mora numa toca que ele mesmo cavou e passa os dias mastigando cenoura e fazendo caçador de bobo. Ouviu falar de uma arena cheia de bombas, achou que era um atalho para Pismo Beach e desceu cavando. Pegou a esquerda errada em Albuquerque, saiu bem no meio da partida e resolveu ficar. Ninguém consegue encurralar quem anda por baixo da terra.",
+    special: {
+      name: "Toca",
+      recharge: "20 s",
+      text: "Cava e some no chão: sai até 5 casas à frente, na casa livre mais longe, passando por baixo de paredes, blocos, bombas e jogadores. Nunca sai em cima de alguém, de uma bomba ou do fogo, e se não houver saída ele fica onde está e não gasta o especial.",
+      tips: [
+        "Encurralado? Solte a bomba e cave: ela explode onde você estava.",
+        "Atravessa uma fileira de blocos inteira sem quebrar nenhum.",
+        "Olhe para onde vai sair: ele escolhe a casa livre mais longe, não a mais segura.",
+        "O escudo do Capitão não para quem está debaixo da terra.",
+      ],
+    },
+  },  lantern: {
+    name: "Lanterna Verde",
+    title: "O fuzileiro com o anel mais poderoso do universo",
+    color: green,
+    story:
+      "John Stewart era arquiteto e fuzileiro naval quando os Guardiões de Oa o escolheram para usar o anel: alguém sem medo e com uma vontade de ferro. Tudo o que ele imagina vira energia verde, e como bom arquiteto ele constrói com cuidado. Na arena, quando a bomba explode bem embaixo dele, ele só fecha a bolha e espera o fogo passar.",
+    special: {
+      name: "Bolha protetora",
+      recharge: "25 s",
+      text: "Ergue em volta de si uma bolha de energia verde por 3 s: fogo vindo de qualquer lado não entra, nem o da bomba embaixo dele. Dentro dela ele anda na metade da velocidade. A bolha não segura raio, teia nem os outros especiais.",
+      tips: [
+        "Plante a bomba no meio dos rivais e fique: a bolha te segura no fogo.",
+        "Ative um instante antes da explosão: 3 s passam rápido.",
+        "No último segundo ela pisca: saia do fogo antes de ela estourar.",
+        "Dentro dela você fica lento, então não conte com fugir correndo.",
+      ],
+    },
+  },
+  donatello: {
+    name: "Donatello",
+    title: "O gênio do casco roxo",
+    color: null,
+    story:
+      "O cérebro das Tartarugas Ninja: mora no esgoto de Nova York, conserta tudo o que quebra no esconderijo e inventa o que ainda não existe. Enquanto os irmãos usam espadas e nunchakus, ele confia no bo, um bastão comprido que mantém qualquer um à distância. Na arena, fez as contas: bomba que chega perto dele volta para quem mandou.",
+    special: {
+      name: "Giro do bastão",
+      recharge: "20 s",
+      text: "Gira o bo em volta de si: atordoa por 3 s quem estiver colado nele (nas 4 casas vizinhas ou na mesma casa) e rebate cada bomba vizinha 3 casas para longe, na direção em que foi batida, como um soco. O escudo do Capitão virado para ele segura aquele lado e quem fica tonto é ele.",
+      tips: [
+        "Bomba encostada em você? Gire e mande ela de volta para o rival.",
+        "Rival colado: gire, ele fica tonto, e solte a bomba do lado dele.",
+        "Rebate as bombas dos 4 lados de uma vez: ótimo quando te cercam.",
+        "Bomba rebatida não explode no ar: ela cai e aí o pavio volta a correr.",
+      ],
+    },
+  },
+  penelope: {
+    name: "Penélope Charmosa",
+    title: "A pilota mais charmosa da corrida",
+    color: null,
+    story:
+      "A única garota da Corrida Maluca, ao volante do seu carrinho cor-de-rosa. Vive sendo raptada pelo Tião Gavião, e enquanto a Quadrilha de Morte corre para salvá-la, ela quase sempre escapa sozinha, sem borrar a maquiagem. Na arena, troca o volante pelas bombas e descobriu que um beijinho no ar desarma qualquer rival.",
+    special: {
+      name: "Beijo charmoso",
+      recharge: "20 s",
+      text: "Manda um beijo no ar: um coração voa até 5 casas para a frente e o primeiro jogador que ele acerta fica encantado, com corações rodando na cabeça, sem se mexer por 3 s. Paredes, blocos e bombas param o coração. O escudo do Capitão devolve o beijo para ela.",
+      tips: [
+        "Encantou? Corra e solte uma bomba do lado dele: são 3 s parado.",
+        "Mire pelos corredores: o coração não passa por blocos.",
+        "Cuidado com o Capitão: com o escudo erguido, quem fica encantada é você.",
+        "Beije quem vem correndo atrás de você e ganhe tempo para fugir.",
+      ],
+    },
+  },
+  panther: {
+    name: "Pantera Cor-de-Rosa",
+    title: "O felino mais elegante (e calado) dos desenhos",
+    color: "#3d7bf2",
+    story:
+      "Nasceu na abertura de um filme de detetive sobre um diamante rosa e escapou para os desenhos: um felino cor-de-rosa que quase nunca fala, resolve tudo com calma e anda na ponta dos pés ao som do próprio tema. Na arena, ninguém o vê chegar: quando você nota, a bomba já está do seu lado. O cachecol azul fica na cor do jogador.",
+    special: {
+      name: "Na ponta dos pés",
+      recharge: "20 s",
+      text: "Sai de fininho e some da tela dos rivais por 4 s (só um sopro de fumaça rosa onde ele estava). Anda na velocidade de sempre e pode soltar bombas; na sua tela ele aparece transparente. Os bots perdem ele de vista. O fogo continua pegando ele.",
+      tips: [
+        "Some, chegue perto e solte a bomba ao lado do rival antes de ele te ver.",
+        "Use para fugir de quem te persegue: ele perde você de vista.",
+        "Ele reaparece aos poucos no último meio segundo: já esteja longe.",
+        "Invisível não é imortal: cuidado com o fogo das próprias bombas.",
+      ],
+    },
+  },
+  harry: {
+    name: "Harry Potter",
+    title: "O menino que sobreviveu",
+    color: "#e84a4a",
+    story:
+      "Bruxo da Grifinória, apanhador do time de quadribol e dono da cicatriz em forma de raio mais famosa de Hogwarts. Aprendeu com o professor Lupin um feitiço que pouquíssimos alunos conseguem: o Patrono, um cervo prateado de pura luz. Na arena, troca os dementadores pelos rivais. A capa vermelha fica na cor do jogador.",
+    special: {
+      name: "Expecto Patronum",
+      recharge: "25 s",
+      text: "Conjura o Patrono: um cervo prateado sai galopando para a frente até bater numa parede ou bloco, pulando por cima das bombas, e deixa tonto por 3 s cada jogador que ele alcança no caminho, não só o primeiro. O escudo do Capitão virado para ele segura o cervo.",
+      tips: [
+        "Rivais enfileirados no corredor? Um cervo só pega todos.",
+        "O cervo atravessa o mapa: mire num corredor comprido e pegue quem estiver lá no fundo.",
+        "O cervo pula as bombas: mire por cima delas em quem está atrás.",
+        "Atordoou? Corra e solte uma bomba do lado: são 3 s parado.",
+        "O Capitão com o escudo erguido segura o cervo: espere ele baixar.",
+      ],
+    },
+  },
+  optimus: {
+    name: "Optimus Prime",
+    title: "O líder dos Autobots",
+    color: "#2456c8",
+    story:
+      "Líder dos Autobots, robôs vindos do planeta Cybertron que se disfarçam de veículos. Por baixo do capacete azul e da máscara prateada bate a centelha de um herói que defende quem não pode se defender, e ele leva a Matriz da Liderança no peito. Quando a coisa aperta, vira um caminhão vermelho e passa por cima. O azul da armadura fica na cor do jogador.",
+    special: {
+      name: "Autobots, rolar!",
+      recharge: "25 s",
+      text: "Se transforma no caminhão onde está e acelera reto por até 6 casas, sem obedecer o controle. Quem estiver na frente vai sendo empurrado pelo para-choque e fica tonto por 3 s; se não tiver para onde empurrar (parede, bloco, bomba ou outro jogador atrás), o caminhão para ali. Uma bomba no caminho sai deslizando, um bloco é esmagado e queima, e o escudo do Capitão virado para ele para o caminhão e deixa o Optimus tonto.",
+      tips: [
+        "Encurrale: empurre o rival até a parede e solte uma bomba do lado enquanto ele está tonto.",
+        "Leva o rival junto: pode arrastar alguém para dentro do fogo de uma bomba prestes a explodir.",
+        "Bomba na frente? O caminhão chuta ela para longe: use para mandar bombas no rival.",
+        "Ele se transforma parado por um instante: não use com fogo chegando.",
+        "Abre caminho: o caminhão esmaga um bloco na frente.",
+      ],
+    },
+  },
+  pele: {
+    name: "Pelé",
+    title: "O Rei do Futebol",
+    color: "#f2c61f",
+    story:
+      "Edson Arantes do Nascimento, o Rei. Fez mais de mil gols, foi tricampeão do mundo com a seleção e transformou a camisa amarela e a 10 em lenda. Na arena ele troca a bomba pelo pé: domina, levanta a cabeça e manda a bola onde quer. O short azul fica na cor do jogador.",
+    special: {
+      name: "Chute de craque",
+      recharge: "20 s",
+      text: "Chuta uma bola reta para a frente, até 7 casas. O primeiro jogador que ela acerta cai tonto por 3 s. Se uma bomba estiver no caminho, a bola chuta a bomba e ela sai deslizando para longe. Paredes e blocos seguram a bola, e o escudo do Capitão devolve o chute em quem chutou.",
+      tips: [
+        "Alcance de 7 casas: acerte o rival lá do outro lado do corredor.",
+        "Tem uma bomba entre vocês? Chute nela: a bola manda a bomba deslizando na direção do rival.",
+        "Rival tonto? Corra e solte uma bomba do lado dele: são 3 s parado.",
+        "Bloco no caminho segura a bola: limpe o corredor antes.",
+        "Cuidado com o Capitão de escudo erguido: a bola volta em você.",
+      ],
+    },
+  },
+  lula: {
+    name: "Lula",
+    title: "O Companheiro da Picanha",
+    color: red,
+    story:
+      "Luiz Inácio Lula da Silva, o metalúrgico do ABC que virou presidente do Brasil. Fala de churrasco como ninguém e vive prometendo picanha pra todo mundo. Na arena ele cumpre a promessa do jeito dele. A camiseta vermelha fica na cor do jogador.",
+    special: {
+      name: "Promessa de picanha",
+      recharge: "20 s",
+      text: "Deixa uma picanha na casa da frente. Ela parece um item como qualquer outro, mas quem pegar fica parado, decepcionado, por 3 s. O Lula passa por cima da própria picanha sem pegar, e o fogo queima ela como qualquer item. Só funciona numa casa livre: sem bloco, bomba, item ou jogador.",
+      tips: [
+        "Deixe a picanha no caminho do rival: quem vai atrás de item cai direitinho.",
+        "Rival parado? Corra e solte uma bomba do lado dele: são 3 s sem sair do lugar.",
+        "Bots adoram item: largue a picanha onde eles passam.",
+        "Use num corredor apertado: o rival que quiser passar vai ter que pegar.",
+        "Cuidado com o fogo: uma explosão queima a picanha antes de alguém pegar.",
+      ],
+    },
+  },
 };
 
-/** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it). */
-const SPECIAL_SOUND: Partial<Record<CharacterId, SoundName>> = { goku: "kamehameha", naruto: "rasengan" };
+/** What the special sounds like when the character has no line of their own (Goku and Naruto shout inside it; Static's crackles). */
+const SPECIAL_SOUND: Partial<Record<CharacterId, SoundName>> = { goku: "kamehameha", naruto: "rasengan", static: "magnet" };
 
 /** Every character with who they are, their story, their special with tips, and their voice lines. */
 export const CHARACTER_GUIDE = CHARACTERS.map((id) => {
@@ -217,7 +436,7 @@ export function characterGuide(hooks: CharacterGuideHooks): { root: HTMLElement;
   const root = el("div", { class: "card guide chars" }, [
     el("h2", { text: "Personagens" }),
     el("div", { class: "guide-body" }, [list, detail]),
-    button("Voltar", hooks.close, "primary"),
+    backButton("Voltar", hooks.close, "primary"),
   ]);
   return { root, open: () => select(current) };
 }

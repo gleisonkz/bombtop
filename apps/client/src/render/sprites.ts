@@ -1,4 +1,4 @@
-import { BLAST_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 
 type Rgb = readonly [number, number, number];
@@ -7,6 +7,20 @@ type Rgb = readonly [number, number, number];
 export interface Strip {
   row: number;
   frames: number;
+}
+
+/**
+ * A lobby showpiece in an image of its own, one row of cells (scripts/build-lobby-image.py): its effects need bigger
+ * cells than the arena's, and only the menus play it, so the sheet each menu preview paints stays small.
+ */
+export interface LobbyImage {
+  url: string;
+  width: number;
+  height: number;
+  frameW: number;
+  frameH: number;
+  anchorX: number;
+  anchorY: number;
 }
 
 /** Where each animation sits on a character sheet (all frames are one fixed cell size). */
@@ -46,8 +60,10 @@ export interface SheetLayout {
   stun?: Strip;
   /** Played once when the player dies. */
   death?: Strip;
-  /** A pose for the menus (lobby seats), facing the camera. */
-  lobby?: Strip;
+  /** A pose for the menus (lobby seats), facing the camera; in its own image when it has one (`row` is then that image's). */
+  lobby?: Strip & { image?: LobbyImage };
+  /** A pose for winning (the results' champion), when not the lobby's; facing the camera, in its own image when it has one. */
+  victory?: Strip & { image?: LobbyImage };
   /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
   cast?: Record<"down" | "up" | "side", Strip>;
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
@@ -93,32 +109,6 @@ export const SHEETS = {
     idle: { down: { row: 0, frames: 1 }, side: { row: 3, frames: 1 }, up: { row: 2, frames: 1 } },
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
-  },
-  /** The ninja, made in PixelLab ("Ice ninja HD4"; scripts/build-character-sheet.py ninja lays out its frames). */
-  ninja: {
-    url: "sprites/ninja.png",
-    width: 1620,
-    height: 2988,
-    frameW: 180,
-    frameH: 166,
-    anchorX: 90.5,
-    anchorY: 151,
-    bodyH: 142,
-    ticksPerFrame: 7,
-    idleTicksPerFrame: 15,
-    side: "right",
-    idle: strips(0, 1, 2, 4),
-    walk: strips(3, 4, 5, 6),
-    stun: { row: 6, frames: 6 },
-    death: { row: 7, frames: 7 },
-    /** The ice blast: hands gather a frost orb at one side, then both palms thrust it forward. */
-    cast: strips(8, 9, 10, 9),
-    carryIdle: strips(11, 12, 13, 4),
-    carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
-    /** His blue helmet and suit and the ice on his armor. */
-    hues: [185, 250],
-    scale: 0.156,
   },
   /** Captain America, made in PixelLab (scripts/build-character-sheet.py captain lays out its frames). */
   captain: {
@@ -172,7 +162,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Mjolnir raised, struck by lightning, crackling, then slammed down in a shockwave (scripts/build-thor-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/thor-lobby.png", width: 2880, height: 204, frameW: 180, frameH: 204, anchorX: 91, anchorY: 191 } },
     /** The navy armor (the silver helmet and chest discs sit just past it, at hue 229). */
     hues: [205, 226],
     hueBase: [47, 56, 73],
@@ -201,7 +192,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Powering up, a flash, Super Saiyan in a golden aura crackling with lightning, and back (scripts/build-goku-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/goku-lobby.png", width: 2048, height: 207, frameW: 128, frameH: 207, anchorX: 64, anchorY: 194 } },
     /** His hands at the thrust (the back view hides them: over his shoulders). */
     muzzle: { side: [46.5, -67.5], down: [2.5, -34], up: [0, -97] },
     /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */
@@ -230,7 +222,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
+    /** Shadow Clone Jutsu: a hand seal, two clones out of the smoke, poses, and back into smoke (scripts/build-naruto-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/naruto-lobby.png", width: 3296, height: 165, frameW: 206, frameH: 165, anchorX: 103.5, anchorY: 164 } },
     /** His hand in the lunge, where the Rasengan spins (the back view hides it: over his shoulders). */
     muzzle: { side: [49.5, -66.5], down: [0, -52.5], up: [0, -84.7] },
     /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
@@ -240,6 +233,392 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14,
   },
+  /** Spider-Man (fan art), made in PixelLab (scripts/build-character-sheet.py spider lays out its frames). */
+  spider: {
+    url: "sprites/spider.png",
+    width: 1170,
+    height: 2898,
+    frameW: 130,
+    frameH: 161,
+    anchorX: 64.5,
+    anchorY: 155,
+    bodyH: 152,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The web shot: hand pulled back, then thrust forward as the web leaves. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** A web shot up, yanked out of the card, swinging back in and landing crouched (scripts/build-spider-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/spider-lobby.png", width: 2880, height: 200, frameW: 180, frameH: 200, anchorX: 91, anchorY: 195 } },
+    /** His thrust hand, where the web leaves (the back view hides it: over his shoulder). */
+    muzzle: { side: [42.5, -74], down: [-8.5, -39], up: [0, -84.2] },
+    /** The blue of his suit's sides and legs (his red is the suit itself). */
+    hues: [205, 240],
+    hueBase: [5, 89, 194],
+    /** White would bleach his blue into his web lines, red would melt it into his suit: those players keep the blue. */
+    keepFor: [[245, 245, 245], [232, 74, 74]],
+    scale: 0.139,
+  },
+  /** Pikachu (fan art), made in PixelLab (scripts/build-character-sheet.py pikachu lays out its frames). */
+  pikachu: {
+    url: "sprites/pikachu.png",
+    width: 1620,
+    height: 2952,
+    frameW: 180,
+    frameH: 164,
+    anchorX: 96,
+    anchorY: 157,
+    bodyH: 146,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The thunder shock: crouched gathering the charge, then arms flung out crackling. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    lobby: { row: 17, frames: 8 },
+    /** His blue scarf (his yellow fur, red cheeks and black ear tips stay his own). */
+    hues: [205, 240],
+    hueBase: [34, 82, 149],
+    scale: 0.145,
+  },
+  /** Static (fan art), made in PixelLab (scripts/build-character-sheet.py static lays out its frames). */
+  static: {
+    url: "sprites/static.png",
+    width: 2352,
+    height: 3348,
+    frameW: 168,
+    frameH: 186,
+    anchorX: 82,
+    anchorY: 182,
+    bodyH: 155,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The magnet pull: hands gathered at his chest, pushed out as the field leaves, then yanked back. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Sparks between his hands, a jump onto his flying manhole cover and a surf on it (scripts/build-static-lobby.py). */
+    lobby: { row: 17, frames: 14 },
+    /** His pushed-out hands, where the field leaves (the back view hides them: over his shoulders). */
+    muzzle: { side: [59, -75], down: [2, -58], up: [0, -86.35] },
+    /** His long blue coat. */
+    hues: [200, 222],
+    hueBase: [24, 61, 94],
+    /** White would bleach his coat (and grey his hair): that player keeps the blue. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.139,
+  },
+  /** The Flash (fan art), made in PixelLab (scripts/build-character-sheet.py flash lays out its frames). */
+  flash: {
+    url: "sprites/flash.png",
+    width: 2880,
+    height: 3024,
+    frameW: 180,
+    frameH: 168,
+    anchorX: 91,
+    anchorY: 161,
+    bodyH: 157,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** The skid stop after his dash (the dash itself is instant). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Crackling, gone in a flash, streaking across and back, a skid and a thumbs up (scripts/build-flash-lobby.py). */
+    lobby: { row: 17, frames: 16 },
+    /** His red suit (the range wraps through 360; his yellow boots, belt and ear wings stay his own). */
+    hues: [335, 12],
+    hueBase: [210, 56, 53],
+    /** White would bleach his whole suit (a ghost of the flash): that player keeps the red. */
+    keepFor: [[245, 245, 245]],
+    scale: 0.137,
+  },  /** Bugs Bunny (fan art), made in PixelLab (scripts/build-character-sheet.py bugs lays out its frames). */
+  bugs: {
+    url: "sprites/bugs.png",
+    width: 1098,
+    height: 2952,
+    frameW: 122,
+    frameH: 164,
+    anchorX: 64.5,
+    anchorY: 161,
+    bodyH: 155,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Popping out of his tunnel (the dig itself is instant): squashed low, arms flung up, a hand over his brow. */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Munching a carrot, then a wave. */
+    lobby: { row: 17, frames: 8 },
+    /** His blue scarf (his gray fur and white gloves stay his own). */
+    hues: [195, 225],
+    hueBase: [63, 122, 162],
+    /** His tall ears take up a third of his height. */
+    scale: 0.145,
+  },
+  /** The green lantern, John Stewart (fan art), made in PixelLab (scripts/build-character-sheet.py lantern lays out its frames). */
+  lantern: {
+    url: "sprites/lantern.png",
+    width: 1170,
+    height: 2898,
+    frameW: 130,
+    frameH: 161,
+    anchorX: 67.5,
+    anchorY: 157,
+    bodyH: 150,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Willing his bubble: the ring fist drawn to his chest, then thrust overhead (the bubble is its own art, BUBBLE). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Ring fist to the sky, then fists on his hips. */
+    lobby: { row: 17, frames: 8 },
+    /** His green suit and boots (his emerald irises sit past this range and keep their green). */
+    hues: [100, 140],
+    hueBase: [7, 180, 20],
+    scale: 0.145,
+  },
+  /** Donatello (fan art), made in PixelLab (scripts/build-character-sheet.py donatello lays out its frames). */
+  donatello: {
+    url: "sprites/donatello.png",
+    width: 1992,
+    height: 2772,
+    frameW: 166,
+    frameH: 154,
+    anchorX: 87.5,
+    anchorY: 152,
+    bodyH: 130,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 6 },
+    /** Both hands on his bo, swept round him (the whirl itself is drawn by the renderer, spinLook). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Twirls his bo overhead, plants it and grins. */
+    lobby: { row: 17, frames: 12 },
+    /** His purple bandana and pads (his green skin, shell and staff stay his own). */
+    hues: [250, 300],
+    hueBase: [143, 33, 228],
+    scale: 0.165,
+  },
+  /** Penelope Pitstop (fan art), made in PixelLab (scripts/build-character-sheet.py penelope lays out its frames). */
+  penelope: {
+    url: "sprites/penelope.png",
+    width: 1656,
+    height: 2686,
+    frameW: 184,
+    frameH: 158,
+    anchorX: 87,
+    anchorY: 156,
+    bodyH: 148,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 5 },
+    /** Blowing a kiss: a hand to her lips, then thrown out (the heart itself is drawn by the renderer, kissHearts). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** A touch-up in her compact mirror, powder, a fluff of her ponytail and a kiss blown at us (scripts/build-penelope-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/penelope-lobby.png", width: 2208, height: 154, frameW: 138, frameH: 154, anchorX: 64, anchorY: 154 } },
+    /** A jump for joy, then a checkered race flag waved over her head, hearts floating up (scripts/build-penelope-victory.py). */
+    victory: { row: 0, frames: 16, image: { url: "sprites/penelope-victory.png", width: 3200, height: 164, frameW: 200, frameH: 164, anchorX: 95, anchorY: 164 } },
+    /** Her lips (the kiss leaves from them; the back view: over her head). */
+    muzzle: { side: [30, -80], down: [0, -76], up: [0, -100] },
+    /** Her pink helmet and suit (her blonde hair, white goggles, gloves and boots stay her own). */
+    hues: [322, 348],
+    hueBase: [235, 77, 133],
+    scale: 0.145,
+  },
+
+  /** The pink panther (fan art), "Pink Panther HD 4" in PixelLab (scripts/build-character-sheet.py panther). */
+  panther: {
+    url: "sprites/panther.png",
+    width: 1092,
+    height: 2601,
+    frameW: 156,
+    frameH: 153,
+    anchorX: 78.5,
+    anchorY: 149,
+    bodyH: 141,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His tiptoe, paws before his chest: walked through while he sneaks out of sight (playerFrame's `sneaking`). */
+    cast: strips(8, 9, 10, 6),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Tiptoeing in from the left, then a finger to his lips and a sly look (scripts/build-panther-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/panther-lobby.png", width: 4288, height: 150, frameW: 268, frameH: 150, anchorX: 134, anchorY: 149 } },
+    /** His blue scarf (his pink fur, yellow eyes and nose stay his own). */
+    hues: [182, 222],
+    hueBase: [18, 178, 214],
+    scale: 0.152,
+  },
+
+  /** Harry Potter (fan art), "Harry Potter HD v3b" in PixelLab (scripts/build-character-sheet.py harry). */
+  harry: {
+    url: "sprites/harry.png",
+    width: 1368,
+    height: 2856,
+    frameW: 152,
+    frameH: 168,
+    anchorX: 78.5,
+    anchorY: 164,
+    bodyH: 157,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Expecto patronum: the wand swung up, then thrust out (the stag is its own art, PATRONUS). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** His wand lit and swirled overhead, thrust out, and his stag galloping once round him (scripts/build-harry-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/harry-lobby.png", width: 4320, height: 171, frameW: 270, frameH: 171, anchorX: 135, anchorY: 157 } },
+    /** A jump for joy, the golden snitch snatched out of the air and held up in his fist (scripts/build-harry-lobby.py). */
+    victory: { row: 0, frames: 16, image: { url: "sprites/harry-victory.png", width: 4192, height: 200, frameW: 262, frameH: 200, anchorX: 131, anchorY: 200 } },
+    /** The red lining of his robe (his blush and scar, a redder hue, stay his own). */
+    hues: [1, 6],
+    hueBase: [161, 45, 38],
+    keepFor: [[232, 74, 74]],
+    scale: 0.137,
+  },
+  optimus: {
+    url: "sprites/optimus.png",
+    width: 1566,
+    height: 3094,
+    frameW: 174,
+    frameH: 182,
+    anchorX: 90.5,
+    anchorY: 169,
+    bodyH: 164,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** Turning into his truck: down into a crouch, then (where it stopped) back up (the truck is its own art, TRUCK). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** His eyes flare, he bursts into his truck, which drives off the card and brakes back in, and he rises with his fist high (scripts/build-optimus-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/optimus-lobby.png", width: 5120, height: 182, frameW: 320, frameH: 182, anchorX: 160, anchorY: 166 } },
+    /** His helmet, hands, thighs' plates and boots (the blue of his eyes and windows, a paler cyan, stay his own). */
+    hues: [200, 240],
+    hueBase: [5, 80, 174],
+    keepFor: [[245, 245, 245], [232, 74, 74]],
+    scale: 0.134,
+  },
+
+
+  pele: {
+    url: "sprites/pele.png",
+    width: 1098,
+    height: 2839,
+    frameW: 122,
+    frameH: 167,
+    anchorX: 61.5,
+    anchorY: 154,
+    bodyH: 152,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His kick: the leg drawn back, struck through, followed through high (the ball is its own art, BALL). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** Keepy-uppy, the ball sent up out of the card, then headed away as it comes back down, in confetti (scripts/build-pele-lobby.py). */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/pele-lobby.png", width: 4800, height: 226, frameW: 300, frameH: 226, anchorX: 150.5, anchorY: 226 } },
+    /** His blue shorts (the CBF crest's blue goes with them). */
+    hues: [205, 230],
+    hueBase: [30, 72, 137],
+    scale: 0.142,
+  },
+
+  lula: {
+    url: "sprites/lula.png",
+    width: 1386,
+    height: 3384,
+    frameW: 154,
+    frameH: 188,
+    anchorX: 77.5,
+    anchorY: 184,
+    bodyH: 172,
+    ticksPerFrame: 7,
+    idleTicksPerFrame: 15,
+    side: "right",
+    idle: strips(0, 1, 2, 4),
+    walk: strips(3, 4, 5, 6),
+    stun: { row: 6, frames: 6 },
+    death: { row: 7, frames: 7 },
+    /** His promise: he bends over and sets the picanha down in front of him (the picanha is an item, ItemKind.Picanha). */
+    cast: strips(8, 9, 10, 9),
+    carryIdle: strips(11, 12, 13, 4),
+    carryWalk: strips(14, 15, 16, 6),
+    /** The "L" raised high, laughing. */
+    lobby: { row: 17, frames: 8 },
+    /** His red t-shirt (the yellow star and the reds of his face stay his own: build-character-sheet.py face_reds). */
+    hues: [336, 6],
+    hueBase: [217, 45, 29],
+    keepFor: [[232, 74, 74]],
+    scale: 0.126,
+  },
+
+  /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
   bomber: {
     url: "sprites/bomber-atlas.png?v=20261025-hd-family-v1",
     width: 936,
@@ -283,6 +662,15 @@ export const BOMBS = {
   anchorX: 64,
   anchorY: 76,
   scale: 0.1,
+  /** Dedicated Bomber art; coordinates refer to the square HD runtime PNG. */
+  mega: {
+    url: "sprites/bomb-mega.png?v=20261025-bomber-v1",
+    size: 512,
+    anchorX: 256,
+    anchorY: 300,
+    scale: 0.025,
+    glow: { x: 395, y: 70, color: 0xffbc38 },
+  },
   order: ["normal", "pierce", "remote"] satisfies BombType[],
   /** Cell pixel of the fuse spark (or the remote's light) and its glow color. */
   glow: {
@@ -313,7 +701,7 @@ export function bombLook({ fuse, tick, type, mega }: { fuse: number; tick: numbe
   return {
     stage,
     sx: (1 + breath) * size,
-    sy: (1 - breath) * size,
+    sy: (1 + (mega ? breath : -breath)) * size,
     tint: 0xffffff,
     flash: urgent && Math.floor((FUSE_TICKS - fuse) / 6) % 2 === 0,
     glow: type === "remote" ? Math.floor(tick / 20) % 2 === 0 : SPARK[Math.floor(tick / 3) % SPARK.length] === 1,
@@ -409,14 +797,24 @@ export function flameFrame(ttl: number): number {
   return Math.min(FLAMES.frames - 1, Math.max(0, Math.floor(age * FLAMES.frames)));
 }
 
-/** Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade. */
+/**
+ * Arena art (scripts/build-tiles.py): one row of square cells. Grass has plain, flower and pebble variants per shade;
+ * `burn` is a blown-up block burning away (struck, ablaze, breaking, collapsing, embers, ash), drawn over the grass.
+ */
 export const TILES = {
   url: "sprites/tiles.png",
   size: 128,
   /** Drawn size: one cell per tile. */
   scale: 0.125,
-  cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8 },
+  cells: { grassA: [0, 1, 2], grassB: [3, 4, 5], block: 6, pillar: 7, border: 8, burn: [9, 10, 11, 12, 13, 14] },
 };
+
+/** Cell of a blown-up block whose flame goes out in `ttl` ticks: it burns away with it. */
+export function burnCell(ttl: number): number {
+  const { burn } = TILES.cells;
+  const age = 1 - ttl / FLAME_TICKS;
+  return burn[Math.min(burn.length - 1, Math.max(0, Math.floor(age * burn.length)))]!;
+}
 
 /** Which cell a tile shows. Grass variants are picked by a hash of the position, so they stay put. */
 export function tileCell(tile: Tile, x: number, y: number, width: number, height: number): number {
@@ -432,7 +830,7 @@ export function tileCell(tile: Tile, x: number, y: number, width: number, height
 /** Walls and blocks stand up from the floor and shade the tile below them. */
 export const castsShadow = (tile: Tile): boolean => tile === Tile.Wall || tile === Tile.Block;
 
-/** Power-up art (scripts/build-items.py): one column per item, rows = plain, then a glint sweeping across. */
+/** Power-up art (scripts/pack-concept-items.py; build-items.py only draws the picanha for it, never rerun it to write items.png): one column per item, rows = plain, then a glint sweeping across. */
 export const ITEMS = {
   url: "sprites/items.png",
   size: 192,
@@ -451,6 +849,7 @@ export const ITEMS = {
     ItemKind.Glove,
     ItemKind.Skull,
     ItemKind.Egg,
+    ItemKind.Picanha,
   ] satisfies ItemKind[],
 };
 
@@ -479,25 +878,34 @@ export function beamAlpha(ticks: number): number {
   return 1 - ((ticks - BEAM_DELAY) / (BLAST_TICKS - BEAM_DELAY)) * 0.8;
 }
 
+/** Lula's cast: his 9 frames setting the picanha down, once. */
+const LULA_CAST_TICKS = 9 * CAST_TICKS_PER_FRAME;
+
 /** Ticks before a blast in which its cast already ran (Goku's charge, Naruto's dash). */
-const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS };
+const WINDUP: Partial<Record<Blast["kind"], number>> = { kamehameha: KAME_CHARGE, rasengan: RASENGAN_TICKS, truck: TRUCK_SHIFT };
 
 /**
  * Ticks into a player's cast animation: Goku's runs from the start of his Kamehameha's charge (the
  * beam leaves on the thrust frame, KAME_CHARGE in), Naruto's from the start of his Rasengan dash (it
- * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, the others' from their
- * blast; undefined when not casting.
+ * strikes on the lunge frame), the bomb mascot's from when his mega bomb lands, Optimus's while he turns into his truck
+ * (and on from TRUCK_SHIFT as he turns back where it stopped), lula's from when he sets his picanha down (it leaves no
+ * blast), the others' from their blast; undefined when not casting.
  */
 export function castTicks(
-  p: Pick<Player, "charge" | "rasengan">,
-  blast: Pick<Blast, "ttl" | "kind"> | undefined,
+  p: Pick<Player, "charge" | "rasengan"> & Partial<Pick<Player, "truck" | "character" | "specialCooldown">>,
+  blast: (Pick<Blast, "ttl" | "kind"> & Partial<Pick<Blast, "length">>) | undefined,
   mega?: Pick<Bomb, "fuse">,
 ): number | undefined {
+  if (p.character === "lula" && p.specialCooldown !== undefined) {
+    const t = SPECIAL_COOLDOWN - p.specialCooldown;
+    return t >= 0 && t < LULA_CAST_TICKS ? t : undefined;
+  }
   if (p.charge > 0) return KAME_CHARGE - p.charge;
   if (mega) return FUSE_TICKS - mega.fuse;
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
+  if (p.truck && p.truck > TRUCK_TICKS) return TRUCK_SHIFT + TRUCK_TICKS - p.truck;
   if (!blast) return undefined;
-  return (WINDUP[blast.kind] ?? 0) + BLAST_TICKS - blast.ttl;
+  return (WINDUP[blast.kind] ?? 0) + blastLife({ kind: blast.kind, length: blast.length ?? 0 }) - blast.ttl;
 }
 
 /**
@@ -558,6 +966,12 @@ export function rasenganLook(rasengan: number, blast: Pick<Blast, "ttl" | "kind"
   return frame < RASENGAN.frames ? { burst: frame } : null;
 }
 
+/** Flames without those inside a green lantern's bubble: the fire stops at it and goes on past it, drawn round it. */
+export function outsideBubbles<F extends Pick<Flame, "x" | "y">>(flames: F[], players: readonly Pick<Player, "px" | "py" | "bubble" | "alive">[]): F[] {
+  const inside = players.filter((p) => p.alive && p.bubble > 0).map((p) => `${Math.floor(p.px / TILE)},${Math.floor(p.py / TILE)}`);
+  return inside.length ? flames.filter((f) => !inside.includes(`${f.x},${f.y}`)) : flames;
+}
+
 /** Flames without the Kamehameha's own fire along its beam (the beam is drawn over those tiles instead). */
 export function outsideBeams<F extends Pick<Flame, "x" | "y" | "ownerId">>(flames: F[], blasts: readonly Blast[]): F[] {
   const beams = blasts.filter((b) => b.kind === "kamehameha");
@@ -608,6 +1022,185 @@ export function boltPoints(x0: number, y0: number, x1: number, y1: number, seed:
   return pts;
 }
 
+/** How often a new ring of Static's magnet pull leaves the one pulled, and how long it takes to reach him. */
+const MAGNET_WAVE_GAP = 5;
+const MAGNET_WAVE_TICKS = 15;
+
+/**
+ * Static's magnet pull from (x0,y0) (him) to (x1,y1) (where it caught): rings of force, `age` ticks in,
+ * running from the far end back to him and shrinking as they arrive (radius 7 px there, 2 px at his hand).
+ */
+export function magnetWaves(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; r: number }[] {
+  const out: { x: number; y: number; r: number }[] = [];
+  for (let k = 0; k < MAGNET_WAVE_TICKS / MAGNET_WAVE_GAP; k++) {
+    const t = 1 - ((age + k * MAGNET_WAVE_GAP) % MAGNET_WAVE_TICKS) / MAGNET_WAVE_TICKS;
+    out.push({ x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, r: 2 + 5 * t });
+  }
+  return out;
+}
+
+/** How see-through the sneaking panther is to himself and to screens that only watch. */
+export const SNEAK_FAINT = 0.35;
+/** Ticks over which he fades back in for everyone before his tiptoe ends. */
+const SNEAK_FADE = 30;
+
+/**
+ * How visible player `p` is on the screen of `viewer` (null: a screen that only watches, or several players at once):
+ * a sneaking panther is gone for his rivals and faint for himself and for watchers, and fades back in at the end.
+ */
+export function sneakAlpha(p: Pick<Player, "id" | "sneak">, viewer: string | null): number {
+  if (p.sneak <= 0) return 1;
+  const back = Math.max(0, 1 - p.sneak / SNEAK_FADE);
+  return viewer === null || viewer === p.id ? Math.max(SNEAK_FAINT, back) : back;
+}
+
+/** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */
+export const BUBBLE = {
+  url: "sprites/lantern-bubble.png",
+  size: 192,
+  rows: { form: 0, loop: 1, pop: 2 },
+  frames: { form: 8, loop: 12, pop: 8 },
+  /** Ticks each frame stays on screen. */
+  ticks: 2,
+  /** Drawn about 28 px across, round a player. */
+  scale: 0.18,
+};
+
+/**
+ * Ticks into a held pose, if any: the captain planted behind his shield, the green lantern kneeling with his ring up in his
+ * bubble (only while he stands still: walking in it, he walks). Drawn with his cast row, held on its last frame.
+ */
+export function bracing(p: Pick<Player, "shield" | "bubble">, moving: boolean): number | undefined {
+  if (p.shield > 0) return SHIELD_TICKS - p.shield;
+  if (p.bubble > 0 && !moving) return BUBBLE_TICKS - p.bubble;
+  return undefined;
+}
+
+/**
+ * How the green lantern's bubble looks with `bubble` ticks left, at `tick`: forming as it rises, shimmering while held
+ * (flickering in its last second), giving way over its last ticks; null with none.
+ */
+export function bubbleLook(bubble: number, tick: number): { row: number; frame: number; alpha: number } | null {
+  if (bubble <= 0) return null;
+  const { rows, frames, ticks } = BUBBLE;
+  const age = BUBBLE_TICKS - bubble;
+  if (age < frames.form * ticks) return { row: rows.form, frame: Math.floor(age / ticks), alpha: 1 };
+  if (bubble <= frames.pop * ticks) return { row: rows.pop, frame: frames.pop - Math.ceil(bubble / ticks), alpha: 1 };
+  const alpha = bubble <= TICK_RATE && Math.floor(tick / 4) % 2 === 0 ? 0.45 : 1;
+  return { row: rows.loop, frame: Math.floor(tick / ticks) % frames.loop, alpha };
+}
+
+/**
+ * Bugs' tunnel from (x0,y0) to (x1,y1), `age` ticks after he went under: a ridge of dirt mounds heaved up along it, one
+ * every few pixels between the two holes, running ahead from where he went under faster than the eye can follow.
+ */
+export function tunnelMounds(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; r: number }[] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const ux = len ? (x1 - x0) / len : 0;
+  const uy = len ? (y1 - y0) / len : 0;
+  const mounds: { x: number; y: number; r: number }[] = [];
+  for (let d = 7; d < len - 5 && d <= 7 + (age + 1) * 16; d += 6) {
+    mounds.push({ x: x0 + ux * d, y: y0 + uy * d, r: 2.2 + ((d / 6) % 2) * 0.6 });
+  }
+  return mounds;
+}
+
+/**
+ * Donatello's staff spin, `age` ticks in: his bo turning round him (two full turns, quick at first and slowing),
+ * a whoosh ring swelling out from him and fading as the spin ends.
+ */
+export function spinLook(age: number): { angle: number; ring: number; alpha: number } {
+  const t = Math.min(1, Math.max(0, age / BLAST_TICKS));
+  return { angle: 4 * Math.PI * (1 - (1 - t) ** 2) + t * 0.5, ring: 10 + 10 * Math.sin(t * Math.PI * 0.75), alpha: 1 - t * t };
+}
+
+/** Ticks penelope's kiss takes to fly from her hand to where it stopped. */
+const KISS_FLIGHT = 14;
+
+/**
+ * Penelope's blown kiss from (x0,y0) to (x1,y1), `age` ticks after it: a heart flying out (quick, then easing in,
+ * bobbing up as it goes) with two little ones trailing, then a ring of little hearts bursting out where it landed and
+ * fading with the blast. `size` is the heart's width in arena pixels.
+ */
+export function kissHearts(x0: number, y0: number, x1: number, y1: number, age: number): { x: number; y: number; size: number; alpha: number }[] {
+  const at = (t: number) => {
+    const e = 1 - (1 - Math.min(1, Math.max(0, t))) ** 2;
+    return { x: x0 + (x1 - x0) * e, y: y0 + (y1 - y0) * e - Math.sin(e * Math.PI) * 3 };
+  };
+  if (age < KISS_FLIGHT) {
+    const t = age / KISS_FLIGHT;
+    return [
+      { ...at(t), size: 7, alpha: 1 },
+      { ...at(t - 0.18), size: 3.5, alpha: 0.7 },
+      { ...at(t - 0.34), size: 2.5, alpha: 0.45 },
+    ];
+  }
+  const t = Math.min(1, (age - KISS_FLIGHT) / (BLAST_TICKS - KISS_FLIGHT));
+  const r = 4 + 9 * t;
+  const hearts = Array.from({ length: 6 }, (_, k) => {
+    const a = (k / 6) * Math.PI * 2 - Math.PI / 2;
+    return { x: x1 + Math.cos(a) * r, y: y1 + Math.sin(a) * r - 2 * t, size: 3.5, alpha: 1 - t };
+  });
+  return [{ x: x1, y: y1 - 3 * t, size: 7 + 3 * t, alpha: 1 - t }, ...hearts];
+}
+
+/**
+ * Harry's patronus, a silver stag galloping (scripts/build-patronus.py): one row per view (side facing right, front
+ * running at us, back running away), `frames` gallop frames each, its feet at (anchorX, anchorY) of a cell.
+ */
+export const PATRONUS = { url: "sprites/patronus.png", size: 96, frames: 8, rows: { side: 0, down: 1, up: 2 }, anchorX: 48, anchorY: 84, scale: 0.3 };
+/** Ticks a gallop frame lasts. */
+const PATRONUS_FRAME_TICKS = 3;
+
+/**
+ * Harry's stag from (x0,y0) to (x1,y1), running `dir`, `age` ticks after he cast it: a steady gallop there in `run`
+ * ticks (bounding a little, its legs going round the gallop frames), a trail of sparkles behind it, then standing there
+ * fading into light for PATRONUS_FADE ticks. Null once it is gone.
+ */
+export function patronusLook(x0: number, y0: number, x1: number, y1: number, dir: Facing, run: number, age: number):
+  { x: number; y: number; alpha: number; flip: boolean; view: "side" | "down" | "up"; frame: number; sparkles: { x: number; y: number; size: number; alpha: number }[] } | null {
+  if (age >= run + PATRONUS_FADE) return null;
+  const at = (k: number) => {
+    const t = run > 0 ? Math.min(1, Math.max(0, k / run)) : 1;
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t - Math.abs(Math.sin((k / (PATRONUS_FRAME_TICKS * PATRONUS.frames)) * Math.PI * 2)) * 2 };
+  };
+  const { x, y } = at(Math.min(age, run));
+  const fading = Math.max(0, age - run) / PATRONUS_FADE;
+  const sparkles = Array.from({ length: 5 }, (_, k) => {
+    const back = at(Math.min(age, run) - 2 - k * 3);
+    return { x: back.x, y: back.y + 3 + ((k * 5) % 4) - 2, size: 1.6 - k * 0.2, alpha: (1 - k / 5) * (1 - fading) };
+  });
+  const view = dir === "up" || dir === "down" ? dir : "side";
+  const frame = Math.floor(Math.min(age, run) / PATRONUS_FRAME_TICKS) % PATRONUS.frames;
+  return { x, y, alpha: 0.9 * (1 - fading * 0.9), flip: dir === "left", view, frame, sparkles };
+}
+
+/**
+ * The hearts circling over the head of someone charmed by penelope's kiss, `charmed` ticks left: three of them going
+ * round, offsets from the top of the head (the circle squashed, seen from above), each bobbing.
+ */
+export function charmHearts(charmed: number, tick: number): { dx: number; dy: number; size: number }[] {
+  if (charmed <= 0) return [];
+  return Array.from({ length: 3 }, (_, k) => {
+    const a = tick / 9 + (k * Math.PI * 2) / 3;
+    return { dx: Math.cos(a) * 7, dy: -3 + Math.sin(a) * 2.5 - Math.abs(Math.sin(tick / 6 + k)), size: 3.5 };
+  });
+}
+
+/**
+ * The flash's dash from (x0,y0) to (x1,y1), `age` ticks after it: speed lines side by side along it (the middle one
+ * longest), from where he left to where he stopped, their tails catching up with him as they fade.
+ */
+export function speedLines(x0: number, y0: number, x1: number, y1: number, age: number): { x0: number; y0: number; x1: number; y1: number }[] {
+  const len = Math.hypot(x1 - x0, y1 - y0);
+  const ux = len ? (x1 - x0) / len : 0;
+  const uy = len ? (y1 - y0) / len : 0;
+  return [-5, -2.5, 0, 2.5, 5].map((off, k) => {
+    const tail = Math.min(len, age * 4 + Math.abs(off) * 3 + (k % 2) * 6);
+    return { x0: x0 + ux * tail - uy * off, y0: y0 + uy * tail + ux * off, x1: x1 - uy * off, y1: y1 + ux * off };
+  });
+}
+
 /**
  * The spiral of light round the captain while his shield is up (PixelLab VFX "Captain shield spiral",
  * laid out by scripts/build-captain-spiral.py): one row drawn behind him, one in front. The anchor is
@@ -632,24 +1225,36 @@ export function spiralFrame(ticks: number): number {
   return Math.floor(ticks / SPIRAL.ticksPerFrame) % SPIRAL.frames;
 }
 
-/**
- * How a frozen player looks: tinted icy inside a block of ice, which flickers
- * in its last second as it melts. Null when not frozen.
- */
-export function frozenLook(frozen: number, tick: number): { tint: number; block: boolean } | null {
-  if (frozen <= 0) return null;
-  const melting = frozen <= TICK_RATE;
-  return { tint: 0x9fdcff, block: !melting || Math.floor(tick / 4) % 2 === 0 };
-}
-
 /** Where players' feet stand, below the tile center. */
 export const FEET_DY = 6;
 
-/** The ice block around a frozen player whose drawn body is `bodyH` tall: just over the head to just under the feet. */
-export function iceBlock(cx: number, cy: number, bodyH: number): { x: number; y: number; w: number; h: number } {
+/**
+ * How a player caught in the spider's web looks: shaking as they struggle, the web flickering
+ * in its last second as it comes loose. Null when not webbed.
+ */
+export function webbedLook(webbed: number, tick: number): { shake: number; wraps: boolean } | null {
+  if (webbed <= 0) return null;
+  const loosening = webbed <= TICK_RATE;
+  return { shake: Math.floor(tick / 5) % 2 ? 0.75 : -0.75, wraps: !loosening || Math.floor(tick / 4) % 2 === 0 };
+}
+
+type Strand = [number, number, number, number];
+
+/**
+ * The web cocoon around a player whose drawn body is `bodyH` tall, and the strands wound round it
+ * (x0,y0,x1,y1): a spiral, the turns in front all slanting one way and fewer seen through it behind, the other way.
+ */
+export function cocoon(cx: number, cy: number, bodyH: number): { x: number; y: number; w: number; h: number; strands: Strand[]; back: Strand[] } {
   const w = 14;
   const top = cy + FEET_DY - bodyH - 2;
-  return { x: cx - w / 2, y: top, w, h: bodyH + 4 };
+  const h = bodyH + 4;
+  const x0 = cx - w / 2;
+  const x1 = cx + w / 2;
+  const strands: Strand[] = [];
+  const back: Strand[] = [];
+  for (let y = top + 2; y + 3 <= top + h - 1; y += 3) strands.push([x0, y + 3, x1, y]);
+  for (let y = top + 3; y + 3 <= top + h - 1; y += 6) back.push([x0, y, x1, y + 3]);
+  return { x: x0, y: top, w, h, strands, back };
 }
 
 export interface FrameRect {
@@ -668,12 +1273,18 @@ export function playerFrame(
     stunned,
     casting,
     shielding,
+    sneaking,
     tick,
-  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; shielding?: number | undefined; tick: number },
+  }: { facing: Facing; moving: boolean; carrying: boolean; stunned?: boolean; casting?: number | undefined; shielding?: number | undefined; sneaking?: boolean; tick: number },
 ): FrameRect {
   if (stunned && sheet.stun) return cell(sheet, sheet.stun, Math.floor(tick / sheet.ticksPerFrame) % sheet.stun.frames);
   const view = facing === "left" || facing === "right" ? "side" : facing;
   const flip = view === "side" && facing !== sheet.side;
+  // The pink panther's cast row is his tiptoe: walked through while he sneaks, its first frame while he stands.
+  if (sneaking && sheet.cast && !carrying) {
+    const strip = sheet.cast[view];
+    return { ...cell(sheet, strip, moving ? Math.floor(tick / sheet.ticksPerFrame) % strip.frames : 0), flip };
+  }
   if (sheet.cast && shielding !== undefined) {
     const strip = sheet.cast[view];
     return { ...cell(sheet, strip, Math.min(Math.floor(shielding / CAST_TICKS_PER_FRAME), strip.frames - 1)), flip };
@@ -733,16 +1344,33 @@ export function recolor(px: Uint8ClampedArray, from: readonly Rgb[], to: Rgb): v
  */
 export function shadeHues(px: Uint8ClampedArray, range: readonly [number, number], base: Rgb, to: Rgb): void {
   const ref = luma(base);
+  eachColor(px, (c) => {
+    const [h, s] = toHsl(c);
+    if (s < 0.2 || !inHues(h, range)) return null;
+    const k = luma(c) / ref;
+    const shade = (v: number) => (k <= 1 ? v * k : v + (255 - v) * Math.min(1, (k - 1) * 0.8));
+    return [shade(to[0]), shade(to[1]), shade(to[2])];
+  });
+}
+
+/**
+ * Repaints every opaque pixel by what `paint` makes of its color (null: left as it is), working each color out once:
+ * pixel art repeats a few dozen colors over millions of pixels (a phone took seconds repainting the menus' sheets).
+ */
+function eachColor(px: Uint8ClampedArray, paint: (c: Rgb) => Rgb | null): void {
+  const seen = new Map<number, Rgb | null>();
   for (let i = 0; i < px.length; i += 4) {
     if (px[i + 3] === 0) continue;
-    const c: Rgb = [px[i]!, px[i + 1]!, px[i + 2]!];
-    const [h, s] = toHsl(c);
-    if (s < 0.2 || h < range[0] || h > range[1]) continue;
-    const k = luma(c) / ref;
-    for (let ch = 0; ch < 3; ch++) {
-      const v = to[ch]!;
-      px[i + ch] = k <= 1 ? v * k : v + (255 - v) * Math.min(1, (k - 1) * 0.8);
+    const key = (px[i]! << 16) | (px[i + 1]! << 8) | px[i + 2]!;
+    let out = seen.get(key);
+    if (out === undefined) {
+      out = paint([px[i]!, px[i + 1]!, px[i + 2]!]);
+      seen.set(key, out);
     }
+    if (!out) continue;
+    px[i] = out[0];
+    px[i + 1] = out[1];
+    px[i + 2] = out[2];
   }
 }
 
@@ -772,6 +1400,11 @@ export class MotionTracker {
   }
 }
 
+/** Whether hue `h` lies in `range` (degrees); a range whose start is past its end wraps through 360 (reds). */
+function inHues(h: number, range: readonly [number, number]): boolean {
+  return range[0] <= range[1] ? h >= range[0] && h <= range[1] : h >= range[0] || h <= range[1];
+}
+
 function toHsl([r, g, b]: Rgb): [number, number, number] {
   const [rr, gg, bb] = [r / 255, g / 255, b / 255];
   const max = Math.max(rr, gg, bb);
@@ -798,16 +1431,12 @@ function fromHsl(h: number, s: number, l: number): [number, number, number] {
  */
 export function paintHues(px: Uint8ClampedArray, range: readonly [number, number], to: Rgb): void {
   const [th, ts, tl] = toHsl(to);
-  for (let i = 0; i < px.length; i += 4) {
-    if (px[i + 3] === 0) continue;
-    const [h, s, l] = toHsl([px[i]!, px[i + 1]!, px[i + 2]!]);
-    if (s < 0.2 || h < range[0] || h > range[1]) continue;
+  eachColor(px, (c) => {
+    const [h, s, l] = toHsl(c);
+    if (s < 0.2 || !inHues(h, range)) return null;
     const lit = Math.min(1, Math.max(0, l + (tl - 0.5) * 0.6));
-    const [r, g, b] = fromHsl(th, s * ts, lit);
-    px[i] = r;
-    px[i + 1] = g;
-    px[i + 2] = b;
-  }
+    return fromHsl(th, s * ts, lit);
+  });
 }
 
 interface Pos {
@@ -824,4 +1453,51 @@ export function between(from: Pos, to: Pos, alpha: number): Pos {
   const jumped = Math.abs(to.px - from.px) + Math.abs(to.py - from.py) >= TILE;
   const a = alpha > 1 && jumped ? 1 : alpha;
   return { px: from.px + (to.px - from.px) * a, py: from.py + (to.py - from.py) * a };
+}
+
+/**
+ * Optimus's truck (scripts/build-truck.py): one row per view, seen from the side (a flat profile facing right), its front
+ * (coming down) and its back (going up), FRAMES frames driving each (the side's wheels turning, the cab rocking), its
+ * wheels on the anchor's line.
+ */
+export const TRUCK = { url: "sprites/truck.png", w: 128, h: 96, frames: 4, rows: { side: 0, down: 1, up: 2 }, anchorX: 64, anchorY: 90, scale: 0.26 };
+const TRUCK_FRAME_TICKS = 2;
+
+/** The truck as he drives (null while he is not driving): the view his facing shows, and its driving frame. */
+export function truckLook(p: Pick<Player, "truck" | "facing">, tick: number): { view: "side" | "down" | "up"; flip: boolean; frame: number } | null {
+  if (p.truck <= 0 || p.truck > TRUCK_TICKS) return null;
+  const view = p.facing === "down" ? "down" : p.facing === "up" ? "up" : "side";
+  return { view, flip: p.facing === "left", frame: Math.floor(tick / TRUCK_FRAME_TICKS) % TRUCK.frames };
+}
+
+/** Pelé's soccer ball (scripts/build-ball.py): one 32 px frame, spun by the renderer. */
+export const BALL = { url: "sprites/ball.png", size: 32, scale: 0.32 };
+/** Ticks the ball takes per tile on its way (fast: a kick). */
+const BALL_TICKS_PER_TILE = 1.5;
+
+/**
+ * Pelé's ball `age` ticks after the kick, from his feet (x0,y0) to where it stopped (x1,y1) `length` tiles off: flying
+ * there in an arc, spinning, then dropping back a little off whatever stopped it, bouncing low, and fading out before
+ * its blast is gone (null then). `lift`: how high it is (its shadow stays on the ground).
+ */
+export function ballLook(x0: number, y0: number, x1: number, y1: number, length: number, age: number): { x: number; y: number; lift: number; spin: number; alpha: number } | null {
+  if (age >= BLAST_TICKS) return null;
+  const flight = Math.max(4, length * BALL_TICKS_PER_TILE);
+  const spin = age * 0.7;
+  const alpha = Math.min(1, (BLAST_TICKS - age) / 10);
+  if (age < flight) {
+    const t = age / flight;
+    return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, lift: Math.sin(Math.PI * t) * (3 + length), spin, alpha };
+  }
+  // the rebound: back off what it hit, two low bounces
+  const after = Math.min(1, (age - flight) / 14);
+  const len = Math.hypot(x1 - x0, y1 - y0) || 1;
+  const back = 6 * after;
+  return {
+    x: x1 - ((x1 - x0) / len) * back,
+    y: y1 - ((y1 - y0) / len) * back,
+    lift: Math.abs(Math.sin(Math.PI * 2 * after)) * 3 * (1 - after),
+    spin: flight * 0.7 + (age - flight) * 0.25 * (1 - after),
+    alpha,
+  };
 }

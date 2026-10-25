@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { blastLife, BLAST_TICKS, BUBBLE_TICKS, createMatch, FUSE_TICKS, ItemKind, publicView, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
 import { Listener, soundCues } from "../src/audio/cues";
 
 function view(): PublicView {
@@ -59,12 +59,25 @@ describe("soundCues", () => {
     expect(names(v, next)).toEqual(["break", "wall"]);
   });
 
+  it("hears a block break when it starts burning (a Kamehameha's block makes no explosion sound), not when it has burned away", () => {
+    const v = view();
+    const i = (x: number, y: number) => y * v.grid.width + x;
+    v.grid.tiles[i(3, 1)] = Tile.Block;
+    const lit = later(v, (n) => n.flames.push({ x: 3, y: 1, ttl: 30, block: true }));
+    expect(names(v, lit)).toEqual(["break"]);
+    const gone = later(lit, (n) => {
+      n.flames = [];
+      n.grid.tiles[i(3, 1)] = Tile.Empty;
+    });
+    expect(names(lit, gone)).toEqual([]);
+  });
+
   it("hears kicks and punches by bombs starting to move", () => {
     const v = view();
     v.bombs.push(bomb(3, 1), bomb(5, 1));
     const next = later(v, (n) => {
       n.bombs[0]!.slide = "right";
-      n.bombs[1]!.air = { dir: "down", tilesLeft: 3, progress: 0 };
+      n.bombs[1]!.air = { dir: "down", span: 3, tilesLeft: 3, progress: 0 };
     });
     expect(names(v, next)).toEqual(["kick", "throw"]);
   });
@@ -84,7 +97,7 @@ describe("soundCues", () => {
     v.items.push({ x: 1, y: 2, kind: ItemKind.Skull });
     const next = later(v, (n) => {
       n.items = [];
-      n.players[0]!.curse = { kind: "slow", ticks: 600 };
+      n.players[0]!.curse = { kind: "slow" };
     });
     expect(names(v, next)).toEqual(["curse"]);
   });
@@ -173,19 +186,120 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "thunder", x: 4.5 }]);
   });
 
-  it("hears an ice blast cast, at the caster, and the player it freezes", () => {
+  it("hears one shock for Pikachu's thunder shock, not one per arm", () => {
     const v = view();
     const next = later(v, (n) => {
-      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2, kind: "ice" });
-      n.players[1]!.frozen = 300;
+      for (const dir of ["up", "down", "left", "right"] as const) n.blasts.push({ ownerId: "a", x: 4, y: 1, dir, length: 1, ttl: BLAST_TICKS - 1, kind: "thunder" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "shock", x: 4.5 }]);
+  });
+
+  it("hears Static's magnet pull, at the caster", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 4, y: 1, dir: "left", length: 2, ttl: BLAST_TICKS - 1, kind: "magnet" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "magnet", x: 4.5 }]);
+  });
+
+  it("hears the flash's dash, where he left from", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 4, ttl: BLAST_TICKS - 1, kind: "flash" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "zoom", x: 1.5 }]);
+  });
+
+  it("hears bugs digging in, where he went under", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 4, ttl: BLAST_TICKS - 1, kind: "tunnel" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "dig", x: 1.5 }]);
+  });
+
+  it("hears donatello's staff spin, where he spun it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "down", length: 1, ttl: BLAST_TICKS - 1, kind: "spin" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "spin", x: 1.5 }]);
+  });
+
+  it("hears penelope's blown kiss, where she blew it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 1, kind: "kiss" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "kiss", x: 1.5 }]);
+  });
+
+  it("hears harry's stag galloping off, where he cast it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 1, y: 1, dir: "right", length: 9, ttl: blastLife({ kind: "patronus", length: 9 }) - 1, kind: "patronus" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "gallop", x: 1.5 }]);
+  });
+
+  it("hears optimus transform, his truck's engine roar as it pulls away, and him transform back where it stopped", async () => {
+    const { TRUCK_SHIFT, TRUCK_TICKS } = await import("@bombtop/shared");
+    const v = view();
+    const shift = later(v, (n) => {
+      n.players[0]!.truck = TRUCK_SHIFT + TRUCK_TICKS;
+    });
+    expect(names(v, shift)).toContain("transform");
+    const drive = later(shift, (n) => {
+      n.players[0]!.truck = TRUCK_TICKS - 1;
+    });
+    expect(names(shift, drive)).toEqual(["truck"]);
+    const back = later(drive, (n) => {
+      n.players[0]!.truck = 0;
+      n.blasts.push({ ownerId: "a", x: 4, y: 1, dir: "right", length: 0, ttl: BLAST_TICKS - 1, kind: "truck" });
+    });
+    expect(soundCues(drive, back)).toEqual([{ name: "transform", x: 4.5 }]);
+  });
+
+  it("hears pelé's ball kicked off, where he kicked it", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 5, ttl: BLAST_TICKS - 1, kind: "ball" });
+    });
+    expect(soundCues(v, next)).toEqual([{ name: "kickball", x: 2.5 }]);
+  });
+
+  it("hears the green lantern's bubble rising round him and giving way", () => {
+    const v = view();
+    const up = later(v, (n) => {
+      n.players[0]!.bubble = BUBBLE_TICKS;
+    });
+    expect(names(v, up)).toContain("bubble");
+    const held = later(up, (n) => {
+      n.players[0]!.bubble -= 2;
+    });
+    expect(names(up, held)).toEqual([]);
+    const near = later(v, (n) => {
+      n.players[0]!.bubble = 1;
+    });
+    const gone = later(near, (n) => {
+      n.players[0]!.bubble = 0;
+    });
+    expect(names(near, gone)).toEqual(["pop"]);
+  });
+
+  it("hears a web shot, at the caster, and the player it wraps up", () => {
+    const v = view();
+    const next = later(v, (n) => {
+      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2, kind: "web" });
+      n.players[1]!.webbed = 240;
     });
     expect(soundCues(v, next)).toEqual([
-      { name: "ice", x: 2.5 },
-      { name: "freeze", x: next.players[1]!.px / TILE },
+      { name: "web", x: 2.5 },
+      { name: "webbed", x: next.players[1]!.px / TILE },
     ]);
     const after = later(next, (n) => {
       n.blasts[0]!.ttl -= 2;
-      n.players[1]!.frozen -= 2;
+      n.players[1]!.webbed -= 2;
     });
     expect(names(next, after)).toEqual([]);
   });

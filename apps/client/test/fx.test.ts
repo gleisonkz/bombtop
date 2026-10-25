@@ -29,6 +29,26 @@ describe("Fx", () => {
     expect(fx.particles.filter((p) => p.kind === "debris").every((p) => Math.abs(p.x - 6.5 * 16) < 16)).toBe(true);
   });
 
+  it("puffs a little cloud of smoke at a point, in the color given", () => {
+    const fx = new Fx();
+    fx.puff(40, 50, 0xff77bb);
+    const puffs = fx.particles.filter((p) => p.kind === "smoke");
+    expect(puffs.length).toBeGreaterThan(4);
+    expect(puffs.every((p) => p.color === 0xff77bb && Math.abs(p.x - 40) < 8 && Math.abs(p.y - 50) < 8)).toBe(true);
+  });
+
+  it("a robot turning into a truck (or back) bursts into bits of red, blue and chrome with blue sparks, and shakes a little", () => {
+    const fx = new Fx();
+    fx.transform(40, 50);
+    const bits = fx.particles.filter((p) => p.kind === "debris");
+    const sparks = fx.particles.filter((p) => p.kind === "spark");
+    expect(bits.length).toBeGreaterThan(6);
+    expect(sparks.length).toBeGreaterThan(4);
+    expect(new Set(bits.map((p) => p.color)).size).toBeGreaterThan(2);
+    expect([...bits, ...sparks].every((p) => Math.abs(p.x - 40) < 10 && Math.abs(p.y - 50) < 10)).toBe(true);
+    expect(fx.shake).toBeGreaterThan(0);
+  });
+
   it("leaves smoke where flames die out", () => {
     const fx = new Fx();
     fx.observe(cross, noBlocks, 10);

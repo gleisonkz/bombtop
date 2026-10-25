@@ -1,4 +1,6 @@
-import { RoomCore, TICK_RATE } from "@bombtop/shared";
+import { MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
+import type { LanRoomInfo } from "./lan";
+import { worstRoute, type Route } from "./rtc-route";
 import type { RoomLink } from "./room-link";
 import { TickClock } from "../loop/tick-clock";
 
@@ -8,6 +10,8 @@ export interface Wire {
   onMessage(callback: (data: string) => void): void;
   onClose(callback: () => void): void;
   close(): void;
+  /** Which way the connection runs (a WebRTC data channel tells; see rtc-route.ts). */
+  route?(): Promise<Route | null>;
 }
 
 /** Wire messages besides the room's own (C2S/S2C) ones. */
@@ -41,6 +45,7 @@ export class LocalHost {
   private seq = 0;
   private timer: ReturnType<typeof setInterval> | undefined;
   private closed = false;
+  private closeListeners: (() => void)[] = [];
 
   constructor() {
     this.core = new RoomCore(OFFLINE_CODE, {
@@ -51,15 +56,35 @@ export class LocalHost {
     });
   }
 
-  /** The host's own seat. Starts the room's clock. */
+  /** The host's own seat. Starts the room's clock; leaving it closes the room. */
   hostLink(name: string, character: string): RoomLink {
+    const link = this.localLink(name, character, () => this.close())!;
+    this.run();
+    return link;
+  }
+
+  /**
+   * Another player on this same screen (couch play: one per controller), or null when the room is
+   * full or playing. Leaving frees the seat; the room goes on.
+   */
+  seat(name: string, character: string): RoomLink | null {
+    return this.localLink(name, character, (id) => {
+      this.links.delete(id);
+      this.core.leave(id);
+    });
+  }
+
+  /** A seat whose messages never leave this device. */
+  private localLink(name: string, character: string, left: (id: string) => void): RoomLink | null {
     const id = `p${++this.seq}`;
     const handlers: Handlers = new Map();
     const leaveHandlers: ((code: number) => void)[] = [];
     // Delivered a moment later, like a network would: handlers attached right after still get it.
     this.links.set(id, (type, message) => queueMicrotask(() => dispatch(handlers, type, message)));
-    this.core.join(id, name, character);
-    this.run();
+    if (!this.core.join(id, name, character)) {
+      this.links.delete(id);
+      return null;
+    }
     return {
       sessionId: id,
       roomId: OFFLINE_CODE,
@@ -68,8 +93,10 @@ export class LocalHost {
       onMessage: (type, cb) => listen(handlers, type, cb),
       onLeave: (cb) => leaveHandlers.push(cb),
       ping: (cb) => cb(0),
+      // on this device: the friends' connections are what count
+      route: () => Promise.all([...this.wires.values()].map((w) => w.route?.() ?? null)).then(worstRoute),
       leave: async () => {
-        this.close();
+        left(id);
         for (const cb of leaveHandlers) cb(1000);
       },
     };
@@ -109,10 +136,22 @@ export class LocalHost {
     this.core.update();
   }
 
+  /** Called once the room is closed. */
+  onClose(cb: () => void): void {
+    this.closeListeners.push(cb);
+  }
+
+  /** What the room's listing on the server shows (net/lan.ts), as hosted by `name`. */
+  listing(name: string): LanRoomInfo {
+    const { members, phase } = this.core.session;
+    return { name, players: members.length, max: MAX_PLAYERS, playing: phase !== "lobby" };
+  }
+
   /** Ends the room: every friend is let go. */
   close(): void {
     if (this.closed) return;
     this.closed = true;
+    for (const cb of this.closeListeners) cb();
     clearInterval(this.timer);
     this.links.clear();
     for (const wire of this.wires.values()) wire.close();
@@ -185,6 +224,10 @@ export class PeerLink implements RoomLink {
     const n = ++this.pingSeq;
     this.pings.set(n, callback);
     this.wire.send(JSON.stringify([PING, [n, performance.now()]]));
+  }
+
+  route(): Promise<Route | null> {
+    return this.wire.route?.() ?? Promise.resolve(null);
   }
 
   async leave(): Promise<void> {

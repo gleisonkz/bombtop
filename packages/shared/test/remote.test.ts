@@ -23,13 +23,14 @@ describe("remote bombs", () => {
     expect(player(s).bombType).toBe("remote");
   });
 
-  it("explode with visible flames after three seconds", () => {
+  it("stay armed past three seconds until their owner detonates them", () => {
     const s = remoteMatch();
     const b = drop(s, 5, 5);
     placePlayerAt(s, "p1", 1, 1);
-    run(s, FUSE_TICKS - 1);
+    run(s, FUSE_TICKS * 2);
     expect(s.bombs).toContain(b);
-    step(s);
+    expect(b.fuse).toBe(FUSE_TICKS);
+    press(s, "action");
     expect(s.bombs).not.toContain(b);
     expect(hasFlame(s, 5, 5)).toBe(true);
   });

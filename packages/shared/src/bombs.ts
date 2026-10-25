@@ -21,14 +21,20 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
 
 /** Ticks fuses and flames, resolving explosions and chain reactions. */
 export function updateBombs(s: MatchState): void {
-  for (const f of s.flames) f.ttl--;
+  for (const f of s.flames) {
+    if (--f.ttl <= 0 && f.block) setTile(s, f.x, f.y, Tile.Empty);
+  }
   s.flames = s.flames.filter((f) => f.ttl > 0);
 
   updateSlides(s);
   updateAir(s);
 
+  // A flying bomb's fuse waits for it to land, and a carried one's while it is held (as in Super Bomberman 4): it never
+  // goes off in the air nor in the hands.
   for (const b of s.bombs) {
-    if (b.type !== "remote") b.fuse--;
+    // A remote stays armed while its owner can trigger it; abandoned bombs use their normal fuse.
+    const remoteArmed = b.type === "remote" && s.players.some((p) => p.id === b.ownerId && p.alive);
+    if (!remoteArmed && !b.air && !b.heldBy) b.fuse--;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0 || (!b.air && !b.heldBy && hasFlame(s, b.x, b.y)));
   while (queue.length > 0) {
@@ -79,9 +85,8 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
     if (tile === Tile.Wall) return false;
     const shield = shieldAt(s, x, y, dx, dy);
     if (shield) return shield.id;
-    addFlame(s, x, y, ownerId);
+    addFlame(s, x, y, ownerId, tile === Tile.Block);
     if (tile === Tile.Block) {
-      setTile(s, x, y, Tile.Empty);
       if (pierce) continue;
       return false;
     }
@@ -99,12 +104,14 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
   return true;
 }
 
-export function addFlame(s: MatchState, x: number, y: number, ownerId: string): void {
+/** Sets (x,y) on fire; `block` when it is a block burning away, which clears when the flame dies. */
+export function addFlame(s: MatchState, x: number, y: number, ownerId: string, block = false): void {
   const existing = s.flames.find((f) => f.x === x && f.y === y);
   if (existing) {
     existing.ttl = FLAME_TICKS;
     existing.ownerId = ownerId;
+    if (block) existing.block = true;
   } else {
-    s.flames.push({ x, y, ttl: FLAME_TICKS, ownerId });
+    s.flames.push(block ? { x, y, ttl: FLAME_TICKS, ownerId, block } : { x, y, ttl: FLAME_TICKS, ownerId });
   }
 }

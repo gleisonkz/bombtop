@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FUSE_TICKS, getTile, hasFlame, ItemKind, placeBomb, placePlayerAt, setTile, step, Tile } from "../src";
+import { FLAME_TICKS, FUSE_TICKS, getTile, hasFlame, ItemKind, placeBomb, placePlayerAt, setTile, step, Tile } from "../src";
 import { emptyMatch, player, run } from "./helpers";
 
 function pierceBomb(range: number) {
@@ -32,11 +32,12 @@ describe("pierce bombs", () => {
     setTile(s, 9, 5, Tile.Block);
     setTile(s, 10, 5, Tile.Block);
     detonateAt(s, 5, 5);
+    expect(hasFlame(s, 8, 5)).toBe(true);
+    run(s, FLAME_TICKS); // the blocks burn away with their flames
     expect(getTile(s, 6, 5)).toBe(Tile.Empty);
     expect(getTile(s, 7, 5)).toBe(Tile.Empty);
     expect(getTile(s, 9, 5)).toBe(Tile.Empty);
     expect(getTile(s, 10, 5)).toBe(Tile.Block); // out of range
-    expect(hasFlame(s, 8, 5)).toBe(true);
   });
 
   it("are still stopped by walls", () => {

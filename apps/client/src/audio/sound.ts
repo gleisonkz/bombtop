@@ -36,11 +36,23 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   jump: { gain: 0.4, vary: 0.06, voices: 2 },
   dash: { gain: 0.45, vary: 0.06, voices: 2 },
   warp: { gain: 0.45, vary: 0.04, voices: 2 },
-  ice: { gain: 0.55, vary: 0.04, voices: 2 },
   thunder: { gain: 0.6, vary: 0.05, voices: 2 },
+  shock: { gain: 0.6, vary: 0.04, voices: 2 },
+  magnet: { gain: 0.6, vary: 0.04, voices: 2 },
+  zoom: { gain: 0.6, vary: 0.05, voices: 2 },
+  dig: { gain: 0.6, vary: 0.05, voices: 2 },
+  spin: { gain: 0.6, vary: 0.05, voices: 2 },
+  kiss: { gain: 0.6, vary: 0.05, voices: 2 },
+  gallop: { gain: 0.65, vary: 0.04, voices: 2 },
+  transform: { gain: 0.7, vary: 0.03, voices: 2 },
+  kickball: { gain: 0.8, vary: 0.06, voices: 2 },
+  truck: { gain: 0.65, vary: 0.04, voices: 2 },
+  bubble: { gain: 0.6, vary: 0.04, voices: 2 },
+  pop: { gain: 0.55, vary: 0.06, voices: 2 },
   kamehameha: { gain: 0.65, vary: 0.03, voices: 2 },
   rasengan: { gain: 0.6, vary: 0.04, voices: 2 },
-  freeze: { gain: 0.6, vary: 0.04, voices: 2 },
+  web: { gain: 0.6, vary: 0.05, voices: 2 },
+  webbed: { gain: 0.55, vary: 0.05, voices: 2 },
   hurry: { gain: 0.6, vary: 0, voices: 1 },
   mega: { gain: 0.7, vary: 0.04, voices: 2 },
   start: { gain: 0.6, vary: 0, voices: 1 },
@@ -53,10 +65,6 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "bomb-death": { gain: 0.7, vary: 0, voices: 2 },
   "bomb-win": { gain: 0.65, vary: 0, voices: 1 },
   "bomb-special": { gain: 0.6, vary: 0, voices: 2 },
-  "ninja-pick": { gain: 0.6, vary: 0, voices: 1 },
-  "ninja-death": { gain: 0.7, vary: 0, voices: 2 },
-  "ninja-win": { gain: 0.65, vary: 0, voices: 1 },
-  "ninja-special": { gain: 0.6, vary: 0, voices: 2 },
   "captain-pick": { gain: 0.6, vary: 0, voices: 1 },
   "captain-death": { gain: 0.7, vary: 0, voices: 2 },
   "captain-win": { gain: 0.65, vary: 0, voices: 1 },
@@ -71,6 +79,57 @@ export const SOUNDS: Record<SoundName, SoundSpec> = {
   "naruto-pick": { gain: 0.6, vary: 0, voices: 1 },
   "naruto-death": { gain: 0.7, vary: 0, voices: 2 },
   "naruto-win": { gain: 0.65, vary: 0, voices: 1 },
+  "spider-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "spider-death": { gain: 0.7, vary: 0, voices: 2 },
+  "spider-win": { gain: 0.65, vary: 0, voices: 1 },
+  "spider-special": { gain: 0.6, vary: 0, voices: 2 },
+  "pikachu-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "pikachu-death": { gain: 0.7, vary: 0, voices: 2 },
+  "pikachu-win": { gain: 0.65, vary: 0, voices: 1 },
+  "pikachu-special": { gain: 0.65, vary: 0, voices: 2 },
+  "static-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "static-death": { gain: 0.7, vary: 0, voices: 2 },
+  "static-win": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-death": { gain: 0.7, vary: 0, voices: 2 },
+  "flash-win": { gain: 0.65, vary: 0, voices: 1 },
+  "flash-special": { gain: 0.65, vary: 0, voices: 2 },
+  "bugs-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "bugs-death": { gain: 0.7, vary: 0, voices: 2 },
+  "bugs-win": { gain: 0.65, vary: 0, voices: 1 },
+  "bugs-special": { gain: 0.65, vary: 0, voices: 2 },
+  "lantern-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "lantern-death": { gain: 0.7, vary: 0, voices: 2 },
+  "lantern-win": { gain: 0.65, vary: 0, voices: 1 },
+  "lantern-special": { gain: 0.65, vary: 0, voices: 2 },
+  "donatello-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "donatello-death": { gain: 0.7, vary: 0, voices: 2 },
+  "donatello-win": { gain: 0.65, vary: 0, voices: 1 },
+  "donatello-special": { gain: 0.65, vary: 0, voices: 2 },
+  "penelope-pick": { gain: 0.65, vary: 0, voices: 1 },
+  "penelope-death": { gain: 0.7, vary: 0, voices: 2 },
+  "penelope-win": { gain: 0.65, vary: 0, voices: 1 },
+  "penelope-special": { gain: 0.65, vary: 0, voices: 2 },
+  "panther-pick": { gain: 0.6, vary: 0, voices: 1 },
+  "panther-death": { gain: 0.7, vary: 0, voices: 2 },
+  "panther-win": { gain: 0.6, vary: 0, voices: 1 },
+  "panther-special": { gain: 0.6, vary: 0, voices: 2 },
+  "harry-pick": { gain: 0.7, vary: 0, voices: 1 },
+  "harry-death": { gain: 0.7, vary: 0, voices: 2 },
+  "harry-win": { gain: 0.7, vary: 0, voices: 1 },
+  "harry-special": { gain: 0.7, vary: 0, voices: 2 },
+  "optimus-pick": { gain: 0.75, vary: 0, voices: 1 },
+  "optimus-death": { gain: 0.75, vary: 0, voices: 2 },
+  "optimus-win": { gain: 0.75, vary: 0, voices: 1 },
+  "optimus-special": { gain: 0.75, vary: 0, voices: 2 },
+  "pele-pick": { gain: 0.75, vary: 0, voices: 1 },
+  "pele-death": { gain: 0.75, vary: 0, voices: 2 },
+  "pele-win": { gain: 0.75, vary: 0, voices: 1 },
+  "pele-special": { gain: 0.75, vary: 0, voices: 2 },
+  "lula-pick": { gain: 0.75, vary: 0, voices: 1 },
+  "lula-death": { gain: 0.75, vary: 0, voices: 2 },
+  "lula-win": { gain: 0.75, vary: 0, voices: 1 },
+  "lula-special": { gain: 0.75, vary: 0, voices: 2 },
 };
 
 /** What the end of an online match sounds like to `me`: a null winner is a tie. */
@@ -78,10 +137,15 @@ export function resultSound(winnerId: string | null, me: string): SoundName {
   return winnerId === null ? "draw" : winnerId === me ? "win" : "lose";
 }
 
+/** A sound on its way out of the speakers. */
+export interface Playing {
+  stop(): void;
+}
+
 /** Where sounds actually go; WebAudioBackend in the browser, a fake in tests. */
 export interface AudioBackend {
   unlock(): Promise<void>;
-  play(name: SoundName, o: { gain: number; pan: number; rate: number }): void;
+  play(name: SoundName, o: { gain: number; pan: number; rate: number }): Playing | void;
   /** Milliseconds, for the voice limiter. */
   now(): number;
 }
@@ -127,12 +191,20 @@ export class Sound {
     return this.muted;
   }
 
-  play(name: SoundName, o: { pan?: number; gain?: number } = {}): void {
+  /** A `channel` holds one sound at a time: playing on it cuts whatever it was still playing. */
+  play(name: SoundName, o: { pan?: number; gain?: number; channel?: string } = {}): void {
+    if (o.channel) {
+      this.channels.get(o.channel)?.stop();
+      this.channels.delete(o.channel);
+    }
     const spec = SOUNDS[name];
     if (this.muted || this.volume === 0 || !this.allow(name, spec.voices)) return;
     const rate = 1 + (this.random() * 2 - 1) * spec.vary;
-    this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    const playing = this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
+    if (o.channel && playing) this.channels.set(o.channel, playing);
   }
+
+  private readonly channels = new Map<string, Playing>();
 
   /** Plays what happened in the arena (see soundCues). */
   cues(cues: Cue[], arenaWidth: number): void {
@@ -171,7 +243,7 @@ export class WebAudioBackend implements AudioBackend {
     );
   }
 
-  play(name: SoundName, o: { gain: number; pan: number; rate: number }): void {
+  play(name: SoundName, o: { gain: number; pan: number; rate: number }): Playing | void {
     const ctx = this.ctx;
     const buffer = this.buffers.get(name);
     if (!ctx || !buffer) return;
@@ -181,6 +253,7 @@ export class WebAudioBackend implements AudioBackend {
     const pan = new StereoPannerNode(ctx, { pan: o.pan });
     src.connect(gain).connect(pan).connect(ctx.destination);
     src.start();
+    return { stop: () => src.stop() };
   }
 
   now(): number {

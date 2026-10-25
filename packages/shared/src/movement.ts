@@ -6,6 +6,10 @@ function passable(s: MatchState, x: number, y: number): boolean {
   return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y);
 }
 
+function canKickAhead(s: MatchState, p: Player, x: number, y: number): boolean {
+  return (p.canKick || p.mount === "pusher") && !!bombAt(s, x, y);
+}
+
 /**
  * Moves a player one tick in `dir`, with grid collision and corner sliding.
  *
@@ -52,8 +56,11 @@ export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = eff
         const target = tileCenter(lane);
         const step = Math.min(Math.abs(target - across), budget);
         across += Math.sign(target - across) * step;
-        budget = 0;
+      } else if (canKickAhead(s, p, horizontal ? ta + sign : tc, horizontal ? tc : ta + sign)) {
+        // A bomb we can kick and no way around it: line up with it so the kick lands.
+        across -= Math.sign(offset) * Math.min(Math.abs(offset), budget);
       }
+      budget = 0;
     }
   }
 

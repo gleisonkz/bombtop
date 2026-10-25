@@ -19,8 +19,8 @@ describe("character guide", () => {
     }
   });
 
-  it("shows the ninja in ice blue, not a player red", () => {
-    expect(CHARACTER_GUIDE.find((c) => c.id === "ninja")!.color).toBe(PLAYER_COLORS[3]);
+  it("shows thor in blue, not a player red", () => {
+    expect(CHARACTER_GUIDE.find((c) => c.id === "thor")!.color).toBe(PLAYER_COLORS[3]);
   });
 
   it("lets every character be heard: picked, special, winning and losing, all real sounds", () => {
@@ -62,6 +62,7 @@ describe("character moves", () => {
   });
 
   it("every playable sheet has the full set", () => {
-    for (const c of CHARACTERS) expect(characterMoves(CHARACTER_SHEETS[c]).length, c).toBe(10);
+    // one more for a sheet with a victory pose of its own (its lobby pose shown apart, "Na sala")
+    for (const c of CHARACTERS) expect(characterMoves(CHARACTER_SHEETS[c]).length, c).toBe(CHARACTER_SHEETS[c].victory ? 11 : 10);
   });
 });

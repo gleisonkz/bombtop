@@ -10,6 +10,7 @@ describe("bot escape", () => {
     me.px = center(5);
     me.py = center(1);
     me.fireRange = 2;
+    me.specialCooldown = FUSE_TICKS + 10; // exercise ordinary bomb escape, not the new mega-bomb plan
     rival.px = center(7);
     rival.py = center(1);
     s.items.push({ x: 5, y: 2, kind: ItemKind.Fire });
@@ -32,7 +33,7 @@ describe("bot escape", () => {
     const rival = s.players[1]!;
     rival.px = center(11);
     rival.py = center(1);
-    me.curse = { kind: "reverse", ticks: 100 };
+    me.curse = { kind: "reverse" };
 
     const bot = new Bot(me.id, "hard");
     const before = me.px;

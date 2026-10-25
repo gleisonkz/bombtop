@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto"] as const;
+export const CHARACTERS = ["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele", "lula"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -58,7 +58,7 @@ export interface PlayerInput {
   hold?: boolean;
   /** Secondary button: detonate / punch. */
   action?: boolean;
-  /** Special button: the character's own move (ninja: ice blast). */
+  /** Special button: the character's own move (thor: lightning bolt). */
   special?: boolean;
 }
 
@@ -80,8 +80,16 @@ export interface Player {
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
   character: CharacterId;
-  /** Ticks left frozen by an ice blast (no movement or actions; flames still kill). */
-  frozen: number;
+  /** Drawn in the character's original colors (first to pick it, see `firstPickers`); otherwise in the seat color. */
+  ownColors?: true;
+  /** Ticks left wrapped in the spider's web (no movement or actions; flames still kill). */
+  webbed: number;
+  /** Ticks left charmed by penelope's kiss (drawn with hearts; the stun is what holds them). */
+  charmed: number;
+  /** Ticks left of the pink panther tiptoeing out of sight (rivals do not see him; bots do not hunt him). */
+  sneak: number;
+  /** Ticks left inside the green lantern's bubble (no fire gets in; he moves at half speed). */
+  bubble: number;
   /** Ticks until the special can be used again. */
   specialCooldown: number;
   /** Ticks left with the captain's shield up (planted, facing `facing`). */
@@ -90,6 +98,11 @@ export interface Player {
   charge: number;
   /** Ticks left in Naruto's Rasengan dash (he runs `facing`, deaf to the stick; see `updateRasengan`). */
   rasengan: number;
+  /**
+   * Ticks left of Optimus's "roll out": while above TRUCK_TICKS he turns into his truck where he stands, then he drives
+   * `facing`, deaf to the stick (see `updateTruck`).
+   */
+  truck: number;
   curse: Curse | null;
   mount: MountKind | null;
   /** Ticks left of post-hit invulnerability. */
@@ -115,9 +128,11 @@ export type MountKind = "hopper" | "dasher" | "pusher";
 
 export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire";
 
+/** A skull's curse: it lasts until passed on by touch or cured by picking up another item. */
 export interface Curse {
   kind: CurseKind;
-  ticks: number;
+  /** Who just passed it on: it cannot go back to them until the two have parted. */
+  from?: string;
 }
 
 export interface Bomb {
@@ -142,6 +157,8 @@ export interface Bomb {
 
 export interface AirState {
   dir: Facing;
+  /** Tiles the current arc spans: the whole flight when launched, one per bounce. */
+  span: number;
   /** Tiles still to travel before trying to land. */
   tilesLeft: number;
   /** Ticks spent on the current tile hop (0..AIR_TICKS_PER_TILE). */
@@ -160,6 +177,8 @@ export enum ItemKind {
   Skull = "skull",
   FullFire = "fullFire",
   Egg = "egg",
+  /** Lula's promise of picanha: looks like a power-up; whoever but him picks it up is let down, stunned. Never in a block. */
+  Picanha = "picanha",
 }
 
 /** A power-up. Hidden while its tile is still a block. */
@@ -167,6 +186,8 @@ export interface Item {
   x: number;
   y: number;
   kind: ItemKind;
+  /** Who left it there (lula's picanha): they walk over it. */
+  owner?: string;
 }
 
 export interface Flame {
@@ -176,6 +197,8 @@ export interface Flame {
   ttl: number;
   /** Player whose bomb made this flame (for kill credit). */
   ownerId?: string;
+  /** A blown-up block burning on this tile: it stays solid until the flame dies, then it is gone. */
+  block?: true;
 }
 
 /** A special's shot, kept a few ticks so clients can draw it. */
@@ -188,13 +211,13 @@ export interface Blast {
   length: number;
   ttl: number;
   /**
-   * Ninja's ice (freezes), Thor's lightning (stuns), Goku's Kamehameha (breaks blocks) or
+   * Thor's lightning (stuns), the spider's web (wraps up), Goku's Kamehameha (breaks blocks) or
    * where Naruto's Rasengan struck (`length` 1; 0 when it ran its course).
    */
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "kamehameha" | "rasengan";
+export type BlastKind = "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus" | "truck" | "ball";
 
 export interface MatchState {
   tick: number;
@@ -202,6 +225,8 @@ export interface MatchState {
   rng: number;
   /** Sudden death: how many spiral tiles have been processed. */
   pressure: number;
+  /** Tick sudden death starts at: ROUND_TICKS, or sooner once only bots are left (BOTS_ONLY_HURRY). */
+  pressureAt: number;
   /** Whether dead players get revenge carts. */
   revenge: boolean;
   grid: Grid;

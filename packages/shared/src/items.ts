@@ -3,6 +3,7 @@ import {
   MAX_BOMB_CAPACITY,
   MAX_FIRE_RANGE,
   MAX_SPEED,
+  SPECIAL_STUN_TICKS,
   SPEED_STEP,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
@@ -24,6 +25,7 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Skull]: (p, s) => applyRandomCurse(s, p),
   [ItemKind.FullFire]: (p) => (p.fireRange = MAX_FIRE_RANGE),
   [ItemKind.Egg]: (p, s) => giveRandomMount(s, p),
+  [ItemKind.Picanha]: (p) => (p.stun = SPECIAL_STUN_TICKS),
 };
 
 /** Living players collect any exposed item on their tile. */
@@ -33,7 +35,8 @@ export function collectItems(s: MatchState): void {
     const { x, y } = playerTile(p);
     if (getTile(s, x, y) !== Tile.Empty) continue;
     const item = s.items.find((i) => i.x === x && i.y === y);
-    if (!item) continue;
+    if (!item || item.owner === p.id) continue;
+    if (item.kind !== ItemKind.Skull && item.kind !== ItemKind.Picanha) p.curse = null; // any other item cures a curse
     EFFECTS[item.kind](p, s);
     s.items = s.items.filter((i) => i !== item);
   }

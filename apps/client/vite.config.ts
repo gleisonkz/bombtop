@@ -41,7 +41,7 @@ export default defineConfig({
         theme_color: "#14142b",
         background_color: "#14142b",
         display: "fullscreen",
-        orientation: "landscape",
+        orientation: "any",
         start_url: "/",
         icons: [
           { src: "icons/icon-192.png", sizes: "192x192", type: "image/png" },

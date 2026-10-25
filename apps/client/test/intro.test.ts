@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHARACTERS, playerTile, Tile } from "@bombtop/shared";
+import { CHARACTERS, getTile, ItemKind, playerTile, Tile, TILE } from "@bombtop/shared";
 import { Intro, INTRO_TICKS, INTRO_VIEW, introDue } from "../src/game/intro";
 
 /** Runs the intro, calling `each` after every tick. */
@@ -20,7 +20,7 @@ describe("Intro", () => {
       const key = card?.name ?? (intro.logo() ? "logo" : null);
       if (key && seen[seen.length - 1] !== key) seen.push(key);
     });
-    expect(seen).toEqual(["Bomba", "Ninja", "Capitão América", "Thor", "Goku", "Naruto", "logo"]);
+    expect(seen).toEqual(["Bomba", "Capitão América", "Thor", "Goku", "Naruto", "Homem-Aranha", "Pikachu", "Super Choque", "Flash", "Pernalonga", "Lanterna Verde", "Donatello", "Penélope Charmosa", "Pantera Cor-de-Rosa", "Harry Potter", "Optimus Prime", "Pelé", "Lula", "logo"]);
   });
 
   it("each card says what the character does", () => {
@@ -29,20 +29,17 @@ describe("Intro", () => {
       const card = intro.card();
       if (card) lines.add(card.line);
     });
-    expect(lines.size).toBe(6);
+    expect(lines.size).toBe(18);
     for (const line of lines) expect(line.length).toBeGreaterThan(10);
   });
 
-  it("shows off the moves: the ninja's ice, the captain's shield, the fire bounced back as his", () => {
-    let ice = false;
+  it("shows off the moves: the captain's shield, the fire bounced back as his", () => {
     let shield = false;
     let bounced = false;
     play(({ state }) => {
-      ice ||= state.blasts.some((b) => b.ownerId === "ninja" && b.length > 0);
       shield ||= state.players.some((p) => p.id === "captain" && p.shield > 0);
       bounced ||= state.flames.some((f) => f.ownerId === "captain");
     });
-    expect(ice).toBe(true);
     expect(shield).toBe(true);
     expect(bounced).toBe(true);
   });
@@ -86,6 +83,177 @@ describe("Intro", () => {
     expect(knocked).toBe(true);
   });
 
+  it("the spider's web wraps up goku down row 7", () => {
+    let web = false;
+    let wrapped = false;
+    play(({ state }) => {
+      web ||= state.blasts.some((b) => b.ownerId === "spider" && b.kind === "web" && b.length > 0);
+      wrapped ||= state.players.some((p) => p.id === "goku" && p.webbed > 0);
+    });
+    expect(web).toBe(true);
+    expect(wrapped).toBe(true);
+  });
+
+  it("dresses the spider in red (his own seat, the third)", () => {
+    expect(new Intro().colors.get("spider")).toBe(2);
+  });
+
+  it("pikachu's thunder shock leaves the spider dizzy in row 7", () => {
+    let dizzy = false;
+    play(({ state }) => {
+      dizzy ||= state.blasts.some((b) => b.ownerId === "pikachu" && b.kind === "thunder") && state.players.some((p) => p.id === "spider" && p.stun > 0);
+    });
+    expect(dizzy).toBe(true);
+  });
+
+  it("keeps pikachu's blue scarf (the seventh seat would wear the second one's black)", () => {
+    expect(new Intro().colors.get("pikachu")).toBe(3);
+  });
+
+  it("static's magnet drags pikachu over to him in row 7, dizzy", () => {
+    let pulled = false;
+    play(({ state }) => {
+      const pika = state.players.find((p) => p.id === "pikachu")!;
+      pulled ||= state.blasts.some((b) => b.ownerId === "static" && b.kind === "magnet") && playerTile(pika).x === 10 && playerTile(pika).y === 7 && pika.stun > 0;
+    });
+    expect(pulled).toBe(true);
+  });
+
+  it("the flash zips along row 3 through naruto, the mascot and thor, leaving all three dizzy", () => {
+    let all = false;
+    play(({ state }) => {
+      const dizzy = (id: string) => state.players.find((p) => p.id === id)!.stun > 0;
+      all ||= state.blasts.some((b) => b.ownerId === "flash" && b.kind === "flash") && dizzy("naruto") && dizzy("bomb") && dizzy("thor");
+    });
+    expect(all).toBe(true);
+  });
+
+  it("bugs digs along row 4 under two pillars and comes out past them", () => {
+    let under = false;
+    play(({ state }) => {
+      const b = state.players.find((p) => p.id === "bugs")!;
+      under ||= state.blasts.some((x) => x.ownerId === "bugs" && x.kind === "tunnel") && playerTile(b).x === 5 && playerTile(b).y === 4 && getTile(state, 4, 4) === Tile.Wall;
+    });
+    expect(under).toBe(true);
+  });
+
+  it("the green lantern stands in his own bomb's fire inside his bubble, unhurt", () => {
+    let held = false;
+    play(({ state }) => {
+      const g = state.players.find((p) => p.id === "lantern")!;
+      const t = playerTile(g);
+      held ||= g.bubble > 0 && state.flames.some((f) => f.x === t.x && f.y === t.y);
+    });
+    expect(held).toBe(true);
+    expect(play().state.players.find((p) => p.id === "lantern")!.alive).toBe(true);
+  });
+
+  it("donatello spins his staff by optimus: optimus is left dizzy and his bomb flies off down the column", () => {
+    let dizzy = false;
+    let batted = false;
+    play(({ state }) => {
+      if (!state.blasts.some((x) => x.ownerId === "donatello" && x.kind === "spin")) return;
+      dizzy ||= state.players.find((p) => p.id === "optimus")!.stun > 0;
+      batted ||= state.bombs.some((b) => b.ownerId === "donatello" && b.air?.dir === "down");
+    });
+    expect(dizzy).toBe(true);
+    expect(batted).toBe(true);
+    expect(play().state.players.find((p) => p.id === "donatello")!.alive).toBe(true);
+  });
+
+  it("penelope blows the captain a kiss down row 5: he is left charmed", () => {
+    let charmed = false;
+    play(({ state }) => {
+      charmed ||= state.players.find((p) => p.id === "captain")!.charmed > 0;
+    });
+    expect(charmed).toBe(true);
+    expect(play().state.players.find((p) => p.id === "penelope")!.alive).toBe(true);
+  });
+
+  it("the pink panther tiptoes out of sight into row 7, leaves a bomb between goku and the spider and slips back out", () => {
+    let sneaking = false;
+    let planted = false;
+    play(({ state }) => {
+      sneaking ||= state.players.find((p) => p.id === "panther")!.sneak > 0;
+      planted ||= state.bombs.some((b) => b.ownerId === "panther" && b.x === 4 && b.y === 7);
+    });
+    expect(sneaking).toBe(true);
+    expect(planted).toBe(true);
+    const end = play().state;
+    for (const id of ["panther", "goku", "spider"]) expect(end.players.find((p) => p.id === id)!.alive).toBe(true);
+  });
+
+  it("harry's stag gallops along row 3 and leaves naruto and the flash dizzy at once", () => {
+    const dizzy = new Set<string>();
+    play(({ state }) => {
+      if (!state.blasts.some((b) => b.ownerId === "harry" && b.kind === "patronus")) return;
+      for (const id of ["naruto", "flash"]) if (state.players.find((p) => p.id === id)!.stun > 0) dizzy.add(id);
+    });
+    expect([...dizzy].sort()).toEqual(["flash", "naruto"]);
+    expect(play().state.players.find((p) => p.id === "harry")!.alive).toBe(true);
+  });
+
+  it("optimus steps along row 5, rolls out and shoves the captain down the corridor until he is pinned against penelope", () => {
+    let truck = false;
+    let shoved = false;
+    play(({ state }) => {
+      const optimus = state.players.find((p) => p.id === "optimus")!;
+      const captain = state.players.find((p) => p.id === "captain")!;
+      truck ||= optimus.truck > 0;
+      shoved ||= optimus.truck > 0 && captain.stun > 0 && Math.floor(captain.px / TILE) === 10 && Math.floor(captain.py / TILE) === 5;
+    });
+    expect(truck).toBe(true);
+    expect(shoved).toBe(true);
+    for (const id of ["optimus", "captain", "penelope"]) expect(play().state.players.find((p) => p.id === id)!.alive).toBe(true);
+  });
+
+  it("pelé steps up into row 7 and kicks his ball down it: the spider is knocked down from four tiles off", () => {
+    let kicked = false;
+    let down = false;
+    play(({ state }) => {
+      kicked ||= state.blasts.some((b) => b.ownerId === "pele" && b.kind === "ball" && b.length === 4);
+      down ||= kicked && state.players.find((p) => p.id === "spider")!.stun > 0;
+    });
+    expect(kicked).toBe(true);
+    expect(down).toBe(true);
+    for (const id of ["pele", "spider"]) expect(play().state.players.find((p) => p.id === id)!.alive).toBe(true);
+  });
+
+  it("lula leaves a picanha in front of donatello, who steps down for it and is let down, stunned", () => {
+    let left = false;
+    let letDown = false;
+    play(({ state }) => {
+      left ||= state.items.some((i) => i.kind === ItemKind.Picanha && i.owner === "lula" && i.x === 1 && i.y === 6);
+      letDown ||= left && state.players.find((p) => p.id === "donatello")!.stun > 0 && !state.items.some((i) => i.kind === ItemKind.Picanha);
+    });
+    expect(left).toBe(true);
+    expect(letDown).toBe(true);
+  });
+
+  it("dresses lula in red, to keep his red shirt", () => {
+    expect(new Intro().colors.get("lula")).toBe(2);
+  });
+
+  it("dresses the pink panther in blue, to keep his blue scarf", () => {
+    expect(new Intro().colors.get("panther")).toBe(3);
+  });
+
+  it("dresses the green lantern in green", () => {
+    expect(new Intro().colors.get("lantern")).toBe(4);
+  });
+
+  it("dresses bugs in blue, to keep his blue scarf", () => {
+    expect(new Intro().colors.get("bugs")).toBe(3);
+  });
+
+  it("dresses the flash in red", () => {
+    expect(new Intro().colors.get("flash")).toBe(2);
+  });
+
+  it("keeps static's blue coat", () => {
+    expect(new Intro().colors.get("static")).toBe(3);
+  });
+
   it("thor's bolt leaves the mascot dizzy", () => {
     let bolt = false;
     let dizzy = false;
@@ -109,11 +277,15 @@ describe("Intro", () => {
 
   it("nobody gets hurt", () => {
     const intro = play();
-    expect(intro.state.players.every((p) => p.alive && p.frozen === 0)).toBe(true);
+    expect(intro.state.players.every((p) => p.alive)).toBe(true);
   });
 
-  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red ninja, blue thor, green goku, white naruto (his navy jacket)", () => {
-    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "ninja", "thor", "goku", "naruto"]);
+  it("seats them for the arena colors of the title lineup: white captain (his navy suit), black bomb, red spider, blue thor, green goku, white naruto (his navy jacket), then pikachu, static, the flash, bugs, the green lantern, donatello, penelope, the pink panther, harry, optimus, pelé and lula", () => {
+    expect(new Intro().state.players.map((p) => p.character)).toEqual(["captain", "bomb", "spider", "thor", "goku", "naruto", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele", "lula"]);
+  });
+
+  it("shows every character in its own original colors (each one is there once)", () => {
+    expect(new Intro().state.players.filter((p) => !p.ownColors).map((p) => p.character)).toEqual([]);
   });
 
   it(`ends after ${INTRO_TICKS / 60} seconds and then stays put`, () => {

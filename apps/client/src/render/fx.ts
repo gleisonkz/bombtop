@@ -14,6 +14,9 @@ export interface Particle {
 
 const SPARK_COLORS = [0xfff6c8, 0xffd23f, 0xff7a1a];
 const DEBRIS_COLORS = [0xa86b3c, 0x7a4a26, 0xc98a52];
+/** Optimus's plates: red, blue and chrome; his sparks blue-white. */
+const PLATE_COLORS = [0xd8262e, 0x2456c8, 0xc8ccd6, 0x8a9099];
+const TECH_SPARKS = [0xdff4ff, 0x7fd0ff, 0x3aa0ff];
 /** Most ticks a frame may advance the effects (a hidden tab catching up). */
 const MAX_STEP = 120;
 
@@ -92,6 +95,29 @@ export class Fx {
       const vx = (this.random() - 0.5) * 1.4;
       this.add("debris", cx + vx * 3, cy, vx, -0.8 - this.random() * 0.9, 24 + this.random() * 12, 1.5 + this.random() * 1.5, DEBRIS_COLORS);
     }
+  }
+
+  /** A small cloud of `color` smoke at stage point (x, y): the pink panther slipping out of sight. */
+  puff(x: number, y: number, color: number): void {
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      this.add("smoke", x + Math.cos(a) * 3, y + Math.sin(a) * 2, Math.cos(a) * 0.25, Math.sin(a) * 0.15 - 0.1, 24 + this.random() * 12, 2.5 + this.random() * 1.5, [color]);
+    }
+  }
+
+  /** Optimus turning into his truck, or back: his plates fly apart in a burst of blue sparks, with a small shake. */
+  transform(x: number, y: number): void {
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2 + this.random() * 0.4;
+      const v = 0.5 + this.random() * 0.7;
+      this.add("debris", x + Math.cos(a) * 2, y + Math.sin(a) * 2, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 0.7, 16 + this.random() * 10, 1.2 + this.random() * 1.2, PLATE_COLORS);
+    }
+    for (let i = 0; i < 8; i++) {
+      const a = this.random() * Math.PI * 2;
+      const v = 0.8 + this.random();
+      this.add("spark", x, y, Math.cos(a) * v, Math.sin(a) * v, 8 + this.random() * 8, 0.8 + this.random() * 0.6, TECH_SPARKS);
+    }
+    this.shake = Math.min(3, this.shake + 0.8);
   }
 
   private smoke(tx: number, ty: number): void {

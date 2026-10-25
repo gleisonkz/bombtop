@@ -4,7 +4,7 @@ import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing,
 
 /** Launches a grounded bomb into the air from its current tile. */
 export function launch(b: Bomb, dir: Facing): void {
-  b.air = { dir, tilesLeft: AIR_DISTANCE, progress: 0 };
+  b.air = { dir, span: AIR_DISTANCE, tilesLeft: AIR_DISTANCE, progress: 0 };
   b.slide = null;
   b.offset = 0;
 }
@@ -58,22 +58,20 @@ export function updateHeldBombs(s: MatchState): void {
   }
 }
 
-/** Moves one tile, wrapping around the border walls to the opposite side. */
-function hop(s: MatchState, b: Bomb, dir: Facing): void {
+/** Moves one tile, wrapping around the border walls to the opposite side. Returns true if it wrapped. */
+function hop(s: MatchState, b: Bomb, dir: Facing): boolean {
   const [dx, dy] = DIR_VECTORS[dir];
   const { width, height } = s.grid;
-  b.x += dx;
-  b.y += dy;
-  if (b.x <= 0) b.x = width - 2;
-  if (b.x >= width - 1) b.x = 1;
-  if (b.y <= 0) b.y = height - 2;
-  if (b.y >= height - 1) b.y = 1;
+  const [x, y] = [b.x + dx, b.y + dy];
+  b.x = x <= 0 ? width - 2 : x >= width - 1 ? 1 : x;
+  b.y = y <= 0 ? height - 2 : y >= height - 1 ? 1 : y;
+  return b.x !== x || b.y !== y;
 }
 
 /**
  * Advances airborne bombs. On reaching their target they land on a free
  * tile; solid tiles, grounded bombs and players make them bounce one tile
- * further (stunning the player hit).
+ * further (stunning the player hit, unless they carry a bomb).
  */
 export function updateAir(s: MatchState): void {
   for (const b of s.bombs) {
@@ -81,16 +79,18 @@ export function updateAir(s: MatchState): void {
     if (!air) continue;
     if (++air.progress < AIR_TICKS_PER_TILE) continue;
     air.progress = 0;
-    hop(s, b, air.dir);
+    // Coming in from across the arena, it comes down on the first tile (as in Super Bomberman 4).
+    if (hop(s, b, air.dir)) air.span = air.tilesLeft = 1;
     if (--air.tilesLeft > 0) continue;
 
     const hit = s.players.find((p) => {
       const t = playerTile(p);
       return p.alive && t.x === b.x && t.y === b.y;
     });
-    if (hit) hit.stun = STUN_TICKS;
+    // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned.
+    if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) hit.stun = STUN_TICKS;
     if (hit || getTile(s, b.x, b.y) !== Tile.Empty || bombAt(s, b.x, b.y)) {
-      air.tilesLeft = 1;
+      air.span = air.tilesLeft = 1;
       continue;
     }
     b.air = null;

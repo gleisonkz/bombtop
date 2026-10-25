@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHARACTERS, getTile, Tile, type CharacterId, type MatchState } from "@bombtop/shared";
+import { CHARACTERS, getTile, Tile, TILE, type CharacterId, type MatchState } from "@bombtop/shared";
 import { SHOWCASE_VIEW, specialShowcase } from "../src/game/showcase";
 
 /** Plays one loop of a character's special scene, calling `watch` after every tick. */
@@ -30,8 +30,8 @@ describe("special showcase", () => {
     }
   });
 
-  it("dresses each character in their own color (the ninja in ice blue) and the rival in another", () => {
-    expect(specialShowcase("ninja").colors.get("you")).toBe(3);
+  it("dresses each character in their own color (thor in blue) and the rival in another", () => {
+    expect(specialShowcase("thor").colors.get("you")).toBe(3);
     expect(specialShowcase("goku").colors.get("you")).toBe(4);
     for (const c of CHARACTERS) {
       const { colors } = specialShowcase(c);
@@ -60,12 +60,6 @@ describe("special showcase", () => {
     expect(getTile(show.state, x, y)).toBe(Tile.Empty);
   });
 
-  it("ninja: the ice freezes the rival", () => {
-    let frozen = false;
-    play("ninja", (s) => (frozen ||= rival(s).frozen > 0));
-    expect(frozen).toBe(true);
-  });
-
   it("captain: the shield is up while the rival's bomb blows right next to him", () => {
     let shieldedInFire = false;
     play("captain", (s) => (shieldedInFire ||= you(s).shield > 0 && s.flames.length > 0));
@@ -78,12 +72,12 @@ describe("special showcase", () => {
     expect(stunned).toBe(true);
   });
 
-  it("goku: the Kamehameha smashes a row of blocks", () => {
+  it("goku: the Kamehameha smashes through blocks and stuns the rival behind them", () => {
     const show = specialShowcase("goku");
-    const [x, y] = show.target!;
-    expect(getTile(show.state, x, y)).toBe(Tile.Block);
-    for (let t = 0; t < show.length; t++) show.advance();
-    expect(getTile(show.state, x, y)).toBe(Tile.Empty);
+    expect(getTile(show.state, 3, 5)).toBe(Tile.Block);
+    let stunned = false;
+    play("goku", (s) => (stunned ||= rival(s).stun > 0 && getTile(s, 3, 5) === Tile.Empty));
+    expect(stunned).toBe(true);
   });
 
   it("naruto: the Rasengan knocks the rival back and stuns him", () => {
@@ -91,5 +85,46 @@ describe("special showcase", () => {
     let pushed = false;
     play("naruto", (s) => (pushed ||= rival(s).stun > 0 && rival(s).px > start));
     expect(pushed).toBe(true);
+  });
+
+  it("pikachu: the shock stuns the rival close by, and a bomb comes while he is dizzy", () => {
+    let bombedWhileDizzy = false;
+    play("pikachu", (s) => (bombedWhileDizzy ||= rival(s).stun > 0 && s.bombs.some((b) => b.ownerId === "you")));
+    expect(bombedWhileDizzy).toBe(true);
+  });
+
+  it("spider: the web wraps the rival up, and a bomb comes while he can't run", () => {
+    let bombedWhileWebbed = false;
+    play("spider", (s) => (bombedWhileWebbed ||= rival(s).webbed > 0 && s.bombs.some((b) => b.ownerId === "you")));
+    expect(bombedWhileWebbed).toBe(true);
+  });
+
+  it("static: the magnet drags the rival from afar to his side, dizzy, and a bomb comes", () => {
+    const start = rival(specialShowcase("static").state).px;
+    let pulled = false;
+    let bombed = false;
+    play("static", (s) => {
+      pulled ||= rival(s).stun > 0 && rival(s).px < start;
+      bombed ||= pulled && rival(s).stun > 0 && s.bombs.some((b) => b.ownerId === "you");
+    });
+    expect(bombed).toBe(true);
+  });
+
+  it("lantern: plants a bomb and sits out its fire in his bubble", () => {
+    let through = false;
+    play("lantern", (s) => (through ||= you(s).bubble > 0 && s.flames.some((f) => f.x === Math.floor(you(s).px / TILE) && f.y === Math.floor(you(s).py / TILE))));
+    expect(through).toBe(true);
+  });
+
+  it("bugs: boxed in with his own bomb, digs under the blocks and comes out far from it", () => {
+    let out = false;
+    play("bugs", (s) => (out ||= s.bombs.some((b) => b.ownerId === "you") && you(s).px > 7 * TILE && getTile(s, 4, 5) === Tile.Block));
+    expect(out).toBe(true);
+  });
+
+  it("flash: plants a bomb and zips right through the rival, who is left dizzy in its way", () => {
+    let through = false;
+    play("flash", (s) => (through ||= rival(s).stun > 0 && you(s).px > rival(s).px && s.bombs.some((b) => b.ownerId === "you")));
+    expect(through).toBe(true);
   });
 });

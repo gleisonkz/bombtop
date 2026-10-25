@@ -51,7 +51,7 @@ describe("carryOn", () => {
     expect(to).toEqual(before);
   });
 
-  it.each(["stun", "frozen", "shield", "charge", "rasengan", "jumpTicks", "dashTicks"] as const)("does not extrapolate %s movement", (status) => {
+  it.each(["stun", "webbed", "shield", "charge", "rasengan", "truck", "jumpTicks", "dashTicks"] as const)("does not extrapolate %s movement", (status) => {
     const { from, to } = moved(32, 0);
     to.players[0]![status] = 5;
     expect(posOf(carryOn(from, to, 150))).toEqual(posOf(to));
