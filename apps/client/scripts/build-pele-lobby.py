@@ -16,8 +16,10 @@ W, H = 300, 240
 GROUND = 226
 MID = W // 2
 CONFETTI = [(255, 210, 40), (20, 150, 60), (40, 90, 200), (255, 255, 255)]
-JUMP = [0, 0, 0, 12, 24, 22, 10, 0]  # the jump's height per header frame, px
+JUMP = [0, 0, 0, 18, 32, 28, 12, 0]  # the jump's height per header frame, px
 HIT = 4  # the header frame the ball meets his forehead
+PAD = 10  # room over a header frame for the head pulled back
+NOD = [0, -1, -3, -4, 8, 5, 2, 0]  # the head's own move per header frame, px: cocked back eyeing the ball, snapped down through it
 
 
 def feet(im):
@@ -46,8 +48,30 @@ def main():
 
     def place(im, lift=0):
         canvas = Image.new("RGBA", (W, H))
-        canvas.paste(im, (round(ox), round(oy - lift)), im)
+        canvas.paste(im, (round(ox), round(oy - lift - (im.height - first.height))), im)
         return canvas
+
+    def nod(im, dy):
+        """PixelLab kept his head still, so it is moved here: cut off above the collar, pulled back up (the neck stretched)
+        or snapped down onto it. Comes back PAD px taller, room for a head pulled back off the top of the frame."""
+        tall = Image.new("RGBA", (im.width, im.height + PAD))
+        tall.paste(im, (0, PAD))
+        p = tall.load()
+        cut = next(y for y in range(tall.height)
+                   if sum(1 for x in range(60, 120) if p[x, y][3] > 200 and p[x, y][0] > 200 and p[x, y][1] > 160 and p[x, y][2] < 90) > 4) - 3
+        head = tall.crop((0, 0, tall.width, cut))
+        out = tall.copy()
+        out.paste(Image.new("RGBA", (tall.width, cut)), (0, 0))
+        if dy < 0:  # the neck stretched into the gap
+            neck = tall.crop((0, cut - 1, tall.width, cut))
+            for y in range(cut + dy, cut):
+                out.paste(neck, (0, y))
+        out.alpha_composite(head.crop((0, max(0, -dy), tall.width, cut)), (0, max(0, dy)))
+        return out
+
+    def head_top(im):
+        bb = im.getchannel("A").point(lambda v: 255 if v > 32 else 0).getbbox()
+        return bb[1]
 
     def put_ball(canvas, x, y, turn=0):
         # a quarter turn at a time: pixel art smears when rotated by other angles
@@ -65,17 +89,28 @@ def main():
         put_ball(canvas, kx, ky - 8 - up * 40, turn=i)
         frames.append(canvas)
     # 8-15: the ball drops back out of the sky onto his forehead as he springs up, and is nodded away; confetti rains
+    tops = []
     for n in range(8):
-        canvas = place(header(n), JUMP[n])
-        k = {q["label"]: q for q in heads[n]}
-        brow = (k["RIGHT EYE"]["y"] + k["LEFT EYE"]["y"]) / 2 * 180 + oy - JUMP[n] - 34  # the top of his head
-        r = ball.height / 2
+        im = nod(header(n), NOD[n])
+        tops.append(head_top(im) - PAD + oy - JUMP[n])
+    r = ball.height / 2
+    for n in range(8):
+        canvas = place(nod(header(n), NOD[n]), JUMP[n])
         if n <= HIT:  # falling onto the spot his head will be when it meets it
             t = n / HIT
-            hit = (sum(q["y"] for q in heads[HIT] if "EYE" in q["label"]) / 2 * 180 + oy - JUMP[HIT] - 34) - r
+            hit = tops[HIT] + 2 - r
             put_ball(canvas, MID + 4 * (1 - t), -r + (hit + r) * t * t, turn=n)
         elif n < 7:  # nodded up and away
-            put_ball(canvas, MID + 14 * (n - HIT), brow - r - 45 * (n - HIT), turn=n)
+            put_ball(canvas, MID + 14 * (n - HIT), tops[n] - r - 45 * (n - HIT), turn=n)
+        if n in (HIT, HIT + 1):  # the knock: lines bursting off the ball
+            d = ImageDraw.Draw(canvas)
+            cy = tops[HIT] + 2 - r if n == HIT else tops[n] - r - 45
+            cx = MID if n == HIT else MID + 14
+            for a in range(8):
+                ang = a * math.pi / 4 + math.pi / 8
+                r0, r1 = (r + 4, r + 14) if n == HIT else (r + 10, r + 18)
+                d.line([(cx + math.cos(ang) * r0, cy + math.sin(ang) * r0), (cx + math.cos(ang) * r1, cy + math.sin(ang) * r1)],
+                       fill=(255, 255, 255, 255 if n == HIT else 160), width=2)
         if n > HIT:
             d = ImageDraw.Draw(canvas)
             for c in range(28):
