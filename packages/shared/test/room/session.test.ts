@@ -305,6 +305,21 @@ describe("bots", () => {
     expect(new Set(s.members.slice(1).map((m) => m.character)).size).toBe(4);
   });
 
+  it("a bot plays a character drawn at random, none already in the room", () => {
+    const first = (r: number) => {
+      const s = new BattleSession({ seed: () => 1, random: () => r });
+      s.join("c1", "P1", "bomb");
+      s.addBot("c1", "easy");
+      return s.members[1]!.character;
+    };
+    expect(first(0)).not.toBe("bomb");
+    expect(first(0)).not.toBe(first(0.99));
+    const s = new BattleSession({ seed: () => 1, random: () => 0.5 });
+    s.join("c1", "P1");
+    for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
+    expect(new Set(s.members.map((m) => m.character)).size).toBe(MAX_PLAYERS);
+  });
+
   it("picks the bot names at random", () => {
     const names = (r: number) => {
       const s = new BattleSession({ seed: () => 1, random: () => r });

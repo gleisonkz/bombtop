@@ -126,8 +126,12 @@ export class BattleSession {
   /** Host only, in the lobby: seats a computer player of the given level. */
   addBot(requesterId: string, level: BotLevel): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length >= MAX_PLAYERS) return false;
-    const character = CHARACTERS[this.botSeq % CHARACTERS.length]!; // bots take turns
     const random = this.opts.random ?? Math.random;
+    // a character drawn at random, one nobody in the room plays yet (any, once all are taken)
+    const playing = new Set(this.members.map((m) => m.character));
+    const free = CHARACTERS.filter((c) => !playing.has(c));
+    const pool = free.length ? free : CHARACTERS;
+    const character = pool[Math.floor(random() * pool.length)]!;
     const name = this.botName(character) ?? `Bot ${this.botSeq + 1}`;
     // A personality no other bot in the room has (there are as many as bot seats).
     const used = new Set(this.members.map((m) => m.persona));

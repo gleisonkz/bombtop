@@ -67,11 +67,11 @@ describe("own colors in the lobby", () => {
   it("bots count as pickers", () => {
     const s = new BattleSession({ random: () => 0 });
     s.join("a", "A", "bomb");
-    s.addBot("a", "easy"); // the first bot plays the bomb mascot
-    s.addBot("a", "easy"); // the second, the captain
-    expect(own(s)).toEqual(["a", "bot-2"]);
-    s.setCharacter("a", "captain");
-    expect(own(s)).toEqual(["bot-1", "bot-2"]);
+    s.addBot("a", "easy"); // a character nobody plays: the captain
+    expect(s.members[1]!.character).toBe("captain");
+    expect(own(s)).toEqual(["a", "bot-1"]);
+    s.setCharacter("a", "captain"); // the bot picked the captain first
+    expect(own(s)).toEqual(["bot-1"]);
   });
 });
 
