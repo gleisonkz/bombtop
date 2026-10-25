@@ -39,8 +39,9 @@
 // = 24015278, "Ai, ai, ai, ai" = 24015337, under pele/; his kick = "Soccer Ball Kick" by bittermelonheart (CC0),
 // https://freesound.org/s/555042/ (saved as freesound/555042_11910076-hq.mp3);
 // lula's own lines, clips of his speeches on myinstants.com, under lula/: "Bora, gente, pra rua!"
-// (lula-bora-pra-rua-gente), "Você vai voltar a comer picanha" (vai-voltar-a-comer-picanha), "Eu vou comer picanha e vou
-// tomar uma cerveja" (lula-picanha-e-cerveja_3zSp50v), "Por favor, me ajude!" (lula-por-favor-me-ajuda_5UqDBWj);
+// (lula-bora-pra-rua-gente), "Vamos comer uma fatia de picanha com uma gordurinha passada na farinha" (picanha-com-gordurinha,
+// a 2022 campaign speech; the clip vai-voltar-a-comer-picanha is not his voice), "Eu vou comer picanha e vou tomar uma
+// cerveja" (lula-picanha-e-cerveja_3zSp50v), "Por favor, me ajude!" (lula-por-favor-me-ajuda_5UqDBWj);
 // the bomb mascot as White Bomber from Super Bomberman R (fan use; (c) Konami), asset 412206 "White", under sbr/.
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
@@ -242,7 +243,7 @@ const RECIPE = {
   "lula-pick": { src: LULA("lula-bora-pra-rua-gente"), len: 1.35 },
   "lula-death": { src: LULA("lula-por-favor-me-ajuda_5UqDBWj"), len: 3.65 },
   "lula-win": { src: LULA("lula-picanha-e-cerveja_3zSp50v"), len: 4.85 },
-  "lula-special": { src: LULA("vai-voltar-a-comer-picanha"), len: 1.98 },
+  "lula-special": { src: LULA("picanha-com-gordurinha"), from: 7.6, len: 4.95 },
   // pelé's kick: a ball struck hard
   kickball: { src: FS("555042_11910076-hq.mp3"), len: 0.6 },
   // optimus turning into his truck (or back): the cartoon's transforming sound; the truck's engine roaring off

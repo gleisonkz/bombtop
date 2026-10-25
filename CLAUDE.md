@@ -278,8 +278,8 @@ from our own skeletons (E:/lula-src/kp); in the side view PixelLab drew a gray l
 out and what is left of it cut off (`no_lump`); the cast plays from when he uses his special (`castTicks`: it leaves no
 blast). The picanha is an item (`build-items.py`: on a skewer, its fat cap on top), its own entry in the item guide's data
 but left out of the guide (it never comes out of a block). Lobby: a v3 animation, the "L" raised high, laughing. Heard
-through his own speeches (myinstants.com clips): "Bora, gente, pra rua!" when picked, "Você vai voltar a comer picanha"
-on his special, "Eu vou comer picanha e vou tomar uma cerveja" when he wins, "Por favor, me ajude!" when he dies. The
+through his own speeches (myinstants.com clips): "Bora, gente, pra rua!" when picked, "Nós vamos comer uma fatia de picanha com
+uma gordurinha passada na farinha" (a 2022 campaign speech) on his special, "Eu vou comer picanha e vou tomar uma cerveja" when he wins, "Por favor, me ajude!" when he dies. The
 intro seats him in an eighteenth seat, in red, stepping up column 1 to leave a picanha in front of donatello, who steps
 down for it and is let down (45 s now); the title lineup has him at the far right. Bots leave it on the free tile toward a
 rival coming down a clear line 2-4 tiles off (`SPECIAL_PLANS.lula`).
