@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "../../src";
-import { BattleSession, BOT_NAMES, BOT_PERSONAS, RESULTS_TICKS } from "../../src";
+import { BattleSession, BOT_NAMES, BOT_PERSONAS, RESULTS_TICKS, WINS_TO_WIN } from "../../src";
 
 function lobby(n: number) {
   const s = new BattleSession({ seed: () => 1, blockDensity: 0 });
@@ -185,27 +185,75 @@ describe("playing", () => {
     expect(s.match!.players[1]!.alive).toBe(false);
   });
 
-  it("ends the round when one player is left, then returns to the lobby", () => {
+  it("ends the round when one player is left, then the next round starts by itself", () => {
     const s = playing();
+    const first = s.match;
     const { x, y } = playerTile(s.match!.players[1]!);
     s.match!.revenge = false;
     s.match!.flames.push({ x, y, ttl: FLAME_TICKS });
     const out = s.tick();
-    expect(out.result).toEqual({ over: true, winnerId: "c1" });
+    expect(out.result).toEqual({ over: true, winnerId: "c1", setOver: false });
     expect(s.phase).toBe("results");
     for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
-    expect(s.phase).toBe("lobby");
-    expect(s.match).toBeNull();
+    expect(s.phase).toBe("playing");
+    expect(s.match).not.toBe(first);
+    expect(s.match!.players.every((p) => p.alive)).toBe(true);
   });
 
   it("keeps score across rounds", () => {
     const s = playing();
+    winRound(s, "c1");
+    winRound(s, "c2");
+    winRound(s, "c1");
+    expect(s.members.map((m) => m.wins)).toEqual([2, 1]);
+  });
+
+  it(`whoever wins ${WINS_TO_WIN} rounds wins the match, and the room goes back to the lobby`, () => {
+    const s = playing();
+    for (let i = 1; i < WINS_TO_WIN; i++) expect(winRound(s, "c2")).toMatchObject({ setOver: false });
+    expect(winRound(s, "c2")).toEqual({ over: true, winnerId: "c2", setOver: true });
+    expect(s.phase).toBe("lobby");
+    expect(s.match).toBeNull();
+    expect(s.lobbyInfo("X").members.find((m) => m.id === "c2")!.wins).toBe(WINS_TO_WIN); // the final score stays up in the lobby
+  });
+
+  it("a draw scores nobody, and play goes on", () => {
+    const s = playing();
     s.match!.revenge = false;
-    s.match!.players[1]!.alive = false;
-    s.tick();
-    expect(s.members.find((m) => m.id === "c1")!.wins).toBe(1);
+    for (const p of s.match!.players) p.alive = false;
+    expect(s.tick().result).toEqual({ over: true, winnerId: null, setOver: false });
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.phase).toBe("playing");
+    expect(s.members.map((m) => m.wins)).toEqual([0, 0]);
+  });
+
+  it("a new match from the lobby starts the score from zero", () => {
+    const s = playing();
+    for (let i = 0; i < WINS_TO_WIN; i++) winRound(s, "c1");
+    s.start("c1");
+    expect(s.members.map((m) => m.wins)).toEqual([0, 0]);
+  });
+
+  it("with fewer than two players left, the room goes back to the lobby instead of another round", () => {
+    const s = playing(3);
+    s.leave("c3");
+    winRound(s, "c1");
+    expect(s.phase).toBe("playing");
+    s.leave("c2");
+    s.tick(); // c1 is the last one standing
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.phase).toBe("lobby");
   });
 });
+
+/** Everyone but `winner` drops dead; the round's result, after its results screen has run out. */
+function winRound(s: BattleSession, winner: string) {
+  s.match!.revenge = false;
+  for (const p of s.match!.players) if (p.id !== winner) p.alive = false;
+  const { result } = s.tick();
+  for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+  return result;
+}
 
 describe("snapshots", () => {
   it("are emitted every other tick while playing", () => {

@@ -1,5 +1,6 @@
 import {
   RESULTS_TICKS,
+  WINS_TO_WIN,
   BOTS_ONLY_HURRY,
   Bot,
   createMatch,
@@ -17,9 +18,9 @@ import {
   type CharacterId,
   type LobbyInfo,
   type LobbyMember,
-  type MatchResult,
   type MatchState,
   type PlayerInput,
+  type ResultMessage,
   type Snapshot,
   type RoomPhase,
   type StageId,
@@ -32,7 +33,7 @@ export const SNAPSHOT_EVERY = 2;
 
 export interface TickOutput {
   snapshot?: Snapshot;
-  result?: MatchResult & { over: true };
+  result?: ResultMessage;
 }
 
 /** Names for computer players, by the character they play; each bot draws one not taken yet. */
@@ -75,6 +76,8 @@ export class BattleSession {
   stage: StageId = STAGES[0]!;
   private round = 0;
   private resultsLeft = 0;
+  /** The last round's winner won the match: after its results, back to the lobby. */
+  private setOver = false;
   private inputs = new Map<string, InputQueue>();
   private bots = new Map<string, Bot>();
   private botSeq = 0;
@@ -194,8 +197,16 @@ export class BattleSession {
     return STAGES[this.round % STAGES.length]!;
   }
 
+  /** The host starts a match from the lobby: rounds until someone has won WINS_TO_WIN of them. */
   start(requesterId: string): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
+    for (const m of this.members) m.wins = 0;
+    this.startRound();
+    return true;
+  }
+
+  private startRound(): void {
+    this.setOver = false;
     this.stage = this.nextStage;
     this.round++;
     const seed = this.opts.seed?.() ?? Math.floor(Math.random() * 2 ** 32);
@@ -211,7 +222,6 @@ export class BattleSession {
     // Each bot gets its own dice for this match, from the match's seed: replays stay the same, matches don't.
     this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot, m.persona, seed ^ hashId(m.id))]));
     this.phase = "playing";
-    return true;
   }
 
   /** An input from a player; `clientTick` (when sent) lets the server hold it exactly as long as the client did. */
@@ -231,8 +241,10 @@ export class BattleSession {
   tick(): TickOutput {
     if (this.phase === "results") {
       if (--this.resultsLeft <= 0) {
-        this.phase = "lobby";
-        this.match = null;
+        if (this.setOver || this.members.length < 2 || this.hostId === undefined) {
+          this.phase = "lobby";
+          this.match = null;
+        } else this.startRound();
       }
       return {};
     }
@@ -249,9 +261,10 @@ export class BattleSession {
     const result = matchResult(this.match);
     const out: TickOutput = {};
     if (result.over) {
-      out.result = result;
       const winner = this.members.find((m) => m.id === result.winnerId);
       if (winner) winner.wins++;
+      this.setOver = !!winner && winner.wins >= WINS_TO_WIN;
+      out.result = { ...result, setOver: this.setOver };
       this.phase = "results";
       this.resultsLeft = RESULTS_TICKS;
     }

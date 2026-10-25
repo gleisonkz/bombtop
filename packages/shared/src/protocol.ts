@@ -57,7 +57,8 @@ export interface LobbyInfo {
   watchers?: number;
 }
 
-export type ResultMessage = MatchResult & { over: true };
+/** A round's end; `setOver` when its winner has won the match (the room goes back to the lobby). */
+export type ResultMessage = MatchResult & { over: true; setOver: boolean };
 
 const DIRS = new Set<Direction>(["up", "down", "left", "right"]);
 

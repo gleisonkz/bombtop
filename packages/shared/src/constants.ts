@@ -59,8 +59,10 @@ export const DASH_SPEED = BASE_SPEED * 3;
 export const ROUND_TICKS = 3 * 60 * TICK_RATE;
 /** Once only bots are left in a match, sudden death comes this soon (they also go all out: botHeat). */
 export const BOTS_ONLY_HURRY = 30 * TICK_RATE;
-/** Ticks the results screen stays up before the room goes back to the lobby. */
+/** Ticks a round's results screen stays up before the next round (or, once the match is won, the lobby). */
 export const RESULTS_TICKS = 6 * TICK_RATE;
+/** Rounds to win a match (as in Super Bomberman 4, at most 5): between rounds the next one starts by itself. */
+export const WINS_TO_WIN = 5;
 
 /** Ticks between falling walls during sudden death. */
 export const PRESSURE_INTERVAL = 12;
