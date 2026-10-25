@@ -810,7 +810,7 @@ export function tileCell(tile: Tile, x: number, y: number, width: number, height
 /** Walls and blocks stand up from the floor and shade the tile below them. */
 export const castsShadow = (tile: Tile): boolean => tile === Tile.Wall || tile === Tile.Block;
 
-/** Power-up art (scripts/build-items.py): one column per item, rows = plain, then a glint sweeping across. */
+/** Power-up art (scripts/pack-concept-items.py; build-items.py only draws the picanha for it, never rerun it to write items.png): one column per item, rows = plain, then a glint sweeping across. */
 export const ITEMS = {
   url: "sprites/items.png",
   size: 192,

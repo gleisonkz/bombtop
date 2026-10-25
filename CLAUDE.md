@@ -276,7 +276,7 @@ the shirt, or up among his head, a little toward orange (`face_reds`). Idle fron
 breathing template frowned and puffed breath). His cast (he bends over and sets the picanha down) and carry walk are posed
 from our own skeletons (E:/lula-src/kp); in the side view PixelLab drew a gray lump in his hands, so those frames are left
 out and what is left of it cut off (`no_lump`); the cast plays from when he uses his special (`castTicks`: it leaves no
-blast). The picanha is an item (`build-items.py`: on a skewer, its fat cap on top), its own entry in the item guide's data
+blast). The picanha is an item (drawn by `build-items.py`: on a skewer, its fat cap on top; set in the power-ups' gold ring by `pack-concept-items.py`, which builds `items.png` from the concept art: never write it with `build-items.py`, that is the old art), its own entry in the item guide's data
 but left out of the guide (it never comes out of a block). Lobby: a v3 animation, the "L" raised high, laughing. Heard
 through his own speeches (myinstants.com clips): "Bora, gente, pra rua!" when picked, "Nós vamos comer uma fatia de picanha com
 uma gordurinha passada na farinha" (a 2022 campaign speech) on his special, "Eu vou comer picanha e vou tomar uma cerveja" when he wins, "Por favor, me ajude!" when he dies. The

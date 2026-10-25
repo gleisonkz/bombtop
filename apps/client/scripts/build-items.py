@@ -1,4 +1,5 @@
-"""Power-up sheet in HD: one 192x192 column per item (order = ITEMS.order in render/sprites.ts),
+"""The first power-up sheet (items.png is now packed from concept art by pack-concept-items.py, which
+takes only the picanha icon from here). Power-up sheet in HD: one 192x192 column per item (order = ITEMS.order in render/sprites.ts),
 rows = plain, then 3 frames of a glint sweeping across the plate. Designed on a 48-unit grid
 (4 px per unit). Each item is a beveled plate in its own color with a glossy icon on top; the
 bomb items reuse the bombs from bombs.png (run build-bombs.py first).
@@ -226,4 +227,5 @@ def main():
         prev.alpha_composite(sheet.crop((0, 2 * SIZE, SIZE * len(ORDER), 3 * SIZE)), (0, SIZE))
         prev.resize((prev.width // 2, prev.height // 2), Image.LANCZOS).save(sys.argv[3])
 
-main()
+if __name__ == "__main__":
+    main()

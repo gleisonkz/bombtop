@@ -117,7 +117,7 @@ lobby's ball and confetti are drawn by `scripts/build-pele-lobby.py`, laid out b
 Caricature of Luiz Inácio Lula da Silva for this non-commercial project, made in PixelLab (pixellab.ai) (character
 "Lula HD V2", after a vinyl toy of him: red t-shirt with a yellow star; his setting the picanha down and carry walk posed
 from our own skeletons, his "L" raised high a v3 animation); laid out by `scripts/build-character-sheet.py lula`; rows =
-`SHEETS.lula`. The picanha he leaves is an item in `items.png` (`build-items.py`).
+`SHEETS.lula`. The picanha he leaves is an item in `items.png` (`pack-concept-items.py`).
 
 ## optimus.png, optimus-lobby.png, truck.png
 
@@ -143,7 +143,8 @@ in HD: drawn on a design grid at high resolution and scaled down, so edges are s
 `hd.py` holds the shared drawing helpers.
 
 - `bombs.png` — `build-bombs.py`. Cells (128px): normal, pierce, remote.
-- `items.png` — `build-items.py` (bomb items reuse bombs.png). Columns (192px): one per item,
+- `items.png` — `pack-concept-items.py`, packed from the concept art `concept/powerups/powerup-family-concept-v1.png`;
+  the last column is Lula's picanha, `build-items.py`'s icon set in that art's gold ring. Columns (192px): one per item,
   order = `ITEMS.order` in `src/render/sprites.ts`; rows: plain, then 3 frames of a glint.
 - `flames.png` — `build-flames.py`. Rows (128px): fireball center, arm segment, arm tip; columns: 5 stages.
 - `kamehameha.png` — `build-kamehameha.py`, Goku's beam. Rows (128px): ball of ki, beam segment (tiles
