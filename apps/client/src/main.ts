@@ -207,6 +207,7 @@ const ctx: ModeContext = {
   renderer,
   sound,
   touch: touch.input,
+  specialCooldown: (ticks) => touch.setSpecialCooldown(ticks),
   fit,
   exit: (message) => {
     route.left();

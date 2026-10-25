@@ -19,6 +19,7 @@ describe("online snapshot rendering", () => {
   let game: import("../src/game/online-game").OnlineGame;
   let draw: ReturnType<typeof vi.fn>;
   let send: ReturnType<typeof vi.fn>;
+  let specialCooldown: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
@@ -28,6 +29,7 @@ describe("online snapshot rendering", () => {
     handlers = new Map();
     draw = vi.fn();
     send = vi.fn();
+    specialCooldown = vi.fn();
     const link: RoomLink = {
       sessionId: "me", roomId: "test", reconnectionToken: "",
       send, onMessage: (type, callback) => handlers.set(type, callback),
@@ -36,7 +38,7 @@ describe("online snapshot rendering", () => {
     const ctx = {
       renderer: { draw, setCharacters: vi.fn(), setViewer: vi.fn(), setNames: vi.fn(), setScore: vi.fn(), showBanner: vi.fn() },
       sound: { play: vi.fn(), cues: vi.fn() },
-      touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(),
+      touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(), specialCooldown,
     } as unknown as ModeContext;
     const panel = { update: vi.fn(), hide: vi.fn(), setWatching: vi.fn() } as unknown as LobbyPanel;
     game = OnlineGame.over(link, ctx, panel);
@@ -49,9 +51,10 @@ describe("online snapshot rendering", () => {
     vi.restoreAllMocks();
   });
 
-  function receive(tick: number, botX = 896): Snapshot {
+  function receive(tick: number, botX = 896, cooldown = 0): Snapshot {
     const state = createMatch({ seed: 1, playerIds: ["me", "bot"], blockDensity: 0 });
     state.tick = tick;
+    state.players[0]!.specialCooldown = cooldown;
     state.players[1]!.px = botX;
     state.players[1]!.py = TILE + TILE / 2;
     const snap = { ...publicView(state), acks: {} };
@@ -115,5 +118,21 @@ describe("online snapshot rendering", () => {
     const reports = send.mock.calls.filter(([type]) => type === C2S.stats).map(([, m]) => m);
     expect(reports).toHaveLength(1);
     expect(reports[0]).toMatchObject({ gap: Math.round(1000 / 30) });
+  });
+
+  it("tells the special button how long our special still recharges, and that it is ready once the match is left", () => {
+    receive(60, 896, 600);
+    now += 1000 / 30;
+    receive(62, 896, 598);
+    game.frame(0, now);
+    expect(specialCooldown.mock.calls.at(-1)![0]).toBeGreaterThan(500);
+    now += 1000 / 30;
+    receive(64, 896, 0);
+    game.frame(0, now);
+    expect(specialCooldown).toHaveBeenLastCalledWith(0);
+    receive(66, 896, 300);
+    game.frame(0, now);
+    game.dispose();
+    expect(specialCooldown).toHaveBeenLastCalledWith(0);
   });
 });

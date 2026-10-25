@@ -240,6 +240,7 @@ export class OnlineGame implements GameMode {
       this.echo.played(got, nowMs);
     }
     view = this.pickups.apply(view, nowMs);
+    this.ctx.specialCooldown?.(me?.specialCooldown ?? 0);
     if (!me) {
       this.measureJumps(view, prev, sample.alpha, null);
       return this.ctx.renderer.draw(view, prev, sample.alpha);
@@ -371,6 +372,7 @@ export class OnlineGame implements GameMode {
     this.ctx.renderer.showBanner("");
     this.ctx.renderer.setNames(new Map()); // the menus' scenes go untagged
     this.ctx.renderer.setScore(null);
+    this.ctx.specialCooldown?.(0);
     if (!this.leaving) {
       this.leaving = true;
       this.couch?.leaveAll();

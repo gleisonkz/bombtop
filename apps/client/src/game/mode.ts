@@ -19,6 +19,8 @@ export interface ModeContext {
   sound: Sound;
   /** On-screen controls (idle on non-touch devices). */
   touch: TouchInput;
+  /** Ticks our own special still recharges (0 = ready), for the touch special button. */
+  specialCooldown?(ticks: number): void;
   /**
    * Resizes the canvas to fit an arena of the given size in tiles, or only the window of it
    * that starts at tile (x, y) (0, 0 = the whole arena).

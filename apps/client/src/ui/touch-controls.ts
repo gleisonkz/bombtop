@@ -1,6 +1,7 @@
 import type { ControlStyle } from "../input/control-style";
 import { STICK_RADIUS, TouchInput } from "../input/touch";
 import { el } from "./dom";
+import { specialCountdown } from "./special-countdown";
 
 /** True on phones/tablets (primary pointer is a finger). */
 export const isTouchDevice = (): boolean =>
@@ -13,6 +14,9 @@ export class TouchControls {
 
   private readonly knob = el("div", { class: "knob" });
   private style: ControlStyle = "dpad";
+  /** The seconds left on the special button while it recharges. */
+  private readonly countdown = el("span", { class: "countdown" });
+  private shownCountdown: string | null = null;
 
   constructor(parent: HTMLElement) {
     // The d-pad: a fixed cross; the finger steers by where it is on it and can slide from arrow to arrow.
@@ -54,8 +58,9 @@ export class TouchControls {
     stick.addEventListener("pointerup", end);
     stick.addEventListener("pointercancel", end);
 
-    const pad = (label: string, button: "bomb" | "action" | "special") => {
+    const pad = (label: string, button: "bomb" | "action" | "special", extra?: HTMLElement) => {
       const b = el("div", { class: `touch-btn ${button}`, text: label });
+      if (extra) b.appendChild(extra);
       b.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         this.input.press(button);
@@ -74,13 +79,14 @@ export class TouchControls {
     this.root = el("div", { class: "touch" }, [
       stick,
       el("div", { class: "touch-buttons" }, [
-        pad("⚡", "special"),
+        pad("⚡", "special", this.countdown),
         pad("AÇÃO", "action"),
         pad("💣", "bomb"),
       ]),
     ]);
     this.root.hidden = true;
     this.knob.hidden = true;
+    this.countdown.hidden = true;
     parent.appendChild(this.root);
   }
 
@@ -95,6 +101,16 @@ export class TouchControls {
   setVisible(visible: boolean): void {
     this.root.hidden = !visible || !isTouchDevice();
     if (this.root.hidden) this.input.reset();
+  }
+
+  /** Dims the special button and counts down the seconds while our special recharges (ticks; 0 = ready). */
+  setSpecialCooldown(ticks: number): void {
+    const label = specialCountdown(ticks);
+    if (label === this.shownCountdown) return;
+    this.shownCountdown = label;
+    this.countdown.textContent = label ?? "";
+    this.countdown.hidden = label === null;
+    this.countdown.parentElement?.classList.toggle("cooling", label !== null);
   }
 
   private showKnob(ox: number, oy: number, dx: number, dy: number): void {
