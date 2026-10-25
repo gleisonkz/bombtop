@@ -36,24 +36,6 @@ const INFO: Record<CharacterId, Info> = {
       ],
     },
   },
-  ninja: {
-    name: "Ninja",
-    title: "O guerreiro do gelo",
-    color: blue,
-    story:
-      "Treinado num templo escondido nas montanhas geladas, aprendeu a esfriar o ar com as mãos antes de aprender a andar. Fala pouco, observa muito e ataca uma vez só. Entrou na arena para provar que paciência e sangue frio vencem qualquer explosão.",
-    special: {
-      name: "Raio de gelo",
-      recharge: "20 s",
-      text: "Lança gelo 4 casas em linha reta à frente. O primeiro jogador atingido fica congelado por 5 s: não anda nem solta bombas, mas o fogo ainda pega.",
-      tips: [
-        "Congele e solte uma bomba do lado: congelado não foge.",
-        "Fique na mesma linha do rival, a até 4 casas, antes de apertar.",
-        "Cuidado com o Capitão: o escudo devolve o gelo para você.",
-        "Use para segurar quem está fugindo pela linha de fogo de uma bomba.",
-      ],
-    },
-  },
   captain: {
     name: "Capitão América",
     title: "O sentinela da liberdade",
@@ -63,11 +45,11 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Escudo",
       recharge: "20 s",
-      text: "Ergue o escudo por 3 s, parado e virado para a frente. Fogo e gelo que vêm na direção do escudo param nele e voltam: o fogo de uma bomba à frente vai duas vezes mais longe do outro lado, e raios voltam em quem atirou.",
+      text: "Ergue o escudo por 3 s, parado e virado para a frente. Fogo e golpes que vêm na direção do escudo param nele e voltam: o fogo de uma bomba à frente vai duas vezes mais longe do outro lado, e raios voltam em quem atirou.",
       tips: [
         "Vire para o perigo antes de apertar: com o escudo erguido você não gira.",
         "Só protege a frente: fogo pelos lados ou pelas costas ainda te pega.",
-        "Devolve o gelo do Ninja, o raio do Thor e o Kamehameha do Goku em quem mandou.",
+        "Devolve o raio do Thor, a teia do Homem-Aranha e o Kamehameha do Goku em quem mandou.",
         "O Naruto que bater no escudo fica tonto em vez de você.",
       ],
     },
@@ -99,7 +81,7 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Kamehameha",
       recharge: "30 s",
-      text: "Carrega o ki por um instante, parado (ficar tonto ou congelado cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. O primeiro jogador atingido fica tonto por 3 s, sem andar nem agir. Paredes param o raio.",
+      text: "Carrega o ki por um instante, parado (ficar tonto cancela), e dispara um raio 5 casas à frente que quebra os blocos no caminho. O primeiro jogador atingido fica tonto por 3 s, sem andar nem agir. Paredes param o raio.",
       tips: [
         "Use para abrir corredores e limpar blocos rapidamente.",
         "Enquanto carrega você fica parado: nunca use com fogo vindo na sua direção.",
@@ -224,7 +206,7 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Bolha protetora",
       recharge: "25 s",
-      text: "Ergue em volta de si uma bolha de energia verde por 3 s: fogo vindo de qualquer lado não entra, nem o da bomba embaixo dele. Dentro dela ele anda na metade da velocidade. A bolha não segura gelo, raio, teia nem os outros especiais.",
+      text: "Ergue em volta de si uma bolha de energia verde por 3 s: fogo vindo de qualquer lado não entra, nem o da bomba embaixo dele. Dentro dela ele anda na metade da velocidade. A bolha não segura raio, teia nem os outros especiais.",
       tips: [
         "Plante a bomba no meio dos rivais e fique: a bolha te segura no fogo.",
         "Ative um instante antes da explosão: 3 s passam rápido.",

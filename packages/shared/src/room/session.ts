@@ -38,7 +38,6 @@ export interface TickOutput {
 /** Names for computer players, by the character they play; each bot draws one not taken yet. */
 export const BOT_NAMES: Record<CharacterId, readonly string[]> = {
   bomb: ["Pavio", "Faísca", "Pólvora", "Estopim", "Rastilho", "Fumaça"],
-  ninja: ["Hanzo", "Kenji", "Ryu", "Kage", "Hayate", "Shiro", "Akira", "Yuki"],
   captain: ["Capitão Bravo", "Capitão Trovão", "Capitão Estrela", "Capitão Valente", "Capitão Águia", "Capitão Brasil", "Capitão Escudo", "Capitão Liberdade"],
   goku: ["Kakaroto", "Son", "Kaio", "Saiyajin", "Kame", "Nimbus", "Shenlong", "Genki"],
   naruto: ["Konoha", "Dattebayo", "Ichiraku", "Kurama", "Hokage", "Uzumaki", "Rasen", "Ramen"],

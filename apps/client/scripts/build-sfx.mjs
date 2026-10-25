@@ -16,8 +16,7 @@
 // web sounds from the same game, asset 407822 "Spider-Man", under mvci/mvci-spider/.
 // Pikachu's voice (Ikue Otani) and his Thunder sound are from Super Smash Bros. Ultimate (fan use; (c) Nintendo / The Pokemon
 // Company), The Sounds Resource asset 409668 "Pikachu", unzipped under ssbu/ssbu-pikachu/.
-// The ninja speaks as Sub-Zero from Mortal Kombat (2011) (fan use; (c) Warner Bros. / NetherRealm), asset 413724 "Sub-Zero",
-// under mk9/; Static's lines (Phil LaMarr) are cut from Static Shock / Justice League Unlimited scenes on 101soundboards.com, board
+// Static's lines (Phil LaMarr) are cut from Static Shock / Justice League Unlimited scenes on 101soundboards.com, board
 // "Static Shock (TV Show)" (fan use; (c) Warner Bros. / DC), under static-shock/ (to-the-rescue = sound 52736484, impresses-batman =
 // 52736429); the flash's (Taliesin Jaffe) from Injustice 2, board "Injustice 2 (PC): The Flash Voice" on the same site, under
 // flash-inj2/; bugs' (Jeff Bergman) from Looney Tunes Dash! (mobile), board "Bugs Bunny - Looney Tunes Dash! - Character Voices
@@ -64,7 +63,6 @@ const SPIDER = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Voice
 const SPIDER_FX = (n, tag) => join(SRC, "mvci", "mvci-spider", "Spider-Man", "Sounds", `00D_SE#${n} (${tag}).wav`);
 const PIKA = (name) => join(SRC, "ssbu", "ssbu-pikachu", "Super Smash Bros Ultimate", "Fighters", name.startsWith("se_") ? "se_pikachu" : "vc_pikachu", `${name}.wav`);
 const THOR = (n, tag) => join(SRC, "mvci", "mvci-thor", "Thor", "Voice", `011_CV${n} (${tag}).wav`);
-const SUBZERO = (who, file) => join(SRC, "mk9", "mk9-subzero", "Sub-Zero", `vo_human_${who}`, file);
 const WHITE = (n) => join(SRC, "sbr", "sbr-white", "White", `V_WHI_${n}_E.wav`);
 const FLASH = (name) => join(SRC, "flash-inj2", `${name}.mp3`);
 const LANTERN = (name) => join(SRC, "lantern-inj2", `${name}.mp3`);
@@ -108,12 +106,6 @@ const RECIPE = {
   jump: { src: K("digital-audio", "phaseJump1.ogg"), len: 0.45 },
   dash: { src: CSD("Colossal Impacts", "Woosh Debris.wav"), len: 0.9 },
   warp: { src: K("digital-audio", "phaserUp1.ogg"), len: 0.5 },
-  // the ninja's special: a shimmer building up, a crystal ting as the beam leaves the hands
-  ice: {
-    src: K("sci-fi-sounds", "forceField_000.ogg"),
-    len: 0.8,
-    layer: { src: K("impact-sounds", "impactGlass_light_000.ogg"), len: 0.6, gain: -2, at: 0.3 },
-  },
   // Thor's special: an electric zap cracking over a low thunder rumble
   thunder: {
     src: K("digital-audio", "zap1.ogg"),
@@ -162,11 +154,6 @@ const RECIPE = {
   "bomb-death": { src: BASS_DOWN, len: 1.8, layer: { src: WHITE("015"), len: 1.4, gain: -3 } },
   "bomb-win": { src: WHITE("024"), len: 1.7 },
   "bomb-special": { src: WHITE("009"), len: 0.6 },
-  // The ninja (Sub-Zero): "This fight will be your last!", a cry, "Feel death's cold embrace." (Bi-Han), a "Hya!" as he throws his ice
-  "ninja-pick": { src: SUBZERO("kuai_liang", "intro.wav"), len: 2.0 },
-  "ninja-death": { src: BASS_DOWN, len: 1.8, layer: { src: SUBZERO("kuai_liang", "death_sh02.mp3"), len: 1.4, gain: -3 } },
-  "ninja-win": { src: SUBZERO("bi_han", "intro.wav"), len: 2.6 },
-  "ninja-special": { src: SUBZERO("kuai_liang", "spatk_sh01.mp3"), len: 0.85 },
   // Captain America: "Avengers assemble!", a cry, "I could do this all day.", and his shield clanging up as he shouts
   "captain-pick": { src: CAP(112, "VO_APR_SP11"), len: 1.7 },
   "captain-death": { src: BASS_DOWN, len: 1.8, layer: { src: CAP(34, "VO_LOSE_DOWN; VO_LOSE_KO"), len: 1.4, gain: -3 } },
@@ -331,7 +318,6 @@ const RECIPE = {
   // the spider's web: his web ball leaving his hand, and splatting round whoever it wraps up
   web: { src: SPIDER_FX(37, "SKILL_BALL_SHOT"), len: 0.6 },
   webbed: { src: SPIDER_FX(35, "SKILL_BALL_HIT"), len: 0.7 },
-  freeze: { src: S("Epic Stock Media - Tower Defense Game", "ICEBrk_Skill Freeze Whoosh Break Impact Layered Movement Shatter 03_ESM_TDG.wav"), len: 1.2 },
   hurry: {
     src: SOLER("Alarms", "EffectiveTrailer_Alarms_Vol2_QuarterNotes_013.wav"),
     len: 2.5,

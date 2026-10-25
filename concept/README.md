@@ -15,6 +15,6 @@ Esta pasta guarda os conceitos e as referências da família visual dos personag
 
 ## Piloto
 
-`base-character.png` é o primeiro teste dessa linguagem, um **herói genérico original** usado para validar proporção e acabamento. Não é um sprite de produção, não substitui o Capitão nem o ninja e não deve ser conectado ao renderer antes de aprovar o estilo.
+`base-character.png` é o primeiro teste dessa linguagem, um **herói genérico original** usado para validar proporção e acabamento. Não é um sprite de produção, não substitui nenhum personagem e não deve ser conectado ao renderer antes de aprovar o estilo.
 
 O prompt reutilizável está em `PROMPT-BASE.md`. Para gerar cada personagem, mantenha o bloco de regras fixas e substitua somente as variáveis de identidade. Depois de aprovar a linguagem, derivar os sprites na grade e nos anchors reais de `apps/client/src/render/sprites.ts`, preservando quadros de animação e perspectiva.

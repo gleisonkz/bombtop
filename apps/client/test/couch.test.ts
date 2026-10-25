@@ -50,15 +50,15 @@ describe("couch seats", () => {
   it("gives a new seat a character nobody has yet", () => {
     const { host, seats } = room();
     const couch = new CouchSeats(host, () => [{ index: 0, state: pad() }, { index: 1, state: pad(0) }]);
-    couch.tick("lobby", ["bomb", "ninja"]);
-    expect(seats[0]!.character).toBe("captain");
+    couch.tick("lobby", ["bomb", "captain"]);
+    expect(seats[0]!.character).toBe("thor");
   });
 
   it("two controllers joining at once get different characters", () => {
     const { host, seats } = room();
     const couch = new CouchSeats(host, () => [{ index: 0, state: pad() }, { index: 1, state: pad(0) }, { index: 2, state: pad(0) }]);
     couch.tick("lobby", ["bomb"]);
-    expect(seats.map((s) => s.character)).toEqual(["ninja", "captain"]);
+    expect(seats.map((s) => s.character)).toEqual(["captain", "thor"]);
   });
 
   it("in the lobby, Y changes the seat's character and B gives the seat up", () => {
@@ -71,7 +71,7 @@ describe("couch seats", () => {
     couch.tick("lobby", taken);
     state = pad(3);
     couch.tick("lobby", taken);
-    expect(seats[0]!.sent).toEqual([[C2S.character, { character: "captain" }]]);
+    expect(seats[0]!.sent).toEqual([[C2S.character, { character: "thor" }]]);
     state = pad(1);
     couch.tick("lobby", taken);
     expect(seats[0]!.left).toBe(true);

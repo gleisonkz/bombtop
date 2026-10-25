@@ -34,7 +34,7 @@ export type Facing = Exclude<Direction, null>;
 export type BombType = "normal" | "remote" | "pierce";
 
 /** Playable characters: each has its own look and special. */
-export const CHARACTERS = ["bomb", "ninja", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele"] as const;
+export const CHARACTERS = ["bomb", "captain", "thor", "goku", "naruto", "spider", "pikachu", "static", "flash", "bugs", "lantern", "donatello", "penelope", "panther", "harry", "optimus", "pele"] as const;
 export type CharacterId = (typeof CHARACTERS)[number];
 export const DEFAULT_CHARACTER: CharacterId = "bomb";
 
@@ -58,7 +58,7 @@ export interface PlayerInput {
   hold?: boolean;
   /** Secondary button: detonate / punch. */
   action?: boolean;
-  /** Special button: the character's own move (ninja: ice blast). */
+  /** Special button: the character's own move (thor: lightning bolt). */
   special?: boolean;
 }
 
@@ -82,8 +82,6 @@ export interface Player {
   character: CharacterId;
   /** Drawn in the character's original colors (first to pick it, see `firstPickers`); otherwise in the seat color. */
   ownColors?: true;
-  /** Ticks left frozen by an ice blast (no movement or actions; flames still kill). */
-  frozen: number;
   /** Ticks left wrapped in the spider's web (no movement or actions; flames still kill). */
   webbed: number;
   /** Ticks left charmed by penelope's kiss (drawn with hearts; the stun is what holds them). */
@@ -209,13 +207,13 @@ export interface Blast {
   length: number;
   ttl: number;
   /**
-   * Ninja's ice (freezes), Thor's lightning (stuns), the spider's web (wraps up), Goku's Kamehameha (breaks blocks) or
+   * Thor's lightning (stuns), the spider's web (wraps up), Goku's Kamehameha (breaks blocks) or
    * where Naruto's Rasengan struck (`length` 1; 0 when it ran its course).
    */
   kind: BlastKind;
 }
 
-export type BlastKind = "ice" | "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus" | "truck" | "ball";
+export type BlastKind = "lightning" | "web" | "kamehameha" | "rasengan" | "thunder" | "magnet" | "flash" | "tunnel" | "spin" | "kiss" | "patronus" | "truck" | "ball";
 
 export interface MatchState {
   tick: number;

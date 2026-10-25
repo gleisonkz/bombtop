@@ -15,7 +15,7 @@ describe("character previews", () => {
 
   it("shows each character with its own sheet", () => {
     expect(CHARACTER_SHEETS.bomb).toBe(SHEETS.bomber);
-    expect(CHARACTER_SHEETS.ninja).toBe(SHEETS.ninja);
+    expect(CHARACTER_SHEETS.thor).toBe(SHEETS.thor);
   });
 
   it("walks toward us, breathes when idle, reels when dizzy", () => {
@@ -27,7 +27,7 @@ describe("character previews", () => {
   });
 
   it("plays a sheet's own lobby pose when it has one", () => {
-    const s = SHEETS.ninja;
+    const s = SHEETS.flash;
     expect(previewPose(s, "walk").row).toBe(s.lobby!.row);
     expect(previewPose(s, "walk").frames).toBe(s.lobby!.frames);
   });

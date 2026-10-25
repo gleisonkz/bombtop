@@ -79,7 +79,6 @@ export function createMatch(opts: MatchOptions): MatchState {
       stun: 0,
       character: character(id),
       ...(own.has(id) && { ownColors: true as const }),
-      frozen: 0,
       webbed: 0,
       charmed: 0,
       sneak: 0,

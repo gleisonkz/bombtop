@@ -287,23 +287,6 @@ describe("soundCues", () => {
     expect(names(near, gone)).toEqual(["pop"]);
   });
 
-  it("hears an ice blast cast, at the caster, and the player it freezes", () => {
-    const v = view();
-    const next = later(v, (n) => {
-      n.blasts.push({ ownerId: "a", x: 2, y: 1, dir: "right", length: 3, ttl: BLAST_TICKS - 2, kind: "ice" });
-      n.players[1]!.frozen = 300;
-    });
-    expect(soundCues(v, next)).toEqual([
-      { name: "ice", x: 2.5 },
-      { name: "freeze", x: next.players[1]!.px / TILE },
-    ]);
-    const after = later(next, (n) => {
-      n.blasts[0]!.ttl -= 2;
-      n.players[1]!.frozen -= 2;
-    });
-    expect(names(next, after)).toEqual([]);
-  });
-
   it("hears a web shot, at the caster, and the player it wraps up", () => {
     const v = view();
     const next = later(v, (n) => {

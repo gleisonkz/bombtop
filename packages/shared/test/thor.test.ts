@@ -35,7 +35,6 @@ describe("thor lightning bolt", () => {
     cast(s);
     expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1); // may already have ticked once
     expect(SPECIAL_STUN_TICKS).toBe(3 * 60);
-    expect(player(s, "p2").frozen).toBe(0);
   });
 
   it("misses players out of range or past a block", () => {

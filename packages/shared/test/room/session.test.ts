@@ -67,20 +67,20 @@ describe("lobby", () => {
 
   it("each player picks a character: the bomb unless chosen on joining, changeable in the lobby", () => {
     const s = lobby(1);
-    s.join("c2", "Ninja", "ninja");
-    expect(s.members.map((m) => m.character)).toEqual(["bomb", "ninja"]);
-    expect(s.setCharacter("c1", "ninja")).toBe(true);
-    expect(s.members[0]!.character).toBe("ninja");
-    expect(s.setCharacter("nobody", "ninja")).toBe(false);
+    s.join("c2", "Thor", "thor");
+    expect(s.members.map((m) => m.character)).toEqual(["bomb", "thor"]);
+    expect(s.setCharacter("c1", "thor")).toBe(true);
+    expect(s.members[0]!.character).toBe("thor");
+    expect(s.setCharacter("nobody", "thor")).toBe(false);
     s.start("c1");
     expect(s.setCharacter("c1", "bomb")).toBe(false); // locked mid-match
   });
 
   it("plays each member as the character they picked", () => {
     const s = lobby(2);
-    s.setCharacter("c2", "ninja");
+    s.setCharacter("c2", "thor");
     s.start("c1");
-    expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "ninja"]);
+    expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "thor"]);
   });
 
   it("rejects joins during a match", () => {
@@ -293,11 +293,10 @@ describe("bots", () => {
     expect(new Set(s.members.map((m) => m.name)).size).toBe(MAX_PLAYERS);
   });
 
-  it("names each bot after its character: a ninja name, Capitão something, a Norse name for thor, a Dragon Ball name for goku, a fuse word for the mascot", () => {
+  it("names each bot after its character: Capitão something, a Norse name for thor, a Dragon Ball name for goku, a fuse word for the mascot", () => {
     const s = lobby(1);
     for (let i = 1; i < MAX_PLAYERS; i++) s.addBot("c1", "easy");
     for (const m of s.members.slice(1)) {
-      if (m.character === "ninja") expect(BOT_NAMES.ninja).toContain(m.name);
       if (m.character === "captain") expect(m.name).toMatch(/^Capitão \S/);
       if (m.character === "thor") expect(BOT_NAMES.thor).toContain(m.name);
       if (m.character === "goku") expect(BOT_NAMES.goku).toContain(m.name);

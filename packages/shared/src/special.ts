@@ -1,15 +1,15 @@
 import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
-import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, FREEZE_TICKS, ICE_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, BALL_RANGE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
+import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, BALL_RANGE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
 import { bombAt, DIR_VECTORS, getTile, hasFlame, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
 
 /**
- * The player's special, when ready. Ninja: an ice blast straight ahead that
- * freezes the first player within ICE_RANGE tiles; walls, blocks and bombs stop it.
- * Thor: a lightning bolt the same way that stuns the first player within BOLT_RANGE tiles.
+ * The player's special, when ready.
+ * Thor: a lightning bolt straight ahead that stuns the first player within BOLT_RANGE tiles; walls, blocks and bombs
+ *   stop it.
  * Spider: a web shot the same way that wraps up the first player within WEB_RANGE tiles.
  * Captain: raises his shield for SHIELD_TICKS (see `shieldAt`).
  * Goku: charges for KAME_CHARGE ticks, then fires the Kamehameha (see `kamehameha`).
@@ -32,8 +32,6 @@ export function useSpecial(s: MatchState, p: Player): boolean {
   if (p.specialCooldown > 0) return false;
   if (p.character === "captain") {
     p.shield = SHIELD_TICKS;
-  } else if (p.character === "ninja") {
-    blast(s, "ice", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "thor") {
     blast(s, "lightning", p.id, playerTile(p), p.facing, true);
   } else if (p.character === "spider") {
@@ -106,7 +104,6 @@ export function shieldAt(s: MatchState, x: number, y: number, dx: number, dy: nu
 
 /** What each blast does: how far it reaches and what it does to the first player it hits. */
 const BLASTS: Record<Exclude<BlastKind, "kamehameha" | "rasengan" | "thunder" | "flash" | "tunnel" | "spin" | "patronus" | "truck">, { range: number; strike: (p: Player, from: { x: number; y: number }, dx: number, dy: number) => void }> = {
-  ice: { range: ICE_RANGE, strike: (p) => (p.frozen = FREEZE_TICKS) },
   lightning: { range: BOLT_RANGE, strike: (p) => (p.stun = SPECIAL_STUN_TICKS) },
   web: { range: WEB_RANGE, strike: (p) => (p.webbed = WEB_TICKS) },
   kiss: { range: KISS_RANGE, strike: (p) => (p.stun = p.charmed = SPECIAL_STUN_TICKS) },

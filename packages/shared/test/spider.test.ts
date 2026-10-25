@@ -34,7 +34,6 @@ describe("spider web shot", () => {
     cast(s);
     expect(player(s, "p2").webbed).toBe(WEB_TICKS);
     expect(WEB_TICKS).toBe(4 * 60);
-    expect(player(s, "p2").frozen).toBe(0);
     expect(player(s, "p2").stun).toBe(0);
   });
 

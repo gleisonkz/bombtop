@@ -1,7 +1,4 @@
 """Builds a character sheet (SHEETS.<name> in render/sprites.ts) from its PixelLab animation frames:
-  ninja: sprites/ninja.png, character "Ice ninja HD4" (180px canvas; cast = the ice cast posed from our own
-    skeletons with the ice drawn over it by build-ninja-cast.py; carry walk posed from our own skeletons, carry idle =
-    its standing frames; lobby = the v3 "hand seal" frames 1..8)
   captain: sprites/captain.png, character "Captain America HD" (180px canvas; "Carry" state too); then run
     lock-walk-head.py captain: the template side walk redrew his head on every frame (it wobbled, the jaw changed)
   goku: sprites/goku.png, character "Goku HD" (180px canvas; cast = Kamehameha and carry walk posed from our own
@@ -89,7 +86,7 @@
     his lobby is its own image (build-pele-lobby.py).
 Frames come on different canvas sizes, so each row is aligned by the feet of its first frame
 (standing pose) to one baseline, centered, and every cell is cropped to the union of what is drawn.
-Usage: python build-character-sheet.py ninja|captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele FRAMES_DIR public/sprites/<name>.png
+Usage: python build-character-sheet.py captain|thor|goku|naruto|spider|pikachu|static|flash|bugs|lantern|donatello|penelope|panther|harry|optimus|pele FRAMES_DIR public/sprites/<name>.png
   FRAMES_DIR holds <animation>/<direction>/<i>.png as downloaded from PixelLab."""
 import colorsys, json, sys
 import numpy as np
@@ -99,16 +96,6 @@ from scipy import ndimage
 
 # (sheet row name, animation folder, direction, frames)
 CHARACTERS = {
-    "ninja": [
-        ("idle.down", "idle", "south", 4), ("idle.side", "idle", "east", 4), ("idle.up", "idle", "north", 4),
-        ("walk.down", "walk", "south", 6), ("walk.side", "walk", "east", 6), ("walk.up", "walk", "north", 6),
-        ("stun", "hit", "south", 6),
-        ("death", "death", "south", 7),
-        ("cast.down", "castice", "south", 9), ("cast.side", "castice", "east", 9), ("cast.up", "castice", "north", 9),
-        ("carryIdle.down", "carry-idle", "south", 4), ("carryIdle.side", "carry-idle", "east", 4), ("carryIdle.up", "carry-idle", "north", 4),
-        ("carryWalk.down", "carry-walk", "south", 6), ("carryWalk.side", "carry-walk", "east", 6), ("carryWalk.up", "carry-walk", "north", 6),
-        ("lobby", "lobby", "south", 8),
-    ],
     # cast = raising the shield (skeleton-posed brace); "up" is the back view without the shield, the
     # renderer draws the big shield in front of him.
     "captain": [
@@ -709,16 +696,6 @@ def lantern_frames(src, folder, d):
     return None
 
 
-def ninja_frames(src, folder, d):
-    """His frames by sheet folder, from what was downloaded (see the docstring)."""
-    load = lambda f, i: Image.open(src / f / d / f"{i}.png").convert("RGBA")
-    if folder == "carry-idle":
-        return [load("carry-walk", i) for i in (0, 0, 3, 3)]
-    if folder == "lobby":
-        return [load("lobby9", i) for i in range(1, 9)]
-    return None
-
-
 def hand_front(im):
     """Front view: the lowest middle of the skin pixels in the lower body band, near the middle (his hand held out)."""
     px = im.load()
@@ -733,7 +710,7 @@ def main():
     character, src, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     rows = []
     for name, folder, d, n in CHARACTERS[character]:
-        frames = {"naruto": naruto_frames, "ninja": ninja_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames}.get(character, lambda *_: None)(src, folder, d)
+        frames = {"naruto": naruto_frames, "spider": spider_frames, "pikachu": pikachu_frames, "static": static_frames, "flash": flash_frames, "bugs": bugs_frames, "lantern": lantern_frames, "donatello": donatello_frames, "penelope": penelope_frames, "panther": panther_frames, "harry": harry_frames, "optimus": optimus_frames, "pele": pele_frames}.get(character, lambda *_: None)(src, folder, d)
         if frames is None:
             frames = [Image.open(src / folder / d / f"{i}.png").convert("RGBA") for i in range(n)]
         if character == "lantern":

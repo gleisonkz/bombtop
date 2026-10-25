@@ -53,7 +53,6 @@ app.stage.addChild(renderer.root);
 if (import.meta.env.DEV) Object.assign(window, { __renderer: renderer });
 // Art loads in the background; the intro waits for it so it never plays with placeholder shapes.
 const art = Promise.allSettled([
-  renderer.useSheet("ninja", SHEETS.ninja).catch((e) => console.error("sprite sheet", e)),
   renderer.useSheet("bomb", SHEETS.bomber).catch((e) => console.error("bomber sheet", e)),
   renderer.useSheet("captain", SHEETS.captain).catch((e) => console.error("captain sheet", e)),
   renderer.useSheet("thor", SHEETS.thor).catch((e) => console.error("thor sheet", e)),

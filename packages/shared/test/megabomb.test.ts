@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { createMatch, FLAME_TICKS, FUSE_TICKS, getTile, MEGA_COOLDOWN, placeBomb, placePlayerAt, setTile, step, Tile, TICK_RATE, type MatchState } from "../src";
 import { hold, player, run } from "./helpers";
 
-/** p1 (the bomb mascot) at (3,5), p2 (ninja) far away. */
+/** p1 (the bomb mascot) at (3,5), p2 (thor) far away. */
 function arena(): MatchState {
-  const s = createMatch({ seed: 1, playerIds: ["p1", "p2"], blockDensity: 0, characters: { p1: "bomb", p2: "ninja" } });
+  const s = createMatch({ seed: 1, playerIds: ["p1", "p2"], blockDensity: 0, characters: { p1: "bomb", p2: "thor" } });
   placePlayerAt(s, "p1", 3, 5);
   placePlayerAt(s, "p2", 11, 1);
   return s;

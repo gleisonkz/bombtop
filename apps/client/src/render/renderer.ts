@@ -3,7 +3,7 @@ import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art"
 import { airLift } from "./air-arc";
 import { Fx } from "./fx";
 import { paintTo, PerColor, skinColor } from "./per-color";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame, frozenLook, iceBlock, webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, type FlamePiece, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, ROUND_TICKS, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -33,7 +33,8 @@ const COLORS = {
   flame: 0xff7a1a,
   flameCore: 0xfff1a8,
   cursed: 0xb57bff,
-  ice: 0x7fd8ff,
+  /** The spark over a player whose special is ready, for characters without a color of their own. */
+  spark: 0x7fd8ff,
   bolt: 0xffe45c,
   /** Static's electromagnetism: light violet. */
   magnet: 0xb9a4ff,
@@ -899,10 +900,9 @@ export class Renderer {
       const carrying = !!held;
       let headroom = 12;
       const moving = this.motion.moving(p.id, ux, uy);
-      const ice = frozenLook(p.frozen, s.tick);
       const web = webbedLook(p.webbed, s.tick);
-      const tint = ice ? ice.tint : cursedFlash ? COLORS.cursed : 0xffffff;
-      const tick = ice || web ? 0 : s.tick; // frozen stiff, or wrapped up and struggling
+      const tint = cursedFlash ? COLORS.cursed : 0xffffff;
+      const tick = web ? 0 : s.tick; // wrapped up and struggling
       const sx = cx + (web?.shake ?? 0);
       const blast = s.blasts.find((b) => b.ownerId === p.id);
       const character = this.character(p.id);
@@ -930,11 +930,6 @@ export class Renderer {
         top.circle(cx, cy - headroom, 5).fill(COLORS.bomb);
         top.circle(cx + 3, cy - headroom - 5, 1.5).fill(COLORS.fuse);
       }
-      if (ice?.block) {
-        const b = iceBlock(cx, cy, headroom);
-        top.roundRect(b.x, b.y, b.w, b.h, 3).fill({ color: COLORS.ice, alpha: 0.45 }).stroke({ color: 0xffffff, width: 1, alpha: 0.8 });
-        top.moveTo(b.x + 3, b.y + 3).lineTo(b.x + 6, b.y + 6).stroke({ color: 0xffffff, width: 1, alpha: 0.9 });
-      }
       if (web?.wraps) {
         const c = cocoon(sx, cy, headroom);
         top.roundRect(c.x, c.y, c.w, c.h, 5).fill({ color: COLORS.web, alpha: 0.3 }).stroke({ color: COLORS.webShade, width: 1, alpha: 0.9 });
@@ -945,7 +940,7 @@ export class Renderer {
       this.placeTag(p.id, cx, Math.max(7, cy + 6 - headroom - (carrying ? 9 : 0) + TAG_DROP), seen);
       if (p.shield > 0) this.placeSpiral(p.id, SHIELD_TICKS - p.shield, cx, cy);
       // Thor's bolt, Pikachu's shock, Static's pull and the flash's dash leave their victims crackling while stunned.
-      if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet" || b.kind === "flash") && b.ownerId !== p.id) && !ice) {
+      if (p.stun > 0 && s.blasts.some((b) => (b.kind === "lightning" || b.kind === "thunder" || b.kind === "magnet" || b.kind === "flash") && b.ownerId !== p.id)) {
         for (let k = 0; k < 3; k++) {
           const a = s.tick / 5 + (k * Math.PI * 2) / 3;
           top.circle(cx + Math.cos(a) * 6, cy - headroom + Math.sin(a) * 2, 1.2).fill(COLORS.bolt);
@@ -973,9 +968,9 @@ export class Renderer {
       // The green lantern's bubble round him, his body showing through it.
       const bubble = bubbleLook(p.bubble, s.tick);
       if (bubble) this.placeBubble(top, bubble, cx, cy - 4);
-      if (p.specialCooldown === 0 && !ice && !web) {
+      if (p.specialCooldown === 0 && !web) {
         const r = 1.2 + Math.sin(s.tick / 8) * 0.4;
-        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet, flash: COLORS.bolt, bugs: COLORS.dirt, lantern: COLORS.lantern }[character as string] ?? COLORS.ice;
+        const spark = { thor: COLORS.bolt, goku: COLORS.ki, naruto: COLORS.ki, bomb: COLORS.fuse, spider: COLORS.web, pikachu: COLORS.bolt, static: COLORS.magnet, flash: COLORS.bolt, bugs: COLORS.dirt, lantern: COLORS.lantern }[character as string] ?? COLORS.spark;
         top.circle(cx + 6, cy - headroom, r + 1).fill({ color: spark, alpha: 0.5 });
         top.circle(cx + 6, cy - headroom, r).fill(0xffffff);
       }
@@ -1001,7 +996,7 @@ export class Renderer {
     this.clock.text = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "SUDDEN DEATH!";
   }
 
-  /** An ice beam from the caster to where it stopped, with shards along it and a burst at the end. */
+  /** A special's blast, from the caster to where it stopped. */
   private drawBlast(g: Graphics, b: Blast): void {
     if (b.kind === "thunder") return this.drawThunder(g, b);
     if (b.kind === "ball") return this.drawBall(g, b);
@@ -1011,7 +1006,7 @@ export class Renderer {
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
     const x1 = center(b.x + dx * b.length);
     const y1 = center(b.y + dy * b.length);
-    // The Kamehameha shows the moment it fires (its charge was the wind-up); ice and bolts wait for the thrust.
+    // The Kamehameha shows the moment it fires (its charge was the wind-up); bolts wait for the thrust.
     if (b.kind === "kamehameha") {
       const at = this.lastSeen.get(b.ownerId);
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
@@ -1038,8 +1033,6 @@ export class Renderer {
     // The magnet's pull and the flash's dash land at once (the one caught, or he, is already there), so they show from the first tick.
     const alpha = beamAlpha(BLAST_TICKS - b.ttl + (b.kind === "magnet" || b.kind === "flash" || b.kind === "tunnel" ? BEAM_DELAY : 0));
     if (alpha <= 0) return;
-    const x0 = center(b.x) + dx * 6;
-    const y0 = center(b.y) + dy * 6;
     if (b.kind === "lightning") {
       // From the hammer of the caster as drawn, level with it all the way to where it stopped.
       const at = this.lastSeen.get(b.ownerId);
@@ -1058,14 +1051,6 @@ export class Renderer {
       const [ox, oy] = boltOrigin(this.skins.get(this.character(b.ownerId))?.sheet, b.dir, at?.cx ?? center(b.x), at?.cy ?? center(b.y));
       return this.drawWeb(g, ox, oy, dx ? x1 : ox, dy ? y1 : oy, alpha);
     }
-    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: COLORS.ice, width: 6, alpha: alpha * 0.6, cap: "round" });
-    g.moveTo(x0, y0).lineTo(x1, y1).stroke({ color: 0xffffff, width: 2, alpha, cap: "round" });
-    for (let i = 1; i <= b.length; i++) {
-      const sx = center(b.x + dx * i) + dy * (i % 2 ? 3 : -3);
-      const sy = center(b.y + dy * i) + dx * (i % 2 ? 3 : -3);
-      g.poly([sx, sy - 2.5, sx + 1.5, sy, sx, sy + 2.5, sx - 1.5, sy]).fill({ color: 0xffffff, alpha });
-    }
-    g.circle(x1, y1, 5).fill({ color: COLORS.ice, alpha: alpha * 0.5 });
   }
 
   /**

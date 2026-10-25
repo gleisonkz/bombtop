@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FREEZE_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
-import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, frozenLook, iceBlock, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
+import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, TICK_RATE, TILE, Tile } from "@bombtop/shared";
+import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, beamAlpha, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
   const foozle = SHEETS.foozle;
@@ -110,10 +110,10 @@ describe("MotionTracker", () => {
   });
 });
 
-describe("ninja sheet", () => {
-  const ninja = SHEETS.ninja;
+describe("a PixelLab character sheet", () => {
+  const sheet = SHEETS.pikachu;
   const at = (facing: "up" | "down" | "left" | "right", o: { moving?: boolean; stunned?: boolean; tick?: number } = {}) =>
-    playerFrame(ninja, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
+    playerFrame(sheet, { facing, moving: o.moving ?? false, carrying: false, stunned: o.stunned ?? false, tick: o.tick ?? 0 });
 
   it("walks with 6 frames in each direction, mirroring east for west", () => {
     const xs = new Set<number>();
@@ -124,7 +124,7 @@ describe("ninja sheet", () => {
   });
 
   it("shows the hit reaction while stunned, whatever the facing", () => {
-    expect(at("up", { stunned: true }).y).toBe(ninja.stun!.row * ninja.frameH);
+    expect(at("up", { stunned: true }).y).toBe(sheet.stun!.row * sheet.frameH);
     expect(at("left", { stunned: true }).flip).toBe(false);
   });
 
@@ -139,28 +139,28 @@ describe("ninja sheet", () => {
   });
 
   it("holds the bomb overhead: carry rows while carrying", () => {
-    const carry = (moving: boolean) => playerFrame(ninja, { facing: "down", moving, carrying: true, tick: 0 }).y;
-    expect(carry(false)).toBe(ninja.carryIdle!.down.row * ninja.frameH);
-    expect(carry(true)).toBe(ninja.carryWalk!.down.row * ninja.frameH);
+    const carry = (moving: boolean) => playerFrame(sheet, { facing: "down", moving, carrying: true, tick: 0 }).y;
+    expect(carry(false)).toBe(sheet.carryIdle!.down.row * sheet.frameH);
+    expect(carry(true)).toBe(sheet.carryWalk!.down.row * sheet.frameH);
   });
 
   it("every row fits inside the image", () => {
-    const strips = [ninja.idle, ninja.walk, ninja.cast!, ninja.carryIdle!, ninja.carryWalk!].flatMap((s) => Object.values(s));
-    for (const s of [...strips, ninja.stun!, ninja.death!, ninja.lobby!]) {
-      expect((s.row + 1) * ninja.frameH).toBeLessThanOrEqual(ninja.height);
-      expect(s.frames * ninja.frameW).toBeLessThanOrEqual(ninja.width);
+    const strips = [sheet.idle, sheet.walk, sheet.cast!, sheet.carryIdle!, sheet.carryWalk!].flatMap((s) => Object.values(s));
+    for (const s of [...strips, sheet.stun!, sheet.death!, sheet.lobby!]) {
+      expect((s.row + 1) * sheet.frameH).toBeLessThanOrEqual(sheet.height);
+      expect(s.frames * sheet.frameW).toBeLessThanOrEqual(sheet.width);
     }
   });
 });
 
 describe("deathFrame", () => {
-  const ninja = SHEETS.ninja;
-  const last = ninja.death!.frames * ninja.ticksPerFrame;
+  const sheet = SHEETS.pikachu;
+  const last = sheet.death!.frames * sheet.ticksPerFrame;
 
   it("plays the death row once, then the body is gone", () => {
-    expect(deathFrame(ninja, 0)).toEqual({ x: 0, y: ninja.death!.row * ninja.frameH, flip: false });
-    expect(deathFrame(ninja, last - 1)!.x).toBe((ninja.death!.frames - 1) * ninja.frameW);
-    expect(deathFrame(ninja, last + 30)).toBeNull();
+    expect(deathFrame(sheet, 0)).toEqual({ x: 0, y: sheet.death!.row * sheet.frameH, flip: false });
+    expect(deathFrame(sheet, last - 1)!.x).toBe((sheet.death!.frames - 1) * sheet.frameW);
+    expect(deathFrame(sheet, last + 30)).toBeNull();
   });
 
   it("has nothing to play on sheets without a death row", () => {
@@ -306,24 +306,24 @@ describe("mascot in the arena", () => {
   });
 });
 
-describe("ice blast visuals", () => {
-  const ninja = SHEETS.ninja;
-  const cast = ninja.cast!;
+describe("special cast visuals", () => {
+  const sheet = SHEETS.pikachu;
+  const cast = sheet.cast!;
   const frame = (facing: "up" | "down" | "left" | "right", casting: number) =>
-    playerFrame(ninja, { facing, moving: true, carrying: false, casting, tick: 0 });
+    playerFrame(sheet, { facing, moving: true, carrying: false, casting, tick: 0 });
 
   it("plays the cast row for the facing direction, mirroring east for west", () => {
-    expect(frame("down", 0).y).toBe(cast.down.row * ninja.frameH);
-    expect(frame("up", 0).y).toBe(cast.up.row * ninja.frameH);
-    expect(frame("left", 0)).toMatchObject({ y: cast.side.row * ninja.frameH, flip: true });
+    expect(frame("down", 0).y).toBe(cast.down.row * sheet.frameH);
+    expect(frame("up", 0).y).toBe(cast.up.row * sheet.frameH);
+    expect(frame("left", 0)).toMatchObject({ y: cast.side.row * sheet.frameH, flip: true });
     const last = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME - 1);
-    expect(last.x).toBe((cast.down.frames - 1) * ninja.frameW);
-    expect(last.x + ninja.frameW).toBeLessThanOrEqual(ninja.width);
+    expect(last.x).toBe((cast.down.frames - 1) * sheet.frameW);
+    expect(last.x + sheet.frameW).toBeLessThanOrEqual(sheet.width);
   });
 
   it("goes back to walking once the cast is over", () => {
     const after = frame("down", cast.down.frames * CAST_TICKS_PER_FRAME);
-    expect(after.y).toBe(ninja.walk.down.row * ninja.frameH);
+    expect(after.y).toBe(sheet.walk.down.row * sheet.frameH);
   });
 
   it("the beam appears when the hands thrust forward and fades out", () => {
@@ -481,25 +481,6 @@ describe("ice blast visuals", () => {
     for (const l of speedLines(5, 0, 5, 48, 3)) expect(l.x0).toBe(l.x1);
   });
 
-  it("frozen players turn icy, and the ice flickers in its last second", () => {
-    expect(frozenLook(0, 0)).toBeNull();
-    const solid = Array.from({ length: 30 }, (_, t) => frozenLook(FREEZE_TICKS, t)!);
-    expect(new Set(solid.map((l) => l.block))).toEqual(new Set([true]));
-    expect(solid[0]!.tint).not.toBe(0xffffff);
-    const melting = Array.from({ length: 30 }, (_, t) => frozenLook(30, t)!.block);
-    expect(new Set(melting)).toEqual(new Set([true, false]));
-  });
-
-  it("the ice block hugs the body: from just over the head to just under the feet", () => {
-    const body = 21;
-    const b = iceBlock(100, 50, body);
-    const feet = 50 + 6;
-    expect(b.y).toBeGreaterThanOrEqual(feet - body - 3);
-    expect(b.y).toBeLessThan(feet - body);
-    expect(b.y + b.h).toBeGreaterThan(feet);
-    expect(b.y + b.h).toBeLessThanOrEqual(feet + 3);
-    expect(b.x + b.w / 2).toBe(100);
-  });
 });
 
 describe("spider web", () => {
@@ -684,7 +665,6 @@ describe("HD art", () => {
     expect(BOMBS.size * BOMBS.scale).toBeCloseTo(128 * 0.1);
     expect(ITEMS.size * ITEMS.scale).toBeCloseTo(48 * 0.29);
     expect(SHEETS.bomber.bodyH * SHEETS.bomber.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
-    expect(SHEETS.ninja.bodyH * SHEETS.ninja.scale).toBeCloseTo(SHEETS.goku.bodyH * SHEETS.goku.scale, 0); // as tall as Goku
   });
 });
 
@@ -758,7 +738,7 @@ describe("rasenganLook", () => {
     expect(rasenganLook(0, struck(0))).toEqual({ burst: 0 });
     expect(rasenganLook(0, struck(5))).toEqual({ burst: 2 });
     expect(rasenganLook(0, struck(2 * RASENGAN.frames))).toBeNull();
-    expect(rasenganLook(0, { ttl: BLAST_TICKS, kind: "ice" })).toBeNull();
+    expect(rasenganLook(0, { ttl: BLAST_TICKS, kind: "lightning" })).toBeNull();
     expect(rasenganLook(0, undefined)).toBeNull();
   });
 });
@@ -786,7 +766,7 @@ describe("castTicks", () => {
   });
 
   it("other casts start with their blast", () => {
-    expect(castTicks(still, { ttl: BLAST_TICKS - 3, kind: "ice" })).toBe(3);
+    expect(castTicks(still, { ttl: BLAST_TICKS - 3, kind: "lightning" })).toBe(3);
     expect(castTicks(still, undefined)).toBeUndefined();
   });
 });
@@ -835,7 +815,7 @@ describe("outsideBeams", () => {
       { x: 3, y: 3, ttl: 5, ownerId: "other" },
     ];
     expect(outsideBeams(flames, [beam])).toEqual([flames[2], flames[3]]);
-    expect(outsideBeams(flames, [{ ...beam, kind: "ice" }])).toEqual(flames);
+    expect(outsideBeams(flames, [{ ...beam, kind: "lightning" }])).toEqual(flames);
   });
 });
 
@@ -913,9 +893,9 @@ describe("captain sheet and shield", () => {
     }
   });
 
-  it("stands about as tall as the ninja on screen", () => {
-    const tall = (s: typeof captain | typeof SHEETS.ninja) => s.bodyH * s.scale;
-    expect(Math.abs(tall(captain) - tall(SHEETS.ninja))).toBeLessThan(2);
+  it("stands about as tall as pikachu on screen", () => {
+    const tall = (s: typeof captain | typeof SHEETS.pikachu) => s.bodyH * s.scale;
+    expect(Math.abs(tall(captain) - tall(SHEETS.pikachu))).toBeLessThan(2);
   });
 
   it("raises the shield with the brace row and holds its last frame while the shield is up", () => {

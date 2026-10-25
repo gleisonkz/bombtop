@@ -107,8 +107,8 @@ describe("Sound", () => {
     const { backend, played, stopped } = fakeBackend();
     const s = new Sound(backend, memoryStore());
     s.play("bomb-pick", { channel: "pick" });
-    s.play("ninja-pick", { channel: "pick" });
-    expect(played.map((p) => p.name)).toEqual(["bomb-pick", "ninja-pick"]);
+    s.play("captain-pick", { channel: "pick" });
+    expect(played.map((p) => p.name)).toEqual(["bomb-pick", "captain-pick"]);
     expect(stopped).toEqual(["bomb-pick"]);
   });
 
@@ -117,7 +117,7 @@ describe("Sound", () => {
     const s = new Sound(backend, memoryStore());
     s.play("click");
     s.play("bomb-pick", { channel: "pick" });
-    s.play("ninja-pick", { channel: "pick" });
+    s.play("captain-pick", { channel: "pick" });
     expect(stopped).toEqual(["bomb-pick"]);
   });
 
@@ -126,7 +126,7 @@ describe("Sound", () => {
     const s = new Sound(backend, memoryStore());
     s.play("bomb-pick", { channel: "pick" });
     s.toggleMute();
-    s.play("ninja-pick", { channel: "pick" });
+    s.play("captain-pick", { channel: "pick" });
     expect(stopped).toEqual(["bomb-pick"]);
   });
 });

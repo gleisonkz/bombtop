@@ -166,10 +166,10 @@ describe("BattleRoom over the network", () => {
   });
 
   it("takes the character picked on joining and lets the player change it", async () => {
-    const r = await client().create(ROOM_NAME, { name: "N", character: "ninja" });
+    const r = await client().create(ROOM_NAME, { name: "N", character: "thor" });
     const joined = next<LobbyInfo>(r, S2C.lobby);
     r.send(C2S.sync);
-    expect((await joined).members[0]!.character).toBe("ninja");
+    expect((await joined).members[0]!.character).toBe("thor");
     const changed = next<LobbyInfo>(r, S2C.lobby, (l) => l.members[0]!.character === "bomb");
     r.send(C2S.character, { character: "bomb" });
     await changed;

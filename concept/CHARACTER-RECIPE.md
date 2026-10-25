@@ -24,7 +24,7 @@ Ordem: **regra (shared) → sprite → código do cliente → som → telas → 
    bloco para, escudo devolve, recarga).
 2. `state.ts`: nome em `CHARACTERS` (+ campo novo em `Player` se houver estado, ex.: `webbed`).
 3. `constants.ts`: alcance/duração. `special.ts`: o especial em `useSpecial`.
-4. `step.ts`: se o estado impede agir, trate como `frozen`/`webbed`. `arena.ts`: valor inicial do campo.
+4. `step.ts`: se o estado impede agir, trate como `webbed`. `arena.ts`: valor inicial do campo.
 5. `room/session.ts`: nome do bot em `BOT_NAMES`. `test/protocol.test.ts`: lista de `CHARACTERS`.
 6. Rode `pnpm -C packages/shared bench` se mexeu em algo que roda todo tick.
 

@@ -1,4 +1,4 @@
-import { BLAST_TICKS, blastLife, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type BlastKind, type Bomb, type PublicView } from "@bombtop/shared";
 import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
@@ -17,7 +17,6 @@ export type CueName =
   | "jump"
   | "dash"
   | "warp"
-  | "ice"
   | "web"
   | "webbed"
   | "thunder"
@@ -35,7 +34,6 @@ export type CueName =
   | "pop"
   | "kamehameha"
   | "rasengan"
-  | "freeze"
   | "hurry"
   | "mega"
   | VoiceName;
@@ -49,6 +47,21 @@ export interface Cue {
 }
 
 type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "blasts" | "pressure">;
+
+/** The sound each blast makes as it starts (the kamehameha and the rasengan are heard from their charge or dash). */
+const BLAST_CUES: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, CueName> = {
+  lightning: "thunder",
+  thunder: "shock",
+  web: "web",
+  magnet: "magnet",
+  flash: "zoom",
+  tunnel: "dig",
+  spin: "spin",
+  kiss: "kiss",
+  patronus: "gallop",
+  truck: "transform",
+  ball: "kickball",
+};
 
 const key = (x: number, y: number) => `${x},${y}`;
 const bombKey = (b: Bomb) => `${b.ownerId}@${key(b.x, b.y)}`;
@@ -108,8 +121,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   for (const b of next.blasts) {
     if (b.kind === "kamehameha" || b.kind === "rasengan" || b.ttl < blastLife(b) - elapsed) continue;
     if (b.kind === "thunder" && b.dir !== "up") continue; // Pikachu's shock: four arms, one sound
-    const name = ({ lightning: "thunder", thunder: "shock", web: "web", magnet: "magnet", flash: "zoom", tunnel: "dig", spin: "spin", kiss: "kiss", patronus: "gallop", truck: "transform", ball: "kickball" } as const)[b.kind as string] ?? "ice";
-    cues.push({ name, x: mid(b.x) });
+    cues.push({ name: BLAST_CUES[b.kind], x: mid(b.x) });
   }
 
   for (const p of next.players) {
@@ -129,7 +141,6 @@ export function soundCues(prev: View, next: View): Cue[] {
     hear("jump", !was.jumpTicks && p.jumpTicks);
     hear("warp", !was.warpLock && p.warpLock);
     hear("dash", !was.dashTicks && p.dashTicks);
-    hear("freeze", !was.frozen && p.frozen);
     hear("webbed", !was.webbed && p.webbed);
     hear("kamehameha", !was.charge && p.charge);
     hear("rasengan", !was.rasengan && p.rasengan);

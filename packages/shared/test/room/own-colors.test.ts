@@ -10,9 +10,9 @@ const own = (s: BattleSession) =>
 describe("firstPickers", () => {
   it("gives each character's original colors to the first in the list who has it", () => {
     const picks = [
-      { id: "a", character: "ninja" },
+      { id: "a", character: "captain" },
       { id: "b", character: "goku" },
-      { id: "c", character: "ninja" },
+      { id: "c", character: "captain" },
       { id: "d", character: "goku" },
       { id: "e", character: "thor" },
     ] as const;
@@ -23,7 +23,7 @@ describe("firstPickers", () => {
 describe("own colors in the lobby", () => {
   it("everyone on a character nobody else picked keeps its original colors", () => {
     const s = new BattleSession();
-    s.join("a", "A", "ninja");
+    s.join("a", "A", "captain");
     s.join("b", "B", "goku");
     expect(own(s)).toEqual(["a", "b"]);
   });
@@ -31,14 +31,14 @@ describe("own colors in the lobby", () => {
   it("the second to pick a taken character wears their seat color", () => {
     const s = new BattleSession();
     s.join("a", "A", "goku");
-    s.join("b", "B", "ninja");
+    s.join("b", "B", "captain");
     s.setCharacter("b", "goku");
     expect(own(s)).toEqual(["a"]);
   });
 
   it("goes by when they picked, not by seat: a later seat that picked first keeps the originals", () => {
     const s = new BattleSession();
-    s.join("a", "A", "ninja");
+    s.join("a", "A", "captain");
     s.join("b", "B", "goku");
     s.setCharacter("a", "goku");
     expect(own(s)).toEqual(["b"]);
@@ -68,9 +68,9 @@ describe("own colors in the lobby", () => {
     const s = new BattleSession({ random: () => 0 });
     s.join("a", "A", "bomb");
     s.addBot("a", "easy"); // the first bot plays the bomb mascot
-    s.addBot("a", "easy"); // the second, the ninja
+    s.addBot("a", "easy"); // the second, the captain
     expect(own(s)).toEqual(["a", "bot-2"]);
-    s.setCharacter("a", "ninja");
+    s.setCharacter("a", "captain");
     expect(own(s)).toEqual(["bot-1", "bot-2"]);
   });
 });
@@ -79,10 +79,10 @@ describe("own colors in the match", () => {
   it("each player carries whether they wear their character's original colors, also in what clients see", () => {
     const s = new BattleSession({ seed: () => 1 });
     s.join("a", "A", "goku");
-    s.join("b", "B", "ninja");
-    s.join("c", "C", "ninja");
+    s.join("b", "B", "captain");
+    s.join("c", "C", "captain");
     s.setCharacter("b", "thor");
-    s.setCharacter("b", "ninja"); // now after c
+    s.setCharacter("b", "captain"); // now after c
     s.start("a");
     const view = publicView(s.match!);
     expect(view.players.map((p) => [p.id, !!p.ownColors])).toEqual([

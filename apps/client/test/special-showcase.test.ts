@@ -30,8 +30,8 @@ describe("special showcase", () => {
     }
   });
 
-  it("dresses each character in their own color (the ninja in ice blue) and the rival in another", () => {
-    expect(specialShowcase("ninja").colors.get("you")).toBe(3);
+  it("dresses each character in their own color (thor in blue) and the rival in another", () => {
+    expect(specialShowcase("thor").colors.get("you")).toBe(3);
     expect(specialShowcase("goku").colors.get("you")).toBe(4);
     for (const c of CHARACTERS) {
       const { colors } = specialShowcase(c);
@@ -58,12 +58,6 @@ describe("special showcase", () => {
     expect(getTile(show.state, x, y)).toBe(Tile.Block);
     for (let t = 0; t < show.length; t++) show.advance();
     expect(getTile(show.state, x, y)).toBe(Tile.Empty);
-  });
-
-  it("ninja: the ice freezes the rival", () => {
-    let frozen = false;
-    play("ninja", (s) => (frozen ||= rival(s).frozen > 0));
-    expect(frozen).toBe(true);
   });
 
   it("captain: the shield is up while the rival's bomb blows right next to him", () => {

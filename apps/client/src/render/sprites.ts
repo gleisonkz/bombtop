@@ -110,32 +110,6 @@ export const SHEETS = {
     walk: strips(1, 3, 2, 4),
     clothes: [[235, 115, 201], [255, 173, 198]],
   },
-  /** The ninja, made in PixelLab ("Ice ninja HD4"; scripts/build-character-sheet.py ninja lays out its frames). */
-  ninja: {
-    url: "sprites/ninja.png",
-    width: 1620,
-    height: 2988,
-    frameW: 180,
-    frameH: 166,
-    anchorX: 90.5,
-    anchorY: 151,
-    bodyH: 142,
-    ticksPerFrame: 7,
-    idleTicksPerFrame: 15,
-    side: "right",
-    idle: strips(0, 1, 2, 4),
-    walk: strips(3, 4, 5, 6),
-    stun: { row: 6, frames: 6 },
-    death: { row: 7, frames: 7 },
-    /** The ice blast: hands gather a frost orb at one side, then both palms thrust it forward. */
-    cast: strips(8, 9, 10, 9),
-    carryIdle: strips(11, 12, 13, 4),
-    carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 8 },
-    /** His blue helmet and suit and the ice on his armor. */
-    hues: [185, 250],
-    scale: 0.156,
-  },
   /** Captain America, made in PixelLab (scripts/build-character-sheet.py captain lays out its frames). */
   captain: {
     url: "sprites/captain.png",
@@ -1193,25 +1167,8 @@ export function spiralFrame(ticks: number): number {
   return Math.floor(ticks / SPIRAL.ticksPerFrame) % SPIRAL.frames;
 }
 
-/**
- * How a frozen player looks: tinted icy inside a block of ice, which flickers
- * in its last second as it melts. Null when not frozen.
- */
-export function frozenLook(frozen: number, tick: number): { tint: number; block: boolean } | null {
-  if (frozen <= 0) return null;
-  const melting = frozen <= TICK_RATE;
-  return { tint: 0x9fdcff, block: !melting || Math.floor(tick / 4) % 2 === 0 };
-}
-
 /** Where players' feet stand, below the tile center. */
 export const FEET_DY = 6;
-
-/** The ice block around a frozen player whose drawn body is `bodyH` tall: just over the head to just under the feet. */
-export function iceBlock(cx: number, cy: number, bodyH: number): { x: number; y: number; w: number; h: number } {
-  const w = 14;
-  const top = cy + FEET_DY - bodyH - 2;
-  return { x: cx - w / 2, y: top, w, h: bodyH + 4 };
-}
 
 /**
  * How a player caught in the spider's web looks: shaking as they struggle, the web flickering

@@ -20,8 +20,8 @@ function room() {
 describe("RoomCore", () => {
   it("seats whoever joins and tells everyone", () => {
     const r = room();
-    expect(r.core.join("a", "Ana", "ninja")).toBe(true);
-    expect(r.lastLobby().members.map((m) => [m.name, m.character])).toEqual([["Ana", "ninja"]]);
+    expect(r.core.join("a", "Ana", "thor")).toBe(true);
+    expect(r.lastLobby().members.map((m) => [m.name, m.character])).toEqual([["Ana", "thor"]]);
     expect(r.lastLobby().code).toBe("CODE");
   });
 
@@ -40,7 +40,7 @@ describe("RoomCore", () => {
     r.core.join("a", "Ana", "bomb");
     r.core.watch("tv");
     r.core.message("tv", C2S.addBot, { level: "easy" });
-    r.core.message("tv", C2S.character, { character: "ninja" });
+    r.core.message("tv", C2S.character, { character: "thor" });
     r.core.message("tv", C2S.start);
     expect(r.lastLobby().members).toHaveLength(1);
     expect(r.lastLobby().phase).toBe("lobby");

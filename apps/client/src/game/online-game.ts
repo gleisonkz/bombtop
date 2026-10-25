@@ -74,7 +74,7 @@ export class OnlineGame implements GameMode {
   private pinger: ReturnType<typeof setInterval> | undefined;
   private readonly echo = new EchoFilter();
   private readonly ghosts: GhostBombs;
-  /** Our ice blast and the items we walk onto, shown before the server confirms them. */
+  /** Our special's blast and the items we walk onto, shown before the server confirms them. */
   private readonly blastGhosts: GhostBlasts;
   private pickups = new GhostPickups();
   private readonly kicks = new KickPrediction();
@@ -300,7 +300,7 @@ export class OnlineGame implements GameMode {
     const now = performance.now();
     // A blast we already predicted is still recharging on the server's side: don't cast it twice.
     const casting = this.blastGhosts.active(now);
-    const shot = (c: { name: string }) => c.name === "ice" || c.name === "web";
+    const shot = (c: { name: string }) => c.name === "web";
     const cues = actionCues(this.ghosts.apply(this.latest!, now), me, input).filter((c) => !shot(c) || !casting);
     for (const c of cues) if (c.name === "place") this.ghosts.add(Math.floor(c.x), Math.floor(me.py / TILE), now, me.bombType, seq);
     const blast = cues.some(shot) ? predictBlast(this.latest!, me) : null;

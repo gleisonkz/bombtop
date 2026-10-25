@@ -83,9 +83,6 @@ export const AIR_DISTANCE = 3;
 /** Ticks a player stays stunned after a bomb lands on them. */
 export const STUN_TICKS = TICK_RATE;
 
-/** Ninja ice blast: reach in tiles, how long it freezes, and its recharge. */
-export const ICE_RANGE = 4;
-export const FREEZE_TICKS = 5 * TICK_RATE;
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
 /** How long a special that stuns (Thor's bolt, Goku's Kamehameha, Naruto's Rasengan) stuns whoever it hits. */
@@ -137,7 +134,7 @@ export const BUBBLE_COOLDOWN = 25 * 60;
 export const THUNDER_RANGE = 2;
 
 /**
- * Goku's Kamehameha: reach in tiles, the charge before it fires (he stands still; a stun or freeze
+ * Goku's Kamehameha: reach in tiles, the charge before it fires (he stands still; a stun
  * cancels it) and its recharge.
  */
 export const KAME_RANGE = 5;

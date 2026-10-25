@@ -113,14 +113,13 @@ internet") shows with ?debug and goes in the 5 s connection reports, which an of
 | revenge cart | `revenge.ts` | **off for now** (`createMatch` `revenge` defaults to false). dead ride the border, throw bombs; a kill swaps them back in |
 | stages | `stage.ts`, `floor.ts` | classic, conveyor (belts), warp (paired teleporters). Only classic is in the rotation (`STAGES`) for now |
 | Bots (easy / medium / hard) | `bot.ts` | Danger map with blast timings and chain reactions, escape-first; levels differ in reaction time, safety margin, bomb count, hunting and trapping. They warm up as a match drags on (`botHeat`, from 45 s, a step every 30 s) and go all out once no human is left: every bot hunts, cares less for power-ups, thinks faster, keeps more bombs out and sets traps (never less careful of its own bombs). Server runs them (`session.ts`), host adds them in the lobby |
-| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ❄). Ninja: ice blast 4 tiles straight ahead, first player hit frozen 5 s (flames still kill), 20 s recharge. Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and ice coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Every special stun lasts the same 3 s (`SPECIAL_STUN_TICKS`); a bomb landing on a player stuns 1 s (`STUN_TICKS`). Goku: Kamehameha, charges 1/3 s planted (`Player.charge`; a stun or freeze cancels it), then a beam 5 tiles straight ahead: through blocks (breaking them) up to the first player, who is stunned 3 s; bombs are left alone, walls stop it, a shield sends it back; 30 s recharge. Naruto: Rasengan, dashes 3 tiles straight ahead (`Player.rasengan`, 4 ticks a tile, deaf to the stick; a stun or freeze cuts it short): a wall or bomb stops him, a block in his way breaks and stops him, the first player he runs into is knocked back up to 2 tiles and stunned 3 s, a shield facing him stuns him instead; 20 s recharge. Spider: web shot 5 tiles straight ahead, first player hit wrapped up 4 s (`Player.webbed`: no moving or bombs, flames still kill; a shield sends it back), 20 s recharge. Pikachu: thunder shock all around him, every player on his tile and up to 2 tiles away in the four directions stunned 3 s (walls, blocks and bombs stop an arm; a shield facing him stops its arm and stuns him instead), 20 s recharge. Static: magnet pull 5 tiles straight ahead, the first player hit is dragged to the tile next to him and stunned 3 s (walls, blocks and bombs stop it; a shield sends it back, dragging him to the captain), 20 s recharge. Flash: super speed, dashes up to 5 tiles straight ahead in a blink, through every player in his way (each stunned 3 s), stopping short of walls, blocks and bombs and on the last tile nobody stands on (a shield facing him stops him in front of it, stunned instead); 20 s recharge. Bugs: tunnel, digs in and comes out on the farthest open tile up to 5 tiles straight ahead, under walls, blocks, bombs and players (never into a flame, on a bomb or on a player, nor out of the arena; with nowhere to come out he stays and keeps his special; a shield cannot stop him); 20 s recharge. Green lantern: bubble, 3 s (`Player.bubble`) in which no fire gets to him from any side, not even his own bomb's under him (other specials still do), moving at half speed (`effectiveSpeed`); 25 s recharge. Donatello: bo staff spin, every player on his tile and the four next to him stunned 3 s and every bomb next to him batted 3 tiles away the way it was hit, as a punch (a shield facing him stops its side and stuns him instead); 20 s recharge. Penelope: blown kiss, a heart 5 tiles straight ahead, the first player hit charmed 3 s (`Player.charmed`, drawn as hearts round their head; the stun holds them; a shield sends it back), 20 s recharge. Pink panther: tiptoe, 4 s out of sight (`Player.sneak`): gone from his rivals' screens, faint on his own and on screens that only watch (`sneakAlpha`, `Renderer.setViewer`), a pink puff where he slipped away; bots neither hunt him nor count him in a bomb's reach; he walks as fast as ever and flames still catch him; 20 s recharge. Harry: expecto patronum, his silver stag gallops straight ahead until a wall or block (`PATRONUS_TICKS_PER_TILE` ticks a tile, leaping over bombs) and stuns each player as it reaches them, 3 s (not only the first; `updateBlasts`); a shield facing it stops it there; its blast lasts as long as the run and a fade (`blastLife`); 25 s recharge. Optimus: roll out, he turns into his truck where he stands (`TRUCK_SHIFT`, `Player.truck`; a stun cuts it short), then drives up to 6 tiles straight ahead (`TRUCK_TICKS_PER_TILE` ticks a tile, deaf to the stick, `updateTruck`): whoever is in front is shoved along by the bumper, stunned 3 s (pinned against a wall, block, bomb or player, they stop him), a bomb is rammed off sliding, a block crushed (burns away), a wall stops him, a shield facing him stops him, stunned; 25 s recharge. Pelé: his kick, a ball 7 tiles straight ahead (`BALL_RANGE`), the first player hit knocked down, stunned 3 s; a bomb in its way is kicked off sliding (the ball stops there); walls and blocks stop it, a shield sends it back; 20 s recharge. Bomb mascot: mega bomb, planted on his tile (`Bomb.mega`, drawn `MEGA_SCALE` bigger, takes none of his bomb slots), piercing, twice his fire; 25 s recharge |
+| specials | `special.ts` | special button (E / right Ctrl, pad Y, touch ⚡). Captain: shield up 3 s (planted, facing locked), 20 s recharge; fire and specials coming at the shield stop there and bounce back (the bomb's far arm burns twice as far, as the captain's fire; the blast flies back at whoever is in its way). Thor: lightning bolt 5 tiles straight ahead, first player hit stunned 3 s (a shield sends it back), 20 s recharge. Every special stun lasts the same 3 s (`SPECIAL_STUN_TICKS`); a bomb landing on a player stuns 1 s (`STUN_TICKS`). Goku: Kamehameha, charges 1/3 s planted (`Player.charge`; a stun cancels it), then a beam 5 tiles straight ahead: through blocks (breaking them) up to the first player, who is stunned 3 s; bombs are left alone, walls stop it, a shield sends it back; 30 s recharge. Naruto: Rasengan, dashes 3 tiles straight ahead (`Player.rasengan`, 4 ticks a tile, deaf to the stick; a stun cuts it short): a wall or bomb stops him, a block in his way breaks and stops him, the first player he runs into is knocked back up to 2 tiles and stunned 3 s, a shield facing him stuns him instead; 20 s recharge. Spider: web shot 5 tiles straight ahead, first player hit wrapped up 4 s (`Player.webbed`: no moving or bombs, flames still kill; a shield sends it back), 20 s recharge. Pikachu: thunder shock all around him, every player on his tile and up to 2 tiles away in the four directions stunned 3 s (walls, blocks and bombs stop an arm; a shield facing him stops its arm and stuns him instead), 20 s recharge. Static: magnet pull 5 tiles straight ahead, the first player hit is dragged to the tile next to him and stunned 3 s (walls, blocks and bombs stop it; a shield sends it back, dragging him to the captain), 20 s recharge. Flash: super speed, dashes up to 5 tiles straight ahead in a blink, through every player in his way (each stunned 3 s), stopping short of walls, blocks and bombs and on the last tile nobody stands on (a shield facing him stops him in front of it, stunned instead); 20 s recharge. Bugs: tunnel, digs in and comes out on the farthest open tile up to 5 tiles straight ahead, under walls, blocks, bombs and players (never into a flame, on a bomb or on a player, nor out of the arena; with nowhere to come out he stays and keeps his special; a shield cannot stop him); 20 s recharge. Green lantern: bubble, 3 s (`Player.bubble`) in which no fire gets to him from any side, not even his own bomb's under him (other specials still do), moving at half speed (`effectiveSpeed`); 25 s recharge. Donatello: bo staff spin, every player on his tile and the four next to him stunned 3 s and every bomb next to him batted 3 tiles away the way it was hit, as a punch (a shield facing him stops its side and stuns him instead); 20 s recharge. Penelope: blown kiss, a heart 5 tiles straight ahead, the first player hit charmed 3 s (`Player.charmed`, drawn as hearts round their head; the stun holds them; a shield sends it back), 20 s recharge. Pink panther: tiptoe, 4 s out of sight (`Player.sneak`): gone from his rivals' screens, faint on his own and on screens that only watch (`sneakAlpha`, `Renderer.setViewer`), a pink puff where he slipped away; bots neither hunt him nor count him in a bomb's reach; he walks as fast as ever and flames still catch him; 20 s recharge. Harry: expecto patronum, his silver stag gallops straight ahead until a wall or block (`PATRONUS_TICKS_PER_TILE` ticks a tile, leaping over bombs) and stuns each player as it reaches them, 3 s (not only the first; `updateBlasts`); a shield facing it stops it there; its blast lasts as long as the run and a fade (`blastLife`); 25 s recharge. Optimus: roll out, he turns into his truck where he stands (`TRUCK_SHIFT`, `Player.truck`; a stun cuts it short), then drives up to 6 tiles straight ahead (`TRUCK_TICKS_PER_TILE` ticks a tile, deaf to the stick, `updateTruck`): whoever is in front is shoved along by the bumper, stunned 3 s (pinned against a wall, block, bomb or player, they stop him), a bomb is rammed off sliding, a block crushed (burns away), a wall stops him, a shield facing him stops him, stunned; 25 s recharge. Pelé: his kick, a ball 7 tiles straight ahead (`BALL_RANGE`), the first player hit knocked down, stunned 3 s; a bomb in its way is kicked off sliding (the ball stops there); walls and blocks stop it, a shield sends it back; 20 s recharge. Bomb mascot: mega bomb, planted on his tile (`Bomb.mega`, drawn `MEGA_SCALE` bigger, takes none of his bomb slots), piercing, twice his fire; 25 s recharge |
 
 Action button priority: detonate remote > punch > mount ability.
 
-Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, ninja, captain, thor, goku, naruto, spider, pikachu, static, flash, bugs, lantern, donatello, penelope, panther, harry, optimus, pele). Picked in the lobby (own seat),
-saved in localStorage and sent on join; bots alternate. Both use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
-ninja made in PixelLab ("Ice ninja HD4", 180px canvas like the others; frames laid out by
-`scripts/build-character-sheet.py ninja`, carry walk posed from our own skeletons, lobby = a v3 hand seal; the ice cast is posed from our own skeletons with the ice drawn over it by `scripts/build-ninja-cast.py`), the bomb mascot is our own art, drawn in code by `scripts/build-bomber.py` (no PixelLab): a serious demolition trooper with an iron bomb for a head (visor slits glowing across a riveted band, lit fuse), a V-shaped body with a chest plate bearing a bomb emblem, shoulder pads and boot cuffs in the player's color, a rust scarf; in the menus he tosses a mini bomb and catches it. The script is a 3D puppet (two-bone IK for arms and legs, one pose gives the front, side and back views) drawn the way the PixelLab sheets look: flat shading bands, dark outlines, each sheet pixel the most common color of its supersampled block (no blending), at the others' pixel density. Edit a pose function there and rerun it (~5 min) to change an animation. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
+Characters (looks only): `CHARACTERS` in `packages/shared/src/state.ts` (bomb mascot, captain, thor, goku, naruto, spider, pikachu, static, flash, bugs, lantern, donatello, penelope, panther, harry, optimus, pele). Picked in the lobby (own seat),
+saved in localStorage and sent on join; bots alternate. All use sprite sheets (`SHEETS` in `render/sprites.ts`) in the arena and the menus (`ui/sheet-art.ts`):
+the bomb mascot is our own art, drawn in code by `scripts/build-bomber.py` (no PixelLab): a serious demolition trooper with an iron bomb for a head (visor slits glowing across a riveted band, lit fuse), a V-shaped body with a chest plate bearing a bomb emblem, shoulder pads and boot cuffs in the player's color, a rust scarf; in the menus he tosses a mini bomb and catches it. The script is a 3D puppet (two-bone IK for arms and legs, one pose gives the front, side and back views) drawn the way the PixelLab sheets look: flat shading bands, dark outlines, each sheet pixel the most common color of its supersampled block (no blending), at the others' pixel density. Edit a pose function there and rerun it (~5 min) to change an animation. Captain America (fan art) made in PixelLab too ("Captain America HD" + "Carry"), laid out by
 `scripts/build-character-sheet.py captain`, then `scripts/lock-walk-head.py captain` (the templates redrew his head every frame, standing and walking, so one clean head is pasted over each idle and walk row (front and side), moving only with the body); his special (cast rows): shield forward, then he kneels as it grows huge
 (PixelLab "Shield" state + v3 interpolation), and a spiral of light loops round him (PixelLab VFX, `scripts/build-captain-spiral.py`, `SPIRAL`).
 Thor (fan art) made in PixelLab ("Thor HD", 180px canvas), laid out by `scripts/build-character-sheet.py thor`; his cast (hammer overhead,
@@ -153,8 +152,8 @@ clones gone in smoke; poses from our own skeletons, the clones, smoke and chakra
 Spider-Man (fan art) made in PixelLab ("Spider-Man HD", Naruto's settings with a big chibi head per `concept/PROMPT-BASE.md`:
 custom proportions head 1.8), laid out by `scripts/build-character-sheet.py spider`; web shot and carry walk posed from our
 own skeletons (his short arms only reach the sides of his head when carrying). The web (strand, splat, cocoon round
-whoever it wraps up) is drawn by the renderer (`drawWeb`, `cocoon`, `webbedLook`). The intro seats him in a seventh seat,
-dressed in red (`Intro.colors`). PixelLab's Pro image model refuses franchise characters (concept art); `create_character` does not.
+whoever it wraps up) is drawn by the renderer (`drawWeb`, `cocoon`, `webbedLook`). The intro seats him in the third seat,
+which is red. PixelLab's Pro image model refuses franchise characters (concept art); `create_character` does not.
 His lobby (and the title lineup's "walk"): he shoots a web up out of the card, is yanked up after it, swings back in on
 it and lands in his three-point crouch in a puff of dust; poses from our own skeletons (the web splats PixelLab drew at
 his hands taken out), lifted, swung and given their web lines by `scripts/build-spider-lobby.py`.
@@ -163,14 +162,14 @@ side head, so "Pikachu HD v3" rotates that front (`create_character` mode `v3` w
 back rows; laid out by `scripts/build-character-sheet.py pikachu`. Thunder shock and carry walk posed from our own skeletons;
 idle side and back are his rotation bobbing (the breathing template puffed breath and shut his eye). His blue scarf takes the
 player's color. The shock (bolts out to each arm's end, a ring of light round him) is drawn by the renderer (`drawThunder`).
-The intro seats him in an eighth seat, in blue (`Intro.colors`); the title lineup has him at the mascot's feet (`.cast .front`).
+The intro seats him in a seventh seat, in blue (`Intro.colors`); the title lineup has him at the mascot's feet (`.cast .front`).
 Static / Super Choque (fan art) made in PixelLab: "Static Shock HD 2" (standard mode; short locs, goggles, long blue coat with
 yellow lining, which takes the player's color) drew his front again for the back, so "Static Shock HD v3" rotates its front
 and sides (`direction_images`) for the back row; laid out by `scripts/build-character-sheet.py static`. Magnet pull, carry walk
 and lobby posed from our own skeletons. His lobby (and the title lineup's "walk") is the showpiece: he charges sparks between
 his hands, jumps onto his flying manhole cover and surfs on it crackling, drawn over his poses by
 `scripts/build-static-lobby.py`. The pull (violet arcs, rings of force running back to him) is drawn by the renderer
-(`drawMagnet`, `magnetWaves`). The intro seats him in a ninth seat, in blue, pulling Pikachu; in the title lineup he hovers at
+(`drawMagnet`, `magnetWaves`). The intro seats him in an eighth seat, in blue, pulling Pikachu; in the title lineup he hovers at
 the mascot's other side (`.cast .front.left`).
 The Flash (fan art) made in PixelLab ("Flash HD", standard mode; classic red suit, yellow boots and ear wings; the suit takes
 the player's color), laid out by `scripts/build-character-sheet.py flash`. The dash is instant, so his cast rows are a skid
@@ -178,15 +177,15 @@ stop; skid, carry walk and lobby posed from our own skeletons (PixelLab turned h
 behind, back view" in the skeleton description). His lobby (and the title lineup's "walk"): crackling with the Speed Force he
 vanishes in a flash, streaks across the card and back with afterimages and speed lines, skids in and gives a thumbs up
 (`scripts/build-flash-lobby.py`). The dash is drawn by the renderer as speed lines with a bolt (`drawSpeed`, `speedLines`).
-The intro seats him in a tenth seat, in red, zipping through Naruto, the mascot and Thor in row 3; the title lineup has him at
+The intro seats him in a ninth seat, in red, zipping through Naruto, the mascot and Thor in row 3; the title lineup has him at
 the far left.
 Bugs Bunny / Pernalonga (fan art) made in PixelLab: "Bugs Bunny HD" (standard mode; blue scarf, which takes the player's color)
 drew his front again for the side and back, so "Bugs Bunny HD v3" rotates that front for the side and back rows; laid out by
 `scripts/build-character-sheet.py bugs`. Idle is his rotation bobbing (the breathing template shut his eyes); the dig is
 instant, so his cast rows are him popping out (squashed low, arms flung up, a hand over his brow), posed from our own
 skeletons like the carry walk; lobby (and the title lineup) a v3 animation munching a carrot. The tunnel (holes at both ends,
-a ridge of dirt mounds, clods flying) is drawn by the renderer (`drawTunnel`, `tunnelMounds`). The intro seats him in an
-eleventh seat, in blue, digging along row 4 under two pillars; the title lineup has him at the far right.
+a ridge of dirt mounds, clods flying) is drawn by the renderer (`drawTunnel`, `tunnelMounds`). The intro seats him in a
+tenth seat, in blue, digging along row 4 under two pillars; the title lineup has him at the far right.
 The Green Lantern / Lanterna Verde (fan art) is John Stewart, made in PixelLab: "John Stewart HD 2" (standard mode: dark
 brown skin, short black hair, green and black suit; the green takes the player's color) drew him smiling with white eyes,
 so its front and side were repainted (glowing green eyes, a closed serious mouth) and imported as "John Stewart HD v3"
@@ -198,14 +197,14 @@ lobby a v3 animation. Every frame gets his eyes white with an emerald iris and l
 script (`green_iris`, `no_blots`). The bubble is its own HD art, `scripts/build-lantern-bubble.py`
 (`BUBBLE`, `bubbleLook`): it forms (sparks rushing in, a ring swelling out), is held (fresnel rim, a honeycomb drifting over
 the sphere, ripples round its edge, a white shine, sparkles; flickering in its last second) and gives way (a crack into
-shards), drawn additively over him. The intro seats him in a twelfth seat, in green, sitting out his own bomb's fire in row
+shards), drawn additively over him. The intro seats him in an eleventh seat, in green, sitting out his own bomb's fire in row
 6; the title lineup has him at the far left.
 Donatello (fan art) made in PixelLab ("Donatello HD", standard mode; purple bandana and pads, which take the player's color,
 a bo staff in hand), laid out by `scripts/build-character-sheet.py donatello`. Idle is his rotation bobbing (the breathing
 template opened his mouth and puffed breath); the staff spin (both hands on the bo swept round him) and carry walk are posed
 from our own skeletons; lobby a v3 animation twirling the staff overhead, planting it and grinning. The whirl (the bo turning
 round him twice with a blur, a whoosh ring) is drawn by the renderer (`drawSpin`, `spinLook`). The intro seats him in a
-thirteenth seat, batting his own bomb down the column and leaving the ninja dizzy in row 5; the title lineup has him at the far
+twelfth seat, batting his own bomb down the column and leaving optimus dizzy in row 5; the title lineup has him at the far
 right (the lineup's edges hide below 740 px wide).
 Penelope Pitstop / Penélope Charmosa (fan art) made in PixelLab ("Penelope HD 2", standard mode: a round pink racing
 helmet with big goggles, blonde ponytail, pink suit; the pink of helmet and suit takes the player's color). Its side views
@@ -217,7 +216,7 @@ fluff of her ponytail (sparkles), a kiss blown at us (hearts floating up), `scri
 first with a victory of her own (`SheetLayout.victory`, its own image; the results' champion plays it, the guide shows it
 apart from the lobby): a jump for joy, then a checkered flag waved over her head, a foot kicked up, hearts floating up
 (`scripts/build-penelope-victory.py`; PixelLab drew a flag of its own that changed every frame, so her hand is left empty
-and the flag drawn in). Others fall back to their lobby pose. The intro seats her in a fourteenth seat, blowing the captain
+and the flag drawn in). Others fall back to their lobby pose. The intro seats her in a thirteenth seat, blowing the captain
 a kiss down row 5 (a bomb landing out of the frame is dropped); the title lineup has her at the far left.
 The Pink Panther / Pantera Cor-de-Rosa (fan art) made in PixelLab: the first tries drew a generic cute cat, so "Pink Panther
 HD 4" was described from the cartoon's own face (big round yellow eyes with black pupils, black brows, a dark pink
@@ -227,7 +226,7 @@ his mouth and puffed breath); PixelLab drew a floor shadow under him, taken out 
 His cast rows are the classic tiptoe (up on his toes, paws before his chest), posed from our own skeletons like the carry
 walk (the back views asked "seen from behind": they turned to face us), walked through while he sneaks (`playerFrame`'s
 `sneaking`). His lobby: he tiptoes in from the left, turns to us and goes "shh" with a sly look (`scripts/build-panther-lobby.py`).
-The intro seats him in a fifteenth seat, in blue, tiptoeing out of sight into row 7 to leave a bomb between goku and the
+The intro seats him in a fourteenth seat, in blue, tiptoeing out of sight into row 7 to leave a bomb between goku and the
 spider; the title lineup has him at the far right.
 Harry Potter (fan art) made in PixelLab: the standard-mode tries came out with their directions mixed up, one of them a
 good front holding the wand like a staff; that front had the wand cut short and the lightning scar painted on by script and
@@ -241,7 +240,7 @@ sparkles trailing, heard as `gallop` (hooves under a shimmer) (`patronusLook`). 
 overhead in a trail of light (our own skeletons), thrust out in a burst of mist, and the stag galloping once round him;
 his victory: a jump and the golden snitch
 snatched out of the air, its wings fluttering out of his fist (both `scripts/build-harry-lobby.py`). The intro seats him
-in a sixteenth seat, in red, sending the stag along row 3 through naruto and the flash (36 s now); the title lineup has
+in a fifteenth seat, in red, sending the stag along row 3 through naruto and the flash (36 s now); the title lineup has
 him at the far left.
 Optimus Prime (fan art) made in PixelLab ("Optimus Prime HD", standard mode: the classic red and blue robot, blue helmet
 with its fins, silver faceplate, red chest with its truck windows; the blue takes the player's color, red and white
@@ -253,8 +252,8 @@ front and its back, with the side's wheels turned a step a frame by `scripts/bui
 stands in for him while he drives (`drawTruck`: a blue glow as he turns, plates and sparks bursting each way, exhaust and
 speed lines; `Fx.transform`), heard as `transform` (the cartoon's sound) and `truck` (an engine roaring off). His lobby:
 his eyes flare, he bursts into the truck, which drives off the card and brakes back in, and he rises with his fist high,
-the Matrix shining in his chest (`scripts/build-optimus-lobby.py`). The intro seats him in a seventeenth seat, in blue,
-shoving the captain down row 5 until he is pinned against penelope (39 s now); the title lineup has him at the far right.
+the Matrix shining in his chest (`scripts/build-optimus-lobby.py`). The intro seats him in a sixteenth seat, in blue, standing in row 5 from the start,
+shoving the captain down it until he is pinned against penelope (39 s now); the title lineup has him at the far right.
 Pelé (fan art) made in PixelLab ("Pele HD", standard mode, the 1970 Brazil kit: yellow jersey with a green collar and
 cuffs, blue shorts, which take the player's color, white socks, black cleats), laid out by
 `scripts/build-character-sheet.py pele`; idle front is his rotation bobbing (the breathing template shut his eyes). His
@@ -262,7 +261,7 @@ kick and carry walk are posed from our own skeletons; the kick was asked "at emp
 own, and the ball is the renderer's: `BALL`, `ballLook`, a PixelLab image cleared of its shadow by `scripts/build-ball.py`,
 flying in an arc, spinning, rebounding off what stopped it), heard as `kickball` (Freesound, CC0). His lobby: keepy-uppy,
 the ball sent up out of the card, and his jump punching the air in green and yellow confetti (`scripts/build-pele-lobby.py`).
-The intro seats him in an eighteenth seat, in blue, kicking his ball down row 7 into the spider (42 s now); the title
+The intro seats him in a seventeenth seat, in blue, kicking his ball down row 7 into the spider (42 s now); the title
 lineup has him at the far left.
 PixelLab character animations always use a skeleton (`animate_character` mode `skeleton-v3` with a template,
 or `animate_with_skeleton_v3` with our own keypoints when no template fits): `template` and text-only `v3`
@@ -274,8 +273,7 @@ a cheer when they win, and a shout when they use their special (heard when `spec
 shout inside their kamehameha/rasengan sounds instead). Sources ripped on The Sounds Resource (asset ids in `build-sfx.mjs`):
 Goku from Dragon Ball FighterZ (Japanese, also his Kamehameha sound), Naruto from Ultimate Ninja Storm 2 (Japanese),
 Captain America, Thor and Spider-Man from Marvel vs. Capcom: Infinite (the captain's shout layered on his shield clang; the
-spider's web sounds too), Pikachu from Super Smash Bros. Ultimate (Japanese, also his Thunder for the shock), the ninja as
-Sub-Zero from Mortal Kombat (2011), the bomb mascot as White Bomber from Super Bomberman R. Static has no game voice there:
+spider's web sounds too), Pikachu from Super Smash Bros. Ultimate (Japanese, also his Thunder for the shock), the bomb mascot as White Bomber from Super Bomberman R. Static has no game voice there:
 his lines (Phil LaMarr) are cut from cartoon scenes on 101soundboards.com (board "Static Shock (TV Show)"), and his
 special is heard as the magnet's crackle (`magnet`). The flash's lines are Injustice 2's (board "Injustice 2 (PC): The
 Flash Voice" on the same site; the board's titles can be off by one, so transcribe a clip before using it). Bugs' lines (Jeff Bergman) are from Looney Tunes Dash! (board "Bugs Bunny - Looney

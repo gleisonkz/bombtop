@@ -19,8 +19,8 @@ describe("character guide", () => {
     }
   });
 
-  it("shows the ninja in ice blue, not a player red", () => {
-    expect(CHARACTER_GUIDE.find((c) => c.id === "ninja")!.color).toBe(PLAYER_COLORS[3]);
+  it("shows thor in blue, not a player red", () => {
+    expect(CHARACTER_GUIDE.find((c) => c.id === "thor")!.color).toBe(PLAYER_COLORS[3]);
   });
 
   it("lets every character be heard: picked, special, winning and losing, all real sounds", () => {

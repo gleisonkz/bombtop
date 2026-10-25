@@ -74,7 +74,7 @@ export class TouchControls {
     this.root = el("div", { class: "touch" }, [
       stick,
       el("div", { class: "touch-buttons" }, [
-        pad("❄", "special"),
+        pad("⚡", "special"),
         pad("AÇÃO", "action"),
         pad("💣", "bomb"),
       ]),

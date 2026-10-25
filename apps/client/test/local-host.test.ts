@@ -41,22 +41,22 @@ function inbox<T>(link: { onMessage(type: string, cb: (m: T) => void): void }, t
 describe("LocalHost", () => {
   it("the host plays through a link of its own", async () => {
     const host = new LocalHost();
-    const me = host.hostLink("Ana", "ninja");
+    const me = host.hostLink("Ana", "thor");
     const lobbies = inbox<LobbyInfo>(me, S2C.lobby);
     me.send(C2S.sync);
     await flush();
-    expect(lobbies.at(-1)!.members.map((m) => [m.id, m.name, m.character])).toEqual([[me.sessionId, "Ana", "ninja"]]);
+    expect(lobbies.at(-1)!.members.map((m) => [m.id, m.name, m.character])).toEqual([[me.sessionId, "Ana", "thor"]]);
     expect(lobbies.at(-1)!.hostId).toBe(me.sessionId);
   });
 
   it("seats more players on the same screen (one per controller), who play and leave on their own", async () => {
     const host = new LocalHost();
     const me = host.hostLink("Ana", "bomb");
-    const pad = host.seat("Controle 2", "ninja")!;
+    const pad = host.seat("Controle 2", "thor")!;
     const lobbies = inbox<LobbyInfo>(me, S2C.lobby);
     me.send(C2S.sync);
     await flush();
-    expect(lobbies.at(-1)!.members.map((m) => [m.name, m.character])).toEqual([["Ana", "bomb"], ["Controle 2", "ninja"]]);
+    expect(lobbies.at(-1)!.members.map((m) => [m.name, m.character])).toEqual([["Ana", "bomb"], ["Controle 2", "thor"]]);
     me.send(C2S.start);
     await flush();
     pad.send(C2S.input, { dir: "left", bomb: false, seq: 1 });

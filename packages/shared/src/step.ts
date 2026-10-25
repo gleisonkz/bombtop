@@ -15,9 +15,8 @@ import { playerTile, type MatchState, type PlayerInput } from "./state";
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   s.tick++;
   const living = s.players.filter((p) => p.alive);
-  // Thawed before anyone acts, so a freeze lasts the same whoever moved first.
+  // Worn off before anyone acts, so a web or charm lasts the same whoever moved first.
   for (const p of s.players) {
-    if (p.frozen > 0) p.frozen--;
     if (p.webbed > 0) p.webbed--;
     if (p.charmed > 0) p.charmed--;
   }
@@ -32,7 +31,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (p.bubble > 0) p.bubble--;
     if (p.sneak > 0) p.sneak--;
     if (p.specialCooldown > 0) p.specialCooldown--;
-    // Planted behind the shield: it wears off on time even if he gets stunned or frozen.
+    // Planted behind the shield: it wears off on time even if he gets stunned.
     if (p.shield > 0) {
       p.shield--;
       continue;
@@ -42,7 +41,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       p.charge = p.rasengan = p.truck = 0;
       continue;
     }
-    if (p.frozen > 0 || p.webbed > 0) {
+    if (p.webbed > 0) {
       p.charge = p.rasengan = p.truck = 0;
       continue;
     }
