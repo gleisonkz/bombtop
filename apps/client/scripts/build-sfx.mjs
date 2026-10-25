@@ -82,7 +82,7 @@ const STATIC = (name) => join(SRC, "static-shock", `${name}.mp3`);
 const GOKU_FX = (name) => join(SRC, "dbfz", "dbfz-goku-sfx", "Goku", `ARC_BTL_GKN_${name}.ogg`);
 
 /**
- * name -> { src, from? (s into the source), len (s), tempo?, layer? | layers?: [{ src, from?, len, gain (dB), lowpass? (Hz), at? (s, delay), tempo? }] }
+ * name -> { src, from? (s into the source), len (s), tempo?, compress? (squeeze a rally recording's peaks so the voice comes up), layer? | layers?: [{ src, from?, len, gain (dB), lowpass? (Hz), at? (s, delay), tempo? }] }
  * Every clip is trimmed of leading silence, cut to `len`, faded out, mixed to mono
  * and peak-normalized; per-sound loudness is set in code (SOUNDS in sound.ts).
  */
@@ -241,9 +241,9 @@ const RECIPE = {
   "pele-win": { src: PELE("24015278-e-tetra-e-tetra"), from: 1.66, len: 2.6 },
   "pele-special": { src: PELE("24015287-galvao-olha-o-gol"), from: 0.87, len: 1.9 },
   "lula-pick": { src: LULA("lula-bora-pra-rua-gente"), len: 1.35 },
-  "lula-death": { src: LULA("lula-por-favor-me-ajuda_5UqDBWj"), len: 3.65 },
-  "lula-win": { src: LULA("lula-picanha-e-cerveja_3zSp50v"), len: 4.85 },
-  "lula-special": { src: LULA("picanha-com-gordurinha"), from: 7.6, len: 4.95 },
+  "lula-death": { src: LULA("lula-por-favor-me-ajuda_5UqDBWj"), len: 3.65, compress: true },
+  "lula-win": { src: LULA("lula-picanha-e-cerveja_3zSp50v"), len: 4.85, compress: true },
+  "lula-special": { src: LULA("picanha-com-gordurinha"), from: 7.6, len: 4.95, compress: true },
   // pelé's kick: a ball struck hard
   kickball: { src: FS("555042_11910076-hq.mp3"), len: 0.6 },
   // optimus turning into his truck (or back): the cartoon's transforming sound; the truck's engine roaring off
@@ -345,6 +345,7 @@ const RECIPE = {
   click: { src: CSD("Interface & Infographics", "Interface Pop High Short.wav"), len: 0.4 },
 };
 
+const COMPRESS = "loudnorm=I=-12:TP=-1.5:LRA=5,alimiter=limit=0.35:attack=2:release=60:level=false";
 const TRIM = "silenceremove=start_periods=1:start_threshold=-50dB";
 const shape = (len) => `${TRIM},atrim=0:${len},afade=t=out:st=${Math.max(0, len - Math.min(0.3, len / 3))}:d=${Math.min(0.3, len / 3)}`;
 
@@ -357,7 +358,8 @@ const tempoOf = (t) => (t ? `,atempo=${t}` : "");
 
 function filterFor(r) {
   const layers = layersOf(r);
-  const main = `[0:a]aformat=channel_layouts=mono${tempoOf(r.tempo)},${shape(r.len)}[m]`;
+  const squeeze = r.compress ? `,${COMPRESS}` : "";
+  const main = `[0:a]aformat=channel_layouts=mono${tempoOf(r.tempo)},${shape(r.len)}${squeeze}[m]`;
   if (!layers.length) return `${main};[m]anull[mix]`;
   const subs = layers.map((l, i) => {
     const lowpass = l.lowpass ? `,lowpass=f=${l.lowpass}` : "";
