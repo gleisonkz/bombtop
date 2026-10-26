@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { C2S, MAX_WATCHERS, RoomCore, S2C, type LobbyInfo, type RoomPhase } from "../../src";
+import { C2S, MAX_WATCHERS, placePlayerAt, RoomCore, S2C, setTile, Tile, type LobbyInfo, type RoomPhase } from "../../src";
 
 /** A room whose messages land in lists instead of a network. */
 function room() {
@@ -18,6 +18,40 @@ function room() {
 }
 
 describe("RoomCore", () => {
+  it("delivers network guard input before an opponent tries to Push", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    r.core.join("b", "Bia", "bomb");
+    r.core.message("a", C2S.start);
+    const match = r.core.session.match!;
+    for (const x of [3, 4, 5, 6, 7]) setTile(match, x, 5, Tile.Empty);
+    placePlayerAt(match, "a", 3, 5);
+    placePlayerAt(match, "b", 4, 5);
+    match.players[0]!.canPush = true;
+    match.players[0]!.facing = "right";
+    r.core.message("b", C2S.input, { dir: null, bomb: false, brace: true, seq: 1 });
+    r.core.message("a", C2S.input, { dir: null, bomb: false, action: true, seq: 1 });
+    r.core.update();
+    expect(match.players.map((p) => p.shove)).toEqual([undefined, undefined]);
+    expect(match.players[0]!.px).toBe(3 * 256 + 128);
+    expect(match.players[1]!.px).toBe(4 * 256 + 128);
+  });
+
+  it("delivers the kick-stop button from a network packet to the authoritative bomb", () => {
+    const r = room();
+    r.core.join("a", "Ana", "bomb");
+    r.core.join("b", "Bia", "bomb");
+    r.core.message("a", C2S.start);
+    const match = r.core.session.match!;
+    match.players[0]!.canKick = true;
+    setTile(match, 5, 5, Tile.Empty);
+    setTile(match, 6, 5, Tile.Empty);
+    match.bombs.push({ ownerId: "a", x: 5, y: 5, fuse: 150, range: 1, type: "normal", slide: "right", offset: 0, air: null, heldBy: null });
+    r.core.message("a", C2S.input, { dir: null, bomb: false, stopKick: true, seq: 1 });
+    r.core.update();
+    expect(match.bombs[0]!.slide).toBeNull();
+    expect(match.bombs[0]!.offset).toBe(0);
+  });
   it("seats whoever joins and tells everyone", () => {
     const r = room();
     expect(r.core.join("a", "Ana", "thor")).toBe(true);

@@ -27,7 +27,7 @@ export const DEFAULT_BLOCK_DENSITY = 0.75;
 /** Chance (0..1) that a block hides a power-up. */
 export const ITEM_CHANCE = 0.5;
 
-export const ITEM_WEIGHTS = { fire: 6, bomb: 6, speed: 2, kick: 1, remote: 1, pierce: 1, punch: 1, glove: 1, skull: 1, fullFire: 0.5, egg: 2, picanha: 0 } as const;
+export const ITEM_WEIGHTS = { fire: 6, bomb: 6, speed: 2, kick: 1, remote: 1, pierce: 1, punch: 1, push: 1, glove: 1, skull: 1, fullFire: 0.5, egg: 2, picanha: 0, bombPass: 0, blockPass: 0, fireSuit: 0, heart: 0 } as const;
 
 export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;
@@ -45,6 +45,7 @@ export const SLOW_SPEED = BASE_SPEED / 2;
 
 /** Invulnerability after losing a mount. */
 export const INVULN_TICKS = 2 * TICK_RATE;
+export const FIRE_SUIT_TICKS = 16 * TICK_RATE;
 
 /** A hopper jump covers two tiles in JUMP_TICKS. */
 export const JUMP_TICKS = 16;
@@ -81,13 +82,13 @@ export const AIR_TICKS_PER_TILE = 6;
 /** Tiles a punched or thrown bomb travels before trying to land. */
 export const AIR_DISTANCE = 3;
 
-/** Ticks a player stays stunned after a bomb lands on them. */
-export const STUN_TICKS = TICK_RATE;
+/** A brief knockdown after a bomb lands on a player (0.75 seconds). */
+export const STUN_TICKS = Math.round(0.75 * TICK_RATE);
 
 export const SPECIAL_COOLDOWN = 20 * TICK_RATE;
 
-/** How long a special that stuns (Thor's bolt, Goku's Kamehameha, Naruto's Rasengan) stuns whoever it hits. */
-export const SPECIAL_STUN_TICKS = 3 * TICK_RATE;
+/** Two-second special stun leaves time to escape a freshly placed three-second bomb. */
+export const SPECIAL_STUN_TICKS = 2 * TICK_RATE;
 
 /** Thor's lightning bolt: reach in tiles. */
 export const BOLT_RANGE = 5;

@@ -2,12 +2,13 @@ import { TILE } from "./constants";
 import { effectiveSpeed } from "./curse";
 import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
-function passable(s: MatchState, x: number, y: number): boolean {
-  return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y);
+function passable(s: MatchState, p: Player, x: number, y: number): boolean {
+  const tile = getTile(s, x, y);
+  return (tile === Tile.Empty || (!!p.canBlockPass && tile === Tile.Block)) && (!!p.canBombPass || !bombAt(s, x, y));
 }
 
 function canKickAhead(s: MatchState, p: Player, x: number, y: number): boolean {
-  return (p.canKick || p.mount === "pusher") && !!bombAt(s, x, y);
+  return !p.canBombPass && (p.canKick || p.mount === "pusher") && !!bombAt(s, x, y);
 }
 
 /**
@@ -21,6 +22,7 @@ function canKickAhead(s: MatchState, p: Player, x: number, y: number): boolean {
  */
 /** Moves along `dir`, or along `alt` when `dir` makes no progress. Returns the direction used. */
 export function steer(s: MatchState, p: Player, dir: Direction, alt: Direction): Direction {
+  if (p.stun > 0) return null;
   const { px, py } = p;
   movePlayer(s, p, dir);
   if (!alt || alt === dir || p.px !== px || p.py !== py) return dir;
@@ -37,7 +39,7 @@ export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = eff
   let along = horizontal ? p.px : p.py;
   let across = horizontal ? p.py : p.px;
   const tileAt = (a: number, c: number) =>
-    horizontal ? passable(s, a, c) : passable(s, c, a);
+    horizontal ? passable(s, p, a, c) : passable(s, p, c, a);
 
   const ta = Math.floor(along / TILE);
   const tc = Math.floor(across / TILE);

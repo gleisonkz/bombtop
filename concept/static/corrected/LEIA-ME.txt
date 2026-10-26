@@ -1,0 +1,26 @@
+SUPER CHOQUE - SPRITES COM TRANSPARENCIA REAL (RGBA)
+
+RECOMENDADO PARA INTEGRAR NO JOGO
+01_Super_Choque_transparente_PRINCIPAL.png
+- 1052x1495 pixels, PNG RGBA (alfa real).
+- Regenerado especificamente com fundo transparente desde a criacao.
+- Cabelo preto e roupas escuras permanecem opacos.
+- Eletricidade com transparencias gradativas, sem blocos pretos de fundo.
+
+02_Super_Choque_transparente_2X.png
+- 2104x2990, ampliacao inteira 2x pelo metodo nearest-neighbor.
+- Sem interpolacao/suavizacao que apague pixels, para uso em escala maior.
+
+OPCAO PARA PRESERVAR POSICOES DO ATLAS ORIGINAL
+03_Super_Choque_original_recortado_ALTERNATIVO.png
+- Mantem as posicoes dos frames do atlas preto original.
+- Cabelo e contornos escuros foram recuperados no recorte.
+- Os efeitos de eletricidade do original ainda incluem parte dos contornos/areas escuras;
+  prefira o PRINCIPAL quando a transparencia nos efeitos for mais importante.
+
+PREVIEWS
+04_PREVIEW_principal_fundo_xadrez.png
+05_PREVIEW_principal_fundo_claro.jpg
+Nao use os arquivos de preview como textura: eles incluem fundo.
+
+Importe 01 ou 02 preservando o canal alfa, sem converter para JPG.

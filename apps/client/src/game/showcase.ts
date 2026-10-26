@@ -1,9 +1,13 @@
+import { ORIGINAL } from "../render/per-color";
 import {
   createMatch,
   DIR_VECTORS,
   ItemKind,
   MAX_FIRE_RANGE,
   MAX_SPEED,
+  FIRE_SUIT_TICKS,
+  FLAME_TICKS,
+  placeBomb,
   placePlayerAt,
   playerTile,
   setTile,
@@ -91,6 +95,45 @@ const SCENES: Record<ItemKind, Scene> = {
     target: [10, 5],
     seconds: 5,
   },
+  [ItemKind.BombPass]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 5, 5);
+      placeBomb(s, "rival");
+      placePlayerAt(s, "rival", 11, 7);
+      s.bombs[0]!.fuse = 360;
+      you.canBombPass = true;
+    },
+    you: [{ go: "right", tiles: 4 }],
+    seconds: 3,
+  },
+  [ItemKind.BlockPass]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      blocks(s, [4, 5], [5, 5]);
+      you.canBlockPass = true;
+    },
+    you: [{ go: "right", tiles: 4 }],
+    seconds: 3,
+  },
+  [ItemKind.FireSuit]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 5, 5);
+      you.fireSuitTicks = FIRE_SUIT_TICKS;
+      s.flames.push({ x: 5, y: 5, ttl: 90, ownerId: "rival" });
+    },
+    you: [{ wait: 100 }],
+    seconds: 3,
+  },
+  [ItemKind.Heart]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 5, 5);
+      you.hasHeart = true;
+      s.flames.push({ x: 5, y: 5, ttl: FLAME_TICKS, ownerId: "rival" });
+    },
+    you: [{ wait: 100 }],
+    seconds: 2,
+  },
   [ItemKind.Remote]: {
     setup(s, you) {
       placePlayerAt(s, "you", 3, 5);
@@ -122,6 +165,16 @@ const SCENES: Record<ItemKind, Scene> = {
     you: [{ press: "bomb" }, { go: "left", tiles: 1 }, { face: "right" }, { press: "action" }],
     target: [8, 5],
     seconds: 5,
+  },
+  [ItemKind.Push]: {
+    setup(s, you) {
+      placePlayerAt(s, "you", 3, 5);
+      placePlayerAt(s, "rival", 4, 5);
+      you.canPush = true;
+      you.facing = "right";
+    },
+    you: [{ press: "action" }, { wait: 80 }],
+    seconds: 3,
   },
   [ItemKind.Glove]: {
     setup(s, you) {
@@ -162,7 +215,6 @@ const SCENES: Record<ItemKind, Scene> = {
 };
 
 /** The player color (by seat) each character wears in their scene, as in the menus: thor in blue, Goku in green. */
-const CHARACTER_COLOR: Record<CharacterId, number> = { bomb: 1, captain: 0, thor: 3, goku: 4, naruto: 0, spider: 2, pikachu: 3, static: 3, flash: 2, bugs: 3, lantern: 4, donatello: 3, penelope: 2, panther: 3, harry: 2, optimus: 3, pele: 3, lula: 2 };
 
 /** Each character's special shown in use, played by that character against a rival. */
 const SPECIALS: Record<CharacterId, Scene> = {
@@ -454,7 +506,7 @@ export class Showcase {
     this.length = scene.seconds * TICK_RATE;
     this.target = scene.target;
     const cast = scene.characters;
-    this.colors = new Map(cast ? [["you", CHARACTER_COLOR[cast.you]], ["rival", CHARACTER_COLOR[cast.rival]]] : []);
+    this.colors = new Map(cast ? [["you", ORIGINAL], ["rival", ORIGINAL]] : []);
     this.reset();
   }
 

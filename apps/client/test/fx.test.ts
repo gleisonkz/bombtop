@@ -7,6 +7,17 @@ const noBlocks = () => false;
 const count = (fx: Fx, kind: string) => fx.particles.filter((p) => p.kind === kind).length;
 
 describe("Fx", () => {
+  it("uses the selected special palette for transformation debris without altering later originals", () => {
+    const fx = new Fx();
+    fx.transform(20, 30, 0xe84a4a);
+    const colored = fx.particles.filter(p => p.kind === "debris");
+    expect(colored.length).toBeGreaterThan(0);
+    expect(colored.some(p => ((p.color >> 16) & 255) > (p.color & 255))).toBe(true);
+    expect(colored.every(p => ((p.color >> 8) & 255) === (p.color & 255))).toBe(true);
+    fx.reset();
+    fx.transform(20, 30);
+    expect(fx.particles.some(p => (p.color & 255) > ((p.color >> 16) & 255))).toBe(true);
+  });
   it("bursts sparks and shakes the screen when a bomb goes off", () => {
     const fx = new Fx();
     fx.observe(cross, noBlocks, 10);

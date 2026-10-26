@@ -4,7 +4,6 @@ import { CHARACTER_GUIDE } from "../src/ui/character-guide";
 import { CHARACTER_SHEETS, characterMoves } from "../src/ui/sheet-art";
 import { CAST_TICKS_PER_FRAME, SHEETS } from "../src/render/sprites";
 import { SOUNDS } from "../src/audio/sound";
-import { PLAYER_COLORS } from "../src/ui/art";
 
 describe("character guide", () => {
   it("has every character, in the game's order, with a story, the special and tips", () => {
@@ -19,8 +18,8 @@ describe("character guide", () => {
     }
   });
 
-  it("shows thor in blue, not a player red", () => {
-    expect(CHARACTER_GUIDE.find((c) => c.id === "thor")!.color).toBe(PLAYER_COLORS[3]);
+  it("keeps every preview in the original character colors", () => {
+    for (const c of CHARACTER_GUIDE) expect(c.color, c.id).toBeNull();
   });
 
   it("lets every character be heard: picked, special, winning and losing, all real sounds", () => {

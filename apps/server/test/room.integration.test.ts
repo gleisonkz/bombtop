@@ -59,6 +59,30 @@ function view(room: Room, base: PublicView, pred: (v: PublicView) => boolean) {
 }
 
 describe("BattleRoom over the network", () => {
+  it("shares Maniac item/HP settings and fixed rules over Colyseus", async () => {
+    const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
+    const guest = await client().joinById(host.roomId, { name: "Guest" });
+    const chosen = next<LobbyInfo>(guest, S2C.lobby, (l) => l.battleMode === "maniac");
+    host.send(C2S.rules, { battleMode: "maniac", maniac: { items: { heart: 2 }, hitPoints: { [host.sessionId]: 5, [guest.sessionId]: 2 } } });
+    expect(await chosen).toMatchObject({ battleMode: "maniac", winsToWin: 3, timeMinutes: 3, suddenDeath: false,
+      maniac: { items: { heart: 2 }, hitPoints: { [host.sessionId]: 5, [guest.sessionId]: 2 } } });
+    const started = next<LobbyInfo>(host, S2C.lobby, (l) => l.phase === "playing");
+    host.send(C2S.start);
+    expect((await started).battleMode).toBe("maniac");
+    await Promise.all([host.leave(), guest.leave()]);
+  });
+  it("broadcasts host-only Battle Mode victories and time through Colyseus", async () => {
+    const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
+    const guest = await client().joinById(host.roomId, { name: "Guest" });
+    const chosen = next<LobbyInfo>(guest, S2C.lobby, (l) => l.winsToWin === 2 && l.timeMinutes === 2 && l.suddenDeath === false);
+    host.send(C2S.rules, { winsToWin: 2, timeMinutes: 2, suddenDeath: false });
+    expect(await chosen).toMatchObject({ winsToWin: 2, timeMinutes: 2, suddenDeath: false });
+    guest.send(C2S.rules, { winsToWin: 1, timeMinutes: 1, suddenDeath: true });
+    const current = next<LobbyInfo>(host, S2C.lobby);
+    host.send(C2S.sync);
+    expect(await current).toMatchObject({ winsToWin: 2, timeMinutes: 2, suddenDeath: false });
+    await Promise.all([host.leave(), guest.leave()]);
+  });
   it("two players join a public room, the host starts, both receive snapshots", async () => {
     const a = await client().joinOrCreate(ROOM_NAME, { name: "Ana" });
     const lobbyWithTwo = next<LobbyInfo>(a, S2C.lobby, (l) => l.members.length === 2);

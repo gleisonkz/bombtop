@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "familyVersion": "1.0",
   "language": "pt-BR",
-  "status": "approved_visual_identity; production_contract_pending_coordinator_validation",
+  "status": "approved_visual_identity; regenerated_assets_structurally_validated",
   "references": [
     {
       "path": "bomber/menu-flight-source.png",
@@ -110,6 +110,31 @@
     "emblem": "small original gold hexagonal chest emblem",
     "rearView": "back of bomb head and cape; no front eyes or chest emblem visible through body",
     "carry": "both arms raised to support renderer-owned carried object; do not bake bomb into character",
+    "specialBomb": {
+      "source": "bombs/mega-bomber.png",
+      "runtime": "../apps/client/public/sprites/bombs/mega/armed.png",
+      "stageSource": "bombs/mega-stages.png",
+      "stageGrid": [2, 2],
+      "stages": ["armed", "warning", "critical", "detonation-start"],
+      "runtimeDirectory": "../apps/client/public/sprites/bombs/mega",
+      "flashVariants": "matching -white image per stage, preserving alpha",
+      "runtimeSize": [512, 512],
+      "anchor": [250, 310],
+      "fuseGlow": [254, 76],
+      "baseScale": 0.025,
+      "megaScale": 1.6,
+      "identity": "heavy charcoal-black sphere matching the game's smooth arcade finish; Bomber's narrow amber eye slits, dark-violet forged reinforcement plates, contained molten seams, gold fasteners and central upright burning wick",
+      "summoningReference": "bomber master rows 8-10: kneel and press both gauntlets downward to plant a heavy charged demolition core",
+      "summonEffects": {
+        "durationTicks": 36,
+        "impactTick": 12,
+        "phases": ["violet gathering and amber hand sparks", "ground impact and uniform emergence", "expanding ring and fading dust"],
+        "timeSource": "register the matching fresh bomb and cast once, then advance from simulation ticks; cancel moved/held bombs and never attach a later cast to an older bomb",
+        "reducedMotion": "new summon motion and mega white flashes disabled; stages remain visible"
+      },
+      "animation": "uniform scale pulse; horizontal and vertical scales must remain equal",
+      "rule": "dedicated HD drawing, not a stretched standard bomb"
+    },
     "familyBoundary": "Bomb head, amber eyes, flame, violet armor, red cape and gold hex emblem belong to Bomber only; do not force these on other characters."
   },
   "negativeConstraints": [
@@ -137,7 +162,7 @@
     ]
   },
   "animationGrid": {
-    "status": "refined production contract; actual final output must be verified by coordinator",
+    "status": "verified master dimensions, frame inventory, alpha padding and reproducible runtime exports",
     "indexing": "zero-based rows, left-to-right columns; unused cells transparent",
     "views": "front/right/back; renderer mirrors right for left",
     "master": {
@@ -179,6 +204,18 @@
       "scale": 0.22,
       "nominalDisplayedBodyHeight": 22,
       "purpose": "preserve mobile GPU/memory texture budget"
+    },
+    "runtimePreview": {
+      "path": "../apps/client/public/sprites/bomber-menu-atlas.png",
+      "cell": [208, 288],
+      "columns": 9,
+      "rows": 18,
+      "size": [1872, 5184],
+      "anchor": [104, 280],
+      "bodyHeight": 200,
+      "scale": 0.11,
+      "sampling": "CSS image-rendering auto; no pixelated override",
+      "purpose": "full master detail for enlarged lobby, podium and guide portraits; same displayed proportions as arena"
     },
     "export": {
       "filter": "Lanczos",

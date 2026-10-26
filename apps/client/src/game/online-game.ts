@@ -5,6 +5,7 @@ import { AdaptiveDelay } from "../net/adaptive-delay";
 import { GhostBlasts, GhostPickups, predictBlast } from "../net/own-actions";
 import { between } from "../render/sprites";
 import { RemoteMotion } from "../render/remote-motion";
+import { smoothBombSlides } from "../render/bomb-motion";
 import { Standings } from "./standings";
 import {
   C2S,
@@ -13,8 +14,11 @@ import {
   TICK_RATE,
   TILE,
   type BotLevel,
+  type BattleMode,
+  type ManiacConfig,
   type CharacterId,
   type LobbyInfo,
+  type StageRotationEntry,
   type PlayerInput,
   type Player,
   type PublicView,
@@ -81,6 +85,7 @@ export class OnlineGame implements GameMode {
   private pickups = new GhostPickups();
   private readonly kicks = new KickPrediction();
   private latest: Snapshot | null = null;
+  private latestAt = 0;
   private lobby: LobbyInfo | null = null;
   /** Who went out when, for the results screen. */
   private readonly standings = new Standings();
@@ -197,6 +202,30 @@ export class OnlineGame implements GameMode {
     this.room.send(C2S.start);
   }
 
+  setWinsToWin(winsToWin: number): void {
+    this.room.send(C2S.rules, { winsToWin });
+  }
+
+  setTimeMinutes(timeMinutes: 1 | 2 | 3 | 5 | null): void {
+    this.room.send(C2S.rules, { timeMinutes });
+  }
+
+  setSuddenDeath(suddenDeath: boolean): void {
+    this.room.send(C2S.rules, { suddenDeath });
+  }
+
+  setBattleMode(battleMode: BattleMode): void {
+    this.room.send(C2S.rules, { battleMode });
+  }
+
+  setManiac(maniac: ManiacConfig): void {
+    this.room.send(C2S.rules, { maniac });
+  }
+
+  setStageRotation(stageRotation: StageRotationEntry[]): void {
+    this.room.send(C2S.rules, { stageRotation });
+  }
+
   addBot(level: BotLevel): void {
     this.room.send(C2S.addBot, { level });
   }
@@ -236,7 +265,9 @@ export class OnlineGame implements GameMode {
     const prev = new Map(others.players.map((p) => [p.id, { px: p.px, py: p.py }]));
     const { bombs, flames, grid, items, blasts } = world;
     const mixed = { ...others, tick: world.tick, bombs, flames, grid, items, blasts };
-    let view = this.blastGhosts.apply(this.kicks.apply(this.ghosts.apply(mixed, nowMs), nowMs), nowMs);
+    const placed = this.ghosts.apply(mixed, nowMs);
+    const kicked = this.kicks.apply(placed, nowMs);
+    let view = this.blastGhosts.apply(smoothBombSlides(world, kicked, nowMs - this.latestAt), nowMs);
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
     if (me) {
       // Walking onto an item takes it (and plays its sound) now, not a round trip later.
@@ -299,7 +330,16 @@ export class OnlineGame implements GameMode {
     }
     // Walking into a bomb kicks it now on our screen, not a round trip later.
     const me = this.playing() ? this.predictor.predict(this.latest!) : null;
-    if (me) this.kicks.check(this.latest!, me, input.dir, performance.now());
+    if (me) {
+      const at = performance.now();
+      if (input.stopKick) this.kicks.stop(me.id, at);
+      const kick = input.stopKick ? null : this.kicks.check(this.latest!, me, input.dir, at);
+      if (kick) {
+        const cue = [{ name: "kick" as const, x: kick.x + 0.5 }];
+        this.ctx.sound.cues(cue, this.latest!.grid.width);
+        this.echo.played(cue, at);
+      }
+    }
   }
 
   /** Our own button press is heard (and a placed bomb drawn) at once; the server's echo is skipped. */
@@ -336,6 +376,7 @@ export class OnlineGame implements GameMode {
   private received(snap: Snapshot): void {
     if (!this.buffer.latest) this.ctx.fit(snap.grid.width, snap.grid.height);
     const now = performance.now();
+    this.latestAt = now;
     this.stats.arrival(now);
     this.delay.observe(now);
     this.buffer.delayMs = this.delay.ms;

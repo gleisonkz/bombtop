@@ -1,11 +1,5 @@
 # Sprite licenses
 
-Trial character sheets. Both are CC0 (public domain, no attribution required).
-
-- `foozle-legend.png` — "Legend - Main Character" by Foozle (commissioned from Atari Boy),
-  https://foozlecc.itch.io/legend-main-character — CC0 1.0
-- `james.png` — "Pixel Character 02 - James", https://opengameart.org/content/pixel-character-02-james — CC0 1.0
-
 ## captain.png
 
 Fan art of Captain America (Marvel) for this non-commercial project, made in PixelLab (pixellab.ai)
@@ -23,15 +17,19 @@ lightning, shockwave, dust and the struck hammer's head are drawn by `scripts/bu
 
 Fan art of Goku (Dragon Ball) for this non-commercial project, made in PixelLab (pixellab.ai)
 (character "Goku HD"; Kamehameha, carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's
-golden hair, aura, lightning, pebbles and flash are drawn by `scripts/build-goku-lobby.py`. Frames laid out by
-`scripts/build-character-sheet.py goku`, rows = `SHEETS.goku`. The lobby is its own image, `goku-lobby.png`, laid out by `scripts/build-lobby-image.py goku`.
+original golden hair, aura, lightning, pebbles and flash were drawn by `scripts/build-goku-lobby.py`. Gameplay frames
+are laid out by `scripts/build-character-sheet.py goku`, rows = `SHEETS.goku`. The current separate lobby image,
+`goku-lobby.png`, uses the AI-edited source `concept/goku/lobby-hair-transform-candidate.png` (built-in image
+generator): redrawn upright golden hair, followed by a return to black hair. `scripts/pack-goku-lobby.py` registers
+those poses to the existing 16-cell grid. See `concept/goku/README.md` for provenance and reproduction.
 
 ## naruto.png
 
-Fan art of Naruto (Naruto) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Naruto HD"; Rasengan dash, carry walk and the lobby poses posed with skeleton v3 from its rotations). The
-lobby's clones, smoke and chakra are drawn by `scripts/build-naruto-lobby.py`. Frames laid out by
-`scripts/build-character-sheet.py naruto`, rows = `SHEETS.naruto`. The lobby is its own image, `naruto-lobby.png`, laid out by `scripts/build-lobby-image.py naruto`.
+Fan art of Naruto for this non-commercial project. Current art supplied by the user in
+`naruto_slim_sprites (1).zip`: 108 original frames, 80 x 116 pixels per cell,
+9 columns and 18 rows. Source atlas and metadata retained in `concept/naruto/`.
+Used without resampling; row 17 supplies the eight-frame lobby celebration.
+The unused earlier PixelLab-derived lobby image was removed from public assets.
 
 ## spider.png
 
@@ -99,15 +97,25 @@ laid out by `scripts/build-character-sheet.py panther`; rows = `SHEETS.panther`.
 
 ## harry.png, harry-lobby.png, harry-victory.png, patronus.png
 
+`harry-lobby-patronus-v2.png` reuses clean Harry cells from the original menu strip
+and the original eight-frame stag, recomposed by `scripts/pack-harry-lobby.py`.
+Its preserved source, timeline and reproduction are documented in `concept/harry/README.md`.
+
 Fan art of Harry Potter (J. K. Rowling / Warner Bros.) for this non-commercial project, made in PixelLab (pixellab.ai)
 (character "Harry Potter HD v3b", its front retouched by hand: a shorter wand, the scar; his spell and carry walk posed
 from our own skeletons, a lobby swirling the wand and a victory jump); laid out by `scripts/build-character-sheet.py harry`;
 rows = `SHEETS.harry`. The stag is a PixelLab image (`scripts/build-patronus.py`); the lobby's stag run and sparkles and the
 victory's golden snitch are laid out and drawn by `scripts/build-harry-lobby.py` and `scripts/build-lobby-image.py`.
 
-## pele.png, pele-lobby.png, ball.png
+## pele-final.png, pele.png, pele-lobby.png, ball.png
 
-Fan art of Pelé (Edson Arantes do Nascimento) in the 1970 Brazil kit, for this non-commercial project, made in PixelLab
+The current `pele-final.png` uses the user-supplied `pele_pixel_art_final.zip`, preserved unchanged as
+`concept/pele/supplied-final-atlas.png`; its original author/license was not specified.
+The earlier source `concept/pele/supplied-atlas.png` remains historical; the unused public `pele.png` was removed. `scripts/pack-pele.py` isolates
+and registers the supplied art without generating new poses. The lobby now uses this atlas's celebration row.
+See `concept/pele/README.md` for inventory and reproduction.
+
+The historical Pelé artwork and unused `pele-lobby.png` were fan art in the 1970 Brazil kit, made in PixelLab
 (pixellab.ai) (character "Pele HD"; his kick, carry walk, keepy-uppy and jump posed from our own skeletons); laid out by
 `scripts/build-character-sheet.py pele`; rows = `SHEETS.pele`. The ball is a PixelLab image (`scripts/build-ball.py`); the
 lobby's ball and confetti are drawn by `scripts/build-pele-lobby.py`, laid out by `scripts/build-lobby-image.py`.
@@ -142,7 +150,7 @@ Project art built from the authored sources listed below or drawn in code by the
 `apps/client/scripts`, in HD with smooth edges.
 `hd.py` holds the shared drawing helpers.
 
-- `bombs.png` — `build-bombs.py`. Cells (128px): normal, pierce, remote.
+- `bombs/armed.png`, `bombs/warning.png`, `bombs/critical.png`, `bombs/detonation-start.png` and white masks are the active normal/pierce/remote atlases (128px cells). The obsolete `bombs.png` was removed.
 - `items.png` — `pack-concept-items.py`, packed from the concept art `concept/powerups/powerup-family-concept-v1.png`;
   the last column is Lula's picanha, `build-items.py`'s icon set in that art's gold ring. Columns (192px): one per item,
   order = `ITEMS.order` in `src/render/sprites.ts`; rows: plain, then 3 frames of a glint.
@@ -164,9 +172,39 @@ RGBA, 9 columns, 19 rows of 208 x 288 master cells). The first 18 rows match `SH
 the last contains nine distinct menu-flight poses. Dedicated generated carry poses
 keep both arms raised; the renderer supplies the carried bomb.
 
-`scripts/pack-bomber.py` exports `bomber-atlas.png` (arena/lobby) from the compiled
+`scripts/pack-bomber.py` exports `bomber-atlas.png` (arena) and
+`bomber-menu-atlas.png` (HD lobby/portraits) from the compiled
 source and `bomber-title-fly.png` (768 x 768, 3 x 3 menu loop) from the regenerated
 `concept/bomber/menu-flight-source.png` (1152 x 1152). The menu source preserves
 HD details and transparent padding; the compiled sheet includes matching thumbnails.
 `scripts/build-bomber.py` is the historical procedural generator, not the source
 of the current art. See `concept/bomber/README.md` for the frame inventory.
+
+`bombs/mega/*.png` is original Bomber-specific art generated with OpenAI from the
+game's bomb-family reference and Bomber's approved identity. Canonical source:
+`concept/bombs/mega-bomber.png` (approved armed art) and `mega-stages.png`
+(four-stage grid); exported at 512 x 512 by `pack-mega-bomb.py`. White-flash
+variants are technical alpha-preserving masks, not additional hand-drawn stages.
+
+## Ground effects
+
+ground-effects.png is original AI-generated artwork, styled against the project's implemented bomb. Six purple teleport-vortex phases and six rose extra-hit protection-ring phases are separate concepts. Source images and reproducible packing notes: concept/ground-effects/README.md. No third-party sprite was copied.
+
+## Block destruction tiles
+
+The six destruction cells in tiles.png are original AI-generated artwork based on this project's original brick tile and approved sculpted fire. The other nine tiles remain unchanged. Source, prompt and reproducible packing notes: concept/tiles/README.md.
+
+## Conveyors
+
+`conveyors.png` derives from original artwork generated with OpenAI's built-in
+image tool using this project's tilesheet as its material reference and approved
+by the user. `concept/conveyors/conveyor-concept.png` retains the source.
+`scripts/pack-conveyors.py` registers the pixels into four directional rows with
+16 translated belt phases and stationary rails. See `concept/conveyors/README.md`.
+
+## Supplied Super Choque replacement
+
+`static-final.png` is packed from the image supplied by the user in
+`Imagem do ChatGPT 25 de out. de 2026, 21_48_03.png`. The original image is retained in
+`concept/static/supplied-20261025-214803.png`; packing and fallback animation notes
+are in `concept/static/README.md`. No additional licensing grant was supplied.

@@ -1,0 +1,2923 @@
+{
+  "width": 512,
+  "height": 128,
+  "cell": 64,
+  "frames": 8,
+  "rows": [
+    "behind",
+    "front"
+  ],
+  "palette": [
+    "#173c68",
+    "#2998c8",
+    "#78dcef",
+    "#edfbff"
+  ],
+  "description": "Open-center cyan side arcs and brief hand sparks; no torso rings. Native pixel animation, eight paired phases at three ticks per frame.",
+  "operations": [
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 21,
+        "y0": 12,
+        "x1": 16,
+        "y1": 19,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 16,
+        "y0": 19,
+        "x1": 19,
+        "y1": 24,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 24,
+        "x1": 12,
+        "y1": 32,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 12,
+        "y0": 32,
+        "x1": 16,
+        "y1": 36,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 16,
+        "y0": 36,
+        "x1": 13,
+        "y1": 44,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 21,
+        "y0": 12,
+        "x1": 16,
+        "y1": 19,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 16,
+        "y0": 19,
+        "x1": 19,
+        "y1": 24,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 24,
+        "x1": 12,
+        "y1": 32,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 12,
+        "y0": 32,
+        "x1": 16,
+        "y1": 36,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 16,
+        "y0": 36,
+        "x1": 13,
+        "y1": 44,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 21,
+        "y0": 12,
+        "x1": 16,
+        "y1": 19,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 44,
+        "y0": 15,
+        "x1": 49,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 49,
+        "y0": 21,
+        "x1": 45,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 45,
+        "y0": 27,
+        "x1": 52,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 52,
+        "y0": 33,
+        "x1": 47,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 47,
+        "y0": 39,
+        "x1": 50,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 44,
+        "y0": 15,
+        "x1": 49,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 49,
+        "y0": 21,
+        "x1": 45,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 45,
+        "y0": 27,
+        "x1": 52,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 52,
+        "y0": 33,
+        "x1": 47,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 47,
+        "y0": 39,
+        "x1": 50,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 49,
+        "y0": 21,
+        "x1": 45,
+        "y1": 27,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 17,
+        "y0": 91,
+        "x1": 21,
+        "y1": 94,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 21,
+        "y0": 94,
+        "x1": 18,
+        "y1": 98,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 17,
+        "y0": 91,
+        "x1": 21,
+        "y1": 94,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 21,
+        "y0": 94,
+        "x1": 18,
+        "y1": 98,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 17,
+        "y0": 91,
+        "x1": 21,
+        "y1": 94,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 47,
+        "y0": 93,
+        "x1": 43,
+        "y1": 96,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 43,
+        "y0": 96,
+        "x1": 46,
+        "y1": 100,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 47,
+        "y0": 93,
+        "x1": 43,
+        "y1": 96,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 43,
+        "y0": 96,
+        "x1": 46,
+        "y1": 100,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 43,
+        "y0": 96,
+        "x1": 46,
+        "y1": 100,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 92,
+        "x1": 21,
+        "y1": 92,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 20,
+        "y0": 91,
+        "x1": 20,
+        "y1": 93,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 85,
+        "y0": 13,
+        "x1": 81,
+        "y1": 20,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 20,
+        "x1": 84,
+        "y1": 25,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 84,
+        "y0": 25,
+        "x1": 77,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 77,
+        "y0": 33,
+        "x1": 81,
+        "y1": 37,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 37,
+        "x1": 77,
+        "y1": 45,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 85,
+        "y0": 13,
+        "x1": 81,
+        "y1": 20,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 20,
+        "x1": 84,
+        "y1": 25,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 84,
+        "y0": 25,
+        "x1": 77,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 77,
+        "y0": 33,
+        "x1": 81,
+        "y1": 37,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 37,
+        "x1": 77,
+        "y1": 45,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 20,
+        "x1": 84,
+        "y1": 25,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 108,
+        "y0": 15,
+        "x1": 112,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 112,
+        "y0": 21,
+        "x1": 108,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 108,
+        "y0": 27,
+        "x1": 115,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 115,
+        "y0": 33,
+        "x1": 110,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 110,
+        "y0": 39,
+        "x1": 114,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 108,
+        "y0": 15,
+        "x1": 112,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 112,
+        "y0": 21,
+        "x1": 108,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 108,
+        "y0": 27,
+        "x1": 115,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 115,
+        "y0": 33,
+        "x1": 110,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 110,
+        "y0": 39,
+        "x1": 114,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 108,
+        "y0": 27,
+        "x1": 115,
+        "y1": 33,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 92,
+        "x1": 85,
+        "y1": 95,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 85,
+        "y0": 95,
+        "x1": 82,
+        "y1": 99,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 81,
+        "y0": 92,
+        "x1": 85,
+        "y1": 95,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 85,
+        "y0": 95,
+        "x1": 82,
+        "y1": 99,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 85,
+        "y0": 95,
+        "x1": 82,
+        "y1": 99,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 111,
+        "y0": 92,
+        "x1": 107,
+        "y1": 95,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 107,
+        "y0": 95,
+        "x1": 110,
+        "y1": 99,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 111,
+        "y0": 92,
+        "x1": 107,
+        "y1": 95,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 107,
+        "y0": 95,
+        "x1": 110,
+        "y1": 99,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 111,
+        "y0": 92,
+        "x1": 107,
+        "y1": 95,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 14,
+        "x1": 146,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 146,
+        "y0": 21,
+        "x1": 149,
+        "y1": 26,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 26,
+        "x1": 142,
+        "y1": 34,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 142,
+        "y0": 34,
+        "x1": 146,
+        "y1": 38,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 146,
+        "y0": 38,
+        "x1": 141,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 14,
+        "x1": 146,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 146,
+        "y0": 21,
+        "x1": 149,
+        "y1": 26,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 26,
+        "x1": 142,
+        "y1": 34,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 142,
+        "y0": 34,
+        "x1": 146,
+        "y1": 38,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 146,
+        "y0": 38,
+        "x1": 141,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 26,
+        "x1": 142,
+        "y1": 34,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 172,
+        "y0": 15,
+        "x1": 175,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 175,
+        "y0": 21,
+        "x1": 171,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 171,
+        "y0": 27,
+        "x1": 178,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 178,
+        "y0": 33,
+        "x1": 173,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 173,
+        "y0": 39,
+        "x1": 178,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 172,
+        "y0": 15,
+        "x1": 175,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 175,
+        "y0": 21,
+        "x1": 171,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 171,
+        "y0": 27,
+        "x1": 178,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 178,
+        "y0": 33,
+        "x1": 173,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 173,
+        "y0": 39,
+        "x1": 178,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 178,
+        "y0": 33,
+        "x1": 173,
+        "y1": 39,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 145,
+        "y0": 93,
+        "x1": 149,
+        "y1": 96,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 96,
+        "x1": 146,
+        "y1": 100,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 145,
+        "y0": 93,
+        "x1": 149,
+        "y1": 96,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 149,
+        "y0": 96,
+        "x1": 146,
+        "y1": 100,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 145,
+        "y0": 93,
+        "x1": 149,
+        "y1": 96,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 175,
+        "y0": 91,
+        "x1": 171,
+        "y1": 94,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 171,
+        "y0": 94,
+        "x1": 174,
+        "y1": 98,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 175,
+        "y0": 91,
+        "x1": 171,
+        "y1": 94,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 171,
+        "y0": 94,
+        "x1": 174,
+        "y1": 98,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 171,
+        "y0": 94,
+        "x1": 174,
+        "y1": 98,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 147,
+        "y0": 94,
+        "x1": 149,
+        "y1": 94,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 148,
+        "y0": 93,
+        "x1": 148,
+        "y1": 95,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 213,
+        "y0": 13,
+        "x1": 209,
+        "y1": 20,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 20,
+        "x1": 212,
+        "y1": 25,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 212,
+        "y0": 25,
+        "x1": 205,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 205,
+        "y0": 33,
+        "x1": 209,
+        "y1": 37,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 37,
+        "x1": 205,
+        "y1": 45,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 213,
+        "y0": 13,
+        "x1": 209,
+        "y1": 20,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 20,
+        "x1": 212,
+        "y1": 25,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 212,
+        "y0": 25,
+        "x1": 205,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 205,
+        "y0": 33,
+        "x1": 209,
+        "y1": 37,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 37,
+        "x1": 205,
+        "y1": 45,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 205,
+        "y0": 33,
+        "x1": 209,
+        "y1": 37,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 236,
+        "y0": 15,
+        "x1": 240,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 240,
+        "y0": 21,
+        "x1": 236,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 236,
+        "y0": 27,
+        "x1": 243,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 243,
+        "y0": 33,
+        "x1": 238,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 238,
+        "y0": 39,
+        "x1": 242,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 236,
+        "y0": 15,
+        "x1": 240,
+        "y1": 21,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 240,
+        "y0": 21,
+        "x1": 236,
+        "y1": 27,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 236,
+        "y0": 27,
+        "x1": 243,
+        "y1": 33,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 243,
+        "y0": 33,
+        "x1": 238,
+        "y1": 39,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 238,
+        "y0": 39,
+        "x1": 242,
+        "y1": 46,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 236,
+        "y0": 15,
+        "x1": 240,
+        "y1": 21,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 92,
+        "x1": 213,
+        "y1": 95,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 213,
+        "y0": 95,
+        "x1": 210,
+        "y1": 99,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 209,
+        "y0": 92,
+        "x1": 213,
+        "y1": 95,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 213,
+        "y0": 95,
+        "x1": 210,
+        "y1": 99,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 213,
+        "y0": 95,
+        "x1": 210,
+        "y1": 99,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 239,
+        "y0": 92,
+        "x1": 235,
+        "y1": 95,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 235,
+        "y0": 95,
+        "x1": 238,
+        "y1": 99,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 239,
+        "y0": 92,
+        "x1": 235,
+        "y1": 95,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 235,
+        "y0": 95,
+        "x1": 238,
+        "y1": 99,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 239,
+        "y0": 92,
+        "x1": 235,
+        "y1": 95,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 277,
+        "y0": 12,
+        "x1": 272,
+        "y1": 19,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 272,
+        "y0": 19,
+        "x1": 275,
+        "y1": 24,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 275,
+        "y0": 24,
+        "x1": 268,
+        "y1": 32,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 268,
+        "y0": 32,
+        "x1": 272,
+        "y1": 36,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 272,
+        "y0": 36,
+        "x1": 269,
+        "y1": 44,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 277,
+        "y0": 12,
+        "x1": 272,
+        "y1": 19,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 272,
+        "y0": 19,
+        "x1": 275,
+        "y1": 24,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 275,
+        "y0": 24,
+        "x1": 268,
+        "y1": 32,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 268,
+        "y0": 32,
+        "x1": 272,
+        "y1": 36,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 272,
+        "y0": 36,
+        "x1": 269,
+        "y1": 44,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 277,
+        "y0": 12,
+        "x1": 272,
+        "y1": 19,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 300,
+        "y0": 15,
+        "x1": 305,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 305,
+        "y0": 21,
+        "x1": 301,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 301,
+        "y0": 27,
+        "x1": 308,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 308,
+        "y0": 33,
+        "x1": 303,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 303,
+        "y0": 39,
+        "x1": 306,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 300,
+        "y0": 15,
+        "x1": 305,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 305,
+        "y0": 21,
+        "x1": 301,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 301,
+        "y0": 27,
+        "x1": 308,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 308,
+        "y0": 33,
+        "x1": 303,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 303,
+        "y0": 39,
+        "x1": 306,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 305,
+        "y0": 21,
+        "x1": 301,
+        "y1": 27,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 273,
+        "y0": 91,
+        "x1": 277,
+        "y1": 94,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 277,
+        "y0": 94,
+        "x1": 274,
+        "y1": 98,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 273,
+        "y0": 91,
+        "x1": 277,
+        "y1": 94,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 277,
+        "y0": 94,
+        "x1": 274,
+        "y1": 98,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 273,
+        "y0": 91,
+        "x1": 277,
+        "y1": 94,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 303,
+        "y0": 93,
+        "x1": 299,
+        "y1": 96,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 299,
+        "y0": 96,
+        "x1": 302,
+        "y1": 100,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 303,
+        "y0": 93,
+        "x1": 299,
+        "y1": 96,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 299,
+        "y0": 96,
+        "x1": 302,
+        "y1": 100,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 299,
+        "y0": 96,
+        "x1": 302,
+        "y1": 100,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 275,
+        "y0": 92,
+        "x1": 277,
+        "y1": 92,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 276,
+        "y0": 91,
+        "x1": 276,
+        "y1": 93,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 341,
+        "y0": 11,
+        "x1": 335,
+        "y1": 18,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 335,
+        "y0": 18,
+        "x1": 338,
+        "y1": 23,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 338,
+        "y0": 23,
+        "x1": 331,
+        "y1": 31,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 331,
+        "y0": 31,
+        "x1": 335,
+        "y1": 35,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 335,
+        "y0": 35,
+        "x1": 333,
+        "y1": 43,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 341,
+        "y0": 11,
+        "x1": 335,
+        "y1": 18,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 335,
+        "y0": 18,
+        "x1": 338,
+        "y1": 23,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 338,
+        "y0": 23,
+        "x1": 331,
+        "y1": 31,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 331,
+        "y0": 31,
+        "x1": 335,
+        "y1": 35,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 335,
+        "y0": 35,
+        "x1": 333,
+        "y1": 43,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 335,
+        "y0": 18,
+        "x1": 338,
+        "y1": 23,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 364,
+        "y0": 15,
+        "x1": 370,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 370,
+        "y0": 21,
+        "x1": 366,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 366,
+        "y0": 27,
+        "x1": 373,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 373,
+        "y0": 33,
+        "x1": 368,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 368,
+        "y0": 39,
+        "x1": 370,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 364,
+        "y0": 15,
+        "x1": 370,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 370,
+        "y0": 21,
+        "x1": 366,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 366,
+        "y0": 27,
+        "x1": 373,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 373,
+        "y0": 33,
+        "x1": 368,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 368,
+        "y0": 39,
+        "x1": 370,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 366,
+        "y0": 27,
+        "x1": 373,
+        "y1": 33,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 337,
+        "y0": 90,
+        "x1": 341,
+        "y1": 93,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 341,
+        "y0": 93,
+        "x1": 338,
+        "y1": 97,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 337,
+        "y0": 90,
+        "x1": 341,
+        "y1": 93,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 341,
+        "y0": 93,
+        "x1": 338,
+        "y1": 97,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 341,
+        "y0": 93,
+        "x1": 338,
+        "y1": 97,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 367,
+        "y0": 94,
+        "x1": 363,
+        "y1": 97,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 363,
+        "y0": 97,
+        "x1": 366,
+        "y1": 101,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 367,
+        "y0": 94,
+        "x1": 363,
+        "y1": 97,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 363,
+        "y0": 97,
+        "x1": 366,
+        "y1": 101,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 367,
+        "y0": 94,
+        "x1": 363,
+        "y1": 97,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 405,
+        "y0": 10,
+        "x1": 398,
+        "y1": 17,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 398,
+        "y0": 17,
+        "x1": 401,
+        "y1": 22,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 22,
+        "x1": 394,
+        "y1": 30,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 394,
+        "y0": 30,
+        "x1": 398,
+        "y1": 34,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 398,
+        "y0": 34,
+        "x1": 397,
+        "y1": 42,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 405,
+        "y0": 10,
+        "x1": 398,
+        "y1": 17,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 398,
+        "y0": 17,
+        "x1": 401,
+        "y1": 22,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 22,
+        "x1": 394,
+        "y1": 30,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 394,
+        "y0": 30,
+        "x1": 398,
+        "y1": 34,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 398,
+        "y0": 34,
+        "x1": 397,
+        "y1": 42,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 22,
+        "x1": 394,
+        "y1": 30,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 428,
+        "y0": 15,
+        "x1": 435,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 435,
+        "y0": 21,
+        "x1": 431,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 431,
+        "y0": 27,
+        "x1": 438,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 438,
+        "y0": 33,
+        "x1": 433,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 433,
+        "y0": 39,
+        "x1": 434,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 428,
+        "y0": 15,
+        "x1": 435,
+        "y1": 21,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 435,
+        "y0": 21,
+        "x1": 431,
+        "y1": 27,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 431,
+        "y0": 27,
+        "x1": 438,
+        "y1": 33,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 438,
+        "y0": 33,
+        "x1": 433,
+        "y1": 39,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 433,
+        "y0": 39,
+        "x1": 434,
+        "y1": 46,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 438,
+        "y0": 33,
+        "x1": 433,
+        "y1": 39,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 89,
+        "x1": 405,
+        "y1": 92,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 405,
+        "y0": 92,
+        "x1": 402,
+        "y1": 96,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 89,
+        "x1": 405,
+        "y1": 92,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 405,
+        "y0": 92,
+        "x1": 402,
+        "y1": 96,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 401,
+        "y0": 89,
+        "x1": 405,
+        "y1": 92,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 431,
+        "y0": 95,
+        "x1": 427,
+        "y1": 98,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 427,
+        "y0": 98,
+        "x1": 430,
+        "y1": 102,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 431,
+        "y0": 95,
+        "x1": 427,
+        "y1": 98,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 427,
+        "y0": 98,
+        "x1": 430,
+        "y1": 102,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 427,
+        "y0": 98,
+        "x1": 430,
+        "y1": 102,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 403,
+        "y0": 90,
+        "x1": 405,
+        "y1": 90,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 404,
+        "y0": 89,
+        "x1": 404,
+        "y1": 91,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 469,
+        "y0": 11,
+        "x1": 463,
+        "y1": 18,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 463,
+        "y0": 18,
+        "x1": 466,
+        "y1": 23,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 466,
+        "y0": 23,
+        "x1": 459,
+        "y1": 31,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 459,
+        "y0": 31,
+        "x1": 463,
+        "y1": 35,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 463,
+        "y0": 35,
+        "x1": 461,
+        "y1": 43,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 469,
+        "y0": 11,
+        "x1": 463,
+        "y1": 18,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 463,
+        "y0": 18,
+        "x1": 466,
+        "y1": 23,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 466,
+        "y0": 23,
+        "x1": 459,
+        "y1": 31,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 459,
+        "y0": 31,
+        "x1": 463,
+        "y1": 35,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 463,
+        "y0": 35,
+        "x1": 461,
+        "y1": 43,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 459,
+        "y0": 31,
+        "x1": 463,
+        "y1": 35,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 492,
+        "y0": 15,
+        "x1": 498,
+        "y1": 21,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 498,
+        "y0": 21,
+        "x1": 494,
+        "y1": 27,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 494,
+        "y0": 27,
+        "x1": 501,
+        "y1": 33,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 501,
+        "y0": 33,
+        "x1": 496,
+        "y1": 39,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 496,
+        "y0": 39,
+        "x1": 498,
+        "y1": 46,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 492,
+        "y0": 15,
+        "x1": 498,
+        "y1": 21,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 498,
+        "y0": 21,
+        "x1": 494,
+        "y1": 27,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 494,
+        "y0": 27,
+        "x1": 501,
+        "y1": 33,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 501,
+        "y0": 33,
+        "x1": 496,
+        "y1": 39,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 496,
+        "y0": 39,
+        "x1": 498,
+        "y1": 46,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 492,
+        "y0": 15,
+        "x1": 498,
+        "y1": 21,
+        "color": "#edfbff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 465,
+        "y0": 90,
+        "x1": 469,
+        "y1": 93,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 469,
+        "y0": 93,
+        "x1": 466,
+        "y1": 97,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 465,
+        "y0": 90,
+        "x1": 469,
+        "y1": 93,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 469,
+        "y0": 93,
+        "x1": 466,
+        "y1": 97,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 469,
+        "y0": 93,
+        "x1": 466,
+        "y1": 97,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 495,
+        "y0": 94,
+        "x1": 491,
+        "y1": 97,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 491,
+        "y0": 97,
+        "x1": 494,
+        "y1": 101,
+        "color": "#173c68",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 495,
+        "y0": 94,
+        "x1": 491,
+        "y1": 97,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 491,
+        "y0": 97,
+        "x1": 494,
+        "y1": 101,
+        "color": "#78dcef",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 495,
+        "y0": 94,
+        "x1": 491,
+        "y1": 97,
+        "color": "#2998c8",
+        "thickness": 1
+      }
+    }
+  ]
+}

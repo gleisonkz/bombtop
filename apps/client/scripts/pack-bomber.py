@@ -39,7 +39,8 @@ def export_sheets(source: Image.Image, menu: Image.Image) -> tuple[Image.Image, 
 def pack() -> None:
     with Image.open(SOURCE) as source, Image.open(MENU_SOURCE) as menu:
         gameplay, title = export_sheets(source, menu)
-        preview = source.crop((0, 0, source.width, GAME_ROWS * MASTER_FRAME_H))
+        preview_width, preview_height = GRID["runtimePreview"]["size"]
+        preview = source.crop((0, 0, preview_width, preview_height))
     for name, image in (("bomber-atlas.png", gameplay), ("bomber-menu-atlas.png", preview), ("bomber-title-fly.png", title)):
         output = CLIENT / "public/sprites" / name
         image.save(output, optimize=True)

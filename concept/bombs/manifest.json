@@ -18,6 +18,19 @@
     "critical": "states/critical.png",
     "detonation_start": "states/detonation-start.png"
   },
-  "runtime_integration": "concept-only; existing renderer still loads apps/client/public/sprites/bombs.png",
-  "animation_note": "Four distinct still stages; these are not a timed explosion animation."
+  "runtime_integration": "runtime loads apps/client/public/sprites/bombs/{stage}.png and matching white masks",
+  "animation_note": "Four distinct still stages; these are not a timed explosion animation.",
+  "mega_bomber": {
+    "armed_source": "mega-bomber.png",
+    "stages_source": "mega-stages.png",
+    "grid": [2, 2],
+    "cell_size": [512, 512],
+    "order": ["armed", "warning", "critical", "detonation-start"],
+    "runtime_directory": "../../apps/client/public/sprites/bombs/mega",
+    "anchor": [250, 310],
+    "uniform_scale": true,
+    "white_flash_masks": true,
+    "summon_ticks": 36,
+    "impact_tick": 12
+  }
 }

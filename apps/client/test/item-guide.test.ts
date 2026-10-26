@@ -9,7 +9,7 @@ describe("item guide", () => {
   });
 
   it("leaves out lula's picanha: it never comes out of a block (the character guide tells of it)", () => {
-    expect(ITEM_GUIDE.some((i) => i.kind === ItemKind.Picanha)).toBe(false);
+    expect((ITEM_GUIDE.map((i) => i.kind) as ItemKind[])).not.toContain(ItemKind.Picanha);
   });
 
   it("shows the egg now available from blocks", () => {

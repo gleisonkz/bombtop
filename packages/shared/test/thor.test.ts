@@ -30,11 +30,11 @@ describe("thor lightning bolt", () => {
     expect(CHARACTERS).toContain("thor");
   });
 
-  it(`stuns the first player within ${BOLT_RANGE} tiles in front for 3 seconds`, () => {
+  it(`stuns the first player within ${BOLT_RANGE} tiles in front for 2 seconds`, () => {
     const s = duel(BOLT_RANGE);
     cast(s);
     expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1); // may already have ticked once
-    expect(SPECIAL_STUN_TICKS).toBe(3 * 60);
+    expect(SPECIAL_STUN_TICKS).toBe(2 * 60);
   });
 
   it("misses players out of range or past a block", () => {

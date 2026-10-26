@@ -1,0 +1,969 @@
+{
+  "canvas": {
+    "width": 256,
+    "height": 16,
+    "background": "transparent"
+  },
+  "operations": [
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 25,
+        "y": 7,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 14,
+        "y": 11,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 8,
+        "y": 6,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 8,
+        "y": 2,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 23,
+        "y": 5,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 8,
+        "y": 8,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 57,
+        "y": 9,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 40,
+        "y": 10,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 47,
+        "y": 5,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 48,
+        "y": 2,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 35,
+        "y": 6,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 52,
+        "y": 7,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 83,
+        "y": 11,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 70,
+        "y": 7,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 86,
+        "y": 6,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 86,
+        "y": 3,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 68,
+        "y": 4,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 77,
+        "y": 8,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 108,
+        "y": 11,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 106,
+        "y": 6,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 122,
+        "y": 8,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 106,
+        "y": 2,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 119,
+        "y": 6,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 102,
+        "y": 7,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 135,
+        "y": 9,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 146,
+        "y": 5,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 152,
+        "y": 10,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 146,
+        "y": 2,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 131,
+        "y": 5,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 146,
+        "y": 8,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 167,
+        "y": 7,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 184,
+        "y": 6,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 177,
+        "y": 11,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 166,
+        "y": 3,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 183,
+        "y": 4,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 170,
+        "y": 8,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 205,
+        "y": 5,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 218,
+        "y": 9,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 202,
+        "y": 10,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 205,
+        "y": 2,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 214,
+        "y": 6,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 196,
+        "y": 7,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 244,
+        "y": 5,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 246,
+        "y": 10,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 230,
+        "y": 8,
+        "rows": [
+          "ss"
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 244,
+        "y": 3,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 227,
+        "y": 4,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    },
+    {
+      "op": "paint_grid",
+      "params": {
+        "x": 240,
+        "y": 8,
+        "rows": [
+          "...o...",
+          "..oyo..",
+          "ooyhyoo",
+          ".oyyyo.",
+          "..yay..",
+          ".oy.yo.",
+          ".o...o."
+        ],
+        "legend": {
+          "o": "#603b24",
+          "a": "#c68127",
+          "y": "#efc34e",
+          "h": "#fff3cf",
+          "s": "#b88435"
+        }
+      }
+    }
+  ]
+}

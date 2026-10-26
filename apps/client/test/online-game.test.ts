@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { C2S, createMatch, publicView, S2C, TILE, type Snapshot } from "@bombtop/shared";
+import { C2S, createMatch, ItemKind, publicView, S2C, TILE, type Snapshot } from "@bombtop/shared";
 import type { ModeContext } from "../src/game/mode";
 import type { RoomLink } from "../src/net/room-link";
 import type { LobbyPanel } from "../src/ui/lobby";
@@ -61,6 +61,39 @@ describe("online snapshot rendering", () => {
     handlers.get(S2C.snapshot)!(snap);
     return snap;
   }
+
+  it("sends the chosen Battle Mode victory target to the room", () => {
+    game.setWinsToWin(3);
+    expect(send).toHaveBeenCalledWith(C2S.rules, { winsToWin: 3 });
+  });
+
+  it("sends the chosen Battle Mode time limit and supports infinite time", () => {
+    game.setTimeMinutes(2);
+    game.setTimeMinutes(null);
+    expect(send).toHaveBeenCalledWith(C2S.rules, { timeMinutes: 2 });
+    expect(send).toHaveBeenCalledWith(C2S.rules, { timeMinutes: null });
+  });
+
+  it("sends Sudden Death ON/OFF changes over the rules channel", () => {
+    game.setSuddenDeath(false);
+    game.setSuddenDeath(true);
+    expect(send).toHaveBeenCalledWith(C2S.rules, { suddenDeath: false });
+    expect(send).toHaveBeenCalledWith(C2S.rules, { suddenDeath: true });
+  });
+
+  it("sends Maniac mode and item/HP inventory edits through the room rules channel", () => {
+    game.setBattleMode("maniac");
+    const maniac = { items: { [ItemKind.BombPass]: 2, [ItemKind.Heart]: 2 }, hitPoints: { me: 5, bot: 3 } };
+    game.setManiac(maniac);
+    expect(send).toHaveBeenCalledWith(C2S.rules, { battleMode: "maniac" });
+    expect(send).toHaveBeenCalledWith(C2S.rules, { maniac });
+  });
+
+  it("sends the host's ordered stages using the same rules transport", () => {
+    const stageRotation = [{ stage: "warp" as const }, { stage: "conveyor" as const }];
+    game.setStageRotation(stageRotation);
+    expect(send).toHaveBeenCalledWith(C2S.rules, { stageRotation });
+  });
 
   it("continues recent walking while waiting for the next snapshot", () => {
     receive(60, 864);

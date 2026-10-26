@@ -7,6 +7,7 @@ export function launch(b: Bomb, dir: Facing): void {
   b.air = { dir, span: AIR_DISTANCE, tilesLeft: AIR_DISTANCE, progress: 0 };
   b.slide = null;
   b.offset = 0;
+  delete b.conveyor;
 }
 
 /** Punches the grounded bomb on the tile the player is facing. Returns false if there was none. */

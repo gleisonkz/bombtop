@@ -17,10 +17,11 @@ describe("arena", () => {
       [ItemKind.Egg]: 2,
       [ItemKind.Glove]: 2,
       [ItemKind.Punch]: 2,
+      [ItemKind.Push]: 2,
       [ItemKind.Kick]: 3,
       [ItemKind.Skull]: 1,
     });
-    expect(match.items).toHaveLength(26);
+    expect(match.items).toHaveLength(28);
     expect(new Set(match.items.map((item) => `${item.x},${item.y}`)).size).toBe(match.items.length);
     expect(match.items.every(({ x, y }) => getTile(match, x, y) === Tile.Block)).toBe(true);
   });

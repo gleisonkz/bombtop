@@ -43,6 +43,16 @@ export class PadMenus {
     if (cmd === "prev" || cmd === "next") return this.step(targets, cmd);
     // Nothing ringed yet on this screen: start on its main button (a guide's first card), never on its way back.
     if (at < 0) return this.ring(START.map((s) => targets.find((t) => t.matches(s))).find(Boolean) ?? targets[0]!);
+    const active = targets[at]!;
+    if (active.tagName === "SELECT" && (cmd === "left" || cmd === "right")) {
+      const select = active as HTMLSelectElement;
+      const index = Math.max(0, Math.min(select.options.length - 1, select.selectedIndex + (cmd === "left" ? -1 : 1)));
+      if (index !== select.selectedIndex) {
+        select.selectedIndex = index;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      return;
+    }
     if (cmd === "confirm") {
       if (!(targets[at] instanceof HTMLInputElement)) targets[at]!.click();
       return;
@@ -65,7 +75,8 @@ export class PadMenus {
   }
 
   private targets(): HTMLElement[] {
-    return [...this.root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+    const scope = this.root.querySelector("dialog[open]") ?? this.root;
+    return [...scope.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
       (t) => !(t as HTMLButtonElement).disabled && t.getClientRects().length > 0,
     );
   }

@@ -2,6 +2,7 @@ import { publicView, TICK_RATE } from "@bombtop/shared";
 import { Listener } from "../audio/cues";
 import { FixedStep } from "../loop/fixed-step";
 import { button, el } from "../ui/dom";
+import { gameLogo } from "../ui/game-logo";
 import { Intro, INTRO_VIEW } from "./intro";
 import { crumb } from "../net/client-log";
 import type { GameMode, ModeContext } from "./mode";
@@ -32,8 +33,7 @@ export class IntroMode implements GameMode {
     this.name = el("b", { class: "intro-name" });
     this.line = el("span", { class: "intro-line" });
     this.card = el("div", { class: "intro-card" }, [this.name, this.line]);
-    const logo = el("h1", { class: "logo", text: "BOMB" });
-    logo.append(el("span", { text: "TOP" }));
+    const logo = gameLogo();
     this.logo = el("div", { class: "intro-logo" }, [logo]);
     this.withSound = button("▶ Tocar com som", () => this.replayWithSound(), "intro-sound");
     this.root = el("div", { class: "intro" }, [

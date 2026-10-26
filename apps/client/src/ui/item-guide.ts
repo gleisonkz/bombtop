@@ -1,4 +1,4 @@
-import { ITEM_WEIGHTS, ItemKind } from "@bombtop/shared";
+import { ItemKind } from "@bombtop/shared";
 import { ITEMS, itemCell } from "../render/sprites";
 import { backButton, button, el } from "./dom";
 
@@ -26,7 +26,27 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   [ItemKind.Kick]: {
     name: "Chute",
     text: "Ande contra uma bomba para chutá-la: ela desliza até bater em algo.",
-    tips: ["Chute bombas na direção dos rivais.", "A bomba para em blocos, outras bombas e jogadores."],
+    tips: ["Chute bombas na direção dos rivais.", "Segure PARAR (R/Numpad1, RB no controle) para frear uma bomba sua enquanto ela desliza.", "A bomba para em blocos, outras bombas e jogadores."],
+  },
+  [ItemKind.BombPass]: {
+    name: "Passar bombas",
+    text: "Atravesse bombas no chão, suas ou de outros jogadores. Substitui o poder de chute.",
+    tips: ["Não permite colocar uma segunda bomba em cima de outra.", "Pegar Chute novamente substitui este poder.", "Disponível no inventário especial do Maniac."],
+  },
+  [ItemKind.BlockPass]: {
+    name: "Passar blocos",
+    text: "Atravesse blocos destrutíveis sem atravessar paredes de pedra.",
+    tips: ["Enquanto estiver dentro de um bloco, o fogo comum não te atinge.", "Bombas continuam bloqueando a passagem sem Bomb Pass.", "Disponível no inventário especial do Maniac."],
+  },
+  [ItemKind.FireSuit]: {
+    name: "Traje anti-chamas",
+    text: "Deixa você temporariamente imune às explosões.",
+    tips: ["No Bombtop, o efeito dura 16 segundos; o valor exato da ROM ainda será conferido.", "Não evita ser esmagado pelas paredes da morte súbita.", "Disponível no inventário especial do Maniac."],
+  },
+  [ItemKind.Heart]: {
+    name: "Coração",
+    text: "Protege contra um golpe que seria fatal, uma única vez.",
+    tips: ["Após gastar o coração, você recebe uma breve invulnerabilidade.", "Se estiver montado, a montaria é perdida primeiro.", "Disponível no inventário especial do Maniac."],
   },
   [ItemKind.Remote]: {
     name: "Controle remoto",
@@ -42,6 +62,11 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
     name: "Soco",
     text: "Aperte ação de frente para uma bomba: ela voa 3 casas e atordoa quem acertar.",
     tips: ["A bomba voa por cima dos blocos e dá a volta pela borda da arena.", "Quem é atingido fica tonto por um instante."],
+  },
+  [ItemKind.Push]: {
+    name: "Empurrão (Push)",
+    text: "Aperte ação para avançar uma casa e empurrar outro jogador por até três casas.",
+    tips: ["Use o Push para jogar rivais na direção de armadilhas ou explosões.", "Segure DEF. (Q/Numpad0, LB no controle) para resistir ao empurrão. Soco e Push funcionam juntos."],
   },
   [ItemKind.Glove]: {
     name: "Luva",
@@ -70,7 +95,7 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
 };
 
 /** Every item in play with its name, description, tips and the left edge of its cell on the item sheet. */
-export const ITEM_GUIDE = ITEMS.order.filter((kind) => ITEM_WEIGHTS[kind] > 0).map((kind) => ({ kind, ...INFO[kind], cell: itemCell(kind) }));
+export const ITEM_GUIDE = ITEMS.order.filter((kind) => kind !== ItemKind.Picanha).map((kind) => ({ kind, ...INFO[kind], cell: itemCell(kind) }));
 
 /** An item's plate from the sheet, as an element. */
 function icon(cell: number, cls = "guide-icon"): HTMLElement {

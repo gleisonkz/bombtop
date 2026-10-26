@@ -52,4 +52,16 @@ describe("bot escape", () => {
 
     expect(new Bot(me.id, "hard").input(s).dir).toBe("up");
   });
+
+  it("avoids a warp whose destination is burning when another escape exists", () => {
+    const s = createMatch({ seed: 1, playerIds: ["bot", "idle"], blockDensity: 0, stage: "warp" });
+    const me = s.players[0]!;
+    me.px = center(3);
+    me.py = center(2);
+    s.bombs.push({ ownerId: "idle", x: 3, y: 4, fuse: 120, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
+    const exit = s.grid.warps[1]!;
+    s.flames.push({ ...exit, ttl: 180, ownerId: "idle" });
+
+    expect(new Bot(me.id, "hard").input(s).dir).toBe("down");
+  });
 });

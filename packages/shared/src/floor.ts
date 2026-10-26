@@ -9,6 +9,10 @@ const BELTS: Partial<Record<Floor, Facing>> = {
   [Floor.ConveyorRight]: "right",
 };
 
+export function conveyorDirection(floor: Floor): Facing | undefined {
+  return BELTS[floor];
+}
+
 /** Conveyor belts carry players; warps teleport them to the paired warp. */
 export function applyFloor(s: MatchState): void {
   for (const p of s.players) {
@@ -16,7 +20,7 @@ export function applyFloor(s: MatchState): void {
     const { x, y } = playerTile(p);
     const floor = getFloor(s, x, y);
 
-    const belt = BELTS[floor];
+    const belt = conveyorDirection(floor);
     if (belt) movePlayer(s, p, belt, CONVEYOR_SPEED);
 
     if (floor !== Floor.Warp) {

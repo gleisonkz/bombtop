@@ -327,7 +327,7 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
   Android phones getting the 30 Hz snapshots in bursts 150-600 ms apart with a 10 ms ping, pinning the render delay at 250 ms.
 - In the arena the human players' names float over their heads (`render/name-tags.ts`, `Renderer.setNames`: ours in
   yellow, bots untagged, hidden with a sneaking rival).
-- Client renders other players snapshots in the past, interpolated, by an adaptive delay (`net/adaptive-delay.ts`: ~1 snapshot gap + jitter room, 40-250 ms; past the newest snapshot walking players walk on, `net/carry-on.ts`). Own player, bombs and kicks are predicted (`net/prediction.ts`, `ghost-bombs.ts`, `kick-prediction.ts`); bombs, flames, blocks and items are drawn from the latest snapshot run ahead by our input lead (`net/world-ahead.ts`), so explosions land on time.
+- Client renders other players snapshots in the past, interpolated, by an adaptive delay (`net/adaptive-delay.ts`: ~1 snapshot gap + jitter room, 40-250 ms; past the newest snapshot walking players walk on, `net/carry-on.ts`). Own player, bombs and kicks are predicted (`net/prediction.ts`, `ghost-bombs.ts`, `kick-prediction.ts`); bombs, flames, blocks and items use the latest authoritative snapshot; active prediction overlays cover local bomb placement, kicks and specials (`game/online-game.ts`).
 - Clocks, one contract per mode: a client's own frame loop (`loop/fixed-step.ts`) runs at most 5 ticks a frame and drops
   the rest (only its local view slows); the offline host (`loop/tick-clock.ts`) is authoritative for every phone, so it
   plays every owed tick, a few per call (no long freeze), dropping time past 500 ms; the server ticks on Colyseus' interval.

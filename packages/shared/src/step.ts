@@ -3,13 +3,14 @@ import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
 import { applyFloor } from "./floor";
 import { collectItems, dropItems } from "./items";
-import { tryKick } from "./kick";
+import { stopKickedBombs, tryKick } from "./kick";
+import { tryPush, updatePushMotions } from "./push";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
 import { kamehameha, updateBlasts, updateRasengan, updateTruck, useSpecial } from "./special";
-import { playerTile, type MatchState, type PlayerInput } from "./state";
+import { getTile, playerTile, Tile, type MatchState, type PlayerInput } from "./state";
 
 /** Advances the simulation by one tick, applying each player's input for this tick. */
 export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
@@ -28,6 +29,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (p.invuln > 0) p.invuln--;
+    if (p.fireSuitTicks && p.fireSuitTicks > 0) p.fireSuitTicks--;
     if (p.bubble > 0) p.bubble--;
     if (p.sneak > 0) p.sneak--;
     if (p.specialCooldown > 0) p.specialCooldown--;
@@ -58,18 +60,26 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (updateMountMove(s, p)) continue;
+    if (input?.stopKick) stopKickedBombs(s, p);
+    if (p.shove || input?.brace) continue;
     if (p.curse?.kind === "diarrhea") placeBomb(s, p.id);
     if (!input) continue;
     const dir = cursedDirection(p, input.dir);
     if (dir && p.alive) p.facing = dir;
     bombButton(s, p, input);
-    if (input.action) detonateRemote(s, p.id) || punch(s, p) || useMountAbility(s, p);
+    if (input.action && !detonateRemote(s, p.id)) {
+      const punched = punch(s, p);
+      const pushed = tryPush(s, p, inputs);
+      if (!punched && !pushed) useMountAbility(s, p);
+    }
     if (input.special) useSpecial(s, p);
+    if (p.stun > 0 || p.shove) continue;
     const moved = steer(s, p, dir, cursedDirection(p, input.alt ?? null));
     if (moved !== dir) p.facing = moved!;
-    tryKick(s, p, moved);
+    if (!input.stopKick) tryKick(s, p, moved);
   }
 
+  updatePushMotions(s);
   updateBlasts(s);
   applyFloor(s);
   updateHeldBombs(s);
@@ -82,7 +92,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   for (const p of s.players) {
     const { x, y } = playerTile(p);
     const flame = s.flames.find((f) => f.x === x && f.y === y);
-    if (!flame || p.bubble > 0 || !hurt(p)) continue;
+    if (!flame || p.bubble > 0 || (p.canBlockPass && getTile(s, x, y) === Tile.Block) || !hurt(p)) continue;
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }

@@ -161,6 +161,10 @@ export function soundCues(prev: View, next: View): Cue[] {
 export class Listener {
   private last: View | null = null;
 
+  reset(): void {
+    this.last = null;
+  }
+
   hear(view: View): Cue[] {
     const last = this.last;
     if (!last || view.tick < last.tick) {

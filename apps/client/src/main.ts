@@ -221,6 +221,12 @@ const ctx: ModeContext = {
 let online: OnlineGame | null = null;
 const lobby = new LobbyPanel(ui, {
   start: () => online?.start(),
+  setWinsToWin: (wins) => online?.setWinsToWin(wins),
+  setTimeMinutes: (minutes) => online?.setTimeMinutes(minutes),
+  setSuddenDeath: (enabled) => online?.setSuddenDeath(enabled),
+  setBattleMode: (mode) => online?.setBattleMode(mode),
+  setManiac: (config) => online?.setManiac(config),
+  setStageRotation: (rotation) => online?.setStageRotation(rotation),
   leave: () => void online?.leave(),
   addBot: (level) => online?.addBot(level),
   removeBot: (id) => online?.removeBot(id),
@@ -284,8 +290,12 @@ const menu = new Menu(ui, {
     else for (const r of Object.values(guideRoutes)) r.closed();
     menu.showGuide(open);
   },
-  hear: (name) => sound.play(name),
-  hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width),
+  hear: (name) => sound.play(name, { channel: "preview-voice", group: "character-preview" }),
+  hearScene: (view) => sound.cues(sceneEars.hear(view), view.grid.width, "character-preview"),
+  stopPreviewAudio: () => {
+    sound.stopGroup("character-preview");
+    sceneEars.reset();
+  },
   online: (choice, name) => void enterRoom(choice, name),
 });
 

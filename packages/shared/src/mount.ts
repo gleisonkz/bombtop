@@ -25,12 +25,23 @@ export function giveRandomMount(s: MatchState, p: Player): void {
  * lose the mount. Returns true if the player died.
  */
 export function hurt(p: Player): boolean {
-  if (!p.alive || p.invuln > 0) return false;
+  if (!p.alive || p.invuln > 0 || (p.fireSuitTicks ?? 0) > 0) return false;
   if (p.mount) {
     p.mount = null;
     p.invuln = INVULN_TICKS;
     return false;
   }
+  if (p.hasHeart) {
+    p.hasHeart = false;
+    p.invuln = INVULN_TICKS;
+    return false;
+  }
+  if ((p.hitPoints ?? 1) > 1) {
+    p.hitPoints!--;
+    p.invuln = INVULN_TICKS;
+    return false;
+  }
+  if (p.hitPoints !== undefined) p.hitPoints = 0;
   p.alive = false;
   return true;
 }

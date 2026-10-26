@@ -16,6 +16,8 @@ const DPAD: [number, Exclude<Direction, null>][] = [
 const BOMB_BUTTONS = [0]; // A / Cross
 const ACTION_BUTTONS = [1, 2]; // B / Circle, X / Square
 const SPECIAL_BUTTONS = [3]; // Y / Triangle
+const BRACE_BUTTONS = [4];
+const STOP_BUTTONS = [5];
 
 /** The n-th connected gamepad from the browser, if any. */
 export function gamepadAt(n: number): () => PadState | null {
@@ -47,6 +49,8 @@ export class GamepadInput {
     const input: PlayerInput = { dir: direction(pad), bomb: bombNow && !this.bombHeld, action: actionNow && !this.actionHeld };
     if (specialNow && !this.specialHeld) input.special = true;
     if (bombNow) input.hold = true;
+    if (down(BRACE_BUTTONS)) input.brace = true;
+    if (down(STOP_BUTTONS)) input.stopKick = true;
     this.bombHeld = bombNow;
     this.actionHeld = actionNow;
     this.specialHeld = specialNow;

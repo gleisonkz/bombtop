@@ -1,10 +1,11 @@
+import { TEST_SHEETS } from "./fixtures/sheets";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BLAST_TICKS, BUBBLE_TICKS, FLAME_TICKS, FUSE_TICKS, WEB_TICKS, SNEAK_TICKS, PATRONUS_FADE, ItemKind, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, TICK_RATE, TILE, Tile } from "@bombtop/shared";
 import { BEAM_DELAY, rasenganLook, RASENGAN, kameSegments, castTicks, outsideBeams, outsideBubbles, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, bubbleLook, BUBBLE, bracing, SPIRAL, spiralFrame, BOMBS, ITEMS, TILES, burnCell, castsShadow, tileCell, itemCell, itemFrame, CAST_TICKS_PER_FRAME, FLAMES, MASCOT, flameFrame, flamePiece, flameVariant, flameConnections, beamAlpha, webbedLook, cocoon, MotionTracker, between, SHEETS, bombFrame, bombLook, MEGA_SCALE, deathFrame, mascotDeath, mascotPose, paintHues, paintSheet, playerFrame, recolor, shadeHues, type SheetLayout } from "../src/render/sprites";
 
 describe("playerFrame", () => {
-  const foozle = SHEETS.foozle;
+  const foozle = TEST_SHEETS.foozle;
 
   it("tiptoes on the cast row while sneaking: cycling it as he walks, its first frame standing", () => {
     const sheet = SHEETS.panther;
@@ -43,7 +44,7 @@ describe("playerFrame", () => {
 
   it("uses the arms-up rows while holding a bomb, when the sheet has them", () => {
     expect(playerFrame(foozle, { facing: "down", moving: false, carrying: true, tick: 0 }).y).toBe(5 * 64);
-    const james = SHEETS.james;
+    const james = TEST_SHEETS.james;
     const held = playerFrame(james, { facing: "down", moving: false, carrying: true, tick: 0 });
     expect(held).toEqual(playerFrame(james, { facing: "down", moving: false, carrying: false, tick: 0 }));
   });
@@ -164,7 +165,7 @@ describe("deathFrame", () => {
   });
 
   it("has nothing to play on sheets without a death row", () => {
-    expect(deathFrame(SHEETS.james, 0)).toBeNull();
+    expect(deathFrame(TEST_SHEETS.james, 0)).toBeNull();
   });
 });
 
@@ -240,11 +241,12 @@ describe("bomb sheet", () => {
     expect(flashes).toContain(false);
   });
 
-  it("draws the bomb mascot's mega bomb bigger", () => {
+  it("draws the bomb mascot's mega bomb bigger without squashing its sphere", () => {
     const mega = bombLook({ fuse: FUSE_TICKS, tick: 5, type: "pierce", mega: true });
     const plain = look(FUSE_TICKS, 5, "pierce");
     expect(mega.sx / plain.sx).toBeCloseTo(MEGA_SCALE);
-    expect(mega.sy / plain.sy).toBeCloseTo(MEGA_SCALE);
+    expect(mega.sy).toBe(mega.sx);
+    expect(mega.sy / plain.sx).toBeCloseTo(MEGA_SCALE);
     expect(MEGA_SCALE).toBeGreaterThan(1.3);
   });
 
@@ -633,6 +635,21 @@ describe("tile art", () => {
 describe("bomber sheet", () => {
   const sheet = SHEETS.bomber;
 
+  it("preserves the warm eye glow when changing player colors", () => {
+    const eyes = new Uint8ClampedArray(sheet.width * sheet.frameH * 4);
+    eyes.set([195, 49, 46, 253, 198, 36, 27, 253, 255, 178, 8, 253], (86 * sheet.width + 47) * 4);
+    const original = eyes.slice();
+    paintSheet(eyes, sheet, [65, 190, 95]);
+    expect([...eyes.slice((86 * sheet.width + 47) * 4, (86 * sheet.width + 50) * 4)])
+      .toEqual([...original.slice((86 * sheet.width + 47) * 4, (86 * sheet.width + 50) * 4)]);
+  });
+
+  it("makes the red seat visibly darker than the original scarlet armor", () => {
+    const armor = new Uint8ClampedArray([215, 17, 30, 255]);
+    paintSheet(armor, sheet, [232, 74, 74]);
+    expect(armor[0]).toBeLessThan(170);
+  });
+
   it("matches the reusable visual identity's runtime contract", () => {
     const identity = JSON.parse(readFileSync(new URL("../../../concept/characters.identity.json", import.meta.url), "utf8")) as {
       animationGrid: { runtimeGameplay: { cell: number[]; size: number[]; anchor: number[]; bodyHeight: number; scale: number } };
@@ -673,9 +690,17 @@ describe("bomber sheet", () => {
     expect(playerFrame(sheet, { facing: "up", moving: true, carrying: false, tick: 0 }).y).toBe(sheet.walk.up.row * sheet.frameH);
   });
 
-  it("repaints his violet armor in the player's color, by hue", () => {
-    expect(sheet.hues).toEqual([250, 290]);
-    expect(sheet.keepFor).toEqual([[245, 245, 245]]); // white would bleach his armor into his steel
+  it.each([[232, 74, 74], [70, 130, 230], [65, 190, 95]])("repaints his red details for seat color %j", (r, g, b) => {
+    const data = new Uint8ClampedArray([
+      215, 17, 30, 255,
+      106, 8, 15, 255,
+      25, 27, 32, 255,
+      255, 160, 25, 255,
+    ]);
+    paintSheet(data, sheet, [r, g, b]);
+    expect([...data.slice(0, 3)]).toEqual(r === 232 ? [145, 24, 52] : [r, g, b]);
+    expect(data[4]).toBeLessThan(r);
+    expect([...data.slice(8)]).toEqual([25, 27, 32, 255, 255, 160, 25, 255]);
   });
 
   it("plants his mega bomb on the cast rows", () => {
@@ -1022,7 +1047,12 @@ describe("lobby showpieces", () => {
   };
 
   it("goku powers up into a Super Saiyan", () => showpiece("goku"));
-  it("naruto calls up his shadow clones", () => showpiece("naruto"));
+  it("naruto uses the supplied eight-frame celebration", () => {
+    expect(SHEETS.naruto.lobby).toEqual({ row: 17, frames: 8 });
+    expect(size(SHEETS.naruto.url)).toEqual([720, 2088]);
+    expect(SHEETS.naruto.frameW).toBe(80);
+    expect(SHEETS.naruto.frameH).toBe(116);
+  });
   it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
   it("thor calls lightning down onto his hammer and slams it into the ground", () => showpiece("thor"));
 });

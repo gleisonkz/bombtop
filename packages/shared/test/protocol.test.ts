@@ -15,6 +15,17 @@ describe("sanitizeInput", () => {
     expect(sanitizeInput({ dir: null, bomb: false, hold: 1 })).toEqual({ dir: null, bomb: false, action: false });
   });
 
+  it("forwards the held Push guard and manual kick-stop flags using strict booleans", () => {
+    expect(sanitizeInput({ dir: "right", bomb: false, brace: true, stopKick: true })).toEqual({
+      dir: "right", bomb: false, action: false, brace: true, stopKick: true,
+    });
+    for (const malformed of ["true", 1, [], {}, null]) {
+      expect(sanitizeInput({ dir: null, bomb: false, brace: malformed, stopKick: malformed })).toEqual({
+        dir: null, bomb: false, action: false,
+      });
+    }
+  });
+
   it("survives garbage", () => {
     for (const raw of [null, undefined, 42, "x", [], { dir: { up: true } }]) {
       expect(sanitizeInput(raw)).toEqual({ dir: null, bomb: false, action: false });

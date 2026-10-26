@@ -1,0 +1,50 @@
+{
+  "size": [
+    256,
+    64
+  ],
+  "frameSize": [
+    64,
+    64
+  ],
+  "frames": 4,
+  "alphaValues": [
+    0,
+    255
+  ],
+  "uniqueFrames": 4,
+  "sha256RgbaFrames": [
+    "fabf7300efa4f498630198c2287f89c4fb36500fc8fcdadabc81f28c412420a5",
+    "f8eadf744010c895bb84699de0c1191fbb35689db6cd60032e13092004a89e69",
+    "7cbf4c4e653e09f262d087bd16fff2a390b9a0c0d0f03ef4889661f6a002d3fc",
+    "4ac2d49e5d91cb4a495bdec20f46a76efbff12d01ca411f218f77d297c838007"
+  ],
+  "bounds": [
+    [
+      8,
+      15,
+      57,
+      56
+    ],
+    [
+      8,
+      8,
+      57,
+      56
+    ],
+    [
+      8,
+      7,
+      57,
+      56
+    ],
+    [
+      8,
+      6,
+      57,
+      56
+    ]
+  ],
+  "fixedMeatBody": true,
+  "transparentFrameBorders": true
+}

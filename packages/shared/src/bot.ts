@@ -3,9 +3,13 @@ import { pressureOrder } from "./pressure";
 import { cursedDirection, effectiveRange, effectiveSpeed } from "./curse";
 import { createRng } from "./rng";
 import { SPECIAL_PLANS, type SpecialContext } from "./bot-specials";
+import { conveyorDirection } from "./floor";
+import { updateSlides } from "./kick";
 import {
   bombAt,
   DIR_VECTORS,
+  Floor,
+  getFloor,
   getTile,
   ItemKind,
   playerTile,
@@ -413,7 +417,7 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
   for (const b of bombs) when.set(b, b.type === "remote" ? (b.ownerId === me ? FUSE_TICKS : REMOTE_THREAT) : b.fuse);
   const occ = occupancy(s);
   const unblocked = { ...occ, items: new Set<number>() };
-  const blasts = new Map(bombs.map((b) => [b, blast(s, b, b.ownerId === me && unblockedExtra ? unblocked : occ)]));
+  const blasts = new Map(bombs.map((b) => [b, forecastBlast(s, b, b.ownerId === me && unblockedExtra ? unblocked : occ, when.get(b)!, mark)]));
   // Bombs by tile, in field order (sliding ones can share a tile).
   const at = new Map<number, Bomb[]>();
   for (const b of bombs) {
@@ -439,6 +443,31 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
   return danger;
 }
 
+/** Keep every possible belt origin: obstruction or an early chain can stop transport short. */
+function forecastBlast(s: MatchState, b: Bomb, occ: Occupancy, deadline: number, mark: (x: number, y: number, t: number) => void): [number, number][] {
+  const tiles = blast(s, b, occ);
+  if (!b.conveyor && !conveyorDirection(getFloor(s, b.x, b.y))) return tiles;
+
+  const moving = { ...b };
+  // Players and other bombs may move away before arrival; do not rely on their cover.
+  const forecast = { ...s, bombs: [moving], players: [], items: [] };
+  const open = { bombs: new Set<number>(), items: new Set<number>() };
+  const seen = new Set([b.y * s.grid.width + b.x]);
+  const horizon = Math.min(FUSE_TICKS, Math.max(0, b.type === "remote" ? FUSE_TICKS : b.fuse));
+  for (let tick = 0; tick < horizon; tick++) {
+    updateSlides(forecast);
+    const key = moving.y * s.grid.width + moving.x;
+    if (!seen.has(key)) {
+      seen.add(key);
+      const transported = blast(s, moving, open);
+      tiles.push(...transported);
+      for (const [x, y] of transported) mark(x, y, Math.min(deadline, tick + 1));
+    }
+    if (!moving.slide) break;
+  }
+  return tiles;
+}
+
 /** Lookahead for sudden-death walls, in walls. */
 const PRESSURE_LOOKAHEAD = 40;
 
@@ -450,7 +479,7 @@ function pressureDanger(s: MatchState, mark: (x: number, y: number, t: number) =
   const firstIn = startsIn > 0 ? startsIn : (PRESSURE_INTERVAL - (sinceStart % PRESSURE_INTERVAL)) % PRESSURE_INTERVAL;
   const order = pressureOrder(s.grid.width, s.grid.height);
   let n = 0;
-  for (let i = s.pressure; i < order.length && n < PRESSURE_LOOKAHEAD; i++) {
+  for (let i = s.pressure; i < Math.min(order.length, s.pressureLimit ?? order.length) && n < PRESSURE_LOOKAHEAD; i++) {
     const { x, y } = order[i]!;
     if (getTile(s, x, y) === Tile.Wall) continue;
     mark(x, y, firstIn + n * PRESSURE_INTERVAL);
@@ -527,6 +556,16 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
       const through = (n.steps + 2) * perStep + lag + margin;
       if (burns !== undefined && (strict || burns <= through)) continue;
       if (avoidSkulls && skulls.has(k)) continue;
+      if (getFloor(s, x, y) === Floor.Warp) {
+        const portalIndex = s.grid.warps.findIndex((warp) => warp.x === x && warp.y === y);
+        const destination = portalIndex < 0 ? undefined : s.grid.warps[portalIndex ^ 1];
+        if (!destination || getTile(s, destination.x, destination.y) !== Tile.Empty) continue;
+        const destinationKey = destination.y * w + destination.x;
+        if (bombs.has(destinationKey)) continue;
+        const destinationBurns = danger.get(destinationKey);
+        if (destinationBurns !== undefined && (strict || destinationBurns <= through)) continue;
+        if (avoidSkulls && skulls.has(destinationKey)) continue;
+      }
       seen.add(k);
       out.push({ x, y, steps: n.steps + 1, first: n.steps === 0 ? { x, y } : n.first });
     }

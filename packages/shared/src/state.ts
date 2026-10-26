@@ -58,6 +58,8 @@ export interface PlayerInput {
   hold?: boolean;
   /** Secondary button: detonate / punch. */
   action?: boolean;
+  brace?: boolean;
+  stopKick?: boolean;
   /** Special button: the character's own move (thor: lightning bolt). */
   special?: boolean;
 }
@@ -74,9 +76,16 @@ export interface Player {
   speed: number;
   facing: Facing;
   canKick: boolean;
+  canBombPass?: boolean;
+  canBlockPass?: boolean;
+  fireSuitTicks?: number;
+  hasHeart?: boolean;
+  hitPoints?: number;
   bombType: BombType;
   canPunch: boolean;
+  canPush?: boolean;
   canGlove: boolean;
+  shove?: { dir: Facing; ticks: number; pace: number };
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
   character: CharacterId;
@@ -143,8 +152,10 @@ export interface Bomb {
   fuse: number;
   range: number;
   type: BombType;
-  /** Direction the bomb is sliding after a kick, or null when resting. */
+  /** Direction of ground movement (kick or conveyor), or null when resting. */
   slide: Facing | null;
+  /** Ground movement is driven by the belt rather than a kick. */
+  conveyor?: true;
   /** Units travelled from (x,y) toward the next tile while sliding. */
   offset: number;
   /** Set while flying (punched/thrown); airborne bombs sit on no tile and their fuse pauses. */
@@ -170,9 +181,14 @@ export enum ItemKind {
   Bomb = "bomb",
   Speed = "speed",
   Kick = "kick",
+  BombPass = "bombPass",
+  BlockPass = "blockPass",
+  FireSuit = "fireSuit",
+  Heart = "heart",
   Remote = "remote",
   Pierce = "pierce",
   Punch = "punch",
+  Push = "push",
   Glove = "glove",
   Skull = "skull",
   FullFire = "fullFire",
@@ -227,6 +243,8 @@ export interface MatchState {
   pressure: number;
   /** Tick sudden death starts at: ROUND_TICKS, or sooner once only bots are left (BOTS_ONLY_HURRY). */
   pressureAt: number;
+  pressureLimit?: number;
+  roundEndsAt?: number;
   /** Whether dead players get revenge carts. */
   revenge: boolean;
   grid: Grid;

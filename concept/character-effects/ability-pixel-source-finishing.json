@@ -1,0 +1,64 @@
+{
+  "operations": [
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 18,
+        "y0": 31,
+        "cx": 18,
+        "cy": 12,
+        "cx2": 54,
+        "cy2": 21,
+        "x1": 43,
+        "y1": 39,
+        "color": "#b8f3ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 30,
+        "cx": 82,
+        "cy": 12,
+        "cx2": 118,
+        "cy2": 22,
+        "x1": 107,
+        "y1": 40,
+        "color": "#b8f3ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 146,
+        "y0": 29,
+        "cx": 146,
+        "cy": 12,
+        "cx2": 182,
+        "cy2": 23,
+        "x1": 171,
+        "y1": 41,
+        "color": "#b8f3ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 210,
+        "y0": 28,
+        "cx": 210,
+        "cy": 12,
+        "cx2": 246,
+        "cy2": 24,
+        "x1": 235,
+        "y1": 42,
+        "color": "#b8f3ed",
+        "thickness": 2
+      }
+    }
+  ]
+}

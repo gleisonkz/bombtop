@@ -58,7 +58,7 @@ export class TouchControls {
     stick.addEventListener("pointerup", end);
     stick.addEventListener("pointercancel", end);
 
-    const pad = (label: string, button: "bomb" | "action" | "special", extra?: HTMLElement) => {
+    const pad = (label: string, button: "bomb" | "action" | "special" | "brace" | "stop", extra?: HTMLElement) => {
       const b = el("div", { class: `touch-btn ${button}`, text: label });
       if (extra) b.appendChild(extra);
       b.addEventListener("pointerdown", (e) => {
@@ -79,6 +79,8 @@ export class TouchControls {
     this.root = el("div", { class: "touch" }, [
       stick,
       el("div", { class: "touch-buttons" }, [
+        pad("PARAR", "stop"),
+        pad("DEF.", "brace"),
         pad("⚡", "special", this.countdown),
         pad("AÇÃO", "action"),
         pad("💣", "bomb"),

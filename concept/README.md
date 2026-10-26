@@ -10,7 +10,12 @@ A família visual **v1** segue a arte de menu aprovada em [bomber/menu-flight-so
 
 O contrato refinado usa master 1872 × 5472 (9 × 19 células de 208 × 288) e mantém gameplay runtime 936 × 2592 (9 × 18 células de 104 × 144), escala 0,22, corpo 100 px e âncora (52, 140). Cada quadro master é reduzido individualmente com Lanczos antes de montar o atlas. O menu aprovado continua fonte 1152 × 1152 e runtime 768 × 768, ambos 3 × 3. Novos desenhos fornecem o detalhe; ampliar arte antiga não atende ao pedido.
 
-Esses documentos registram direção aprovada e contrato de produção; a validação dos assets finais cabe ao coordenador. Fontes ficam em concept; texturas usadas pelo jogo ficam em apps/client/public/sprites. Não interpretar documentação como prova de regeneração ou integração concluída.
+O master regenerado contém 117 poses e possui verificações de imagem reproduzíveis.
+O lobby, guia e pódio usam o atlas HD `bomber-menu-atlas.png` (1872 × 5184), com
+escala 0,11 e filtro suave; a arena mantém o atlas menor e filtragem linear.
+A mega bomba especial tem arte própria em `bombs/mega-bomber.png`, com olhos âmbar
+ameaçadores e reforços violetas, documentada também em [BOMB-IDENTITY.md](BOMB-IDENTITY.md).
+Fontes ficam em concept; texturas usadas pelo jogo ficam em apps/client/public/sprites.
 
 ## Histórico
 

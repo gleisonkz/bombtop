@@ -110,7 +110,7 @@ function sheetUrl(sheet: SheetLayout, color: string | null, row: number): Promis
       ctx.drawImage(img, 0, row * sheet.frameH, sheet.width, sheet.frameH, 0, 0, sheet.width, sheet.frameH);
       const data = ctx.getImageData(0, 0, sheet.width, sheet.frameH);
       const rgb = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) as [number, number, number];
-      paintSheet(data.data, sheet, rgb);
+      paintSheet(data.data, sheet, rgb, row);
       ctx.putImageData(data, 0, 0);
       // toBlob encodes off the page's thread (toDataURL held a phone's menu up)
       const blob = await new Promise<Blob | null>((done) => canvas.toBlob(done));
@@ -150,8 +150,16 @@ async function loaded(src: string): Promise<HTMLImageElement> {
 export function characterArt(character: CharacterId, color: string | null, state: PreviewState | Omit<Move, "label"> = "walk"): HTMLElement {
   const pose = typeof state === "string" ? previewPose(CHARACTER_SHEETS[character], state) : state;
   const sheet = pose.sheet ?? CHARACTER_SHEETS[character];
+  const bodyRatio = pose.row === sheet.lobby?.row && sheet.lobby.bodyH
+    ? sheet.bodyH / sheet.lobby.bodyH : 1;
+  const previewScale = (sheet.scale ?? 1) * bodyRatio;
   const span = document.createElement("span");
   span.className = `mascot sheet ${character}`;
+  // Only entrances baked into these lobby strips reach the edge of their cells.
+  if (sheet.url === "sprites/panther-lobby.png" || sheet.url === "sprites/spider-lobby.png"
+    || (character === "flash" && pose.row === SHEETS.flash.lobby.row)) {
+    span.classList.add("soft-entry");
+  }
   const sprite = document.createElement("i");
   const vars: Record<string, string> = {
     "--fw": `${sheet.frameW}px`,
@@ -165,7 +173,7 @@ export function characterArt(character: CharacterId, color: string | null, state
     "--frames": `${pose.frames}`,
     "--dur": `${pose.seconds}s`,
     // Same size relative to each other as in the arena; each box zooms with --k.
-    "--s": `calc(var(--k) * ${sheet.scale ?? 1})`,
+    "--s": `var(--cast-scale, calc(var(--k) * ${previewScale}))`,
   };
   for (const [k, v] of Object.entries(vars)) sprite.style.setProperty(k, v);
   span.appendChild(sprite);

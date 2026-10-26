@@ -93,6 +93,51 @@ describe("LocalHost", () => {
     expect(hostSees.at(-1)!.members.map((m) => m.name)).toEqual(["Ana", "Bia"]);
   });
 
+  it("shares the host's Battle Mode win target and time limit with an offline Wi-Fi guest", async () => {
+    const host = new LocalHost();
+    const me = host.hostLink("Ana", "bomb");
+    const [hostEnd, guestEnd] = wires();
+    host.addPeer(hostEnd);
+    const friend = await PeerLink.join(guestEnd, "Bia", "bomb");
+    const guestLobbies = inbox<LobbyInfo>(friend, S2C.lobby);
+    me.send(C2S.rules, { winsToWin: 3, timeMinutes: 2, suddenDeath: false });
+    await flush();
+    expect(guestLobbies.at(-1)!.winsToWin).toBe(3);
+    expect(guestLobbies.at(-1)!.timeMinutes).toBe(2);
+    expect(guestLobbies.at(-1)!.suddenDeath).toBe(false);
+    friend.send(C2S.rules, { winsToWin: 1, timeMinutes: 1, suddenDeath: true });
+    await flush();
+    expect(host.core.session.lobbyInfo("X").winsToWin).toBe(3);
+    expect(host.core.session.lobbyInfo("X").timeMinutes).toBe(2);
+    expect(host.core.session.lobbyInfo("X").suddenDeath).toBe(false);
+    await me.leave();
+  });
+
+  it("transmits Maniac inventory, health and forced rules over the offline Wi-Fi wire", async () => {
+    const host = new LocalHost();
+    const me = host.hostLink("Ana", "bomb");
+    const [hostEnd, guestEnd] = wires();
+    host.addPeer(hostEnd);
+    const friend = await PeerLink.join(guestEnd, "Bia", "bomb");
+    const guestLobbies = inbox<LobbyInfo>(friend, S2C.lobby);
+    me.send(C2S.rules, { battleMode: "maniac", maniac: {
+      items: { heart: 3, bombPass: 2 }, hitPoints: { [me.sessionId]: 4, [friend.sessionId]: 3 },
+    } });
+    await flush();
+    expect(guestLobbies.at(-1)).toMatchObject({
+      battleMode: "maniac", stage: "classic", winsToWin: 3, timeMinutes: 3, suddenDeath: false,
+      maniac: { items: { heart: 3, bombPass: 2 }, hitPoints: { [me.sessionId]: 4, [friend.sessionId]: 3 } },
+    });
+    friend.send(C2S.rules, { battleMode: "single" });
+    await flush();
+    expect(host.core.session.lobbyInfo("X").battleMode).toBe("maniac");
+    me.send(C2S.start);
+    await flush();
+    expect(host.core.session.match!.items).toHaveLength(5);
+    expect(host.core.session.match!.players.map((p) => p.hitPoints)).toEqual([4, 3]);
+    await me.leave();
+  });
+
   it("runs the match: the friend gets snapshots and steers its own player", async () => {
     const host = new LocalHost();
     const me = host.hostLink("Ana", "bomb");

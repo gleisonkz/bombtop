@@ -30,12 +30,11 @@ describe("special showcase", () => {
     }
   });
 
-  it("dresses each character in their own color (thor in blue) and the rival in another", () => {
-    expect(specialShowcase("thor").colors.get("you")).toBe(3);
-    expect(specialShowcase("goku").colors.get("you")).toBe(4);
+  it("keeps both characters in their original colors", () => {
     for (const c of CHARACTERS) {
       const { colors } = specialShowcase(c);
-      expect(colors.get("rival"), c).not.toBe(colors.get("you"));
+      expect(colors.get("you"), c).toBe(-1);
+      expect(colors.get("rival"), c).toBe(-1);
     }
   });
 

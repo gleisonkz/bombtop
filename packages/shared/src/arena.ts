@@ -7,11 +7,14 @@ import {
   ITEM_WEIGHTS,
   MAX_PLAYERS,
   ROUND_TICKS,
+  TICK_RATE,
   SPAWN_POINTS,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
 } from "./constants";
 import { createRng } from "./rng";
+import { MANIAC_ITEM_KINDS, normalizeManiac, type ManiacItemKind } from "./maniac";
+import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
 import { buildStage, type StageId } from "./stage";
 import { firstPickers } from "./own-colors";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
@@ -23,6 +26,10 @@ export interface MatchOptions {
   /** Dead players ride revenge carts (default false: off until the idea is settled). */
   revenge?: boolean;
   stage?: StageId;
+  timeLimitMinutes?: 1 | 2 | 3 | 5 | null;
+  suddenDeath?: boolean;
+  maniacItems?: Partial<Record<ManiacItemKind, number>>;
+  startingHitPoints?: Record<string, number>;
   /** Each player's character (default: the bomb). */
   characters?: Record<string, CharacterId>;
   /** Players in their character's original colors (default: the first seat on each character, see `firstPickers`). */
@@ -30,21 +37,26 @@ export interface MatchOptions {
 }
 
 const CLASSIC_ITEM_COUNTS: readonly [ItemKind, number][] = [
-  [ItemKind.Bomb, 8],
-  [ItemKind.Fire, 5],
-  [ItemKind.Speed, 3],
-  [ItemKind.Egg, 2],
-  [ItemKind.Glove, 2],
-  [ItemKind.Punch, 2],
-  [ItemKind.Kick, 3],
-  [ItemKind.Skull, 1],
+  [ItemKind.Bomb, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Bomb]],
+  [ItemKind.Fire, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Fire]],
+  [ItemKind.Speed, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Speed]],
+  [ItemKind.Egg, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Egg]],
+  [ItemKind.Glove, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Glove]],
+  [ItemKind.Punch, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Punch]],
+  [ItemKind.Push, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Push]],
+  [ItemKind.Kick, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Kick]],
+  [ItemKind.Skull, SB4_STAGE_DEFINITIONS[0].itemCounts[ItemKind.Skull]],
 ];
 
 export function createMatch(opts: MatchOptions): MatchState {
-  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = false, stage = "classic" } = opts;
+  const { seed, playerIds, blockDensity = DEFAULT_BLOCK_DENSITY, revenge = false, stage = "classic", timeLimitMinutes = null, suddenDeath = true } = opts;
   if (playerIds.length > MAX_PLAYERS) {
     throw new Error(`At most ${MAX_PLAYERS} players per match`);
   }
+  const maniac = opts.maniacItems === undefined && opts.startingHitPoints === undefined
+    ? null
+    : normalizeManiac({ items: opts.maniacItems ?? {}, hitPoints: opts.startingHitPoints ?? {} }, playerIds);
+  if ((opts.maniacItems !== undefined || opts.startingHitPoints !== undefined) && !maniac) throw new Error("Invalid Maniac configuration");
 
   const width = DEFAULT_WIDTH;
   const height = DEFAULT_HEIGHT;
@@ -70,9 +82,11 @@ export function createMatch(opts: MatchOptions): MatchState {
     tick: 0,
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
-    pressureAt: ROUND_TICKS,
+    pressureAt: timeLimitMinutes === null ? ROUND_TICKS : Math.max(0, (timeLimitMinutes - 1) * 60 * TICK_RATE),
+    ...(suddenDeath ? {} : { pressureLimit: 2 * (width - 2 + height - 2) - 4 }),
+    ...(timeLimitMinutes === null ? {} : { roundEndsAt: timeLimitMinutes * 60 * TICK_RATE }),
     revenge,
-    items: hideItems(tiles, width, seed, stage),
+    items: hideItems(tiles, width, seed, stage, opts.maniacItems === undefined ? undefined : maniac!.items),
     grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
     players: playerIds.map((id, i) => ({
       id,
@@ -84,6 +98,7 @@ export function createMatch(opts: MatchOptions): MatchState {
       speed: BASE_SPEED,
       facing: "down" as const,
       canKick: false,
+      ...(maniac && { hitPoints: maniac.hitPoints[id] }),
       bombType: "normal" as const,
       canPunch: false,
       canGlove: false,
@@ -135,8 +150,15 @@ function shuffle<T>(values: T[], rng: () => number): void {
   }
 }
 
-function hideItems(tiles: Tile[], width: number, seed: number, stage: StageId): Item[] {
+function hideItems(tiles: Tile[], width: number, seed: number, stage: StageId, maniacItems?: Partial<Record<ManiacItemKind, number>>): Item[] {
   const rng = createRng(seed ^ 0x9e3779b9);
+  if (maniacItems !== undefined) {
+    const blocks = tiles.flatMap((tile, i) => tile === Tile.Block ? [i] : []);
+    const pool = MANIAC_ITEM_KINDS.flatMap((kind) => Array<ItemKind>(maniacItems[kind] ?? 0).fill(kind));
+    shuffle(blocks, rng);
+    shuffle(pool, rng);
+    return pool.slice(0, blocks.length).map((kind, i) => ({ x: blocks[i]! % width, y: Math.floor(blocks[i]! / width), kind }));
+  }
   if (stage === "classic") {
     const blocks = tiles.flatMap((tile, i) => tile === Tile.Block ? [i] : []);
     const pool = CLASSIC_ITEM_COUNTS.flatMap(([kind, count]) => Array<ItemKind>(count).fill(kind));

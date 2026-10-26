@@ -2,12 +2,16 @@ import { BOT_LEVELS, type BotLevel, type BotPersona } from "./bot";
 import type { MatchResult } from "./pressure";
 import { CHARACTERS, type CharacterId, type Direction, type PlayerInput } from "./state";
 import type { StageId } from "./stage";
+import type { StageRotationEntry } from "./stage-rotation";
+import type { ManiacConfig } from "./maniac";
 import type { PublicView } from "./view";
 
 /** Room name registered on the server. */
 export const ROOM_NAME = "battle";
 
 export type RoomPhase = "lobby" | "playing" | "results";
+export type BattleTimeMinutes = 1 | 2 | 3 | 5 | null;
+export type BattleMode = "single" | "maniac";
 
 /**
  * Client -> server message types. `sync` asks for the current lobby (and
@@ -17,6 +21,7 @@ export type RoomPhase = "lobby" | "playing" | "results";
 export const C2S = {
   input: "input",
   start: "start",
+  rules: "rules",
   sync: "sync",
   addBot: "addBot",
   removeBot: "removeBot",
@@ -51,6 +56,12 @@ export interface LobbyInfo {
   hostId: string | null;
   members: LobbyMember[];
   stage: StageId;
+  stageRotation?: StageRotationEntry[];
+  winsToWin: number;
+  timeMinutes: BattleTimeMinutes;
+  suddenDeath: boolean;
+  battleMode?: BattleMode;
+  maniac?: ManiacConfig;
   /** Room id; doubles as the private-room code. */
   code: string;
   /** Screens watching without a seat (TV mode). */
@@ -69,6 +80,8 @@ export function sanitizeInput(raw: unknown): PlayerInput {
   const input: PlayerInput = { dir, bomb: r.bomb === true, action: r.action === true };
   if (r.special === true) input.special = true;
   if (r.hold === true) input.hold = true;
+  if (r.brace === true) input.brace = true;
+  if (r.stopKick === true) input.stopKick = true;
   if (dir && DIRS.has(r.alt as Direction) && r.alt !== dir) input.alt = r.alt as Direction;
   return input;
 }

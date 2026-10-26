@@ -1,0 +1,6795 @@
+{
+  "width": 256,
+  "height": 192,
+  "cell": 64,
+  "columns": 4,
+  "rows": [
+    "cocoon",
+    "projectile",
+    "terminal"
+  ],
+  "operations": [
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 10,
+        "cx": 28,
+        "cy": 5,
+        "x1": 51,
+        "y1": 17,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 11,
+        "cx": 33,
+        "cy": 13,
+        "x1": 50,
+        "y1": 19,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 16,
+        "cx": 28,
+        "cy": 11,
+        "x1": 51,
+        "y1": 23,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 17,
+        "cx": 33,
+        "cy": 19,
+        "x1": 50,
+        "y1": 25,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 22,
+        "cx": 28,
+        "cy": 17,
+        "x1": 51,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 23,
+        "cx": 33,
+        "cy": 25,
+        "x1": 50,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 28,
+        "cx": 28,
+        "cy": 23,
+        "x1": 51,
+        "y1": 35,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 29,
+        "cx": 33,
+        "cy": 31,
+        "x1": 50,
+        "y1": 37,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 34,
+        "cx": 28,
+        "cy": 29,
+        "x1": 51,
+        "y1": 41,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 35,
+        "cx": 33,
+        "cy": 37,
+        "x1": 50,
+        "y1": 43,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 40,
+        "cx": 28,
+        "cy": 35,
+        "x1": 51,
+        "y1": 47,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 41,
+        "cx": 33,
+        "cy": 43,
+        "x1": 50,
+        "y1": 49,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 46,
+        "cx": 28,
+        "cy": 41,
+        "x1": 51,
+        "y1": 53,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 47,
+        "cx": 33,
+        "cy": 49,
+        "x1": 50,
+        "y1": 55,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 28,
+        "y0": 5,
+        "cx": 8,
+        "cy": 14,
+        "x1": 9,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 9,
+        "y0": 32,
+        "cx": 9,
+        "cy": 49,
+        "x1": 28,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 27,
+        "y0": 5,
+        "cx": 8,
+        "cy": 14,
+        "x1": 9,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 9,
+        "y0": 32,
+        "cx": 9,
+        "cy": 49,
+        "x1": 27,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 36,
+        "y0": 5,
+        "cx": 56,
+        "cy": 14,
+        "x1": 55,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 55,
+        "y0": 32,
+        "cx": 55,
+        "cy": 49,
+        "x1": 36,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 35,
+        "y0": 5,
+        "cx": 54,
+        "cy": 14,
+        "x1": 53,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 53,
+        "y0": 32,
+        "cx": 53,
+        "cy": 49,
+        "x1": 35,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 17,
+        "y0": 16,
+        "cx": 34,
+        "cy": 22,
+        "x1": 47,
+        "y1": 8,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 17,
+        "y0": 15,
+        "cx": 34,
+        "cy": 20,
+        "x1": 47,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 18,
+        "y0": 14,
+        "cx": 31,
+        "cy": 18,
+        "x1": 45,
+        "y1": 6,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 20,
+        "y0": 14,
+        "cx": 24,
+        "cy": 18,
+        "x1": 34,
+        "y1": 16,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 19,
+        "y0": 17,
+        "cx": 34,
+        "cy": 22,
+        "x1": 46,
+        "y1": 10,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 23,
+        "cx": 34,
+        "cy": 29,
+        "x1": 53,
+        "y1": 16,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 22,
+        "cx": 34,
+        "cy": 27,
+        "x1": 53,
+        "y1": 15,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 12,
+        "y0": 21,
+        "cx": 31,
+        "cy": 25,
+        "x1": 51,
+        "y1": 14,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 21,
+        "cx": 24,
+        "cy": 25,
+        "x1": 34,
+        "y1": 23,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 24,
+        "cx": 34,
+        "cy": 29,
+        "x1": 52,
+        "y1": 18,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 30,
+        "cx": 34,
+        "cy": 36,
+        "x1": 53,
+        "y1": 24,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 29,
+        "cx": 34,
+        "cy": 34,
+        "x1": 53,
+        "y1": 23,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 12,
+        "y0": 28,
+        "cx": 31,
+        "cy": 32,
+        "x1": 51,
+        "y1": 22,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 28,
+        "cx": 24,
+        "cy": 32,
+        "x1": 34,
+        "y1": 30,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 31,
+        "cx": 34,
+        "cy": 36,
+        "x1": 52,
+        "y1": 26,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 37,
+        "cx": 34,
+        "cy": 43,
+        "x1": 53,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 36,
+        "cx": 34,
+        "cy": 41,
+        "x1": 53,
+        "y1": 28,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 12,
+        "y0": 35,
+        "cx": 31,
+        "cy": 39,
+        "x1": 51,
+        "y1": 27,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 35,
+        "cx": 24,
+        "cy": 39,
+        "x1": 34,
+        "y1": 37,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 38,
+        "cx": 34,
+        "cy": 43,
+        "x1": 52,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 44,
+        "cx": 34,
+        "cy": 50,
+        "x1": 53,
+        "y1": 37,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 43,
+        "cx": 34,
+        "cy": 48,
+        "x1": 53,
+        "y1": 36,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 12,
+        "y0": 42,
+        "cx": 31,
+        "cy": 46,
+        "x1": 51,
+        "y1": 35,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 42,
+        "cx": 24,
+        "cy": 46,
+        "x1": 34,
+        "y1": 44,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 45,
+        "cx": 34,
+        "cy": 50,
+        "x1": 52,
+        "y1": 39,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 17,
+        "y0": 51,
+        "cx": 34,
+        "cy": 57,
+        "x1": 47,
+        "y1": 45,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 17,
+        "y0": 50,
+        "cx": 34,
+        "cy": 55,
+        "x1": 47,
+        "y1": 44,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 18,
+        "y0": 49,
+        "cx": 31,
+        "cy": 53,
+        "x1": 45,
+        "y1": 43,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 20,
+        "y0": 49,
+        "cx": 24,
+        "cy": 53,
+        "x1": 34,
+        "y1": 51,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 19,
+        "y0": 52,
+        "cx": 34,
+        "cy": 57,
+        "x1": 46,
+        "y1": 47,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 24,
+        "y0": 7,
+        "cx": 33,
+        "cy": 0,
+        "x1": 40,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 25,
+        "y0": 5,
+        "cx": 32,
+        "cy": 1,
+        "x1": 38,
+        "y1": 5,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 23,
+        "y0": 55,
+        "cx": 32,
+        "cy": 62,
+        "x1": 42,
+        "y1": 54,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 18,
+        "y0": 17,
+        "cx": 10,
+        "cy": 22,
+        "x1": 13,
+        "y1": 29,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 48,
+        "y0": 35,
+        "cx": 57,
+        "cy": 40,
+        "x1": 51,
+        "y1": 45,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 16,
+        "y0": 40,
+        "cx": 9,
+        "cy": 43,
+        "x1": 12,
+        "y1": 50,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 10,
+        "cx": 92,
+        "cy": 5,
+        "x1": 115,
+        "y1": 17,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 11,
+        "cx": 97,
+        "cy": 13,
+        "x1": 114,
+        "y1": 19,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 16,
+        "cx": 92,
+        "cy": 11,
+        "x1": 115,
+        "y1": 23,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 17,
+        "cx": 97,
+        "cy": 19,
+        "x1": 114,
+        "y1": 25,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 22,
+        "cx": 92,
+        "cy": 17,
+        "x1": 115,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 23,
+        "cx": 97,
+        "cy": 25,
+        "x1": 114,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 28,
+        "cx": 92,
+        "cy": 23,
+        "x1": 115,
+        "y1": 35,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 29,
+        "cx": 97,
+        "cy": 31,
+        "x1": 114,
+        "y1": 37,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 34,
+        "cx": 92,
+        "cy": 29,
+        "x1": 115,
+        "y1": 41,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 35,
+        "cx": 97,
+        "cy": 37,
+        "x1": 114,
+        "y1": 43,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 40,
+        "cx": 92,
+        "cy": 35,
+        "x1": 115,
+        "y1": 47,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 41,
+        "cx": 97,
+        "cy": 43,
+        "x1": 114,
+        "y1": 49,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 46,
+        "cx": 92,
+        "cy": 41,
+        "x1": 115,
+        "y1": 53,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 47,
+        "cx": 97,
+        "cy": 49,
+        "x1": 114,
+        "y1": 55,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 92,
+        "y0": 5,
+        "cx": 73,
+        "cy": 14,
+        "x1": 74,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 74,
+        "y0": 32,
+        "cx": 73,
+        "cy": 49,
+        "x1": 92,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 91,
+        "y0": 5,
+        "cx": 73,
+        "cy": 14,
+        "x1": 74,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 74,
+        "y0": 32,
+        "cx": 73,
+        "cy": 49,
+        "x1": 91,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 100,
+        "y0": 5,
+        "cx": 121,
+        "cy": 14,
+        "x1": 120,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 120,
+        "y0": 32,
+        "cx": 119,
+        "cy": 49,
+        "x1": 100,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 99,
+        "y0": 5,
+        "cx": 119,
+        "cy": 14,
+        "x1": 118,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 118,
+        "y0": 32,
+        "cx": 117,
+        "cy": 49,
+        "x1": 99,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 81,
+        "y0": 16,
+        "cx": 98,
+        "cy": 23,
+        "x1": 111,
+        "y1": 9,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 81,
+        "y0": 15,
+        "cx": 98,
+        "cy": 21,
+        "x1": 111,
+        "y1": 8,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 14,
+        "cx": 95,
+        "cy": 19,
+        "x1": 109,
+        "y1": 7,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 84,
+        "y0": 14,
+        "cx": 88,
+        "cy": 19,
+        "x1": 98,
+        "y1": 16,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 83,
+        "y0": 17,
+        "cx": 98,
+        "cy": 23,
+        "x1": 110,
+        "y1": 11,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 23,
+        "cx": 98,
+        "cy": 30,
+        "x1": 117,
+        "y1": 17,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 22,
+        "cx": 98,
+        "cy": 28,
+        "x1": 117,
+        "y1": 16,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 76,
+        "y0": 21,
+        "cx": 95,
+        "cy": 26,
+        "x1": 115,
+        "y1": 15,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 21,
+        "cx": 88,
+        "cy": 26,
+        "x1": 98,
+        "y1": 23,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 24,
+        "cx": 98,
+        "cy": 30,
+        "x1": 116,
+        "y1": 19,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 30,
+        "cx": 98,
+        "cy": 37,
+        "x1": 117,
+        "y1": 22,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 29,
+        "cx": 98,
+        "cy": 35,
+        "x1": 117,
+        "y1": 21,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 76,
+        "y0": 28,
+        "cx": 95,
+        "cy": 33,
+        "x1": 115,
+        "y1": 20,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 28,
+        "cx": 88,
+        "cy": 33,
+        "x1": 98,
+        "y1": 30,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 31,
+        "cx": 98,
+        "cy": 37,
+        "x1": 116,
+        "y1": 24,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 37,
+        "cx": 98,
+        "cy": 44,
+        "x1": 117,
+        "y1": 30,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 36,
+        "cx": 98,
+        "cy": 42,
+        "x1": 117,
+        "y1": 29,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 76,
+        "y0": 35,
+        "cx": 95,
+        "cy": 40,
+        "x1": 115,
+        "y1": 28,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 35,
+        "cx": 88,
+        "cy": 40,
+        "x1": 98,
+        "y1": 37,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 38,
+        "cx": 98,
+        "cy": 44,
+        "x1": 116,
+        "y1": 32,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 44,
+        "cx": 98,
+        "cy": 51,
+        "x1": 117,
+        "y1": 38,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 43,
+        "cx": 98,
+        "cy": 49,
+        "x1": 117,
+        "y1": 37,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 76,
+        "y0": 42,
+        "cx": 95,
+        "cy": 47,
+        "x1": 115,
+        "y1": 36,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 42,
+        "cx": 88,
+        "cy": 47,
+        "x1": 98,
+        "y1": 44,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 45,
+        "cx": 98,
+        "cy": 51,
+        "x1": 116,
+        "y1": 40,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 81,
+        "y0": 51,
+        "cx": 98,
+        "cy": 58,
+        "x1": 111,
+        "y1": 43,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 81,
+        "y0": 50,
+        "cx": 98,
+        "cy": 56,
+        "x1": 111,
+        "y1": 42,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 49,
+        "cx": 95,
+        "cy": 54,
+        "x1": 109,
+        "y1": 41,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 84,
+        "y0": 49,
+        "cx": 88,
+        "cy": 54,
+        "x1": 98,
+        "y1": 51,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 83,
+        "y0": 52,
+        "cx": 98,
+        "cy": 58,
+        "x1": 110,
+        "y1": 45,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 88,
+        "y0": 7,
+        "cx": 97,
+        "cy": 0,
+        "x1": 104,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 89,
+        "y0": 5,
+        "cx": 96,
+        "cy": 1,
+        "x1": 102,
+        "y1": 5,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 87,
+        "y0": 55,
+        "cx": 96,
+        "cy": 62,
+        "x1": 106,
+        "y1": 54,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 17,
+        "cx": 74,
+        "cy": 22,
+        "x1": 77,
+        "y1": 29,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 112,
+        "y0": 35,
+        "cx": 121,
+        "cy": 40,
+        "x1": 115,
+        "y1": 45,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 80,
+        "y0": 40,
+        "cx": 73,
+        "cy": 43,
+        "x1": 76,
+        "y1": 50,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 10,
+        "cx": 156,
+        "cy": 5,
+        "x1": 179,
+        "y1": 17,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 11,
+        "cx": 161,
+        "cy": 13,
+        "x1": 178,
+        "y1": 19,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 16,
+        "cx": 156,
+        "cy": 11,
+        "x1": 179,
+        "y1": 23,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 17,
+        "cx": 161,
+        "cy": 19,
+        "x1": 178,
+        "y1": 25,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 22,
+        "cx": 156,
+        "cy": 17,
+        "x1": 179,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 23,
+        "cx": 161,
+        "cy": 25,
+        "x1": 178,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 28,
+        "cx": 156,
+        "cy": 23,
+        "x1": 179,
+        "y1": 35,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 29,
+        "cx": 161,
+        "cy": 31,
+        "x1": 178,
+        "y1": 37,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 34,
+        "cx": 156,
+        "cy": 29,
+        "x1": 179,
+        "y1": 41,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 35,
+        "cx": 161,
+        "cy": 37,
+        "x1": 178,
+        "y1": 43,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 40,
+        "cx": 156,
+        "cy": 35,
+        "x1": 179,
+        "y1": 47,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 41,
+        "cx": 161,
+        "cy": 43,
+        "x1": 178,
+        "y1": 49,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 46,
+        "cx": 156,
+        "cy": 41,
+        "x1": 179,
+        "y1": 53,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 47,
+        "cx": 161,
+        "cy": 49,
+        "x1": 178,
+        "y1": 55,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 156,
+        "y0": 5,
+        "cx": 136,
+        "cy": 14,
+        "x1": 137,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 137,
+        "y0": 32,
+        "cx": 137,
+        "cy": 49,
+        "x1": 156,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 155,
+        "y0": 5,
+        "cx": 136,
+        "cy": 14,
+        "x1": 137,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 137,
+        "y0": 32,
+        "cx": 137,
+        "cy": 49,
+        "x1": 155,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 164,
+        "y0": 5,
+        "cx": 184,
+        "cy": 14,
+        "x1": 183,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 183,
+        "y0": 32,
+        "cx": 183,
+        "cy": 49,
+        "x1": 164,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 163,
+        "y0": 5,
+        "cx": 182,
+        "cy": 14,
+        "x1": 181,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 181,
+        "y0": 32,
+        "cx": 181,
+        "cy": 49,
+        "x1": 163,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 145,
+        "y0": 16,
+        "cx": 162,
+        "cy": 22,
+        "x1": 175,
+        "y1": 10,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 145,
+        "y0": 15,
+        "cx": 162,
+        "cy": 20,
+        "x1": 175,
+        "y1": 9,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 146,
+        "y0": 14,
+        "cx": 159,
+        "cy": 18,
+        "x1": 173,
+        "y1": 8,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 148,
+        "y0": 14,
+        "cx": 152,
+        "cy": 18,
+        "x1": 162,
+        "y1": 16,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 147,
+        "y0": 17,
+        "cx": 162,
+        "cy": 22,
+        "x1": 174,
+        "y1": 12,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 23,
+        "cx": 162,
+        "cy": 29,
+        "x1": 181,
+        "y1": 15,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 22,
+        "cx": 162,
+        "cy": 27,
+        "x1": 181,
+        "y1": 14,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 140,
+        "y0": 21,
+        "cx": 159,
+        "cy": 25,
+        "x1": 179,
+        "y1": 13,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 21,
+        "cx": 152,
+        "cy": 25,
+        "x1": 162,
+        "y1": 23,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 24,
+        "cx": 162,
+        "cy": 29,
+        "x1": 180,
+        "y1": 17,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 30,
+        "cx": 162,
+        "cy": 36,
+        "x1": 181,
+        "y1": 23,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 29,
+        "cx": 162,
+        "cy": 34,
+        "x1": 181,
+        "y1": 22,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 140,
+        "y0": 28,
+        "cx": 159,
+        "cy": 32,
+        "x1": 179,
+        "y1": 21,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 28,
+        "cx": 152,
+        "cy": 32,
+        "x1": 162,
+        "y1": 30,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 31,
+        "cx": 162,
+        "cy": 36,
+        "x1": 180,
+        "y1": 25,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 37,
+        "cx": 162,
+        "cy": 43,
+        "x1": 181,
+        "y1": 31,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 36,
+        "cx": 162,
+        "cy": 41,
+        "x1": 181,
+        "y1": 30,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 140,
+        "y0": 35,
+        "cx": 159,
+        "cy": 39,
+        "x1": 179,
+        "y1": 29,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 35,
+        "cx": 152,
+        "cy": 39,
+        "x1": 162,
+        "y1": 37,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 38,
+        "cx": 162,
+        "cy": 43,
+        "x1": 180,
+        "y1": 33,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 44,
+        "cx": 162,
+        "cy": 50,
+        "x1": 181,
+        "y1": 36,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 43,
+        "cx": 162,
+        "cy": 48,
+        "x1": 181,
+        "y1": 35,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 140,
+        "y0": 42,
+        "cx": 159,
+        "cy": 46,
+        "x1": 179,
+        "y1": 34,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 42,
+        "cx": 152,
+        "cy": 46,
+        "x1": 162,
+        "y1": 44,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 45,
+        "cx": 162,
+        "cy": 50,
+        "x1": 180,
+        "y1": 38,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 145,
+        "y0": 51,
+        "cx": 162,
+        "cy": 57,
+        "x1": 175,
+        "y1": 44,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 145,
+        "y0": 50,
+        "cx": 162,
+        "cy": 55,
+        "x1": 175,
+        "y1": 43,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 146,
+        "y0": 49,
+        "cx": 159,
+        "cy": 53,
+        "x1": 173,
+        "y1": 42,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 148,
+        "y0": 49,
+        "cx": 152,
+        "cy": 53,
+        "x1": 162,
+        "y1": 51,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 147,
+        "y0": 52,
+        "cx": 162,
+        "cy": 57,
+        "x1": 174,
+        "y1": 46,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 152,
+        "y0": 7,
+        "cx": 161,
+        "cy": 0,
+        "x1": 168,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 153,
+        "y0": 5,
+        "cx": 160,
+        "cy": 1,
+        "x1": 166,
+        "y1": 5,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 151,
+        "y0": 55,
+        "cx": 160,
+        "cy": 62,
+        "x1": 170,
+        "y1": 54,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 146,
+        "y0": 17,
+        "cx": 138,
+        "cy": 22,
+        "x1": 141,
+        "y1": 29,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 176,
+        "y0": 35,
+        "cx": 185,
+        "cy": 40,
+        "x1": 179,
+        "y1": 45,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 144,
+        "y0": 40,
+        "cx": 137,
+        "cy": 43,
+        "x1": 140,
+        "y1": 50,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 10,
+        "cx": 220,
+        "cy": 5,
+        "x1": 243,
+        "y1": 17,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 11,
+        "cx": 225,
+        "cy": 13,
+        "x1": 242,
+        "y1": 19,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 16,
+        "cx": 220,
+        "cy": 11,
+        "x1": 243,
+        "y1": 23,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 17,
+        "cx": 225,
+        "cy": 19,
+        "x1": 242,
+        "y1": 25,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 22,
+        "cx": 220,
+        "cy": 17,
+        "x1": 243,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 23,
+        "cx": 225,
+        "cy": 25,
+        "x1": 242,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 28,
+        "cx": 220,
+        "cy": 23,
+        "x1": 243,
+        "y1": 35,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 29,
+        "cx": 225,
+        "cy": 31,
+        "x1": 242,
+        "y1": 37,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 34,
+        "cx": 220,
+        "cy": 29,
+        "x1": 243,
+        "y1": 41,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 35,
+        "cx": 225,
+        "cy": 37,
+        "x1": 242,
+        "y1": 43,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 40,
+        "cx": 220,
+        "cy": 35,
+        "x1": 243,
+        "y1": 47,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 41,
+        "cx": 225,
+        "cy": 43,
+        "x1": 242,
+        "y1": 49,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 46,
+        "cx": 220,
+        "cy": 41,
+        "x1": 243,
+        "y1": 53,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 47,
+        "cx": 225,
+        "cy": 49,
+        "x1": 242,
+        "y1": 55,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 220,
+        "y0": 5,
+        "cx": 199,
+        "cy": 14,
+        "x1": 200,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 200,
+        "y0": 32,
+        "cx": 201,
+        "cy": 49,
+        "x1": 220,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 219,
+        "y0": 5,
+        "cx": 199,
+        "cy": 14,
+        "x1": 200,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 200,
+        "y0": 32,
+        "cx": 201,
+        "cy": 49,
+        "x1": 219,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 228,
+        "y0": 5,
+        "cx": 247,
+        "cy": 14,
+        "x1": 246,
+        "y1": 32,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 246,
+        "y0": 32,
+        "cx": 247,
+        "cy": 49,
+        "x1": 228,
+        "y1": 58,
+        "color": "#596e8c",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 227,
+        "y0": 5,
+        "cx": 245,
+        "cy": 14,
+        "x1": 244,
+        "y1": 32,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 244,
+        "y0": 32,
+        "cx": 245,
+        "cy": 49,
+        "x1": 227,
+        "y1": 58,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 209,
+        "y0": 16,
+        "cx": 226,
+        "cy": 21,
+        "x1": 239,
+        "y1": 8,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 209,
+        "y0": 15,
+        "cx": 226,
+        "cy": 19,
+        "x1": 239,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 210,
+        "y0": 14,
+        "cx": 223,
+        "cy": 17,
+        "x1": 237,
+        "y1": 6,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 212,
+        "y0": 14,
+        "cx": 216,
+        "cy": 17,
+        "x1": 226,
+        "y1": 16,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 211,
+        "y0": 17,
+        "cx": 226,
+        "cy": 21,
+        "x1": 238,
+        "y1": 10,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 23,
+        "cx": 226,
+        "cy": 28,
+        "x1": 245,
+        "y1": 16,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 22,
+        "cx": 226,
+        "cy": 26,
+        "x1": 245,
+        "y1": 15,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 204,
+        "y0": 21,
+        "cx": 223,
+        "cy": 24,
+        "x1": 243,
+        "y1": 14,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 21,
+        "cx": 216,
+        "cy": 24,
+        "x1": 226,
+        "y1": 23,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 24,
+        "cx": 226,
+        "cy": 28,
+        "x1": 244,
+        "y1": 18,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 30,
+        "cx": 226,
+        "cy": 35,
+        "x1": 245,
+        "y1": 24,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 29,
+        "cx": 226,
+        "cy": 33,
+        "x1": 245,
+        "y1": 23,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 204,
+        "y0": 28,
+        "cx": 223,
+        "cy": 31,
+        "x1": 243,
+        "y1": 22,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 28,
+        "cx": 216,
+        "cy": 31,
+        "x1": 226,
+        "y1": 30,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 31,
+        "cx": 226,
+        "cy": 35,
+        "x1": 244,
+        "y1": 26,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 37,
+        "cx": 226,
+        "cy": 42,
+        "x1": 245,
+        "y1": 29,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 36,
+        "cx": 226,
+        "cy": 40,
+        "x1": 245,
+        "y1": 28,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 204,
+        "y0": 35,
+        "cx": 223,
+        "cy": 38,
+        "x1": 243,
+        "y1": 27,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 35,
+        "cx": 216,
+        "cy": 38,
+        "x1": 226,
+        "y1": 37,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 38,
+        "cx": 226,
+        "cy": 42,
+        "x1": 244,
+        "y1": 31,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 44,
+        "cx": 226,
+        "cy": 49,
+        "x1": 245,
+        "y1": 37,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 43,
+        "cx": 226,
+        "cy": 47,
+        "x1": 245,
+        "y1": 36,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 204,
+        "y0": 42,
+        "cx": 223,
+        "cy": 45,
+        "x1": 243,
+        "y1": 35,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 42,
+        "cx": 216,
+        "cy": 45,
+        "x1": 226,
+        "y1": 44,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 45,
+        "cx": 226,
+        "cy": 49,
+        "x1": 244,
+        "y1": 39,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 209,
+        "y0": 51,
+        "cx": 226,
+        "cy": 56,
+        "x1": 239,
+        "y1": 45,
+        "color": "#596e8c",
+        "thickness": 5
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 209,
+        "y0": 50,
+        "cx": 226,
+        "cy": 54,
+        "x1": 239,
+        "y1": 44,
+        "color": "#c5c8cd",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 210,
+        "y0": 49,
+        "cx": 223,
+        "cy": 52,
+        "x1": 237,
+        "y1": 43,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 212,
+        "y0": 49,
+        "cx": 216,
+        "cy": 52,
+        "x1": 226,
+        "y1": 51,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 211,
+        "y0": 52,
+        "cx": 226,
+        "cy": 56,
+        "x1": 238,
+        "y1": 47,
+        "color": "#a8afb9",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 216,
+        "y0": 7,
+        "cx": 225,
+        "cy": 0,
+        "x1": 232,
+        "y1": 7,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 217,
+        "y0": 5,
+        "cx": 224,
+        "cy": 1,
+        "x1": 230,
+        "y1": 5,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 215,
+        "y0": 55,
+        "cx": 224,
+        "cy": 62,
+        "x1": 234,
+        "y1": 54,
+        "color": "#c5c8cd",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 210,
+        "y0": 17,
+        "cx": 202,
+        "cy": 22,
+        "x1": 205,
+        "y1": 29,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 240,
+        "y0": 35,
+        "cx": 249,
+        "cy": 40,
+        "x1": 243,
+        "y1": 45,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 208,
+        "y0": 40,
+        "cx": 201,
+        "cy": 43,
+        "x1": 204,
+        "y1": 50,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 5,
+        "y0": 86,
+        "cx": 25,
+        "cy": 89,
+        "x1": 47,
+        "y1": 94,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 6,
+        "y0": 85,
+        "cx": 25,
+        "cy": 88,
+        "x1": 48,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 7,
+        "y0": 91,
+        "cx": 25,
+        "cy": 92,
+        "x1": 47,
+        "y1": 95,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 8,
+        "y0": 90,
+        "cx": 25,
+        "cy": 91,
+        "x1": 48,
+        "y1": 94,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 9,
+        "y0": 96,
+        "cx": 25,
+        "cy": 95,
+        "x1": 47,
+        "y1": 96,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 10,
+        "y0": 95,
+        "cx": 25,
+        "cy": 94,
+        "x1": 48,
+        "y1": 95,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 11,
+        "y0": 101,
+        "cx": 25,
+        "cy": 95,
+        "x1": 47,
+        "y1": 97,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 12,
+        "y0": 100,
+        "cx": 25,
+        "cy": 94,
+        "x1": 48,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 13,
+        "y0": 106,
+        "cx": 25,
+        "cy": 98,
+        "x1": 47,
+        "y1": 98,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 14,
+        "y0": 105,
+        "cx": 25,
+        "cy": 97,
+        "x1": 48,
+        "y1": 97,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 38,
+            "y": 91
+          },
+          {
+            "x": 43,
+            "y": 86
+          },
+          {
+            "x": 50,
+            "y": 85
+          },
+          {
+            "x": 55,
+            "y": 89
+          },
+          {
+            "x": 58,
+            "y": 95
+          },
+          {
+            "x": 55,
+            "y": 102
+          },
+          {
+            "x": 49,
+            "y": 106
+          },
+          {
+            "x": 42,
+            "y": 103
+          },
+          {
+            "x": 38,
+            "y": 98
+          }
+        ],
+        "color": "#596e8c",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 40,
+            "y": 91
+          },
+          {
+            "x": 45,
+            "y": 88
+          },
+          {
+            "x": 50,
+            "y": 87
+          },
+          {
+            "x": 54,
+            "y": 91
+          },
+          {
+            "x": 56,
+            "y": 95
+          },
+          {
+            "x": 53,
+            "y": 100
+          },
+          {
+            "x": 48,
+            "y": 103
+          },
+          {
+            "x": 43,
+            "y": 101
+          },
+          {
+            "x": 40,
+            "y": 97
+          }
+        ],
+        "color": "#c5c8cd",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 40,
+        "y0": 91,
+        "cx": 48,
+        "cy": 101,
+        "x1": 54,
+        "y1": 91,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 41,
+        "y0": 90,
+        "cx": 48,
+        "cy": 99,
+        "x1": 54,
+        "y1": 90,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 42,
+        "y0": 94,
+        "cx": 49,
+        "cy": 101,
+        "x1": 54,
+        "y1": 94,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 43,
+        "y0": 93,
+        "cx": 49,
+        "cy": 99,
+        "x1": 54,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 44,
+        "y0": 97,
+        "cx": 50,
+        "cy": 101,
+        "x1": 54,
+        "y1": 97,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 45,
+        "y0": 96,
+        "cx": 50,
+        "cy": 99,
+        "x1": 54,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 44,
+        "y0": 89,
+        "cx": 48,
+        "cy": 85,
+        "x1": 52,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 44,
+        "y0": 100,
+        "cx": 53,
+        "cy": 96,
+        "x1": 52,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 7,
+        "y0": 81,
+        "cx": 14,
+        "cy": 79,
+        "x1": 21,
+        "y1": 83,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 37,
+        "cy": 159,
+        "x1": 40,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 36,
+        "cy": 159,
+        "x1": 40,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 36,
+        "y0": 161,
+        "cx": 35,
+        "cy": 162,
+        "x1": 35,
+        "y1": 164,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 36,
+        "y0": 160,
+        "cx": 35,
+        "cy": 161,
+        "x1": 35,
+        "y1": 163,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 40,
+        "y0": 161,
+        "cx": 37,
+        "cy": 163,
+        "x1": 37,
+        "y1": 166,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 40,
+        "y0": 160,
+        "cx": 37,
+        "cy": 162,
+        "x1": 37,
+        "y1": 165,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 36,
+        "cy": 162,
+        "x1": 37,
+        "y1": 165,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 35,
+        "cy": 162,
+        "x1": 37,
+        "y1": 165,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 35,
+        "y0": 164,
+        "cx": 33,
+        "cy": 163,
+        "x1": 32,
+        "y1": 165,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 35,
+        "y0": 163,
+        "cx": 33,
+        "cy": 162,
+        "x1": 32,
+        "y1": 164,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 37,
+        "y0": 166,
+        "cx": 34,
+        "cy": 166,
+        "x1": 32,
+        "y1": 168,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 37,
+        "y0": 165,
+        "cx": 34,
+        "cy": 165,
+        "x1": 32,
+        "y1": 167,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 33,
+        "cy": 163,
+        "x1": 32,
+        "y1": 167,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 32,
+        "cy": 163,
+        "x1": 32,
+        "y1": 167,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 165,
+        "cx": 31,
+        "cy": 164,
+        "x1": 29,
+        "y1": 164,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 164,
+        "cx": 31,
+        "cy": 163,
+        "x1": 29,
+        "y1": 163,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 168,
+        "cx": 30,
+        "cy": 166,
+        "x1": 26,
+        "y1": 167,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 167,
+        "cx": 30,
+        "cy": 165,
+        "x1": 26,
+        "y1": 166,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 30,
+        "cy": 162,
+        "x1": 26,
+        "y1": 166,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 29,
+        "cy": 162,
+        "x1": 26,
+        "y1": 166,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 29,
+        "y0": 164,
+        "cx": 29,
+        "cy": 162,
+        "x1": 29,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 29,
+        "y0": 163,
+        "cx": 29,
+        "cy": 161,
+        "x1": 29,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 26,
+        "y0": 167,
+        "cx": 27,
+        "cy": 163,
+        "x1": 25,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 26,
+        "y0": 166,
+        "cx": 27,
+        "cy": 162,
+        "x1": 25,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 30,
+        "cy": 159,
+        "x1": 25,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 29,
+        "cy": 159,
+        "x1": 25,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 29,
+        "y0": 161,
+        "cx": 30,
+        "cy": 160,
+        "x1": 30,
+        "y1": 159,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 29,
+        "y0": 160,
+        "cx": 30,
+        "cy": 159,
+        "x1": 30,
+        "y1": 158,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 25,
+        "y0": 161,
+        "cx": 27,
+        "cy": 159,
+        "x1": 27,
+        "y1": 156,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 25,
+        "y0": 160,
+        "cx": 27,
+        "cy": 158,
+        "x1": 27,
+        "y1": 155,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 31,
+        "cy": 157,
+        "x1": 27,
+        "y1": 155,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 30,
+        "cy": 157,
+        "x1": 27,
+        "y1": 155,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 30,
+        "y0": 159,
+        "cx": 31,
+        "cy": 158,
+        "x1": 32,
+        "y1": 157,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 30,
+        "y0": 158,
+        "cx": 31,
+        "cy": 157,
+        "x1": 32,
+        "y1": 156,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 27,
+        "y0": 156,
+        "cx": 30,
+        "cy": 156,
+        "x1": 32,
+        "y1": 153,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 27,
+        "y0": 155,
+        "cx": 30,
+        "cy": 155,
+        "x1": 32,
+        "y1": 152,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 33,
+        "cy": 155,
+        "x1": 32,
+        "y1": 152,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 32,
+        "cy": 155,
+        "x1": 32,
+        "y1": 152,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 157,
+        "cx": 33,
+        "cy": 158,
+        "x1": 35,
+        "y1": 159,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 156,
+        "cx": 33,
+        "cy": 157,
+        "x1": 35,
+        "y1": 158,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 153,
+        "cx": 34,
+        "cy": 156,
+        "x1": 37,
+        "y1": 156,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 152,
+        "cx": 34,
+        "cy": 155,
+        "x1": 37,
+        "y1": 155,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 36,
+        "cy": 157,
+        "x1": 37,
+        "y1": 155,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 32,
+        "y0": 160,
+        "cx": 35,
+        "cy": 157,
+        "x1": 37,
+        "y1": 155,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 35,
+        "y0": 159,
+        "cx": 35,
+        "cy": 160,
+        "x1": 36,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 35,
+        "y0": 158,
+        "cx": 35,
+        "cy": 159,
+        "x1": 36,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 37,
+        "y0": 156,
+        "cx": 37,
+        "cy": 159,
+        "x1": 40,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 37,
+        "y0": 155,
+        "cx": 37,
+        "cy": 158,
+        "x1": 40,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 29,
+        "y0": 160,
+        "cx": 31,
+        "cy": 156,
+        "x1": 35,
+        "y1": 160,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 69,
+        "y0": 86,
+        "cx": 89,
+        "cy": 90,
+        "x1": 111,
+        "y1": 94,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 70,
+        "y0": 85,
+        "cx": 89,
+        "cy": 89,
+        "x1": 112,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 71,
+        "y0": 91,
+        "cx": 89,
+        "cy": 93,
+        "x1": 111,
+        "y1": 95,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 72,
+        "y0": 90,
+        "cx": 89,
+        "cy": 92,
+        "x1": 112,
+        "y1": 94,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 73,
+        "y0": 96,
+        "cx": 89,
+        "cy": 93,
+        "x1": 111,
+        "y1": 96,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 74,
+        "y0": 95,
+        "cx": 89,
+        "cy": 92,
+        "x1": 112,
+        "y1": 95,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 75,
+        "y0": 101,
+        "cx": 89,
+        "cy": 96,
+        "x1": 111,
+        "y1": 97,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 76,
+        "y0": 100,
+        "cx": 89,
+        "cy": 95,
+        "x1": 112,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 77,
+        "y0": 106,
+        "cx": 89,
+        "cy": 99,
+        "x1": 111,
+        "y1": 98,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 78,
+        "y0": 105,
+        "cx": 89,
+        "cy": 98,
+        "x1": 112,
+        "y1": 97,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 102,
+            "y": 91
+          },
+          {
+            "x": 107,
+            "y": 86
+          },
+          {
+            "x": 114,
+            "y": 85
+          },
+          {
+            "x": 119,
+            "y": 89
+          },
+          {
+            "x": 122,
+            "y": 95
+          },
+          {
+            "x": 119,
+            "y": 102
+          },
+          {
+            "x": 113,
+            "y": 106
+          },
+          {
+            "x": 106,
+            "y": 103
+          },
+          {
+            "x": 102,
+            "y": 98
+          }
+        ],
+        "color": "#596e8c",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 104,
+            "y": 91
+          },
+          {
+            "x": 109,
+            "y": 88
+          },
+          {
+            "x": 114,
+            "y": 87
+          },
+          {
+            "x": 118,
+            "y": 91
+          },
+          {
+            "x": 120,
+            "y": 95
+          },
+          {
+            "x": 117,
+            "y": 100
+          },
+          {
+            "x": 112,
+            "y": 103
+          },
+          {
+            "x": 107,
+            "y": 101
+          },
+          {
+            "x": 104,
+            "y": 97
+          }
+        ],
+        "color": "#c5c8cd",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 104,
+        "y0": 91,
+        "cx": 112,
+        "cy": 101,
+        "x1": 118,
+        "y1": 91,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 105,
+        "y0": 90,
+        "cx": 112,
+        "cy": 99,
+        "x1": 118,
+        "y1": 90,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 106,
+        "y0": 94,
+        "cx": 113,
+        "cy": 101,
+        "x1": 118,
+        "y1": 94,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 107,
+        "y0": 93,
+        "cx": 113,
+        "cy": 99,
+        "x1": 118,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 108,
+        "y0": 97,
+        "cx": 114,
+        "cy": 101,
+        "x1": 118,
+        "y1": 97,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 109,
+        "y0": 96,
+        "cx": 114,
+        "cy": 99,
+        "x1": 118,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 108,
+        "y0": 89,
+        "cx": 112,
+        "cy": 85,
+        "x1": 116,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 108,
+        "y0": 100,
+        "cx": 117,
+        "cy": 96,
+        "x1": 116,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 73,
+        "y0": 82,
+        "cx": 78,
+        "cy": 80,
+        "x1": 85,
+        "y1": 84,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 105,
+        "cy": 159,
+        "x1": 111,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 104,
+        "cy": 159,
+        "x1": 111,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 104,
+        "y0": 161,
+        "cx": 101,
+        "cy": 163,
+        "x1": 101,
+        "y1": 166,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 104,
+        "y0": 160,
+        "cx": 101,
+        "cy": 162,
+        "x1": 101,
+        "y1": 165,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 111,
+        "y0": 161,
+        "cx": 106,
+        "cy": 165,
+        "x1": 106,
+        "y1": 171,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 111,
+        "y0": 160,
+        "cx": 106,
+        "cy": 164,
+        "x1": 106,
+        "y1": 170,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 102,
+        "cy": 164,
+        "x1": 106,
+        "y1": 170,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 101,
+        "cy": 164,
+        "x1": 106,
+        "y1": 170,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 101,
+        "y0": 166,
+        "cx": 98,
+        "cy": 166,
+        "x1": 96,
+        "y1": 168,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 101,
+        "y0": 165,
+        "cx": 98,
+        "cy": 165,
+        "x1": 96,
+        "y1": 167,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 106,
+        "y0": 171,
+        "cx": 100,
+        "cy": 171,
+        "x1": 96,
+        "y1": 175,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 106,
+        "y0": 170,
+        "cx": 100,
+        "cy": 170,
+        "x1": 96,
+        "y1": 174,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 97,
+        "cy": 166,
+        "x1": 96,
+        "y1": 174,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 96,
+        "cy": 166,
+        "x1": 96,
+        "y1": 174,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 168,
+        "cx": 94,
+        "cy": 166,
+        "x1": 91,
+        "y1": 167,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 167,
+        "cx": 94,
+        "cy": 165,
+        "x1": 91,
+        "y1": 166,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 175,
+        "cx": 92,
+        "cy": 171,
+        "x1": 85,
+        "y1": 172,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 174,
+        "cx": 92,
+        "cy": 170,
+        "x1": 85,
+        "y1": 171,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 92,
+        "cy": 165,
+        "x1": 85,
+        "y1": 171,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 91,
+        "cy": 165,
+        "x1": 85,
+        "y1": 171,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 91,
+        "y0": 167,
+        "cx": 91,
+        "cy": 163,
+        "x1": 89,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 91,
+        "y0": 166,
+        "cx": 91,
+        "cy": 162,
+        "x1": 89,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 85,
+        "y0": 172,
+        "cx": 86,
+        "cy": 165,
+        "x1": 82,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 85,
+        "y0": 171,
+        "cx": 86,
+        "cy": 164,
+        "x1": 82,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 90,
+        "cy": 159,
+        "x1": 82,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 89,
+        "cy": 159,
+        "x1": 82,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 89,
+        "y0": 161,
+        "cx": 91,
+        "cy": 159,
+        "x1": 91,
+        "y1": 156,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 89,
+        "y0": 160,
+        "cx": 91,
+        "cy": 158,
+        "x1": 91,
+        "y1": 155,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 161,
+        "cx": 86,
+        "cy": 157,
+        "x1": 86,
+        "y1": 151,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 82,
+        "y0": 160,
+        "cx": 86,
+        "cy": 156,
+        "x1": 86,
+        "y1": 150,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 92,
+        "cy": 154,
+        "x1": 86,
+        "y1": 150,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 91,
+        "cy": 154,
+        "x1": 86,
+        "y1": 150,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 91,
+        "y0": 156,
+        "cx": 94,
+        "cy": 156,
+        "x1": 96,
+        "y1": 154,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 91,
+        "y0": 155,
+        "cx": 94,
+        "cy": 155,
+        "x1": 96,
+        "y1": 153,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 86,
+        "y0": 151,
+        "cx": 92,
+        "cy": 151,
+        "x1": 96,
+        "y1": 146,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 86,
+        "y0": 150,
+        "cx": 92,
+        "cy": 150,
+        "x1": 96,
+        "y1": 145,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 97,
+        "cy": 152,
+        "x1": 96,
+        "y1": 145,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 96,
+        "cy": 152,
+        "x1": 96,
+        "y1": 145,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 154,
+        "cx": 98,
+        "cy": 156,
+        "x1": 101,
+        "y1": 156,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 153,
+        "cx": 98,
+        "cy": 155,
+        "x1": 101,
+        "y1": 155,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 146,
+        "cx": 100,
+        "cy": 151,
+        "x1": 106,
+        "y1": 151,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 145,
+        "cx": 100,
+        "cy": 150,
+        "x1": 106,
+        "y1": 150,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 102,
+        "cy": 154,
+        "x1": 106,
+        "y1": 150,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 96,
+        "y0": 160,
+        "cx": 101,
+        "cy": 154,
+        "x1": 106,
+        "y1": 150,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 101,
+        "y0": 156,
+        "cx": 101,
+        "cy": 159,
+        "x1": 104,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 101,
+        "y0": 155,
+        "cx": 101,
+        "cy": 158,
+        "x1": 104,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 106,
+        "y0": 151,
+        "cx": 106,
+        "cy": 157,
+        "x1": 111,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 106,
+        "y0": 150,
+        "cx": 106,
+        "cy": 156,
+        "x1": 111,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 72,
+        "y0": 148,
+        "cx": 68,
+        "cy": 144,
+        "x1": 71,
+        "y1": 140,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 118,
+        "y0": 169,
+        "cx": 124,
+        "cy": 170,
+        "x1": 123,
+        "y1": 177,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 93,
+        "y0": 160,
+        "cx": 95,
+        "cy": 156,
+        "x1": 99,
+        "y1": 160,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 133,
+        "y0": 86,
+        "cx": 153,
+        "cy": 91,
+        "x1": 175,
+        "y1": 94,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 134,
+        "y0": 85,
+        "cx": 153,
+        "cy": 90,
+        "x1": 176,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 135,
+        "y0": 91,
+        "cx": 153,
+        "cy": 91,
+        "x1": 175,
+        "y1": 95,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 136,
+        "y0": 90,
+        "cx": 153,
+        "cy": 90,
+        "x1": 176,
+        "y1": 94,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 137,
+        "y0": 96,
+        "cx": 153,
+        "cy": 94,
+        "x1": 175,
+        "y1": 96,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 138,
+        "y0": 95,
+        "cx": 153,
+        "cy": 93,
+        "x1": 176,
+        "y1": 95,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 101,
+        "cx": 153,
+        "cy": 97,
+        "x1": 175,
+        "y1": 97,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 140,
+        "y0": 100,
+        "cx": 153,
+        "cy": 96,
+        "x1": 176,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 141,
+        "y0": 106,
+        "cx": 153,
+        "cy": 97,
+        "x1": 175,
+        "y1": 98,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 142,
+        "y0": 105,
+        "cx": 153,
+        "cy": 96,
+        "x1": 176,
+        "y1": 97,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 166,
+            "y": 91
+          },
+          {
+            "x": 171,
+            "y": 86
+          },
+          {
+            "x": 178,
+            "y": 85
+          },
+          {
+            "x": 183,
+            "y": 89
+          },
+          {
+            "x": 186,
+            "y": 95
+          },
+          {
+            "x": 183,
+            "y": 102
+          },
+          {
+            "x": 177,
+            "y": 106
+          },
+          {
+            "x": 170,
+            "y": 103
+          },
+          {
+            "x": 166,
+            "y": 98
+          }
+        ],
+        "color": "#596e8c",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 168,
+            "y": 91
+          },
+          {
+            "x": 173,
+            "y": 88
+          },
+          {
+            "x": 178,
+            "y": 87
+          },
+          {
+            "x": 182,
+            "y": 91
+          },
+          {
+            "x": 184,
+            "y": 95
+          },
+          {
+            "x": 181,
+            "y": 100
+          },
+          {
+            "x": 176,
+            "y": 103
+          },
+          {
+            "x": 171,
+            "y": 101
+          },
+          {
+            "x": 168,
+            "y": 97
+          }
+        ],
+        "color": "#c5c8cd",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 168,
+        "y0": 91,
+        "cx": 176,
+        "cy": 101,
+        "x1": 182,
+        "y1": 91,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 169,
+        "y0": 90,
+        "cx": 176,
+        "cy": 99,
+        "x1": 182,
+        "y1": 90,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 170,
+        "y0": 94,
+        "cx": 177,
+        "cy": 101,
+        "x1": 182,
+        "y1": 94,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 171,
+        "y0": 93,
+        "cx": 177,
+        "cy": 99,
+        "x1": 182,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 172,
+        "y0": 97,
+        "cx": 178,
+        "cy": 101,
+        "x1": 182,
+        "y1": 97,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 173,
+        "y0": 96,
+        "cx": 178,
+        "cy": 99,
+        "x1": 182,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 172,
+        "y0": 89,
+        "cx": 176,
+        "cy": 85,
+        "x1": 180,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 172,
+        "y0": 100,
+        "cx": 181,
+        "cy": 96,
+        "x1": 180,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 139,
+        "y0": 83,
+        "cx": 142,
+        "cy": 81,
+        "x1": 149,
+        "y1": 85,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 173,
+        "cy": 159,
+        "x1": 183,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 172,
+        "cy": 159,
+        "x1": 183,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 172,
+        "y0": 161,
+        "cx": 168,
+        "cy": 164,
+        "x1": 168,
+        "y1": 169,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 172,
+        "y0": 160,
+        "cx": 168,
+        "cy": 163,
+        "x1": 168,
+        "y1": 168,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 183,
+        "y0": 161,
+        "cx": 176,
+        "cy": 167,
+        "x1": 176,
+        "y1": 177,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 183,
+        "y0": 160,
+        "cx": 176,
+        "cy": 166,
+        "x1": 176,
+        "y1": 176,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 169,
+        "cy": 167,
+        "x1": 176,
+        "y1": 176,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 168,
+        "cy": 167,
+        "x1": 176,
+        "y1": 176,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 168,
+        "y0": 169,
+        "cx": 163,
+        "cy": 169,
+        "x1": 160,
+        "y1": 172,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 168,
+        "y0": 168,
+        "cx": 163,
+        "cy": 168,
+        "x1": 160,
+        "y1": 171,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 176,
+        "y0": 177,
+        "cx": 166,
+        "cy": 176,
+        "x1": 160,
+        "y1": 183,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 176,
+        "y0": 176,
+        "cx": 166,
+        "cy": 175,
+        "x1": 160,
+        "y1": 182,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 161,
+        "cy": 170,
+        "x1": 160,
+        "y1": 182,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 160,
+        "cy": 170,
+        "x1": 160,
+        "y1": 182,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 172,
+        "cx": 157,
+        "cy": 169,
+        "x1": 152,
+        "y1": 169,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 171,
+        "cx": 157,
+        "cy": 168,
+        "x1": 152,
+        "y1": 168,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 183,
+        "cx": 154,
+        "cy": 176,
+        "x1": 144,
+        "y1": 177,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 182,
+        "cx": 154,
+        "cy": 175,
+        "x1": 144,
+        "y1": 176,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 153,
+        "cy": 167,
+        "x1": 144,
+        "y1": 176,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 152,
+        "cy": 167,
+        "x1": 144,
+        "y1": 176,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 152,
+        "y0": 169,
+        "cx": 152,
+        "cy": 164,
+        "x1": 149,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 152,
+        "y0": 168,
+        "cx": 152,
+        "cy": 163,
+        "x1": 149,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 144,
+        "y0": 177,
+        "cx": 145,
+        "cy": 167,
+        "x1": 138,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 144,
+        "y0": 176,
+        "cx": 145,
+        "cy": 166,
+        "x1": 138,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 150,
+        "cy": 159,
+        "x1": 138,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 149,
+        "cy": 159,
+        "x1": 138,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 149,
+        "y0": 161,
+        "cx": 152,
+        "cy": 158,
+        "x1": 152,
+        "y1": 153,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 149,
+        "y0": 160,
+        "cx": 152,
+        "cy": 157,
+        "x1": 152,
+        "y1": 152,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 138,
+        "y0": 161,
+        "cx": 145,
+        "cy": 155,
+        "x1": 144,
+        "y1": 145,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 138,
+        "y0": 160,
+        "cx": 145,
+        "cy": 154,
+        "x1": 144,
+        "y1": 144,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 153,
+        "cy": 151,
+        "x1": 144,
+        "y1": 144,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 152,
+        "cy": 151,
+        "x1": 144,
+        "y1": 144,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 152,
+        "y0": 153,
+        "cx": 157,
+        "cy": 153,
+        "x1": 160,
+        "y1": 150,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 152,
+        "y0": 152,
+        "cx": 157,
+        "cy": 152,
+        "x1": 160,
+        "y1": 149,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 144,
+        "y0": 145,
+        "cx": 154,
+        "cy": 145,
+        "x1": 160,
+        "y1": 138,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 144,
+        "y0": 144,
+        "cx": 154,
+        "cy": 144,
+        "x1": 160,
+        "y1": 137,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 161,
+        "cy": 148,
+        "x1": 160,
+        "y1": 137,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 160,
+        "cy": 148,
+        "x1": 160,
+        "y1": 137,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 150,
+        "cx": 163,
+        "cy": 153,
+        "x1": 168,
+        "y1": 153,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 149,
+        "cx": 163,
+        "cy": 152,
+        "x1": 168,
+        "y1": 152,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 138,
+        "cx": 166,
+        "cy": 145,
+        "x1": 176,
+        "y1": 145,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 137,
+        "cx": 166,
+        "cy": 144,
+        "x1": 176,
+        "y1": 144,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 169,
+        "cy": 151,
+        "x1": 176,
+        "y1": 144,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 160,
+        "y0": 160,
+        "cx": 168,
+        "cy": 151,
+        "x1": 176,
+        "y1": 144,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 168,
+        "y0": 153,
+        "cx": 168,
+        "cy": 158,
+        "x1": 172,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 168,
+        "y0": 152,
+        "cx": 168,
+        "cy": 157,
+        "x1": 172,
+        "y1": 160,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 176,
+        "y0": 145,
+        "cx": 176,
+        "cy": 155,
+        "x1": 183,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 176,
+        "y0": 144,
+        "cx": 176,
+        "cy": 154,
+        "x1": 183,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 136,
+        "y0": 148,
+        "cx": 132,
+        "cy": 144,
+        "x1": 135,
+        "y1": 140,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 182,
+        "y0": 169,
+        "cx": 188,
+        "cy": 170,
+        "x1": 187,
+        "y1": 177,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 197,
+        "y0": 86,
+        "cx": 217,
+        "cy": 89,
+        "x1": 239,
+        "y1": 94,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 198,
+        "y0": 85,
+        "cx": 217,
+        "cy": 88,
+        "x1": 240,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 199,
+        "y0": 91,
+        "cx": 217,
+        "cy": 92,
+        "x1": 239,
+        "y1": 95,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 200,
+        "y0": 90,
+        "cx": 217,
+        "cy": 91,
+        "x1": 240,
+        "y1": 94,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 201,
+        "y0": 96,
+        "cx": 217,
+        "cy": 95,
+        "x1": 239,
+        "y1": 96,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 202,
+        "y0": 95,
+        "cx": 217,
+        "cy": 94,
+        "x1": 240,
+        "y1": 95,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 203,
+        "y0": 101,
+        "cx": 217,
+        "cy": 95,
+        "x1": 239,
+        "y1": 97,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 204,
+        "y0": 100,
+        "cx": 217,
+        "cy": 94,
+        "x1": 240,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 106,
+        "cx": 217,
+        "cy": 98,
+        "x1": 239,
+        "y1": 98,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 105,
+        "cx": 217,
+        "cy": 97,
+        "x1": 240,
+        "y1": 97,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 230,
+            "y": 91
+          },
+          {
+            "x": 235,
+            "y": 86
+          },
+          {
+            "x": 242,
+            "y": 85
+          },
+          {
+            "x": 247,
+            "y": 89
+          },
+          {
+            "x": 250,
+            "y": 95
+          },
+          {
+            "x": 247,
+            "y": 102
+          },
+          {
+            "x": 241,
+            "y": 106
+          },
+          {
+            "x": 234,
+            "y": 103
+          },
+          {
+            "x": 230,
+            "y": 98
+          }
+        ],
+        "color": "#596e8c",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_polygon",
+      "params": {
+        "points": [
+          {
+            "x": 232,
+            "y": 91
+          },
+          {
+            "x": 237,
+            "y": 88
+          },
+          {
+            "x": 242,
+            "y": 87
+          },
+          {
+            "x": 246,
+            "y": 91
+          },
+          {
+            "x": 248,
+            "y": 95
+          },
+          {
+            "x": 245,
+            "y": 100
+          },
+          {
+            "x": 240,
+            "y": 103
+          },
+          {
+            "x": 235,
+            "y": 101
+          },
+          {
+            "x": 232,
+            "y": 97
+          }
+        ],
+        "color": "#c5c8cd",
+        "filled": true
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 232,
+        "y0": 91,
+        "cx": 240,
+        "cy": 101,
+        "x1": 246,
+        "y1": 91,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 233,
+        "y0": 90,
+        "cx": 240,
+        "cy": 99,
+        "x1": 246,
+        "y1": 90,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 234,
+        "y0": 94,
+        "cx": 241,
+        "cy": 101,
+        "x1": 246,
+        "y1": 94,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 235,
+        "y0": 93,
+        "cx": 241,
+        "cy": 99,
+        "x1": 246,
+        "y1": 93,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 236,
+        "y0": 97,
+        "cx": 242,
+        "cy": 101,
+        "x1": 246,
+        "y1": 97,
+        "color": "#a8afb9",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 237,
+        "y0": 96,
+        "cx": 242,
+        "cy": 99,
+        "x1": 246,
+        "y1": 96,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 236,
+        "y0": 89,
+        "cx": 240,
+        "cy": 85,
+        "x1": 244,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 236,
+        "y0": 100,
+        "cx": 245,
+        "cy": 96,
+        "x1": 244,
+        "y1": 90,
+        "color": "#f5f4ed",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 205,
+        "y0": 84,
+        "cx": 206,
+        "cy": 82,
+        "x1": 213,
+        "y1": 86,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 237,
+        "y0": 161,
+        "cx": 233,
+        "cy": 165,
+        "x1": 233,
+        "y1": 170,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 237,
+        "y0": 160,
+        "cx": 233,
+        "cy": 164,
+        "x1": 233,
+        "y1": 169,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 250,
+        "y0": 161,
+        "cx": 242,
+        "cy": 168,
+        "x1": 242,
+        "y1": 179,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 250,
+        "y0": 160,
+        "cx": 242,
+        "cy": 167,
+        "x1": 242,
+        "y1": 178,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 234,
+        "cy": 168,
+        "x1": 242,
+        "y1": 178,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 233,
+        "cy": 168,
+        "x1": 242,
+        "y1": 178,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 233,
+        "y0": 170,
+        "cx": 228,
+        "cy": 170,
+        "x1": 224,
+        "y1": 174,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 233,
+        "y0": 169,
+        "cx": 228,
+        "cy": 169,
+        "x1": 224,
+        "y1": 173,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 242,
+        "y0": 179,
+        "cx": 231,
+        "cy": 178,
+        "x1": 224,
+        "y1": 186,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 242,
+        "y0": 178,
+        "cx": 231,
+        "cy": 177,
+        "x1": 224,
+        "y1": 185,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 225,
+        "cy": 172,
+        "x1": 224,
+        "y1": 185,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 224,
+        "cy": 172,
+        "x1": 224,
+        "y1": 185,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 174,
+        "cx": 220,
+        "cy": 170,
+        "x1": 215,
+        "y1": 170,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 173,
+        "cx": 220,
+        "cy": 169,
+        "x1": 215,
+        "y1": 169,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 179,
+        "cx": 207,
+        "cy": 168,
+        "x1": 199,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 178,
+        "cx": 207,
+        "cy": 167,
+        "x1": 199,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 213,
+        "cy": 159,
+        "x1": 199,
+        "y1": 160,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 212,
+        "cy": 159,
+        "x1": 199,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 212,
+        "y0": 161,
+        "cx": 215,
+        "cy": 157,
+        "x1": 215,
+        "y1": 152,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 212,
+        "y0": 160,
+        "cx": 215,
+        "cy": 156,
+        "x1": 215,
+        "y1": 151,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 199,
+        "y0": 161,
+        "cx": 207,
+        "cy": 154,
+        "x1": 206,
+        "y1": 143,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 199,
+        "y0": 160,
+        "cx": 207,
+        "cy": 153,
+        "x1": 206,
+        "y1": 142,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 216,
+        "cy": 150,
+        "x1": 206,
+        "y1": 142,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 215,
+        "cy": 150,
+        "x1": 206,
+        "y1": 142,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 215,
+        "y0": 152,
+        "cx": 220,
+        "cy": 152,
+        "x1": 224,
+        "y1": 148,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 215,
+        "y0": 151,
+        "cx": 220,
+        "cy": 151,
+        "x1": 224,
+        "y1": 147,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 143,
+        "cx": 217,
+        "cy": 143,
+        "x1": 224,
+        "y1": 135,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 206,
+        "y0": 142,
+        "cx": 217,
+        "cy": 142,
+        "x1": 224,
+        "y1": 134,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 148,
+        "cx": 228,
+        "cy": 152,
+        "x1": 233,
+        "y1": 152,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 147,
+        "cx": 228,
+        "cy": 151,
+        "x1": 233,
+        "y1": 151,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 234,
+        "cy": 150,
+        "x1": 242,
+        "y1": 142,
+        "color": "#596e8c",
+        "thickness": 2
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 224,
+        "y0": 160,
+        "cx": 233,
+        "cy": 150,
+        "x1": 242,
+        "y1": 142,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 242,
+        "y0": 143,
+        "cx": 242,
+        "cy": 154,
+        "x1": 250,
+        "y1": 161,
+        "color": "#596e8c",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 242,
+        "y0": 142,
+        "cx": 242,
+        "cy": 153,
+        "x1": 250,
+        "y1": 160,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 200,
+        "y0": 148,
+        "cx": 196,
+        "cy": 144,
+        "x1": 199,
+        "y1": 140,
+        "color": "#c5c8cd",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_curve",
+      "params": {
+        "x0": 246,
+        "y0": 169,
+        "cx": 252,
+        "cy": 170,
+        "x1": 251,
+        "y1": 177,
+        "color": "#e0e1e3",
+        "thickness": 1
+      }
+    }
+  ]
+}

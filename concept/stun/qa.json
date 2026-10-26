@@ -1,0 +1,74 @@
+{
+  "mode": "RGBA",
+  "size": [
+    256,
+    16
+  ],
+  "frame_count": 8,
+  "unique_frames": 8,
+  "alpha_values": [
+    0,
+    255
+  ],
+  "frame_bounds_exclusive": [
+    [
+      8,
+      2,
+      30,
+      15
+    ],
+    [
+      3,
+      2,
+      27,
+      14
+    ],
+    [
+      4,
+      3,
+      29,
+      15
+    ],
+    [
+      6,
+      2,
+      30,
+      14
+    ],
+    [
+      3,
+      2,
+      26,
+      15
+    ],
+    [
+      6,
+      3,
+      30,
+      15
+    ],
+    [
+      4,
+      2,
+      29,
+      14
+    ],
+    [
+      3,
+      3,
+      27,
+      15
+    ]
+  ],
+  "minimum_padding_pass": true,
+  "frame_sha256": [
+    "fe807c29fa6b0d86c3bcd7661fec832ef5ad0fda9c25f5dd1536e0ed6de0cc68",
+    "903e04956919409b545786d079e1e1ced26308a4acd74eb10c123007929105d2",
+    "d1d4481f29418c2aacc8d733371bd848766522121ad948fa99ef15785a7304a9",
+    "3725d0563a75e77a84f4225e40b26957354fb12514261ba6aafea6320e76d827",
+    "2cf193ee044c9529c0f9fe7ecf2bc11c3a7a4299220b75f49753a81f83e1a393",
+    "65441fcb96d169295ae0586a1331a22101426e3f48b613def3334991c75320a4",
+    "7347cd7f1a49b52209740b07fb9c0d116e763bf0d5edd8206bdf39dc4c792c41",
+    "a1b1ad1878e0bb6adcfa2abb994bde1d8ba81830d5d51d803b45c4d515f3d586"
+  ]
+}

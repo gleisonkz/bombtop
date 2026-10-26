@@ -25,6 +25,14 @@ As cores hexadecimais do [JSON reutilizável](characters.identity.json) são apr
 
 Gameplay mantém escala 0,22: corpo nominal de 22 px. O master é fonte de autoria, não textura de execução. Recortar e reduzir **cada quadro separadamente com Lanczos**, depois montar o atlas, evita mistura com vizinhos e preserva o orçamento de memória/GPU móvel. O ganho visual vem de novos desenhos detalhados; ampliar desenhos antigos não é regeneração. A arte aprovada do menu permanece preservada.
 
+Retratos ampliados do lobby, guia e pódio usam o atlas HD de 1872 × 5184, células
+208 × 288 e escala 0,11. Assim preservam o detalhe da mesma arte e o mesmo tamanho
+relativo da arena. Na UI usar `image-rendering: auto`; não aplicar pixelated.
+A bomba especial tem arte própria em `bombs/mega-bomber.png`: esfera de ferro escuro,
+olhos âmbar ameaçadores, reforços violetas e energia contida nas juntas. Evoca o
+núcleo pesado plantado pela invocação agachada do Bomber. A textura
+de execução é 512 × 512 e a pulsação preserva escalas X e Y iguais.
+
 Linhas base zero: 0–2 parado (4 quadros/direção); 3–5 andando (6); 6 tonto (6); 7 derrota/queda/explosão/fumaça (7); 8–10 especial (9); 11–13 carregando parado (4); 14–16 carregando andando (6); 17 celebração (8); 18 inventário das nove poses de voo. Os grupos direcionais seguem frente/direita/costas. Somente linhas 0–17 entram no atlas de gameplay. Células excedentes ficam transparentes. Bombas carregadas são objetos do renderer; os braços precisam estar erguidos sem bomba incorporada.
 
 ## Reutilização e aceitação
@@ -33,7 +41,10 @@ Anexar os pixels da referência aprovada é obrigatório ao gerar ou editar arte
 
 Exigir RGBA com transparência real, curvas antialias limpas, margens por célula, âncoras estáveis e vistas coerentes. Rejeitar matte, checkerboard pintado, sombras de chão, texto, recortes, restos de quadros vizinhos e poses idênticas vendidas como animação nova. Confirmar diferenças reais entre quadros e leitura no runtime reduzido.
 
-Este documento registra a identidade aprovada e o contrato refinado solicitado. Não certifica que os arquivos finais já tenham sido regenerados: o coordenador deve verificar dimensões, alpha, inventário, âncoras, exportação e integração reais antes de declarar produção concluída.
+O master regenerado tem 117 poses distintas. Os testes de imagem verificam dimensões,
+alpha, margens, poses de carregar, correspondência com o menu aprovado e exportação
+reproduzível. O teste TypeScript compara o contrato JSON com o renderer. Essas
+verificações estruturais não substituem avaliação de fluidez durante reprodução.
 
 ## Contexto histórico
 

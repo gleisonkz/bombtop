@@ -14,6 +14,8 @@ interface Entry {
   alt: Direction;
   /** Bomb button down (a carried bomb is thrown when it is let go). */
   hold: boolean;
+  brace: boolean;
+  stopKick: boolean;
   /** Client tick from which this input is held. */
   tick: number;
 }
@@ -42,11 +44,13 @@ export class Predictor {
   step(input: PlayerInput): number | null {
     const alt = input.alt ?? null;
     const hold = !!input.hold;
+    const brace = !!input.brace;
+    const stopKick = !!input.stopKick;
     const last = this.log.at(-1);
     let sent: number | null = null;
-    if (!last || last.dir !== input.dir || last.alt !== alt || last.hold !== hold || input.bomb || input.action || input.special) {
+    if (!last || last.dir !== input.dir || last.alt !== alt || last.hold !== hold || last.brace !== brace || last.stopKick !== stopKick || input.bomb || input.action || input.special) {
       sent = ++this.seq;
-      this.log.push({ seq: sent, dir: input.dir, alt, hold, tick: this.tick });
+      this.log.push({ seq: sent, dir: input.dir, alt, hold, brace, stopKick, tick: this.tick });
     }
     this.tick++;
     return sent;
@@ -82,13 +86,14 @@ export class Predictor {
     this.reconcile(snap);
 
     const p = structuredClone(found);
-    if (!p.alive || p.stun > 0 || p.webbed > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.truck > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0) return p;
+    if (!p.alive || p.stun > 0 || p.webbed > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.truck > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0 || p.shove) return p;
 
     const state = { ...snap, players: [p], rng: 0 } as MatchState;
     this.log.forEach((e, i) => {
       const start = Math.max(e.tick + (e.seq === ack.seq ? ack.ticks : 0), this.tick - MAX_PREDICTION_TICKS);
       let ticks = (this.log[i + 1]?.tick ?? this.tick) - start;
       for (; ticks > 0; ticks--) {
+        if (e.brace) continue;
         const dir = cursedDirection(p, e.dir);
         const moved = steer(state, p, dir, cursedDirection(p, e.alt));
         if (moved) p.facing = moved;

@@ -1,4 +1,4 @@
-import { BOT_LEVELS, MAX_PLAYERS, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BattleMode, type BattleTimeMinutes, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo, type ManiacConfig } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { backButton, button, el } from "./dom";
@@ -6,15 +6,13 @@ import { lobbySlots, seatClass } from "./lobby-slots";
 import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
 import { cycleCharacter } from "./character-cycle";
+import { StageRotationPanel } from "./stage-rotation-panel";
+import { ManiacPanel } from "./maniac-panel";
+import { STAGE_NAMES } from "./stage-names";
+import type { StageRotationEntry } from "@bombtop/shared";
 import type { Placing } from "../game/standings";
 
 const CHARACTER_NAMES: Record<CharacterId, string> = { bomb: "Bomba", captain: "Capitão América", thor: "Thor", goku: "Goku", naruto: "Naruto", spider: "Homem-Aranha", pikachu: "Pikachu", static: "Super Choque", flash: "Flash", bugs: "Pernalonga", lantern: "Lanterna Verde", donatello: "Donatello", penelope: "Penélope Charmosa", panther: "Pantera Cor-de-Rosa", harry: "Harry Potter", optimus: "Optimus Prime", pele: "Pelé", lula: "Lula" };
-
-const STAGE_NAMES: Record<LobbyInfo["stage"], string> = {
-  classic: "Clássica",
-  conveyor: "Esteiras",
-  warp: "Teleportes",
-};
 
 export const LEVEL_NAMES: Record<BotLevel, string> = { easy: "Fácil", medium: "Médio", hard: "Difícil" };
 
@@ -29,6 +27,12 @@ export const PERSONA_NAMES: Record<BotPersona, string> = {
 
 export interface LobbyHandlers {
   start(): void;
+  setBattleMode(mode: BattleMode): void;
+  setManiac(config: ManiacConfig): void;
+  setWinsToWin(wins: number): void;
+  setTimeMinutes(minutes: BattleTimeMinutes): void;
+  setSuddenDeath(enabled: boolean): void;
+  setStageRotation(rotation: StageRotationEntry[]): void;
   leave(): void;
   addBot(level: BotLevel): void;
   removeBot(id: string): void;
@@ -44,6 +48,16 @@ export class LobbyPanel {
   private readonly stage = el("span", { class: "chip" });
   private readonly seats = el("div", { class: "seats" });
   private readonly status = el("p", { class: "hint" });
+  private readonly wins: HTMLButtonElement[];
+  private readonly times: HTMLButtonElement[];
+  private readonly winRules: HTMLElement;
+  private readonly timeRules: HTMLElement;
+  private readonly suddenDeathToggle: HTMLButtonElement;
+  private currentSuddenDeath = true;
+  private readonly stageRotation: StageRotationPanel;
+  private readonly maniacPanel: ManiacPanel;
+  private readonly modeButtons: HTMLButtonElement[];
+  private readonly maniacNotice = el("span", { class: "lobby-maniac-notice", text: "Maniac: 3 vitórias, 3 minutos, fase Clássica e morte súbita OFF" });
   private readonly startBtn: HTMLButtonElement;
   private readonly results: ResultScreen;
   private readonly codeLabel = el("small", { text: "Código da sala" });
@@ -60,6 +74,35 @@ export class LobbyPanel {
     private readonly handlers: LobbyHandlers,
   ) {
     this.startBtn = button("Começar partida", handlers.start, "primary big start");
+    this.stageRotation = new StageRotationPanel(parent, handlers.setStageRotation);
+    this.maniacPanel = new ManiacPanel(parent, handlers.setManiac);
+    this.modeButtons = (["single", "maniac"] as const).map((mode) => {
+      const choice = button(mode === "single" ? "Single" : "Maniac", () => handlers.setBattleMode(mode), "lobby-mode-option");
+      choice.setAttribute("aria-label", mode === "single" ? "Modo Battle Royale Single" : "Modo Battle Maniac");
+      return choice;
+    });
+    this.wins = Array.from({ length: 5 }, (_, i) => {
+      const value = i + 1;
+      const choice = button(String(value), () => handlers.setWinsToWin(value), "lobby-win-option");
+      choice.setAttribute("aria-label", `${value} ${value === 1 ? "vitória" : "vitórias"} para ganhar`);
+      return choice;
+    });
+    this.winRules = el("div", { class: "lobby-rules" }, [
+      el("span", { class: "lobby-rules-title", text: "Vitórias para ganhar" }),
+      el("div", { class: "lobby-rules-options" }, this.wins),
+    ]);
+    this.times = ([1, 2, 3, 5, null] as const).map((value) => {
+      const label = value === null ? "∞" : `${value}m`;
+      const choice = button(label, () => handlers.setTimeMinutes(value), "lobby-win-option lobby-time-option");
+      choice.setAttribute("aria-label", value === null ? "Tempo infinito" : `${value} ${value === 1 ? "minuto" : "minutos"} por rodada`);
+      choice.dataset.timeMinutes = String(value);
+      return choice;
+    });
+    this.timeRules = el("div", { class: "lobby-rules" }, [
+      el("span", { class: "lobby-rules-title", text: "Tempo por rodada" }),
+      el("div", { class: "lobby-rules-options" }, this.times),
+    ]);
+    this.suddenDeathToggle = button("Morte súbita: ON", () => handlers.setSuddenDeath(!this.currentSuddenDeath), "lobby-rule-toggle");
     const invite = (this.inviteBtn = button("Convidar amigos", () => void this.invite(invite), "primary invite-btn"));
     this.root = el("div", { class: "screen lobby" }, [
       el("div", { class: "lobby-shell" }, [
@@ -70,7 +113,13 @@ export class LobbyPanel {
           invite,
         ]),
         this.seats,
-        el("footer", { class: "lobby-foot" }, [this.status, this.startBtn]),
+        el("footer", { class: "lobby-foot" }, [
+          el("div", { class: "lobby-settings" }, [
+            el("div", { class: "lobby-rules" }, [el("span", { class: "lobby-rules-title", text: "Modo" }), el("div", { class: "lobby-rules-options" }, this.modeButtons)]),
+            this.stageRotation.trigger, this.maniacPanel.trigger, this.winRules, this.timeRules, this.suddenDeathToggle,
+          ]),
+          this.maniacNotice, this.status, this.startBtn,
+        ]),
       ]),
     ]);
     this.root.hidden = true;
@@ -98,6 +147,30 @@ export class LobbyPanel {
     this.code.textContent = this.offline?.couch ? "🎮" : this.offline ? "Wi-Fi" : info.code;
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}${info.watchers ? ` • 📺 ${info.watchers}` : ""}`;
     const isHost = info.hostId === me;
+    const maniac = info.battleMode === "maniac";
+    const mayEdit = isHost && !this.watching;
+    this.stageRotation.update(info, mayEdit && !maniac);
+    this.stageRotation.trigger.hidden = maniac;
+    this.maniacPanel.update(info, mayEdit && maniac);
+    this.maniacPanel.trigger.hidden = !maniac;
+    this.maniacNotice.hidden = !maniac;
+    for (const [index, choice] of this.modeButtons.entries()) {
+      choice.setAttribute("aria-pressed", String((maniac ? 1 : 0) === index));
+      choice.disabled = !mayEdit;
+    }
+    for (const [index, choice] of this.wins.entries()) {
+      const selected = info.winsToWin === index + 1;
+      choice.setAttribute("aria-pressed", String(selected));
+      choice.disabled = !mayEdit || maniac;
+    }
+    for (const choice of this.times) {
+      choice.setAttribute("aria-pressed", String(choice.dataset.timeMinutes === String(info.timeMinutes)));
+      choice.disabled = !mayEdit || maniac;
+    }
+    this.currentSuddenDeath = info.suddenDeath;
+    this.suddenDeathToggle.textContent = `Morte súbita: ${info.suddenDeath ? "ON" : "OFF"}`;
+    this.suddenDeathToggle.setAttribute("aria-pressed", String(info.suddenDeath));
+    this.suddenDeathToggle.disabled = !mayEdit || maniac;
     this.seats.replaceChildren(
       ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
         const tag = el("span", { class: "slot-tag", text: `P${i + 1}` });
@@ -199,10 +272,11 @@ export class LobbyPanel {
 
   /** A round is over: who won and everyone's place, until the next round (or, the match won, the lobby). */
   showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null, setOver: boolean): void {
-    this.results.show(placings, info.members, me, winnerId, setOver);
+    this.results.show(placings, info.members, me, winnerId, setOver, info.winsToWin);
   }
 
   hide(): void {
+    this.stageRotation.close();
     this.root.hidden = true;
     this.results.hide();
   }

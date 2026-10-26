@@ -57,6 +57,12 @@ describe("lobby", () => {
       phase: "lobby",
       hostId: "c1",
       stage: "classic",
+      stageRotation: [{ stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }],
+      winsToWin: WINS_TO_WIN,
+      timeMinutes: null,
+      suddenDeath: true,
+      battleMode: "single",
+      maniac: { items: {}, hitPoints: { c1: 1, c2: 1 } },
       code: "ROOM1",
       members: [
         { id: "c1", name: "Player 1", wins: 0, connected: true, character: "bomb", ownColors: true },

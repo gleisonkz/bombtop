@@ -1,5 +1,6 @@
 import { Assets, Texture } from "pixi.js";
 import { FLAMES } from "./sprites";
+import { isolatedTextureRow, textureFromCanvas } from "./texture-cells";
 
 export interface FlameArt {
   center: Texture[][];
@@ -10,19 +11,7 @@ export interface FlameArt {
 export async function loadFlameArt(url = `${import.meta.env.BASE_URL}${FLAMES.url}`): Promise<FlameArt> {
   const sheet: Texture = await Assets.load(url);
   const image = sheet.source.resource as CanvasImageSource;
-  const textureFromCanvas = (canvas: HTMLCanvasElement) => {
-    const texture = Texture.from(canvas);
-    texture.source.scaleMode = "linear";
-    texture.source.addressMode = "clamp-to-edge";
-    return texture;
-  };
-  const row = (r: number) => Array.from({ length: FLAMES.frames }, (_, frame) => {
-    const canvas = document.createElement("canvas");
-    canvas.width = FLAMES.size;
-    canvas.height = FLAMES.size;
-    canvas.getContext("2d")!.drawImage(image, frame * FLAMES.size, r * FLAMES.size, FLAMES.size, FLAMES.size, 0, 0, FLAMES.size, FLAMES.size);
-    return textureFromCanvas(canvas);
-  });
+  const row = (r: number) => isolatedTextureRow(image, r, FLAMES.size, FLAMES.frames);
   const centers = row(FLAMES.rows.center);
   const mid = Array.from({ length: FLAMES.variants }, (_, variant) => row(FLAMES.rows.mid + variant));
   const joins = Array.from({ length: FLAMES.frames }, (_, frame) => {

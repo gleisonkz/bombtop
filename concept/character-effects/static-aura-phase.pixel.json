@@ -1,0 +1,181 @@
+{
+  "description": "Apply after energy-v2.pixel.json; distinct moving chest branches for all four body phases.",
+  "operations": [
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 544,
+        "x1": 26,
+        "y1": 549,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 543,
+        "x1": 26,
+        "y1": 548,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 608,
+        "x1": 26,
+        "y1": 613,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 19,
+        "y0": 607,
+        "x1": 26,
+        "y1": 612,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 83,
+        "y0": 545,
+        "x1": 91,
+        "y1": 548,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 83,
+        "y0": 544,
+        "x1": 91,
+        "y1": 547,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 83,
+        "y0": 609,
+        "x1": 91,
+        "y1": 612,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 83,
+        "y0": 608,
+        "x1": 91,
+        "y1": 611,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 147,
+        "y0": 546,
+        "x1": 156,
+        "y1": 547,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 147,
+        "y0": 545,
+        "x1": 156,
+        "y1": 546,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 147,
+        "y0": 610,
+        "x1": 156,
+        "y1": 611,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 147,
+        "y0": 609,
+        "x1": 156,
+        "y1": 610,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 211,
+        "y0": 547,
+        "x1": 221,
+        "y1": 546,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 211,
+        "y0": 546,
+        "x1": 221,
+        "y1": 545,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 211,
+        "y0": 611,
+        "x1": 221,
+        "y1": 610,
+        "color": "#58c9ef",
+        "thickness": 3
+      }
+    },
+    {
+      "op": "draw_line",
+      "params": {
+        "x0": 211,
+        "y0": 610,
+        "x1": 221,
+        "y1": 609,
+        "color": "#f4ffff",
+        "thickness": 1
+      }
+    }
+  ]
+}

@@ -41,6 +41,8 @@ export class TouchInput {
   private stick: ({ id: number; ox: number; oy: number; fixed?: true } & Steer) | null = null;
   private pending: { bomb: boolean; action: boolean; special?: true } = { bomb: false, action: false };
   private bombDown = false;
+  private braceDown = false;
+  private stopDown = false;
 
   constructor(private readonly deadZone = 12) {}
 
@@ -80,13 +82,23 @@ export class TouchInput {
     if (this.stick?.id === id) this.stick = null;
   }
 
-  press(button: "bomb" | "action" | "special"): void {
+  press(button: "bomb" | "action" | "special" | "brace" | "stop"): void {
+    if (button === "brace") {
+      this.braceDown = true;
+      return;
+    }
+    if (button === "stop") {
+      this.stopDown = true;
+      return;
+    }
     this.pending[button] = true;
     if (button === "bomb") this.bombDown = true;
   }
 
   /** A finger lifted off a button (only the bomb button cares: it lets go of a carried bomb). */
-  release(button: "bomb" | "action" | "special"): void {
+  release(button: "bomb" | "action" | "special" | "brace" | "stop"): void {
+    if (button === "brace") this.braceDown = false;
+    if (button === "stop") this.stopDown = false;
     if (button === "bomb") this.bombDown = false;
   }
 
@@ -94,6 +106,8 @@ export class TouchInput {
     const input: PlayerInput = { dir: this.stick?.dir ?? null, ...this.pending };
     if (this.stick?.alt) input.alt = this.stick.alt;
     if (this.bombDown) input.hold = true;
+    if (this.braceDown) input.brace = true;
+    if (this.stopDown) input.stopKick = true;
     this.pending = { bomb: false, action: false };
     return input;
   }
@@ -101,6 +115,8 @@ export class TouchInput {
   reset(): void {
     this.stick = null;
     this.bombDown = false;
+    this.braceDown = false;
+    this.stopDown = false;
     this.pending = { bomb: false, action: false };
   }
 }

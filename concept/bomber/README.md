@@ -50,12 +50,38 @@ python apps/client/scripts/test-bomber.py
 O empacotador lê a grade do JSON, reduz cada quadro das 18 primeiras linhas
 individualmente com Lanczos e monta `bomber-atlas.png` (936 × 2592). Assim o master
 guarda o detalhe sem aumentar a textura de execução e sua memória no celular.
+O lobby, os retratos e o pódio usam `bomber-menu-atlas.png` (1872 × 5184), preservando
+os pixels do master, com escala 0,11 e `image-rendering: auto`. A arena usa escala
+0,22 com filtragem linear. As duas apresentações mantêm o mesmo tamanho relativo;
+o lobby não amplia o atlas reduzido nem aplica o antigo filtro pixelated.
 O menu usa `menu-flight-source.png` (1152 × 1152, grade 3 × 3), regenerado com
 quadros isolados e margem transparente para eliminar mãos de poses vizinhas.
 Essa fonte gera `bomber-title-fly.png` (768 × 768, células de 256 × 256).
 A última linha compilada contém as mesmas nove poses reduzidas para inventário;
-os testes verificam que ela corresponde à fonte em alta resolução. Somente as duas
+os testes verificam que ela corresponde à fonte em alta resolução. Somente as três
 texturas de execução ficam em `public/sprites`; as fontes não entram no precache da PWA.
+
+## Bomba especial
+
+`../bombs/mega-bomber.png` é a arte própria da mega bomba: esfera de ferro escuro,
+olhos âmbar ameaçadores como os do Bomber, reforços violetas, juntas incandescentes
+e pavio central. O núcleo pesado combina com a invocação agachada, pressionando
+as duas luvas contra o chão. Mantém o acabamento arcade das bombas do jogo.
+O exportador `apps/client/scripts/pack-mega-bomb.py` gera
+`public/sprites/bombs/mega/` em RGBA 512 × 512: armada, aviso, crítica e início
+da detonação, além das versões de flash branco. A folha de estados fica em
+`../bombs/mega-stages.png`, grade 2 × 2. Âncora e faísca são próprias;
+a pulsação usa escalas X e Y iguais, preservando a esfera em todos os ticks.
+`mega-summon.ts` desenha a concentração violeta, impacto âmbar e poeira por 36
+ticks, com impacto no tick 12 sincronizado ao gesto agachado. Apenas apresentação;
+não muda as regras da bomba. Movimento reduzido e lite omitem o efeito adicional.
+
+Os estágios foram gerados com a imagem da mega bomba e a referência crítica do jogo
+anexadas. Prompt: manter esfera, olhos, armadura, luz e proporções idênticos em
+quatro células RGBA; aumentar progressivamente o pavio e a energia nas juntas até
+a pressão branco-dourada da pré-detonação, sem mudar o volume da bomba.
+A invocação usa [Graphics do PixiJS 8.22](https://github.com/pixijs/pixijs/blob/v8.22.0/src/scene/__docs__/graphics/index.md):
+geometria reutilizada e limpa por quadro, sem filtros nem emissores persistentes.
 
 Na arena, o personagem usa filtragem linear ao ser reduzido, como os demais
 personagens em HD. Isso evita as bordas serrilhadas do antigo filtro nearest.

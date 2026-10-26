@@ -24,3 +24,30 @@ PRODUCTION GRID: one horizontal 384×128 PNG RGBA image, exactly THREE isolated 
 ## Aceitação
 
 Conferir RGBA, dimensões exatas, três células preenchidas, fundo transparente, ausência de elementos fora da célula e consistência dos olhos e corpos. Avaliar visualmente cada saída junto da referência. Não substituir o atlas em uso sem verificar compatibilidade com a lógica de renderização.
+
+## Mega do Bomber — variante própria
+
+A mega bomba especial não é uma quarta variante do trio normal/pierce/remote.
+Ela usa a esfera e o acabamento arcade do jogo, mas incorpora a identidade do
+Bomber: ferro carvão com reflexo superior esquerdo, olhos âmbar em fenda,
+reforços violetas, juntas incandescentes contidas e pavio central com colar
+dourado. O desenho evoca um núcleo pesado invocado quando o personagem se
+agacha e pressiona as duas luvas contra o chão. Os olhos ovais do trio continuam
+reservados às bombas comuns; a mega usa os olhos ameaçadores do personagem.
+
+Fonte armada: `bombs/mega-bomber.png`; folha de estados `bombs/mega-stages.png`,
+grade 2 × 2, na ordem armada/aviso/crítica/início da detonação. Execução em
+`apps/client/public/sprites/bombs/mega/`, quatro PNGs RGBA 512 × 512 e suas máscaras
+de flash branco. O estágio acompanha os mesmos limiares de pavio das bombas comuns.
+Âncora de execução (250, 310), brilho do pavio (254, 76),
+escala base 0,025 e fator mega 1,6. A pulsação altera os dois eixos igualmente:
+nunca esticar verticalmente a bomba comum para representar a especial.
+O [JSON da família](characters.identity.json) registra a variante em
+`bomberIdentity.specialBomb` e as poses de invocação nas linhas 8–10 do master.
+
+A invocação visual dura 36 ticks: concentração violeta, impacto âmbar no tick 12,
+emergência uniforme da bomba e dissipação de poeira/faíscas. A observação registra
+uma vez a bomba recém-criada e sua invocação, depois usa os ticks da simulação.
+Carregar, arremessar ou mover cancela o efeito; outra invocação não reinicia uma
+bomba antiga de pavio pausado. Lite e movimento reduzido omitem o efeito decorativo. Alcance,
+dano, pavio e recarga da simulação não são alterados por esses efeitos.

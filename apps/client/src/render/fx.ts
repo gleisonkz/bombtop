@@ -1,3 +1,5 @@
+import { specialInk } from "./special-palette";
+
 /** A short-lived bit of visual flair, in stage pixels. */
 export interface Particle {
   kind: "spark" | "smoke" | "debris";
@@ -106,16 +108,18 @@ export class Fx {
   }
 
   /** Optimus turning into his truck, or back: his plates fly apart in a burst of blue sparks, with a small shake. */
-  transform(x: number, y: number): void {
+  transform(x: number, y: number, color?: number | null): void {
+    const plates = color == null ? PLATE_COLORS : PLATE_COLORS.map(ink => specialInk(ink, color));
+    const sparks = color == null ? TECH_SPARKS : TECH_SPARKS.map(ink => specialInk(ink, color));
     for (let i = 0; i < 10; i++) {
       const a = (i / 10) * Math.PI * 2 + this.random() * 0.4;
       const v = 0.5 + this.random() * 0.7;
-      this.add("debris", x + Math.cos(a) * 2, y + Math.sin(a) * 2, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 0.7, 16 + this.random() * 10, 1.2 + this.random() * 1.2, PLATE_COLORS);
+      this.add("debris", x + Math.cos(a) * 2, y + Math.sin(a) * 2, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 0.7, 16 + this.random() * 10, 1.2 + this.random() * 1.2, plates);
     }
     for (let i = 0; i < 8; i++) {
       const a = this.random() * Math.PI * 2;
       const v = 0.8 + this.random();
-      this.add("spark", x, y, Math.cos(a) * v, Math.sin(a) * v, 8 + this.random() * 8, 0.8 + this.random() * 0.6, TECH_SPARKS);
+      this.add("spark", x, y, Math.cos(a) * v, Math.sin(a) * v, 8 + this.random() * 8, 0.8 + this.random() * 0.6, sparks);
     }
     this.shake = Math.min(3, this.shake + 0.8);
   }

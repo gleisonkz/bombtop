@@ -1,0 +1,382 @@
+{
+  "dimensions": [
+    256,
+    512
+  ],
+  "mode": "RGBA",
+  "colors": 11,
+  "alpha_values": [
+    0,
+    255
+  ],
+  "rows": {
+    "ki": [
+      {
+        "frame": 0,
+        "bbox": [
+          6,
+          8,
+          58,
+          52
+        ],
+        "sha256": "dc4bcd326f789027cdbd0bf836745f5b2ff2fbc8f40ecb00fb5a077711c6db2c",
+        "opaque_pixels": 1278
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          8,
+          8,
+          58,
+          54
+        ],
+        "sha256": "669d4d4fa8c1b1e891ed8a29e9199a0b7255a5e04d3cbec2f6d01faf9edf3e0e",
+        "opaque_pixels": 1546
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          10,
+          8,
+          58,
+          53
+        ],
+        "sha256": "2aad3129a82435c7712250a04eab0fe7433ebfe72f6c195133f34571a5396a7d",
+        "opaque_pixels": 1410
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          12,
+          8,
+          58,
+          51
+        ],
+        "sha256": "d61fc2c6667f3b6d8d9d21a1f5b999217fac6ed1cb47e1ce3299e63bf74c44db",
+        "opaque_pixels": 1154
+      }
+    ],
+    "chakra": [
+      {
+        "frame": 0,
+        "bbox": [
+          6,
+          8,
+          58,
+          52
+        ],
+        "sha256": "572aec57a72027d5aab9c13fb40a34e057031c2da534f97e4689145520782fc0",
+        "opaque_pixels": 1278
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          8,
+          8,
+          58,
+          54
+        ],
+        "sha256": "cf701edd96508b03fc34b02568d30d1b59790c47df1228cfbdb0335a936fa930",
+        "opaque_pixels": 1546
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          10,
+          8,
+          58,
+          53
+        ],
+        "sha256": "658c500fab3f5202b75a802e73991ef97bb735f39addf7ce0133b1dfca97b7b0",
+        "opaque_pixels": 1410
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          12,
+          8,
+          58,
+          51
+        ],
+        "sha256": "44e2f8d4a7e40f852e85722b8d4b4772a7a3f3921906106e21b24e398fc6c774",
+        "opaque_pixels": 1154
+      }
+    ],
+    "lantern": [
+      {
+        "frame": 0,
+        "bbox": [
+          7,
+          6,
+          60,
+          56
+        ],
+        "sha256": "2aeb45b12c5c756968f8d0843a93e816dd26a3f34ffd147fae520db2de22d8ad",
+        "opaque_pixels": 876
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          7,
+          6,
+          57,
+          60
+        ],
+        "sha256": "35517b325475b201e58b16055db67f55b0fd3f559f0b40a9f5326f27dc11b0ce",
+        "opaque_pixels": 881
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          5,
+          6,
+          57,
+          56
+        ],
+        "sha256": "66996778efaaefb7572775419a3ceedec4bb90f4010dd06b10125afa8565935e",
+        "opaque_pixels": 882
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          7,
+          5,
+          57,
+          56
+        ],
+        "sha256": "8fc9256a6d628760e84744abf9c3b20a33f3233ee46d4d655749576c83a8607a",
+        "opaque_pixels": 889
+      }
+    ],
+    "patronus": [
+      {
+        "frame": 0,
+        "bbox": [
+          5,
+          4,
+          59,
+          56
+        ],
+        "sha256": "b4b47ccb16c128500276a31e2c4d279d0a5d7ba18a8a128ddfdc9501871eb4e8",
+        "opaque_pixels": 800
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          5,
+          5,
+          59,
+          56
+        ],
+        "sha256": "80fab03c445ac0d43e84e039ebe01af43076f7e913e257c5121e779bfd86d0ec",
+        "opaque_pixels": 811
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          5,
+          6,
+          59,
+          56
+        ],
+        "sha256": "2d43208157c39694e82d89ecad50d957b27e5679bbe5a8b610f1589fee69ffd1",
+        "opaque_pixels": 808
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          5,
+          7,
+          59,
+          56
+        ],
+        "sha256": "796936b0aa92a9c032a017ee4c702654d8b7abb9f4f9854d353339318029b5ab",
+        "opaque_pixels": 806
+      }
+    ],
+    "shield": [
+      {
+        "frame": 0,
+        "bbox": [
+          6,
+          11,
+          58,
+          51
+        ],
+        "sha256": "39be5bb7602a293f35fd3e3675794d138f70e7c90e630a4a94d15f7804322962",
+        "opaque_pixels": 744
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          6,
+          13,
+          58,
+          51
+        ],
+        "sha256": "6c8fd0dc8cbdd0aaf04ea22506bb0d13cdd877eeab59af93a9e013aa01cd2378",
+        "opaque_pixels": 720
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          6,
+          11,
+          58,
+          51
+        ],
+        "sha256": "a9991f9984d08cb047afca7a7909dd30b167aea6bc293af08d916e6da2d29d5f",
+        "opaque_pixels": 717
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          6,
+          13,
+          58,
+          51
+        ],
+        "sha256": "963bc3b67041c5b6d954be48d1c6a799538f26ead9b3dc5bfda734ee77cd8cee",
+        "opaque_pixels": 724
+      }
+    ],
+    "exhaust": [
+      {
+        "frame": 0,
+        "bbox": [
+          10,
+          9,
+          56,
+          47
+        ],
+        "sha256": "6f7bc68602aca132e0e534eed6ea882d5fea79ba7399ebf8b404901077761815",
+        "opaque_pixels": 540
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          10,
+          12,
+          54,
+          47
+        ],
+        "sha256": "83eb9482bad22111001a53849188386b856da0bfb6ef885e1fe5b31d8c8a785d",
+        "opaque_pixels": 566
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          10,
+          15,
+          57,
+          47
+        ],
+        "sha256": "d0c029521971ce5931a6c4a7b22d2b01ca9049fdaafb8a81106fac7abf186c05",
+        "opaque_pixels": 603
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          10,
+          15,
+          50,
+          47
+        ],
+        "sha256": "f6824de937feee1123aec99a3e9a02faf673f1157a23911b6fbdc94dcd1b7414",
+        "opaque_pixels": 544
+      }
+    ],
+    "kick": [
+      {
+        "frame": 0,
+        "bbox": [
+          10,
+          10,
+          55,
+          55
+        ],
+        "sha256": "6437e8715a43611386287bf1d4c88923a3ebb4fbc7b3ef4895ad844f2295806d",
+        "opaque_pixels": 413
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          4,
+          4,
+          61,
+          61
+        ],
+        "sha256": "a16ca83158b982982e3f20de2ce36171af2d9a7be1865e2412e03596b55f599b",
+        "opaque_pixels": 529
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          3,
+          3,
+          62,
+          62
+        ],
+        "sha256": "d53da3ebb1a5767b0e6e161582cced8a6a2ead32854568c20be6d91be4eb124d",
+        "opaque_pixels": 571
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          8,
+          8,
+          57,
+          57
+        ],
+        "sha256": "1e2380bcd197a2611defcfc2b1c6b9016b4295136c21c9c3014d847f66ca047d",
+        "opaque_pixels": 509
+      }
+    ],
+    "promise": [
+      {
+        "frame": 0,
+        "bbox": [
+          6,
+          11,
+          56,
+          52
+        ],
+        "sha256": "3c85570c5ae504ff6cfd9feca3e37d9402231ac8674b8e07e0e37363d1ddeb63",
+        "opaque_pixels": 661
+      },
+      {
+        "frame": 1,
+        "bbox": [
+          8,
+          8,
+          56,
+          52
+        ],
+        "sha256": "c49f21cb37aa396e89b246e4e5d04bdfb4308b5a2b44fa98dc8eb8e12dd3b7b4",
+        "opaque_pixels": 824
+      },
+      {
+        "frame": 2,
+        "bbox": [
+          10,
+          10,
+          54,
+          52
+        ],
+        "sha256": "3806480c7b2c9144821b67a813bfc16351679c4a228496f658de7c96ee41fe34",
+        "opaque_pixels": 715
+      },
+      {
+        "frame": 3,
+        "bbox": [
+          12,
+          13,
+          53,
+          52
+        ],
+        "sha256": "f4a094b35ac3e8e30cd9e669a492be1b9b5d482b3a5c5326dc871db5b9f57cc4",
+        "opaque_pixels": 545
+      }
+    ]
+  }
+}

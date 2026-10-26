@@ -1,15 +1,17 @@
 import type { PublicView } from "@bombtop/shared";
 import type { SoundName } from "../audio/sound";
 import { specialShowcase } from "../game/showcase";
-import { MASCOT_COLOR, PLAYER_COLORS } from "./art";
 import { characterGuide } from "./character-guide";
 import { connectingText } from "./connecting";
+import { controlHint } from "./control-hint";
 import { itemGuide } from "./item-guide";
 import { ItemPreview } from "./item-preview";
 import { freshReload, liteOn, toggleDebug, toggleLite, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
 import { characterArt, titleBomberArt } from "./sheet-art";
-import { shrinkToFit } from "./shrink-to-fit";
+import { observeCast } from "./cast-layout";
+import { menuOptions } from "./menu-options";
+import { gameLogo } from "./game-logo";
 
 /** `watch`: this screen only shows the room's match (TV mode), with no seat. */
 export type OnlineChoice = { kind: "public" } | { kind: "create" } | { kind: "join"; code: string } | { kind: "watch"; code: string };
@@ -27,6 +29,7 @@ export interface MenuHandlers {
   /** A sound to play from the character guide: a voice line, or the scene shown. */
   hear(sound: SoundName): void;
   hearScene(view: PublicView): void;
+  stopPreviewAudio(): void;
   login(): void;
   logout(): void;
 }
@@ -46,6 +49,8 @@ export class Menu {
   private readonly buttons: HTMLButtonElement[];
   private readonly account = el("div", { class: "account" });
   private readonly joinByCode: () => void;
+  private readonly fitCast: () => void;
+  private readonly closeOptions: () => void;
   /** Shows a guide instead of the menu card, or the card again (null). */
   readonly showGuide: (guide: Guide | null) => void;
 
@@ -111,9 +116,22 @@ export class Menu {
     const freshBtn = tool("Atualizar", "jogo", () => void freshReload());
     freshBtn.classList.add("fresh"); // an action, not a switch: blue
 
+    const options = menuOptions([
+      button("Assistir demo", () => handlers.demo(), "ghost demo-btn"),
+      button("📶 Jogar offline (Wi-Fi)", () => {
+        storage.set(NAME_KEY, this.name.value.trim());
+        handlers.offline(this.name.value);
+      }, "ghost offline-btn"),
+      button("🎮 Vários controles (mesma tela)", () => {
+        storage.set(NAME_KEY, this.name.value.trim());
+        handlers.couch(this.name.value);
+      }, "ghost couch-btn"),
+      el("div", { class: "tools" }, [debugBtn, liteBtn, freshBtn]),
+    ]);
+    this.closeOptions = options.close;
+
     this.handlers = handlers;
-    const logo = el("h1", { class: "logo", text: "BOMB" });
-    logo.append(el("span", { text: "TOP" }));
+    const logo = gameLogo();
     const card = el("div", { class: "card" }, [
       el("h2", { class: "card-title", text: "Bora jogar?" }),
       this.account,
@@ -128,20 +146,8 @@ export class Menu {
         button("Ver itens", () => handlers.guide("items"), "ghost"),
         button("Personagens", () => handlers.guide("characters"), "ghost"),
       ]),
-      button("Assistir demo", () => handlers.demo(), "ghost demo-btn"),
-      button("📶 Jogar offline (Wi-Fi)", () => {
-        storage.set(NAME_KEY, this.name.value.trim());
-        handlers.offline(this.name.value);
-      }, "ghost offline-btn"),
-      // Shown on computers, and on touch screens once a controller is plugged in (index.html).
-      button("🎮 Vários controles (mesma tela)", () => {
-        storage.set(NAME_KEY, this.name.value.trim());
-        handlers.couch(this.name.value);
-      }, "ghost couch-btn"),
-      el("p", { class: "hint keys-hint", text: "WASD ou setas • Espaço: bomba • Shift: ação" }),
-      // Tools: debug readout, lite mode, reload past a stale cache; the version under them.
+      controlHint(),
       el("div", { class: "menu-foot" }, [
-        el("div", { class: "tools" }, [debugBtn, liteBtn, freshBtn]),
         el("span", { class: "version", text: versionLabel(__APP_VERSION__) }),
       ]),
     ]);
@@ -151,25 +157,34 @@ export class Menu {
       show: (kind, stage) => void preview.play(kind, stage).catch((e) => console.error("item preview", e)),
     });
     // The characters' scenes are heard (their specials' sounds); the items' play silent.
-    const charPreview = new ItemPreview((view) => handlers.hearScene(view));
+    const charPreview = new ItemPreview((view) => handlers.hearScene(view), { characterColors: true });
     const characters = characterGuide({
       close: () => handlers.guide(null),
-      show: (c, stage) => void charPreview.play(specialShowcase(c), stage).catch((e) => console.error("character preview", e)),
+      show: (c, stage, color) => {
+        handlers.stopPreviewAudio();
+        charPreview.setCharacterColor(color);
+        void charPreview.play(specialShowcase(c), stage).catch((e) => console.error("character preview", e));
+      },
+      colorChanged: (color) => charPreview.setCharacterColor(color),
       hear: (sound) => handlers.hear(sound),
     });
     const guides = { items, characters };
     this.showGuide = (on: Guide | null) => {
+      options.close();
+      options.root.hidden = !!on;
       card.hidden = !!on;
       for (const [name, g] of Object.entries(guides)) g.root.hidden = name !== on;
       this.root.classList.toggle("guiding", !!on);
       if (on) guides[on].open();
       if (on !== "items") preview.pause();
-      if (on !== "characters") charPreview.pause();
+      if (on !== "characters") {
+        charPreview.pause();
+        handlers.stopPreviewAudio();
+      }
     };
     items.root.hidden = characters.root.hidden = true;
     const lineup = cast();
     const hero = el("div", { class: "hero" }, [
-      lineup,
       logo,
       el("p", { class: "tagline", text: "Batalha de bombas online com até 5 amigos" }),
       el(
@@ -178,19 +193,17 @@ export class Menu {
         ["Grátis", "Sem download", "PC, tablet e celular", "Bots para treinar"].map((t) => el("li", { text: t })),
       ),
     ]);
-    // The lineup is wider than the hero beside the card on most computer screens: shrink it to fit.
-    new ResizeObserver(() => {
-      lineup.style.zoom = "";
-      lineup.style.zoom = String(shrinkToFit(lineup.offsetWidth, hero.clientWidth));
-    }).observe(hero);
     this.root = el("div", { class: "screen menu" }, [
       menuBackdrop(),
+      options.root,
+      lineup,
       hero,
       card,
       items.root,
       characters.root,
     ]);
     parent.appendChild(this.root);
+    this.fitCast = observeCast(lineup);
   }
 
   /**
@@ -229,11 +242,13 @@ export class Menu {
 
   show(message = ""): void {
     this.root.hidden = false;
+    this.fitCast();
     this.setBusy(false);
     this.showError(message);
   }
 
   hide(): void {
+    this.closeOptions();
     this.root.hidden = true;
     this.setBusy(false);
   }
@@ -258,32 +273,35 @@ export class Menu {
 }
 
 /**
- * The lineup on the title screen: the mascot in front, players in their arena colors at its sides, Pikachu at its feet
+ * The lineup on the title screen: all characters in their original colors, with the mascot in front, Pikachu at its feet
  * and Static on his flying disc at its other side; pelé, harry, penelope (in her own pink), the green lantern and the flash at the far left, bugs munching his carrot,
  * donatello (in his own purple), the pink panther, optimus and lula at the far right.
  */
 function cast(): HTMLElement {
-  const [white, , red, blue, green] = PLAYER_COLORS;
   const member = (art: HTMLElement, cls: string) => el("span", { class: `cast-member ${cls}` }, [art]);
   return el("div", { class: "cast" }, [
-    member(characterArt("pele", blue, "walk"), "edge left"),
-    member(characterArt("harry", red, "walk"), "edge left"),
+    el("div", { class: "cast-wing left" }, [
+    member(characterArt("harry", null, "walk"), "edge left"),
+    member(characterArt("pele", null, "walk"), "edge left"),
     member(characterArt("penelope", null, "walk"), "edge left"),
-    member(characterArt("lantern", green, "walk"), "edge left"),
-    member(characterArt("flash", red, "walk"), "edge left"),
-    member(characterArt("naruto", white, "walk"), "far left"),
-    member(characterArt("goku", green, "walk"), "near left"),
+    member(characterArt("lantern", null, "walk"), "edge left"),
+    member(characterArt("flash", null, "walk"), "edge left"),
+    member(characterArt("naruto", null, "walk"), "far left"),
+    member(characterArt("goku", null, "walk"), "near left"),
+    member(characterArt("static", null, "walk"), "front left"),
+    ]),
     member(titleBomberArt(), "star"),
-    member(characterArt("pikachu", blue, "walk"), "front"),
-    member(characterArt("static", blue, "walk"), "front left"),
-    member(characterArt("captain", white, "walk"), "near right"),
-    member(characterArt("thor", blue, "walk"), "far right"),
-    member(characterArt("spider", red, "walk"), "edge right"),
-    member(characterArt("bugs", blue, "walk"), "edge right"),
+    el("div", { class: "cast-wing right" }, [
+    member(characterArt("pikachu", null, "walk"), "front"),
+    member(characterArt("captain", null, "walk"), "near right"),
+    member(characterArt("thor", null, "walk"), "far right"),
+    member(characterArt("spider", null, "walk"), "edge right"),
+    member(characterArt("bugs", null, "walk"), "edge right"),
     member(characterArt("donatello", null, "walk"), "edge right"),
-    member(characterArt("panther", blue, "walk"), "edge right"),
-    member(characterArt("optimus", blue, "walk"), "edge right"),
-    member(characterArt("lula", red, "walk"), "edge right"),
+    member(characterArt("panther", null, "walk"), "edge right"),
+    member(characterArt("lula", null, "walk"), "edge right"),
+    member(characterArt("optimus", null, "walk"), "edge right"),
+    ]),
   ]);
 }
 

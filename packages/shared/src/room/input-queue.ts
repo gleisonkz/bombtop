@@ -29,6 +29,8 @@ export class InputQueue {
   private alt: Direction = null;
   private bomb = false;
   private hold = false;
+  private brace = false;
+  private stopKick = false;
   private action = false;
   private special = false;
   private seq = 0;
@@ -69,6 +71,8 @@ export class InputQueue {
       this.dir = input.dir;
       this.alt = input.alt ?? null;
       this.hold = !!input.hold;
+      this.brace = !!input.brace;
+      this.stopKick = !!input.stopKick;
       this.bomb ||= input.bomb;
       this.action ||= !!input.action;
       this.special ||= !!input.special;
@@ -78,6 +82,8 @@ export class InputQueue {
     const out: PlayerInput = { dir: this.dir, alt: this.alt, bomb: this.bomb, action: this.action };
     if (this.special) out.special = true;
     if (this.hold) out.hold = true;
+    if (this.brace) out.brace = true;
+    if (this.stopKick) out.stopKick = true;
     this.bomb = this.action = this.special = false;
     this.ticks++;
     return out;
@@ -96,6 +102,8 @@ export class InputQueue {
     const input = first.input;
     if (input.bomb || input.action || input.special || next.input.bomb || next.input.action || next.input.special) return;
     if (!!input.hold !== this.hold || !!next.input.hold !== this.hold) return;
+    if (!!input.brace !== this.brace || !!next.input.brace !== this.brace) return;
+    if (!!input.stopKick !== this.stopKick || !!next.input.stopKick !== this.stopKick) return;
     this.pending.shift();
   }
 

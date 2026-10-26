@@ -98,6 +98,10 @@ export class RoomCore {
       case C2S.start:
         if (this.session.start(id)) this.syncPhase();
         break;
+      case C2S.rules: {
+        if (this.session.setRules(id, message)) this.broadcastLobby();
+        break;
+      }
     }
   }
 

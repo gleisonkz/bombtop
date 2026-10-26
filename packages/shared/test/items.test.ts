@@ -6,6 +6,7 @@ import {
   FUSE_TICKS,
   getTile,
   hasFlame,
+  ITEM_WEIGHTS,
   ItemKind,
   MAX_BOMB_CAPACITY,
   MAX_FIRE_RANGE,
@@ -59,7 +60,7 @@ describe("item generation", () => {
     for (let seed = 1; seed <= 200; seed++) {
       for (const i of createMatch({ seed, playerIds: ids, stage: "conveyor" }).items) kinds.add(i.kind);
     }
-    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => k !== ItemKind.Picanha)));
+    expect(kinds).toEqual(new Set(Object.values(ItemKind).filter((k) => ITEM_WEIGHTS[k] > 0)));
   });
 
   it("hides eight bombs and five fire upgrades for a full classic room", () => {

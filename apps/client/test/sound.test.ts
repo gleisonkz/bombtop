@@ -23,6 +23,16 @@ function memoryStore() {
 }
 
 describe("Sound", () => {
+  it("stops all character preview audio without stopping other sounds", () => {
+    const { backend, stopped } = fakeBackend();
+    const s = new Sound(backend, memoryStore());
+    s.play("click");
+    s.play("goku-pick", { group: "preview" });
+    s.cues([{ name: "kamehameha", x: 3 }], 13, "preview");
+    s.stopGroup("preview");
+    s.stopGroup("preview");
+    expect(stopped).toEqual(["goku-pick", "kamehameha"]);
+  });
   it("plays cues panned by position, louder for bigger explosions", () => {
     const { backend, played } = fakeBackend();
     const s = new Sound(backend, memoryStore(), () => 0.5);

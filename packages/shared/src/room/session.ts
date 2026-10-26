@@ -14,6 +14,10 @@ import {
   DEFAULT_CHARACTER,
   firstPickers,
   type BotLevel,
+  type BattleTimeMinutes,
+  type BattleMode,
+  type ManiacConfig,
+  normalizeManiac,
   BOT_PERSONAS,
   type CharacterId,
   type LobbyInfo,
@@ -26,6 +30,7 @@ import {
   type StageId,
 } from "../index";
 import { InputQueue } from "./input-queue";
+import { DEFAULT_STAGE_ROTATION, validateStageRotation } from "../stage-rotation";
 
 
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
@@ -64,6 +69,9 @@ export interface SessionOptions {
   /** Random number in [0, 1) for bot names (injectable for tests). */
   random?: () => number;
   blockDensity?: number;
+  winsToWin?: number;
+  timeMinutes?: BattleTimeMinutes;
+  suddenDeath?: boolean;
 }
 
 /**
@@ -75,6 +83,12 @@ export class BattleSession {
   members: LobbyMember[] = [];
   match: MatchState | null = null;
   stage: StageId = STAGES[0]!;
+  private winsToWin: number;
+  private timeMinutes: BattleTimeMinutes;
+  private suddenDeath: boolean;
+  private battleMode: BattleMode = "single";
+  private maniacSettings: ManiacConfig = { items: {}, hitPoints: {} };
+  private stageRotation = DEFAULT_STAGE_ROTATION.map((entry) => ({ ...entry }));
   private round = 0;
   private resultsLeft = 0;
   /** The last round's winner won the match: after its results, back to the lobby. */
@@ -86,7 +100,11 @@ export class BattleSession {
   private pickedAt = new Map<string, number>();
   private picks = 0;
 
-  constructor(private readonly opts: SessionOptions = {}) {}
+  constructor(private readonly opts: SessionOptions = {}) {
+    this.winsToWin = opts.winsToWin ?? WINS_TO_WIN;
+    this.timeMinutes = opts.timeMinutes ?? null;
+    this.suddenDeath = opts.suddenDeath ?? true;
+  }
 
   /** The first person in the room (bots never host). */
   get hostId(): string | undefined {
@@ -184,24 +202,84 @@ export class BattleSession {
 
   lobbyInfo(code: string): LobbyInfo {
     const own = this.ownColors();
+    const maniac = this.battleMode === "maniac";
     return {
       phase: this.phase,
       hostId: this.hostId ?? null,
       members: this.members.map((m) => ({ ...m, ...(own.has(m.id) && { ownColors: true as const }) })),
       // In the lobby, show what is coming next; otherwise what is being played.
-      stage: this.phase === "lobby" ? this.nextStage : this.stage,
+      stage: maniac ? "classic" : this.phase === "lobby" ? this.nextStage : this.stage,
+      winsToWin: maniac ? 3 : this.winsToWin,
+      timeMinutes: maniac ? 3 : this.timeMinutes,
+      suddenDeath: maniac ? false : this.suddenDeath,
+      stageRotation: maniac ? [{ stage: "classic" }] : this.stageRotation.map((entry) => ({ ...entry })),
+      battleMode: this.battleMode,
+      maniac: this.currentManiac(),
       code,
     };
   }
 
   private get nextStage(): StageId {
-    return STAGES[this.round % STAGES.length]!;
+    return this.battleMode === "maniac" ? "classic" : this.stageRotation[this.round % this.stageRotation.length]!.stage;
+  }
+
+  private currentManiac(): ManiacConfig {
+    const ids = this.members.map((member) => member.id);
+    const hitPoints = Object.fromEntries(ids.map((id) => [id, this.maniacSettings.hitPoints[id] ?? 1]));
+    return normalizeManiac({ items: this.maniacSettings.items, hitPoints }, ids)!;
+  }
+
+  setWinsToWin(requesterId: string, winsToWin: unknown): boolean {
+    return this.setRules(requesterId, { winsToWin });
+  }
+
+  setTimeMinutes(requesterId: string, timeMinutes: unknown): boolean {
+    return this.setRules(requesterId, { timeMinutes });
+  }
+
+  setSuddenDeath(requesterId: string, suddenDeath: unknown): boolean {
+    return this.setRules(requesterId, { suddenDeath });
+  }
+
+  setRules(requesterId: string, raw: unknown): boolean {
+    if (this.phase !== "lobby" || requesterId !== this.hostId) return false;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return false;
+    const rules = raw as Record<string, unknown>;
+    const hasWins = Object.hasOwn(rules, "winsToWin");
+    const hasRotation = Object.hasOwn(rules, "stageRotation");
+    const hasTime = Object.hasOwn(rules, "timeMinutes");
+    const hasSuddenDeath = Object.hasOwn(rules, "suddenDeath");
+    const hasMode = Object.hasOwn(rules, "battleMode");
+    const hasManiac = Object.hasOwn(rules, "maniac");
+    if (!hasWins && !hasRotation && !hasTime && !hasSuddenDeath && !hasMode && !hasManiac) return false;
+    const battleMode = hasMode ? rules.battleMode : this.battleMode;
+    if (battleMode !== "single" && battleMode !== "maniac") return false;
+    if (battleMode === "maniac" && (hasWins || hasRotation || hasTime || hasSuddenDeath)) return false;
+    const wins = hasWins ? rules.winsToWin : this.winsToWin;
+    if (typeof wins !== "number" || !Number.isSafeInteger(wins) || wins < 1 || wins > 5) return false;
+    const rotation = hasRotation ? validateStageRotation(rules.stageRotation) : this.stageRotation;
+    if (!rotation) return false;
+    const timeMinutes = hasTime ? rules.timeMinutes : this.timeMinutes;
+    if (timeMinutes !== null && timeMinutes !== 1 && timeMinutes !== 2 && timeMinutes !== 3 && timeMinutes !== 5) return false;
+    const suddenDeath = hasSuddenDeath ? rules.suddenDeath : this.suddenDeath;
+    if (typeof suddenDeath !== "boolean") return false;
+    const maniac = hasManiac ? normalizeManiac(rules.maniac, this.members.map((member) => member.id)) : this.currentManiac();
+    if (!maniac) return false;
+    this.winsToWin = wins;
+    this.stageRotation = rotation;
+    this.timeMinutes = timeMinutes as BattleTimeMinutes;
+    this.suddenDeath = suddenDeath;
+    this.battleMode = battleMode;
+    this.maniacSettings = maniac;
+    this.round = 0;
+    return true;
   }
 
   /** The host starts a match from the lobby: rounds until someone has won WINS_TO_WIN of them. */
   start(requesterId: string): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
     for (const m of this.members) m.wins = 0;
+    this.round = 0;
     this.startRound();
     return true;
   }
@@ -211,12 +289,17 @@ export class BattleSession {
     this.stage = this.nextStage;
     this.round++;
     const seed = this.opts.seed?.() ?? Math.floor(Math.random() * 2 ** 32);
+    const maniac = this.battleMode === "maniac" ? this.currentManiac() : null;
     this.match = createMatch({
       seed,
       playerIds: this.members.map((m) => m.id),
       characters: Object.fromEntries(this.members.map((m) => [m.id, m.character])),
       ownColors: this.ownColors(),
       stage: this.stage,
+      timeLimitMinutes: maniac ? 3 : this.timeMinutes,
+      suddenDeath: maniac ? false : this.suddenDeath,
+      revenge: !!maniac,
+      ...(maniac && { maniacItems: maniac.items, startingHitPoints: maniac.hitPoints }),
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
     });
     this.inputs.clear();
@@ -264,7 +347,7 @@ export class BattleSession {
     if (result.over) {
       const winner = this.members.find((m) => m.id === result.winnerId);
       if (winner) winner.wins++;
-      this.setOver = !!winner && winner.wins >= WINS_TO_WIN;
+      this.setOver = !!winner && winner.wins >= (this.battleMode === "maniac" ? 3 : this.winsToWin);
       out.result = { ...result, setOver: this.setOver };
       this.phase = "results";
       this.resultsLeft = RESULTS_TICKS;

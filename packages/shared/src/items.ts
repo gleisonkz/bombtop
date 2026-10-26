@@ -4,6 +4,7 @@ import {
   MAX_FIRE_RANGE,
   MAX_SPEED,
   SPECIAL_STUN_TICKS,
+  FIRE_SUIT_TICKS,
   SPEED_STEP,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
@@ -17,10 +18,21 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Fire]: (p) => (p.fireRange = Math.min(p.fireRange + 1, MAX_FIRE_RANGE)),
   [ItemKind.Bomb]: (p) => (p.bombCapacity = Math.min(p.bombCapacity + 1, MAX_BOMB_CAPACITY)),
   [ItemKind.Speed]: (p) => (p.speed = Math.min(p.speed + SPEED_STEP, MAX_SPEED)),
-  [ItemKind.Kick]: (p) => (p.canKick = true),
+  [ItemKind.Kick]: (p) => {
+    p.canKick = true;
+    p.canBombPass = false;
+  },
+  [ItemKind.BombPass]: (p) => {
+    p.canBombPass = true;
+    p.canKick = false;
+  },
+  [ItemKind.BlockPass]: (p) => (p.canBlockPass = true),
+  [ItemKind.FireSuit]: (p) => (p.fireSuitTicks = FIRE_SUIT_TICKS),
+  [ItemKind.Heart]: (p) => (p.hasHeart = true),
   [ItemKind.Remote]: (p) => (p.bombType = "remote"),
   [ItemKind.Pierce]: (p) => (p.bombType = "pierce"),
   [ItemKind.Punch]: (p) => (p.canPunch = true),
+  [ItemKind.Push]: (p) => (p.canPush = true),
   [ItemKind.Glove]: (p) => (p.canGlove = true),
   [ItemKind.Skull]: (p, s) => applyRandomCurse(s, p),
   [ItemKind.FullFire]: (p) => (p.fireRange = MAX_FIRE_RANGE),
@@ -50,7 +62,11 @@ function carried(p: Player): ItemKind[] {
     ...n(p.bombCapacity - START_BOMB_CAPACITY, ItemKind.Bomb),
     ...n(Math.floor((p.speed - BASE_SPEED) / SPEED_STEP), ItemKind.Speed),
     ...(p.canKick ? [ItemKind.Kick] : []),
+    ...(p.canBombPass ? [ItemKind.BombPass] : []),
+    ...(p.canBlockPass ? [ItemKind.BlockPass] : []),
+    ...(p.hasHeart ? [ItemKind.Heart] : []),
     ...(p.canPunch ? [ItemKind.Punch] : []),
+    ...(p.canPush ? [ItemKind.Push] : []),
     ...(p.canGlove ? [ItemKind.Glove] : []),
     ...(p.bombType === "remote" ? [ItemKind.Remote] : p.bombType === "pierce" ? [ItemKind.Pierce] : []),
   ];
@@ -66,6 +82,10 @@ export function dropItems(s: MatchState, p: Player): void {
   p.bombCapacity = START_BOMB_CAPACITY;
   p.speed = BASE_SPEED;
   p.canKick = p.canPunch = p.canGlove = false;
+  p.canBombPass = p.canBlockPass = false;
+  p.hasHeart = false;
+  p.fireSuitTicks = 0;
+  if (p.canPush) p.canPush = false;
   p.bombType = "normal";
   const taken = (x: number, y: number) =>
     s.items.some((i) => i.x === x && i.y === y) ||

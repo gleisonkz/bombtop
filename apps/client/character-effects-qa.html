@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>Character effects QA</title>
+<style>
+  body { margin: 16px; background: #151724; color: #e7edf5; font: 16px system-ui; }
+  #scenes { display: grid; grid-template-columns: repeat(2, 528px); gap: 12px; width: max-content; }
+  figure { margin: 0; } figcaption { padding: 8px 0; } canvas { display: block; width: 528px; height: 240px; }
+</style>
+<main id="scenes"></main>
+<script type="module">
+  import { Application } from "pixi.js";
+  import { publicView } from "@bombtop/shared";
+  import { Renderer } from "/src/render/renderer.ts";
+  import { SHEETS } from "/src/render/sprites.ts";
+  import { specialShowcase } from "/src/game/showcase.ts";
+
+  const selected = new URLSearchParams(location.search).get("characters")?.split(",") ?? ["pikachu", "static", "thor", "goku"];
+  window.effectQA = [];
+  for (const character of selected) {
+    const scene = specialShowcase(character);
+    let found = false;
+    for (let tick = 0; tick < scene.length; tick++) {
+      scene.advance();
+      const player = scene.state.players.find(p => p.id === "you");
+      const active = character === "captain" ? player.shield > 0 : character === "lantern" ? player.bubble > 0 : character === "naruto" ? player.rasengan > 0 : scene.state.blasts.some(b => b.ownerId === "you");
+      if (active) { found = true; break; }
+    }
+    const ages = { static: 8, bugs: 6, harry: 12 };
+    if (found) for (let tick = 0; tick < (ages[character] ?? 24); tick++) scene.advance();
+    const app = new Application();
+    await app.init({ width: 528, height: 240, antialias: false, background: 0x285b31 });
+    const renderer = new Renderer();
+    await Promise.all([
+      renderer.useTileArt(), renderer.useItemArt(),
+      ...(character === "captain" ? [renderer.useSpiralArt()] : []),
+      ...(character === "harry" ? [renderer.usePatronusArt()] : []),
+      ...(character === "optimus" ? [renderer.useTruckArt()] : []),
+      ...(character === "pele" ? [renderer.useBallArt()] : []),
+      ...[...new Set(scene.state.players.map(p => p.character))].map(c => renderer.useSheet(c, c === "bomb" ? SHEETS.bomber : SHEETS[c])),
+    ]);
+    renderer.setCharacters(new Map(scene.state.players.map(p => [p.id, p.character])));
+    renderer.setColors(scene.colors);
+    renderer.showClock(false);
+    app.stage.addChild(renderer.root);
+    app.stage.scale.set(3);
+    app.stage.position.set(-48, -144);
+    renderer.draw(publicView(scene.state), new Map(), 1);
+    app.render();
+    const figure = document.createElement("figure");
+    const title = document.createElement("figcaption");
+    title.textContent = character;
+    figure.append(title, app.canvas);
+    document.querySelector("#scenes").append(figure);
+    window.effectQA.push({ character, scene, renderer, app });
+  }
+  document.documentElement.dataset.ready = "true";
+</script>
+</html>

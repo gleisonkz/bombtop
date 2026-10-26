@@ -192,7 +192,7 @@ export class Sound {
   }
 
   /** A `channel` holds one sound at a time: playing on it cuts whatever it was still playing. */
-  play(name: SoundName, o: { pan?: number; gain?: number; channel?: string } = {}): void {
+  play(name: SoundName, o: { pan?: number; gain?: number; channel?: string; group?: string | undefined } = {}): void {
     if (o.channel) {
       this.channels.get(o.channel)?.stop();
       this.channels.delete(o.channel);
@@ -202,14 +202,26 @@ export class Sound {
     const rate = 1 + (this.random() * 2 - 1) * spec.vary;
     const playing = this.backend.play(name, { gain: MASTER_GAIN * this.volume * spec.gain * (o.gain ?? 1), pan: o.pan ?? 0, rate });
     if (o.channel && playing) this.channels.set(o.channel, playing);
+    if (o.group && playing) {
+      let group = this.groups.get(o.group);
+      if (!group) this.groups.set(o.group, (group = new Map()));
+      group.get(name)?.stop();
+      group.set(name, playing);
+    }
   }
 
   private readonly channels = new Map<string, Playing>();
+  private readonly groups = new Map<string, Map<SoundName, Playing>>();
+
+  stopGroup(name: string): void {
+    for (const playing of this.groups.get(name)?.values() ?? []) playing.stop();
+    this.groups.delete(name);
+  }
 
   /** Plays what happened in the arena (see soundCues). */
-  cues(cues: Cue[], arenaWidth: number): void {
+  cues(cues: Cue[], arenaWidth: number, group?: string): void {
     for (const c of cues) {
-      this.play(c.name, { pan: panFor(c.x, arenaWidth), gain: c.size ? explosionGain(c.size) : 1 });
+      this.play(c.name, { pan: panFor(c.x, arenaWidth), gain: c.size ? explosionGain(c.size) : 1, group });
     }
   }
 

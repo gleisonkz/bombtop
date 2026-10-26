@@ -23,7 +23,7 @@ export class ResultScreen {
     parent.appendChild(this.root);
   }
 
-  show(placings: Placing[], members: LobbyMember[], me: string, winnerId: string | null, setOver: boolean): void {
+  show(placings: Placing[], members: LobbyMember[], me: string, winnerId: string | null, setOver: boolean, winsToWin = WINS_TO_WIN): void {
     // The seat's color, or null for the original colors of whoever picked their character first.
     const colors = new Map(lobbySlots(members, members.length).map(({ member, color }) => [member!.id, member!.ownColors ? null : color]));
     const byId = new Map(members.map((m) => [m.id, m]));
@@ -39,7 +39,7 @@ export class ResultScreen {
           el("span", { class: "place", text: MEDALS[place - 1] ?? `${place}º` }),
           characterArt(m.character, colors.get(id) ?? null, won ? "win" : "dizzy"),
           el("span", { class: "seat-name", text: id === me ? `${m.name} (você)` : m.name }),
-          el("span", { class: "seat-sub", text: `${m.wins}/${WINS_TO_WIN} 🏆` }),
+          el("span", { class: "seat-sub", text: `${m.wins}/${winsToWin} 🏆` }),
         ]),
       ];
     });

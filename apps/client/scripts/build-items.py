@@ -2,8 +2,8 @@
 takes only the picanha icon from here). Power-up sheet in HD: one 192x192 column per item (order = ITEMS.order in render/sprites.ts),
 rows = plain, then 3 frames of a glint sweeping across the plate. Designed on a 48-unit grid
 (4 px per unit). Each item is a beveled plate in its own color with a glossy icon on top; the
-bomb items reuse the bombs from bombs.png (run build-bombs.py first).
-Usage: python build-items.py public/sprites/bombs.png public/sprites/items.png preview.png  (needs Pillow, numpy, scipy)"""
+bomb items reuse the active atlas from bombs/armed.png.
+Usage: python build-items.py public/sprites/bombs/armed.png public/sprites/items.png preview.png  (needs Pillow, numpy, scipy)"""
 import math, sys
 import numpy as np
 from PIL import Image
@@ -188,7 +188,7 @@ def icon_picanha():
     return c.done()
 
 def bomb_icon(sheet, col):
-    """A bomb from bombs.png (128px cells), trimmed and scaled to fill the plate."""
+    """A bomb from bombs/armed.png (128px cells), trimmed and scaled to fill the plate."""
     cell = sheet.crop((col * 128, 0, col * 128 + 128, 128))
     cell = cell.crop(cell.getbbox())
     k = (36 * PX) / max(cell.size)

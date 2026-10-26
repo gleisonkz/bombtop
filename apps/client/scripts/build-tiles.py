@@ -1,11 +1,12 @@
 """Arena tiles (TILES in render/sprites.ts): grass A (plain, flowers, pebbles), grass B (darker),
-block, pillar, border, the block burning away (6 frames); 128x128, computed as smooth shaders on a 32-unit design grid at 2x and
-scaled down. Grass noise wraps every
+block, pillar, border, the block burning away (6 generated-art frames); 128x128. Static tiles are computed as smooth shaders on a 32-unit design grid at 2x and
+scaled down; burn art is packed from the approved source. Grass noise wraps every
 tile so neighbours join seamlessly.
 Usage: python build-tiles.py public/sprites/tiles.png preview.png  (needs Pillow, numpy)"""
 import math, random, sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
+from pack_tile_burn import burning
 
 OUT = 128
 SS = 2
@@ -129,106 +130,6 @@ def block():
     for pts in (((22, 10), (21.4, 12), (22.6, 13.5), (21.8, 15.5)), ((6, 22), (6.8, 24), (6.1, 25.6))):  # cracks
         d.line([(x * K, y * K) for x, y in pts], fill=tuple(int(v) for v in mortar) + (255,), width=int(K * 0.5), joint="curve")
     return finish(img)
-
-# --- burning block: six frames from the fire reaching it to ash -------------------------------
-# struck (flash, glowing seams) > ablaze (charring, fire licking up) > breaking (chunks split, seams
-# of fire) > collapsing (chunks sink into a glowing heap) > embers (heap and smoke) > ash (fading).
-
-BURN_FRAMES = 6
-HEAT = [  # same ramp as the flames (build-flames.py): dark rim to white-hot core
-    (0.00, (110, 18, 8)), (0.16, (214, 52, 28)), (0.40, (255, 122, 26)),
-    (0.64, (255, 210, 63)), (0.84, (255, 248, 210)), (1.00, (255, 255, 240)),
-]
-CHAR, EMBER, ASH = C(46, 28, 24), C(255, 120, 30), C(70, 64, 62)
-
-def heat_rgb(h):
-    hh = np.clip(h, 0, 1) ** 1.6
-    col = np.zeros(h.shape + (3,))
-    for (t0, c0), (t1, c1) in zip(HEAT, HEAT[1:]):
-        f = np.clip((hh - t0) / (t1 - t0), 0, 1)[..., None]
-        seg = (hh >= t0) & (hh <= t1)
-        col = np.where(seg[..., None], C(*c0) * (1 - f) + C(*c1) * f, col)
-    return col
-
-def tongues(sources, seed):
-    """Heat of flame tongues: (base x, base y, half width, height) in design units, each tapering to a
-    wavering tip, licked by noise."""
-    h = np.full((N, N), -1.0)
-    n = fbm(seed) - 0.5
-    for i, (x, y, w, tall) in enumerate(sources):
-        up = np.clip((y - UY) / tall, -0.4, 1.2)                       # 0 at the base, 1 at the tip
-        sway = np.sin(up * 4.2 + i * 1.7 + seed) * w * 0.35 * up
-        half = w * np.where(up < 0, np.sqrt(np.clip(1 - (up / 0.4) ** 2, 0, 1)), np.clip(1 - up, 0, 1) ** 0.8)
-        across = 1 - np.abs(UX - x - sway + n * 3 * up) / np.maximum(half, 1e-3)
-        h = np.maximum(h, np.where(half > 0.05, across * (1 - np.clip(up, 0, 1) * 0.55) + n * 0.25, -1))
-    return h
-
-def over(col, a, top, ta):
-    """(top, ta) over (col, a); alphas 0..1."""
-    out = ta + a * (1 - ta)
-    safe = np.where(out > 0, out, 1)[..., None]
-    return (top * ta[..., None] + col * (a * (1 - ta))[..., None]) / safe, out
-
-def burning():
-    src = np.asarray(block().resize((N, N), Image.LANCZOS)).astype(float)
-    bcol = src[..., :3]
-    r = random.Random(7)
-    pts = [(r.uniform(4, 28), r.uniform(4, 28)) for _ in range(8)]
-    owner = np.argmin(np.stack([(UX - x) ** 2 + (UY - y) ** 2 for x, y in pts]), axis=0)
-    # how far each pixel is from its chunk's edge (design units), for seams of fire between chunks
-    dist = np.sort(np.stack([np.sqrt((UX - x) ** 2 + (UY - y) ** 2) for x, y in pts]), axis=0)
-    seam = (dist[1] - dist[0]) / 2
-    veins = smooth(0.12, 0.0, np.abs(fbm(33) - 0.5))                     # glowing cracks in the char
-    # per frame: char amount, seam glow, gap between chunks, chunk spread, collapse (0 standing, 1 flat on
-    # the floor), shrink, fire, smoke
-    LIFE = [
-        (0.10, 0.9, 0.0, 0.0, 0.0, 1.00, [(16, 10, 6, 9), (8, 12, 3.5, 6), (24, 12, 3.5, 6)], 0.0),
-        (0.50, 1.0, 0.0, 0.0, 0.0, 1.00, [(16, 16, 8, 16), (7, 18, 5, 11), (25, 17, 5, 12)], 0.0),
-        (0.75, 1.0, 0.7, 1.2, 0.06, 0.96, [(15, 18, 7, 15), (8, 21, 4.5, 10), (24, 20, 5, 11)], 0.0),
-        (0.88, 0.8, 0.9, 1.6, 0.5, 0.8, [(16, 25, 6, 11), (10, 27, 3.5, 6), (22, 27, 3.5, 7)], 0.25),
-        (0.95, 0.5, 1.0, 2.2, 0.78, 0.55, [(16, 28, 3.5, 6)], 0.45),
-        (1.00, 0.0, 0.0, 0.0, 0.0, 0.0, [], 0.3),
-    ]
-    frames = []
-    for f, (char, glow, gap, spread, collapse, shrink, fire, smoke) in enumerate(LIFE):
-        col = np.zeros((N, N, 3))
-        a = np.zeros((N, N))
-        # a collapsing heap is a rounded mound, not the block's square outline
-        mound = np.ones((N, N), bool)
-        if collapse > 0.3:
-            top, half = 31 - 30 * (1 - collapse) * 1.05, 16 - collapse * 6
-            mound = UY > top + (31 - top) * ((UX - 16) / half) ** 2 + (fbm(50) - 0.5) * 3
-        if shrink > 0:
-            for i, (px, py) in enumerate(pts):
-                cx = 16 + (px - 16) * (1 + spread / 16) * (0.6 + shrink * 0.4)
-                cy = 31 - (31 - py) * (1 - collapse)
-                sx = (UX - cx) / shrink + px
-                sy = (UY - cy) / shrink + py
-                ix = np.clip((sx * K).astype(int), 0, N - 1)
-                iy = np.clip((sy * K).astype(int), 0, N - 1)
-                inside = (sx >= 0) & (sx < 32) & (sy >= 0) & (sy < 32) & (owner[iy, ix] == i) & (seam[iy, ix] > gap * 0.5) & mound
-                c = mix(bcol[iy, ix], CHAR, char)
-                c = mix(c, EMBER, (veins[iy, ix] * char * 0.9))                       # cracks glow through the char
-                c = mix(c, heat_rgb(np.full((N, N), 0.75)), smooth(0.9 + gap, 0.0, seam[iy, ix]) * glow)  # hot seams
-                col = np.where(inside[..., None], c, col)
-                a = np.where(inside, 1.0, a)
-            if f == 0:  # struck: a hot flash over the whole block
-                col = mix(col, C(255, 236, 190), 0.3)
-        if f >= 3:  # a pool of embers glowing on the floor under the heap
-            pool = smooth(1.0, 0.0, np.sqrt(((UX - 16) / [0, 0, 0, 13, 11, 9][f]) ** 2 + ((UY - 29.5) / 2.4) ** 2))
-            col, a = over(col, a, heat_rgb(pool * [0, 0, 0, 0.55, 0.45, 0.25][f] + 0.1), pool * [0, 0, 0, 0.9, 0.8, 0.5][f])
-        if f == 5:  # ash where the block stood
-            ash = smooth(1.0, 0.3, np.sqrt(((UX - 16) / 12) ** 2 + ((UY - 28) / 3.4) ** 2)) * (0.65 + fbm(44) * 0.5)
-            col, a = over(col, a, ASH * (0.7 + fbm(45)[..., None] * 0.4), np.clip(ash, 0, 1) * 0.8)
-        if fire:
-            h = tongues(fire, 70 + f)
-            col, a = over(col, a, heat_rgb(h), np.clip(h / 0.06, 0, 1) * (0.75 if f == 0 else 1.0))
-        if smoke:
-            s = fbm(120 + f, UX, (UY + f * 6) % 32)
-            plume = smooth(7, 1.5, np.abs(UX - 16 - (24 - UY) * 0.18)) * smooth(30, 8, UY) * smooth(4, 12, UY) * smooth(0.35, 0.7, s)
-            col, a = over(col, a, np.broadcast_to(C(84, 78, 76), col.shape), plume * smoke)
-        frames.append(finish(to_img(col, a * 255)))
-    return frames
 
 # --- pillar: unbreakable stone ----------------------------------------------------------------
 

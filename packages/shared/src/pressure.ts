@@ -24,10 +24,11 @@ export function updatePressure(s: MatchState): void {
   if (elapsed < 0 || elapsed % PRESSURE_INTERVAL !== 0) return;
 
   const order = pressureOrder(s.grid.width, s.grid.height);
-  while (s.pressure < order.length && getTile(s, order[s.pressure]!.x, order[s.pressure]!.y) === Tile.Wall) {
+  const limit = Math.min(order.length, s.pressureLimit ?? order.length);
+  while (s.pressure < limit && getTile(s, order[s.pressure]!.x, order[s.pressure]!.y) === Tile.Wall) {
     s.pressure++;
   }
-  const target = order[s.pressure];
+  const target = s.pressure < limit ? order[s.pressure] : undefined;
   if (target) {
     s.pressure++;
     const { x, y } = target;
@@ -51,6 +52,7 @@ export type MatchResult = { over: false } | { over: true; winnerId: string | nul
 export function matchResult(s: MatchState): MatchResult {
   if (s.players.length < 2) return { over: false };
   const alive = s.players.filter((p) => p.alive);
-  if (alive.length > 1) return { over: false };
-  return { over: true, winnerId: alive[0]?.id ?? null };
+  if (alive.length <= 1) return { over: true, winnerId: alive[0]?.id ?? null };
+  if (s.roundEndsAt !== undefined && s.tick >= s.roundEndsAt) return { over: true, winnerId: null };
+  return { over: false };
 }
