@@ -1,4 +1,10 @@
 import { Tile, type StageId } from "@bombtop/shared";
+import { TILES } from "./sprites";
+
+export function sb4TileLayout(number: number): typeof TILES | null {
+  if (!Number.isInteger(number) || number < 1 || number > 12) return null;
+  return { ...TILES, url: `sprites/sb4-battle/tiles-${String(number).padStart(2, "0")}.png` };
+}
 
 const PALETTES: Record<"sb4-01" | "sb4-02", Record<Tile, number>> = {
   "sb4-01": {

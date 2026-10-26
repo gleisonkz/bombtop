@@ -13,6 +13,18 @@ const art: CastArt[] = CHARACTERS.filter((id) => id !== "bomb").map((id) => {
 });
 
 describe("single-row menu cast", () => {
+  it("reserves the same vertical space through every mobile rotation", () => {
+    const layouts = art.map((_, rotation) => castLayout({ art, width: 350, heroWidth: 150, heroHeight: 140, maxBodyHeight: 104, rotation }));
+    expect(new Set(layouts.map((layout) => layout.height)).size).toBe(1);
+    expect(new Set(layouts.map((layout) => layout.footroom)).size).toBe(1);
+    for (const layout of layouts) {
+      for (const member of layout.members) {
+        const source = art.find((item) => item.id === member.id)!;
+        expect(layout.height).toBeGreaterThanOrEqual(source.anchorY * member.scale);
+        expect(layout.footroom).toBeGreaterThanOrEqual((source.frameH - source.anchorY) * member.scale);
+      }
+    }
+  });
   it("keeps the measured Harry bounds in sync with every real animation frame", () => {
     const image = CHARACTER_SHEETS.harry.lobby!.image!;
     const path = fileURLToPath(new URL(`../public/${image.url}`, import.meta.url));

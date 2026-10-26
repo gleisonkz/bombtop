@@ -1,0 +1,289 @@
+{
+  "cellSize": 128,
+  "columns": 12,
+  "rows": 1,
+  "sourceSize": [
+    1448,
+    1086
+  ],
+  "sourceSha256": "eab027b1f2f056efa9c8c54fc05b079089954df869272d5e7861bb864fb57178",
+  "scale": "128/432 shared by all props",
+  "props": [
+    {
+      "name": "clock",
+      "stage": 2,
+      "cell": 0,
+      "sourceRegion": [
+        20,
+        30,
+        355,
+        385
+      ],
+      "occupiedSourceBounds": [
+        50,
+        62,
+        308,
+        322
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "rolling-ball",
+      "stage": 3,
+      "cell": 1,
+      "sourceRegion": [
+        390,
+        30,
+        715,
+        385
+      ],
+      "occupiedSourceBounds": [
+        20,
+        55,
+        286,
+        318
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "forest-pit",
+      "stage": 4,
+      "cell": 2,
+      "sourceRegion": [
+        720,
+        30,
+        1080,
+        390
+      ],
+      "occupiedSourceBounds": [
+        16,
+        32,
+        335,
+        339
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "electric-fence",
+      "stage": 5,
+      "cell": 3,
+      "sourceRegion": [
+        1090,
+        60,
+        1448,
+        390
+      ],
+      "occupiedSourceBounds": [
+        15,
+        57,
+        327,
+        277
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "direction-panel",
+      "stage": 6,
+      "cell": 4,
+      "sourceRegion": [
+        30,
+        390,
+        360,
+        700
+      ],
+      "occupiedSourceBounds": [
+        33,
+        19,
+        304,
+        285
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "foliage",
+      "stage": 7,
+      "cell": 5,
+      "sourceRegion": [
+        380,
+        390,
+        715,
+        700
+      ],
+      "occupiedSourceBounds": [
+        11,
+        4,
+        324,
+        301
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "slots",
+      "stage": 8,
+      "cell": 6,
+      "sourceRegion": [
+        720,
+        390,
+        1085,
+        700
+      ],
+      "occupiedSourceBounds": [
+        13,
+        16,
+        353,
+        285
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "slot-switch",
+      "stage": 8,
+      "cell": 7,
+      "sourceRegion": [
+        1090,
+        390,
+        1448,
+        700
+      ],
+      "occupiedSourceBounds": [
+        33,
+        37,
+        310,
+        287
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "seesaw",
+      "stage": 9,
+      "cell": 8,
+      "sourceRegion": [
+        0,
+        740,
+        390,
+        1050
+      ],
+      "occupiedSourceBounds": [
+        20,
+        78,
+        379,
+        246
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "costume-mask",
+      "stage": 10,
+      "cell": 9,
+      "sourceRegion": [
+        395,
+        700,
+        715,
+        1050
+      ],
+      "occupiedSourceBounds": [
+        19,
+        15,
+        303,
+        305
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "trolley",
+      "stage": 11,
+      "cell": 10,
+      "sourceRegion": [
+        720,
+        705,
+        1085,
+        1050
+      ],
+      "occupiedSourceBounds": [
+        10,
+        41,
+        350,
+        302
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "flag",
+      "stage": 12,
+      "cell": 11,
+      "sourceRegion": [
+        1090,
+        695,
+        1448,
+        1050
+      ],
+      "occupiedSourceBounds": [
+        44,
+        4,
+        314,
+        321
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    }
+  ]
+}

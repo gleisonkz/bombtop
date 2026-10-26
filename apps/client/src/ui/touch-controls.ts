@@ -59,7 +59,11 @@ export class TouchControls {
     stick.addEventListener("pointercancel", end);
 
     const pad = (label: string, button: "bomb" | "action" | "special" | "brace" | "stop", extra?: HTMLElement) => {
-      const b = el("div", { class: `touch-btn ${button}`, text: label });
+      const icon = el("span", { class: "touch-icon" });
+      icon.setAttribute("aria-hidden", "true");
+      const b = el("button", { class: `touch-btn ${button}`, title: label }, [icon]);
+      b.type = "button";
+      b.setAttribute("aria-label", label);
       if (extra) b.appendChild(extra);
       b.addEventListener("pointerdown", (e) => {
         e.preventDefault();
@@ -73,6 +77,18 @@ export class TouchControls {
       const release = () => this.input.release(button);
       b.addEventListener("pointerup", release);
       b.addEventListener("pointercancel", release);
+      b.addEventListener("lostpointercapture", release);
+      b.addEventListener("keydown", (e) => {
+        if (e.code !== "Space" && e.code !== "Enter") return;
+        e.preventDefault();
+        if (!e.repeat) this.input.press(button);
+      });
+      b.addEventListener("keyup", (e) => {
+        if (e.code !== "Space" && e.code !== "Enter") return;
+        e.preventDefault();
+        release();
+      });
+      b.addEventListener("blur", release);
       return b;
     };
 
@@ -81,9 +97,9 @@ export class TouchControls {
       el("div", { class: "touch-buttons" }, [
         pad("PARAR", "stop"),
         pad("DEF.", "brace"),
-        pad("⚡", "special", this.countdown),
+        pad("Especial", "special", this.countdown),
         pad("AÇÃO", "action"),
-        pad("💣", "bomb"),
+        pad("Bomba", "bomb"),
       ]),
     ]);
     this.root.hidden = true;

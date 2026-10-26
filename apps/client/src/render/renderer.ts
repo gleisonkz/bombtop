@@ -19,6 +19,7 @@ import { staticPowerLook } from "./static-power";
 import { loadPicanhaArt } from "./picanha-art";
 import { battleClockText, battleTempoText } from "./battle-clock";
 import { stageTileTint } from "./stage-art";
+import { StageTileArt } from "./stage-tile-art";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects } from "./ability-pixel-effects";
@@ -235,6 +236,9 @@ export class Renderer {
   private readonly itemLayer = new Container();
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
+  private readonly stageTileLoader = new StageTileArt();
+  private stageTileArt: Awaited<ReturnType<StageTileArt["load"]>> = new Map();
+  private tileArtRequest = 0;
   private tileScale = TILES.scale;
   private readonly tileSprites: Sprite[] = [];
   /** Blown-up blocks burning away, over the grass they stood on. */
@@ -753,8 +757,10 @@ export class Renderer {
 
   /** Draws the arena (grass, blocks, walls) with the tile art instead of flat colors. */
   async useTileArt(layout: typeof TILES = TILES): Promise<void> {
-    const [base]: [Texture, void, void, void, void, void, void, void] = await Promise.all([
-      Assets.load(`${import.meta.env.BASE_URL}${layout.url}`),
+    const request = ++this.tileArtRequest;
+    const [base, stageArt] = await Promise.all([
+      Assets.load<Texture>(`${import.meta.env.BASE_URL}${layout.url}`),
+      this.stageTileLoader.load(layout),
       this.conveyors.load(),
       this.groundEffects.load(),
       this.webCocoons.load().catch((e) => console.error("web cocoon art", e)),
@@ -763,15 +769,18 @@ export class Renderer {
       this.companionEffects.load(),
       this.abilityEffects.load().catch((e) => console.error("pixel ability art", e)),
     ]);
+    if (request !== this.tileArtRequest) return;
     base.source.scaleMode = "linear"; // drawn smaller than the art
     const count = base.width / layout.size;
     this.tileScale = layout.scale;
     this.tileArt = isolatedTextureRow(base.source.resource as CanvasImageSource, 0, layout.size, count);
+    this.stageTileArt = stageArt;
   }
 
   /** `burning`: tile index -> ticks left on a blown-up block's flame. */
   private drawTiles(s: PublicView, burning: ReadonlyMap<number, number>): void {
-    const art = this.tileArt!;
+    const stageArt = s.stage ? this.stageTileArt.get(s.stage) : undefined;
+    const art = stageArt ?? this.tileArt!;
     const { width, height } = s.grid;
     for (const sprite of this.tileSprites) sprite.visible = false;
     for (const sprite of this.burnSprites) sprite.visible = false;
@@ -790,7 +799,7 @@ export class Renderer {
         let tile = getTile(s, x, y);
         if (ttl !== undefined) tile = ignition ? Tile.Block : Tile.Empty;
         sprite.texture = art[tileCell(tile, x, y, width, height)]!;
-        sprite.tint = stageTileTint(s.stage, tile);
+        sprite.tint = stageArt ? 0xffffff : stageTileTint(s.stage, tile);
         sprite.scale.set(this.tileScale);
         sprite.position.set(x * TILE_PX, y * TILE_PX);
         sprite.visible = true;

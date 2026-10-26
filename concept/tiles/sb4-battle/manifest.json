@@ -1,0 +1,144 @@
+{
+  "cellSize": 128,
+  "columns": 15,
+  "rows": 1,
+  "source": {
+    "file": "tiles-source.png",
+    "sha256": "807b33a8b485ac89e27a0f425150d919f6df83f7ce8b6657d3cc28128c6a2b9f",
+    "size": [
+      1086,
+      1448
+    ],
+    "grid": [
+      9,
+      12
+    ],
+    "rowBoundaries": [
+      0,
+      120,
+      238,
+      354,
+      474,
+      589,
+      707,
+      825,
+      944,
+      1061,
+      1182,
+      1299,
+      1448
+    ],
+    "cropInset": {
+      "x": 2,
+      "y": 4
+    },
+    "blockCellRemap": {
+      "8": 10,
+      "10": 8
+    }
+  },
+  "cells": {
+    "floorA": [
+      0,
+      1,
+      2
+    ],
+    "floorB": [
+      3,
+      4,
+      5
+    ],
+    "block": 6,
+    "pillar": 7,
+    "border": 8,
+    "burn": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ]
+  },
+  "destruction": {
+    "early": "stage block plus existing flame overlays, progressively compressed at the floor baseline",
+    "late": "three shared standard rubble/ember/ash cells",
+    "overlaySha256": "daf8f573e7809f7ef73e70829d83c779b24feebe88df8ba55c98f0f963d8f7e2",
+    "standardSha256": "190ddb67a569d2759a1b3649df6d392e080eb723470d938fce65917242f79cd0"
+  },
+  "previews": "Material samples on a shared demonstration grid; not original stage layouts or gameplay validation",
+  "stages": [
+    {
+      "number": 1,
+      "name": "Usual",
+      "file": "tiles-01.png",
+      "sha256": "96f68fd51622d32f6a4ec8cd8937487b2e010a9501284b5dd9f1cf251a941989"
+    },
+    {
+      "number": 2,
+      "name": "Fast 'n Slow",
+      "file": "tiles-02.png",
+      "sha256": "94e8e6567d0a42c5a9242d22631d33b146e761becc6d030fd3ff9c8429d9d399"
+    },
+    {
+      "number": 3,
+      "name": "Rolling Sugedama",
+      "file": "tiles-03.png",
+      "sha256": "faefe5ff13fe1041cfac6b22cc18431a59d1d9adb93c7688fb4f0299690a5254"
+    },
+    {
+      "number": 4,
+      "name": "Push and Fall",
+      "file": "tiles-04.png",
+      "sha256": "74129dd1af97a5be4839678b0a49c2b4d27a92ae5574b42691ffab836ea47bad"
+    },
+    {
+      "number": 5,
+      "name": "Numb Bomb",
+      "file": "tiles-05.png",
+      "sha256": "a22c7a4b2f42a946f822354fde6755f4be36f9d93096177a3314389fae7c2c9e"
+    },
+    {
+      "number": 6,
+      "name": "Surprise Floor",
+      "file": "tiles-06.png",
+      "sha256": "0d5e1c8db79093aef0438b958b501d54361a88f3b768f3b640b959abf5644da0"
+    },
+    {
+      "number": 7,
+      "name": "Hide and Blow Seek",
+      "file": "tiles-07.png",
+      "sha256": "8ea05d6d4529064aad4788984994ce69f04f7061b13e38cfe9545e8dea4d3830"
+    },
+    {
+      "number": 8,
+      "name": "Spinny Slots",
+      "file": "tiles-08.png",
+      "sha256": "eff5364e07498d485a33051c9eabb7ab2b1d202d51f6b0e204935d1b72fa409c"
+    },
+    {
+      "number": 9,
+      "name": "Seesaw",
+      "file": "tiles-09.png",
+      "sha256": "c6098ea70e80a751b9e74c54d1ba99e5e13309901ecca1ae9096fed57d03e170"
+    },
+    {
+      "number": 10,
+      "name": "Costume/Cosplay",
+      "file": "tiles-10.png",
+      "sha256": "81a9eda7a46b4e67715beb8439f81dacfef727053680ac740bca1d91e124b521"
+    },
+    {
+      "number": 11,
+      "name": "Trolley",
+      "file": "tiles-11.png",
+      "sha256": "6ae74c3a78f3f899be8c3084f021c73f4d3d540f74237c66818ed745642f9f98"
+    },
+    {
+      "number": 12,
+      "name": "Flag Tag",
+      "file": "tiles-12.png",
+      "sha256": "c8bcb9ac7b7ab74d2f11572bd28498580df15cbe3919528d244b6862457f800e"
+    }
+  ]
+}

@@ -2,7 +2,6 @@ import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE
 import type { MascotView, Mood } from "../ui/art";
 import bomberPaintRegions from "./bomber-paint-regions.json";
 import staticPaintRegions from "./static-paint-regions.json";
-import spiderPaintRegions from "./spider-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
 
 type Rgb = readonly [number, number, number];
@@ -240,7 +239,6 @@ export const SHEETS = {
     hueBase: [5, 89, 194],
     /** The original selection keeps the blue panels; alternate colors repaint them. */
     keepFor: [[245, 245, 245]],
-    colorProtection: spiderPaintRegions,
     scale: 0.1703871,
   },
   /** Pikachu (fan art), made in PixelLab (scripts/build-character-sheet.py pikachu lays out its frames). */
@@ -410,8 +408,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Twirls his bo overhead, plants it and grins. */
-    lobby: { row: 17, frames: 12 },
+    /** The planted lobby pose's feet end at 145; arena poses use the lower 152 baseline. */
+    lobby: { row: 17, frames: 12, image: { url: "sprites/donatello.png", width: 1992, height: 2772, frameW: 166, frameH: 154, anchorX: 87.5, anchorY: 145 } },
     /** His purple bandana and pads (his green skin, shell and staff stay his own). */
     hues: [250, 300],
     hueBase: [143, 33, 228],

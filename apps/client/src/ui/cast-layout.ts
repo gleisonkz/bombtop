@@ -76,8 +76,9 @@ export function castLayout({ art, width, heroWidth, heroHeight, maxBodyHeight, m
     width: slotWidth(item) * bodyHeight / item.bodyH,
     anchorOffset: (item.anchorX - spacingBounds(item)[0]) * bodyHeight / item.bodyH,
   }));
-  const height = Math.max(heroHeight, ...selected.map((item) => item.anchorY * bodyHeight / item.bodyH));
-  const footroom = Math.max(0, ...selected.map((item) => (item.frameH - item.anchorY) * bodyHeight / item.bodyH));
+  // Reserve the full roster's envelope so rotation never moves the title or menu below it.
+  const height = Math.max(heroHeight, ...art.map((item) => item.anchorY * maxBodyHeight / item.bodyH));
+  const footroom = Math.max(0, ...art.map((item) => (item.frameH - item.anchorY) * maxBodyHeight / item.bodyH));
   const wings = { left: edgeSpace(ordered.filter((item) => item.side === "left")), right: edgeSpace(ordered.filter((item) => item.side === "right")) };
   return { bodyHeight, gap, members, height, footroom, wings };
 }
@@ -100,7 +101,7 @@ export function observeCast(lineup: HTMLElement): () => void {
     const bomba = lineup.querySelector<HTMLElement>(".title-bomber")!;
     const cell = Number.parseFloat(getComputedStyle(bomba).getPropertyValue("--fly-cell"));
     const heroWidth = Math.ceil(Math.max(bomba.offsetWidth, cell) * 1.06 + 8);
-    const compact = window.matchMedia("(orientation: portrait) and (max-height: 740px)").matches;
+    const compact = window.matchMedia("(orientation: portrait) and (max-height: 740px), (orientation: landscape) and (max-height: 500px)").matches;
     const params = { art, width: lineup.clientWidth, heroWidth, heroHeight: bomba.offsetHeight, maxBodyHeight: compact ? 76 : 104, minBodyHeight: compact ? 58 : 70 };
     const baseline = castLayout(params);
     rotating = baseline.members.length < art.length;
