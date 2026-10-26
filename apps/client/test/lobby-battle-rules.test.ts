@@ -178,7 +178,10 @@ describe("Battle Mode lobby controls", () => {
     };
     const find = (cls: string) => parent.all().find((node) => node.className.split(" ").includes(cls))!;
 
+    // The host sees each human guest's say at a glance; the host and bots get no chip.
+    const chips = () => parent.all().filter((node) => node.className.startsWith("ready-chip")).map((node) => [node.className, node.textContent]);
     panel.update(lobby, "host");
+    expect(chips()).toEqual([["ready-chip", "Escolhendo…"]]);
     expect(find("ready-btn").hidden).toBe(true);
     expect(find("start").disabled).toBe(true);
 
@@ -197,5 +200,6 @@ describe("Battle Mode lobby controls", () => {
 
     panel.update(readyLobby, "host");
     expect(find("start").disabled).toBe(false);
+    expect(chips()).toEqual([["ready-chip on", "✓ Pronto"]]);
   });
 });

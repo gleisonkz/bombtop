@@ -221,9 +221,12 @@ export class LobbyPanel {
         const sub = member.bot
           ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
           : member.connected
-            ? `${you ? "você • " : ""}${member.wins} 🏆${member.ready ? " • ✓ pronto" : ""}`
+            ? `${you ? "você • " : ""}${member.wins} 🏆`
             : "reconectando…";
-        return el("div", { class: cls }, [
+        // Each human guest's say, for the host above all: ready, or still choosing.
+        const guest = !member.bot && member.id !== info.hostId && member.connected;
+        const readyChip = guest ? el("span", { class: member.ready ? "ready-chip on" : "ready-chip", text: member.ready ? "✓ Pronto" : "Escolhendo…" }) : null;
+        return el("div", { class: guest && member.ready ? `${cls} is-ready` : cls }, [
           slotTag,
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
@@ -232,6 +235,7 @@ export class LobbyPanel {
           ]),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
+          readyChip,
           tag ? teamButton : null,
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
           // Arrows step through the characters, so any number of them fits on a narrow card.

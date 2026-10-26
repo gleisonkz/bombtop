@@ -411,6 +411,9 @@
       .crown { position: absolute; top: -15px; left: 46px; z-index: 1; font-size: 20px; line-height: 1; filter: drop-shadow(0 2px 0 var(--ink)); }
       .kick-bot { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; min-height: 0; padding: 0; font-size: 13px; border-width: 2px; border-radius: 50%; box-shadow: none; background: #ffffffcc; }
       .seat.me { border-color: var(--accent); box-shadow: 0 5px 0 var(--ink), 0 0 0 3px #ffd23f40, 0 0 14px #ffd23f40, inset 0 3px 0 color-mix(in srgb, var(--p) 65%, transparent); }
+      .ready-chip { justify-self: start; font-family: var(--display); font-size: 14px; line-height: 1.2; padding: 3px 10px; border: 2px solid var(--ink); border-radius: 999px; background: #00000059; color: var(--muted); }
+      .ready-chip.on { background: #4cc35a; color: #10331a; animation: pop 0.25s ease-out; }
+      .seat.is-ready:not(.me) { border-color: #4cc35a; box-shadow: 0 5px 0 var(--ink), 0 0 0 3px #4cc35a55, 0 0 14px #4cc35a55, inset 0 3px 0 color-mix(in srgb, var(--p) 65%, transparent); }
       .seat.easy::after { top: 8px; left: 64px; font-size: 18px; } /* the dozing bot's z, over its head */
       .seat.empty { background: #0b0b1666; border: 3px dashed #ffffff2a; box-shadow: none; animation: none; }
       .seat.empty .slot-tag { background: #2a2a5c; color: var(--muted); border-color: #ffffff2a; }
