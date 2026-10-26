@@ -51,7 +51,7 @@ class CarryAnchorTests(unittest.TestCase):
                     self.assertGreaterEqual(socket["y"], 0)
                     self.assertLess(socket["y"], character["frameH"])
                     self.assertGreaterEqual(socket["span"], 0)
-                    self.assertEqual(socket["span"] == 0, name == "static" or row in (12, 15))
+                    self.assertEqual(socket["span"] == 0, row in (12, 15))
                 count += len(sockets)
         self.assertEqual(count, 540)
 
@@ -65,14 +65,17 @@ class CarryAnchorTests(unittest.TestCase):
                 self.assertAlmostEqual(socket["x"], x, places=3)
                 self.assertAlmostEqual(socket["y"], y, places=3)
 
-    def test_changed_spider_pose_uses_raised_palm_reference(self):
-        for row, count in ((12, 4), (15, 6)):
-            start = 2 if row == 12 else 1
-            for col in range(start, count):
-                self.assertEqual(ANCHORS.reference_pose("spider", row, col, 0), (12, 2, (111, 55)))
-                socket = self.data["characters"]["spider"]["rows"][str(row)][col]
-                normalized_y = socket["y"] * 180 / self.data["characters"]["spider"]["frameH"]
-                self.assertLess(normalized_y, 65, "Raised glove must not drift down to the elbow")
+    def test_spider_rig_palms_match_visible_gloves_in_every_carry_frame(self):
+        image = Image.open(ANCHORS.CLIENT / "public/sprites/spider.png").convert("RGBA")
+        profile = self.data["characters"]["spider"]
+        for row, frames in ANCHORS.SPIDER_PALMS["rows"].items():
+            for column, palms in enumerate(frames):
+                socket = profile["rows"][row][column]
+                self.assertAlmostEqual(socket["x"], sum(point[0] for point in palms) / len(palms), places=3)
+                self.assertAlmostEqual(socket["y"], sum(point[1] for point in palms) / len(palms), places=3)
+                for x, y in palms:
+                    self.assertLess(y, 50, "Overhead glove must not drift down to the elbow")
+                    self.assertGreater(image.getpixel((column * 130 + int(x), int(row) * 161 + int(y)))[3], 128)
 
     def test_every_remaining_flag_has_explicit_review_or_occlusion(self):
         unresolved = []
@@ -81,7 +84,7 @@ class CarryAnchorTests(unittest.TestCase):
                 self.assertIn("review", report, report)
             if "occluded-palm" in report["flags"]:
                 unresolved.append((report["character"], report["row"], report["frame"], report["palm"]))
-        self.assertEqual(unresolved, [("naruto", 14, 5, 0), ("naruto", 14, 5, 1)])
+        self.assertEqual(unresolved, [])
 
     def test_checked_in_json_is_reproducible(self):
         expected = json.dumps(self.data, indent=2, allow_nan=False) + "\n"

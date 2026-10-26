@@ -1053,7 +1053,11 @@ describe("lobby showpieces", () => {
     expect(SHEETS.naruto.frameW).toBe(80);
     expect(SHEETS.naruto.frameH).toBe(116);
   });
-  it("spider-man swings in on a web and lands crouched", () => showpiece("spider"));
+  it("spider-man uses eight articulated presentation poses from the gameplay atlas", () => {
+    expect(SHEETS.spider.lobby).toEqual({ row: 17, frames: 8, bodyH: 122 });
+    expect(size(SHEETS.spider.url)).toEqual([1170, 2898]);
+    expect([SHEETS.spider.frameW * 9, SHEETS.spider.frameH * 18]).toEqual([1170, 2898]);
+  });
   it("thor calls lightning down onto his hammer and slams it into the ground", () => showpiece("thor"));
 });
 

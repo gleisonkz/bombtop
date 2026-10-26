@@ -3,7 +3,7 @@ import { CHARACTER_SHEETS, previewPose } from "./sheet-art";
 import animationBounds from "./cast-animation-bounds.json";
 
 export const CAST_BODY_HEIGHT: Record<Exclude<CharacterId, "bomb">, number> = {
-  captain: 124, thor: 127, goku: 142, naruto: 109, spider: 153, pikachu: 150,
+  captain: 124, thor: 127, goku: 142, naruto: 109, spider: 122, pikachu: 150,
   static: CHARACTER_SHEETS.static.lobby!.bodyH!, flash: 158, bugs: 153, lantern: 146, donatello: 130, penelope: 148,
   panther: 141, harry: 157, optimus: 165, pele: 125, lula: 166,
 };

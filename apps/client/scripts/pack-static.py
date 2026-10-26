@@ -1,5 +1,6 @@
 """Pack the user's 2026-10-25 21:48 RGBA source into the existing animation roles."""
 from functools import lru_cache
+import importlib.util
 from pathlib import Path
 import json
 import numpy as np
@@ -91,8 +92,9 @@ def frame_protection(frame, x, y, disc=False):
     pixels = np.array(frame)
     rgb = pixels[:, :, :3].astype(int)
     visible = pixels[:, :, 3] > 0
-    ys = np.indices(visible.shape)[0]
-    hair = visible & (ys < round(frame.height * .45)) & (rgb.max(2) - rgb.min(2) < 80) & (rgb[:, :, 2] >= rgb[:, :, 0])
+    ys, xs = np.indices(visible.shape)
+    head = xs < round(frame.width * .4) if frame.width > frame.height else ys < round(frame.height * .45)
+    hair = visible & head & (rgb.max(2) - rgb.min(2) < 80) & (rgb[:, :, 2] >= rgb[:, :, 0])
     regions = rectangles(hair, x, y)
     if disc:
         silver = visible & (ys > frame.height * .55) & (rgb.min(2) > 45) & (rgb.max(2) - rgb.min(2) < 65)
@@ -109,11 +111,21 @@ def frame_protection(frame, x, y, disc=False):
 
 def build(protection_rows=None):
     source = Image.open(SOURCE).convert('RGBA')
+    spec = importlib.util.spec_from_file_location('static_carry', Path(__file__).with_name('pack-static-carry.py'))
+    carry = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(carry)
+    carry_frames = carry.frames()
     owners, inventory = geometry()
     atlas = Image.new('RGBA', (CELL[0] * 14, CELL[1] * len(MAP)))
     for row, (source_row, columns) in enumerate(MAP):
         row_regions = []
         for column, index in enumerate(columns):
+            if row in carry_frames:
+                frame = carry_frames[row][column]
+                atlas.alpha_composite(frame, (column * CELL[0], row * CELL[1]))
+                left, top, right, bottom = frame.getchannel('A').getbbox()
+                row_regions.append(frame_protection(frame.crop((left, top, right, bottom)), left, top, row == 17))
+                continue
             box, label = inventory[source_row][index]
             left, top, right, bottom = box
             frame = extract(source, box, owners[top:bottom, left:right] == label)

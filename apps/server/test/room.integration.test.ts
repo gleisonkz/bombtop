@@ -59,6 +59,29 @@ function view(room: Room, base: PublicView, pred: (v: PublicView) => boolean) {
 }
 
 describe("BattleRoom over the network", () => {
+  it("synchronizes TAG teams and only starts while both teams have a player", async () => {
+    const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
+    const guest = await client().joinById(host.roomId, { name: "Guest" });
+    const chosen = next<LobbyInfo>(guest, S2C.lobby, lobby => lobby.battleMode === "tag");
+    host.send(C2S.rules, { battleMode: "tag", winsToWin: 2 });
+    const first = await chosen.catch(() => { throw new Error("TAG mode not broadcast"); });
+    expect(first.members.map(member => member.team)).toEqual(["red", "blue"]);
+    const bothBlue = next<LobbyInfo>(guest, S2C.lobby, lobby => lobby.members.every(member => member.team === "blue"));
+    host.send(C2S.team, { id: host.sessionId, team: "blue" });
+    expect((await bothBlue.catch(() => { throw new Error("TAG same-team change not broadcast"); })).members).toHaveLength(2);
+    host.send(C2S.start);
+    const blocked = next<LobbyInfo>(host, S2C.lobby);
+    host.send(C2S.sync);
+    expect((await blocked.catch(() => { throw new Error("TAG blocked start lobby sync timed out"); })).phase).toBe("lobby");
+    const separated = next<LobbyInfo>(host, S2C.lobby, lobby => lobby.members[1]?.team === "red");
+    guest.send(C2S.team, { id: guest.sessionId, team: "red" });
+    expect((await separated.catch(() => { throw new Error("TAG guest team change not broadcast"); })).members.map(member => member.team)).toEqual(["blue", "red"]);
+    const playing = next<LobbyInfo>(guest, S2C.lobby, lobby => lobby.phase === "playing");
+    host.send(C2S.start);
+    expect((await playing.catch(() => { throw new Error("TAG game did not start after team change"); })).battleMode).toBe("tag");
+    await Promise.all([host.leave(), guest.leave()]);
+  });
+
   it("shares Maniac item/HP settings and fixed rules over Colyseus", async () => {
     const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
     const guest = await client().joinById(host.roomId, { name: "Guest" });

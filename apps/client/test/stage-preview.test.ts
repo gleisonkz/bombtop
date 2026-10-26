@@ -20,6 +20,13 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("stage thumbnails", () => {
+  it.each(["sb4-01", "sb4-02"] as const)("uses the original Battle Game screenshot for %s", async stage => {
+    const { stagePreview } = await import("../src/ui/stage-preview");
+    const image = stagePreview(stage);
+    expect(image.src).toContain(`sprites/sb4-battle/stage-${stage.slice(-2)}.png`);
+    expect(drawImage).not.toHaveBeenCalled();
+    expect(toDataURL).not.toHaveBeenCalled();
+  });
   it.each(["classic", "conveyor", "warp"] as const)("renders the real %s layout and its matching artwork", async stage => {
     const { stagePreview } = await import("../src/ui/stage-preview");
     const image = stagePreview(stage);

@@ -5,3 +5,8 @@ export function battleClockText(state: Pick<PublicView, "tick" | "pressureAt" | 
   if (left <= 0 && state.roundEndsAt === undefined) return state.pressureLimit === undefined ? "SUDDEN DEATH!" : "∞";
   return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
 }
+
+export function battleTempoText(state: Pick<PublicView, "stage" | "tempo">): string {
+  if (state.stage !== "sb4-02") return "";
+  return state.tempo === 2 ? "×2" : state.tempo === 0.5 ? "×½" : "×1";
+}

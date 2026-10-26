@@ -257,13 +257,40 @@ describe("stage rotation rules", () => {
     expect(session.lobbyInfo("CODE")).toMatchObject({ winsToWin: 1, stageRotation });
   });
 
-  it.each(["wins", "rotation"])("resets the round cursor when accepting %s configuration", (field) => {
+  it("plays both selected SB4 stages when two wins are required", () => {
+    const session = lobby();
+    const stageRotation: StageRotationEntry[] = [{ stage: "sb4-01" }, { stage: "sb4-02" }];
+    expect(session.setRules("host", { winsToWin: 2, stageRotation })).toBe(true);
+    session.start("host");
+    expect(session.match!.stage).toBe("sb4-01");
+    expect(finishRound(session, "host")?.setOver).toBe(false);
+    advanceResults(session);
+    expect(session.match!.stage).toBe("sb4-02");
+    expect(finishRound(session, "host")?.setOver).toBe(true);
+    advanceResults(session);
+    expect(session.lobbyInfo("CODE")).toMatchObject({ phase: "lobby", stage: "sb4-01", stageRotation });
+  });
+
+  it("announces the first configured stage when returning to the lobby after a set", () => {
+    const session = lobby();
+    const stageRotation: StageRotationEntry[] = [{ stage: "sb4-01" }, { stage: "sb4-02" }];
+    session.setRules("host", { winsToWin: 1, stageRotation });
+    session.start("host");
+    finishRound(session, "host");
+    advanceResults(session);
+    expect(session.lobbyInfo("CODE")).toMatchObject({ phase: "lobby", stage: "sb4-01", stageRotation });
+    session.start("host");
+    expect(session.stage).toBe("sb4-01");
+    expect(session.match!.stage).toBe("sb4-01");
+  });
+
+  it.each(["wins", "rotation"])("keeps the first stage announced when accepting %s configuration", (field) => {
     const session = lobby();
     session.setWinsToWin("host", 1);
     session.start("host");
     finishRound(session, "host");
     advanceResults(session);
-    expect(session.lobbyInfo("CODE").stage).toBe("conveyor");
+    expect(session.lobbyInfo("CODE").stage).toBe("classic");
     const rules = field === "wins" ? { winsToWin: 2 } : { stageRotation: DEFAULT_STAGE_ROTATION };
     expect(session.setRules("host", rules)).toBe(true);
     expect(session.lobbyInfo("CODE").stage).toBe("classic");
@@ -276,7 +303,7 @@ describe("stage rotation rules", () => {
     finishRound(session, "host");
     advanceResults(session);
     const before = session.lobbyInfo("CODE");
-    expect(before.stage).toBe("conveyor");
+    expect(before.stage).toBe("classic");
     expect(session.setRules("host", { winsToWin: 2, stageRotation: [] })).toBe(false);
     expect(session.lobbyInfo("CODE")).toEqual(before);
   });

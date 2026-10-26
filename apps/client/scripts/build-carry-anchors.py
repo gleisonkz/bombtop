@@ -4,7 +4,7 @@ Run from any directory: python apps/client/scripts/build-carry-anchors.py [--che
 Requires Pillow and numpy, already used by the character art tooling. Seeds were
 manually inspected on cells stretched to 180 x 180, not aspect-fit thumbnails.
 Each target is matched directly against its direction's carry-idle frame zero,
-except Spider-Man's visibly different raised side palm (idle frame two).
+Spider-Man's cutout rig supplies exact registered palms instead of tracking.
 There is no recursive tracking drift or synthetic breathing offset. Diagnostics
 go to stderr and do not change the runtime JSON contract.
 """
@@ -20,18 +20,24 @@ from PIL import Image
 
 
 CLIENT = Path(__file__).resolve().parents[1]
+STATIC_PALMS = json.loads((CLIENT.parents[1] / 'concept/static/carry-redraw/palms.json').read_text(encoding='utf-8'))
 OUTPUT = CLIENT / "src/render/carry-anchors.json"
 COUNTS = (4, 4, 4, 6, 6, 6)
+SPIDER_PALMS = json.loads((CLIENT.parents[1] / "concept/spider/pixellab/rigged/palms.json").read_text(encoding="utf-8"))
 SEEDS = {
     "captain": (((52, 53), (122, 53)), ((96, 58),), ((57, 49), (123, 49))),
     "thor": (((64, 12), (112, 12)), ((95, 6),), ((68, 6), (112, 6))),
-    "goku": (((65, 25), (112, 25)), ((96, 20),), ((70, 27), (125, 27))),
-    "naruto": (((67.5, 41.9), (117, 41.9)), ((108, 34.1),), ((67.5, 45), (112.5, 45))),
-    "spider": (((40, 73), (137, 73)), ((95, 82),), ((38, 73), (138, 73))),
+    "goku": (((33 * 180 / 146, 35 * 180 / 159), (111.5 * 180 / 146, 35 * 180 / 159)),
+             ((75.5 * 180 / 146, 26 * 180 / 159),),
+             ((33 * 180 / 146, 33 * 180 / 159), (113 * 180 / 146, 33 * 180 / 159))),
+    "naruto": (((15 * 180 / 80, 20 * 180 / 116), (67 * 180 / 80, 20 * 180 / 116)),
+               ((45 * 180 / 80, 17 * 180 / 116),),
+               ((14.5 * 180 / 80, 21 * 180 / 116), (67 * 180 / 80, 21 * 180 / 116))),
+    "spider": tuple(tuple((x * 180 / SPIDER_PALMS["frameW"], y * 180 / SPIDER_PALMS["frameH"])
+                          for x, y in SPIDER_PALMS["rows"][str(11 + direction)][0])
+                    for direction in range(3)),
     "pikachu": (((58, 85), (117, 85)), ((103, 83),), ((55, 85), (125, 85))),
-    "static": (((64 * 180 / 168, 87 * 180 / 186),),
-               ((73 * 180 / 168, 127 * 180 / 186),),
-               ((109 * 180 / 168, 127 * 180 / 186),)),
+    "static": tuple(tuple((x * 180 / 168, y * 180 / 186) for x, y in STATIC_PALMS[str(row)][0]) for row in (11, 12, 13)),
     "flash": (((58, 46), (124, 46)), ((93, 52),), ((52, 72), (127, 72))),
     "bugs": (((48, 80), (141, 80)), ((96, 80),), ((49, 79), (136, 79))),
     "lantern": (((42, 79), (143, 79)), ((101, 79),), ((40, 79), (142, 79))),
@@ -57,35 +63,82 @@ REVIEWED = {
 
 def reference_pose(name, row, col, palm):
     direction = (row - 11) % 3
-    if name == "spider" and ((row == 12 and col >= 2) or (row == 15 and col >= 1)):
-        return 12, 2, (111, 55)
     return 11 + direction, 0, SEEDS[name][direction][palm]
 
 
 def reviewed_point(name, row, col, palm):
-    if name == "static":
-        # Reviewed on pack-static.py output: native 168 x 186, anchor (82, 170).
-        # Front carry uses source row 7 (the supplied gesture sequence).
-        # Side/rear reuse ordinary idle/walk art: these are actual visible gloves,
-        # not invented raised sockets. Convert each axis to the 180 convention.
-        front = ((64, 87), (61, 122), (115, 111), (99, 99))
-        side_idle = ((73, 127), (76, 127), (73, 127), (77, 127))
-        rear_idle = ((109, 127), (109, 127), (111, 127), (110, 127))
-        side_walk = ((89, 120), (85, 120), (76, 121), (84, 123), (76, 121), (85, 120))
-        rear_walk = ((109, 125), (109, 125), (110, 126), (109, 126), (110, 126), (109, 126))
-        if row in (11, 14):
-            native = front[(0, 1, 2, 3, 2, 1)[col]]
-        elif row == 12:
-            native = side_idle[col]
-        elif row == 13:
-            native = rear_idle[col]
-        elif row == 15:
-            native = side_walk[col]
-        elif row == 16:
-            native = rear_walk[col]
-        else:
+    if name == "goku":
+        # Native 146x159 palms inspected on the complete gameplay redraw.
+        # Keep every authored pose explicit: the raised fingers and nearby
+        # black hair make idle-patch matches unreliable on walking frames.
+        poses = {
+            11: (
+                ((33, 35), (111.5, 35)), ((32, 35.5), (110.5, 35)),
+                ((32, 34.5), (112, 35)), ((31.5, 35), (111.5, 35.5)),
+            ),
+            12: (((75.5, 26),), ((77.5, 24.5),), ((75.5, 26),), ((74.5, 26),)),
+            13: (
+                ((33, 33), (113, 33)), ((29.5, 34), (110, 33.5)),
+                ((30.5, 34), (110.5, 34)), ((33.5, 33), (113.5, 33.5)),
+            ),
+            14: (
+                ((30.5, 36.5), (111, 36.5)), ((29, 39.5), (105.5, 38)),
+                ((33.5, 37.5), (108.5, 37.5)), ((32, 39), (105, 39)),
+                ((34.5, 37.5), (107.5, 36.5)), ((31.5, 38.5), (108.5, 38)),
+            ),
+            15: (
+                ((75, 24.5),), ((77.5, 26),), ((79.5, 25),),
+                ((77, 25.5),), ((73, 25),), ((75, 26),),
+            ),
+            16: (
+                ((30, 33), (108.5, 33)), ((32.5, 33.5), (109, 33.5)),
+                ((36, 33), (113, 34)), ((36.5, 33.5), (110.5, 34)),
+                ((35.5, 33), (108.5, 33.5)), ((36.5, 34), (111.5, 34.5)),
+            ),
+        }
+        if row not in poses:
             return None, None
-        return (native[0] * 180 / 168, native[1] * 180 / 186), "manual: visible glove center inspected on final 168x186 Static cell; side/rear lack raised carry art"
+        x, y = poses[row][col][palm]
+        return (x * 180 / 146, y * 180 / 159), "manual: visible palm center inspected on final 146x159 Goku carry cell"
+    if name == "naruto":
+        # Native 80x116 palms reviewed on naruto-candidate.png, rows 11-16.
+        # All palms are visible, including front carry-walk frame five.
+        # Store each authored pose explicitly: finger/sleeve changes can make
+        # idle-patch matching prefer hair or wrists over the palm center.
+        poses = {
+            11: (
+                ((15, 20), (67, 20)), ((13.5, 20), (67, 19.5)),
+                ((13, 19.5), (67, 19.5)), ((13.5, 19.5), (67.5, 19.5)),
+            ),
+            12: (((45, 17),), ((45.5, 17),), ((46, 17),), ((48, 17.5),)),
+            13: (
+                ((14.5, 21), (67, 21)), ((13.5, 21.5), (66, 21)),
+                ((12, 21.5), (64.5, 20.5)), ((16.5, 21.5), (69, 20.5)),
+            ),
+            14: (
+                ((16, 20.5), (67, 20.5)), ((11.5, 20.5), (62, 20)),
+                ((15.5, 21), (67, 20.5)), ((16, 19.5), (67, 20)),
+                ((17, 21), (68.5, 19.5)), ((15.5, 20.5), (66.5, 20)),
+            ),
+            15: (
+                ((46.5, 18),), ((49, 19),), ((47, 18),),
+                ((46, 17),), ((47, 18),), ((48, 17),),
+            ),
+            16: (
+                ((15.5, 21), (65.5, 20.5)), ((17, 19), (68, 18.5)),
+                ((12.5, 20), (64, 19)), ((17.5, 20), (68, 19)),
+                ((17, 22), (68, 20)), ((16, 22), (67, 20.5)),
+            ),
+        }
+        if row not in poses:
+            return None, None
+        x, y = poses[row][col][palm]
+        return (x * 180 / 80, y * 180 / 116), "manual: visible palm center inspected on final 80x116 Naruto carry cell"
+    if name == "static":
+        if str(row) not in STATIC_PALMS:
+            return None, None
+        x, y = STATIC_PALMS[str(row)][col][palm]
+        return (x * 180 / 168, y * 180 / 186), "manual: inspected raised glove support on final 168x186 Static carry redraw"
     if name == "pele":
         # Inspected visible palms in pele-final.png, native 160px cells.
         # Source gestures change hand height; idle-patch tracking is unsuitable.
@@ -116,8 +169,6 @@ def reviewed_point(name, row, col, palm):
         return tuple(value * 180 / 160 for value in native), "manual: visible palm center inspected on final 160px Pele carry cell"
     if (name, row, col, palm) == ("donatello", 16, 1, 1):
         return (128, 58), "manual: right palm at head edge; rejected lower-forearm patch"
-    if (name, row, col) == ("naruto", 14, 5):
-        return ((63, 47) if palm == 0 else (117, 47)), "occluded: palms absent behind hair; visible sleeve-tip fallback"
     return None, None
 
 
@@ -205,6 +256,13 @@ def build(only=None):
                     target = rgba(image.crop((col * width, row * height, (col + 1) * width, (row + 1) * height)))
                     palms = []
                     for palm in range(len(SEEDS[name][direction])):
+                        if name == "spider":
+                            point = tuple(SPIDER_PALMS["rows"][str(row)][col][palm])
+                            palms.append(point)
+                            diagnostics.append({"character": name, "row": row, "frame": col, "palm": palm,
+                                                "error": 0, "shift": [0, 0], "flags": [],
+                                                "review": "inspected open palm, registered by the Pillow cutout rig"})
+                            continue
                         ref_row, ref_col, seed = reference_pose(name, row, col, palm)
                         reference = rgba(image.crop((ref_col * width, ref_row * height, (ref_col + 1) * width, (ref_row + 1) * height)))
                         point, report = track(reference, target, seed)

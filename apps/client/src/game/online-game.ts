@@ -15,6 +15,7 @@ import {
   TILE,
   type BotLevel,
   type BattleMode,
+  type BattleTeam,
   type ManiacConfig,
   type CharacterId,
   type LobbyInfo,
@@ -156,7 +157,7 @@ export class OnlineGame implements GameMode {
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
       ctx.renderer.setNames(nameTags(info.members, watching ? null : room.sessionId));
-      ctx.renderer.setScore(info.members.map((m) => ({ id: m.id, wins: m.wins })));
+      ctx.renderer.setScore(info.members.map((m) => ({ id: m.id, wins: m.wins, ...(info.battleMode === "tag" && { team: m.team }) })));
       // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
       ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
@@ -173,7 +174,9 @@ export class OnlineGame implements GameMode {
     });
     room.onMessage(S2C.result, (result: ResultMessage) => {
       this.result = result;
-      ctx.sound.play(resultSound(result.winnerId, room.sessionId));
+      const myTeam = this.lobby?.members.find((member) => member.id === room.sessionId)?.team;
+      const teamWon = result.winnerTeam && myTeam === result.winnerTeam;
+      ctx.sound.play(resultSound(teamWon ? room.sessionId : result.winnerId, room.sessionId));
       // The winner's own cheer, once the announcer and jingle are done.
       const cheer = winnerVoice(result.winnerId, this.lobby?.members ?? []);
       if (cheer) setTimeout(() => ctx.sound.play(cheer), WIN_CHEER_MS);
@@ -216,6 +219,10 @@ export class OnlineGame implements GameMode {
 
   setBattleMode(battleMode: BattleMode): void {
     this.room.send(C2S.rules, { battleMode });
+  }
+
+  setTeam(id: string, team: BattleTeam): void {
+    this.room.send(C2S.team, { id, team });
   }
 
   setManiac(maniac: ManiacConfig): void {
@@ -388,10 +395,11 @@ export class OnlineGame implements GameMode {
     if (import.meta.env.DEV) Object.assign(window, { __snapshot: snap });
   }
 
-  private showResults({ winnerId, setOver }: ResultMessage): void {
+  private showResults({ winnerId, winnerTeam, setOver }: ResultMessage): void {
     if (!this.lobby) return;
     const ids = this.lobby.members.map((m) => m.id);
-    this.panel.showResults(this.standings.ranking(ids, winnerId), this.lobby, this.room.sessionId, winnerId, setOver);
+    const winningIds = winnerTeam ? this.lobby.members.filter((member) => member.team === winnerTeam).map((member) => member.id) : undefined;
+    this.panel.showResults(this.standings.ranking(ids, winnerId, winningIds), this.lobby, this.room.sessionId, winnerId, setOver, winnerTeam);
   }
 
   /** Token to take this seat back after a reload. */

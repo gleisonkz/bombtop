@@ -2,6 +2,7 @@ import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE
 import type { MascotView, Mood } from "../ui/art";
 import bomberPaintRegions from "./bomber-paint-regions.json";
 import staticPaintRegions from "./static-paint-regions.json";
+import spiderPaintRegions from "./spider-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
 
 type Rgb = readonly [number, number, number];
@@ -147,9 +148,9 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.17,
   },
-  /** Goku (fan art), made in PixelLab (scripts/build-character-sheet.py goku lays out its frames). */
+  /** Broader pixel-art Goku; original animation geometry (scripts/pack-goku.py). */
   goku: {
-    url: "sprites/goku.png",
+    url: "sprites/goku.png?v=wide-pixel-2",
     width: 1314,
     height: 2862,
     frameW: 146,
@@ -168,18 +169,18 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Powering up, a flash, Super Saiyan in a golden aura crackling with lightning, and back (scripts/build-goku-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/goku-lobby.png?v=base-pixel-3", width: 3072, height: 207, frameW: 192, frameH: 207, anchorX: 96, anchorY: 194 } },
-    /** His hands at the thrust (the back view hides them: over his shoulders). */
-    muzzle: { side: [46.5, -67.5], down: [2.5, -34], up: [0, -97] },
+    /** Power-up redrawn from the broader gameplay Goku, then reversed back to his exact idle. */
+    lobby: { row: 0, frames: 16, image: { url: "sprites/goku-lobby.png?v=wide-transform-5", width: 2048, height: 207, frameW: 128, frameH: 207, anchorX: 64, anchorY: 194 } },
+    /** Visible hand positions in the redrawn release pose. */
+    muzzle: { side: [54.5, -75], down: [0.5, -62], up: [39.5, -80] },
     /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */
     hues: [205, 235],
     hueBase: [8, 59, 137],
     scale: 0.15,
   },
-  /** User-supplied slim Naruto atlas; original pixels and animation order retained. */
+  /** Reference-redrawn Naruto; original 108-frame animation contract (scripts/pack-naruto.py). */
   naruto: {
-    url: "sprites/naruto.png?v=slim-1",
+    url: "sprites/naruto.png?v=classic-reference-2",
     width: 720,
     height: 2088,
     frameW: 80,
@@ -197,12 +198,11 @@ export const SHEETS = {
     /** The Rasengan: dashing with his hand out, then the lunge as it strikes. */
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
-    // The last front carry cell loses both hands; settle on the matching first pose instead.
-    carryWalk: { ...strips(14, 15, 16, 6), down: { row: 14, frames: 6, columns: [0, 1, 2, 3, 4, 0] } },
-    /** Celebration from the supplied atlas. */
+    carryWalk: strips(14, 15, 16, 6),
+    /** Eight-frame celebration redrawn with the same reference and proportions. */
     lobby: { row: 17, frames: 8 },
-    /** His hand in the lunge, where the Rasengan spins (the back view hides it: over his shoulders). */
-    muzzle: { side: [30, -47], down: [0, -37], up: [0, -60] },
+    /** Visible palm positions in the redrawn Rasengan lunge. */
+    muzzle: { side: [30, -50], down: [-7, -51], up: [24, -54] },
     /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
     hues: [205, 232],
     hueBase: [6, 42, 92],
@@ -210,7 +210,7 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.2,
   },
-  /** Spider-Man (fan art), made in PixelLab (scripts/build-character-sheet.py spider lays out its frames). */
+  /** PixelLab source art, with conventional Pillow carry/presentation animation. */
   spider: {
     url: "sprites/spider.png",
     width: 1170,
@@ -219,7 +219,7 @@ export const SHEETS = {
     frameH: 161,
     anchorX: 64.5,
     anchorY: 155,
-    bodyH: 152,
+    bodyH: 124,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -231,20 +231,21 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** A web shot up, yanked out of the card, swinging back in and landing crouched (scripts/build-spider-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/spider-lobby.png", width: 2880, height: 200, frameW: 180, frameH: 200, anchorX: 91, anchorY: 195 } },
+    /** Articulated wrist lift, airborne pose, landing and recovery. */
+    lobby: { row: 17, frames: 8, bodyH: 122 },
     /** His thrust hand, where the web leaves (the back view hides it: over his shoulder). */
-    muzzle: { side: [42.5, -74], down: [-8.5, -39], up: [0, -84.2] },
+    muzzle: { side: [42.5, -55], down: [44.5, -57], up: [16.5, -121] },
     /** The blue of his suit's sides and legs (his red is the suit itself). */
-    hues: [205, 240],
+    hues: [200, 240],
     hueBase: [5, 89, 194],
     /** The original selection keeps the blue panels; alternate colors repaint them. */
     keepFor: [[245, 245, 245]],
-    scale: 0.139,
+    colorProtection: spiderPaintRegions,
+    scale: 0.1703871,
   },
   /** Pikachu (fan art), made in PixelLab (scripts/build-character-sheet.py pikachu lays out its frames). */
   pikachu: {
-    url: "sprites/pikachu.png",
+    url: "sprites/pikachu.png?v=20261026-local-v1",
     width: 1620,
     height: 2952,
     frameW: 180,
@@ -269,9 +270,9 @@ export const SHEETS = {
     hueBase: [34, 82, 149],
     scale: 0.145,
   },
-  /** User-supplied Super Choque, registered by scripts/pack-static.py. */
+  /** Super Choque: supplied locomotion and redrawn action/carry/menu poses. */
   static: {
-    url: "sprites/static-final.png?v=20261025-supplied-214803",
+    url: "sprites/static-final.png?v=20261026-carry-menu-v1",
     width: 2352,
     height: 3534,
     frameW: 168,
@@ -286,14 +287,14 @@ export const SHEETS = {
     walk: { down: { row: 3, frames: 5 }, side: { row: 4, frames: 4 }, up: { row: 5, frames: 5 } },
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 7 },
-    /** Supplied electric charge poses; the rear view reuses its idle poses. */
+    /** Reach and pull poses; electricity is rendered separately by the game. */
     cast: { down: { row: 8, frames: 6 }, side: { row: 9, frames: 7 }, up: { row: 10, frames: 4 } },
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 10, bodyH: 118 },
+    lobby: { row: 17, frames: 10, bodyH: 142 },
     victory: { row: 18, frames: 11 },
-    /** Electric effect origins relative to the new native-pixel feet anchor. */
-    muzzle: { side: [47, -61], down: [37, -70], up: [0, -84] },
+    /** Open palms in the first pull pose, relative to the native feet anchor. */
+    muzzle: { side: [50, -84], down: [34, -84], up: [0, -92] },
     /** His long blue coat. */
     hues: [195, 245],
     hueBase: [24, 61, 94],
@@ -1036,6 +1037,10 @@ export function sneakAlpha(p: Pick<Player, "id" | "sneak">, viewer: string | nul
   if (p.sneak <= 0) return 1;
   const back = Math.max(0, 1 - p.sneak / SNEAK_FADE);
   return viewer === null || viewer === p.id ? Math.max(SNEAK_FAINT, back) : back;
+}
+
+export function skullAlpha(p: Pick<Player, "curse">, tick: number): number {
+  return p.curse?.kind === "invisible" && Math.floor(tick / (TICK_RATE / 2)) % 2 === 1 ? 0 : 1;
 }
 
 /** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */

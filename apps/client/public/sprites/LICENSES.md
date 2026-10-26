@@ -15,21 +15,27 @@ lightning, shockwave, dust and the struck hammer's head are drawn by `scripts/bu
 
 ## goku.png
 
-Fan art of Goku (Dragon Ball) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Goku HD"; Kamehameha, carry walk and the lobby poses posed with skeleton v3 from its rotations). The lobby's
-original golden hair, aura, lightning, pebbles and flash were drawn by `scripts/build-goku-lobby.py`. Gameplay frames
-are laid out by `scripts/build-character-sheet.py goku`, rows = `SHEETS.goku`. The current separate lobby image,
-`goku-lobby.png`, uses the AI-edited source `concept/goku/lobby-hair-transform-candidate.png` (built-in image
-generator): redrawn upright golden hair, followed by a return to black hair. `scripts/pack-goku-lobby.py` registers
-those poses to the existing 16-cell grid. See `concept/goku/README.md` for provenance and reproduction.
+Fan art of Goku (Dragon Ball) for this non-commercial project. The original
+PixelLab artwork is retained as an appearance/pose reference. The current wider
+pixel-art gameplay family was redrawn with the built-in image generator using
+the actual Goku reference and the new Naruto family. `scripts/pack-goku.py`
+preserves 108 frames in the original 146 x 159 cells. Sources, prompts and
+measurements: `concept/goku/gameplay-redraw/`.
+The separate `goku-lobby.png` transformation is generated from the same new Goku;
+`scripts/pack-goku-lobby.py` registers eight key poses into 16 playback cells,
+including reverse power-down and resting holds. The resting pose uses the actual
+gameplay idle pixels. Earlier supplied/selected sources remain archived in
+`concept/goku/`. See its README for reproduction.
 
 ## naruto.png
 
-Fan art of Naruto for this non-commercial project. Current art supplied by the user in
-`naruto_slim_sprites (1).zip`: 108 original frames, 80 x 116 pixels per cell,
-9 columns and 18 rows. Source atlas and metadata retained in `concept/naruto/`.
-Used without resampling; row 17 supplies the eight-frame lobby celebration.
-The unused earlier PixelLab-derived lobby image was removed from public assets.
+Fan art of Naruto for this non-commercial project. Current artwork was redrawn
+with the built-in image generator from the user's classic Naruto appearance
+reference, preserving the supplied atlas's 108-frame animation contract.
+`scripts/pack-naruto.py` registers 80 x 116 cells in nine columns and 18 rows;
+row 17 supplies the eight-frame celebration. Actual references, generated sources,
+prompts and registration measurements are in `concept/naruto/reference-remake/`.
+The original supplied atlas/metadata remain untouched in `concept/naruto/`.
 
 ## spider.png
 

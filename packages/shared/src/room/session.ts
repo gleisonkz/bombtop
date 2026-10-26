@@ -16,6 +16,7 @@ import {
   type BotLevel,
   type BattleTimeMinutes,
   type BattleMode,
+  type BattleTeam,
   type ManiacConfig,
   normalizeManiac,
   BOT_PERSONAS,
@@ -114,7 +115,7 @@ export class BattleSession {
   join(id: string, name: string, character: CharacterId = DEFAULT_CHARACTER): boolean {
     if (this.phase !== "lobby" || this.members.length >= MAX_PLAYERS) return false;
     if (this.members.some((m) => m.id === id)) return true;
-    this.members.push({ id, name, wins: 0, connected: true, character });
+    this.members.push({ id, name, wins: 0, connected: true, character, team: this.members.length % 2 === 0 ? "red" : "blue" });
     this.pickedAt.set(id, ++this.picks);
     return true;
   }
@@ -125,6 +126,15 @@ export class BattleSession {
     if (this.phase !== "lobby" || !m) return false;
     if (m.character !== character) this.pickedAt.set(id, ++this.picks);
     m.character = character;
+    return true;
+  }
+
+  setTeam(requesterId: string, memberId: string, team: unknown): boolean {
+    if (this.phase !== "lobby" || this.battleMode !== "tag" || (team !== "red" && team !== "blue")) return false;
+    const member = this.members.find((m) => m.id === memberId);
+    if (!member || (requesterId !== memberId && requesterId !== this.hostId)) return false;
+    if (member.bot && requesterId !== this.hostId) return false;
+    member.team = team;
     return true;
   }
 
@@ -160,7 +170,7 @@ export class BattleSession {
     const personas = BOT_PERSONAS.filter((p) => !used.has(p));
     const persona = personas[Math.floor(random() * personas.length)] ?? BOT_PERSONAS[0]!;
     const id = `bot-${++this.botSeq}`;
-    this.members.push({ id, name, wins: 0, connected: true, bot: level, character, persona });
+    this.members.push({ id, name, wins: 0, connected: true, bot: level, character, persona, team: this.members.length % 2 === 0 ? "red" : "blue" });
     this.pickedAt.set(id, ++this.picks);
     return true;
   }
@@ -206,7 +216,11 @@ export class BattleSession {
     return {
       phase: this.phase,
       hostId: this.hostId ?? null,
-      members: this.members.map((m) => ({ ...m, ...(own.has(m.id) && { ownColors: true as const }) })),
+      members: this.members.map(({ team, ...member }) => ({
+        ...member,
+        ...(this.battleMode === "tag" && { team }),
+        ...(own.has(member.id) && { ownColors: true as const }),
+      })),
       // In the lobby, show what is coming next; otherwise what is being played.
       stage: maniac ? "classic" : this.phase === "lobby" ? this.nextStage : this.stage,
       winsToWin: maniac ? 3 : this.winsToWin,
@@ -253,7 +267,7 @@ export class BattleSession {
     const hasManiac = Object.hasOwn(rules, "maniac");
     if (!hasWins && !hasRotation && !hasTime && !hasSuddenDeath && !hasMode && !hasManiac) return false;
     const battleMode = hasMode ? rules.battleMode : this.battleMode;
-    if (battleMode !== "single" && battleMode !== "maniac") return false;
+    if (battleMode !== "single" && battleMode !== "tag" && battleMode !== "maniac") return false;
     if (battleMode === "maniac" && (hasWins || hasRotation || hasTime || hasSuddenDeath)) return false;
     const wins = hasWins ? rules.winsToWin : this.winsToWin;
     if (typeof wins !== "number" || !Number.isSafeInteger(wins) || wins < 1 || wins > 5) return false;
@@ -278,6 +292,7 @@ export class BattleSession {
   /** The host starts a match from the lobby: rounds until someone has won WINS_TO_WIN of them. */
   start(requesterId: string): boolean {
     if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
+    if (this.battleMode === "tag" && new Set(this.members.map((member) => member.team)).size !== 2) return false;
     for (const m of this.members) m.wins = 0;
     this.round = 0;
     this.startRound();
@@ -327,6 +342,7 @@ export class BattleSession {
       if (--this.resultsLeft <= 0) {
         if (this.setOver || this.members.length < 2 || this.hostId === undefined) {
           this.phase = "lobby";
+          this.round = 0;
           this.match = null;
         } else this.startRound();
       }
@@ -342,11 +358,15 @@ export class BattleSession {
     for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match, humansAlive);
     step(this.match, inputs);
 
-    const result = matchResult(this.match);
+    const result = this.battleMode === "tag" ? this.tagResult() : matchResult(this.match);
     const out: TickOutput = {};
     if (result.over) {
-      const winner = this.members.find((m) => m.id === result.winnerId);
-      if (winner) winner.wins++;
+      const winnerTeam = "winnerTeam" in result ? result.winnerTeam : undefined;
+      const winners = winnerTeam
+        ? this.members.filter((member) => member.team === winnerTeam)
+        : this.members.filter((member) => member.id === result.winnerId);
+      for (const member of winners) member.wins++;
+      const winner = winners[0];
       this.setOver = !!winner && winner.wins >= (this.battleMode === "maniac" ? 3 : this.winsToWin);
       out.result = { ...result, setOver: this.setOver };
       this.phase = "results";
@@ -354,6 +374,19 @@ export class BattleSession {
     }
     if (result.over || this.match.tick % SNAPSHOT_EVERY === 0) out.snapshot = this.snapshot(this.match);
     return out;
+  }
+
+  private tagResult(): { over: false } | { over: true; winnerId: string | null; winnerTeam: BattleTeam | null } {
+    if (!this.match || this.match.players.length < 2) return { over: false };
+    const survivors = this.match.players.filter((player) => player.alive);
+    const teams = new Set(survivors.map((player) => this.members.find((member) => member.id === player.id)?.team));
+    if (teams.size <= 1) {
+      const winnerTeam = survivors.length ? (this.members.find((member) => member.id === survivors[0]!.id)?.team ?? null) : null;
+      const winnerId = winnerTeam ? (survivors.find((player) => this.members.some((member) => member.id === player.id && member.team === winnerTeam))?.id ?? null) : null;
+      return { over: true, winnerId, winnerTeam };
+    }
+    if (this.match.roundEndsAt !== undefined && this.match.tick >= this.match.roundEndsAt) return { over: true, winnerId: null, winnerTeam: null };
+    return { over: false };
   }
 }
 

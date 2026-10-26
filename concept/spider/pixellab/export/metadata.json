@@ -1,0 +1,199 @@
+{
+  "group_id": "c0cf1a96-46b8-49bf-b85d-4299de62d201",
+  "states": [
+    {
+      "character": {
+        "id": "439a18c5-85aa-4455-ac5a-f40f73947f85",
+        "name": "Idle",
+        "prompt": "Create a NEW Spider-Man character for a 2D game. Use the uploaded Captain America sprite as the visual style and proportion reference when attached: match its head-to-body ratio, clear torso, visible neck, distinct arms and legs, readable hands and boots, clean dark outlines, restrained shading and pixel density. Compact stylized superhero anatomy, roughly 3 heads tall, with the head about one third of the full height. Classic Spider-Man costume: red full-face mask with black web pattern, large white eye lenses bordered in black, small black spider emblem on the chest, royal blue sides and legs, red gloves and boots. Entire face covered. Standing neutral idle pose, full body visible and centered, feet on the same baseline. Authentic crisp pixel art, limited palette, discrete shading clusters, transparent background. The subject is Spider-Man himself, without any bomb, fuse, helmet, shield, Captain America star, letter A, or carried object. Preserve proper human superhero anatomy; avoid a spherical body, excessively oversized head, tiny torso or ball-shaped silhouette. Consistent costume and proportions across all eight directions.",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-26T02:38:54.029560+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {
+          "Bombtop_web_cast_right._Spider-Man_performs_a_stat": {
+            "east": [
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_000.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_001.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_002.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_003.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_004.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_005.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_006.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_007.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_008.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_009.png",
+              "Idle/animations/Bombtop_web_cast_right._Spider-Man_performs_a_stat/east/frame_010.png"
+            ]
+          },
+          "Bombtop_carry_walk_right._Six-frame_seamless_walki": {
+            "east": [
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_000.png",
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_001.png",
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_002.png",
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_003.png",
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_004.png",
+              "Idle/animations/Bombtop_carry_walk_right._Six-frame_seamless_walki/east/frame_005.png"
+            ]
+          },
+          "Bombtop_carry_fixed_front._Eight-frame_seamless_wa": {
+            "south": [
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_000.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_001.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_002.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_003.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_004.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_005.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_006.png",
+              "Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_007.png"
+            ]
+          },
+          "Walking": {
+            "south": [
+              "Idle/animations/Walking/south/frame_000.png",
+              "Idle/animations/Walking/south/frame_001.png",
+              "Idle/animations/Walking/south/frame_002.png",
+              "Idle/animations/Walking/south/frame_003.png",
+              "Idle/animations/Walking/south/frame_004.png",
+              "Idle/animations/Walking/south/frame_005.png"
+            ]
+          },
+          "Falling_Back_Death": {
+            "south": [
+              "Idle/animations/Falling_Back_Death/south/frame_000.png",
+              "Idle/animations/Falling_Back_Death/south/frame_001.png",
+              "Idle/animations/Falling_Back_Death/south/frame_002.png",
+              "Idle/animations/Falling_Back_Death/south/frame_003.png",
+              "Idle/animations/Falling_Back_Death/south/frame_004.png",
+              "Idle/animations/Falling_Back_Death/south/frame_005.png",
+              "Idle/animations/Falling_Back_Death/south/frame_006.png"
+            ]
+          },
+          "Bombtop_web_cast_back._Spider-Man_performs_a_stati": {
+            "north": [
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_000.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_001.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_002.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_003.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_004.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_005.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_006.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_007.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_008.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_009.png",
+              "Idle/animations/Bombtop_web_cast_back._Spider-Man_performs_a_stati/north/frame_010.png"
+            ]
+          },
+          "Bombtop_web_cast._Spider-Man_performs_a_short_stat": {
+            "south": [
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_000.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_001.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_002.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_003.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_004.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_005.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_006.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_007.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_008.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_009.png",
+              "Idle/animations/Bombtop_web_cast._Spider-Man_performs_a_short_stat/south/frame_010.png"
+            ]
+          },
+          "Taking_Punch": {
+            "south": [
+              "Idle/animations/Taking_Punch/south/frame_000.png",
+              "Idle/animations/Taking_Punch/south/frame_001.png",
+              "Idle/animations/Taking_Punch/south/frame_002.png",
+              "Idle/animations/Taking_Punch/south/frame_003.png",
+              "Idle/animations/Taking_Punch/south/frame_004.png",
+              "Idle/animations/Taking_Punch/south/frame_005.png"
+            ]
+          },
+          "Bombtop_carry_walk_back._Six-frame_seamless_walkin": {
+            "north": [
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_000.png",
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_001.png",
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_002.png",
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_003.png",
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_004.png",
+              "Idle/animations/Bombtop_carry_walk_back._Six-frame_seamless_walkin/north/frame_005.png"
+            ]
+          },
+          "Walking-d7bde56d": {
+            "east": [
+              "Idle/animations/Walking-d7bde56d/east/frame_000.png",
+              "Idle/animations/Walking-d7bde56d/east/frame_001.png",
+              "Idle/animations/Walking-d7bde56d/east/frame_002.png",
+              "Idle/animations/Walking-d7bde56d/east/frame_003.png",
+              "Idle/animations/Walking-d7bde56d/east/frame_004.png",
+              "Idle/animations/Walking-d7bde56d/east/frame_005.png"
+            ]
+          },
+          "Breathing_Idle": {
+            "south": [
+              "Idle/animations/Breathing_Idle/south/frame_000.png",
+              "Idle/animations/Breathing_Idle/south/frame_001.png",
+              "Idle/animations/Breathing_Idle/south/frame_002.png",
+              "Idle/animations/Breathing_Idle/south/frame_003.png"
+            ]
+          },
+          "Breathing_Idle-f663f544": {
+            "east": [
+              "Idle/animations/Breathing_Idle-f663f544/east/frame_000.png",
+              "Idle/animations/Breathing_Idle-f663f544/east/frame_001.png",
+              "Idle/animations/Breathing_Idle-f663f544/east/frame_002.png",
+              "Idle/animations/Breathing_Idle-f663f544/east/frame_003.png"
+            ]
+          },
+          "Walking-f715f752": {
+            "north": [
+              "Idle/animations/Walking-f715f752/north/frame_000.png",
+              "Idle/animations/Walking-f715f752/north/frame_001.png",
+              "Idle/animations/Walking-f715f752/north/frame_002.png",
+              "Idle/animations/Walking-f715f752/north/frame_003.png",
+              "Idle/animations/Walking-f715f752/north/frame_004.png",
+              "Idle/animations/Walking-f715f752/north/frame_005.png"
+            ]
+          },
+          "Bombtop_carry_walk_front._Six-frame_seamless_walk": {
+            "south": [
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_000.png",
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_001.png",
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_002.png",
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_003.png",
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_004.png",
+              "Idle/animations/Bombtop_carry_walk_front._Six-frame_seamless_walk/south/frame_005.png"
+            ]
+          },
+          "Breathing_Idle-fdba44bb": {
+            "north": [
+              "Idle/animations/Breathing_Idle-fdba44bb/north/frame_000.png",
+              "Idle/animations/Breathing_Idle-fdba44bb/north/frame_001.png",
+              "Idle/animations/Breathing_Idle-fdba44bb/north/frame_002.png",
+              "Idle/animations/Breathing_Idle-fdba44bb/north/frame_003.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-26T03:22:11.225118"
+}

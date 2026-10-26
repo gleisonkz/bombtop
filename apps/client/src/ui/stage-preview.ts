@@ -40,13 +40,17 @@ async function renderPreview(stage: StageId): Promise<string> {
   return canvas.toDataURL("image/png");
 }
 
-/** Reuses three cached renders of actual maps and production tile artwork. */
 export function stagePreview(stage: StageId): HTMLImageElement {
   const image = el("img", { class: "stage-preview" });
   image.alt = "";
   image.setAttribute("aria-hidden", "true");
+  image.setAttribute("data-stage", stage);
   image.width = 150;
   image.height = 130;
+  if (stage === "sb4-01" || stage === "sb4-02") {
+    image.src = `${import.meta.env.BASE_URL}sprites/sb4-battle/stage-${stage.slice(-2)}.png`;
+    return image;
+  }
   let preview = previews.get(stage);
   if (!preview) {
     preview = renderPreview(stage);

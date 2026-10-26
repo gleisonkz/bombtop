@@ -1,4 +1,4 @@
-import { RESULTS_TICKS, TICK_RATE, WINS_TO_WIN, type LobbyMember } from "@bombtop/shared";
+import { RESULTS_TICKS, TICK_RATE, WINS_TO_WIN, type BattleTeam, type LobbyMember } from "@bombtop/shared";
 import type { Placing } from "../game/standings";
 import { el } from "./dom";
 import { lobbySlots } from "./lobby-slots";
@@ -8,9 +8,11 @@ const CONFETTI = ["#ffd23f", "#ff7a1a", "#ff6b6b", "#7fd8ff", "#45c25b", "#f5f5f
 const MEDALS = ["🥇", "🥈", "🥉"];
 
 /** The results card's words: a round's winner and the next round coming, or the match's winner and back to the room. */
-export function resultText(winner: string | null, mine: boolean, setOver: boolean): { title: string; hint: string } {
+export function resultText(winner: string | null, mine: boolean, setOver: boolean, winnerTeam?: BattleTeam | null): { title: string; hint: string } {
   const what = setOver ? "a partida" : "o round";
-  const title = mine ? `Você venceu ${what}!` : winner ? `${winner} venceu ${what}!` : "Empate!";
+  const title = winnerTeam
+    ? mine ? `Sua equipe venceu ${what}!` : `Equipe ${winnerTeam === "red" ? "Vermelha" : "Azul"} venceu ${what}!`
+    : mine ? `Você venceu ${what}!` : winner ? `${winner} venceu ${what}!` : "Empate!";
   return { title, hint: setOver ? "Voltando para a sala…" : "Próximo round…" };
 }
 
@@ -23,17 +25,18 @@ export class ResultScreen {
     parent.appendChild(this.root);
   }
 
-  show(placings: Placing[], members: LobbyMember[], me: string, winnerId: string | null, setOver: boolean, winsToWin = WINS_TO_WIN): void {
+  show(placings: Placing[], members: LobbyMember[], me: string, winnerId: string | null, setOver: boolean, winsToWin = WINS_TO_WIN, winnerTeam?: BattleTeam | null): void {
     // The seat's color, or null for the original colors of whoever picked their character first.
     const colors = new Map(lobbySlots(members, members.length).map(({ member, color }) => [member!.id, member!.ownColors ? null : color]));
     const byId = new Map(members.map((m) => [m.id, m]));
     const winner = winnerId ? byId.get(winnerId) : undefined;
-    const { title, hint } = resultText(winner?.name ?? null, !!winner && winnerId === me, setOver);
+    const mine = winnerTeam ? byId.get(me)?.team === winnerTeam : !!winner && winnerId === me;
+    const { title, hint } = resultText(winner?.name ?? null, mine, setOver, winnerTeam);
 
     const rows = placings.flatMap(({ id, place }) => {
       const m = byId.get(id);
       if (!m) return [];
-      const won = id === winnerId;
+      const won = winnerTeam ? m.team === winnerTeam : id === winnerId;
       return [
         el("li", { class: ["placing", won && "won", id === me && "me"].filter(Boolean).join(" ") }, [
           el("span", { class: "place", text: MEDALS[place - 1] ?? `${place}º` }),

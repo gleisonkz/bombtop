@@ -1,4 +1,5 @@
 import { TILE } from "./constants";
+import type { StageId } from "./stage";
 
 export enum Tile {
   Empty = 0,
@@ -135,13 +136,15 @@ export interface Cart {
 
 export type MountKind = "hopper" | "dasher" | "pusher";
 
-export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire";
+export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire" | "hiccups" | "shortFuse" | "longFuse" | "invisible" | "cannotStop";
 
 /** A skull's curse: it lasts until passed on by touch or cured by picking up another item. */
 export interface Curse {
   kind: CurseKind;
   /** Who just passed it on: it cannot go back to them until the two have parted. */
   from?: string;
+  elapsed?: number;
+  momentum?: Facing;
 }
 
 export interface Bomb {
@@ -237,6 +240,8 @@ export type BlastKind = "lightning" | "web" | "kamehameha" | "rasengan" | "thund
 
 export interface MatchState {
   tick: number;
+  stage?: StageId;
+  tempo?: 0.5 | 1 | 2;
   /** PRNG state for in-match randomness (see nextRandom). */
   rng: number;
   /** Sudden death: how many spiral tiles have been processed. */

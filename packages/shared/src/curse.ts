@@ -1,8 +1,11 @@
-import { MAX_SPEED, SLOW_SPEED } from "./constants";
+import { FUSE_TICKS, MAX_SPEED, SLOW_SPEED, TICK_RATE } from "./constants";
 import { nextRandom } from "./rng";
 import { playerTile, type CurseKind, type Direction, type MatchState, type Player } from "./state";
 
-export const CURSES: readonly CurseKind[] = ["slow", "fast", "reverse", "diarrhea", "constipation", "weakFire"];
+export const CURSES: readonly CurseKind[] = [
+  "diarrhea", "weakFire", "hiccups", "fast", "shortFuse", "invisible",
+  "cannotStop", "slow", "longFuse", "constipation", "reverse",
+];
 
 const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" } as const;
 
@@ -18,6 +21,16 @@ export function effectiveSpeed(p: Player): number {
 
 export function effectiveRange(p: Player): number {
   return p.curse?.kind === "weakFire" ? 1 : p.fireRange;
+}
+
+export function effectiveCapacity(p: Player): number {
+  return p.curse?.kind === "weakFire" ? 1 : p.bombCapacity;
+}
+
+export function effectiveFuse(p: Player): number {
+  if (p.curse?.kind === "shortFuse") return TICK_RATE;
+  if (p.curse?.kind === "longFuse") return 4 * TICK_RATE;
+  return FUSE_TICKS;
 }
 
 export function cursedDirection(p: Player, dir: Direction): Direction {

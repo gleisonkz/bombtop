@@ -1,0 +1,106 @@
+{
+  "frame": [
+    80,
+    116
+  ],
+  "atlas": [
+    9,
+    18
+  ],
+  "anchor": [
+    40,
+    112
+  ],
+  "panels": [
+    {
+      "name": "locomotion",
+      "columns": 6,
+      "rows": [
+        {
+          "runtimeRow": 0,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 1,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 2,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 3,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 4,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 5,
+          "frames": 6
+        }
+      ]
+    },
+    {
+      "name": "actions",
+      "columns": 9,
+      "rows": [
+        {
+          "runtimeRow": 6,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 7,
+          "frames": 7
+        },
+        {
+          "runtimeRow": 8,
+          "frames": 9
+        },
+        {
+          "runtimeRow": 9,
+          "frames": 9
+        },
+        {
+          "runtimeRow": 10,
+          "frames": 9
+        }
+      ]
+    },
+    {
+      "name": "carry-celebrate",
+      "columns": 8,
+      "rows": [
+        {
+          "runtimeRow": 11,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 12,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 13,
+          "frames": 4
+        },
+        {
+          "runtimeRow": 14,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 15,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 16,
+          "frames": 6
+        },
+        {
+          "runtimeRow": 17,
+          "frames": 8
+        }
+      ]
+    }
+  ]
+}

@@ -89,6 +89,11 @@ export class RoomCore {
         if (character && this.session.setCharacter(id, character)) this.broadcastLobby();
         break;
       }
+      case C2S.team: {
+        const { id: memberId, team } = (message ?? {}) as { id?: unknown; team?: unknown };
+        if (typeof memberId === "string" && this.session.setTeam(id, memberId, team)) this.broadcastLobby();
+        break;
+      }
       case C2S.botCharacter: {
         const { id: bot, character } = (message ?? {}) as { id?: unknown; character?: unknown };
         const picked = characterId(character);

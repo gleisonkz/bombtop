@@ -1,0 +1,1968 @@
+{
+  "tool": "Pillow",
+  "method": "conventional source-pixel cutout rig",
+  "sources": [
+    "export/Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_004.png",
+    "export/Idle/animations/Breathing_Idle-f663f544/east/frame_000.png",
+    "export/Idle/animations/Breathing_Idle-f663f544/east/frame_001.png",
+    "export/Idle/animations/Breathing_Idle-f663f544/east/frame_002.png",
+    "export/Idle/animations/Breathing_Idle-f663f544/east/frame_003.png",
+    "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_000.png",
+    "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_001.png",
+    "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_002.png",
+    "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_003.png",
+    "export/Idle/animations/Breathing_Idle/south/frame_000.png",
+    "export/Idle/animations/Breathing_Idle/south/frame_001.png",
+    "export/Idle/animations/Breathing_Idle/south/frame_002.png",
+    "export/Idle/animations/Breathing_Idle/south/frame_003.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_000.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_001.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_002.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_003.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_004.png",
+    "export/Idle/animations/Walking-d7bde56d/east/frame_005.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_000.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_001.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_002.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_003.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_004.png",
+    "export/Idle/animations/Walking-f715f752/north/frame_005.png",
+    "export/Idle/animations/Walking/south/frame_000.png",
+    "export/Idle/animations/Walking/south/frame_001.png",
+    "export/Idle/animations/Walking/south/frame_002.png",
+    "export/Idle/animations/Walking/south/frame_003.png",
+    "export/Idle/animations/Walking/south/frame_004.png",
+    "export/Idle/animations/Walking/south/frame_005.png"
+  ],
+  "actions": {
+    "carry-idle": {
+      "south": [
+        {
+          "path": "rigged/carry-idle/south/0.png",
+          "source": "export/Idle/animations/Breathing_Idle/south/frame_000.png",
+          "head": [
+            31,
+            19,
+            64,
+            49
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/south/1.png",
+          "source": "export/Idle/animations/Breathing_Idle/south/frame_001.png",
+          "head": [
+            31,
+            18,
+            64,
+            48
+          ],
+          "palms": [
+            [
+              30,
+              19
+            ],
+            [
+              65,
+              19
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                50
+              ],
+              "elbow": [
+                25,
+                38
+              ],
+              "wrist": [
+                30,
+                22
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                50
+              ],
+              "elbow": [
+                71,
+                38
+              ],
+              "wrist": [
+                65,
+                22
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/south/2.png",
+          "source": "export/Idle/animations/Breathing_Idle/south/frame_002.png",
+          "head": [
+            32,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              18
+            ],
+            [
+              65,
+              18
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                49
+              ],
+              "elbow": [
+                25,
+                37
+              ],
+              "wrist": [
+                30,
+                21
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                49
+              ],
+              "elbow": [
+                71,
+                37
+              ],
+              "wrist": [
+                65,
+                21
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/south/3.png",
+          "source": "export/Idle/animations/Breathing_Idle/south/frame_003.png",
+          "head": [
+            31,
+            18,
+            64,
+            48
+          ],
+          "palms": [
+            [
+              30,
+              19
+            ],
+            [
+              65,
+              19
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                50
+              ],
+              "elbow": [
+                25,
+                38
+              ],
+              "wrist": [
+                30,
+                22
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                50
+              ],
+              "elbow": [
+                71,
+                38
+              ],
+              "wrist": [
+                65,
+                22
+              ]
+            }
+          ]
+        }
+      ],
+      "east": [
+        {
+          "path": "rigged/carry-idle/east/0.png",
+          "source": "export/Idle/animations/Breathing_Idle-f663f544/east/frame_000.png",
+          "head": [
+            38,
+            18,
+            66,
+            48
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/east/1.png",
+          "source": "export/Idle/animations/Breathing_Idle-f663f544/east/frame_001.png",
+          "head": [
+            37,
+            17,
+            65,
+            47
+          ],
+          "palms": [
+            [
+              67,
+              19
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                42,
+                50
+              ],
+              "elbow": [
+                33,
+                38
+              ],
+              "wrist": [
+                36,
+                22
+              ]
+            },
+            {
+              "shoulder": [
+                57,
+                50
+              ],
+              "elbow": [
+                69,
+                38
+              ],
+              "wrist": [
+                67,
+                22
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/east/2.png",
+          "source": "export/Idle/animations/Breathing_Idle-f663f544/east/frame_002.png",
+          "head": [
+            36,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              66,
+              19
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                41,
+                50
+              ],
+              "elbow": [
+                32,
+                38
+              ],
+              "wrist": [
+                35,
+                22
+              ]
+            },
+            {
+              "shoulder": [
+                56,
+                50
+              ],
+              "elbow": [
+                68,
+                38
+              ],
+              "wrist": [
+                66,
+                22
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/east/3.png",
+          "source": "export/Idle/animations/Breathing_Idle-f663f544/east/frame_003.png",
+          "head": [
+            37,
+            17,
+            65,
+            47
+          ],
+          "palms": [
+            [
+              67,
+              19
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                42,
+                50
+              ],
+              "elbow": [
+                33,
+                38
+              ],
+              "wrist": [
+                36,
+                22
+              ]
+            },
+            {
+              "shoulder": [
+                57,
+                50
+              ],
+              "elbow": [
+                69,
+                38
+              ],
+              "wrist": [
+                67,
+                22
+              ]
+            }
+          ]
+        }
+      ],
+      "north": [
+        {
+          "path": "rigged/carry-idle/north/0.png",
+          "source": "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_000.png",
+          "head": [
+            32,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/north/1.png",
+          "source": "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_001.png",
+          "head": [
+            32,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/north/2.png",
+          "source": "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_002.png",
+          "head": [
+            32,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-idle/north/3.png",
+          "source": "export/Idle/animations/Breathing_Idle-fdba44bb/north/frame_003.png",
+          "head": [
+            32,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "carry-walk": {
+      "south": [
+        {
+          "path": "rigged/carry-walk/south/0.png",
+          "source": "export/Idle/animations/Walking/south/frame_000.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/south/1.png",
+          "source": "export/Idle/animations/Walking/south/frame_001.png",
+          "head": [
+            32,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              29,
+              20
+            ],
+            [
+              64,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                36,
+                51
+              ],
+              "elbow": [
+                24,
+                39
+              ],
+              "wrist": [
+                29,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                64,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/south/2.png",
+          "source": "export/Idle/animations/Walking/south/frame_002.png",
+          "head": [
+            31,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              28,
+              20
+            ],
+            [
+              63,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                35,
+                51
+              ],
+              "elbow": [
+                23,
+                39
+              ],
+              "wrist": [
+                28,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                57,
+                51
+              ],
+              "elbow": [
+                69,
+                39
+              ],
+              "wrist": [
+                63,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/south/3.png",
+          "source": "export/Idle/animations/Walking/south/frame_003.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              29,
+              20
+            ],
+            [
+              64,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                36,
+                51
+              ],
+              "elbow": [
+                24,
+                39
+              ],
+              "wrist": [
+                29,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                64,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/south/4.png",
+          "source": "export/Idle/animations/Walking/south/frame_004.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              29,
+              20
+            ],
+            [
+              64,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                36,
+                51
+              ],
+              "elbow": [
+                24,
+                39
+              ],
+              "wrist": [
+                29,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                64,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/south/5.png",
+          "source": "export/Idle/animations/Walking/south/frame_005.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        }
+      ],
+      "east": [
+        {
+          "path": "rigged/carry-walk/east/0.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_000.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/east/1.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_001.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/east/2.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_002.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/east/3.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_003.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/east/4.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_004.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/east/5.png",
+          "source": "export/Idle/animations/Walking-d7bde56d/east/frame_005.png",
+          "head": [
+            35,
+            17,
+            63,
+            47
+          ],
+          "palms": [
+            [
+              68,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                43,
+                51
+              ],
+              "elbow": [
+                34,
+                39
+              ],
+              "wrist": [
+                37,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                58,
+                51
+              ],
+              "elbow": [
+                70,
+                39
+              ],
+              "wrist": [
+                68,
+                23
+              ]
+            }
+          ]
+        }
+      ],
+      "north": [
+        {
+          "path": "rigged/carry-walk/north/0.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_000.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/north/1.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_001.png",
+          "head": [
+            32,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/north/2.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_002.png",
+          "head": [
+            32,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/north/3.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_003.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/north/4.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_004.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        },
+        {
+          "path": "rigged/carry-walk/north/5.png",
+          "source": "export/Idle/animations/Walking-f715f752/north/frame_005.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "palms": [
+            [
+              30,
+              20
+            ],
+            [
+              65,
+              20
+            ]
+          ],
+          "limbs": [
+            {
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ]
+            },
+            {
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "lobby": {
+      "south": [
+        {
+          "path": "rigged/lobby/south/0.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "limbs": []
+        },
+        {
+          "path": "rigged/lobby/south/1.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                36,
+                50
+              ],
+              "elbow": [
+                28,
+                58
+              ],
+              "wrist": [
+                29,
+                63
+              ],
+              "gesture": "down"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                59,
+                50
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ],
+              "gesture": "up"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/2.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                37,
+                51
+              ],
+              "elbow": [
+                25,
+                39
+              ],
+              "wrist": [
+                30,
+                23
+              ],
+              "gesture": "up"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                59,
+                51
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ],
+              "gesture": "up"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/3.png",
+          "head": [
+            32,
+            13,
+            65,
+            43
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                37,
+                47
+              ],
+              "elbow": [
+                24,
+                35
+              ],
+              "wrist": [
+                30,
+                19
+              ],
+              "gesture": "up"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                59,
+                47
+              ],
+              "elbow": [
+                72,
+                35
+              ],
+              "wrist": [
+                65,
+                19
+              ],
+              "gesture": "up"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/4.png",
+          "head": [
+            32,
+            15,
+            65,
+            45
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                36,
+                48
+              ],
+              "elbow": [
+                30,
+                43
+              ],
+              "wrist": [
+                24,
+                42
+              ],
+              "gesture": "out"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                60,
+                48
+              ],
+              "elbow": [
+                66,
+                43
+              ],
+              "wrist": [
+                72,
+                42
+              ],
+              "gesture": "out"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/5.png",
+          "head": [
+            32,
+            27,
+            65,
+            57
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                36,
+                57
+              ],
+              "elbow": [
+                29,
+                64
+              ],
+              "wrist": [
+                24,
+                70
+              ],
+              "gesture": "out"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                60,
+                57
+              ],
+              "elbow": [
+                67,
+                64
+              ],
+              "wrist": [
+                72,
+                70
+              ],
+              "gesture": "out"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/6.png",
+          "head": [
+            32,
+            20,
+            65,
+            50
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                36,
+                54
+              ],
+              "elbow": [
+                30,
+                58
+              ],
+              "wrist": [
+                29,
+                64
+              ],
+              "gesture": "down"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                60,
+                54
+              ],
+              "elbow": [
+                66,
+                58
+              ],
+              "wrist": [
+                67,
+                64
+              ],
+              "gesture": "down"
+            }
+          ]
+        },
+        {
+          "path": "rigged/lobby/south/7.png",
+          "head": [
+            32,
+            17,
+            65,
+            47
+          ],
+          "limbs": [
+            {
+              "side": "left",
+              "shoulder": [
+                36,
+                50
+              ],
+              "elbow": [
+                28,
+                57
+              ],
+              "wrist": [
+                29,
+                63
+              ],
+              "gesture": "down"
+            },
+            {
+              "side": "right",
+              "shoulder": [
+                59,
+                50
+              ],
+              "elbow": [
+                71,
+                39
+              ],
+              "wrist": [
+                65,
+                23
+              ],
+              "gesture": "up"
+            }
+          ]
+        }
+      ]
+    },
+    "cast-up": {
+      "north": [
+        {
+          "path": "rigged/cast-up/north/0.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            67,
+            42
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/1.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            67,
+            42
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/2.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            65,
+            36
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/3.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            63,
+            30
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/4.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            59,
+            24
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/5.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            55,
+            14
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/6.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            55,
+            13
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/7.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            55,
+            15
+          ]
+        },
+        {
+          "path": "rigged/cast-up/north/8.png",
+          "head": [
+            31,
+            17,
+            64,
+            47
+          ],
+          "wrist": [
+            55,
+            14
+          ]
+        }
+      ]
+    }
+  },
+  "open_glove_source": {
+    "path": "export/Idle/animations/Bombtop_carry_fixed_front._Eight-frame_seamless_wa/south/frame_004.png",
+    "boxes": [
+      [
+        15,
+        17,
+        28,
+        31
+      ],
+      [
+        57,
+        17,
+        71,
+        31
+      ]
+    ]
+  }
+}

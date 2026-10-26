@@ -48,7 +48,7 @@ export function collectItems(s: MatchState): void {
     if (getTile(s, x, y) !== Tile.Empty) continue;
     const item = s.items.find((i) => i.x === x && i.y === y);
     if (!item || item.owner === p.id) continue;
-    if (item.kind !== ItemKind.Skull && item.kind !== ItemKind.Picanha) p.curse = null; // any other item cures a curse
+    if (item.kind !== ItemKind.Skull && item.kind !== ItemKind.Picanha && item.kind !== ItemKind.Egg) p.curse = null;
     EFFECTS[item.kind](p, s);
     s.items = s.items.filter((i) => i !== item);
   }
@@ -72,6 +72,66 @@ function carried(p: Player): ItemKind[] {
   ];
 }
 
+function openDropTiles(s: MatchState): { x: number; y: number }[] {
+  const taken = (x: number, y: number) =>
+    s.items.some((item) => item.x === x && item.y === y) ||
+    s.players.some((other) => other.alive && playerTile(other).x === x && playerTile(other).y === y);
+  const open: { x: number; y: number }[] = [];
+  for (let y = 0; y < s.grid.height; y++)
+    for (let x = 0; x < s.grid.width; x++)
+      if (getTile(s, x, y) === Tile.Empty && !hasFlame(s, x, y) && !bombAt(s, x, y) && !taken(x, y)) open.push({ x, y });
+  return open;
+}
+
+export function scatterCurseItem(s: MatchState, p: Player): boolean {
+  const items = carried(p);
+  if (!items.length) return false;
+  const open = openDropTiles(s);
+  if (!open.length) return false;
+  const kind = items[Math.floor(nextRandom(s) * items.length)]!;
+  switch (kind) {
+    case ItemKind.Fire:
+      p.fireRange--;
+      break;
+    case ItemKind.Bomb:
+      p.bombCapacity--;
+      break;
+    case ItemKind.Speed:
+      p.speed -= SPEED_STEP;
+      break;
+    case ItemKind.Kick:
+      p.canKick = false;
+      break;
+    case ItemKind.BombPass:
+      p.canBombPass = false;
+      break;
+    case ItemKind.BlockPass:
+      p.canBlockPass = false;
+      break;
+    case ItemKind.Heart:
+      p.hasHeart = false;
+      break;
+    case ItemKind.Punch:
+      p.canPunch = false;
+      break;
+    case ItemKind.Push:
+      p.canPush = false;
+      break;
+    case ItemKind.Glove:
+      p.canGlove = false;
+      break;
+    case ItemKind.Remote:
+    case ItemKind.Pierce:
+      p.bombType = "normal";
+      break;
+    default:
+      return false;
+  }
+  const spot = open[Math.floor(nextRandom(s) * open.length)]!;
+  s.items.push({ ...spot, kind });
+  return true;
+}
+
 /**
  * A player who just died scatters the power-ups they carried onto random open floor
  * (no block, bomb, flame, item or living player), and is left with the starting stats.
@@ -87,13 +147,7 @@ export function dropItems(s: MatchState, p: Player): void {
   p.fireSuitTicks = 0;
   if (p.canPush) p.canPush = false;
   p.bombType = "normal";
-  const taken = (x: number, y: number) =>
-    s.items.some((i) => i.x === x && i.y === y) ||
-    s.players.some((o) => o.alive && playerTile(o).x === x && playerTile(o).y === y);
-  const open: { x: number; y: number }[] = [];
-  for (let y = 0; y < s.grid.height; y++)
-    for (let x = 0; x < s.grid.width; x++)
-      if (getTile(s, x, y) === Tile.Empty && !hasFlame(s, x, y) && !bombAt(s, x, y) && !taken(x, y)) open.push({ x, y });
+  const open = openDropTiles(s);
   for (const kind of drops) {
     if (open.length === 0) return;
     const [spot] = open.splice(Math.floor(nextRandom(s) * open.length), 1);

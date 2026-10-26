@@ -1,4 +1,4 @@
-import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
+import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SELECTABLE_STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
 import { button, el } from "./dom";
 import { STAGE_NAMES } from "./stage-names";
 import { stagePreview } from "./stage-preview";
@@ -41,7 +41,7 @@ export class StageRotationPanel {
     const cancel = button("Fechar", () => this.close(), "ghost");
     cancel.dataset.padBack = "";
     cancel.autofocus = true;
-    this.additions = STAGES.map(stage => {
+    this.additions = SELECTABLE_STAGES.map(stage => {
       const add = button(`＋ ${STAGE_NAMES[stage]}`, () => {
         if (!this.editable || this.draft.length >= MAX_STAGE_ROTATION) return;
         this.draft.push({ stage });
@@ -50,7 +50,7 @@ export class StageRotationPanel {
       add.appendChild(stagePreview(stage));
       return add;
     });
-    this.dialog.append(title, el("p", { class: "hint", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar." }),
+    this.dialog.append(title, el("p", { class: "hint", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens das fases SB4 são referências do SNES; a reprodução das mecânicas ainda está em andamento." }),
       this.list, el("div", { class: "stage-additions" }, this.additions), this.summary,
       el("div", { class: "stage-dialog-actions" }, [cancel, this.save]));
     parent.appendChild(this.dialog);
@@ -95,7 +95,7 @@ export class StageRotationPanel {
   private row(entry: StageRotationEntry, index: number): HTMLElement {
     const preview = el("span", { class: "stage-preview-box" }, [stagePreview(entry.stage)]);
     const stage = el("select");
-    for (const id of STAGES) {
+    for (const id of SELECTABLE_STAGES) {
       const option = el("option", { text: STAGE_NAMES[id] });
       option.value = id;
       stage.appendChild(option);

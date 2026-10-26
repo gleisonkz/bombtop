@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "source": {
+    "file": "lobby-transform.generated.png",
+    "size": [
+      985,
+      1596
+    ],
+    "sha256": "b98fadc1386f7426a70b2c35a0226cd70ed91c04b63000605bd05de09cc085fa"
+  },
+  "base": {
+    "file": "apps/client/public/sprites/goku.png",
+    "sha256": "e8ea47ea737566fc2a0e2af13f185363df1be4a5dcd38a081c47aaa56066470b",
+    "cell": [
+      0,
+      0,
+      146,
+      159
+    ],
+    "anchor": [
+      71.5,
+      153
+    ],
+    "scale": 0.9594594594594594,
+    "body_height": 148,
+    "chest_width": 62
+  },
+  "cell": [
+    128,
+    207
+  ],
+  "anchor": [
+    64,
+    194
+  ],
+  "scale": 0.34,
+  "resampling": "NEAREST",
+  "playback": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1,
+    0,
+    0
+  ],
+  "alpha_threshold": 32,
+  "minimum_component_pixels": 24,
+  "seam_pixels": 6,
+  "notes": [
+    "Keypose 0 is the actual new gameplay idle cell, explicitly held at the loop end.",
+    "All seven generated action poses share a uniform 0.34 scale; no per-pose stretching.",
+    "Irregular source boxes isolate neighboring aura at seams outside the character.",
+    "Boot anchors use the midpoint of measured blue boot extents; ground is two source pixels below the blue boot bottom.",
+    "Generated calm pose 0 remains immutable in the source but is superseded by the exact gameplay idle."
+  ],
+  "poses": [
+    {
+      "index": 0,
+      "source_box": [
+        0,
+        250,
+        247,
+        820
+      ],
+      "boot_anchor": [
+        126,
+        797
+      ],
+      "hair": "black",
+      "body_top": 380
+    },
+    {
+      "index": 1,
+      "source_box": [
+        247,
+        250,
+        492,
+        820
+      ],
+      "boot_anchor": [
+        370,
+        803
+      ],
+      "hair": "black",
+      "body_top": 411
+    },
+    {
+      "index": 2,
+      "source_box": [
+        492,
+        250,
+        741,
+        820
+      ],
+      "boot_anchor": [
+        613,
+        799
+      ],
+      "hair": "black",
+      "body_top": 380
+    },
+    {
+      "index": 3,
+      "source_box": [
+        741,
+        250,
+        985,
+        820
+      ],
+      "boot_anchor": [
+        865,
+        803
+      ],
+      "hair": "black",
+      "body_top": 365
+    },
+    {
+      "index": 4,
+      "source_box": [
+        0,
+        850,
+        244,
+        1430
+      ],
+      "boot_anchor": [
+        126.5,
+        1404
+      ],
+      "hair": "gold",
+      "body_top": 994
+    },
+    {
+      "index": 5,
+      "source_box": [
+        244,
+        850,
+        501,
+        1430
+      ],
+      "boot_anchor": [
+        372,
+        1404
+      ],
+      "hair": "gold",
+      "body_top": 998
+    },
+    {
+      "index": 6,
+      "source_box": [
+        501,
+        850,
+        747,
+        1430
+      ],
+      "boot_anchor": [
+        616.5,
+        1404
+      ],
+      "hair": "gold",
+      "body_top": 1000
+    },
+    {
+      "index": 7,
+      "source_box": [
+        747,
+        850,
+        985,
+        1430
+      ],
+      "boot_anchor": [
+        864,
+        1404
+      ],
+      "hair": "gold",
+      "body_top": 994
+    }
+  ]
+}

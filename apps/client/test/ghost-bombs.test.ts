@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, FUSE_TICKS, publicView, type Bomb, type PublicView, type Snapshot } from "@bombtop/shared";
+import { createMatch, FUSE_TICKS, publicView, TICK_RATE, type Bomb, type PublicView, type Snapshot } from "@bombtop/shared";
 import { actionCues } from "../src/audio/local-cues";
 import { GhostBombs } from "../src/net/ghost-bombs";
 
@@ -11,6 +11,22 @@ const real = (x: number, y: number): Bomb => ({
 });
 
 describe("GhostBombs", () => {
+  it("predicts a short-fuse Skull bomb using the owner's curse", () => {
+    const g = new GhostBombs("me");
+    const v = view();
+    v.players[0]!.curse = { kind: "shortFuse" };
+    g.add(3, 1, 0);
+    expect(g.apply(v, 500).bombs[0]?.fuse).toBe(TICK_RATE - 30);
+  });
+
+  it("predicts a long-fuse Skull bomb without resetting its timer", () => {
+    const g = new GhostBombs("me");
+    const v = view();
+    v.players[0]!.curse = { kind: "longFuse" };
+    g.add(3, 1, 0);
+    expect(g.apply(v, 500).bombs[0]?.fuse).toBe(TICK_RATE * 4 - 30);
+    expect(g.apply(v, 700).bombs[0]?.fuse).toBe(TICK_RATE * 4 - 42);
+  });
   it("does not predict one action sequence twice after the player moves", () => {
     const g = new GhostBombs("me");
     g.add(3, 1, 0, "normal", 8);

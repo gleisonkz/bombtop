@@ -57,7 +57,7 @@ export class ManiacPanel {
     const title = el("h2", { text: "Itens Maniac" });
     title.id = "maniac-panel-title";
     this.dialog.setAttribute("aria-labelledby", title.id);
-    this.dialog.style.width = "min(92vw, 740px)";
+    this.dialog.style.width = "min(88vw, 740px)";
     this.dialog.style.maxHeight = "85vh";
     this.dialog.style.overflowY = "auto";
     this.itemList.style.display = "grid";

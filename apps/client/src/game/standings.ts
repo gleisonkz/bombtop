@@ -24,8 +24,9 @@ export class Standings {
   }
 
   /** Winner first, then whoever lasted longest; anyone never seen going out (left the room) last. */
-  ranking(ids: readonly string[], winnerId: string | null): Placing[] {
-    const score = (id: string) => (id === winnerId ? Infinity : (this.deaths.get(id) ?? -Infinity));
+  ranking(ids: readonly string[], winnerId: string | null, winnerIds?: readonly string[]): Placing[] {
+    const winners = new Set(winnerIds ?? (winnerId ? [winnerId] : []));
+    const score = (id: string) => (winners.has(id) ? Infinity : (this.deaths.get(id) ?? -Infinity));
     const sorted = [...ids].sort((a, b) => score(b) - score(a) || 0);
     return sorted.map((id) => ({ id, place: 1 + sorted.filter((o) => score(o) > score(id)).length }));
   }

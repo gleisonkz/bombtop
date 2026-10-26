@@ -1,0 +1,529 @@
+{
+  "version": 1,
+  "status": "appearance accepted; deterministic candidate frozen for coordinator promotion",
+  "alpha_threshold": 32,
+  "minimum_component_pixels": 600,
+  "edge_support_pixels": 1,
+  "scales": {
+    "locomotion": 0.448,
+    "actions": 0.49,
+    "action-profile": 0.515,
+    "action-back": 0.525,
+    "carry-front": 0.618,
+    "carry-profile": 0.595,
+    "carry-back": 0.615,
+    "carry-front-walk": 0.605,
+    "carry-back-walk": 0.59,
+    "celebrate": 0.54,
+    "action-end": 0.184,
+    "locomotion-back": 0.452,
+    "knockdown": 0.239
+  },
+  "sources": {
+    "locomotion": {
+      "file": "locomotion.generated.png",
+      "size": [
+        1041,
+        1511
+      ],
+      "sha256": "e49514f0ed780af3fa06e97a0ee697d3adda88959106da770ccaef8b90a64ca5"
+    },
+    "actions": {
+      "file": "actions.generated.png",
+      "size": [
+        1397,
+        1126
+      ],
+      "sha256": "a824007f478ff81ac73f680343f8d10a028314ebb01760a71cb472686ba8c7b1"
+    },
+    "carry-celebrate": {
+      "file": "carry-celebrate.generated.png",
+      "size": [
+        1114,
+        1412
+      ],
+      "sha256": "5681e0fcea76f839d79595e71cbafc692962ece9f889f0eb84dbe57174b726be"
+    },
+    "action-end": {
+      "file": "action-end.generated.png",
+      "size": [
+        2172,
+        724
+      ],
+      "sha256": "96434f6bc2953c538378645bceec84d95c6aeab08bb9f6b2e953e60993a485b3"
+    },
+    "knockdown": {
+      "file": "knockdown.generated.png",
+      "size": [
+        2086,
+        754
+      ],
+      "sha256": "43683f4efcd65ef7f75c4f74536814b81ba4ec075f2aa7f4cd79c2805ec0703b"
+    }
+  },
+  "rows": [
+    {
+      "runtime_row": 0,
+      "source": "locomotion",
+      "y_bounds": [
+        0,
+        259
+      ],
+      "frames": 4,
+      "family": "locomotion"
+    },
+    {
+      "runtime_row": 1,
+      "source": "locomotion",
+      "y_bounds": [
+        259,
+        510
+      ],
+      "frames": 4,
+      "family": "locomotion"
+    },
+    {
+      "runtime_row": 2,
+      "source": "locomotion",
+      "y_bounds": [
+        510,
+        761
+      ],
+      "frames": 4,
+      "family": "locomotion-back"
+    },
+    {
+      "runtime_row": 3,
+      "source": "locomotion",
+      "y_bounds": [
+        761,
+        1014
+      ],
+      "frames": 6,
+      "family": "locomotion"
+    },
+    {
+      "runtime_row": 4,
+      "source": "locomotion",
+      "y_bounds": [
+        1014,
+        1256
+      ],
+      "frames": 6,
+      "family": "locomotion"
+    },
+    {
+      "runtime_row": 5,
+      "source": "locomotion",
+      "y_bounds": [
+        1256,
+        1511
+      ],
+      "frames": 6,
+      "family": "locomotion"
+    },
+    {
+      "runtime_row": 6,
+      "source": "actions",
+      "y_bounds": [
+        0,
+        234
+      ],
+      "frames": 6,
+      "family": "actions"
+    },
+    {
+      "runtime_row": 7,
+      "source": "knockdown",
+      "y_bounds": [
+        0,
+        754
+      ],
+      "frames": 7,
+      "family": "knockdown",
+      "seams": [
+        [
+          [
+            1140,
+            0
+          ],
+          [
+            1140,
+            530
+          ],
+          [
+            1139,
+            540
+          ],
+          [
+            1138,
+            548
+          ],
+          [
+            1137,
+            554
+          ],
+          [
+            1140,
+            561
+          ],
+          [
+            1140,
+            754
+          ]
+        ]
+      ]
+    },
+    {
+      "runtime_row": 8,
+      "source": "actions",
+      "y_bounds": [
+        455,
+        690
+      ],
+      "frames": 9,
+      "family": "actions"
+    },
+    {
+      "runtime_row": 9,
+      "source": "actions",
+      "y_bounds": [
+        690,
+        908
+      ],
+      "frames": 9,
+      "family": "action-profile"
+    },
+    {
+      "runtime_row": 10,
+      "source": "actions",
+      "y_bounds": [
+        908,
+        1126
+      ],
+      "frames": 9,
+      "family": "action-back"
+    },
+    {
+      "runtime_row": 11,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        0,
+        216
+      ],
+      "frames": 4,
+      "family": "carry-front"
+    },
+    {
+      "runtime_row": 12,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        216,
+        411
+      ],
+      "frames": 4,
+      "family": "carry-profile"
+    },
+    {
+      "runtime_row": 13,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        411,
+        598
+      ],
+      "frames": 4,
+      "family": "carry-back"
+    },
+    {
+      "runtime_row": 14,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        598,
+        788
+      ],
+      "frames": 6,
+      "family": "carry-front-walk"
+    },
+    {
+      "runtime_row": 15,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        788,
+        981
+      ],
+      "frames": 6,
+      "family": "carry-profile"
+    },
+    {
+      "runtime_row": 16,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        981,
+        1176
+      ],
+      "frames": 6,
+      "family": "carry-back-walk"
+    },
+    {
+      "runtime_row": 17,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        1176,
+        1412
+      ],
+      "frames": 8,
+      "family": "celebrate"
+    }
+  ],
+  "repair": {
+    "source": "action-end",
+    "y_bounds": [
+      0,
+      724
+    ],
+    "frames": 3,
+    "family": "action-end",
+    "targets": [
+      [
+        8,
+        8
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        10,
+        8
+      ]
+    ]
+  },
+  "decisions": [
+    "Row bands manually reviewed from full sheets and cropped frames; no global grid slicing.",
+    "Components ordered by source x; exact counts from immutable contract. No repeated or synthesized poses.",
+    "Scale is fixed per measured drawing family/direction, never by individual pose bounds. Native carry and celebration drawings use different proportions.",
+    "Feet: midpoint of dark blue boot pixels in bottom 16 percent of core silhouette; ground is exclusive core bottom. Death uses silhouette midpoint to fit horizontal pose.",
+    "Retain the principal 8-connected alpha>=32 component plus one pixel of original alpha support. Never harden retained alpha or recolor core.",
+    "Raw last action column replaced only by three accepted action-end components, with one shared repair scale.",
+    "Nearest-neighbor export preserves hard pixel clusters; original RGBA samples remain untouched before fixed-family resampling.",
+    "Compact knockdown replaces all seven death frames at one .239 family scale (standing first pose approximately 110px).",
+    "Touching knockdown poses 3/4 separated by a manually reviewed polyline around x1137-1140; pixels assigned once, never deleted or duplicated.",
+    "Feet initially target (40,112); extended action poses receive only the minimum horizontal translation required by 1px gutters, logged in reviewed_horizontal_fit_shifts.",
+    "All 151 substantial source-core pixels detached by seam partition are retained and assigned to the nearest substantial pose in the same seam zone; exact coverage and nonduplication are tested."
+  ],
+  "remaining_defects": [
+    "Small native body-height/proportion variation survives fixed family scales; no per-frame normalization.",
+    "Connected generation edge tint and authored outline remain intentionally; detached flecks alone removed.",
+    "Extended action silhouettes require horizontal anchor exceptions to retain full authored poses at fixed scale.",
+    "Knockdown poses 3/4 share a touching outline in source; manually assigned seam remains a source-art limitation."
+  ],
+  "reviewed_horizontal_fit_shifts": [
+    [
+      6,
+      1,
+      4
+    ],
+    [
+      6,
+      4,
+      4
+    ],
+    [
+      6,
+      5,
+      3
+    ],
+    [
+      9,
+      2,
+      -3
+    ],
+    [
+      9,
+      3,
+      -8
+    ],
+    [
+      9,
+      4,
+      -4
+    ],
+    [
+      9,
+      5,
+      -6
+    ],
+    [
+      9,
+      6,
+      -5
+    ],
+    [
+      9,
+      7,
+      -4
+    ],
+    [
+      9,
+      8,
+      -12
+    ],
+    [
+      10,
+      6,
+      -3
+    ],
+    [
+      10,
+      8,
+      -8
+    ]
+  ],
+  "reviewed_rendered_heights": {
+    "0": [
+      109,
+      110,
+      110,
+      110
+    ],
+    "1": [
+      110,
+      110,
+      110,
+      111
+    ],
+    "2": [
+      110,
+      110,
+      111,
+      110
+    ],
+    "3": [
+      109,
+      110,
+      110,
+      109,
+      110,
+      109
+    ],
+    "4": [
+      106,
+      105,
+      103,
+      105,
+      104,
+      106
+    ],
+    "5": [
+      109,
+      109,
+      110,
+      103,
+      109,
+      109
+    ],
+    "6": [
+      105,
+      106,
+      107,
+      102,
+      106,
+      100
+    ],
+    "7": [
+      111,
+      109,
+      90,
+      79,
+      61,
+      51,
+      50
+    ],
+    "8": [
+      110,
+      111,
+      110,
+      110,
+      109,
+      107,
+      107,
+      108,
+      111
+    ],
+    "9": [
+      107,
+      109,
+      107,
+      108,
+      108,
+      109,
+      107,
+      106,
+      108
+    ],
+    "10": [
+      109,
+      109,
+      109,
+      107,
+      106,
+      107,
+      106,
+      106,
+      110
+    ],
+    "11": [
+      108,
+      110,
+      110,
+      110
+    ],
+    "12": [
+      109,
+      109,
+      108,
+      109
+    ],
+    "13": [
+      109,
+      109,
+      110,
+      110
+    ],
+    "14": [
+      108,
+      109,
+      109,
+      109,
+      109,
+      109
+    ],
+    "15": [
+      110,
+      108,
+      109,
+      109,
+      109,
+      110
+    ],
+    "16": [
+      108,
+      109,
+      110,
+      109,
+      108,
+      107
+    ],
+    "17": [
+      109,
+      109,
+      109,
+      109,
+      108,
+      108,
+      108,
+      109
+    ]
+  },
+  "candidate_sha256": "8181e4abc101a68b1834612f5696284ca7be2f2d6b619efff78eb75961dfb90e"
+}

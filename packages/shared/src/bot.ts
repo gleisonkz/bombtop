@@ -1,10 +1,11 @@
 import { FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
 import { pressureOrder } from "./pressure";
-import { cursedDirection, effectiveRange, effectiveSpeed } from "./curse";
+import { cursedDirection, effectiveCapacity, effectiveFuse, effectiveRange, effectiveSpeed } from "./curse";
 import { createRng } from "./rng";
 import { SPECIAL_PLANS, type SpecialContext } from "./bot-specials";
 import { conveyorDirection } from "./floor";
 import { updateSlides } from "./kick";
+import { stageTempoRate } from "./stage";
 import {
   bombAt,
   DIR_VECTORS,
@@ -262,7 +263,7 @@ export class Bot {
     if (planned) return planned;
 
     const mine = s.bombs.filter((b) => b.ownerId === p.id).length;
-    const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(p.bombCapacity, t.bombs + this.heat);
+    const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(effectiveCapacity(p), t.bombs + this.heat);
     if (canBomb) {
       const possible = ownBomb(p, here);
       const after = dangerMap(s, p.id, possible);
@@ -538,9 +539,9 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
   const skulls = new Set(s.items.filter((i) => i.kind === ItemKind.Skull).map((i) => i.y * s.grid.width + i.x));
   const w = s.grid.width;
   const start = playerTile(p);
-  const perStep = TILE / Math.max(1, effectiveSpeed(p));
+  const perStep = TILE / Math.max(1, effectiveSpeed(p) * stageTempoRate(s));
   // Off-center players need a little longer to clear their own tile.
-  const lag = (Math.abs(p.px - tileCenter(start.x)) + Math.abs(p.py - tileCenter(start.y))) / Math.max(1, effectiveSpeed(p));
+  const lag = (Math.abs(p.px - tileCenter(start.x)) + Math.abs(p.py - tileCenter(start.y))) / Math.max(1, effectiveSpeed(p) * stageTempoRate(s));
   const bombs = occupancy(s).bombs;
   const seen = new Set([start.y * w + start.x]);
   const out: Node[] = [{ ...start, steps: 0, first: start }];
@@ -595,7 +596,7 @@ export function heading(p: Player, x: number, y: number): Facing | null {
 }
 
 function ownBomb(p: Player, at: { x: number; y: number }): Bomb {
-  return { ownerId: p.id, x: at.x, y: at.y, fuse: FUSE_TICKS, range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null };
+  return { ownerId: p.id, x: at.x, y: at.y, fuse: effectiveFuse(p), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null };
 }
 
 /** What a bomb at (x, y) would hit: blocks to break and rivals to catch. */

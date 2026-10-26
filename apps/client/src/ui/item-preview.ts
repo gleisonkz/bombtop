@@ -60,7 +60,7 @@ export class ItemPreview {
 
   private async init(): Promise<void> {
     const app = (this.app = new Application());
-    await app.init({ backgroundAlpha: 0, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
+    await app.init({ background: 0x347c3a, backgroundAlpha: 1, antialias: false, resolution: window.devicePixelRatio || 1, autoDensity: true });
     const r = (this.renderer = new Renderer(false));
     app.stage.addChild(r.root);
     await Promise.all([

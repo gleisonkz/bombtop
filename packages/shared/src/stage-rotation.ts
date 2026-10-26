@@ -1,4 +1,4 @@
-import { STAGES, type StageId } from "./stage";
+import { SELECTABLE_STAGES, STAGES, type StageId } from "./stage";
 
 export interface StageRotationEntry {
   stage: StageId;
@@ -10,7 +10,7 @@ export const DEFAULT_STAGE_ROTATION: readonly Readonly<StageRotationEntry>[] = O
   STAGES.map((stage) => Object.freeze({ stage })),
 );
 
-const stageIds = new Set<unknown>(STAGES);
+const stageIds = new Set<unknown>(SELECTABLE_STAGES);
 
 export function validateStageRotation(raw: unknown): StageRotationEntry[] | null {
   if (!Array.isArray(raw) || raw.length < 1 || raw.length > MAX_STAGE_ROTATION) return null;

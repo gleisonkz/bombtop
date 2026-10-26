@@ -1,4 +1,4 @@
-import { BOT_LEVELS, MAX_PLAYERS, type BattleMode, type BattleTimeMinutes, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo, type ManiacConfig } from "@bombtop/shared";
+import { BOT_LEVELS, MAX_PLAYERS, type BattleMode, type BattleTeam, type BattleTimeMinutes, type BotLevel, type BotPersona, type CharacterId, type LobbyInfo, type ManiacConfig } from "@bombtop/shared";
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { backButton, button, el } from "./dom";
@@ -28,6 +28,7 @@ export const PERSONA_NAMES: Record<BotPersona, string> = {
 export interface LobbyHandlers {
   start(): void;
   setBattleMode(mode: BattleMode): void;
+  setTeam(id: string, team: BattleTeam): void;
   setManiac(config: ManiacConfig): void;
   setWinsToWin(wins: number): void;
   setTimeMinutes(minutes: BattleTimeMinutes): void;
@@ -76,9 +77,9 @@ export class LobbyPanel {
     this.startBtn = button("Começar partida", handlers.start, "primary big start");
     this.stageRotation = new StageRotationPanel(parent, handlers.setStageRotation);
     this.maniacPanel = new ManiacPanel(parent, handlers.setManiac);
-    this.modeButtons = (["single", "maniac"] as const).map((mode) => {
-      const choice = button(mode === "single" ? "Single" : "Maniac", () => handlers.setBattleMode(mode), "lobby-mode-option");
-      choice.setAttribute("aria-label", mode === "single" ? "Modo Battle Royale Single" : "Modo Battle Maniac");
+    this.modeButtons = (["single", "tag", "maniac"] as const).map((mode) => {
+      const choice = button(mode === "single" ? "Single" : mode === "tag" ? "Tag" : "Maniac", () => handlers.setBattleMode(mode), "lobby-mode-option");
+      choice.setAttribute("aria-label", `Modo Battle ${mode === "single" ? "Royale Single" : mode === "tag" ? "Tag em equipes" : "Maniac"}`);
       return choice;
     });
     this.wins = Array.from({ length: 5 }, (_, i) => {
@@ -148,6 +149,7 @@ export class LobbyPanel {
     this.stage.textContent = `Fase: ${STAGE_NAMES[info.stage]}${info.watchers ? ` • 📺 ${info.watchers}` : ""}`;
     const isHost = info.hostId === me;
     const maniac = info.battleMode === "maniac";
+    const tag = info.battleMode === "tag";
     const mayEdit = isHost && !this.watching;
     this.stageRotation.update(info, mayEdit && !maniac);
     this.stageRotation.trigger.hidden = maniac;
@@ -155,7 +157,7 @@ export class LobbyPanel {
     this.maniacPanel.trigger.hidden = !maniac;
     this.maniacNotice.hidden = !maniac;
     for (const [index, choice] of this.modeButtons.entries()) {
-      choice.setAttribute("aria-pressed", String((maniac ? 1 : 0) === index));
+      choice.setAttribute("aria-pressed", String((["single", "tag", "maniac"][index] === (info.battleMode ?? "single"))));
       choice.disabled = !mayEdit;
     }
     for (const [index, choice] of this.wins.entries()) {
@@ -198,6 +200,15 @@ export class LobbyPanel {
             ? (c: CharacterId) => this.handlers.pickBotCharacter(member.id, c)
             : null;
         const cls = seatClass(member, me);
+        const team = member.team === "blue" ? "blue" : "red";
+        const nextTeam: BattleTeam = team === "red" ? "blue" : "red";
+        const teamLabel = team === "red" ? "Vermelha" : "Azul";
+        const teamButton = button(teamLabel, () => this.handlers.setTeam(member.id, nextTeam), `team-toggle team-${team}`);
+        const canChangeTeam = !this.watching && (isHost || (you && !member.bot));
+        teamButton.disabled = !canChangeTeam;
+        teamButton.setAttribute("aria-label", canChangeTeam
+          ? `Mover ${member.name} para equipe ${nextTeam === "red" ? "vermelha" : "azul"}`
+          : `${member.name} na equipe ${teamLabel.toLowerCase()}`);
         const sub = member.bot
           ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
           : member.connected
@@ -212,6 +223,7 @@ export class LobbyPanel {
           ]),
           el("span", { class: "seat-name", text: member.name }),
           el("span", { class: "seat-sub", text: sub }),
+          tag ? teamButton : null,
           // Every seat keeps the picker's room (hidden on others' seats), so characters and names line up.
           // Arrows step through the characters, so any number of them fits on a narrow card.
           el("div", { class: pick ? "picker" : "picker spacer" }, [
@@ -222,7 +234,7 @@ export class LobbyPanel {
         ]);
       }),
     );
-    const enough = info.members.length >= 2;
+    const enough = info.members.length >= 2 && (!tag || new Set(info.members.map(member => member.team)).size === 2);
     this.startBtn.hidden = !isHost;
     this.startBtn.disabled = !enough;
     if (this.watching) {
@@ -231,12 +243,14 @@ export class LobbyPanel {
       return;
     }
     const couch = this.offline?.couch ? "🎮 Controles: A entra, Y troca o personagem, B sai, Start começa. " : "";
-    this.status.textContent = couch + (!enough
+    this.status.textContent = couch + (tag && !enough && info.members.length >= 2
+      ? "TAG precisa de jogadores nas duas equipes para começar."
+      : !enough
       ? isHost
         ? "Convide a galera ou coloque bots nas vagas!"
         : "Esperando mais jogadores…"
       : isHost
-        ? "Todo mundo pronto? Bora!"
+        ? tag ? "TAG: vence a última equipe com alguém vivo. Bora!" : "Todo mundo pronto? Bora!"
         : "Esperando o anfitrião começar…");
   }
 
@@ -271,8 +285,8 @@ export class LobbyPanel {
   }
 
   /** A round is over: who won and everyone's place, until the next round (or, the match won, the lobby). */
-  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null, setOver: boolean): void {
-    this.results.show(placings, info.members, me, winnerId, setOver, info.winsToWin);
+  showResults(placings: Placing[], info: LobbyInfo, me: string, winnerId: string | null, setOver: boolean, winnerTeam?: BattleTeam | null): void {
+    this.results.show(placings, info.members, me, winnerId, setOver, info.winsToWin, winnerTeam);
   }
 
   hide(): void {

@@ -96,10 +96,10 @@ describe("carried bomb attachment", () => {
     }
   });
 
-  it("replaces Naruto's carry frame with missing hands by the matching settling pose", () => {
+  it("plays all six redrawn Naruto carry frames with visible raised palms", () => {
     const sheet = SHEETS.naruto;
     const selected = playerFrame(sheet, { facing: "down", moving: true, carrying: true, tick: 5 * sheet.ticksPerFrame });
-    expect(selected).toMatchObject({ x: 0, y: 14 * sheet.frameH });
+    expect(selected).toMatchObject({ x: 5 * sheet.frameW, y: 14 * sheet.frameH });
     const walk = playerFrame(sheet, { facing: "down", moving: true, carrying: false, tick: 5 * sheet.ticksPerFrame });
     expect(walk.x).toBe(5 * sheet.frameW);
   });

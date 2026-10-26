@@ -1,5 +1,6 @@
 """Image contracts for the 2026-10-25 21:48 Super Choque integration."""
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import unittest
@@ -13,6 +14,48 @@ SPEC.loader.exec_module(PACK)
 
 
 class StaticAtlasTests(unittest.TestCase):
+    def test_redraw_preserves_all_rows_outside_carry_and_menu(self):
+        directory = PACK.ROOT.parents[1] / 'concept/static/carry-redraw'
+        contract = json.loads((directory / 'contract.json').read_text(encoding='utf-8'))
+        image = Image.open(PACK.OUTPUT)
+        for row, digest in contract['preservedRows'].items():
+            strip = image.crop((0, int(row) * 186, 2352, (int(row) + 1) * 186))
+            self.assertEqual(hashlib.sha256(strip.tobytes()).hexdigest(), digest, row)
+        poses = set()
+        for row in range(11, 17):
+            for column in range(len(PACK.MAP[row][1])):
+                frame = image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186))
+                poses.add(hashlib.sha256(frame.tobytes()).hexdigest())
+        self.assertEqual(len(poses), 30, 'Carry must have thirty distinct authored drawings')
+
+    def test_menu_disc_stays_thin_and_body_measurement_excludes_it(self):
+        image = Image.open(PACK.OUTPUT)
+        frame = np.array(image.crop((0, 17 * 186, 168, 18 * 186)))
+        rgb = frame[:, :, :3].astype(int)
+        yy = np.indices(frame.shape[:2])[0]
+        board = (frame[:, :, 3] >= 128) & (yy >= 156) & (rgb.min(2) > 45) & (rgb.max(2) - rgb.min(2) < 65)
+        y, x = np.where(board)
+        self.assertLessEqual(int(y.max() - y.min() + 1), 16)
+        self.assertLessEqual(int(x.max() - x.min() + 1), 96)
+        self.assertEqual(frame[:, :, 3].nonzero()[0].min(), 17)
+        # Authored boot contact at 159; body height is 159 - 17 = 142.
+        self.assertGreater(np.count_nonzero(frame[154:160, 50:115, 3]), 100)
+
+    def test_each_action_has_distinct_authored_frames_without_baked_effects(self):
+        image = Image.open(PACK.OUTPUT)
+        for row in (6, 7, 8, 9, 10, 17, 18):
+            poses = []
+            for column in range(len(PACK.MAP[row][1])):
+                frame = np.array(image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186)))
+                poses.append(frame.tobytes())
+                rgb = frame[:, :, :3].astype(int)
+                cyan = (frame[:, :, 3] >= 128) & (rgb[:, :, 1] > 160) & (rgb[:, :, 2] > 160) & (rgb[:, :, 0] < 100)
+                self.assertFalse(cyan.any(), (row, column, 'baked electricity'))
+                labels, _ = ndimage.label(frame[:, :, 3] >= 64)
+                areas = sorted(np.bincount(labels.ravel())[1:], reverse=True)
+                self.assertTrue(all(area < 50 for area in areas[1:]), (row, column, 'detached effect'))
+            self.assertEqual(len(set(poses)), len(poses), row)
+
     def test_source_inventory_has_all_99_distinct_poses(self):
         owners, rows = PACK.geometry()
         self.assertEqual(tuple(map(len, rows)), PACK.COUNTS)
@@ -64,7 +107,7 @@ class StaticAtlasTests(unittest.TestCase):
                 self.assertGreater(bounds[0], 1)
                 self.assertGreater(bounds[1], 1)
                 self.assertLess(bounds[2], 167)
-                self.assertEqual(bounds[3], PACK.ANCHOR[1])
+                self.assertEqual(bounds[3], PACK.ANCHOR[1] - (12 if (row, column) == (18, 6) else 0))
                 labels, _ = ndimage.label(np.array(frame)[:, :, 3] >= 64)
                 areas = sorted(np.bincount(labels.ravel())[1:], reverse=True)
                 self.assertTrue(all(area < 50 for area in areas[1:]), (row, column, areas))

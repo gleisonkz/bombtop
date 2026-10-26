@@ -1,34 +1,39 @@
-# Goku lobby transformation
+# Goku gameplay and lobby transformation
 
-`lobby-transform-v3.source.png` is the current generated source (1266 × 1243).
-The built-in image tool received `base-front-reference.png` as its sole visual
-reference: the actual first 146 × 159 cell from `goku.png`, enlarged 4× with
-nearest-neighbor sampling. The prompt preserves the original pixel treatment,
-slender body, small face, orange/navy palette and chest badge.
-See `PROMPT-v3.md` for the generation prompt and reproducible reference crop.
+Both gameplay and the lobby now use the broader pixel-art Goku documented in
+`gameplay-redraw/README.md`. The lobby transformation was regenerated from the
+actual new gameplay idle and locomotion family, with the older transformation
+used only as a pose/storyboard reference.
 
-The runtime asset is `apps/client/public/sprites/goku-lobby.png`: 16 RGBA cells of
-192 × 207, anchor (96, 194). The wider transparent cell fits the new aura at a
-single 0.5 scale, retaining approximately 142px standing body height. Menu alpha
-bounds are [32, 160); metadata and measured cast bounds match this export.
-Frames 0–3 power up; 4–11 transform/hold; 12–14 return to normal;
-15 deliberately holds the exact opening pose for the loop boundary.
+Current transformation source: `gameplay-redraw/lobby-transform.generated.png`.
+Measured source bounds, scale and provenance are recorded in
+`gameplay-redraw/lobby-packing.json`. The original source is immutable.
+
+The runtime asset is `apps/client/public/sprites/goku-lobby.png`: sixteen RGBA
+cells of 128 × 207, feet anchor `(64,194)`, with approximately 142px standing
+body height. The resting key pose uses the actual gameplay idle pixels;
+the remaining seven key poses use one fixed scale for the new generated art.
+No whole-image horizontal stretching or per-pose size normalization is used.
+
+Playback indices remain `0,1,2,3,4,5,6,7,6,5,4,3,2,1,0,0`: power up from black
+hair to golden Super Saiyan, then reverse to black and hold the resting pose.
+These are eight distinct key poses in sixteen playback cells. Alpha gutters,
+feet registration, hair transitions and exact loop closure are tested.
 
 Rebuild from the repository root:
 
 ```sh
-python apps/client/scripts/pack-goku-lobby.py
+python apps/client/scripts/pack-goku-lobby.py --write
 python apps/client/scripts/test-goku-lobby.py
 ```
 
-The packer applies a single scale to all poses, translates using measured boot
-anchors, removes faint detached generation debris and isolates touching aura
-seams. It does not redraw or recolor hair. The old `build-goku-lobby.py` documents
-the original PixelLab source workflow and does not rebuild the current artwork.
-`lobby-hair-transform-candidate.png` is the previous runtime source.
-`lobby-transform-v2.source.png` was rejected for its smooth anime/chibi restyling
-and is not used by the game. Gameplay still uses the original `goku.png`.
+The packer isolates source poses and aura seams before nearest-neighbor sampling,
+following [Pillow image operations](https://pillow.readthedocs.io/en/stable/reference/Image.html).
+The game continues to draw gameplay Kamehameha effects separately.
 
-Pillow's [RGBA compositing and image resizing](https://pillow.readthedocs.io/en/stable/reference/Image.html)
-guide the export: resize each frame separately with Lanczos before packing to
-avoid mixing pixels across cells.
+Earlier artwork remains archived: `lobby-transform-selected.source.png` is the
+exact user-selected 1536 × 1024 supplied board from before the broader redraw.
+Its SHA256 is `66EF9F40579DBB965A410CB6E1BFDFEDA4F7186DF2067A108B7627FD3498C7D9`.
+The `lobby-hair-transform-candidate.png`, `lobby-transform-v2.source.png`,
+`lobby-transform-v3.source.png` and `PROMPT-v3.md` record earlier candidates.
+The old `build-goku-lobby.py` documents the original PixelLab workflow.

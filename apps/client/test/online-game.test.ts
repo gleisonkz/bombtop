@@ -20,6 +20,7 @@ describe("online snapshot rendering", () => {
   let draw: ReturnType<typeof vi.fn>;
   let send: ReturnType<typeof vi.fn>;
   let specialCooldown: ReturnType<typeof vi.fn>;
+  let setScore: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
@@ -30,13 +31,14 @@ describe("online snapshot rendering", () => {
     draw = vi.fn();
     send = vi.fn();
     specialCooldown = vi.fn();
+    setScore = vi.fn();
     const link: RoomLink = {
       sessionId: "me", roomId: "test", reconnectionToken: "",
       send, onMessage: (type, callback) => handlers.set(type, callback),
       onLeave: vi.fn(), ping: vi.fn(), leave: async () => undefined,
     };
     const ctx = {
-      renderer: { draw, setCharacters: vi.fn(), setViewer: vi.fn(), setNames: vi.fn(), setScore: vi.fn(), showBanner: vi.fn() },
+      renderer: { draw, setCharacters: vi.fn(), setViewer: vi.fn(), setNames: vi.fn(), setScore, showBanner: vi.fn() },
       sound: { play: vi.fn(), cues: vi.fn() },
       touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(), specialCooldown,
     } as unknown as ModeContext;
@@ -87,6 +89,26 @@ describe("online snapshot rendering", () => {
     game.setManiac(maniac);
     expect(send).toHaveBeenCalledWith(C2S.rules, { battleMode: "maniac" });
     expect(send).toHaveBeenCalledWith(C2S.rules, { maniac });
+  });
+
+  it("envia seleção e mudança de equipe TAG em sala online ou Wi-Fi", () => {
+    game.setBattleMode("tag");
+    game.setTeam("me", "blue");
+    expect(send).toHaveBeenCalledWith(C2S.rules, { battleMode: "tag" });
+    expect(send).toHaveBeenCalledWith(C2S.team, { id: "me", team: "blue" });
+  });
+
+  it("envia as cores de equipe TAG para os retratos do placar durante a partida", () => {
+    handlers.get(S2C.lobby)!({
+      phase: "playing", battleMode: "tag", hostId: "me", members: [
+        { id: "me", name: "Ana", character: "bomb", wins: 2, team: "red" },
+        { id: "bot", name: "Bia", character: "bomb", wins: 1, team: "blue" },
+      ],
+    });
+    expect(setScore).toHaveBeenLastCalledWith([
+      { id: "me", wins: 2, team: "red" },
+      { id: "bot", wins: 1, team: "blue" },
+    ]);
   });
 
   it("sends the host's ordered stages using the same rules transport", () => {

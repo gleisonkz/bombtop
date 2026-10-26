@@ -1,4 +1,4 @@
-import { BLAST_TICKS, blastLife, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type BlastKind, type Bomb, type PublicView } from "@bombtop/shared";
+import { BLAST_TICKS, blastLife, effectiveFuse, FUSE_TICKS, TRUCK_TICKS, ItemKind, Tile, TILE, type BlastKind, type Bomb, type PublicView } from "@bombtop/shared";
 import { voiceLine, type VoiceName } from "./voices";
 
 export type CueName =
@@ -100,7 +100,9 @@ export function soundCues(prev: View, next: View): Cue[] {
   const elapsed = next.tick - prev.tick;
   const oldBombs = new Set(prev.bombs.map(bombKey));
   for (const b of next.bombs) {
-    if (grounded(b) && !oldBombs.has(bombKey(b)) && b.fuse >= FUSE_TICKS - elapsed) cues.push({ name: b.mega ? "mega" : "place", x: mid(b.x) });
+    const owner = next.players.find((player) => player.id === b.ownerId);
+    const expectedFuse = owner ? effectiveFuse(owner) : FUSE_TICKS;
+    if (grounded(b) && !oldBombs.has(bombKey(b)) && b.fuse >= expectedFuse - elapsed) cues.push({ name: b.mega ? "mega" : "place", x: mid(b.x) });
   }
   const count = (v: View, f: (b: Bomb) => unknown) => v.bombs.filter(f).length;
   const moving = (f: (b: Bomb) => unknown, name: CueName) => {

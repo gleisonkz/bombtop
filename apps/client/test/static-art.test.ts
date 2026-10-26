@@ -7,7 +7,7 @@ describe("supplied Super Choque", () => {
   it("registers the actual packed PNG and keeps the standing arena size", () => {
     const sheet = SHEETS.static;
     const png = readFileSync(new URL("../public/sprites/static-final.png", import.meta.url));
-    expect(sheet.url).toBe("sprites/static-final.png?v=20261025-supplied-214803");
+    expect(sheet.url).toBe("sprites/static-final.png?v=20261026-carry-menu-v1");
     expect(png.readUInt32BE(16)).toBe(sheet.width);
     expect(png.readUInt32BE(20)).toBe(sheet.height);
     expect(sheet.bodyH * sheet.scale).toBeCloseTo(21.588);

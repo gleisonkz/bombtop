@@ -32,6 +32,15 @@ describe("soundCues", () => {
     expect(soundCues(v, next)).toEqual([{ name: "place", x: 3.5 }]);
   });
 
+  it("hears a Skull bomb placed with a short fuse", () => {
+    const prev = view();
+    const next = later(prev, n => {
+      n.players[0]!.curse = { kind: "shortFuse" };
+      n.bombs.push(bomb(3, 1, { fuse: 58 }));
+    });
+    expect(names(prev, next)).toContain("place");
+  });
+
   it("does not re-hear a waiting remote bomb", () => {
     const v = view();
     v.bombs.push(bomb(3, 1, { type: "remote" }));

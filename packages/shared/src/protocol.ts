@@ -11,7 +11,8 @@ export const ROOM_NAME = "battle";
 
 export type RoomPhase = "lobby" | "playing" | "results";
 export type BattleTimeMinutes = 1 | 2 | 3 | 5 | null;
-export type BattleMode = "single" | "maniac";
+export type BattleMode = "single" | "tag" | "maniac";
+export type BattleTeam = "red" | "blue";
 
 /**
  * Client -> server message types. `sync` asks for the current lobby (and
@@ -26,6 +27,7 @@ export const C2S = {
   addBot: "addBot",
   removeBot: "removeBot",
   character: "character",
+  team: "team",
   /** The host has a bot play another character: `{ id, character }`. */
   botCharacter: "botCharacter",
   /** Connection measurements from a ?debug client, logged on the server. */
@@ -43,6 +45,7 @@ export interface LobbyMember {
   wins: number;
   connected: boolean;
   character: CharacterId;
+  team?: BattleTeam;
   /** Wears the character's original colors (first to pick it, see `firstPickers`); otherwise the seat color. */
   ownColors?: true;
   /** Set for computer players: their difficulty. */
@@ -69,7 +72,7 @@ export interface LobbyInfo {
 }
 
 /** A round's end; `setOver` when its winner has won the match (the room goes back to the lobby). */
-export type ResultMessage = MatchResult & { over: true; setOver: boolean };
+export type ResultMessage = MatchResult & { over: true; setOver: boolean; winnerTeam?: BattleTeam | null };
 
 const DIRS = new Set<Direction>(["up", "down", "left", "right"]);
 

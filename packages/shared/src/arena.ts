@@ -15,7 +15,7 @@ import {
 import { createRng } from "./rng";
 import { MANIAC_ITEM_KINDS, normalizeManiac, type ManiacItemKind } from "./maniac";
 import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
-import { buildStage, type StageId } from "./stage";
+import { buildStage, sb4Map, type StageId } from "./stage";
 import { firstPickers } from "./own-colors";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
@@ -62,8 +62,13 @@ export function createMatch(opts: MatchOptions): MatchState {
   const height = DEFAULT_HEIGHT;
   const rng = createRng(seed);
   const layout = buildStage(stage, width, height);
-  const safe = new Set([...safeTiles(width), ...layout.keepClear]);
+  const original = sb4Map(stage);
+  const spawnPoints = original
+    ? [SPAWN_POINTS[0]!, SPAWN_POINTS[2]!, SPAWN_POINTS[1]!, SPAWN_POINTS[3]!, { x: 7, y: 6 }]
+    : SPAWN_POINTS;
+  const safe = new Set([...safeTiles(width, spawnPoints), ...layout.keepClear]);
   const tiles: Tile[] = [];
+  const candidates: number[] = [];
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -71,8 +76,19 @@ export function createMatch(opts: MatchOptions): MatchState {
       const pillar = x % 2 === 0 && y % 2 === 0;
       if (border || pillar) tiles.push(Tile.Wall);
       else if (safe.has(y * width + x)) tiles.push(Tile.Empty);
-      else tiles.push(rng() < blockDensity ? Tile.Block : Tile.Empty);
+      else if (original) {
+        candidates.push(y * width + x);
+        tiles.push(Tile.Empty);
+      } else tiles.push(rng() < blockDensity ? Tile.Block : Tile.Empty);
     }
+  }
+
+  if (original) {
+    shuffle(candidates, rng);
+    const count = opts.blockDensity === undefined
+      ? original.softBlocks
+      : Math.round(candidates.length * Math.max(0, Math.min(1, opts.blockDensity)));
+    for (const index of candidates.slice(0, count)) tiles[index] = Tile.Block;
   }
 
   const character = (id: string): CharacterId => opts.characters?.[id] ?? DEFAULT_CHARACTER;
@@ -80,6 +96,7 @@ export function createMatch(opts: MatchOptions): MatchState {
 
   return {
     tick: 0,
+    ...(original && { stage, ...(original.timeFlow && { tempo: 1 as const }) }),
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
     pressureAt: timeLimitMinutes === null ? ROUND_TICKS : Math.max(0, (timeLimitMinutes - 1) * 60 * TICK_RATE),
@@ -90,8 +107,8 @@ export function createMatch(opts: MatchOptions): MatchState {
     grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
     players: playerIds.map((id, i) => ({
       id,
-      px: tileCenter(SPAWN_POINTS[i]!.x),
-      py: tileCenter(SPAWN_POINTS[i]!.y),
+      px: tileCenter(spawnPoints[i]!.x),
+      py: tileCenter(spawnPoints[i]!.y),
       alive: true,
       bombCapacity: START_BOMB_CAPACITY,
       fireRange: START_FIRE_RANGE,
@@ -129,9 +146,9 @@ export function createMatch(opts: MatchOptions): MatchState {
 }
 
 /** Spawn tiles plus their orthogonal neighbours never get blocks, so nobody starts trapped. */
-function safeTiles(width: number): Set<number> {
+function safeTiles(width: number, spawnPoints: readonly { x: number; y: number }[] = SPAWN_POINTS): Set<number> {
   const safe = new Set<number>();
-  for (const { x, y } of SPAWN_POINTS) {
+  for (const { x, y } of spawnPoints) {
     for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
       safe.add((y + dy) * width + (x + dx));
     }
@@ -159,9 +176,14 @@ function hideItems(tiles: Tile[], width: number, seed: number, stage: StageId, m
     shuffle(pool, rng);
     return pool.slice(0, blocks.length).map((kind, i) => ({ x: blocks[i]! % width, y: Math.floor(blocks[i]! / width), kind }));
   }
-  if (stage === "classic") {
+  const original = sb4Map(stage);
+  if (stage === "classic" || original) {
     const blocks = tiles.flatMap((tile, i) => tile === Tile.Block ? [i] : []);
-    const pool = CLASSIC_ITEM_COUNTS.flatMap(([kind, count]) => Array<ItemKind>(count).fill(kind));
+    const definition = original ? SB4_STAGE_DEFINITIONS[original.number - 1] : null;
+    const counts: readonly (readonly [ItemKind, number])[] = definition?.kind === "documented"
+      ? Object.entries(definition.itemCounts).filter(([kind]) => kind !== "honey").map(([kind, count]) => [kind as ItemKind, count])
+      : CLASSIC_ITEM_COUNTS;
+    const pool = counts.flatMap(([kind, count]) => Array<ItemKind>(count).fill(kind));
     shuffle(blocks, rng);
     shuffle(pool, rng);
     return pool.slice(0, blocks.length).map((kind, i) => ({

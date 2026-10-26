@@ -17,7 +17,8 @@ import { EnergyPixelEffects } from "./energy-pixel-effects";
 import { pixelStroke } from "./pixel-stroke";
 import { staticPowerLook } from "./static-power";
 import { loadPicanhaArt } from "./picanha-art";
-import { battleClockText } from "./battle-clock";
+import { battleClockText, battleTempoText } from "./battle-clock";
+import { stageTileTint } from "./stage-art";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects } from "./ability-pixel-effects";
@@ -25,7 +26,7 @@ import { FLAME_TICKS, SNEAK_TICKS } from "@bombtop/shared";
 import { scoreSlots } from "./score-bar";
 import { paintTo, PerColor, skinColor } from "./per-color";
 import { specialEffectColor, specialInk, specialTexture } from "./special-palette";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, skullAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -277,6 +278,11 @@ export class Renderer {
     resolution: 4,
     style: { fill: 0xffffff, fontFamily: "monospace", fontSize: 8, stroke: { color: 0, width: 2 } },
   });
+  private readonly tempoLabel = new Text({
+    text: "",
+    resolution: 4,
+    style: { fill: 0xffe5a3, fontFamily: "Lilita One, sans-serif", fontSize: 6, stroke: { color: 0x15152a, width: 1.5 } },
+  });
 
   /** The human players' names over their heads (setNames), one text each, over everything but the banner. */
   private readonly tagLayer = new Container();
@@ -317,24 +323,27 @@ export class Renderer {
 
   /** The score bar on the top wall: each player's head and rounds won (setScore; none in the menus' scenes). */
   private readonly scoreLayer = new Container();
-  private score: readonly { id: string; wins: number }[] | null = null;
+  private score: readonly { id: string; wins: number; team?: "red" | "blue" }[] | null = null;
   private readonly scoreHeads = new Map<string, Sprite>();
   private readonly scoreWins = new Map<string, Text>();
   private readonly scoreHp = new Map<string, Text>();
+  private readonly scoreTeams = new Map<string, Text>();
   /** Heads cut out of each character's first idle frame, by character and color. */
   private readonly heads = new WeakMap<Skin, Map<number, Texture>>();
 
   /** Rounds won so far, in seat order (null: no score bar). */
-  setScore(rows: readonly { id: string; wins: number }[] | null): void {
+  setScore(rows: readonly { id: string; wins: number; team?: "red" | "blue" }[] | null): void {
     this.score = rows;
     for (const [id, head] of this.scoreHeads) {
       if (rows?.some((r) => r.id === id)) continue;
       head.destroy();
       this.scoreWins.get(id)!.destroy();
       this.scoreHp.get(id)?.destroy();
+      this.scoreTeams.get(id)?.destroy();
       this.scoreHeads.delete(id);
       this.scoreWins.delete(id);
       this.scoreHp.delete(id);
+      this.scoreTeams.delete(id);
     }
   }
 
@@ -367,12 +376,13 @@ export class Renderer {
     this.scoreLayer.visible = !!this.score;
     if (!this.score) return;
     const xs = scoreSlots(this.score.length, s.grid.width * TILE_PX);
-    this.score.forEach(({ id, wins }, k) => {
+    this.score.forEach(({ id, wins, team }, k) => {
       const i = s.players.findIndex((p) => p.id === id);
       const p = s.players[i];
       let head = this.scoreHeads.get(id);
       let text = this.scoreWins.get(id);
       let hp = this.scoreHp.get(id);
+      let badge = this.scoreTeams.get(id);
       if (!head || !text) {
         head = new Sprite();
         head.anchor.set(0.5, 1);
@@ -388,10 +398,17 @@ export class Renderer {
           style: { fill: 0xff7777, fontFamily: "Lilita One, sans-serif", fontSize: 8, stroke: { color: 0x15152a, width: 2 } },
         });
         hp.anchor.set(0, 0.5);
+        badge = new Text({
+          text: "",
+          resolution: this.lite ? 1.5 : 4,
+          style: { fill: 0xff7777, fontFamily: "Lilita One, sans-serif", fontSize: 5.5, stroke: { color: 0x15152a, width: 1.5 } },
+        });
+        badge.anchor.set(0, 0.5);
         this.scoreHeads.set(id, head);
         this.scoreWins.set(id, text);
         this.scoreHp.set(id, hp);
-        this.scoreLayer.addChild(head, text, hp);
+        this.scoreTeams.set(id, badge);
+        this.scoreLayer.addChild(head, text, hp, badge);
       }
       const character = this.character(id);
       const skin = this.skins.get(character);
@@ -410,6 +427,13 @@ export class Renderer {
         hp.position.set(xs[k]! + 3, TILE_PX / 2 + 7);
         hp.alpha = p?.alive ? 1 : 0.4;
       }
+      if (badge) {
+        badge.text = team === "red" ? "VERM" : team === "blue" ? "AZUL" : "";
+        badge.style.fill = team === "red" ? 0xff7777 : 0x78baff;
+        badge.visible = !!team;
+        badge.position.set(xs[k]! + 3, TILE_PX / 2 + 7);
+        badge.alpha = p?.alive ? 1 : 0.4;
+      }
       // out of this round: faded
       head.alpha = text.alpha = p?.alive ? 1 : 0.4;
     });
@@ -420,8 +444,9 @@ export class Renderer {
     if (lite) this.banner.resolution = this.clock.resolution = 1.5;
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
+    this.tempoLabel.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.people, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock);
+    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.people, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -765,6 +790,7 @@ export class Renderer {
         let tile = getTile(s, x, y);
         if (ttl !== undefined) tile = ignition ? Tile.Block : Tile.Empty;
         sprite.texture = art[tileCell(tile, x, y, width, height)]!;
+        sprite.tint = stageTileTint(s.stage, tile);
         sprite.scale.set(this.tileScale);
         sprite.position.set(x * TILE_PX, y * TILE_PX);
         sprite.visible = true;
@@ -1138,7 +1164,7 @@ export class Renderer {
       if (p.sneak > 0 && !this.sneaking.has(p.id) && !this.lite && !pixelPuff) this.fx.puff(cx, cy - 6, specialInk(COLORS.sneakPuff, effectColor));
       if (p.sneak > 0) this.sneaking.add(p.id);
       else this.sneaking.delete(p.id);
-      const seen = sneakAlpha(p, this.viewer);
+      const seen = sneakAlpha(p, this.viewer) * skullAlpha(p, s.tick);
       if (seen === 0) return;
       if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
       g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
@@ -1260,8 +1286,11 @@ export class Renderer {
 
     this.banner.position.set((width * TILE_PX) / 2, (height * TILE_PX) / 2);
     this.clock.position.set((width * TILE_PX) / 2, 3);
+    this.tempoLabel.position.set((width * TILE_PX) / 2, 12);
     this.drawScore(s);
     this.clock.text = battleClockText(s);
+    this.tempoLabel.text = battleTempoText(s);
+    this.tempoLabel.visible = this.tempoLabel.text.length > 0;
   }
 
   /** A special's blast, from the caster to where it stopped. */

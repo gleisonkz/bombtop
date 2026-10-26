@@ -1,5 +1,6 @@
 import { TILE } from "./constants";
 import { effectiveSpeed } from "./curse";
+import { stageTempoRate } from "./stage";
 import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
 function passable(s: MatchState, p: Player, x: number, y: number): boolean {
@@ -30,7 +31,7 @@ export function steer(s: MatchState, p: Player, dir: Direction, alt: Direction):
   return alt;
 }
 
-export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = effectiveSpeed(p)): void {
+export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = effectiveSpeed(p) * stageTempoRate(s)): void {
   if (!dir || !p.alive) return;
   const [dx, dy] = DIR_VECTORS[dir];
   const horizontal = dx !== 0;

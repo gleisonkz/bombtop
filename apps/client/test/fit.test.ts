@@ -14,4 +14,14 @@ describe("fitScale", () => {
   it("never shrinks below 1:1", () => {
     expect(fitScale(100, 100, 208, 176)).toBe(1);
   });
+
+  it("fits the arena after rotating from portrait to landscape and back", () => {
+    const arenaWidth = 208;
+    const arenaHeight = 176;
+    for (const [width, height] of [[320, 568], [568, 320], [320, 568]] as const) {
+      const scale = fitScale(width, height, arenaWidth, arenaHeight);
+      expect(arenaWidth * scale).toBeLessThanOrEqual(width + 0.001);
+      expect(arenaHeight * scale).toBeLessThanOrEqual(height + 0.001);
+    }
+  });
 });

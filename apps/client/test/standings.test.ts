@@ -57,4 +57,13 @@ describe("Standings", () => {
     s.see(alive("a")(["a", "b"]), 2);
     expect(s.ranking(["a", "b", "x"], "a").map((r) => r.id)).toEqual(["a", "b", "x"]);
   });
+
+  it("atribui a mesma primeira colocação aos aliados vencedores no TAG", () => {
+    const s = new Standings();
+    s.see(alive("a", "b", "c")(["a", "b", "c"]), 1);
+    s.see(alive("a", "c")(["a", "b", "c"]), 25);
+    expect(s.ranking(["a", "b", "c"], "a", ["a", "c"])).toEqual([
+      { id: "a", place: 1 }, { id: "c", place: 1 }, { id: "b", place: 3 },
+    ]);
+  });
 });

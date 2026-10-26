@@ -1,7 +1,8 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
 import { updateAir } from "./air";
-import { effectiveRange } from "./curse";
+import { effectiveCapacity, effectiveFuse, effectiveRange } from "./curse";
 import { updateSlides } from "./kick";
+import { stageFuseTicks } from "./stage";
 import { shieldAt } from "./special";
 import { bombAt, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
@@ -13,16 +14,17 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   const { x, y } = playerTile(p);
   if (bombAt(s, x, y)) return false;
   const active = s.bombs.filter((b) => b.ownerId === playerId && !b.mega).length;
-  if (active >= p.bombCapacity) return false;
+  if (active >= effectiveCapacity(p)) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: FUSE_TICKS, range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
+  s.bombs.push({ ownerId: playerId, x, y, fuse: effectiveFuse(p), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
   return true;
 }
 
 /** Ticks fuses and flames, resolving explosions and chain reactions. */
 export function updateBombs(s: MatchState): void {
+  const rate = stageFuseTicks(s);
   for (const f of s.flames) {
-    if (--f.ttl <= 0 && f.block) setTile(s, f.x, f.y, Tile.Empty);
+    if ((f.ttl -= rate) <= 0 && f.block) setTile(s, f.x, f.y, Tile.Empty);
   }
   s.flames = s.flames.filter((f) => f.ttl > 0);
 
@@ -34,7 +36,7 @@ export function updateBombs(s: MatchState): void {
   for (const b of s.bombs) {
     // A remote stays armed while its owner can trigger it; abandoned bombs use their normal fuse.
     const remoteArmed = b.type === "remote" && s.players.some((p) => p.id === b.ownerId && p.alive);
-    if (!remoteArmed && !b.air && !b.heldBy) b.fuse--;
+    if (!remoteArmed && !b.air && !b.heldBy) b.fuse -= rate;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0 || (!b.air && !b.heldBy && hasFlame(s, b.x, b.y)));
   while (queue.length > 0) {

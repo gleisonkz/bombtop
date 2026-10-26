@@ -225,6 +225,7 @@ const lobby = new LobbyPanel(ui, {
   setTimeMinutes: (minutes) => online?.setTimeMinutes(minutes),
   setSuddenDeath: (enabled) => online?.setSuddenDeath(enabled),
   setBattleMode: (mode) => online?.setBattleMode(mode),
+  setTeam: (id, team) => online?.setTeam(id, team),
   setManiac: (config) => online?.setManiac(config),
   setStageRotation: (rotation) => online?.setStageRotation(rotation),
   leave: () => void online?.leave(),
@@ -429,6 +430,26 @@ window.addEventListener("resize", refit);
 // Big displays (a TV): the screens grow to use the room, the arena canvas outside them is fitted on its own.
 const zoomUi = () => (ui.style.zoom = String(uiZoom(window.innerWidth, window.innerHeight)));
 window.addEventListener("resize", zoomUi);
+window.visualViewport?.addEventListener("resize", refit);
+window.visualViewport?.addEventListener("resize", zoomUi);
+window.addEventListener("orientationchange", refit);
+window.addEventListener("orientationchange", zoomUi);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  refit();
+  zoomUi();
+});
+let previousViewportWidth = window.innerWidth;
+let previousViewportHeight = window.innerHeight;
+app.ticker.add(() => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  if (width === previousViewportWidth && height === previousViewportHeight) return;
+  previousViewportWidth = width;
+  previousViewportHeight = height;
+  refit();
+  zoomUi();
+});
 zoomUi();
 // A controller on a phone or tablet brings out the couch-play button (hidden on touch screens otherwise).
 window.addEventListener("gamepadconnected", () => document.documentElement.classList.add("has-pad"));

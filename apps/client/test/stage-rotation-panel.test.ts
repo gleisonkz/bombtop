@@ -49,6 +49,16 @@ function fixture(editable = true) {
 }
 
 describe("stage sequence editor", () => {
+  it("offers the first two original SB4 battle stages next to the creative maps", () => {
+    const f = fixture();
+    f.button("＋ SB4 01 · Usual").click();
+    f.button("＋ SB4 02 · Fast ’n Slow").click();
+    f.button("Salvar sequência").click();
+    expect(f.commit).toHaveBeenCalledWith([
+      { stage: "classic" }, { stage: "conveyor" }, { stage: "warp" },
+      { stage: "sb4-01" }, { stage: "sb4-02" },
+    ]);
+  });
   it("saves pointer drag order, including repeated stages, only after confirmation", () => {
     const f = fixture();
     f.button("＋ Clássica").click();

@@ -1,0 +1,2117 @@
+{
+  "version": 1,
+  "status": "full 108-frame candidate visually approved by coordinator; frozen for promotion",
+  "alpha_threshold": 32,
+  "minimum_component_pixels": 600,
+  "edge_support_pixels": 1,
+  "scales": {
+    "stand-front": 0.7,
+    "stand-profile": 0.67,
+    "stand-back": 0.7,
+    "walk-front": 0.71,
+    "walk-profile": 0.72,
+    "walk-back": 0.71,
+    "hurt": 0.78,
+    "death": 0.76,
+    "kame-front": 0.86,
+    "kame-profile": 0.86,
+    "kame-back": 0.89,
+    "carry-front": 0.81,
+    "carry-profile": 0.8,
+    "carry-back": 0.83,
+    "carry-walk-front": 0.81,
+    "carry-walk-profile": 0.83,
+    "carry-walk-back": 0.84,
+    "celebrate": 0.8
+  },
+  "sources": {
+    "locomotion": {
+      "file": "locomotion.generated.png",
+      "size": [
+        1201,
+        1309
+      ],
+      "sha256": "efef56d5a7ea06258a7ccc36a30053d19959232c73731f704e389f8d7ec8dd38"
+    },
+    "actions": {
+      "file": "actions.generated.png",
+      "size": [
+        1683,
+        935
+      ],
+      "sha256": "935c94f03a0232fa562cda5ae75f3ae9af5b60528ae0b30b87bf60d2777f9543"
+    },
+    "carry-celebrate": {
+      "file": "carry-celebrate.generated.png",
+      "size": [
+        1201,
+        1309
+      ],
+      "sha256": "6270d418c70aa8f4f014a9e5efa5d7e35add4d6e1708fd76a3f00c6034bb1077"
+    }
+  },
+  "rows": [
+    {
+      "runtime_row": 0,
+      "source": "locomotion",
+      "y_bounds": [
+        0,
+        223
+      ],
+      "frames": 4,
+      "family": "stand-front"
+    },
+    {
+      "runtime_row": 1,
+      "source": "locomotion",
+      "y_bounds": [
+        223,
+        449
+      ],
+      "frames": 4,
+      "family": "stand-profile"
+    },
+    {
+      "runtime_row": 2,
+      "source": "locomotion",
+      "y_bounds": [
+        449,
+        667
+      ],
+      "frames": 4,
+      "family": "stand-back"
+    },
+    {
+      "runtime_row": 3,
+      "source": "locomotion",
+      "y_bounds": [
+        667,
+        876
+      ],
+      "frames": 6,
+      "family": "walk-front"
+    },
+    {
+      "runtime_row": 4,
+      "source": "locomotion",
+      "y_bounds": [
+        876,
+        1082
+      ],
+      "frames": 6,
+      "family": "walk-profile"
+    },
+    {
+      "runtime_row": 5,
+      "source": "locomotion",
+      "y_bounds": [
+        1082,
+        1309
+      ],
+      "frames": 6,
+      "family": "walk-back"
+    },
+    {
+      "runtime_row": 6,
+      "source": "actions",
+      "y_bounds": [
+        0,
+        205
+      ],
+      "frames": 6,
+      "family": "hurt"
+    },
+    {
+      "runtime_row": 7,
+      "source": "actions",
+      "y_bounds": [
+        205,
+        402
+      ],
+      "frames": 7,
+      "family": "death"
+    },
+    {
+      "runtime_row": 8,
+      "source": "actions",
+      "y_bounds": [
+        402,
+        577
+      ],
+      "frames": 9,
+      "family": "kame-front"
+    },
+    {
+      "runtime_row": 9,
+      "source": "actions",
+      "y_bounds": [
+        577,
+        750
+      ],
+      "frames": 9,
+      "family": "kame-profile"
+    },
+    {
+      "runtime_row": 10,
+      "source": "actions",
+      "y_bounds": [
+        750,
+        935
+      ],
+      "frames": 9,
+      "family": "kame-back"
+    },
+    {
+      "runtime_row": 11,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        0,
+        210
+      ],
+      "frames": 4,
+      "family": "carry-front"
+    },
+    {
+      "runtime_row": 12,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        210,
+        395
+      ],
+      "frames": 4,
+      "family": "carry-profile"
+    },
+    {
+      "runtime_row": 13,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        395,
+        575
+      ],
+      "frames": 4,
+      "family": "carry-back"
+    },
+    {
+      "runtime_row": 14,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        575,
+        759
+      ],
+      "frames": 6,
+      "family": "carry-walk-front"
+    },
+    {
+      "runtime_row": 15,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        759,
+        939
+      ],
+      "frames": 6,
+      "family": "carry-walk-profile"
+    },
+    {
+      "runtime_row": 16,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        939,
+        1117
+      ],
+      "frames": 6,
+      "family": "carry-walk-back"
+    },
+    {
+      "runtime_row": 17,
+      "source": "carry-celebrate",
+      "y_bounds": [
+        1115,
+        1309
+      ],
+      "frames": 8,
+      "family": "celebrate"
+    }
+  ],
+  "runtime_contract": {
+    "bodyHeight": 148,
+    "scale": 0.15,
+    "kame_charge_columns": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "kame_release_column": 5
+  },
+  "measurement_notes": [
+    "No per-frame normalization; fixed directional/family scales.",
+    "Source poses retained in authored left-to-right order.",
+    "Carry row bands 939:1117 and 1115:1309 overlap deliberately to retain the last celebration hair tip and preceding boots; full-source core conservation test prevents loss or duplication."
+  ],
+  "candidate_sha256": "e8ea47ea737566fc2a0e2af13f185363df1be4a5dcd38a081c47aaa56066470b",
+  "reviewed_horizontal_fit_shifts": [
+    [
+      6,
+      2,
+      3
+    ],
+    [
+      7,
+      6,
+      1
+    ]
+  ],
+  "appearance_measurements": {
+    "front_chest_band_y": [
+      80,
+      95
+    ],
+    "alpha_threshold": 128,
+    "statistic": "median horizontal silhouette span",
+    "original_front_chest_width": 49,
+    "candidate_front_chest_width": 62,
+    "increase_percent": 26.53061224489796,
+    "original_front_opaque_height": 148,
+    "candidate_front_opaque_height": 144,
+    "note": "Fixed uniform family scale; no horizontal stretching; bodyHeight remains 148."
+  },
+  "source_measurements": [
+    {
+      "row": 0,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        80,
+        11,
+        195,
+        220
+      ],
+      "core_box": [
+        1,
+        1,
+        115,
+        208
+      ]
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        263,
+        12,
+        379,
+        220
+      ],
+      "core_box": [
+        1,
+        1,
+        115,
+        207
+      ]
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        449,
+        12,
+        566,
+        220
+      ],
+      "core_box": [
+        1,
+        1,
+        116,
+        207
+      ]
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        637,
+        10,
+        754,
+        220
+      ],
+      "core_box": [
+        1,
+        1,
+        116,
+        209
+      ]
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        77,
+        224,
+        200,
+        445
+      ],
+      "core_box": [
+        1,
+        1,
+        122,
+        220
+      ]
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        269,
+        224,
+        393,
+        445
+      ],
+      "core_box": [
+        1,
+        1,
+        123,
+        220
+      ]
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        453,
+        225,
+        577,
+        446
+      ],
+      "core_box": [
+        1,
+        1,
+        123,
+        220
+      ]
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        636,
+        225,
+        760,
+        444
+      ],
+      "core_box": [
+        0,
+        0,
+        123,
+        219
+      ]
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        81,
+        453,
+        205,
+        663
+      ],
+      "core_box": [
+        1,
+        0,
+        123,
+        209
+      ]
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        267,
+        454,
+        389,
+        663
+      ],
+      "core_box": [
+        1,
+        1,
+        122,
+        209
+      ]
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        450,
+        454,
+        574,
+        664
+      ],
+      "core_box": [
+        0,
+        1,
+        123,
+        209
+      ]
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        636,
+        453,
+        761,
+        664
+      ],
+      "core_box": [
+        1,
+        0,
+        124,
+        210
+      ]
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        73,
+        669,
+        189,
+        875
+      ],
+      "core_box": [
+        1,
+        1,
+        115,
+        205
+      ]
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        264,
+        671,
+        379,
+        873
+      ],
+      "core_box": [
+        1,
+        0,
+        115,
+        202
+      ]
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        451,
+        671,
+        567,
+        875
+      ],
+      "core_box": [
+        1,
+        0,
+        115,
+        203
+      ]
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        641,
+        671,
+        757,
+        875
+      ],
+      "core_box": [
+        1,
+        0,
+        116,
+        204
+      ]
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "source": "locomotion",
+      "source_box": [
+        836,
+        670,
+        953,
+        876
+      ],
+      "core_box": [
+        1,
+        0,
+        116,
+        205
+      ]
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "source": "locomotion",
+      "source_box": [
+        1020,
+        670,
+        1135,
+        872
+      ],
+      "core_box": [
+        1,
+        1,
+        114,
+        202
+      ]
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        75,
+        878,
+        194,
+        1078
+      ],
+      "core_box": [
+        1,
+        1,
+        118,
+        199
+      ]
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        264,
+        877,
+        384,
+        1076
+      ],
+      "core_box": [
+        1,
+        1,
+        119,
+        198
+      ]
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        456,
+        879,
+        574,
+        1080
+      ],
+      "core_box": [
+        1,
+        1,
+        118,
+        200
+      ]
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        649,
+        882,
+        771,
+        1082
+      ],
+      "core_box": [
+        1,
+        0,
+        121,
+        199
+      ]
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "source": "locomotion",
+      "source_box": [
+        850,
+        876,
+        975,
+        1080
+      ],
+      "core_box": [
+        1,
+        1,
+        124,
+        203
+      ]
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "source": "locomotion",
+      "source_box": [
+        1040,
+        876,
+        1160,
+        1078
+      ],
+      "core_box": [
+        0,
+        0,
+        119,
+        201
+      ]
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "source": "locomotion",
+      "source_box": [
+        74,
+        1082,
+        189,
+        1285
+      ],
+      "core_box": [
+        1,
+        0,
+        114,
+        202
+      ]
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "source": "locomotion",
+      "source_box": [
+        263,
+        1082,
+        381,
+        1285
+      ],
+      "core_box": [
+        1,
+        0,
+        117,
+        202
+      ]
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "source": "locomotion",
+      "source_box": [
+        450,
+        1082,
+        573,
+        1288
+      ],
+      "core_box": [
+        1,
+        0,
+        122,
+        205
+      ]
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "source": "locomotion",
+      "source_box": [
+        644,
+        1082,
+        764,
+        1288
+      ],
+      "core_box": [
+        1,
+        0,
+        119,
+        205
+      ]
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "source": "locomotion",
+      "source_box": [
+        836,
+        1082,
+        956,
+        1288
+      ],
+      "core_box": [
+        1,
+        0,
+        119,
+        205
+      ]
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "source": "locomotion",
+      "source_box": [
+        1028,
+        1082,
+        1147,
+        1278
+      ],
+      "core_box": [
+        1,
+        0,
+        118,
+        195
+      ]
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "source": "actions",
+      "source_box": [
+        35,
+        22,
+        176,
+        197
+      ],
+      "core_box": [
+        1,
+        1,
+        141,
+        174
+      ]
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "source": "actions",
+      "source_box": [
+        237,
+        20,
+        362,
+        196
+      ],
+      "core_box": [
+        0,
+        1,
+        124,
+        176
+      ]
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "source": "actions",
+      "source_box": [
+        418,
+        21,
+        562,
+        197
+      ],
+      "core_box": [
+        0,
+        0,
+        143,
+        175
+      ]
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "source": "actions",
+      "source_box": [
+        618,
+        15,
+        747,
+        204
+      ],
+      "core_box": [
+        1,
+        1,
+        128,
+        188
+      ]
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "source": "actions",
+      "source_box": [
+        794,
+        18,
+        946,
+        204
+      ],
+      "core_box": [
+        1,
+        1,
+        151,
+        185
+      ]
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "source": "actions",
+      "source_box": [
+        991,
+        17,
+        1123,
+        197
+      ],
+      "core_box": [
+        1,
+        1,
+        131,
+        179
+      ]
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "source": "actions",
+      "source_box": [
+        53,
+        207,
+        161,
+        394
+      ],
+      "core_box": [
+        1,
+        1,
+        108,
+        186
+      ]
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "source": "actions",
+      "source_box": [
+        247,
+        221,
+        355,
+        394
+      ],
+      "core_box": [
+        0,
+        0,
+        108,
+        172
+      ]
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "source": "actions",
+      "source_box": [
+        438,
+        223,
+        558,
+        394
+      ],
+      "core_box": [
+        1,
+        1,
+        119,
+        170
+      ]
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "source": "actions",
+      "source_box": [
+        626,
+        246,
+        738,
+        396
+      ],
+      "core_box": [
+        1,
+        1,
+        111,
+        149
+      ]
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "source": "actions",
+      "source_box": [
+        799,
+        273,
+        966,
+        399
+      ],
+      "core_box": [
+        1,
+        0,
+        166,
+        125
+      ]
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "source": "actions",
+      "source_box": [
+        1014,
+        263,
+        1118,
+        399
+      ],
+      "core_box": [
+        1,
+        1,
+        103,
+        135
+      ]
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "source": "actions",
+      "source_box": [
+        1188,
+        285,
+        1375,
+        391
+      ],
+      "core_box": [
+        1,
+        1,
+        186,
+        105
+      ]
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "source": "actions",
+      "source_box": [
+        43,
+        407,
+        179,
+        572
+      ],
+      "core_box": [
+        1,
+        1,
+        135,
+        165
+      ]
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "source": "actions",
+      "source_box": [
+        238,
+        407,
+        374,
+        572
+      ],
+      "core_box": [
+        1,
+        1,
+        135,
+        165
+      ]
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "source": "actions",
+      "source_box": [
+        422,
+        411,
+        553,
+        576
+      ],
+      "core_box": [
+        1,
+        1,
+        130,
+        164
+      ]
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "source": "actions",
+      "source_box": [
+        609,
+        406,
+        737,
+        577
+      ],
+      "core_box": [
+        1,
+        1,
+        127,
+        171
+      ]
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "source": "actions",
+      "source_box": [
+        781,
+        408,
+        920,
+        574
+      ],
+      "core_box": [
+        1,
+        1,
+        139,
+        165
+      ]
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "source": "actions",
+      "source_box": [
+        967,
+        407,
+        1101,
+        574
+      ],
+      "core_box": [
+        1,
+        1,
+        133,
+        166
+      ]
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "source": "actions",
+      "source_box": [
+        1145,
+        404,
+        1286,
+        574
+      ],
+      "core_box": [
+        1,
+        1,
+        141,
+        169
+      ]
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "source": "actions",
+      "source_box": [
+        1329,
+        405,
+        1470,
+        574
+      ],
+      "core_box": [
+        1,
+        1,
+        140,
+        168
+      ]
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "source": "actions",
+      "source_box": [
+        1516,
+        405,
+        1644,
+        574
+      ],
+      "core_box": [
+        1,
+        1,
+        127,
+        168
+      ]
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "source": "actions",
+      "source_box": [
+        34,
+        577,
+        163,
+        747
+      ],
+      "core_box": [
+        1,
+        0,
+        129,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "source": "actions",
+      "source_box": [
+        217,
+        577,
+        347,
+        747
+      ],
+      "core_box": [
+        1,
+        0,
+        129,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "source": "actions",
+      "source_box": [
+        405,
+        578,
+        536,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        130,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "source": "actions",
+      "source_box": [
+        589,
+        578,
+        716,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        126,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "source": "actions",
+      "source_box": [
+        774,
+        580,
+        899,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        124,
+        167
+      ]
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "source": "actions",
+      "source_box": [
+        959,
+        578,
+        1092,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        132,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "source": "actions",
+      "source_box": [
+        1140,
+        577,
+        1275,
+        748
+      ],
+      "core_box": [
+        1,
+        0,
+        134,
+        170
+      ]
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "source": "actions",
+      "source_box": [
+        1328,
+        578,
+        1462,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        133,
+        169
+      ]
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "source": "actions",
+      "source_box": [
+        1512,
+        577,
+        1645,
+        748
+      ],
+      "core_box": [
+        1,
+        1,
+        132,
+        170
+      ]
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "source": "actions",
+      "source_box": [
+        45,
+        754,
+        160,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        114,
+        164
+      ]
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "source": "actions",
+      "source_box": [
+        228,
+        753,
+        353,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        125,
+        165
+      ]
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "source": "actions",
+      "source_box": [
+        415,
+        753,
+        549,
+        919
+      ],
+      "core_box": [
+        0,
+        1,
+        133,
+        165
+      ]
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "source": "actions",
+      "source_box": [
+        604,
+        756,
+        734,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        129,
+        162
+      ]
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "source": "actions",
+      "source_box": [
+        784,
+        753,
+        917,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        132,
+        165
+      ]
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "source": "actions",
+      "source_box": [
+        967,
+        754,
+        1091,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        123,
+        164
+      ]
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "source": "actions",
+      "source_box": [
+        1154,
+        754,
+        1268,
+        919
+      ],
+      "core_box": [
+        1,
+        1,
+        113,
+        164
+      ]
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "source": "actions",
+      "source_box": [
+        1331,
+        754,
+        1458,
+        919
+      ],
+      "core_box": [
+        0,
+        1,
+        127,
+        164
+      ]
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "source": "actions",
+      "source_box": [
+        1520,
+        754,
+        1642,
+        919
+      ],
+      "core_box": [
+        1,
+        0,
+        121,
+        164
+      ]
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        37,
+        27,
+        174,
+        210
+      ],
+      "core_box": [
+        1,
+        1,
+        136,
+        182
+      ]
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        200,
+        27,
+        338,
+        210
+      ],
+      "core_box": [
+        1,
+        1,
+        137,
+        182
+      ]
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        370,
+        27,
+        510,
+        210
+      ],
+      "core_box": [
+        1,
+        1,
+        139,
+        182
+      ]
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        541,
+        27,
+        680,
+        210
+      ],
+      "core_box": [
+        1,
+        1,
+        138,
+        182
+      ]
+    },
+    {
+      "row": 12,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        51,
+        210,
+        160,
+        391
+      ],
+      "core_box": [
+        1,
+        0,
+        108,
+        180
+      ]
+    },
+    {
+      "row": 12,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        223,
+        210,
+        331,
+        393
+      ],
+      "core_box": [
+        1,
+        0,
+        108,
+        182
+      ]
+    },
+    {
+      "row": 12,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        390,
+        210,
+        500,
+        391
+      ],
+      "core_box": [
+        1,
+        0,
+        109,
+        180
+      ]
+    },
+    {
+      "row": 12,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        559,
+        210,
+        668,
+        391
+      ],
+      "core_box": [
+        1,
+        1,
+        108,
+        180
+      ]
+    },
+    {
+      "row": 13,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        37,
+        396,
+        175,
+        573
+      ],
+      "core_box": [
+        1,
+        1,
+        137,
+        176
+      ]
+    },
+    {
+      "row": 13,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        204,
+        396,
+        341,
+        573
+      ],
+      "core_box": [
+        1,
+        1,
+        137,
+        176
+      ]
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        373,
+        396,
+        511,
+        573
+      ],
+      "core_box": [
+        1,
+        1,
+        137,
+        176
+      ]
+    },
+    {
+      "row": 13,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        545,
+        396,
+        683,
+        573
+      ],
+      "core_box": [
+        1,
+        1,
+        137,
+        176
+      ]
+    },
+    {
+      "row": 14,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        35,
+        577,
+        174,
+        759
+      ],
+      "core_box": [
+        1,
+        1,
+        138,
+        181
+      ]
+    },
+    {
+      "row": 14,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        187,
+        577,
+        322,
+        757
+      ],
+      "core_box": [
+        1,
+        1,
+        135,
+        179
+      ]
+    },
+    {
+      "row": 14,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        334,
+        576,
+        468,
+        757
+      ],
+      "core_box": [
+        1,
+        0,
+        133,
+        180
+      ]
+    },
+    {
+      "row": 14,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        476,
+        579,
+        607,
+        757
+      ],
+      "core_box": [
+        1,
+        0,
+        130,
+        177
+      ]
+    },
+    {
+      "row": 14,
+      "column": 4,
+      "source": "carry-celebrate",
+      "source_box": [
+        613,
+        578,
+        744,
+        758
+      ],
+      "core_box": [
+        1,
+        1,
+        130,
+        180
+      ]
+    },
+    {
+      "row": 14,
+      "column": 5,
+      "source": "carry-celebrate",
+      "source_box": [
+        757,
+        580,
+        891,
+        758
+      ],
+      "core_box": [
+        0,
+        1,
+        134,
+        177
+      ]
+    },
+    {
+      "row": 15,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        52,
+        759,
+        161,
+        937
+      ],
+      "core_box": [
+        1,
+        1,
+        109,
+        177
+      ]
+    },
+    {
+      "row": 15,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        211,
+        759,
+        319,
+        936
+      ],
+      "core_box": [
+        1,
+        0,
+        108,
+        176
+      ]
+    },
+    {
+      "row": 15,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        353,
+        759,
+        461,
+        937
+      ],
+      "core_box": [
+        1,
+        1,
+        107,
+        177
+      ]
+    },
+    {
+      "row": 15,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        494,
+        759,
+        601,
+        936
+      ],
+      "core_box": [
+        0,
+        0,
+        106,
+        176
+      ]
+    },
+    {
+      "row": 15,
+      "column": 4,
+      "source": "carry-celebrate",
+      "source_box": [
+        637,
+        760,
+        744,
+        937
+      ],
+      "core_box": [
+        1,
+        0,
+        106,
+        176
+      ]
+    },
+    {
+      "row": 15,
+      "column": 5,
+      "source": "carry-celebrate",
+      "source_box": [
+        783,
+        760,
+        890,
+        936
+      ],
+      "core_box": [
+        1,
+        0,
+        106,
+        176
+      ]
+    },
+    {
+      "row": 16,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        37,
+        941,
+        172,
+        1117
+      ],
+      "core_box": [
+        1,
+        1,
+        134,
+        175
+      ]
+    },
+    {
+      "row": 16,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        187,
+        940,
+        318,
+        1116
+      ],
+      "core_box": [
+        1,
+        1,
+        131,
+        175
+      ]
+    },
+    {
+      "row": 16,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        339,
+        942,
+        472,
+        1116
+      ],
+      "core_box": [
+        1,
+        1,
+        132,
+        173
+      ]
+    },
+    {
+      "row": 16,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        490,
+        941,
+        618,
+        1116
+      ],
+      "core_box": [
+        1,
+        1,
+        127,
+        174
+      ]
+    },
+    {
+      "row": 16,
+      "column": 4,
+      "source": "carry-celebrate",
+      "source_box": [
+        636,
+        940,
+        763,
+        1115
+      ],
+      "core_box": [
+        1,
+        1,
+        126,
+        174
+      ]
+    },
+    {
+      "row": 16,
+      "column": 5,
+      "source": "carry-celebrate",
+      "source_box": [
+        780,
+        941,
+        909,
+        1115
+      ],
+      "core_box": [
+        1,
+        1,
+        128,
+        173
+      ]
+    },
+    {
+      "row": 17,
+      "column": 0,
+      "source": "carry-celebrate",
+      "source_box": [
+        41,
+        1116,
+        159,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        117,
+        182
+      ]
+    },
+    {
+      "row": 17,
+      "column": 1,
+      "source": "carry-celebrate",
+      "source_box": [
+        192,
+        1116,
+        308,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        115,
+        182
+      ]
+    },
+    {
+      "row": 17,
+      "column": 2,
+      "source": "carry-celebrate",
+      "source_box": [
+        336,
+        1117,
+        454,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        117,
+        181
+      ]
+    },
+    {
+      "row": 17,
+      "column": 3,
+      "source": "carry-celebrate",
+      "source_box": [
+        477,
+        1120,
+        593,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        115,
+        178
+      ]
+    },
+    {
+      "row": 17,
+      "column": 4,
+      "source": "carry-celebrate",
+      "source_box": [
+        622,
+        1118,
+        739,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        116,
+        180
+      ]
+    },
+    {
+      "row": 17,
+      "column": 5,
+      "source": "carry-celebrate",
+      "source_box": [
+        766,
+        1118,
+        881,
+        1299
+      ],
+      "core_box": [
+        0,
+        1,
+        114,
+        180
+      ]
+    },
+    {
+      "row": 17,
+      "column": 6,
+      "source": "carry-celebrate",
+      "source_box": [
+        905,
+        1117,
+        1022,
+        1299
+      ],
+      "core_box": [
+        1,
+        1,
+        116,
+        181
+      ]
+    },
+    {
+      "row": 17,
+      "column": 7,
+      "source": "carry-celebrate",
+      "source_box": [
+        1048,
+        1115,
+        1164,
+        1299
+      ],
+      "core_box": [
+        0,
+        0,
+        115,
+        183
+      ]
+    }
+  ]
+}
