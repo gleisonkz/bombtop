@@ -175,10 +175,10 @@ export class LobbyPanel {
     this.suddenDeathToggle.disabled = !mayEdit || maniac;
     this.seats.replaceChildren(
       ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
-        const tag = el("span", { class: "slot-tag", text: `P${i + 1}` });
+        const slotTag = el("span", { class: "slot-tag", text: `P${i + 1}` });
         if (!member && isHost) {
           return el("div", { class: "seat empty add-bot" }, [
-            tag,
+            slotTag,
             el("span", { class: "seat-name", text: "Vaga livre" }),
             el("span", { class: "seat-sub", text: this.offline?.couch ? "Aperte A num controle, ou chame um bot:" : "Chamar um bot:" }),
             ...BOT_LEVELS.map((level) => button(LEVEL_NAMES[level], () => this.handlers.addBot(level), `mini ${level}`)),
@@ -186,7 +186,7 @@ export class LobbyPanel {
         }
         if (!member) {
           return el("div", { class: "seat empty" }, [
-            tag,
+            slotTag,
             characterArt("bomb", MASCOT_COLOR, "idle"),
             el("span", { class: "seat-name", text: "Vaga livre" }),
             el("span", { class: "seat-sub", text: "esperando alguém…" }),
@@ -215,7 +215,7 @@ export class LobbyPanel {
             ? `${you ? "você • " : ""}${member.wins} 🏆`
             : "reconectando…";
         return el("div", { class: cls }, [
-          tag,
+          slotTag,
           member.id === info.hostId ? el("span", { class: "crown", text: "👑", title: "Anfitrião" }) : null,
           member.bot && isHost ? button("✕", () => this.handlers.removeBot(member.id), "kick-bot") : null,
           el("div", { class: "stage-spot" }, [

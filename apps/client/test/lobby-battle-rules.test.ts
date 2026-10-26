@@ -136,4 +136,26 @@ describe("Battle Mode lobby controls", () => {
     expect(guestButtons[0]!.disabled).toBe(true);
     expect(guestButtons[1]!.disabled).toBe(false);
   });
+
+  it("shows the team buttons only in tag mode", () => {
+    const parent = new Node();
+    const panel = new LobbyPanel(parent as unknown as HTMLElement, {
+      start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
+      pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
+      setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(), setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(),
+    });
+    const lobby: LobbyInfo = {
+      phase: "lobby", code: "TST", stage: "classic", hostId: "host",
+      members: [
+        { id: "host", name: "Host", wins: 0, connected: true, character: "bomb" },
+        { id: "bot-1", name: "Bot", wins: 0, connected: true, character: "goku", bot: "easy" },
+      ],
+      winsToWin: 3, timeMinutes: null, suddenDeath: true, stageRotation: [...DEFAULT_STAGE_ROTATION],
+    };
+    const teamButtons = () => parent.all().filter((node) => node.className.includes("team-toggle"));
+    panel.update({ ...lobby, battleMode: "single" }, "host");
+    expect(teamButtons()).toHaveLength(0);
+    panel.update({ ...lobby, battleMode: "tag", members: lobby.members.map((m, i) => ({ ...m, team: i ? "blue" : "red" })) }, "host");
+    expect(teamButtons()).toHaveLength(2);
+  });
 });
