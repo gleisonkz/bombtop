@@ -1,17 +1,22 @@
 import { FLAME_TICKS, FUSE_TICKS } from "./constants";
 import { updateAir } from "./air";
+import { playerElevated } from "./player-carry";
 import { effectiveCapacity, effectiveFuse, effectiveRange } from "./curse";
 import { updateSlides } from "./kick";
 import { stageFuseTicks } from "./stage";
+import { stageFlame } from "./stage-mechanics";
+import { stageSolid } from "./stage-obstacles";
+import { stopStageStickyBombs } from "./stage-surprise";
 import { shieldAt } from "./special";
-import { bombAt, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
+import { bombAt, Floor, getFloor, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
 export function placeBomb(s: MatchState, playerId: string): boolean {
   const p = s.players.find((p) => p.id === playerId);
-  if (!p || !p.alive || p.curse?.kind === "constipation") return false;
+  if (!p || !p.alive || playerElevated(p) || p.curse?.kind === "constipation") return false;
   const { x, y } = playerTile(p);
+  if (stageSolid(s, x, y) || getFloor(s, x, y) === Floor.Slot || s.stageState?.trolley?.riderId === p.id || s.stageState?.flights?.[p.id]) return false;
   if (bombAt(s, x, y)) return false;
   const active = s.bombs.filter((b) => b.ownerId === playerId && !b.mega).length;
   if (active >= effectiveCapacity(p)) return false;
@@ -28,8 +33,10 @@ export function updateBombs(s: MatchState): void {
   }
   s.flames = s.flames.filter((f) => f.ttl > 0);
 
+  stopStageStickyBombs(s);
   updateSlides(s);
   updateAir(s);
+  s.bombs = s.bombs.filter(b => b.air || b.heldBy || getFloor(s, b.x, b.y) !== Floor.Pit);
 
   // A flying bomb's fuse waits for it to land, and a carried one's while it is held (as in Super Bomberman 4): it never
   // goes off in the air nor in the hands.
@@ -85,6 +92,8 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
     const y = bomb.y + dy * i;
     const tile = getTile(s, x, y);
     if (tile === Tile.Wall) return false;
+    const direction = dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up";
+    if (stageFlame(s, x, y, ownerId, direction)) return false;
     const shield = shieldAt(s, x, y, dx, dy);
     if (shield) return shield.id;
     addFlame(s, x, y, ownerId, tile === Tile.Block);
@@ -108,6 +117,7 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
 
 /** Sets (x,y) on fire; `block` when it is a block burning away, which clears when the flame dies. */
 export function addFlame(s: MatchState, x: number, y: number, ownerId: string, block = false): void {
+  stageFlame(s, x, y, ownerId);
   const existing = s.flames.find((f) => f.x === x && f.y === y);
   if (existing) {
     existing.ttl = FLAME_TICKS;

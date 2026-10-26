@@ -1,0 +1,1546 @@
+{
+  "width": 1568,
+  "height": 3808,
+  "frameW": 224,
+  "frameH": 224,
+  "anchorX": 112,
+  "anchorY": 208,
+  "pixel_scale": 1,
+  "columns": 7,
+  "rowCount": 17,
+  "count": 107,
+  "gameplayCount": 91,
+  "rows": [
+    {
+      "name": "idle.down",
+      "row": 0,
+      "count": 4,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-south/frame_000.png",
+          "sha256": "3cb8af4bc546ed9f6c73304accdb364fd433c0017634c1a086ea3128d696323b",
+          "bounds": [
+            65,
+            82,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-south/frame_001.png",
+          "sha256": "922ccd3633107af9a39cf00321c9e7b14f2c9d40f79eed611d7b0a56478b1c2f",
+          "bounds": [
+            64,
+            81,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-south/frame_002.png",
+          "sha256": "4005a7fc667a388aa91e7e2eca8e7e76bc63535eb12e8f38351924de5b313e85",
+          "bounds": [
+            62,
+            80,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-south/frame_003.png",
+          "sha256": "e080a52876c377e1eeab503799c1c5ffe1df32898d8944385b078014a2b47107",
+          "bounds": [
+            61,
+            80,
+            139,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle.side",
+      "row": 1,
+      "count": 4,
+      "translation": [
+        14,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-east/frame_000.png",
+          "sha256": "6b0edc37a01bb834fd2bba10929e42f48c3852ed2fbbe611e710fdfe98fa39e2",
+          "bounds": [
+            72,
+            81,
+            141,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-east/frame_001.png",
+          "sha256": "abf7dd39947da68ead087f4f5f02e39dbe2b78a4a4536701aa58f20f7aa70441",
+          "bounds": [
+            71,
+            83,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-east/frame_002.png",
+          "sha256": "855a9dc00941a2ccf3a28df9edafd7b5ecab3c814acf00ec3fab2754311c52e7",
+          "bounds": [
+            70,
+            83,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-east/frame_003.png",
+          "sha256": "25264703f386be4bb97095bc741b68d13fb31fafb154df99699a7261726aef95",
+          "bounds": [
+            67,
+            83,
+            140,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle.up",
+      "row": 2,
+      "count": 4,
+      "translation": [
+        15,
+        51
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-north/frame_000.png",
+          "sha256": "c97d6019027e5ab0e748425f294bbfb77da89e2d89ef0f09f9a3b8e02666cc8b",
+          "bounds": [
+            77,
+            82,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-north/frame_001.png",
+          "sha256": "18c36f5e0e258fce706d854405698e1adeb6dd420289f50cb7a7fbe11f7b535e",
+          "bounds": [
+            80,
+            84,
+            143,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-north/frame_002.png",
+          "sha256": "20ecf78e9a9749d1d0794ca7ff885bc87296d1af574d52825fe0a179c04e8432",
+          "bounds": [
+            83,
+            82,
+            145,
+            208
+          ]
+        },
+        {
+          "path": "generated/idle-north/frame_003.png",
+          "sha256": "ff4e950567f11674c172666413bf82279448f107a7d5aa645937d2443f94075e",
+          "bounds": [
+            83,
+            85,
+            143,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "walk.down",
+      "row": 3,
+      "count": 6,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-south/frame_000.png",
+          "sha256": "3cb8af4bc546ed9f6c73304accdb364fd433c0017634c1a086ea3128d696323b",
+          "bounds": [
+            65,
+            82,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-south/frame_001.png",
+          "sha256": "24968bdef1cc64ff826c667cdcad5fd1adb429c531000c189df3c3b21dff454f",
+          "bounds": [
+            55,
+            84,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-south/frame_002.png",
+          "sha256": "c9ea511bcce87ac1cf8387439b1398df19e55a12208d9d2ea766e4d1ed5cc505",
+          "bounds": [
+            47,
+            81,
+            143,
+            206
+          ]
+        },
+        {
+          "path": "generated/walk-south/frame_003.png",
+          "sha256": "44fcdb46ecad9e7cad0669a0cb92c8c8e66d9f211406bdb31172db3abe3679ec",
+          "bounds": [
+            53,
+            78,
+            145,
+            206
+          ]
+        },
+        {
+          "path": "generated/walk-south/frame_004.png",
+          "sha256": "dc09d10ba991e8d9c4c4fdac40ef3ff83d06b22de51b8f259eb6be8543c7f2b0",
+          "bounds": [
+            52,
+            77,
+            149,
+            206
+          ]
+        },
+        {
+          "path": "generated/walk-south/frame_005.png",
+          "sha256": "3b585801cd148e195fa14fe2fef020ffcca4d5c463a44def42e5669d53b2d445",
+          "bounds": [
+            52,
+            84,
+            153,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "name": "walk.side",
+      "row": 4,
+      "count": 6,
+      "translation": [
+        14,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-east/frame_000.png",
+          "sha256": "6b0edc37a01bb834fd2bba10929e42f48c3852ed2fbbe611e710fdfe98fa39e2",
+          "bounds": [
+            72,
+            81,
+            141,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-east/frame_001.png",
+          "sha256": "f3469e4120bd3de6eda26e1fdd52390e911463b0158a043b8730f48dfd566742",
+          "bounds": [
+            72,
+            78,
+            140,
+            209
+          ]
+        },
+        {
+          "path": "generated/walk-east/frame_002.png",
+          "sha256": "66d1e507e67afc63557803fbe89402899f02a06581f4328c83ceb5e9d102b24b",
+          "bounds": [
+            65,
+            81,
+            140,
+            209
+          ]
+        },
+        {
+          "path": "generated/walk-east/frame_003.png",
+          "sha256": "e10d00ad3183d3e2e6cd9beb947e3242e4c013d12909bed8b1938eded5970517",
+          "bounds": [
+            64,
+            77,
+            142,
+            207
+          ]
+        },
+        {
+          "path": "generated/walk-east/frame_004.png",
+          "sha256": "644d26fa080ae2b69261d7e05d2f1f6924efc26e742633fdefb145a605df4c9e",
+          "bounds": [
+            62,
+            77,
+            143,
+            206
+          ]
+        },
+        {
+          "path": "generated/walk-east/frame_005.png",
+          "sha256": "ba46932142bccd8ca61dc7060669c54be414a19c0ae62c25cfe56b1ce66b5739",
+          "bounds": [
+            64,
+            81,
+            152,
+            207
+          ]
+        }
+      ]
+    },
+    {
+      "name": "walk.up",
+      "row": 5,
+      "count": 6,
+      "translation": [
+        15,
+        51
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-north/frame_000.png",
+          "sha256": "c97d6019027e5ab0e748425f294bbfb77da89e2d89ef0f09f9a3b8e02666cc8b",
+          "bounds": [
+            77,
+            82,
+            140,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-north/frame_001.png",
+          "sha256": "cb2188ffc79fdca4da2a3f6d0c0a0fd17e1d11666f08b79680138e9f104b7a5b",
+          "bounds": [
+            74,
+            82,
+            144,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-north/frame_002.png",
+          "sha256": "288ef7c072fb78da148bdfae70a2d8d85ffd3af571ca59b2c86dea89a9f478b7",
+          "bounds": [
+            73,
+            81,
+            148,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-north/frame_003.png",
+          "sha256": "561628bd3a68e95d5d0bda4e1ef6d5ac45438c99d41c7d17c5c4063acb95f808",
+          "bounds": [
+            74,
+            79,
+            147,
+            208
+          ]
+        },
+        {
+          "path": "generated/walk-north/frame_004.png",
+          "sha256": "e6d8c6f3e5b701f9ba7709d6b9e14d25981295955a0fa22d91d57c7f8c0da816",
+          "bounds": [
+            78,
+            79,
+            143,
+            207
+          ]
+        },
+        {
+          "path": "generated/walk-north/frame_005.png",
+          "sha256": "a4fb96adca7c19051813d854061cb47d05311e12b8f230f090a37078fc62cfe8",
+          "bounds": [
+            85,
+            79,
+            143,
+            204
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stun",
+      "row": 6,
+      "count": 6,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/stun-south/frame_000.png",
+          "sha256": "3cb8af4bc546ed9f6c73304accdb364fd433c0017634c1a086ea3128d696323b",
+          "bounds": [
+            65,
+            82,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/stun-south/frame_001.png",
+          "sha256": "4e392ba257459deba0cdd0111d6102eb9eaddd4b9154388dbbb5486bd314768c",
+          "bounds": [
+            58,
+            84,
+            145,
+            208
+          ]
+        },
+        {
+          "path": "generated/stun-south/frame_002.png",
+          "sha256": "95dacac3ea3761f9842a9fea342c36890f7d86a52588cea99c7025ac88a46075",
+          "bounds": [
+            44,
+            86,
+            148,
+            208
+          ]
+        },
+        {
+          "path": "generated/stun-south/frame_003.png",
+          "sha256": "7a43af7cd91f673800871b26e51848afb2902854f6bcfbf7cfdd9985c09a3fa8",
+          "bounds": [
+            44,
+            94,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/stun-south/frame_004.png",
+          "sha256": "4cd7a4903ab6553141eb7b4eafbece8953ec95524d38bb6f7057b4961a90a796",
+          "bounds": [
+            49,
+            89,
+            135,
+            208
+          ]
+        },
+        {
+          "path": "generated/stun-south/frame_006.png",
+          "sha256": "a53116bb4a25872169c36fc1ef7d1922b4fc42d0de0cfde92e292be7b3649db7",
+          "bounds": [
+            62,
+            79,
+            136,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "death",
+      "row": 7,
+      "count": 7,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/death-south/frame_000.png",
+          "sha256": "3cb8af4bc546ed9f6c73304accdb364fd433c0017634c1a086ea3128d696323b",
+          "bounds": [
+            65,
+            82,
+            139,
+            208
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_002.png",
+          "sha256": "bb7bfe23ff5de676eb93d30ae7e95346324d2de0cc2bec2e0d50ef94b6d19b0f",
+          "bounds": [
+            61,
+            83,
+            142,
+            209
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_003.png",
+          "sha256": "1a0fd1266f3826b8827eaeb583e8c118939d2d53552e89cf81e9b89bc6efc267",
+          "bounds": [
+            50,
+            90,
+            151,
+            209
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_004.png",
+          "sha256": "92e49a59188b893f9c9f03654166eca3e36c87db54b8635ffc91c31594ff6b5f",
+          "bounds": [
+            44,
+            100,
+            155,
+            208
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_005.png",
+          "sha256": "6edee850824f0c3316915768f2aba24ec11bc8e72bd2f023c53610dfe229aa7a",
+          "bounds": [
+            45,
+            119,
+            161,
+            209
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_007.png",
+          "sha256": "35051f2f30a51ded3ad4649479aeccd360690def82e438adc9f44d898cdf601f",
+          "bounds": [
+            24,
+            148,
+            178,
+            210
+          ]
+        },
+        {
+          "path": "generated/death-south/frame_008.png",
+          "sha256": "1bda97639dfd9a5b64510217df3c4a06c38c8c10a9a1717568b290f59555c884",
+          "bounds": [
+            22,
+            170,
+            181,
+            210
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cast.down",
+      "row": 8,
+      "count": 6,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-south/frame_001.png",
+          "sha256": "beef24f0643f01b55cd6288b4c8ca23687d15036b7a47d2a557d6d92aa444307",
+          "bounds": [
+            62,
+            81,
+            141,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-south/frame_002.png",
+          "sha256": "65dd19ed816add066731812914e081bf9556cb7fdfaa636a1ebbeaf748007b32",
+          "bounds": [
+            61,
+            85,
+            145,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-south/frame_003.png",
+          "sha256": "bdc41d2d50d22681068534fca31e2d0c4dd25953ce93b83c644b62b7aeb71435",
+          "bounds": [
+            59,
+            94,
+            151,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-south/frame_004.png",
+          "sha256": "66f214babb45674fc9bbb8dff80fa842d7086db9931d8f7b506075532917145a",
+          "bounds": [
+            60,
+            104,
+            154,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-south/frame_005.png",
+          "sha256": "54c079e7c26cfb4bf9b98492a7a954dba622fde98486052bf7dc5fba6818df7b",
+          "bounds": [
+            59,
+            108,
+            156,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-south/frame_006.png",
+          "sha256": "94cf8b0aba4f59f1a6802f860f06d08dd33452bf216a4a699e516cce6bc007aa",
+          "bounds": [
+            61,
+            105,
+            152,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cast.side",
+      "row": 9,
+      "count": 6,
+      "translation": [
+        14,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-east/frame_001.png",
+          "sha256": "4d01ead9fb46646474a44722ad23af5901c5cdea9cf6acea1586e27950d9d8a9",
+          "bounds": [
+            64,
+            82,
+            146,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-east/frame_002.png",
+          "sha256": "c8792834f3f9ccd306e92bd104ad197843fb6e3d8f096ddd3177732ff585c0ca",
+          "bounds": [
+            64,
+            87,
+            152,
+            209
+          ]
+        },
+        {
+          "path": "generated/sneak-east/frame_003.png",
+          "sha256": "ff862134312bc7b7050d523f7e111cceb8ea63ca09480911105b12371cbbe71e",
+          "bounds": [
+            54,
+            89,
+            148,
+            209
+          ]
+        },
+        {
+          "path": "generated/sneak-east/frame_004.png",
+          "sha256": "efb325788e2400bfbe898bd9ae8bb751cb1c3c67511667e1155fc8968cf15fc3",
+          "bounds": [
+            52,
+            98,
+            155,
+            210
+          ]
+        },
+        {
+          "path": "generated/sneak-east/frame_005.png",
+          "sha256": "086b745188f4bd4f33f13e01d8ae37d3ecc2806184f953a1428af8c12c6d5cb0",
+          "bounds": [
+            56,
+            104,
+            157,
+            206
+          ]
+        },
+        {
+          "path": "generated/sneak-east/frame_006.png",
+          "sha256": "fbfa5c862a5188b0e39cda5bb72f36dc1e4fe18f2a72686fa2f0e2424500e1e2",
+          "bounds": [
+            55,
+            105,
+            159,
+            207
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cast.up",
+      "row": 10,
+      "count": 6,
+      "translation": [
+        15,
+        51
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-north/frame_001.png",
+          "sha256": "10a55cbf4771e95b11ecc83e439be9586ab9e2d4d3cc2b1a1089797160e85a9b",
+          "bounds": [
+            72,
+            86,
+            148,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-north/frame_002.png",
+          "sha256": "0b488082e38357f72259ee56db144983cc7955d97c9352c200fa829e73884feb",
+          "bounds": [
+            67,
+            89,
+            151,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-north/frame_003.png",
+          "sha256": "f7334471f932aee5dc4ada059be972d5fae5168e669e789a24246f3d859d449e",
+          "bounds": [
+            64,
+            95,
+            153,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-north/frame_004.png",
+          "sha256": "6536883d53c4209627b26391fabaad553cf59468f71544db8a191c42fb0d04b4",
+          "bounds": [
+            67,
+            103,
+            151,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-north/frame_005.png",
+          "sha256": "4e311fa89a639881f143067d6f819bed268d36f88efbc5e3afe76d7907696187",
+          "bounds": [
+            73,
+            103,
+            152,
+            208
+          ]
+        },
+        {
+          "path": "generated/sneak-north/frame_006.png",
+          "sha256": "faf359fc3f3647cbc630e660273c9eab2c564aaa3a10d59ebc0a425fbaeabdec",
+          "bounds": [
+            64,
+            100,
+            152,
+            208
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.down",
+      "row": 11,
+      "count": 4,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-south/frame_001.png",
+          "sha256": "713e886b0d9503126a36259c248caa58684a1b920895214272e9e7d5f1e07524",
+          "bounds": [
+            48,
+            81,
+            166,
+            209
+          ],
+          "palms": [
+            {
+              "x": 64,
+              "y": 97
+            },
+            {
+              "x": 153,
+              "y": 98
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_002.png",
+          "sha256": "44b89706d1fe8f66c471db6fa4b350c75ce617056e1dadce7db59348155d8a5f",
+          "bounds": [
+            44,
+            87,
+            163,
+            209
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 100
+            },
+            {
+              "x": 151,
+              "y": 101
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_003.png",
+          "sha256": "91a146d963b90f5ed4b058821560ef54b7159074a2db00655bc4a6cf12ae30dc",
+          "bounds": [
+            43,
+            88,
+            166,
+            209
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 104
+            },
+            {
+              "x": 154,
+              "y": 104
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_004.png",
+          "sha256": "47e53c092f10df8a73d602cbb2fe3c13aee6b9f2fd19e9abb3f58452fd102a56",
+          "bounds": [
+            43,
+            86,
+            167,
+            209
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 106
+            },
+            {
+              "x": 155,
+              "y": 106
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.side",
+      "row": 12,
+      "count": 4,
+      "translation": [
+        14,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-east/frame_001.png",
+          "sha256": "12eefa0848f9c0d8929bab9627962aa7eb5c393aa10c1bb945d3c265d4302ffc",
+          "bounds": [
+            48,
+            82,
+            169,
+            206
+          ],
+          "palms": [
+            {
+              "x": 154,
+              "y": 94
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_002.png",
+          "sha256": "bb1f9e57350f319845ce4e2126d7d4099a636883f2a08fa27f2f12d9ba4b855b",
+          "bounds": [
+            44,
+            86,
+            165,
+            209
+          ],
+          "palms": [
+            {
+              "x": 151,
+              "y": 95
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_003.png",
+          "sha256": "6b2d43dd98cb0236b086d317f2f19d01409a3f3d9d5a15aafcc116e789492b29",
+          "bounds": [
+            40,
+            84,
+            168,
+            209
+          ],
+          "palms": [
+            {
+              "x": 153,
+              "y": 95
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_004.png",
+          "sha256": "cbb812ae8e4093d3eedbad8c578243ccdeafdcb9066f0ab9cae00fb99ecd798e",
+          "bounds": [
+            45,
+            81,
+            170,
+            209
+          ],
+          "palms": [
+            {
+              "x": 155,
+              "y": 96
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.up",
+      "row": 13,
+      "count": 4,
+      "translation": [
+        15,
+        51
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-north/frame_001.png",
+          "sha256": "1da0a9b11d02e4cd11af88a2fe9dc069f8d2b72a04a42c8e42e2a8967aa509be",
+          "bounds": [
+            60,
+            82,
+            152,
+            208
+          ],
+          "palms": [
+            {
+              "x": 76,
+              "y": 91
+            },
+            {
+              "x": 141,
+              "y": 91
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_002.png",
+          "sha256": "c3d55ac325a147af01a8d578ff5d0fad0caaa86d665a7e78bba0b6c30e359fc4",
+          "bounds": [
+            58,
+            85,
+            154,
+            208
+          ],
+          "palms": [
+            {
+              "x": 74,
+              "y": 94
+            },
+            {
+              "x": 142,
+              "y": 95
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_003.png",
+          "sha256": "aa89920e6f20b0288cd2a981b8399f5020d1f39a071bd55530e951d7b6f5f45b",
+          "bounds": [
+            55,
+            85,
+            158,
+            208
+          ],
+          "palms": [
+            {
+              "x": 76,
+              "y": 97
+            },
+            {
+              "x": 145,
+              "y": 97
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_004.png",
+          "sha256": "e5bf813d9091e5c23ec5c4fab2845a7cb041838a806aef1dca63022cfa7ee0eb",
+          "bounds": [
+            54,
+            83,
+            159,
+            208
+          ],
+          "palms": [
+            {
+              "x": 74,
+              "y": 95
+            },
+            {
+              "x": 147,
+              "y": 94
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.down",
+      "row": 14,
+      "count": 6,
+      "translation": [
+        12,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-south/frame_007.png",
+          "sha256": "b97909fba45efed42c2f0d089d0dff8d9021be04f8955cd894e569b1a078ca96",
+          "bounds": [
+            45,
+            85,
+            169,
+            206
+          ],
+          "palms": [
+            {
+              "x": 65,
+              "y": 99
+            },
+            {
+              "x": 155,
+              "y": 105
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_008.png",
+          "sha256": "89c3cb6f80368e89dab4508615db6ff697f3a1009ccde8462a4b05bfdc9c3874",
+          "bounds": [
+            48,
+            87,
+            169,
+            209
+          ],
+          "palms": [
+            {
+              "x": 64,
+              "y": 103
+            },
+            {
+              "x": 155,
+              "y": 109
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_009.png",
+          "sha256": "c11410f4f39cdf791cfd3a9181b3f9d1eb5868eff3d3165612337f41a9024afa",
+          "bounds": [
+            49,
+            84,
+            169,
+            209
+          ],
+          "palms": [
+            {
+              "x": 64,
+              "y": 100
+            },
+            {
+              "x": 155,
+              "y": 106
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_010.png",
+          "sha256": "7bf2b998133b21a393fc4549740e5aad93e608794a9e20c0a3e0d4f59d895831",
+          "bounds": [
+            50,
+            80,
+            168,
+            209
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 95
+            },
+            {
+              "x": 155,
+              "y": 101
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_011.png",
+          "sha256": "f6aad68462642b25f9b7f40943dfe8257d3bf4178c9f6385ab883c17fc1ba2b6",
+          "bounds": [
+            50,
+            80,
+            167,
+            209
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 97
+            },
+            {
+              "x": 154,
+              "y": 98
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_012.png",
+          "sha256": "005da58ee89401bdb677b3e429a773f004f5c89afa1e4d1353b0de9a172b7484",
+          "bounds": [
+            49,
+            81,
+            168,
+            208
+          ],
+          "palms": [
+            {
+              "x": 66,
+              "y": 97
+            },
+            {
+              "x": 154,
+              "y": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.side",
+      "row": 15,
+      "count": 6,
+      "translation": [
+        14,
+        48
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-east/frame_007.png",
+          "sha256": "8e81a205c2954bab694092aa3186f8810729d75ff9a34763d3e96dbbfee7a085",
+          "bounds": [
+            37,
+            80,
+            163,
+            206
+          ],
+          "palms": [
+            {
+              "x": 149,
+              "y": 90
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_008.png",
+          "sha256": "a8de77555548f3545deb7a4bc1dace00ea24d9225b7b2ea9edf9413cb456b777",
+          "bounds": [
+            38,
+            83,
+            169,
+            207
+          ],
+          "palms": [
+            {
+              "x": 153,
+              "y": 99
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_009.png",
+          "sha256": "f35cd8de7c59c001af685e295b71d4a42bd0aaff7ba26579831f406767c8cffe",
+          "bounds": [
+            43,
+            82,
+            170,
+            209
+          ],
+          "palms": [
+            {
+              "x": 155,
+              "y": 102
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_010.png",
+          "sha256": "663427de80a497e8312ee309cd24f1edbb97400969ab026894189c9e7cc5c62d",
+          "bounds": [
+            50,
+            81,
+            170,
+            209
+          ],
+          "palms": [
+            {
+              "x": 153,
+              "y": 97
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_011.png",
+          "sha256": "f185c3393eb121b9ad13cc7d48c0a7c293752496b17144976e56732661275d97",
+          "bounds": [
+            47,
+            78,
+            168,
+            206
+          ],
+          "palms": [
+            {
+              "x": 152,
+              "y": 89
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_012.png",
+          "sha256": "79600676593cc8db536df28760285622c04e02590dd04eba0de140368c51d400",
+          "bounds": [
+            43,
+            76,
+            165,
+            206
+          ],
+          "palms": [
+            {
+              "x": 149,
+              "y": 87
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.up",
+      "row": 16,
+      "count": 6,
+      "translation": [
+        15,
+        51
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-north/frame_007.png",
+          "sha256": "72b6a79d51ecf8c17e47026b50a97b44f569e0ed79c1b90654a8d90477d35e8e",
+          "bounds": [
+            50,
+            88,
+            165,
+            208
+          ],
+          "palms": [
+            {
+              "x": 69,
+              "y": 98
+            },
+            {
+              "x": 151,
+              "y": 101
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_008.png",
+          "sha256": "aed4d03b6bbbfd4dc28e809ab5f6da37f4f0568f90de3613d11b55c5208d0cf6",
+          "bounds": [
+            50,
+            85,
+            163,
+            208
+          ],
+          "palms": [
+            {
+              "x": 69,
+              "y": 94
+            },
+            {
+              "x": 150,
+              "y": 97
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_009.png",
+          "sha256": "429149f6d219356ed9d111373599131e912aeb304c0c175e2e2e4114341f8df8",
+          "bounds": [
+            51,
+            81,
+            162,
+            208
+          ],
+          "palms": [
+            {
+              "x": 71,
+              "y": 91
+            },
+            {
+              "x": 149,
+              "y": 91
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_010.png",
+          "sha256": "bdb51567f844cb600f9662e526ca9e4f7f3855f63a1fbb0d0bc4fed99affdd73",
+          "bounds": [
+            58,
+            81,
+            154,
+            208
+          ],
+          "palms": [
+            {
+              "x": 74,
+              "y": 90
+            },
+            {
+              "x": 143,
+              "y": 90
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_011.png",
+          "sha256": "2f73ef0c2aaedbc5c1618c1fb9361562f2e1237615f91adab5bbaf7702ab22c7",
+          "bounds": [
+            56,
+            84,
+            158,
+            208
+          ],
+          "palms": [
+            {
+              "x": 70,
+              "y": 93
+            },
+            {
+              "x": 144,
+              "y": 93
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_012.png",
+          "sha256": "abf5a1486bcd51d2d20343bd8fdef81d9dfd57c90404d7ea0edca52f28a1e1ea",
+          "bounds": [
+            51,
+            89,
+            164,
+            207
+          ],
+          "palms": [
+            {
+              "x": 69,
+              "y": 99
+            },
+            {
+              "x": 150,
+              "y": 99
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "lobby": {
+    "width": 3584,
+    "height": 224,
+    "name": "lobby",
+    "row": 0,
+    "count": 16,
+    "translation": [
+      12,
+      48
+    ],
+    "frames": [
+      {
+        "path": "generated/lobby-south/frame_000.png",
+        "sha256": "3cb8af4bc546ed9f6c73304accdb364fd433c0017634c1a086ea3128d696323b",
+        "bounds": [
+          65,
+          82,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_001.png",
+        "sha256": "fe5e49217c75ba69716d3b53aabe310b68a53442495a22af9723e9f2c22f9c9b",
+        "bounds": [
+          62,
+          82,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_002.png",
+        "sha256": "6562561768c5d4a299b4ff1712326b948c8d3d3a41dcc69c6b9284a5c51b408d",
+        "bounds": [
+          60,
+          85,
+          146,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_003.png",
+        "sha256": "75781c93cab606ff0028b7dc3d418d626bfadfb4ee63ff3c17c953288c7b6ebd",
+        "bounds": [
+          60,
+          88,
+          144,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_004.png",
+        "sha256": "79e9ab1ee95e017c25c517b424e6c23f07b32f77f9c0091c941a0f78beeeee88",
+        "bounds": [
+          61,
+          91,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_005.png",
+        "sha256": "f338d19e3828177b7a98c4955ac688eec9e9c039e22dc70706de345b7fc278b6",
+        "bounds": [
+          61,
+          91,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_006.png",
+        "sha256": "59a5732bde10f082717b5cf9f4bec5cf2170bf6f7ffaf64aba882ae81a63746c",
+        "bounds": [
+          61,
+          91,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_007.png",
+        "sha256": "dd6bccdd8d609d64de281197eead9acb22dfa4731daf51f334f418614ec0439f",
+        "bounds": [
+          57,
+          88,
+          141,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_008.png",
+        "sha256": "90be97d4c09f1514cce855bf3b8540481cf56296a77a8d9f19ba6cecdb47336d",
+        "bounds": [
+          56,
+          87,
+          141,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_009.png",
+        "sha256": "fd9c469af58070d35dde5c90dfb4afca6e1aeaeec8ae23a3a8eb16ef6f01b2be",
+        "bounds": [
+          56,
+          87,
+          141,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_010.png",
+        "sha256": "8d6ebdb17d8549694bb32b11d3a2170af21399bb797b33f2366e0da475dacc77",
+        "bounds": [
+          56,
+          87,
+          141,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_011.png",
+        "sha256": "d4dffe061f0ade08035eb7c72c4fd709f0944771ffb1d9f0f7f9c3f7c115f7bf",
+        "bounds": [
+          56,
+          87,
+          141,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_012.png",
+        "sha256": "4e278ad02c93cd5479e2a1dcfe8422693c300cbc360e78e12b732b0dc7d48e79",
+        "bounds": [
+          57,
+          87,
+          144,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_013.png",
+        "sha256": "b113d8c9ec68d1378007bc12589830db81ce563e5b504684f5d05ed5bf5763ca",
+        "bounds": [
+          62,
+          84,
+          151,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_014.png",
+        "sha256": "2a6f109a96e0d3a850df4fbde89216ce7b8164c1442a9ce7f644ed7443ab7d0d",
+        "bounds": [
+          66,
+          82,
+          139,
+          208
+        ]
+      },
+      {
+        "path": "generated/lobby-south/frame_014.png",
+        "sha256": "2a6f109a96e0d3a850df4fbde89216ce7b8164c1442a9ce7f644ed7443ab7d0d",
+        "bounds": [
+          66,
+          82,
+          139,
+          208
+        ],
+        "hold": 14
+      }
+    ]
+  }
+}

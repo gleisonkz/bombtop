@@ -1,5 +1,6 @@
 import {
   cursedDirection,
+  moveSurprisePlayer,
   steer,
   type Direction,
   type MatchState,
@@ -86,14 +87,19 @@ export class Predictor {
     this.reconcile(snap);
 
     const p = structuredClone(found);
+    if (p.heldBy || p.thrown) return p;
+    if (snap.stageState?.flights?.[p.id] || snap.stageState?.trolley?.riderId === p.id) return p;
     if (!p.alive || p.stun > 0 || p.webbed > 0 || p.shield > 0 || p.charge > 0 || p.rasengan > 0 || p.truck > 0 || p.mount || p.jumpTicks > 0 || p.dashTicks > 0 || p.shove) return p;
 
     const state = { ...snap, players: [p], rng: 0 } as MatchState;
+    if (snap.stageState) state.stageState = structuredClone(snap.stageState);
     this.log.forEach((e, i) => {
       const start = Math.max(e.tick + (e.seq === ack.seq ? ack.ticks : 0), this.tick - MAX_PREDICTION_TICKS);
       let ticks = (this.log[i + 1]?.tick ?? this.tick) - start;
       for (; ticks > 0; ticks--) {
         if (e.brace) continue;
+        state.tick++;
+        if (moveSurprisePlayer(state, p, { dir: e.dir, alt: e.alt, bomb: false })) continue;
         const dir = cursedDirection(p, e.dir);
         const moved = steer(state, p, dir, cursedDirection(p, e.alt));
         if (moved) p.facing = moved;

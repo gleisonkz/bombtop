@@ -1,0 +1,17 @@
+{
+  "job_id": "144c389e-8e09-476a-af3c-da1af87016f7",
+  "model": "pro",
+  "native_size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "references": [
+    "captain-style.png",
+    "thor-style.png"
+  ],
+  "reference_usage": "art finish, detail and proportions only",
+  "scope": "Concept only, no game replacement before approval",
+  "effects": "none",
+  "status": "ready-for-approval"
+}

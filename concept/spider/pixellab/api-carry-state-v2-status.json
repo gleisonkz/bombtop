@@ -1,0 +1,19 @@
+{
+  "usage": {
+    "type": "usd",
+    "usd": 0.0
+  },
+  "id": "2234ee1c-610d-4c53-8850-a0caaafd1475",
+  "status": "failed",
+  "created_at": "2026-10-26T13:32:57.359161-03:00",
+  "last_response": {
+    "type": "character_state",
+    "error": "Generation failed. The model could not generate an image for this prompt. Try a different description.",
+    "status": "failed",
+    "progress": 0.12000000000000001,
+    "character_id": "ef2a78a0-8304-4b41-8841-20a4d698a871",
+    "edit_description": "Overhead carrying pose: both red-gloved palms held upward above the mask, hands separated slightly wider than the head, elbows bent. Standing upright. Preserve the original costume, mask, proportions, scale and pixel art. Empty hands, no props. Entire character visible on transparent background.",
+    "source_character_id": "439a18c5-85aa-4455-ac5a-f40f73947f85",
+    "generation_started_at": "2026-10-26T13:32:57.47103-03:00"
+  }
+}

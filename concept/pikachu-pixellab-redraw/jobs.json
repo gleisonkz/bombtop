@@ -1,0 +1,35 @@
+{
+  "reference": "pikachu-smaller-paws-v2-black-eyes.png",
+  "character_id": "a0bcb79f-d5a9-48ef-8652-1d0e44d935e3",
+  "carry_character_id": "04b1e61a-e93b-424b-9b79-b020788520d1",
+  "jobs": {
+    "idle-south": "bedb7785-91af-487a-b055-2ba681de6288",
+    "walk-south": "7ec24116-fb83-4892-b253-b991098f3554",
+    "stun-south": "548c08ac-ec88-4c5a-a175-868b6413399c",
+    "death-south": "ef53ac43-61cd-46f3-8b6b-27a09efef8a2",
+    "lobby-south": "e3a295f7-77f4-48ce-ae90-8350aa878ec5",
+    "cast-south": "0d98a893-d70d-46bc-ba11-d1f377501bac",
+    "idle-east": "67ba590e-a648-4481-ad7f-65e09335a9cc",
+    "walk-east": "72876b4b-c043-4d1a-86db-c57fc37cd5d1",
+    "cast-east": "ea1e9597-e372-4043-8d5c-1b3ef41c7560",
+    "idle-north": "8f264bd9-ea40-44e2-b8b8-59bf6df40109",
+    "walk-north": "ada47b08-7ab9-4889-bb1a-cd02910eb843",
+    "cast-north": "46bffd47-d32a-446c-8c1b-4a8f6531f70c",
+    "carryIdle-south": "eaf01e14-9cdc-4a86-8fb4-00bfd346d35d",
+    "carryWalk-south": "8aef9e6e-36d1-4ba9-b98c-b03520c7b215",
+    "carryIdle-east": "04e4fd32-6009-4a60-8c8b-f7f1e48d5c2a",
+    "carryWalk-east": "bf4276bb-f014-4dbe-ad08-1c0a7a08933f",
+    "carryIdle-north": "2634acf6-3b48-4081-9638-4b3bafeaa1b1",
+    "carryWalk-north": "b93e2358-567f-4407-91b7-f098c7f83a86"
+  },
+  "rejected": {
+    "cast-north-turn": "42aaa959-65dd-43f1-b7ff-e7eed93224e1"
+  },
+  "carry_v2_character_id": "8a1c7ab5-7a24-4d9f-bfc6-c56590eca802",
+  "cast_north_paw_fixes": {
+    "5": "609759a6-ccbd-4d52-a0dc-aec94e7bd8ae",
+    "6": "dce7f744-ef7b-49f9-8099-f3bee781385f",
+    "7": "4eced077-61b5-4094-ab0a-9198df8d370d",
+    "8": "fd810596-abdc-4863-9b02-284fd1132942"
+  }
+}

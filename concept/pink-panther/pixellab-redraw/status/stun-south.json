@@ -1,0 +1,47 @@
+{
+  "usage": {
+    "type": "generations",
+    "generations": 4.0
+  },
+  "id": "83d7d00a-be34-4151-ab92-6f210b4098ec",
+  "status": "completed",
+  "created_at": "2026-10-26T18:54:19.793596+00:00",
+  "last_response": {
+    "seed": 2793000305,
+    "type": "done",
+    "action": "Keep this exact approved classic Pink Panther, VERY SLIM narrow waist and torso, long THIN arms and legs, long thin tail, small head, original yellow eyes and elongated muzzle. Preserve native detail, pink colors and proportions. Full figure and tail visible. Only character on transparent background. No scarf, clothes, props, balls, bombs, particles, smoke, aura, magic, ground shadows or effects. Locked camera. Short hurt reaction: recoil slightly with surprised face and hands close to chest, then recover to original upright idle. Keep feet near same spot. No stars or impact effects.",
+    "status": "initializing",
+    "progress": 0.9688235294117646,
+    "direction": "south",
+    "frame_count": 6,
+    "animation_id": "a02c33b4-331f-486d-bdf5-48777e8b43d9",
+    "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+    "storage_urls": {
+      "frames": [
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/0.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/1.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/2.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/3.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/4.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/a02c33b4-331f-486d-bdf5-48777e8b43d9/south/5.png"
+      ]
+    },
+    "billing_usage": {
+      "usd": 0.0,
+      "type": "generations",
+      "generations": 4
+    },
+    "generation_id": "6a6cc10b-1c75-442e-915c-46af8b92f4e9",
+    "animation_name": "custom-Keep this exact approved class",
+    "queue_position": 0,
+    "billing_charged": true,
+    "generation_model": "v3",
+    "keep_first_frame": false,
+    "saved_to_storage": true,
+    "animation_group_id": "70aa4191-b994-4262-80cc-663721f2e45b",
+    "input_frames_digest": null,
+    "generation_started_at": "2026-10-26T18:54:25.794774+00:00",
+    "requested_frame_count": 6,
+    "estimated_wait_seconds": 0
+  }
+}

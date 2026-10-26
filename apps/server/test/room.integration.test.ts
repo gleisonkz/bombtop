@@ -59,6 +59,28 @@ function view(room: Room, base: PublicView, pred: (v: PublicView) => boolean) {
 }
 
 describe("BattleRoom over the network", () => {
+  it("keeps the host connected when changing a bot character in a friends room", async () => {
+    const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
+    const guest = await client().joinById(host.roomId, { name: "Guest" });
+    const leaves: number[] = [];
+    host.onLeave(code => leaves.push(code));
+    try {
+      const added = next<LobbyInfo>(host, S2C.lobby, lobby => lobby.members.some(member => member.bot));
+      host.send(C2S.addBot, { level: "easy" });
+      const bot = (await added).members.find(member => member.bot)!;
+      const character = bot.character === "goku" ? "thor" : "goku";
+      const changed = next<LobbyInfo>(guest, S2C.lobby, lobby => lobby.members.some(member => member.id === bot.id && member.character === character));
+      host.send(C2S.botCharacter, { id: bot.id, character });
+      expect((await changed).members.find(member => member.id === bot.id)?.character).toBe(character);
+      const synced = next<LobbyInfo>(host, S2C.lobby);
+      host.send(C2S.sync);
+      expect((await synced).hostId).toBe(host.sessionId);
+      expect(leaves).toEqual([]);
+    } finally {
+      await Promise.all([...(leaves.length === 0 ? [host.leave()] : []), guest.leave()]);
+    }
+  });
+
   it("synchronizes TAG teams and only starts while both teams have a player", async () => {
     const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
     const guest = await client().joinById(host.roomId, { name: "Guest" });

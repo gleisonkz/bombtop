@@ -1,6 +1,7 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { airLift } from "./air-arc";
+import { kameChargeOrigin } from "./sprites";
 import { Fx } from "./fx";
 import { loadFlameArt, type FlameArt } from "./flame-art";
 import { GroundEffects } from "./ground-effects";
@@ -8,6 +9,7 @@ import { ConveyorArt } from "./conveyor-art";
 import { isolatedTextureRow, textureFromCanvas } from "./texture-cells";
 import { scorePortraitCrop, scorePortraitScale, type ScorePortraitCrop } from "./score-portrait";
 import { carriedBombPose } from "./carried-bomb";
+import { playerCarryPoses } from "./player-carry";
 import { avoidHeldBomb, buildHeadAnchors, headAnchor, type HeadAnchors } from "./head-anchor";
 import { drawMegaSummon, MegaSummonEffects, type MegaSummonLook } from "./mega-summon";
 import { WebEffects } from "./web-effects";
@@ -20,6 +22,7 @@ import { loadPicanhaArt } from "./picanha-art";
 import { battleClockText, battleTempoText } from "./battle-clock";
 import { stageTileTint } from "./stage-art";
 import { StageTileArt } from "./stage-tile-art";
+import { Sb4StageEffects, stageFlightLift } from "./sb4-stage-effects";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects } from "./ability-pixel-effects";
@@ -27,7 +30,7 @@ import { FLAME_TICKS, SNEAK_TICKS } from "@bombtop/shared";
 import { scoreSlots } from "./score-bar";
 import { paintTo, PerColor, skinColor } from "./per-color";
 import { specialEffectColor, specialInk, specialTexture } from "./special-palette";
-import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, skullAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
+import { BOMBS, FLAMES, RASENGAN, rasenganLook, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, skullAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
 import { AIR_TICKS_PER_TILE, BLAST_TICKS, blastLife, PATRONUS_TICKS_PER_TILE, DEFAULT_CHARACTER, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, TICK_RATE, ItemKind, TILE, Tile, Floor, getFloor, getTile, perimeter, SHIELD_TICKS, TRUCK_TICKS, type Blast, type Bomb, type BombType, type CharacterId, type Facing, type PublicView } from "@bombtop/shared";
 
 /** Sprite size in art pixels; the stage is scaled up by an integer factor. */
@@ -217,7 +220,7 @@ export class Renderer {
   private patronusLayout = PATRONUS;
   private readonly patronusSprites: Sprite[] = [];
   private patronusUsed = 0;
-  /** Pelé's balls in flight. */
+  /** PelÃ©'s balls in flight. */
   private ballArt: Texture | null = null;
   private readonly ballSprites: Sprite[] = [];
   private ballUsed = 0;
@@ -237,6 +240,7 @@ export class Renderer {
   private readonly tileLayer = new Container();
   private tileArt: Texture[] | null = null;
   private readonly stageTileLoader = new StageTileArt();
+  private readonly sb4Effects = new Sb4StageEffects();
   private stageTileArt: Awaited<ReturnType<StageTileArt["load"]>> = new Map();
   private tileArtRequest = 0;
   private tileScale = TILES.scale;
@@ -426,7 +430,7 @@ export class Renderer {
       text.text = String(wins);
       text.position.set(xs[k]! + 3, TILE_PX / 2);
       if (hp) {
-        hp.text = p?.hitPoints === undefined ? "" : `♥${p.hitPoints}`;
+        hp.text = p?.hitPoints === undefined ? "" : `â™¥${p.hitPoints}`;
         hp.visible = p?.hitPoints !== undefined;
         hp.position.set(xs[k]! + 3, TILE_PX / 2 + 7);
         hp.alpha = p?.alive ? 1 : 0.4;
@@ -450,7 +454,7 @@ export class Renderer {
     this.clock.anchor.set(0.5, 0);
     this.tempoLabel.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.people, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
+    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.sb4Effects.ground, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.people, this.sb4Effects.above, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -570,7 +574,7 @@ export class Renderer {
     this.ballArt = tex;
   }
 
-  /** Pelé's ball flying from his feet to where it stopped (its shadow on the ground under it), then rebounding. */
+  /** PelÃ©'s ball flying from his feet to where it stopped (its shadow on the ground under it), then rebounding. */
   private drawBall(g: Graphics, b: Blast, color: number | null = null): void {
     const [dx, dy] = DIR_VECTORS[b.dir];
     const center = (t: number) => t * TILE_PX + TILE_PX / 2;
@@ -761,6 +765,7 @@ export class Renderer {
     const [base, stageArt] = await Promise.all([
       Assets.load<Texture>(`${import.meta.env.BASE_URL}${layout.url}`),
       this.stageTileLoader.load(layout),
+      this.sb4Effects.load(),
       this.conveyors.load(),
       this.groundEffects.load(),
       this.webCocoons.load().catch((e) => console.error("web cocoon art", e)),
@@ -1053,6 +1058,10 @@ export class Renderer {
   }
 
   draw(s: PublicView, prev: Map<string, PlayerPos>, alpha: number): void {
+    this.sb4Effects.draw(s, id => {
+      const seat = this.colors.get(id) ?? s.players.findIndex(player => player.id === id);
+      return seat < 0 ? undefined : COLORS.players[seat % COLORS.players.length];
+    });
     this.conveyors.beginFrame();
     this.groundEffects.beginFrame();
     this.webCocoons.beginFrame();
@@ -1149,7 +1158,13 @@ export class Renderer {
     const ring = perimeter(width, height);
     this.rasenUsed = 0;
     this.bubbleUsed = 0;
-    s.players.forEach((p, seat) => {
+    const carryPoses = playerCarryPoses({ players: s.players, previous: prev, alpha, bodyHeight: player => {
+      const sheet = this.skins.get(this.character(player.id))?.sheet;
+      return sheet ? sheet.bodyH * (sheet.scale ?? 1) : MASCOT.bodyH * MASCOT.scale;
+    } });
+    carryPoses.forEach(pose => {
+      const p = pose.player;
+      const seat = s.players.findIndex(player => player.id === p.id);
       const i = this.colors.get(p.id) ?? seat;
       const effectColor = this.specialColor(p.id, s);
       const color = COLORS.players[i % COLORS.players.length]!;
@@ -1163,9 +1178,14 @@ export class Renderer {
         g.circle(cx, cy - 3, 4).fill(color).stroke({ color: 0x000000, width: 1 });
         return;
       }
-      const { px: ux, py: uy } = between(prev.get(p.id) ?? p, p, alpha);
-      const cx = (ux / TILE) * TILE_PX;
-      const cy = (uy / TILE) * TILE_PX;
+      const { x: cx } = pose;
+      const flightSheet = this.skins.get(this.character(p.id))?.sheet;
+      const stageLift = stageFlightLift({ flight: s.stageState?.flights?.[p.id], y: pose.y,
+        bodyHeight: flightSheet ? flightSheet.bodyH * (flightSheet.scale ?? 1) : MASCOT.bodyH * MASCOT.scale,
+        elevated: pose.elevated });
+      const cy = pose.y - stageLift;
+      const ux = cx / TILE_PX * TILE;
+      const uy = pose.groundY / TILE_PX * TILE;
       this.lastSeen.set(p.id, { cx, cy, deadAt: null });
       // The pink panther tiptoeing: a puff as he slips away, then gone for his rivals (faint for himself and watchers).
       const sneakAge = SNEAK_TICKS - p.sneak;
@@ -1176,13 +1196,13 @@ export class Renderer {
       const seen = sneakAlpha(p, this.viewer) * skullAlpha(p, s.tick);
       if (seen === 0) return;
       if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
-      g.ellipse(cx, cy + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
-      if (p.mount && !this.groundEffects.draw("protection", cx, cy + PLAYER_FEET_OFFSET, s.tick)) {
+      if (!p.heldBy) g.ellipse(cx, pose.groundY + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
+      if (p.mount && stageLift === 0 && !this.groundEffects.draw("protection", cx, cy + PLAYER_FEET_OFFSET, s.tick)) {
         g.ellipse(cx, cy + PLAYER_FEET_OFFSET, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
       const cursedFlash = p.curse && Math.floor(s.tick / 6) % 2 === 0;
       const held = s.bombs.find((b) => b.heldBy === p.id);
-      const carrying = !!held;
+      const carrying = !!held || pose.carrying;
       let headroom = 12;
       let stunHead = { x: cx, headY: cy - 7 };
       const moving = this.motion.moving(p.id, ux, uy) && p.stun === 0;
@@ -1198,14 +1218,19 @@ export class Renderer {
         const { sheet } = skin;
         const casting = p.stun > 0 ? undefined : castTicks(p, blast, s.bombs.find((b) => b.ownerId === p.id && b.mega));
         const shielding = bracing(p, moving);
-        const f = playerFrame(sheet, { facing: p.facing, moving, carrying, stunned: p.stun > 0, casting, shielding, sneaking: p.sneak > 0, tick });
+        const facing = blast?.kind === "kamehameha" ? blast.dir : p.facing;
+        const f = playerFrame(sheet, { facing, moving, carrying, stunned: p.stun > 0, casting, shielding, sneaking: p.sneak > 0, tick });
         this.placeSprite(skin, p.id, skinColor(p, i), f, sx, cy, tint);
         this.sprite(p.id).alpha = character === "optimus" && this.drawTruck(top, p, cx, cy, s.tick, seen, effectColor) ? 0 : seen;
         headroom = sheet.bodyH * (sheet.scale ?? 1);
         const view = p.facing === "left" || p.facing === "right" ? "side" : p.facing;
         stunHead = headAnchor({ sheet, anchors: skin.heads, frame: f, x: sx, feetY: cy + PLAYER_FEET_OFFSET,
           headRow: carrying ? sheet.idle[view].row : undefined });
-        if (held) carried = carriedBombPose({ sheet, frame: f, cx: sx, feetY: cy + PLAYER_FEET_OFFSET, bomb: held, tick: s.tick });
+        if (held) {
+          const carryHead = headAnchor({ sheet, anchors: skin.heads, frame: f, x: sx, feetY: cy + PLAYER_FEET_OFFSET });
+          carried = carriedBombPose({ sheet, frame: f, cx: sx, feetY: cy + PLAYER_FEET_OFFSET, bomb: held, tick: s.tick,
+            headY: Math.min(stunHead.headY, carryHead.headY) });
+        }
       } else if (character === "bomb" && this.mascots) {
         const look = mascotPose({ moving, stunned: p.stun > 0, facing: p.facing, tick });
         this.placeMascot(p.id, i, sx, cy, look, tint);
@@ -1218,8 +1243,10 @@ export class Renderer {
         g.rect(cx - 3, cy - 3, 2, 3).fill(0x000000);
         g.rect(cx + 1, cy - 3, 2, 3).fill(0x000000);
       }
+      if (p.costume) this.sb4Effects.costume({ x: sx + 5, y: cy - headroom / 2, alpha: seen });
+      if (skin || character === "bomb" && this.mascots) this.sprite(p.id).zIndex = pose.depth;
       // Palms and face stay in front of the carried body; the socket follows the actual pose.
-      if (held && this.bombArt) this.placeBomb(bombs++, held, s.tick, carried.x, carried.y, cy + (carried.front ? 0.5 : -0.5), { glow: top, carryScale: carried.scale, color: this.specialColor(held.ownerId, s) });
+      if (held && this.bombArt) this.placeBomb(bombs++, held, s.tick, carried.x, carried.y, pose.depth + (carried.front ? 0.005 : -0.005), { glow: top, carryScale: carried.scale, color: this.specialColor(held.ownerId, s) });
       else if (held) {
         const heldColor = held.mega ? this.specialColor(held.ownerId, s) : null;
         const look = bombLook({ fuse: held.fuse, tick: s.tick, type: held.type, mega: held.mega, carrying: true });
@@ -1251,13 +1278,12 @@ export class Renderer {
       // Penelope's kiss leaves its victim with hearts going round over their head.
       for (const h of charmHearts(p.charmed, s.tick)) this.drawPixelHeart(top, { x: cx + h.dx, y: cy - headroom + h.dy, size: h.size, alpha: 1, tick: s.tick });
       // A spark over a player whose special is ready.
-      // Goku's ki gathering at his hip while the Kamehameha charges (the side view's sprite draws its own).
-      if (p.charge > 0 && (p.facing === "up" || p.facing === "down")) {
+      if (p.charge > 0) {
         const r = 0.8 + 1.8 * (1 - p.charge / KAME_CHARGE) + Math.sin(s.tick / 2) * 0.3;
-        const kx = cx + (p.facing === "down" ? -3 : 3);
-        if (!this.abilityEffects.draw("ki", { x: kx, y: cy - 1, tick: s.tick, size: (r + 2) * 3, color: effectColor })) {
-          top.circle(kx, cy - 1, r + 1.5).fill({ color: specialInk(COLORS.ki, effectColor), alpha: 0.4 });
-          top.circle(kx, cy - 1, r).fill({ color: 0xffffff, alpha: 0.9 });
+        const [kx, ky] = kameChargeOrigin(p.facing, sx, cy, p.charge);
+        if (!this.abilityEffects.draw("ki", { x: kx, y: ky, tick: s.tick, size: (r + 2) * 3, color: effectColor })) {
+          top.circle(kx, ky, r + 1.5).fill({ color: specialInk(COLORS.ki, effectColor), alpha: 0.4 });
+          top.circle(kx, ky, r).fill({ color: 0xffffff, alpha: 0.9 });
         }
       }
       // Naruto's Rasengan: spinning in his hand as he dashes, bursting where it strikes.
@@ -1503,21 +1529,11 @@ export class Renderer {
 
   /** Donatello's staff spin: his bo whirling round him with a blur trailing it, a whoosh ring swelling out. */
   private drawSpin(g: Graphics, x: number, y: number, age: number): void {
-    const { angle, ring, alpha } = spinLook(age);
+    const { ring, alpha } = spinLook(age);
     if (alpha <= 0) return;
     const cy = y - 4; // round his waist, not his feet
     g.circle(x, cy, ring).stroke({ color: 0xffffff, width: 2, alpha: alpha * 0.55 });
     g.circle(x, cy, ring * 0.8).stroke({ color: COLORS.staffBlur, width: 1, alpha: alpha * 0.4 });
-    for (let k = 3; k >= 0; k--) {
-      const a = angle - k * 0.35;
-      const dx = Math.cos(a) * 13;
-      const dy = Math.sin(a) * 6.5; // the turn seen from above, squashed
-      pixelStroke(g, { x0: x - dx, y0: cy - dy, x1: x + dx, y1: cy + dy, color: k ? COLORS.staffBlur : 0x50301e, width: k ? 2 : 3, alpha: alpha * (k ? 0.25 / k : 1) });
-      if (k === 0) {
-        pixelStroke(g, { x0: x - dx, y0: cy - dy - 0.5, x1: x + dx, y1: cy + dy - 0.5, color: COLORS.staff, width: 1.5, alpha });
-        pixelStroke(g, { x0: x - dx * 0.9, y0: cy - dy * 0.9 - 1, x1: x + dx * 0.9, y1: cy + dy * 0.9 - 1, color: 0xe7c381, width: 0.5, alpha });
-      }
-    }
   }
 
   /** The flash's dash: red and yellow speed lines from where he left to where he stopped, a bolt crackling along them. */

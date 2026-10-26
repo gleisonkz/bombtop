@@ -50,6 +50,7 @@ export class KickPrediction {
 
   /** Called each tick with our predicted player and the direction held. */
   check(view: PublicView, me: Player, dir: Direction, nowMs: number): { x: number; y: number } | null {
+    if (me.heldBy || me.thrown) return null;
     if (!dir || !me.alive || me.stun > 0 || me.webbed > 1 || me.shield > 0 || me.charge > 0 || me.rasengan > 0 || me.truck > 0 || me.jumpTicks > 0 || me.dashTicks > 0 || me.shove) return null;
     const s = {
       ...view,

@@ -1,0 +1,20 @@
+{
+  "status": "active",
+  "frames": 108,
+  "cell": [
+    96,
+    128
+  ],
+  "size": [
+    864,
+    2304
+  ],
+  "anchor": [
+    48,
+    124
+  ],
+  "bodyH": 109,
+  "scale": 0.20366972,
+  "effects": "none baked into sprites",
+  "version": "20261026-approved-base-v1"
+}

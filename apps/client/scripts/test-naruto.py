@@ -131,6 +131,18 @@ class NarutoTests(unittest.TestCase):
             self.assertEqual(self.pack.OUTPUT.read_bytes(), first_bytes.getvalue())
 
     def test_registered_runtime_atlas_matches_reviewed_drawings(self):
+        approved = self.pack.ROOT / "concept/naruto/approved-redraw"
+        if (approved / "integration.json").exists():
+            spec = importlib.util.spec_from_file_location(
+                "pack_naruto_approved", SCRIPT.with_name("pack-naruto-approved.py"))
+            current = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(current)
+            import json
+            contract = json.loads((approved / "contract.json").read_text(encoding="utf-8"))
+            sheet, _ = current.build_sheet(approved, contract)
+            production = self.pack.ROOT / "apps/client/public/sprites/naruto.png"
+            self.assertEqual(production.read_bytes(), current.png_bytes(sheet))
+            return
         expected = io.BytesIO()
         self.pack.save_png(self.sheet, expected)
         production = self.pack.ROOT / "apps/client/public/sprites/naruto.png"

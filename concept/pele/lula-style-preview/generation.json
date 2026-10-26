@@ -1,0 +1,12 @@
+{
+  "job_id": "a90c6fa4-d303-4695-8b14-ddea7638d7a9",
+  "tool": "PixelLab MCP create_image_pro",
+  "size": [128, 160],
+  "candidates": 4,
+  "style_reference": "lula-reference.png",
+  "style_traits": ["outline", "detail", "shading"],
+  "identity_reference": "pele-reference.png",
+  "instruction": "adult athletic Pele in Brazil kit, same authored pixel-art finish as current Lula, no identity or clothing transfer from Lula",
+  "references_uploaded_as_pixels": true,
+  "production_unchanged": true
+}

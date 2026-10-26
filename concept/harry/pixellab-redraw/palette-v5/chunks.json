@@ -1,0 +1,1046 @@
+[
+  {
+    "file": "chunk-0.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 2,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 3
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-1.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 3,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 5,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 1
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-2.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 6,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 7,
+        "col": 6
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 4
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-3.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 6
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 7
+      },
+      {
+        "file": "harry.png",
+        "row": 8,
+        "col": 8
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 6
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 7
+      },
+      {
+        "file": "harry.png",
+        "row": 9,
+        "col": 8
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 2
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-4.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 6
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 7
+      },
+      {
+        "file": "harry.png",
+        "row": 10,
+        "col": 8
+      },
+      {
+        "file": "harry.png",
+        "row": 11,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 11,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 11,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 11,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 12,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 12,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 12,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 12,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 13,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 13,
+        "col": 1
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-5.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 13,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 13,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 14,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 1
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 15,
+        "col": 5
+      },
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 0
+      },
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 1
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-6.png",
+    "cells": [
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 2
+      },
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 3
+      },
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 4
+      },
+      {
+        "file": "harry.png",
+        "row": 16,
+        "col": 5
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 5
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 6
+      },
+      {
+        "file": "harry-lobby-pixellab.png",
+        "row": 0,
+        "col": 7
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 3
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  },
+  {
+    "file": "chunk-7.png",
+    "cells": [
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 5
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 6
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 7
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 8
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 9
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 10
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 11
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 12
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 13
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 14
+      },
+      {
+        "file": "harry-victory-pixellab.png",
+        "row": 0,
+        "col": 15
+      }
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          895,
+          895
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff",
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#f5ece5ff": "#efb193ff",
+          "#eaded6ff": "#efb193ff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Consistent restrained warm highlights in all Harry frames. Preserve every alpha pixel and all geometry."
+      }
+    ]
+  }
+]

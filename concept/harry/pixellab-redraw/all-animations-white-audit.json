@@ -1,0 +1,2079 @@
+[
+  {
+    "sheet": "game",
+    "row": 0,
+    "frame": 0,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 0,
+    "frame": 1,
+    "bright": 28,
+    "bright_bounds": [
+      95,
+      127,
+      127,
+      157
+    ],
+    "body": [
+      70,
+      88,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 0,
+    "frame": 2,
+    "bright": 2,
+    "bright_bounds": [
+      108,
+      157,
+      114,
+      157
+    ],
+    "body": [
+      66,
+      89,
+      143,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 0,
+    "frame": 3,
+    "bright": 10,
+    "bright_bounds": [
+      96,
+      130,
+      126,
+      157
+    ],
+    "body": [
+      70,
+      90,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 1,
+    "frame": 0,
+    "bright": 16,
+    "bright_bounds": [
+      115,
+      124,
+      118,
+      155
+    ],
+    "body": [
+      78,
+      87,
+      138,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 1,
+    "frame": 1,
+    "bright": 10,
+    "bright_bounds": [
+      115,
+      127,
+      119,
+      156
+    ],
+    "body": [
+      79,
+      87,
+      139,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 1,
+    "frame": 2,
+    "bright": 2,
+    "bright_bounds": [
+      115,
+      155,
+      116,
+      156
+    ],
+    "body": [
+      79,
+      89,
+      139,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 1,
+    "frame": 3,
+    "bright": 13,
+    "bright_bounds": [
+      115,
+      125,
+      118,
+      155
+    ],
+    "body": [
+      78,
+      87,
+      138,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 2,
+    "frame": 0,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      84,
+      156,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 2,
+    "frame": 1,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      85,
+      156,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 2,
+    "frame": 2,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      81,
+      87,
+      155,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 2,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      80,
+      84,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 0,
+    "bright": 46,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      158
+    ],
+    "body": [
+      68,
+      87,
+      144,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 1,
+    "bright": 50,
+    "bright_bounds": [
+      96,
+      128,
+      127,
+      159
+    ],
+    "body": [
+      66,
+      89,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 2,
+    "bright": 44,
+    "bright_bounds": [
+      95,
+      127,
+      125,
+      158
+    ],
+    "body": [
+      61,
+      88,
+      144,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 3,
+    "bright": 53,
+    "bright_bounds": [
+      91,
+      128,
+      122,
+      158
+    ],
+    "body": [
+      60,
+      89,
+      141,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 4,
+    "bright": 39,
+    "bright_bounds": [
+      89,
+      129,
+      119,
+      158
+    ],
+    "body": [
+      61,
+      90,
+      139,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 3,
+    "frame": 5,
+    "bright": 50,
+    "bright_bounds": [
+      88,
+      130,
+      119,
+      160
+    ],
+    "body": [
+      58,
+      92,
+      139,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 0,
+    "bright": 19,
+    "bright_bounds": [
+      114,
+      123,
+      127,
+      154
+    ],
+    "body": [
+      78,
+      86,
+      138,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 1,
+    "bright": 18,
+    "bright_bounds": [
+      115,
+      126,
+      127,
+      157
+    ],
+    "body": [
+      77,
+      89,
+      137,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 2,
+    "bright": 16,
+    "bright_bounds": [
+      115,
+      125,
+      127,
+      155
+    ],
+    "body": [
+      77,
+      88,
+      139,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 3,
+    "bright": 20,
+    "bright_bounds": [
+      115,
+      122,
+      128,
+      154
+    ],
+    "body": [
+      78,
+      86,
+      140,
+      211
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 4,
+    "bright": 17,
+    "bright_bounds": [
+      117,
+      122,
+      120,
+      153
+    ],
+    "body": [
+      80,
+      86,
+      140,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 4,
+    "frame": 5,
+    "bright": 21,
+    "bright_bounds": [
+      117,
+      125,
+      130,
+      156
+    ],
+    "body": [
+      80,
+      88,
+      141,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 0,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      85,
+      155,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 1,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      82,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 2,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      82,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      82,
+      146,
+      211
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 4,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      84,
+      147,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 5,
+    "frame": 5,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      80,
+      86,
+      147,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 0,
+    "bright": 44,
+    "bright_bounds": [
+      96,
+      126,
+      127,
+      157
+    ],
+    "body": [
+      70,
+      87,
+      145,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 1,
+    "bright": 45,
+    "bright_bounds": [
+      96,
+      129,
+      127,
+      159
+    ],
+    "body": [
+      75,
+      89,
+      150,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 2,
+    "bright": 44,
+    "bright_bounds": [
+      93,
+      126,
+      127,
+      160
+    ],
+    "body": [
+      73,
+      91,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 3,
+    "bright": 23,
+    "bright_bounds": [
+      105,
+      148,
+      114,
+      162
+    ],
+    "body": [
+      74,
+      94,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 4,
+    "bright": 37,
+    "bright_bounds": [
+      94,
+      129,
+      125,
+      159
+    ],
+    "body": [
+      64,
+      90,
+      147,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 6,
+    "frame": 5,
+    "bright": 40,
+    "bright_bounds": [
+      95,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      62,
+      87,
+      144,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 0,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 1,
+    "bright": 32,
+    "bright_bounds": [
+      98,
+      127,
+      128,
+      159
+    ],
+    "body": [
+      67,
+      88,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 2,
+    "bright": 48,
+    "bright_bounds": [
+      98,
+      131,
+      130,
+      164
+    ],
+    "body": [
+      59,
+      92,
+      150,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 3,
+    "bright": 9,
+    "bright_bounds": [
+      116,
+      175,
+      124,
+      177
+    ],
+    "body": [
+      69,
+      106,
+      159,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 4,
+    "bright": 37,
+    "bright_bounds": [
+      112,
+      171,
+      143,
+      200
+    ],
+    "body": [
+      62,
+      130,
+      166,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 5,
+    "bright": 23,
+    "bright_bounds": [
+      114,
+      174,
+      145,
+      202
+    ],
+    "body": [
+      61,
+      134,
+      166,
+      214
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 7,
+    "frame": 6,
+    "bright": 21,
+    "bright_bounds": [
+      114,
+      174,
+      145,
+      202
+    ],
+    "body": [
+      62,
+      134,
+      166,
+      214
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 0,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 1,
+    "bright": 32,
+    "bright_bounds": [
+      95,
+      126,
+      126,
+      157
+    ],
+    "body": [
+      62,
+      86,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 2,
+    "bright": 16,
+    "bright_bounds": [
+      94,
+      129,
+      125,
+      158
+    ],
+    "body": [
+      54,
+      88,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 3,
+    "bright": 33,
+    "bright_bounds": [
+      95,
+      126,
+      126,
+      158
+    ],
+    "body": [
+      71,
+      87,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 4,
+    "bright": 39,
+    "bright_bounds": [
+      97,
+      128,
+      129,
+      159
+    ],
+    "body": [
+      83,
+      89,
+      144,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 5,
+    "bright": 40,
+    "bright_bounds": [
+      97,
+      128,
+      129,
+      160
+    ],
+    "body": [
+      83,
+      89,
+      144,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 6,
+    "bright": 37,
+    "bright_bounds": [
+      98,
+      128,
+      129,
+      159
+    ],
+    "body": [
+      83,
+      89,
+      144,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 7,
+    "bright": 24,
+    "bright_bounds": [
+      98,
+      129,
+      129,
+      133
+    ],
+    "body": [
+      83,
+      89,
+      145,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 8,
+    "frame": 8,
+    "bright": 40,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      158
+    ],
+    "body": [
+      81,
+      87,
+      142,
+      213
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 0,
+    "bright": 16,
+    "bright_bounds": [
+      115,
+      124,
+      118,
+      155
+    ],
+    "body": [
+      78,
+      87,
+      138,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 1,
+    "bright": 13,
+    "bright_bounds": [
+      115,
+      125,
+      118,
+      155
+    ],
+    "body": [
+      78,
+      87,
+      138,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 2,
+    "bright": 10,
+    "bright_bounds": [
+      116,
+      127,
+      130,
+      155
+    ],
+    "body": [
+      80,
+      87,
+      148,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      81,
+      89,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 4,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      82,
+      91,
+      161,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 5,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      82,
+      91,
+      160,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 6,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      81,
+      89,
+      159,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 7,
+    "bright": 10,
+    "bright_bounds": [
+      115,
+      126,
+      121,
+      155
+    ],
+    "body": [
+      79,
+      88,
+      153,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 9,
+    "frame": 8,
+    "bright": 17,
+    "bright_bounds": [
+      115,
+      124,
+      129,
+      155
+    ],
+    "body": [
+      78,
+      87,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 0,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      84,
+      156,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 1,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      80,
+      84,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 2,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      80,
+      85,
+      156,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      78,
+      83,
+      150,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 4,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      76,
+      82,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 5,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      77,
+      82,
+      146,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 6,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      82,
+      150,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 7,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      83,
+      155,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 10,
+    "frame": 8,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      79,
+      83,
+      156,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 11,
+    "frame": 0,
+    "bright": 39,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      55,
+      86,
+      168,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 11,
+    "frame": 1,
+    "bright": 48,
+    "bright_bounds": [
+      96,
+      88,
+      127,
+      158
+    ],
+    "body": [
+      56,
+      87,
+      167,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 11,
+    "frame": 2,
+    "bright": 39,
+    "bright_bounds": [
+      96,
+      127,
+      127,
+      159
+    ],
+    "body": [
+      55,
+      89,
+      168,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 11,
+    "frame": 3,
+    "bright": 67,
+    "bright_bounds": [
+      60,
+      92,
+      127,
+      159
+    ],
+    "body": [
+      55,
+      89,
+      168,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 12,
+    "frame": 0,
+    "bright": 14,
+    "bright_bounds": [
+      116,
+      124,
+      118,
+      128
+    ],
+    "body": [
+      70,
+      87,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 12,
+    "frame": 1,
+    "bright": 14,
+    "bright_bounds": [
+      116,
+      123,
+      118,
+      127
+    ],
+    "body": [
+      72,
+      86,
+      150,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 12,
+    "frame": 2,
+    "bright": 14,
+    "bright_bounds": [
+      116,
+      122,
+      118,
+      126
+    ],
+    "body": [
+      69,
+      85,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 12,
+    "frame": 3,
+    "bright": 14,
+    "bright_bounds": [
+      115,
+      120,
+      117,
+      124
+    ],
+    "body": [
+      67,
+      83,
+      154,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 13,
+    "frame": 0,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      61,
+      84,
+      160,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 13,
+    "frame": 1,
+    "bright": 1007,
+    "bright_bounds": [
+      42,
+      96,
+      76,
+      186
+    ],
+    "body": [
+      42,
+      86,
+      160,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 13,
+    "frame": 2,
+    "bright": 1002,
+    "bright_bounds": [
+      29,
+      96,
+      78,
+      188
+    ],
+    "body": [
+      29,
+      84,
+      160,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 13,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      61,
+      83,
+      161,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 0,
+    "bright": 31,
+    "bright_bounds": [
+      96,
+      126,
+      127,
+      158
+    ],
+    "body": [
+      54,
+      87,
+      169,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 1,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      128,
+      127,
+      160
+    ],
+    "body": [
+      54,
+      89,
+      169,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 2,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      128,
+      127,
+      160
+    ],
+    "body": [
+      54,
+      90,
+      169,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 3,
+    "bright": 41,
+    "bright_bounds": [
+      96,
+      126,
+      127,
+      158
+    ],
+    "body": [
+      53,
+      88,
+      170,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 4,
+    "bright": 35,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      156
+    ],
+    "body": [
+      54,
+      86,
+      169,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 14,
+    "frame": 5,
+    "bright": 36,
+    "bright_bounds": [
+      96,
+      123,
+      127,
+      155
+    ],
+    "body": [
+      55,
+      84,
+      168,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 0,
+    "bright": 20,
+    "bright_bounds": [
+      115,
+      125,
+      128,
+      129
+    ],
+    "body": [
+      69,
+      88,
+      153,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 1,
+    "bright": 26,
+    "bright_bounds": [
+      115,
+      125,
+      127,
+      131
+    ],
+    "body": [
+      67,
+      90,
+      153,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 2,
+    "bright": 26,
+    "bright_bounds": [
+      115,
+      123,
+      127,
+      130
+    ],
+    "body": [
+      63,
+      88,
+      155,
+      210
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 3,
+    "bright": 23,
+    "bright_bounds": [
+      116,
+      123,
+      128,
+      128
+    ],
+    "body": [
+      61,
+      87,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 4,
+    "bright": 23,
+    "bright_bounds": [
+      116,
+      123,
+      128,
+      128
+    ],
+    "body": [
+      61,
+      87,
+      159,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 15,
+    "frame": 5,
+    "bright": 23,
+    "bright_bounds": [
+      116,
+      124,
+      128,
+      129
+    ],
+    "body": [
+      62,
+      88,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 0,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      62,
+      88,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 1,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      62,
+      87,
+      158,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 2,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      61,
+      83,
+      161,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 3,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      36,
+      80,
+      161,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 4,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      61,
+      82,
+      161,
+      212
+    ]
+  },
+  {
+    "sheet": "game",
+    "row": 16,
+    "frame": 5,
+    "bright": 0,
+    "bright_bounds": null,
+    "body": [
+      54,
+      82,
+      160,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 0,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 1,
+    "bright": 16,
+    "bright_bounds": [
+      106,
+      141,
+      114,
+      158
+    ],
+    "body": [
+      58,
+      88,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 2,
+    "bright": 15,
+    "bright_bounds": [
+      106,
+      140,
+      113,
+      158
+    ],
+    "body": [
+      67,
+      86,
+      148,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 3,
+    "bright": 24,
+    "bright_bounds": [
+      93,
+      128,
+      124,
+      158
+    ],
+    "body": [
+      72,
+      87,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 4,
+    "bright": 39,
+    "bright_bounds": [
+      80,
+      127,
+      124,
+      162
+    ],
+    "body": [
+      72,
+      87,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 5,
+    "bright": 82,
+    "bright_bounds": [
+      94,
+      123,
+      127,
+      158
+    ],
+    "body": [
+      61,
+      88,
+      149,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 6,
+    "bright": 96,
+    "bright_bounds": [
+      94,
+      122,
+      127,
+      158
+    ],
+    "body": [
+      60,
+      86,
+      145,
+      212
+    ]
+  },
+  {
+    "sheet": "menu",
+    "row": 0,
+    "frame": 7,
+    "bright": 146,
+    "bright_bounds": [
+      94,
+      112,
+      127,
+      157
+    ],
+    "body": [
+      74,
+      85,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 0,
+    "bright": 38,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 1,
+    "bright": 18,
+    "bright_bounds": [
+      107,
+      143,
+      115,
+      160
+    ],
+    "body": [
+      63,
+      90,
+      148,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 2,
+    "bright": 13,
+    "bright_bounds": [
+      107,
+      140,
+      115,
+      158
+    ],
+    "body": [
+      64,
+      88,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 3,
+    "bright": 19,
+    "bright_bounds": [
+      106,
+      137,
+      116,
+      157
+    ],
+    "body": [
+      65,
+      86,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 4,
+    "bright": 18,
+    "bright_bounds": [
+      106,
+      137,
+      117,
+      158
+    ],
+    "body": [
+      65,
+      88,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 5,
+    "bright": 19,
+    "bright_bounds": [
+      106,
+      139,
+      117,
+      160
+    ],
+    "body": [
+      65,
+      91,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 6,
+    "bright": 16,
+    "bright_bounds": [
+      106,
+      137,
+      117,
+      158
+    ],
+    "body": [
+      65,
+      90,
+      151,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 7,
+    "bright": 17,
+    "bright_bounds": [
+      106,
+      135,
+      117,
+      156
+    ],
+    "body": [
+      67,
+      87,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 8,
+    "bright": 16,
+    "bright_bounds": [
+      107,
+      134,
+      117,
+      155
+    ],
+    "body": [
+      67,
+      85,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 9,
+    "bright": 18,
+    "bright_bounds": [
+      107,
+      137,
+      118,
+      158
+    ],
+    "body": [
+      67,
+      88,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 10,
+    "bright": 19,
+    "bright_bounds": [
+      107,
+      138,
+      118,
+      160
+    ],
+    "body": [
+      67,
+      90,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 11,
+    "bright": 23,
+    "bright_bounds": [
+      107,
+      127,
+      126,
+      162
+    ],
+    "body": [
+      67,
+      92,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 12,
+    "bright": 19,
+    "bright_bounds": [
+      107,
+      139,
+      117,
+      160
+    ],
+    "body": [
+      67,
+      91,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 13,
+    "bright": 8,
+    "bright_bounds": [
+      107,
+      157,
+      114,
+      159
+    ],
+    "body": [
+      64,
+      89,
+      152,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 14,
+    "bright": 30,
+    "bright_bounds": [
+      96,
+      127,
+      126,
+      158
+    ],
+    "body": [
+      68,
+      88,
+      148,
+      212
+    ]
+  },
+  {
+    "sheet": "victory",
+    "row": 0,
+    "frame": 15,
+    "bright": 44,
+    "bright_bounds": [
+      96,
+      125,
+      127,
+      157
+    ],
+    "body": [
+      72,
+      86,
+      142,
+      212
+    ]
+  }
+]

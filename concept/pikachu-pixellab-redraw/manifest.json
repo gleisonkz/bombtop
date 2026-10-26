@@ -1,0 +1,1207 @@
+{
+  "cell": [
+    180,
+    164
+  ],
+  "columns": 9,
+  "scale": 0.84,
+  "offset": [
+    15,
+    19
+  ],
+  "anchor": [
+    96,
+    157
+  ],
+  "bodyH": 129,
+  "rows": [
+    {
+      "row": 0,
+      "name": "idle-south",
+      "frames": [
+        {
+          "source": "generated\\idle-south\\00.png",
+          "sha256": "e589dd939c68be470d1544e6937da3b086ff7fa654d4e4540646be44123097f2",
+          "bounds": [
+            43,
+            28,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-south\\01.png",
+          "sha256": "2720cbc13891a8c1786c6ffd8ea9ff10417273fc721d822ca1eeffe0f0936be1",
+          "bounds": [
+            46,
+            25,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-south\\02.png",
+          "sha256": "c412fd67eddfd75df3e6efd1b24e5b50848af6f1902782b07982570ca40ce9ac",
+          "bounds": [
+            50,
+            20,
+            143,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-south\\03.png",
+          "sha256": "4cdd2ea0c240d4af7380bf648ef9378c387081bc577b3b934d2c6ad3f9eba5d2",
+          "bounds": [
+            55,
+            19,
+            141,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 1,
+      "name": "idle-east",
+      "frames": [
+        {
+          "source": "generated\\idle-east\\00.png",
+          "sha256": "7435d2ad0510040626cfbaaaa27cb1e77267366ea28e108cba0e86a8f5aa7ad7",
+          "bounds": [
+            28,
+            22,
+            132,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-east\\01.png",
+          "sha256": "5efdeb6f1e2f7a50eda983d72f992b26265cb8c465f4cf65fdbdf89626970a31",
+          "bounds": [
+            29,
+            24,
+            134,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-east\\02.png",
+          "sha256": "a2b5bedfaa10b2ed4a12eb679e36977948f87a41ac2c8377fe409a2476338204",
+          "bounds": [
+            33,
+            27,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-east\\03.png",
+          "sha256": "719245820d8c6200296e1d17276497fe541421bb15bdebbdc84e0ec211c48023",
+          "bounds": [
+            35,
+            31,
+            138,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "name": "idle-north",
+      "frames": [
+        {
+          "source": "generated\\idle-north\\00.png",
+          "sha256": "a260621e12b74daa860c6e26cb5d032d051077a501de076694368250a922ff1b",
+          "bounds": [
+            40,
+            22,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-north\\01.png",
+          "sha256": "146a7d7d4eb08dfe01fdad88f29bd5f10e6d7173a68d778cdf9d46841b8393b6",
+          "bounds": [
+            44,
+            27,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-north\\02.png",
+          "sha256": "2ef68cec2b08276508ca9d1921808e1916397834a02a594065ffc7a30d5055f3",
+          "bounds": [
+            40,
+            22,
+            129,
+            157
+          ]
+        },
+        {
+          "source": "generated\\idle-north\\03.png",
+          "sha256": "0e0eaa3e62dc5bfd0b788c0db43203f42df1008be0b0eece73bc3c13dc8837dd",
+          "bounds": [
+            40,
+            20,
+            124,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "name": "walk-south",
+      "frames": [
+        {
+          "source": "generated\\walk-south\\01.png",
+          "sha256": "51580e76281e3ded4db9c3c932e4054abe47eee476ff7f05290009731031d17f",
+          "bounds": [
+            39,
+            31,
+            153,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-south\\02.png",
+          "sha256": "e1193f5444ee39becedd91ac30e433c8ed878ecf8323e65efee033d2007997d7",
+          "bounds": [
+            43,
+            27,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-south\\03.png",
+          "sha256": "c2f4d0ed8230a6f32a750f8783b98e4e4baf47beb2a3465c8582aeceec00ef1c",
+          "bounds": [
+            49,
+            23,
+            140,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-south\\04.png",
+          "sha256": "afe4301053b10c7ac94cfe4c11cdbbf2240387ce4f869e56d68c808d7ce78e1b",
+          "bounds": [
+            51,
+            21,
+            133,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-south\\05.png",
+          "sha256": "c720ed113ea0e8aac61817486ea86bcc5bbb64b5393a9f9dd60be069d2f3fb7a",
+          "bounds": [
+            54,
+            21,
+            134,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-south\\06.png",
+          "sha256": "130a283b31ffed904c48fa6b51751d42be9f4ce655f1e29fbd2b0facc4a6b0fd",
+          "bounds": [
+            53,
+            24,
+            140,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "name": "walk-east",
+      "frames": [
+        {
+          "source": "generated\\walk-east\\01.png",
+          "sha256": "3184cd90786623b0743d596a18881024fab970e9f3652d950949d33e360dcec7",
+          "bounds": [
+            30,
+            26,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-east\\02.png",
+          "sha256": "0c3f92ec19b4d8bbf782b07cdd0240449874d76d9a7a816cbe9778efcad17edf",
+          "bounds": [
+            28,
+            27,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-east\\03.png",
+          "sha256": "b9be52fdd0d25f9d0abd39f44eb03b280ae5f22f12a59503b7797ad07ec1a995",
+          "bounds": [
+            19,
+            24,
+            137,
+            156
+          ]
+        },
+        {
+          "source": "generated\\walk-east\\04.png",
+          "sha256": "9e1ec3824c7593a8b3b67ded40abc4722cccb2c78145e2c210e83ba9a0f0ad7f",
+          "bounds": [
+            15,
+            22,
+            137,
+            154
+          ]
+        },
+        {
+          "source": "generated\\walk-east\\05.png",
+          "sha256": "879e13d12b0bdbb82d183c4f5088d867bad5504b9175c92b6eeb480258877b97",
+          "bounds": [
+            18,
+            24,
+            139,
+            156
+          ]
+        },
+        {
+          "source": "generated\\walk-east\\06.png",
+          "sha256": "9f3b2c15285d97fe7f6d549dc7f4ad614d85170a07b7347143ed1122607e2e44",
+          "bounds": [
+            23,
+            27,
+            138,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "name": "walk-north",
+      "frames": [
+        {
+          "source": "generated\\walk-north\\01.png",
+          "sha256": "ada0cefd533db380d385e170ed58b989ccb2eb985d309d8823b3b1d68e001ac1",
+          "bounds": [
+            49,
+            22,
+            136,
+            157
+          ]
+        },
+        {
+          "source": "generated\\walk-north\\02.png",
+          "sha256": "99f90537944b2db8d3934fbb601ffdf6fd5ff2aea51087da652e507c0153f6e4",
+          "bounds": [
+            43,
+            27,
+            134,
+            154
+          ]
+        },
+        {
+          "source": "generated\\walk-north\\03.png",
+          "sha256": "f87d4dbff4d88a9d536e25433db023e96557dba68134662c42c84d92a6adaa76",
+          "bounds": [
+            41,
+            22,
+            131,
+            149
+          ]
+        },
+        {
+          "source": "generated\\walk-north\\04.png",
+          "sha256": "94d4cd4709a32b4b1e676cc0e4d2836397b786510e25b776c1d27c4272611dc6",
+          "bounds": [
+            40,
+            22,
+            127,
+            152
+          ]
+        },
+        {
+          "source": "generated\\walk-north\\05.png",
+          "sha256": "f002cdee7ae86d2f3f297b2625bad0aecfa2ff88618e4454cad7b818711ede72",
+          "bounds": [
+            39,
+            22,
+            126,
+            155
+          ]
+        },
+        {
+          "source": "generated\\walk-north\\06.png",
+          "sha256": "78c4081b0d74c09c76633de24f8a4c45e605f3c6423ce10dd2ebfcf8b8447a28",
+          "bounds": [
+            41,
+            24,
+            130,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "name": "stun-south",
+      "frames": [
+        {
+          "source": "generated\\stun-south\\01.png",
+          "sha256": "fbe48f209cacf9e85605ca96e37407854c1f825c0279bc987e094c0e94d69acc",
+          "bounds": [
+            36,
+            28,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\stun-south\\02.png",
+          "sha256": "5707dae93fd2baefb5a8071fe969235714856c73f3652fcecdef778130abb434",
+          "bounds": [
+            35,
+            28,
+            140,
+            156
+          ]
+        },
+        {
+          "source": "generated\\stun-south\\03.png",
+          "sha256": "14245e0638efc5ea051680bb4c269433c8ce6fa702a7e88427f93af5d2fed0cd",
+          "bounds": [
+            34,
+            28,
+            138,
+            154
+          ]
+        },
+        {
+          "source": "generated\\stun-south\\04.png",
+          "sha256": "77faf267186432a17edcc8a7e4f544c95fd40e83670c4be132b7fdaa79bf5670",
+          "bounds": [
+            36,
+            30,
+            134,
+            149
+          ]
+        },
+        {
+          "source": "generated\\stun-south\\05.png",
+          "sha256": "5e242575546aa4bf1437483d7f0bfb360097b9a20b26724a5371ee0d4f2f8d48",
+          "bounds": [
+            37,
+            27,
+            141,
+            152
+          ]
+        },
+        {
+          "source": "generated\\stun-south\\06.png",
+          "sha256": "87a64d7ebc7386fa913c565ed26319840ff2f596ad0d34b1ad97892d56a71e66",
+          "bounds": [
+            38,
+            25,
+            148,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "name": "death-south",
+      "frames": [
+        {
+          "source": "generated\\death-south\\00.png",
+          "sha256": "e589dd939c68be470d1544e6937da3b086ff7fa654d4e4540646be44123097f2",
+          "bounds": [
+            43,
+            28,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\01.png",
+          "sha256": "d229e3ee6089f076eb659d4aa4928d70c9ce9a1c111a67da7d299374ebf35e9b",
+          "bounds": [
+            49,
+            25,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\02.png",
+          "sha256": "fd2dca3961ecbac0b29553a35909090574a3f673ee7a0cd6f783d508aae652c5",
+          "bounds": [
+            54,
+            20,
+            143,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\03.png",
+          "sha256": "3395970e0570a66e81d2844fd3f4a639df039f1532b8165a4c16754a026d39fa",
+          "bounds": [
+            53,
+            27,
+            140,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\04.png",
+          "sha256": "afe99d175d7dc446de20db4a62039aa9c3c86e689109e43c71baa5f9ae4868a9",
+          "bounds": [
+            49,
+            47,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\05.png",
+          "sha256": "a1fcc505d60788190e1b8798c40168e065ab7ac0a3021584e893773fa351baec",
+          "bounds": [
+            41,
+            65,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\death-south\\06.png",
+          "sha256": "0799e399668d810913a79b6e610ba8b04a0d472d08d32ed737b501eba097ad6b",
+          "bounds": [
+            40,
+            77,
+            141,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 8,
+      "name": "cast-south",
+      "frames": [
+        {
+          "source": "generated\\cast-south\\00.png",
+          "sha256": "e589dd939c68be470d1544e6937da3b086ff7fa654d4e4540646be44123097f2",
+          "bounds": [
+            43,
+            28,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\01.png",
+          "sha256": "45ba9383a4b0bd37ed3ec539d61f393d532c3cb2e70074dcfd865db68547f721",
+          "bounds": [
+            44,
+            28,
+            143,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\02.png",
+          "sha256": "84d44e30c831a6f21f0558aeca31017dcd28e9d22ab7b8e6707cf70eaff617dc",
+          "bounds": [
+            44,
+            32,
+            141,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\03.png",
+          "sha256": "897865f7b10433ee162acd6c5f954486a5e4db74e52040ce647933ffc6292053",
+          "bounds": [
+            44,
+            32,
+            141,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\04.png",
+          "sha256": "333c5020d59cd6ccf4b5c4d81795f0ff158cfe817a9f4d0b1a04c6d13886b6fa",
+          "bounds": [
+            45,
+            32,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\05.png",
+          "sha256": "3e4cf45d2d93663b0d614305e2d89b630202528fa79139cb71f51c3db596614d",
+          "bounds": [
+            41,
+            33,
+            150,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\06.png",
+          "sha256": "30c82d5addf3b19781519b6639e59a1cf58243bf1df54e358c6b44dfb7628110",
+          "bounds": [
+            38,
+            40,
+            154,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\07.png",
+          "sha256": "fe97cbf119216743fbfc924f6798acafa25c54ec7b28838d7784c8db32899f21",
+          "bounds": [
+            38,
+            44,
+            155,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-south\\08.png",
+          "sha256": "89167b153b7fb110f5b935cd4cd826afd70d823abc199884bf8b9d31edbeb843",
+          "bounds": [
+            38,
+            42,
+            154,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 9,
+      "name": "cast-east",
+      "frames": [
+        {
+          "source": "generated\\cast-east\\00.png",
+          "sha256": "7435d2ad0510040626cfbaaaa27cb1e77267366ea28e108cba0e86a8f5aa7ad7",
+          "bounds": [
+            28,
+            22,
+            132,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\01.png",
+          "sha256": "f172933918768135647911741595f0a325ee63eea9302f440622b96c3766a2c4",
+          "bounds": [
+            28,
+            24,
+            136,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\02.png",
+          "sha256": "d425d3082a7d63ed9160dd5ae8ef16de2bfc30dc93b8d325d67ed603b06da766",
+          "bounds": [
+            28,
+            27,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\03.png",
+          "sha256": "da2d99abb640d11a31d20f27922ac792cb3e7b55dce48e5c4eef22aba9d7efd0",
+          "bounds": [
+            33,
+            31,
+            140,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\04.png",
+          "sha256": "ee4130a9dd5fb4ad29ac8111e0673001fcda773ce81944a33d4f3cba22e5af5b",
+          "bounds": [
+            30,
+            32,
+            141,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\05.png",
+          "sha256": "c7445ca76a931171e5eda410da040e1448bf4f25d3300d3c80dd97c09da455c7",
+          "bounds": [
+            24,
+            28,
+            140,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\06.png",
+          "sha256": "dc0be808be3e1338264dbaf7d1943939bfa025c9b7096d0420c4644d5fbf12a6",
+          "bounds": [
+            18,
+            23,
+            139,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\07.png",
+          "sha256": "73453fe2778803b48df4971c3e48dd53403aa990a557922f50a2d056a7027ebe",
+          "bounds": [
+            20,
+            23,
+            139,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-east\\08.png",
+          "sha256": "2b7ff63cbdad2d10767696d1a43505936002048d6e6d84d01f37f4fcb5cba250",
+          "bounds": [
+            20,
+            23,
+            139,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 10,
+      "name": "cast-north",
+      "frames": [
+        {
+          "source": "generated\\cast-north\\00.png",
+          "sha256": "a260621e12b74daa860c6e26cb5d032d051077a501de076694368250a922ff1b",
+          "bounds": [
+            40,
+            22,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-north\\01.png",
+          "sha256": "7a2da15c91ab1c4f0845817035a534c11665509314a2c64521cacfb78f1b9560",
+          "bounds": [
+            44,
+            25,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-north\\02.png",
+          "sha256": "bab178ec63e75561d5183af5fa5a9f67c5ff366164cdfb80fac6e37385074d68",
+          "bounds": [
+            48,
+            27,
+            138,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-north\\03.png",
+          "sha256": "47641fdaa0f78fbd84b6a5cbfec76a18b92a85f186131ff96083b34756d78188",
+          "bounds": [
+            42,
+            26,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "generated\\cast-north\\04.png",
+          "sha256": "26a41c023117b307fe8082725a86420a93412287db607a407b0c646569ed48bf",
+          "bounds": [
+            33,
+            22,
+            136,
+            157
+          ]
+        },
+        {
+          "source": "corrections\\cast-north-5.png",
+          "sha256": "ae546090ce1ace6ae6616fc6750bc8be2f4619513f1c2f6e9e392031826e43d9",
+          "bounds": [
+            31,
+            21,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "corrections\\cast-north-6.png",
+          "sha256": "0af8edff602fecb552e7f8c8a35ad31a8276b73d93b8993614d05da3d1b3af39",
+          "bounds": [
+            29,
+            24,
+            137,
+            157
+          ]
+        },
+        {
+          "source": "corrections\\cast-north-7.png",
+          "sha256": "3dc108d7bda192507bf21ad4d3fb6f4745845c4fdd5634d706e01d5eb8e2ca56",
+          "bounds": [
+            29,
+            28,
+            139,
+            157
+          ]
+        },
+        {
+          "source": "corrections\\cast-north-8.png",
+          "sha256": "88e77c17846524aa8d18483aeccd1b063c0b8a570820b06678addd9e44485f99",
+          "bounds": [
+            29,
+            23,
+            137,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 11,
+      "name": "carryIdle-south",
+      "frames": [
+        {
+          "source": "generated\\carryIdle-south\\00.png",
+          "sha256": "98c84f96e8a19b4405584b49980eb36e4c3e3f8e63aac113fcd45803de41b73a",
+          "bounds": [
+            43,
+            28,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-south\\01.png",
+          "sha256": "647e9c9dffcced2dee5f5b578cd46399fe04dea213996c0f2b0b2c46f2f69869",
+          "bounds": [
+            44,
+            25,
+            145,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-south\\02.png",
+          "sha256": "22092edea13265b68a830290aaa86fd1008a02a856966682b948cf33ce3e5364",
+          "bounds": [
+            46,
+            20,
+            143,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-south\\03.png",
+          "sha256": "b771190fcf96d4037080bb076503fee3a304500442e3c2c0408771645272e5d0",
+          "bounds": [
+            52,
+            19,
+            142,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 12,
+      "name": "carryIdle-east",
+      "frames": [
+        {
+          "source": "generated\\carryIdle-east\\00.png",
+          "sha256": "968ff6b8080863e9a2efeaca9b376c3f537abd73b12407f7dce6d8375c5e950a",
+          "bounds": [
+            28,
+            22,
+            132,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-east\\01.png",
+          "sha256": "5ef2c98f3a7140e9032bffe28d1c99ede4ab6bed1221da6fa2c72644e63cd693",
+          "bounds": [
+            27,
+            24,
+            134,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-east\\02.png",
+          "sha256": "ae84394b10dc960ffb887c4b9644a603ac92fb2284eff4d9cf379f101759712b",
+          "bounds": [
+            30,
+            26,
+            136,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-east\\03.png",
+          "sha256": "b75c7117b3da91ce1df004cd1ada9301ce596ccf98bea0d096486e2e3cb2ccec",
+          "bounds": [
+            32,
+            23,
+            141,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 13,
+      "name": "carryIdle-north",
+      "frames": [
+        {
+          "source": "generated\\carryIdle-north\\00.png",
+          "sha256": "27a94874913b2263cf53f8433dd832760fe0babf954463d86e5485846fa1fbeb",
+          "bounds": [
+            40,
+            22,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-north\\01.png",
+          "sha256": "fc0a4adecea541233303fd8eedbc502b4ccea74ce0b16dd9a8aa5266817f2aa7",
+          "bounds": [
+            39,
+            20,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-north\\02.png",
+          "sha256": "fc01d4653606ed9282f8b96818dddd274b3484c3e0ceaebccb945a487a248653",
+          "bounds": [
+            39,
+            19,
+            133,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryIdle-north\\03.png",
+          "sha256": "2c09ed14f68d1a3ae86cd572b2c9b12a1a94ddfe37656382b8e8e29a2030b41c",
+          "bounds": [
+            42,
+            21,
+            129,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 14,
+      "name": "carryWalk-south",
+      "frames": [
+        {
+          "source": "generated\\carryWalk-south\\01.png",
+          "sha256": "2ccc0815e0c963c45d931a71f22b6372eb1ef30a6ef4288fcd9defe5384d6401",
+          "bounds": [
+            44,
+            26,
+            151,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-south\\02.png",
+          "sha256": "969f6bf0af887e98bf6f7a8986694ed89a3f0177cc553f58fa77721540f0cdc6",
+          "bounds": [
+            46,
+            21,
+            150,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-south\\03.png",
+          "sha256": "58dc7bc20eb7b95c779a162724884315fe3818be6acbaf667feee888e8e4961a",
+          "bounds": [
+            51,
+            19,
+            147,
+            151
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-south\\04.png",
+          "sha256": "f2badf78770019b3329c05570109700f1589c0d8a9b5afa2d71532c05d6ff3ac",
+          "bounds": [
+            54,
+            22,
+            142,
+            155
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-south\\05.png",
+          "sha256": "ffd192726ca70c99eab376d201ffac1c62c16e1f7b379e2402f5ebd62382798e",
+          "bounds": [
+            54,
+            25,
+            138,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-south\\06.png",
+          "sha256": "047db1048d225582813e7d35feb4d584e0d1298f6df7a802409ab9340aff78ab",
+          "bounds": [
+            49,
+            27,
+            145,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 15,
+      "name": "carryWalk-east",
+      "frames": [
+        {
+          "source": "generated\\carryWalk-east\\01.png",
+          "sha256": "132fc275e62ecda58a575274e5070aa197271dc78b35a2b917c3a7a5afb027e6",
+          "bounds": [
+            24,
+            22,
+            134,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-east\\02.png",
+          "sha256": "8d915628d48a3829ff19f7b633df062665d4e021b2e10f2dad3ac0ab6ffd4adf",
+          "bounds": [
+            23,
+            23,
+            137,
+            156
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-east\\03.png",
+          "sha256": "062092c41617252572abf869a60c52e6c7eb23b6ce835e7c9d31522a3f7300a4",
+          "bounds": [
+            28,
+            27,
+            140,
+            153
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-east\\04.png",
+          "sha256": "abf89b38ea23fb5116ee7e5e50badb237a54eb9ce8fd8b14cda809008ddec3f1",
+          "bounds": [
+            35,
+            30,
+            140,
+            156
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-east\\05.png",
+          "sha256": "6349df2ee59c901b27075d8bc9844af83b2bffbc171c320b6f3df6fc79b675e8",
+          "bounds": [
+            28,
+            25,
+            138,
+            156
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-east\\06.png",
+          "sha256": "3be326cf4e8db8e4df9627e42cc32cc4535956ab6f8ff8ca04d12843bbd1bb9c",
+          "bounds": [
+            23,
+            22,
+            136,
+            157
+          ]
+        }
+      ]
+    },
+    {
+      "row": 16,
+      "name": "carryWalk-north",
+      "frames": [
+        {
+          "source": "generated\\carryWalk-north\\01.png",
+          "sha256": "86659076bee744ef174491f7921d9986e2e3c85a4f8fb8103dd60fb24c3e6f91",
+          "bounds": [
+            43,
+            21,
+            135,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-north\\02.png",
+          "sha256": "987ba92f860c69530d850a07fb074a5a4a6d78d36453118bca63f7fe5ae3f721",
+          "bounds": [
+            46,
+            19,
+            132,
+            157
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-north\\03.png",
+          "sha256": "f3d122a3e5ab56fff406a52e5ffc95a3be9b106f04020c1fc94a9de641a6cd46",
+          "bounds": [
+            49,
+            19,
+            129,
+            150
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-north\\04.png",
+          "sha256": "b4797f26cbb069bcd693babf5129d3ba9441fdb5709335dd13530aeaa1c83b8f",
+          "bounds": [
+            51,
+            19,
+            127,
+            146
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-north\\05.png",
+          "sha256": "683035b822a3bc1165315eb9274f127ce88a208bf8a4876720502183e82423b2",
+          "bounds": [
+            51,
+            19,
+            129,
+            149
+          ]
+        },
+        {
+          "source": "generated\\carryWalk-north\\06.png",
+          "sha256": "ec69ff72371bed837c940537aa4b5a4e09907115087386c2605eb36151425ad5",
+          "bounds": [
+            49,
+            20,
+            131,
+            155
+          ]
+        }
+      ]
+    },
+    {
+      "row": 17,
+      "name": "lobby-south",
+      "frames": [
+        {
+          "source": "generated\\lobby-south\\00.png",
+          "sha256": "e589dd939c68be470d1544e6937da3b086ff7fa654d4e4540646be44123097f2",
+          "bounds": [
+            43,
+            28,
+            147,
+            157
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\01.png",
+          "sha256": "f49c4bf068e02b08aa33b06896a102b583c3227d459403c27c8f0c2709038194",
+          "bounds": [
+            43,
+            31,
+            144,
+            157
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\02.png",
+          "sha256": "15615bec598c98d6ca373a0aeca1d66056c8cf16b64d1f72ca14a7edfe1f22fe",
+          "bounds": [
+            39,
+            31,
+            143,
+            157
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\03.png",
+          "sha256": "35c935bfc6f6517d5de56d8e828c189a4a3c07c4773037d4365c5257e4b9da17",
+          "bounds": [
+            40,
+            44,
+            143,
+            154
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\04.png",
+          "sha256": "41201f2872f7a2b9e50bb1b1226312d47b9fbe69948ccb720ffdeb331e826765",
+          "bounds": [
+            39,
+            31,
+            142,
+            137
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\05.png",
+          "sha256": "cbfd6b15e6b5a9b0edda3f2282f947be122ffb75ed9fd823fa6d5427253d45e6",
+          "bounds": [
+            38,
+            28,
+            145,
+            138
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\06.png",
+          "sha256": "1d0b55582f1761c4289fe7d1da456563c9bed34eeb81e6cc929519005cb95501",
+          "bounds": [
+            44,
+            20,
+            136,
+            153
+          ]
+        },
+        {
+          "source": "generated\\lobby-south\\07.png",
+          "sha256": "86254d506e77a53ddb6b114555fac39f16a8fec695fdccad189ca1cef3dfd4ec",
+          "bounds": [
+            45,
+            27,
+            137,
+            157
+          ]
+        }
+      ]
+    }
+  ]
+}

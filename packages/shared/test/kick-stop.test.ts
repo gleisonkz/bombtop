@@ -27,10 +27,12 @@ describe("manual kick stop", () => {
     expect(bomb.x).toBe(x);
   });
 
-  it("cannot stop a bomb placed by another player", () => {
+  it("stops a bomb kicked by this player even when a rival placed it", () => {
     const { s, bomb } = slidingBomb("p2");
     step(s, { p1: { dir: null, bomb: false, stopKick: true } });
-    expect(bomb.slide).toBe("right");
+    expect(bomb.slide).toBeNull();
+    expect(bomb.ownerId).toBe("p2");
+    expect(bomb.kickedBy).toBe("p1");
   });
 
   it("prevents kicking the stopped bomb again while the stop button stays held", () => {

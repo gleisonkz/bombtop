@@ -1,0 +1,111 @@
+[
+  {
+    "file": "harry.png",
+    "size": [
+      2016,
+      3808
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          2015,
+          3807
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f9dec8ff": "#efb193ff",
+          "#ebe5e1ff": "#bdb2a2ff",
+          "#f4dec4ff": "#efb193ff",
+          "#edecebff": "#bfb3a3ff",
+          "#f5e9e4ff": "#c5b9a9ff",
+          "#dce9e8ff": "#bcb0a1ff",
+          "#f1ece5ff": "#c2b6a6ff",
+          "#e5e7e8ff": "#bbb0a0ff",
+          "#e2e0d6ff": "#b6ab9cff",
+          "#f5d2c3ff": "#efb193ff",
+          "#f4f1edff": "#c4b9a8ff",
+          "#f1ebe4ff": "#efb193ff",
+          "#dfe1daff": "#b5aa9bff",
+          "#d5d5dbff": "#b0a697ff",
+          "#fcfcfcff": "#cabeadff",
+          "#eeede4ff": "#c0b4a4ff",
+          "#fbfcfbff": "#cabeadff",
+          "#e9e6e6ff": "#bcb0a1ff",
+          "#f2dfd7ff": "#efb193ff",
+          "#d8d8dcff": "#b1a798ff",
+          "#f4e8e4ff": "#c4b9a8ff"
+        },
+        "reason": "Remove stark near-white lens and skin highlights; use restrained warm eye/shirt highlights and consistent approved skin palette across all animation frames. Preserve alpha and geometry."
+      }
+    ]
+  },
+  {
+    "file": "harry-lobby-pixellab.png",
+    "size": [
+      1792,
+      224
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          1791,
+          223
+        ],
+        "colors": {
+          "#f8dac7ff": "#efb193ff",
+          "#f4d1bcff": "#efb193ff",
+          "#dbdbdbff": "#b0a697ff",
+          "#f5ece5ff": "#efb193ff",
+          "#fbfbfaff": "#cabeadff",
+          "#eaded6ff": "#efb193ff"
+        },
+        "reason": "Remove stark near-white lens and skin highlights; use restrained warm eye/shirt highlights and consistent approved skin palette across all animation frames. Preserve alpha and geometry."
+      }
+    ]
+  },
+  {
+    "file": "harry-victory-pixellab.png",
+    "size": [
+      3584,
+      224
+    ],
+    "changes": [
+      {
+        "operation": "map_colors",
+        "layer": "image",
+        "frames": [
+          1
+        ],
+        "region": [
+          0,
+          0,
+          3583,
+          223
+        ],
+        "colors": {
+          "#dbdbdbff": "#b0a697ff",
+          "#fbfbfaff": "#cabeadff",
+          "#f4f2efff": "#c4b9a8ff",
+          "#f8e3c5ff": "#efb193ff",
+          "#e8e7e2ff": "#bbb0a0ff"
+        },
+        "reason": "Remove stark near-white lens and skin highlights; use restrained warm eye/shirt highlights and consistent approved skin palette across all animation frames. Preserve alpha and geometry."
+      }
+    ]
+  }
+]

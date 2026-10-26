@@ -1,0 +1,57 @@
+{
+  "group_id": "d1a1695a-0edf-4153-bbf0-70703f70ebfd",
+  "states": [
+    {
+      "character": {
+        "id": "589007c3-22d5-42ef-8f76-0031e8b2ea26",
+        "name": "Idle",
+        "prompt": "Rotate the EXACT approved adult PELE (Brazilian football legend) in the reference. Preserve adult face, broad nose, cheekbones, friendly smile, warm dark brown skin, SHORT BLACK curly hair, NO beard/mustache, Brazil YELLOW shirt with GREEN collar/cuffs and crest, BLUE shorts number10, white knee socks, BLACK cleats. Same Lula-family polished pixel-art finish, detailed face/shading, compact athletic proportions. South must preserve exact reference; east true right profile; north strict back of head and back of YELLOW jersey with number10, no face, no front crest; west left profile. Empty natural bare hands. NO ball, bomb, sphere, prop, effects, ground or shadow, transparent background.",
+        "size": {
+          "width": 128,
+          "height": 160
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-10-26T20:36:55.212031+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "west": "Idle/rotations/west.png",
+          "east": "Idle/rotations/east.png",
+          "north": "Idle/rotations/north.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "e3cd8427-7023-4af6-bad4-cfcacb3c8826",
+        "name": "Carry empty overhead",
+        "prompt": "Rotate the EXACT approved adult PELE (Brazilian football legend) in the reference. Preserve adult face, broad nose, cheekbones, friendly smile, warm dark brown skin, SHORT BLACK curly hair, NO beard/mustache, Brazil YELLOW shirt with GREEN collar/cuffs and crest, BLUE shorts number10, white knee socks, BLACK cleats. Same Lula-family polished pixel-art finish, detailed face/shading, compact athletic proportions. South must preserve exact reference; east true right profile; north strict back of head and back of YELLOW jersey with number10, no face, no front crest; west left profile. Empty natural bare hands. NO ball, bomb, sphere, prop, effects, ground or shadow, transparent background.",
+        "size": {
+          "width": 128,
+          "height": 160
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-10-26T20:41:43.739373+00:00"
+      },
+      "folder": "Carry_empty_overhead",
+      "frames": {
+        "rotations": {
+          "south": "Carry_empty_overhead/rotations/south.png",
+          "west": "Carry_empty_overhead/rotations/west.png",
+          "east": "Carry_empty_overhead/rotations/east.png",
+          "north": "Carry_empty_overhead/rotations/north.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-26T20:43:59.162991"
+}

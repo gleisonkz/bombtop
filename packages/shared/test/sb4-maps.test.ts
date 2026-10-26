@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   BASE_SPEED, createMatch, ItemKind, placeBomb, placePlayerAt,
-  playerTile, SB4_STAGE_DEFINITIONS, SELECTABLE_STAGES, STAGES, step, TICK_RATE, Tile,
+  playerTile, SB4_STAGE_DEFINITIONS, SB4_STAGES, SELECTABLE_STAGES, STAGES, step, TICK_RATE, Tile,
   validateStageRotation, type StageId,
 } from "../src";
 
@@ -24,8 +24,8 @@ describe("Super Bomberman 4 battle maps", () => {
   });
   it("keeps creative maps as defaults and makes SB4 maps selectable", () => {
     expect(STAGES).toEqual(["classic", "conveyor", "warp"]);
-    expect(SELECTABLE_STAGES).toEqual([...STAGES, ...originals]);
-    expect(validateStageRotation(originals.map(stage => ({ stage })))).toEqual(originals.map(stage => ({ stage })));
+    expect(SELECTABLE_STAGES).toEqual([...STAGES, ...SB4_STAGES]);
+    expect(validateStageRotation(SB4_STAGES.map(stage => ({ stage })))).toEqual(SB4_STAGES.map(stage => ({ stage })));
   });
 
   it.each(originals)("copies the 80 soft-block layout density of %s, without traps", stage => {

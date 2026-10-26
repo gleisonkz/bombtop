@@ -1,0 +1,17 @@
+{
+  "job_id": "3ee18ad3-ced8-40d1-8754-9b93b1ad5d5a",
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "references": [
+    "Captain America",
+    "Thor"
+  ],
+  "reference_usage": "finish only, preserve canonical slender Pink Panther anatomy",
+  "status": "ready-for-user-approval",
+  "scope": "concept for approval only, no game replacement",
+  "effects": "none"
+}

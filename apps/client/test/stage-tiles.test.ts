@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Graphics, Sprite } from "pixi.js";
-import { createMatch, FLAME_TICKS, publicView } from "@bombtop/shared";
+import { createMatch, FLAME_TICKS, publicView, SB4_STAGES, TILE, type StageId } from "@bombtop/shared";
 import { TILES } from "../src/render/sprites";
 
 const mocks = vi.hoisted(() => ({ load: vi.fn(), textures: [] as unknown[] }));
@@ -60,7 +60,7 @@ describe("stage tile atlases", () => {
   function terrain(renderer: Renderer) {
     return renderer as unknown as { tileArt: unknown[]; tileSprites: Sprite[]; burnSprites: Sprite[] };
   }
-  function arena(stage: "classic" | "sb4-01" | "sb4-02") {
+  function arena(stage: StageId) {
     const state = createMatch({ seed: 1, playerIds: ["qa"], blockDensity: 0, stage });
     state.flames = [{ x: 3, y: 3, ttl: FLAME_TICKS, ownerId: "qa", block: true }];
     return publicView(state);
@@ -70,7 +70,7 @@ describe("stage tile atlases", () => {
     const renderer = new Renderer(true);
     await Promise.all([renderer.useTileArt(), renderer.useTileArt()]);
     const stageLoads = () => mocks.load.mock.calls.filter(([url]) => String(url).includes("sb4-battle/tiles-"));
-    expect(stageLoads()).toHaveLength(2);
+    expect(stageLoads()).toHaveLength(12);
     renderer.draw(arena("sb4-01"), new Map(), 1);
     const first = terrain(renderer).tileSprites[0]!.texture;
     await renderer.useTileArt();
@@ -82,7 +82,7 @@ describe("stage tile atlases", () => {
     await renderer.useTileArt();
     renderer.draw(arena("sb4-01"), new Map(), 1);
     expect(terrain(renderer).tileSprites[0]!.texture).toBe(first);
-    expect(stageLoads()).toHaveLength(2);
+    expect(stageLoads()).toHaveLength(12);
   });
   it("retries failed and invalid atlases", async () => {
     let recovered = false;
@@ -101,7 +101,7 @@ describe("stage tile atlases", () => {
       expect(terrain(renderer).tileSprites[0]!.texture).not.toBe(terrain(renderer).tileArt[TILES.cells.border]);
     }
   });
-  it("prepares both originals and switches arenas synchronously without tinting their art", async () => {
+  it("prepares all twelve originals and switches arenas synchronously without tinting their art", async () => {
     mocks.load.mockResolvedValue({ width: 1920, height: 128, source: { resource: {} } });
     const renderer = new Renderer(true);
     await renderer.useTileArt();
@@ -110,6 +110,14 @@ describe("stage tile atlases", () => {
     const first = terrain(renderer).tileSprites[0]!.texture;
     expect(first).not.toBe(terrain(renderer).tileArt[TILES.cells.border]);
     expect(terrain(renderer).tileSprites[0]!.tint).toBe(0xffffff);
+    const distinct = new Set<unknown>();
+    for (const stage of SB4_STAGES) {
+      renderer.draw(arena(stage), new Map(), 1);
+      distinct.add(terrain(renderer).tileSprites[0]!.texture);
+      expect(terrain(renderer).tileSprites[0]!.tint).toBe(0xffffff);
+    }
+    expect(distinct.size).toBe(12);
+    renderer.draw(arena("sb4-01"), new Map(), 1);
     const burn = terrain(renderer).burnSprites[0]!.texture;
     renderer.draw(arena("sb4-02"), new Map(), 1);
     expect(terrain(renderer).tileSprites[0]!.texture).not.toBe(first);
@@ -168,4 +176,19 @@ describe("stage tile atlases", () => {
       expect(terrain(renderer).tileSprites[0]!.texture).toBe(terrain(renderer).tileArt[TILES.cells.border]);
     }
   });
+});
+
+it("keeps a stage flight shadow grounded while lifting only its player presentation", () => {
+  const renderer = new Renderer(true);
+  const state = createMatch({ seed: 1, playerIds: ["qa"], blockDensity: 0 });
+  const player = state.players[0]!;
+  player.px = 5.5 * TILE;
+  player.py = 5.5 * TILE;
+  state.stageState = { flights: { qa: { dir: "right", ticks: 12, remaining: 3 } } };
+  const before = JSON.stringify(state);
+  renderer.draw(publicView(state), new Map(), 1);
+  const world = (renderer as unknown as { world: Graphics }).world;
+  expect(world.circle).toHaveBeenCalledWith(88, 75, 6);
+  expect(world.ellipse).toHaveBeenCalledWith(88, 94, 5, 2);
+  expect(JSON.stringify(state)).toBe(before);
 });

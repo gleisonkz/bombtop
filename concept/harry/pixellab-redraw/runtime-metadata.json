@@ -1,0 +1,23 @@
+{
+  "bodyH": 128,
+  "scale": 0.16803906,
+  "menuBodyH": 126,
+  "horizontalBounds": [
+    58,
+    149
+  ],
+  "portraitCrop": [
+    79,
+    84,
+    65,
+    68
+  ],
+  "frame": [
+    224,
+    224
+  ],
+  "anchor": [
+    111.5,
+    211
+  ]
+}

@@ -1,5 +1,7 @@
 # Harry menu Patronus presentation
 
+Historical pipeline. The active model-1 redraw and its clean gameplay, lobby and victory animations are documented in [pixellab-redraw/README.md](pixellab-redraw/README.md).
+
 The old sixteen-frame menu strip made the stag orbit Harry in seven frames,
 reversed its facing against its travel, hid it behind Harry, and removed it
 abruptly. Changing the gameplay/guide Patronus source did not fix that baked strip.

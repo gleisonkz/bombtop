@@ -19,6 +19,16 @@ const pixels = () => {
 };
 
 describe("opaque head anchors", () => {
+  it("measures carry crowns across every frame without mistaking raised side hands for the head", () => {
+    const carrySheet: SheetLayout = { ...sheet, bodyH: 8,
+      carryIdle: { down: { row: 0, frames: 2 }, side: { row: 0, frames: 2 }, up: { row: 0, frames: 2 } } };
+    const data = pixels();
+    const opaque = (col: number, x: number, y: number) => { data[(y * sheet.width + col * 8 + x) * 4 + 3] = 255; };
+    opaque(0, 0, 0);
+    opaque(0, 3, 3);
+    opaque(1, 4, 2);
+    expect(buildHeadAnchors(data, carrySheet).get(0)?.y).toBe(2);
+  });
   it("unifies only playback cells, excluding transparent padding and skipped cells", () => {
     const anchors = buildHeadAnchors(pixels(), sheet);
     expect(anchors.get(1)).toEqual({ x: 3.5, y: 1 });

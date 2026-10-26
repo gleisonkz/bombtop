@@ -24,6 +24,15 @@ STATIC_PALMS = json.loads((CLIENT.parents[1] / 'concept/static/carry-redraw/palm
 OUTPUT = CLIENT / "src/render/carry-anchors.json"
 COUNTS = (4, 4, 4, 6, 6, 6)
 SPIDER_PALMS = json.loads((CLIENT.parents[1] / "concept/spider/pixellab/rigged/palms.json").read_text(encoding="utf-8"))
+HARRY_PALMS_PATH = CLIENT.parents[1] / "concept/harry/pixellab-redraw/palms.json"
+HARRY_PALMS = json.loads(HARRY_PALMS_PATH.read_text(encoding="utf-8")) if HARRY_PALMS_PATH.exists() else None
+PIKACHU_PALMS = json.loads((CLIENT.parents[1] / "concept/pikachu-pixellab-redraw/palms.json").read_text(encoding="utf-8"))
+DONATELLO_PALMS = json.loads((CLIENT.parents[1] / "concept/donatello/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
+LANTERN_PALMS = json.loads((CLIENT.parents[1] / "concept/lantern/restart-skeleton/native-palms.json").read_text(encoding="utf-8"))
+PANTHER_PALMS = json.loads((CLIENT.parents[1] / "concept/pink-panther/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
+BUGS_PALMS = json.loads((CLIENT.parents[1] / "concept/bugs/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
+PELE_PALMS = json.loads((CLIENT.parents[1] / "concept/pele/lula-style-redraw/palms.json").read_text(encoding="utf-8"))
+NARUTO_PALMS = json.loads((CLIENT.parents[1] / "concept/naruto/approved-redraw/palms.json").read_text(encoding="utf-8"))
 SEEDS = {
     "captain": (((52, 53), (122, 53)), ((96, 58),), ((57, 49), (123, 49))),
     "thor": (((64, 12), (112, 12)), ((95, 6),), ((68, 6), (112, 6))),
@@ -36,17 +45,31 @@ SEEDS = {
     "spider": tuple(tuple((x * 180 / SPIDER_PALMS["frameW"], y * 180 / SPIDER_PALMS["frameH"])
                           for x, y in SPIDER_PALMS["rows"][str(11 + direction)][0])
                     for direction in range(3)),
-    "pikachu": (((58, 85), (117, 85)), ((103, 83),), ((55, 85), (125, 85))),
+    "pikachu": tuple(tuple((x * 180 / PIKACHU_PALMS["frameW"], y * 180 / PIKACHU_PALMS["frameH"])
+                          for x, y in PIKACHU_PALMS["rows"][str(11 + direction)][0])
+                    for direction in range(3)),
     "static": tuple(tuple((x * 180 / 168, y * 180 / 186) for x, y in STATIC_PALMS[str(row)][0]) for row in (11, 12, 13)),
     "flash": (((58, 46), (124, 46)), ((93, 52),), ((52, 72), (127, 72))),
-    "bugs": (((48, 80), (141, 80)), ((96, 80),), ((49, 79), (136, 79))),
-    "lantern": (((42, 79), (143, 79)), ((101, 79),), ((40, 79), (142, 79))),
-    "donatello": (((51, 51), (125, 51)), ((95, 55),), ((56, 58), (128, 58))),
+    "bugs": tuple(tuple((x * 180 / BUGS_PALMS["frameW"], y * 180 / BUGS_PALMS["frameH"])
+                       for x, y in BUGS_PALMS["rows"][str(11 + direction)][0])
+                 for direction in range(3)),
+    "lantern": tuple(tuple((x * 180 / LANTERN_PALMS["frameW"], y * 180 / LANTERN_PALMS["frameH"])
+                           for x, y in LANTERN_PALMS["rows"][str(11 + direction)][0])
+                     for direction in range(3)),
+    "donatello": tuple(tuple((x * 180 / DONATELLO_PALMS["frameW"], y * 180 / DONATELLO_PALMS["frameH"])
+                              for x, y in DONATELLO_PALMS["rows"][str(11 + direction)][0])
+                        for direction in range(3)),
     "penelope": (((58, 70), (124, 70)), ((103, 73),), ((57, 63), (126, 63))),
-    "panther": (((50, 40), (127, 40)), ((101, 49),), ((54, 38), (127, 38))),
-    "harry": (((41, 56), (136, 56)), ((86, 61),), ((42, 50), (137, 50))),
+    "panther": tuple(tuple((x * 180 / PANTHER_PALMS["frameW"], y * 180 / PANTHER_PALMS["frameH"])
+                            for x, y in PANTHER_PALMS["rows"][str(11 + direction)][0])
+                      for direction in range(3)),
+    "harry": tuple(tuple((x * 180 / HARRY_PALMS["frameW"], y * 180 / HARRY_PALMS["frameH"])
+                         for x, y in HARRY_PALMS["rows"][str(11 + direction)][0])
+                   for direction in range(3)) if HARRY_PALMS else (((41, 56), (136, 56)), ((86, 61),), ((42, 50), (137, 50))),
     "optimus": (((41, 37), (137, 37)), ((80, 39),), ((43, 37), (142, 37))),
-    "pele": (((51.75, 83.25), (126, 83.25)), ((121.5, 78.75),), ((55.125, 127.125), (122.625, 60.75))),
+    "pele": tuple(tuple((x * 180 / PELE_PALMS["frameW"], y * 180 / PELE_PALMS["frameH"])
+                       for x, y in PELE_PALMS["rows"][str(11 + direction)][0])
+                 for direction in range(3)),
     "lula": (((44, 66), (141, 66)), ((76, 60),), ((38, 62), (139, 62))),
     "bomber": (((50, 85), (137, 85)), ((78, 82),), ((43, 77), (136, 77))),
 }
@@ -56,7 +79,6 @@ SEEDS = {
 REVIEWED = {
     "thor": {(15, 1, 0), (15, 4, 0), (16, 1, 0), (16, 1, 1), (16, 4, 0), (16, 4, 1)},
     "flash": {(12, 2, 0), (12, 3, 0), (15, 3, 0)},
-    "donatello": {(11, 2, 0), (11, 3, 0), (14, 1, 0), (14, 3, 0), (16, 4, 1)},
     "panther": {(14, 2, 0)},
 }
 
@@ -101,74 +123,15 @@ def reviewed_point(name, row, col, palm):
         x, y = poses[row][col][palm]
         return (x * 180 / 146, y * 180 / 159), "manual: visible palm center inspected on final 146x159 Goku carry cell"
     if name == "naruto":
-        # Native 80x116 palms reviewed on naruto-candidate.png, rows 11-16.
-        # All palms are visible, including front carry-walk frame five.
-        # Store each authored pose explicitly: finger/sleeve changes can make
-        # idle-patch matching prefer hair or wrists over the palm center.
-        poses = {
-            11: (
-                ((15, 20), (67, 20)), ((13.5, 20), (67, 19.5)),
-                ((13, 19.5), (67, 19.5)), ((13.5, 19.5), (67.5, 19.5)),
-            ),
-            12: (((45, 17),), ((45.5, 17),), ((46, 17),), ((48, 17.5),)),
-            13: (
-                ((14.5, 21), (67, 21)), ((13.5, 21.5), (66, 21)),
-                ((12, 21.5), (64.5, 20.5)), ((16.5, 21.5), (69, 20.5)),
-            ),
-            14: (
-                ((16, 20.5), (67, 20.5)), ((11.5, 20.5), (62, 20)),
-                ((15.5, 21), (67, 20.5)), ((16, 19.5), (67, 20)),
-                ((17, 21), (68.5, 19.5)), ((15.5, 20.5), (66.5, 20)),
-            ),
-            15: (
-                ((46.5, 18),), ((49, 19),), ((47, 18),),
-                ((46, 17),), ((47, 18),), ((48, 17),),
-            ),
-            16: (
-                ((15.5, 21), (65.5, 20.5)), ((17, 19), (68, 18.5)),
-                ((12.5, 20), (64, 19)), ((17.5, 20), (68, 19)),
-                ((17, 22), (68, 20)), ((16, 22), (67, 20.5)),
-            ),
-        }
-        if row not in poses:
+        if str(row) not in NARUTO_PALMS["rows"]:
             return None, None
-        x, y = poses[row][col][palm]
-        return (x * 180 / 80, y * 180 / 116), "manual: visible palm center inspected on final 80x116 Naruto carry cell"
+        x, y = NARUTO_PALMS["rows"][str(row)][col][palm]
+        return (x * 180 / NARUTO_PALMS["frameW"], y * 180 / NARUTO_PALMS["frameH"]), "manual: visible palm centers inspected on approved 80x116 Naruto redraw"
     if name == "static":
         if str(row) not in STATIC_PALMS:
             return None, None
         x, y = STATIC_PALMS[str(row)][col][palm]
         return (x * 180 / 168, y * 180 / 186), "manual: inspected raised glove support on final 168x186 Static carry redraw"
-    if name == "pele":
-        # Inspected visible palms in pele-final.png, native 160px cells.
-        # Source gestures change hand height; idle-patch tracking is unsuitable.
-        # Rear idle frame zero has one lowered hand: retain its actual position.
-        front = (
-            ((46, 74), (112, 74)), ((48, 75), (112, 75)),
-            ((46, 62), (114, 62)), ((48, 56), (116, 56)),
-        )
-        rear_idle = (
-            ((49, 113), (109, 54)), ((47, 55), (111, 55)),
-            ((47, 55), (111, 55)), ((47, 55), (111, 55)),
-        )
-        rear_walk = (
-            ((47, 58), (113, 58)), ((47, 58), (113, 58)),
-            ((47, 58), (113, 58)), ((44, 51), (118, 51)),
-            ((47, 58), (113, 58)), ((47, 58), (113, 58)),
-        )
-        if row in (11, 14):
-            native = front[(0, 1, 2, 3, 2, 1)[col]][palm]
-        elif row in (12, 15):
-            native = (108, 70)
-        elif row == 13:
-            native = rear_idle[col][palm]
-        elif row == 16:
-            native = rear_walk[col][palm]
-        else:
-            return None, None
-        return tuple(value * 180 / 160 for value in native), "manual: visible palm center inspected on final 160px Pele carry cell"
-    if (name, row, col, palm) == ("donatello", 16, 1, 1):
-        return (128, 58), "manual: right palm at head edge; rejected lower-forearm patch"
     return None, None
 
 
@@ -243,6 +206,8 @@ def build(only=None):
         if only is not None and name != only:
             continue
         width, height = dimensions["frameW"], dimensions["frameH"]
+        registered = {"pikachu": PIKACHU_PALMS, "harry": HARRY_PALMS, "lantern": LANTERN_PALMS,
+                      "panther": PANTHER_PALMS, "bugs": BUGS_PALMS, "pele": PELE_PALMS}.get(name)
         with Image.open(path) as image:
             if image.mode != "RGBA" or image.size != (dimensions["width"], dimensions["height"]):
                 raise ValueError(f"Sheet differs from runtime layout: {path}")
@@ -256,6 +221,19 @@ def build(only=None):
                     target = rgba(image.crop((col * width, row * height, (col + 1) * width, (row + 1) * height)))
                     palms = []
                     for palm in range(len(SEEDS[name][direction])):
+                        if registered:
+                            palms.append(tuple(registered["rows"][str(row)][col][palm]))
+                            diagnostics.append({"character": name, "row": row, "frame": col, "palm": palm,
+                                                "error": 0, "shift": [0, 0], "flags": [],
+                                                "review": "registered visible palm in new PixelLab pose"})
+                            continue
+                        if name == "donatello":
+                            point = tuple(DONATELLO_PALMS["rows"][str(row)][col][palm])
+                            palms.append(point)
+                            diagnostics.append({"character": name, "row": row, "frame": col, "palm": palm,
+                                                "error": 0, "shift": [0, 0], "flags": [],
+                                                "review": "registered visible palm in new PixelLab pose"})
+                            continue
                         if name == "spider":
                             point = tuple(SPIDER_PALMS["rows"][str(row)][col][palm])
                             palms.append(point)

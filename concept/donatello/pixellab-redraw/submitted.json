@@ -1,0 +1,78 @@
+{
+  "character_id": "8b856f61-5e44-468e-97cc-b05a61f6525a",
+  "carry_character_id": "6ad4649f-97e4-45fc-917b-c69243a62495",
+  "clips": {
+    "idle-south": {
+      "job_id": "b7645c14-e337-4d93-9ab9-5ef32dfdb5aa",
+      "count": 4
+    },
+    "idle-east": {
+      "job_id": "75b76ff6-96c4-4c43-a2ab-9a19984cd160",
+      "count": 4
+    },
+    "idle-north": {
+      "job_id": "bc950669-13e6-4671-9350-426925bc7880",
+      "count": 4
+    },
+    "walk-south": {
+      "job_id": "1330ac2e-0d0b-4378-947e-5b23d71a588e",
+      "count": 6
+    },
+    "walk-east": {
+      "job_id": "cf3d1490-8064-4023-89e8-32dfa2c1c786",
+      "count": 6
+    },
+    "walk-north": {
+      "job_id": "0256b3fd-9d32-4cef-b462-bda165da3517",
+      "count": 6
+    },
+    "stun-south": {
+      "job_id": "a09aa1ff-375d-44ec-87fd-a3247bf76f50",
+      "count": 6
+    },
+    "death-south": {
+      "job_id": "d22a4555-8c01-46d6-8b42-fb03f9f05a72",
+      "count": 6
+    },
+    "cast-south": {
+      "job_id": "f2a1a71a-673b-4fee-b216-49057b807037",
+      "count": 10
+    },
+    "cast-east": {
+      "job_id": "5fd69b65-9de2-4a38-901e-79efb6928a23",
+      "count": 10
+    },
+    "cast-north": {
+      "job_id": "d3ac996b-70ab-4ddd-aa97-e083845db12e",
+      "count": 10
+    },
+    "lobby-south": {
+      "job_id": "51acaa89-905c-4adf-8ef8-85da69984baf",
+      "count": 12
+    },
+    "carryIdle-south": {
+      "job_id": "80ab0738-ecec-423d-8b95-50db4ff9f042",
+      "count": 4
+    },
+    "carryIdle-east": {
+      "job_id": "fd1bdc9e-4429-49c3-869b-133ae5f10643",
+      "count": 4
+    },
+    "carryIdle-north": {
+      "job_id": "df588841-81e5-47b1-be52-74407c80efca",
+      "count": 4
+    },
+    "carryWalk-south": {
+      "job_id": "badd7ff6-d703-4c2a-8097-ced9f8b2eadd",
+      "count": 6
+    },
+    "carryWalk-east": {
+      "job_id": "5155123f-9b81-4a67-9e95-39e7d4f6cdc7",
+      "count": 6
+    },
+    "carryWalk-north": {
+      "job_id": "341044fa-cca0-4e6f-aca6-48aaf753a442",
+      "count": 6
+    }
+  }
+}

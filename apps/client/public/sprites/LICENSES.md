@@ -83,8 +83,9 @@ the ring cast and carry walk posed with skeleton v3 from its rotations). Frames 
 ## donatello.png
 
 Fan art of Donatello (Teenage Mutant Ninja Turtles, Paramount / Nickelodeon) for this non-commercial project, made in
-PixelLab (pixellab.ai) (character "Donatello HD"; his bo staff spin and carry walk posed from our own skeletons, a lobby
-twirling the staff); laid out by `scripts/build-character-sheet.py donatello`; rows = `SHEETS.donatello`.
+PixelLab (pixellab.ai), regenerated from approved option 4 as character `8b856f61-5e44-468e-97cc-b05a61f6525a`.
+All 111 animation frames use the new design; the staff is held or strapped to the shell. Sources and reproducible
+packing are in `concept/donatello/pixellab-redraw/`; rows = `SHEETS.donatello`.
 
 ## penelope.png, penelope-lobby.png, penelope-victory.png
 
@@ -97,9 +98,10 @@ powder, sparkles and hearts and the victory's checkered flag, sparkles and heart
 ## panther.png, panther-lobby.png
 
 Fan art of the Pink Panther (DePatie-Freleng / MGM) for this non-commercial project, made in PixelLab (pixellab.ai)
-(character "Pink Panther HD 4"; his tiptoe and carry walk posed from our own skeletons, a lobby going "shh");
-laid out by `scripts/build-character-sheet.py panther`; rows = `SHEETS.panther`. The lobby (tiptoeing in, then
-"shh") is laid out by `scripts/build-panther-lobby.py` and `scripts/build-lobby-image.py`.
+(character "Pink Panther Bombtop slim option2", `d4a3e349-0c83-4c42-a0e3-72b4b85ff355`).
+All poses follow the approved slender concept; no effects or props are baked into the character.
+Native source frames and reproducible packing are in `concept/pink-panther/pixellab-redraw/`;
+91 gameplay frames follow `SHEETS.panther`, with 16 separate lobby frames.
 
 ## harry.png, harry-lobby.png, harry-victory.png, patronus.png
 

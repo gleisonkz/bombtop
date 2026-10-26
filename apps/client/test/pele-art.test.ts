@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { playerFrame, SHEETS } from "../src/render/sprites";
 import { previewPose } from "../src/ui/sheet-art";
 
-describe("supplied Pele artwork", () => {
+describe("approved option-4 Pele artwork", () => {
   it("loads a runtime grid matching the actual PNG", () => {
     const image = readFileSync(new URL("../public/sprites/pele-final.png", import.meta.url));
     expect(image.readUInt32BE(16)).toBe(SHEETS.pele.width);
@@ -11,8 +11,8 @@ describe("supplied Pele artwork", () => {
     expect(SHEETS.pele.width / SHEETS.pele.frameW).toBe(9);
     expect(SHEETS.pele.height / SHEETS.pele.frameH).toBe(18);
     expect(SHEETS.pele.bodyH * SHEETS.pele.scale).toBeCloseTo(21.6, 0);
-    expect(SHEETS.pele.frameW).toBe(160);
-    expect(SHEETS.pele.frameH).toBe(160);
+    expect(SHEETS.pele.frameW).toBe(192);
+    expect(SHEETS.pele.frameH).toBe(192);
     expect(SHEETS.pele.url).toContain("pele-final");
   });
 

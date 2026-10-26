@@ -1,8 +1,11 @@
 import { CONVEYOR_SPEED, KICK_SPEED, TILE } from "./constants";
 import { conveyorDirection } from "./floor";
+import { playerElevated } from "./player-carry";
+import { stageSolid } from "./stage-obstacles";
 import {
   bombAt,
   DIR_VECTORS,
+  Floor,
   getTile,
   getFloor,
   playerTile,
@@ -19,18 +22,21 @@ import {
  * tile center, facing it) sends it sliding.
  */
 export function tryKick(s: MatchState, p: Player, dir: Direction): void {
-  if (!dir || !p.alive || p.stun > 0 || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
+  if (!dir || !p.alive || playerElevated(p) || p.stun > 0 || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
   const { x, y } = playerTile(p);
   if (p.px !== tileCenter(x) || p.py !== tileCenter(y)) return;
   const [dx, dy] = DIR_VECTORS[dir];
   const bomb = bombAt(s, x + dx, y + dy);
-  if (bomb && !bomb.slide) bomb.slide = dir;
+  if (bomb && !bomb.slide) {
+    bomb.slide = dir;
+    bomb.kickedBy = p.id;
+  }
 }
 
 export function stopKickedBombs(s: MatchState, p: Player): void {
   if (!p.alive || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
   for (const bomb of s.bombs) {
-    if (bomb.ownerId !== p.id || !bomb.slide || bomb.conveyor) continue;
+    if ((bomb.kickedBy ?? bomb.ownerId) !== p.id || !bomb.slide || bomb.conveyor) continue;
     bomb.slide = null;
     bomb.offset = 0;
   }
@@ -38,14 +44,14 @@ export function stopKickedBombs(s: MatchState, p: Player): void {
 
 /** A sliding bomb may enter empty tiles with no bomb and no living player. */
 function freeForBomb(s: MatchState, bomb: Bomb, x: number, y: number): boolean {
-  if (getTile(s, x, y) !== Tile.Empty || bombAt(s, x, y)) return false;
+  if (getTile(s, x, y) !== Tile.Empty || bombAt(s, x, y) || stageSolid(s, x, y) || getFloor(s, x, y) === Floor.Slot) return false;
   if (s.bombs.some(other => {
     if (other === bomb || other.air || other.heldBy || !other.slide || other.offset === 0) return false;
     const [dx, dy] = DIR_VECTORS[other.slide];
     return other.x + dx === x && other.y + dy === y;
   })) return false;
   return !s.players.some((p) => {
-    if (!p.alive) return false;
+    if (!p.alive || playerElevated(p)) return false;
     const t = playerTile(p);
     return t.x === x && t.y === y;
   });

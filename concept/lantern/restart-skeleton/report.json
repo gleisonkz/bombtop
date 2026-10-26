@@ -1,0 +1,40 @@
+{
+  "poseInput": "COCO-18 coordinates only",
+  "occupied": 108,
+  "frameW": 132,
+  "productionReplaced": true,
+  "height": 2952,
+  "nativeFrame": [
+    128,
+    160
+  ],
+  "appearance": "approved A1 only",
+  "character": "e209a97e-98a4-4f0d-9152-37abfc8587cb",
+  "counts": [
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    7,
+    9,
+    9,
+    9,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    8
+  ],
+  "width": 1188,
+  "uniquePoses": 84,
+  "padding": [
+    2,
+    2
+  ],
+  "frameH": 164
+}

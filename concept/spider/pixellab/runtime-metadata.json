@@ -3,7 +3,7 @@
   "scale": 0.1703871,
   "menuBodyH": 122,
   "horizontalBounds": [
-    2,
+    0,
     130
   ],
   "portraitCrop": [
@@ -22,8 +22,8 @@
       -55
     ],
     "up": [
-      16.5,
-      -125
+      35.5,
+      -87
     ]
   }
 }

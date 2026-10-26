@@ -1,0 +1,21 @@
+{
+  "job_id": "e2e8e168-0d5b-4c10-988e-c2e01fcbe42b",
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "style_reference": "captain-style.png",
+  "style_copy": [
+    "outline",
+    "detail",
+    "shading"
+  ],
+  "old_harry_input": false,
+  "directions": "front concept only",
+  "status": "ready-for-approval",
+  "scope": "User approval before any Harry game replacement",
+  "eyes": "white sclera, small subtle dark green iris, black pupil and highlight",
+  "effects": "none"
+}

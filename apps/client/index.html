@@ -597,6 +597,59 @@
         .lobby-foot { grid-template-columns: minmax(0, 1fr); }
         .lobby-rules-options { flex-wrap: wrap; justify-content: center; }
       }
+      @media (max-width: 599px), (orientation: landscape) and (max-height: 500px) and (max-width: 1100px) {
+        .screen.lobby { height: 100dvh; overflow: clip; }
+        .lobby-shell { height: 100%; min-height: 0; grid-template-rows: auto minmax(0, 1fr) auto; padding-inline: 0; gap: 6px; }
+        .lobby-shell .seats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); align-content: stretch; gap: 12px 8px; min-height: 0; overflow: visible; margin: 0; padding: 12px 2px 6px; }
+        .lobby-shell .seat { display: grid; max-width: none; min-height: 0; padding: 6px; column-gap: 6px; row-gap: 2px; text-align: start; align-content: center; }
+        .lobby-shell .seat:not(.add-bot) { grid-template-columns: 60px minmax(0, 1fr); }
+        .lobby-shell .stage-spot, .lobby-shell .seat.empty > .mascot.sheet { height: 56px; }
+        .lobby-shell .seat .mascot.sheet { --k: 2.6; }
+        .lobby-shell .seat-name { justify-self: start; font-size: 14px; }
+        .lobby-shell .seat-sub { font-size: 10px; }
+        .lobby-shell .slot-tag { left: 10px; transform: none; }
+        .lobby-shell .crown { top: -12px; left: 46px; font-size: 16px; }
+        .lobby-shell .seat > .picker { grid-column: 1 / -1; max-width: none; margin-top: 0; }
+        .lobby-shell .picker.spacer { display: none; }
+        .lobby-shell button.mini.pick-arrow { width: 32px; min-height: 32px; font-size: 20px; }
+        .lobby-shell .pick-name { font-size: 12px; }
+        .lobby-shell .seat.add-bot > button { min-height: 32px; max-width: none; padding: 4px 0; font-size: 12px; }
+        .lobby-shell .add-bot::before { display: none; }
+        .lobby-shell button.team-toggle { min-height: 22px; padding: 1px 6px; font-size: 10px; }
+        .lobby-shell .lobby-settings { gap: 4px 6px; }
+        .lobby-shell .lobby-rules { padding: 3px 6px; gap: 4px 6px; }
+        .lobby-shell .lobby-rules-title { font-size: 11px; }
+        .lobby-shell .lobby-win-option { min-width: 28px; width: 28px; height: 28px; font-size: 13px; }
+        .lobby-shell .lobby-mode-option { min-width: 60px; min-height: 28px; padding: 3px 6px; font-size: 12px; }
+        .lobby-shell .stage-configure, .lobby-shell .lobby-rule-toggle { min-height: 32px; padding: 4px 8px; font-size: 12px; }
+        .lobby-shell .lobby-foot { gap: 4px; }
+        .lobby-shell .lobby-foot .hint { display: none; }
+        .lobby-shell .lobby-foot .start { min-height: 40px; padding: 6px 12px; font-size: 20px; }
+      }
+      @media (min-width: 600px) and (max-width: 1100px) and (orientation: landscape) and (max-height: 500px) {
+        .lobby-shell .seats { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        .lobby-shell .stage-spot, .lobby-shell .seat.empty > .mascot.sheet { height: 80px; }
+        .lobby-shell .seat .mascot.sheet { --k: 3.2; }
+      }
+      @media (max-width: 599px) and (min-height: 760px) {
+        .lobby-shell .seat:not(.add-bot) { grid-template-columns: 72px minmax(0, 1fr); }
+        .lobby-shell .stage-spot, .lobby-shell .seat.empty > .mascot.sheet { height: 80px; }
+        .lobby-shell .seat .mascot.sheet { --k: 3.4; }
+      }
+      @media (max-width: 599px) {
+        .lobby-shell .lobby-head { gap: 6px; padding: 8px; }
+        .lobby-shell .lobby-title h2 { font-size: 22px; }
+        .lobby-shell .lobby-head .leave, .lobby-shell .lobby-head .invite-btn { min-height: 32px; padding: 4px 8px; font-size: 13px; }
+        .lobby-shell .code-box { padding: 3px 6px; }
+        .lobby-shell .code-box code { font-size: 16px; }
+        .lobby-shell .lobby-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+        .lobby-shell .lobby-settings > .lobby-rules { display: grid; justify-items: center; gap: 2px; }
+        .lobby-shell .lobby-rules:has(.lobby-mode-option) { grid-column: 1 / -1; grid-row: 1; display: flex; }
+        .lobby-shell .lobby-rules:has(.lobby-win-option):not(:has(.lobby-time-option)) { grid-column: 1; grid-row: 2; }
+        .lobby-shell .lobby-rules:has(.lobby-time-option) { grid-column: 2; grid-row: 2; }
+        .lobby-shell .lobby-rules-options { gap: 3px; }
+        .lobby-shell .lobby-win-option { min-width: 24px; width: 24px; padding-inline: 0; font-size: 12px; }
+      }
       .screen.results { position: fixed; inset: 0; width: auto; max-height: none; padding: 12px; place-items: center; background: radial-gradient(circle at 50% 40%, #0b0b1655, #0b0b16cc); animation: fade-in 0.3s ease-out; }
       .results .card { width: min(440px, 100%); min-width: 0; max-height: 100%; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; justify-items: center; position: relative; z-index: 1; animation: pop 0.35s cubic-bezier(0.2, 1.6, 0.5, 1); }
       .results-title { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 7vmin, 44px); line-height: 1; text-align: center; color: var(--accent); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; text-shadow: 0 4px 0 var(--ink); animation: title-in 0.6s cubic-bezier(0.2, 1.8, 0.4, 1) both; }
@@ -762,6 +815,22 @@
       @media (orientation: landscape) and (max-height: 380px) {
         .menu .card input, .menu .card button:not(.tool) { min-height: 36px; padding-block: 4px; }
         .menu .card button.play { min-height: 42px; }
+      }
+      @media (orientation: landscape) and (max-height: 500px) {
+        .screen.menu.guiding:has(.chars:not([hidden])) { width: 100%; height: 100%; min-height: 0; padding: 0; overflow: hidden; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); align-content: stretch; }
+        .menu.guiding .guide.chars { height: 100%; min-height: 0; padding: 8px 12px; overflow: hidden; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 8px 12px; }
+        .menu.guiding .chars > h2 { grid-column: 2; grid-row: 1; justify-self: start; font-size: 22px; padding-right: 48px; }
+        .menu.guiding .chars > button { grid-column: 1; grid-row: 1; justify-self: start; min-width: 0; min-height: 44px; padding: 6px 14px; }
+        .menu.guiding .chars .guide-body { grid-column: 1 / -1; grid-row: 2; min-height: 0; grid-template-columns: minmax(160px, 0.85fr) minmax(0, 1.4fr); gap: 12px; align-items: stretch; }
+        .menu.guiding .chars .chars-roster { min-height: 0; gap: 4px; }
+        .menu.guiding .chars .chars-roster-head h3 { font-size: 15px; }
+        .menu.guiding .chars .chars-list { max-height: none; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: max-content; overflow-y: auto; }
+        .menu.guiding .chars .guide-card { grid-template-rows: 58px auto; align-self: start; height: auto; white-space: normal; }
+        .menu.guiding .chars .guide-detail { min-height: 0; min-width: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 0 4px 8px 0; gap: 8px; }
+        .menu.guiding .chars .guide-stage { order: -1; min-height: 100px; position: sticky; top: 0; z-index: 1; }
+        .menu.guiding .chars .guide-stage canvas { max-height: 42dvh; width: 100%; height: auto; object-fit: contain; }
+        .menu.guiding .chars .chars-portrait { width: 60px; height: 64px; }
+        .menu.guiding .chars .chars-portrait .mascot.sheet { --k: 2.4; }
       }
       @media (orientation: landscape) and (max-height: 460px) and (max-width: 760px) {
         .screen.menu:not(.guiding) { grid-template-columns: minmax(0, 1fr); grid-template-rows: max-content; align-content: start; }

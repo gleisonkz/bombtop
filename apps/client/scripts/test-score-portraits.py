@@ -45,7 +45,7 @@ class ScorePortraitTests(unittest.TestCase):
                 self.assertGreater(3 - (offset + width * scale / 2), 1)
 
     def test_reviewed_chins_and_identity_details_stay_inside_the_crop(self):
-        landmarks = {"lula": (74, 121), "pikachu": (94, 94), "donatello": (115, 60), "bomber": (57, 101), "naruto": (40, 50)}
+        landmarks = {"lula": (74, 121), "pikachu": (94, 94), "donatello": (139, 133), "bomber": (57, 101), "naruto": (48, 62)}
         for name, point in landmarks.items():
             with self.subTest(character=name):
                 profile = PROFILES[name]

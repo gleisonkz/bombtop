@@ -1,0 +1,1026 @@
+{
+  "frameW": 130,
+  "frameH": 161,
+  "rows": [
+    [
+      [
+        {
+          "left": 68,
+          "top": 68,
+          "right": 86,
+          "bottom": 86
+        },
+        {
+          "left": 40,
+          "top": 70,
+          "right": 58,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 68,
+          "top": 66,
+          "right": 86,
+          "bottom": 84
+        },
+        {
+          "left": 40,
+          "top": 68,
+          "right": 58,
+          "bottom": 84
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 64,
+          "right": 58,
+          "bottom": 82
+        },
+        {
+          "left": 68,
+          "top": 64,
+          "right": 86,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 68,
+          "right": 58,
+          "bottom": 84
+        },
+        {
+          "left": 68,
+          "top": 68,
+          "right": 86,
+          "bottom": 84
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 67,
+          "top": 64,
+          "right": 87,
+          "bottom": 80
+        }
+      ],
+      [
+        {
+          "left": 65,
+          "top": 62,
+          "right": 85,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 63,
+          "top": 62,
+          "right": 83,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 65,
+          "top": 62,
+          "right": 85,
+          "bottom": 78
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 70,
+          "top": 64,
+          "right": 88,
+          "bottom": 82
+        },
+        {
+          "left": 42,
+          "top": 64,
+          "right": 60,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 64,
+          "right": 88,
+          "bottom": 82
+        },
+        {
+          "left": 42,
+          "top": 64,
+          "right": 60,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 64,
+          "right": 88,
+          "bottom": 82
+        },
+        {
+          "left": 42,
+          "top": 64,
+          "right": 60,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 64,
+          "right": 88,
+          "bottom": 82
+        },
+        {
+          "left": 42,
+          "top": 64,
+          "right": 60,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 72,
+          "top": 64,
+          "right": 90,
+          "bottom": 82
+        },
+        {
+          "left": 44,
+          "top": 64,
+          "right": 62,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 72,
+          "top": 64,
+          "right": 90,
+          "bottom": 82
+        },
+        {
+          "left": 44,
+          "top": 64,
+          "right": 62,
+          "bottom": 82
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 63,
+          "top": 70,
+          "right": 83,
+          "bottom": 88
+        },
+        {
+          "left": 41,
+          "top": 72,
+          "right": 53,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 65,
+          "top": 64,
+          "right": 85,
+          "bottom": 84
+        },
+        {
+          "left": 43,
+          "top": 68,
+          "right": 55,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 65,
+          "top": 48,
+          "right": 89,
+          "bottom": 62
+        },
+        {
+          "left": 45,
+          "top": 48,
+          "right": 57,
+          "bottom": 62
+        }
+      ],
+      [
+        {
+          "left": 59,
+          "top": 48,
+          "right": 81,
+          "bottom": 64
+        },
+        {
+          "left": 39,
+          "top": 54,
+          "right": 51,
+          "bottom": 66
+        }
+      ],
+      [
+        {
+          "left": 45,
+          "top": 54,
+          "right": 63,
+          "bottom": 72
+        },
+        {
+          "left": 25,
+          "top": 66,
+          "right": 37,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 53,
+          "top": 70,
+          "right": 71,
+          "bottom": 88
+        },
+        {
+          "left": 33,
+          "top": 76,
+          "right": 45,
+          "bottom": 88
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 60,
+          "top": 70,
+          "right": 78,
+          "bottom": 88
+        },
+        {
+          "left": 38,
+          "top": 74,
+          "right": 50,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 62,
+          "top": 66,
+          "right": 82,
+          "bottom": 86
+        },
+        {
+          "left": 38,
+          "top": 70,
+          "right": 54,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 36,
+          "top": 58,
+          "right": 60,
+          "bottom": 70
+        }
+      ],
+      [
+        {
+          "left": 44,
+          "top": 54,
+          "right": 68,
+          "bottom": 66
+        }
+      ],
+      [
+        {
+          "left": 56,
+          "top": 64,
+          "right": 74,
+          "bottom": 76
+        },
+        {
+          "left": 80,
+          "top": 64,
+          "right": 88,
+          "bottom": 72
+        }
+      ],
+      [
+        {
+          "left": 46,
+          "top": 72,
+          "right": 66,
+          "bottom": 80
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 41,
+          "top": 64,
+          "right": 59,
+          "bottom": 82
+        },
+        {
+          "left": 69,
+          "top": 64,
+          "right": 87,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 41,
+          "top": 68,
+          "right": 59,
+          "bottom": 84
+        },
+        {
+          "left": 69,
+          "top": 68,
+          "right": 87,
+          "bottom": 84
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 68,
+          "right": 87,
+          "bottom": 84
+        },
+        {
+          "left": 41,
+          "top": 68,
+          "right": 59,
+          "bottom": 84
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 68,
+          "right": 87,
+          "bottom": 84
+        },
+        {
+          "left": 41,
+          "top": 68,
+          "right": 59,
+          "bottom": 84
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 66,
+          "right": 87,
+          "bottom": 82
+        },
+        {
+          "left": 41,
+          "top": 66,
+          "right": 59,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        },
+        {
+          "left": 41,
+          "top": 62,
+          "right": 59,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        },
+        {
+          "left": 41,
+          "top": 62,
+          "right": 59,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 64,
+          "right": 87,
+          "bottom": 80
+        },
+        {
+          "left": 41,
+          "top": 64,
+          "right": 59,
+          "bottom": 80
+        }
+      ],
+      [
+        {
+          "left": 41,
+          "top": 66,
+          "right": 59,
+          "bottom": 82
+        },
+        {
+          "left": 69,
+          "top": 66,
+          "right": 87,
+          "bottom": 82
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 62,
+          "right": 87,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 64,
+          "right": 87,
+          "bottom": 80
+        }
+      ],
+      [
+        {
+          "left": 67,
+          "top": 66,
+          "right": 87,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 69,
+          "top": 66,
+          "right": 89,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 71,
+          "top": 58,
+          "right": 89,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 71,
+          "top": 58,
+          "right": 89,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 71,
+          "top": 58,
+          "right": 89,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 71,
+          "top": 58,
+          "right": 89,
+          "bottom": 74
+        }
+      ]
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 40,
+          "top": 46,
+          "right": 58,
+          "bottom": 64
+        },
+        {
+          "left": 68,
+          "top": 46,
+          "right": 86,
+          "bottom": 64
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 48,
+          "right": 58,
+          "bottom": 66
+        },
+        {
+          "left": 68,
+          "top": 48,
+          "right": 86,
+          "bottom": 66
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 46,
+          "right": 58,
+          "bottom": 64
+        },
+        {
+          "left": 68,
+          "top": 46,
+          "right": 86,
+          "bottom": 64
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 44,
+          "right": 58,
+          "bottom": 62
+        },
+        {
+          "left": 68,
+          "top": 44,
+          "right": 86,
+          "bottom": 62
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 70,
+          "top": 58,
+          "right": 90,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 72,
+          "top": 58,
+          "right": 92,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 74,
+          "top": 58,
+          "right": 94,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 74,
+          "top": 58,
+          "right": 94,
+          "bottom": 74
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 68,
+          "top": 44,
+          "right": 84,
+          "bottom": 62
+        },
+        {
+          "left": 38,
+          "top": 44,
+          "right": 56,
+          "bottom": 62
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 44,
+          "right": 58,
+          "bottom": 62
+        },
+        {
+          "left": 68,
+          "top": 44,
+          "right": 86,
+          "bottom": 62
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 48,
+          "right": 88,
+          "bottom": 66
+        },
+        {
+          "left": 42,
+          "top": 48,
+          "right": 60,
+          "bottom": 66
+        }
+      ],
+      [
+        {
+          "left": 42,
+          "top": 50,
+          "right": 60,
+          "bottom": 68
+        },
+        {
+          "left": 70,
+          "top": 50,
+          "right": 88,
+          "bottom": 68
+        }
+      ],
+      [
+        {
+          "left": 68,
+          "top": 46,
+          "right": 86,
+          "bottom": 64
+        },
+        {
+          "left": 40,
+          "top": 46,
+          "right": 58,
+          "bottom": 64
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 44,
+          "right": 58,
+          "bottom": 62
+        },
+        {
+          "left": 68,
+          "top": 44,
+          "right": 86,
+          "bottom": 62
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 70,
+          "top": 60,
+          "right": 90,
+          "bottom": 76
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 62,
+          "right": 90,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 60,
+          "right": 90,
+          "bottom": 76
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 58,
+          "right": 90,
+          "bottom": 74
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 60,
+          "right": 90,
+          "bottom": 76
+        }
+      ],
+      [
+        {
+          "left": 70,
+          "top": 62,
+          "right": 90,
+          "bottom": 78
+        }
+      ],
+      [],
+      [],
+      []
+    ],
+    [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    [
+      [
+        {
+          "left": 40,
+          "top": 64,
+          "right": 58,
+          "bottom": 82
+        },
+        {
+          "left": 68,
+          "top": 64,
+          "right": 86,
+          "bottom": 82
+        }
+      ],
+      [
+        {
+          "left": 68,
+          "top": 68,
+          "right": 86,
+          "bottom": 86
+        },
+        {
+          "left": 40,
+          "top": 68,
+          "right": 58,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 66,
+          "top": 60,
+          "right": 84,
+          "bottom": 78
+        },
+        {
+          "left": 38,
+          "top": 60,
+          "right": 56,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 64,
+          "top": 60,
+          "right": 82,
+          "bottom": 78
+        },
+        {
+          "left": 36,
+          "top": 60,
+          "right": 54,
+          "bottom": 78
+        }
+      ],
+      [
+        {
+          "left": 38,
+          "top": 66,
+          "right": 56,
+          "bottom": 84
+        },
+        {
+          "left": 66,
+          "top": 66,
+          "right": 84,
+          "bottom": 84
+        }
+      ],
+      [
+        {
+          "left": 66,
+          "top": 70,
+          "right": 84,
+          "bottom": 88
+        },
+        {
+          "left": 38,
+          "top": 70,
+          "right": 56,
+          "bottom": 88
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 68,
+          "right": 58,
+          "bottom": 86
+        },
+        {
+          "left": 68,
+          "top": 68,
+          "right": 86,
+          "bottom": 86
+        }
+      ],
+      [
+        {
+          "left": 40,
+          "top": 64,
+          "right": 58,
+          "bottom": 82
+        },
+        {
+          "left": 68,
+          "top": 64,
+          "right": 86,
+          "bottom": 82
+        }
+      ],
+      []
+    ]
+  ]
+}

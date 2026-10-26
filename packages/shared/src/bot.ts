@@ -6,6 +6,8 @@ import { SPECIAL_PLANS, type SpecialContext } from "./bot-specials";
 import { conveyorDirection } from "./floor";
 import { updateSlides } from "./kick";
 import { stageTempoRate } from "./stage";
+import { playerElevated } from "./player-carry";
+import { stageSolid } from "./stage-obstacles";
 import {
   bombAt,
   DIR_VECTORS,
@@ -174,7 +176,7 @@ export class Bot {
 
   private choose(s: MatchState): PlayerInput {
     const p = s.players.find((q) => q.id === this.id);
-    if (!p || !p.alive || p.stun > 0 || p.jumpTicks > 0 || p.dashTicks > 0) return { dir: null, bomb: false };
+    if (!p || !p.alive || playerElevated(p) || p.stun > 0 || p.jumpTicks > 0 || p.dashTicks > 0) return { dir: null, bomb: false };
     const here = playerTile(p);
     const danger = dangerMap(s, this.id);
     const k = (x: number, y: number) => y * s.grid.width + x;
@@ -253,7 +255,7 @@ export class Bot {
     const here = playerTile(p);
 
     // Carrying a bomb (glove): throw it.
-    if (s.bombs.some((b) => b.heldBy === p.id)) return { dir: null, bomb: true };
+    if (s.bombs.some((b) => b.heldBy === p.id) || s.players.some(other => other.heldBy === p.id)) return { dir: null, bomb: true };
 
     // Remote bombs: set them off once we are clear and they would hit something.
     const remote = s.bombs.find((b) => b.ownerId === p.id && b.type === "remote" && !b.air && !b.heldBy);
@@ -410,6 +412,29 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
     if (!danger.has(k) || danger.get(k)! > t) danger.set(k, t);
   };
   for (const f of s.flames) mark(f.x, f.y, 0);
+  if (s.stageState || s.stage === "sb4-04") {
+    s.grid.floor.forEach((floor, index) => {
+      if (floor === Floor.Pit) mark(index % w, Math.floor(index / w), 0);
+    });
+    for (const ball of s.stageState?.balls ?? []) {
+      const x = Math.floor(ball.px / TILE);
+      const y = Math.floor(ball.py / TILE);
+      mark(x, y, 0);
+      if (!ball.dir) continue;
+      const [dx, dy] = DIR_VECTORS[ball.dir];
+      const reach = Math.min(3, Math.ceil((ball.travelRemaining ?? 8 * TILE) / TILE));
+      for (let offset = 1; offset <= reach && getTile(s, x + dx * offset, y + dy * offset) === Tile.Empty; offset++) mark(x + dx * offset, y + dy * offset, offset * 16);
+    }
+    const trolley = s.stageState?.trolley;
+    if (trolley?.riderId && trolley.route?.length && trolley.phase !== "leaving") {
+      const delay = trolley.phase === "boarding" ? trolley.phaseTicks ?? 0 : 0;
+      const index = trolley.index ?? 0;
+      for (let ahead = 0; ahead <= 32 && index + ahead < trolley.route.length; ahead++) {
+        const tile = trolley.route[index + ahead]!;
+        mark(Math.floor(tile.x + 0.5), Math.floor(tile.y + 0.5), delay + ahead);
+      }
+    }
+  }
   pressureDanger(s, mark);
 
   const bombs = s.bombs.filter((b) => !b.air && !b.heldBy);
@@ -522,7 +547,7 @@ function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">, occ =
       const x = b.x + dx * i;
       const y = b.y + dy * i;
       const tile = getTile(s, x, y);
-      if (tile === Tile.Wall) break;
+      if (tile === Tile.Wall || stageSolid(s, x, y)) break;
       tiles.push([x, y]);
       const k = y * s.grid.width + x;
       if (!pierce && (tile === Tile.Block || occ.bombs.has(k) || occ.items.has(k))) break;
@@ -552,7 +577,7 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
       const x = n.x + dx;
       const y = n.y + dy;
       const k = y * w + x;
-      if (seen.has(k) || getTile(s, x, y) !== Tile.Empty || bombs.has(k)) continue;
+      if (seen.has(k) || getTile(s, x, y) !== Tile.Empty || bombs.has(k) || stageSolid(s, x, y)) continue;
       const burns = danger.get(k);
       const through = (n.steps + 2) * perStep + lag + margin;
       if (burns !== undefined && (strict || burns <= through)) continue;
@@ -604,6 +629,9 @@ function bombValue(s: MatchState, p: Player, x: number, y: number, range = effec
   let value = 0;
   const tiles = blast(s, { x, y, range, type });
   for (const [tx, ty] of tiles) {
+    const flag = s.stageState?.flags?.find(f => !f.destroyed && f.x === tx && f.y === ty);
+    if (flag?.ownerId === p.id) return 0;
+    if (flag?.ownerId) value += 8;
     if (getTile(s, tx, ty) === Tile.Block) value += 1;
     if (s.players.some((o) => o.id !== p.id && o.alive && o.sneak === 0 && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
   }

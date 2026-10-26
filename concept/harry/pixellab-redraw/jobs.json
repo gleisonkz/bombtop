@@ -1,0 +1,153 @@
+{
+  "character_id": "b221a997-bdcf-4894-a052-7ee1a1c41985",
+  "jobs": {
+    "idle-south": {
+      "id": "5e9f48cd-dbf9-4e7b-b4a9-372b98900ada",
+      "receipt": "id: 5e9f48cd-dbf9-4e7b-b4a9-372b98900ada\njob_id: 5e9f48cd-dbf9-4e7b-b4a9-372b98900ada\naction: Facing the camera, very subtle breathing idle loop. Feet planted, wand relaxed down in right hand, eyes open with clear pupils and round transparent glasses. Keep pose, silhouette and exact approved fine detail. Do not blink, walk, turn or add anything. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: 8e653e0d-0a55-5250-b31d-eb488e2f24c3\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"5e9f48cd-dbf9-4e7b-b4a9-372b98900ada\")"
+    },
+    "walk-south": {
+      "id": "39e754a7-296e-481e-9e61-c8e709619ca6",
+      "receipt": "id: 39e754a7-296e-481e-9e61-c8e709619ca6\njob_id: 39e754a7-296e-481e-9e61-c8e709619ca6\naction: Facing the camera throughout, seamless walking-in-place cycle with six readable alternating steps, gentle natural arm swing, short robe sways with legs, wand held down safely in right hand. Fixed head size and face. Do not approach camera or turn. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: 0af53f55-34c4-5254-9afe-32f28be410fc\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"39e754a7-296e-481e-9e61-c8e709619ca6\")"
+    },
+    "stun": {
+      "id": "935d0d03-ed98-49d8-ab36-b12327410858",
+      "receipt": "id: 935d0d03-ed98-49d8-ab36-b12327410858\njob_id: 935d0d03-ed98-49d8-ab36-b12327410858\naction: Facing camera, a short stagger when struck: brace, recoil backward slightly, arms reflexively rise, knees bend, regain balance and stand. Keep glasses, hair, uniform and wand unchanged and correctly attached. No attacker or impact graphics. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: e975cbdd-86d7-5085-a161-296ef884a7f1\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"935d0d03-ed98-49d8-ab36-b12327410858\")"
+    },
+    "death": {
+      "id": "245df3b4-45ff-415f-8b61-60074b5c8afd",
+      "receipt": "id: 245df3b4-45ff-415f-8b61-60074b5c8afd\njob_id: 245df3b4-45ff-415f-8b61-60074b5c8afd\naction: Facing camera at first, lose balance and fall backward to the floor, ending lying down with legs out and wand still attached to hand. Complete visible figure including robe, shoes and hands, readable descent and final fallen pose. No disappearing, blood or effects. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: 383c4bca-8a0e-5e71-9783-d795abb2df6d\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"245df3b4-45ff-415f-8b61-60074b5c8afd\")"
+    },
+    "cast-south": {
+      "id": "829a0cfe-61c4-4f5c-af30-d895f6c911bc",
+      "receipt": "id: 829a0cfe-61c4-4f5c-af30-d895f6c911bc\njob_id: 829a0cfe-61c4-4f5c-af30-d895f6c911bc\naction: Facing camera throughout, raise the right wand hand from resting, pull elbow back to prepare, then thrust the wand straight forward toward the camera in the middle of the clip, hold the aimed gesture briefly, then return to rest. Left arm balances naturally. Wand stays a plain thin brown wooden stick. No magic is visible. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: f5a55cc3-5ebb-5338-b1b1-2ea093626cef\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"829a0cfe-61c4-4f5c-af30-d895f6c911bc\")"
+    },
+    "lobby": {
+      "id": "c2b1d916-06c4-4fbd-9491-126f5fa00dac",
+      "receipt": "id: c2b1d916-06c4-4fbd-9491-126f5fa00dac\njob_id: c2b1d916-06c4-4fbd-9491-126f5fa00dac\naction: Facing camera, confident wizard introduction: lift the plain brown wand in a graceful short flourish, pose proudly, lower the wand and return to the exact initial neutral stance. Feet stay nearly planted, natural shoulders and elbows. Keep full figure and face clearly readable. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: 8d1ce418-260f-5fba-8868-3eaabe5c68ce\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"c2b1d916-06c4-4fbd-9491-126f5fa00dac\")"
+    },
+    "victory": {
+      "id": "48b0e793-9eda-4820-8c53-6420a7f024ff",
+      "receipt": "id: 48b0e793-9eda-4820-8c53-6420a7f024ff\njob_id: 48b0e793-9eda-4820-8c53-6420a7f024ff\naction: Facing camera, cheerful victory celebration: smile, raise the free left fist, make one small joyful hop, land softly with bent knees, lower the fist and return to the starting upright pose. Keep the plain wand securely in right hand. No trophy, snitch, ball, particles or other props. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 16\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: 3f701c2e-a60c-58af-a193-161787cb0636\nasset_status: pending (saved when generation completes)\ncost: 7 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"48b0e793-9eda-4820-8c53-6420a7f024ff\")"
+    },
+    "carry-walk-south": {
+      "id": "d18dc310-ec67-482f-9b7d-2472153d9a0a",
+      "receipt": "id: d18dc310-ec67-482f-9b7d-2472153d9a0a\njob_id: d18dc310-ec67-482f-9b7d-2472153d9a0a\naction: Facing camera throughout, first stow the wand out of sight in the robe, quickly lift BOTH EMPTY hands ABOVE the head with palms UP and elbows bent naturally, then walk in place in a seamless alternating-step cycle while keeping both hands raised and level above the head throughout the latter half. No held item, both palms empty and open. Do not lower hands or turn. Preserve this EXACT approved Harry character and its crisp high-definition illustrated sprite finish, facial details, transparent glasses, small iris and black pupils, hair, costume and native scale. Fixed camera, stationary centered full figure, transparent background. ONLY the character; no Patronus, magic, aura, glow, sparks, particles, sphere, ball, bomb, smoke, shadow or backdrop. No pixelation or style simplification.\nframes: 16\nsize: 160x160px\ntransparent: True\nseed: 20261101\nasset_id: e366c150-cbf4-55cf-83fa-0c58ca4a0e85\nasset_status: pending (saved when generation completes)\ncost: 7 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"d18dc310-ec67-482f-9b7d-2472153d9a0a\")"
+    },
+    "idle-east": {
+      "id": "6f8b790b-8ac5-4f9d-aabb-ba214e53614b",
+      "receipt": "id: 6f8b790b-8ac5-4f9d-aabb-ba214e53614b\njob_id: 6f8b790b-8ac5-4f9d-aabb-ba214e53614b\naction: STRICT RIGHT SIDE PROFILE, facing RIGHT throughout, one visible eye behind glasses. Subtle breathing idle loop. Keep both feet planted, wand relaxed down in right hand. Only chest breathes slightly. Keep eyes open, do not walk or rotate. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: 1d64c149-9aa0-5a44-928c-a3e212e458c8\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"6f8b790b-8ac5-4f9d-aabb-ba214e53614b\")"
+    },
+    "walk-east": {
+      "id": "55c1c001-1460-45dd-8fe6-a6e7e71fe7a5",
+      "receipt": "id: 55c1c001-1460-45dd-8fe6-a6e7e71fe7a5\njob_id: 55c1c001-1460-45dd-8fe6-a6e7e71fe7a5\naction: STRICT RIGHT SIDE PROFILE, facing RIGHT throughout, one visible eye behind glasses. Seamless walking-in-place cycle, six alternating natural steps, robe hem sways with legs, wand relaxed down in right hand. No translation or rotation. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: 04b6b1f5-6956-5a5d-a425-ce6bbea79b43\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"55c1c001-1460-45dd-8fe6-a6e7e71fe7a5\")"
+    },
+    "cast-east": {
+      "id": "3f85746f-76ea-4721-be75-6639fcbf6f62",
+      "receipt": "id: 3f85746f-76ea-4721-be75-6639fcbf6f62\njob_id: 3f85746f-76ea-4721-be75-6639fcbf6f62\naction: STRICT RIGHT SIDE PROFILE, facing RIGHT throughout, one visible eye behind glasses. Plain wand gesture: raise right wand hand, pull elbow back, thrust the thin brown wand straight in the facing direction in the middle of the clip, hold briefly then recover to rest. Keep shoulders and wrists anatomically connected. Wand remains a plain wooden stick with no visible spell. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: 2c298ec7-52be-52c4-80ba-a43ea3202e22\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"3f85746f-76ea-4721-be75-6639fcbf6f62\")"
+    },
+    "carry-walk-east": {
+      "id": "f3c20df5-b7fd-4042-83e5-b3635fb7e74d",
+      "receipt": "id: f3c20df5-b7fd-4042-83e5-b3635fb7e74d\njob_id: f3c20df5-b7fd-4042-83e5-b3635fb7e74d\naction: STRICT RIGHT SIDE PROFILE, facing RIGHT throughout, one visible eye behind glasses. Stow the wand out of sight in robe, immediately lift BOTH EMPTY hands above the head with palms facing UP and elbows bent naturally. Then walk in place in a seamless cycle for the rest of the clip, hands stay above the head at fixed height during the latter half. Both hands must remain EMPTY, open and correctly attached. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 16\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: b3bef2a4-a0b2-5a0c-9968-4ae1d6166b3d\nasset_status: pending (saved when generation completes)\ncost: 7 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"f3c20df5-b7fd-4042-83e5-b3635fb7e74d\")"
+    },
+    "idle-north": {
+      "id": "1ff17f42-cf90-4f73-a592-1df2677c4001",
+      "receipt": "id: 1ff17f42-cf90-4f73-a592-1df2677c4001\njob_id: 1ff17f42-cf90-4f73-a592-1df2677c4001\naction: BACK VIEW facing AWAY from camera throughout. Back of hair and robe visible; NO eyes or face visible; do not turn around. Subtle breathing idle loop. Keep both feet planted, wand relaxed down in right hand. Only chest breathes slightly. Keep eyes open, do not walk or rotate. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: ea9b7c0a-38ab-5729-be8e-4531526c61ea\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"1ff17f42-cf90-4f73-a592-1df2677c4001\")"
+    },
+    "walk-north": {
+      "id": "df523f58-30de-4333-8640-88f3de10a40a",
+      "receipt": "id: df523f58-30de-4333-8640-88f3de10a40a\njob_id: df523f58-30de-4333-8640-88f3de10a40a\naction: BACK VIEW facing AWAY from camera throughout. Back of hair and robe visible; NO eyes or face visible; do not turn around. Seamless walking-in-place cycle, six alternating natural steps, robe hem sways with legs, wand relaxed down in right hand. No translation or rotation. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: 97396fe6-c524-5fa2-8de2-ec937fc28a01\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"df523f58-30de-4333-8640-88f3de10a40a\")"
+    },
+    "cast-north": {
+      "id": "0e5e2a1e-b837-44ef-842e-77bcbd589e48",
+      "receipt": "id: 0e5e2a1e-b837-44ef-842e-77bcbd589e48\njob_id: 0e5e2a1e-b837-44ef-842e-77bcbd589e48\naction: BACK VIEW facing AWAY from camera throughout. Back of hair and robe visible; NO eyes or face visible; do not turn around. Plain wand gesture: raise right wand hand, pull elbow back, thrust the thin brown wand straight in the facing direction in the middle of the clip, hold briefly then recover to rest. Keep shoulders and wrists anatomically connected. Wand remains a plain wooden stick with no visible spell. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: d6e84f3b-1126-55a4-98b9-d4e1981fd421\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"0e5e2a1e-b837-44ef-842e-77bcbd589e48\")"
+    },
+    "carry-walk-north": {
+      "id": "efdf8cf1-a441-400f-b365-b2ae3c1bc1c9",
+      "receipt": "id: efdf8cf1-a441-400f-b365-b2ae3c1bc1c9\njob_id: efdf8cf1-a441-400f-b365-b2ae3c1bc1c9\naction: BACK VIEW facing AWAY from camera throughout. Back of hair and robe visible; NO eyes or face visible; do not turn around. Stow the wand out of sight in robe, immediately lift BOTH EMPTY hands above the head with palms facing UP and elbows bent naturally. Then walk in place in a seamless cycle for the rest of the clip, hands stay above the head at fixed height during the latter half. Both hands must remain EMPTY, open and correctly attached. Preserve EXACT approved fine detailed Harry appearance, head size, outfit and native scale. Locked camera, stationary centered complete figure. Character ONLY on transparent background. No magic, Patronus, glow, sphere, ball, bomb, particles, floor shadow, additional object or effects. Do not simplify the face or pixelate the art.\nframes: 16\nsize: 160x160px\ntransparent: True\nseed: 20261102\nasset_id: 37b85222-5244-5af5-9e4c-df5a86a1cfda\nasset_status: pending (saved when generation completes)\ncost: 7 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"efdf8cf1-a441-400f-b365-b2ae3c1bc1c9\")"
+    },
+    "carry-pose-south": {
+      "id": "29dba103-2f9b-46a9-87e8-7b5062664162",
+      "receipt": "id: 29dba103-2f9b-46a9-87e8-7b5062664162\njob_id: 29dba103-2f9b-46a9-87e8-7b5062664162\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: FRONT VIEW, eyes facing camera. Edit ONLY the arms into a raised overhead pose. BOTH hands up HIGH ABOVE the top of the hair, palms turned UP, fingers gently curved, elbows bent beside head, complete naturally connected shoulders and wrists. Hide the wand inside robe; both hands EMPTY. Keep exact head, face, glasses with open eyes, finely defined hair, costume, legs, shoes, scale and fine high-definition sprite finish from input. Leave enough top margin for raised hands. Do not turn to another view or simplify details. Entire character visible. Transparent background. No object, sphere, ball, bomb, magic, glow or effects.\nseed: 20261103\nasset_id: cfbc7fc8-c9e2-591a-b7d8-fe8e6dbc5cea\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"29dba103-2f9b-46a9-87e8-7b5062664162\")"
+    },
+    "carry-pose-east": {
+      "id": "b24e1151-4096-4de3-b8f4-7a7f2cbd7c1f",
+      "receipt": "id: b24e1151-4096-4de3-b8f4-7a7f2cbd7c1f\njob_id: b24e1151-4096-4de3-b8f4-7a7f2cbd7c1f\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: STRICT RIGHT SIDE PROFILE facing RIGHT, only one eye visible. Edit ONLY the arms into a raised overhead pose. BOTH hands up HIGH ABOVE the top of the hair, palms turned UP, fingers gently curved, elbows bent beside head, complete naturally connected shoulders and wrists. Hide the wand inside robe; both hands EMPTY. Keep exact head, face, glasses with open eyes, finely defined hair, costume, legs, shoes, scale and fine high-definition sprite finish from input. Leave enough top margin for raised hands. Do not turn to another view or simplify details. Entire character visible. Transparent background. No object, sphere, ball, bomb, magic, glow or effects.\nseed: 20261103\nasset_id: c75c0376-d14b-5917-97d7-34d616e438fc\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"b24e1151-4096-4de3-b8f4-7a7f2cbd7c1f\")"
+    },
+    "carry-pose-north": {
+      "id": "8f0ea4fd-d957-474a-9a05-37c6326c7894",
+      "receipt": "id: 8f0ea4fd-d957-474a-9a05-37c6326c7894\njob_id: 8f0ea4fd-d957-474a-9a05-37c6326c7894\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: STRICT BACK VIEW facing AWAY, back of hair and robe visible, NO face or eyes. Edit ONLY the arms into a raised overhead pose. BOTH hands up HIGH ABOVE the top of the hair, palms turned UP, fingers gently curved, elbows bent beside head, complete naturally connected shoulders and wrists. Hide the wand inside robe; both hands EMPTY. Keep exact head, face, glasses with open eyes, finely defined hair, costume, legs, shoes, scale and fine high-definition sprite finish from input. Leave enough top margin for raised hands. Do not turn to another view or simplify details. Entire character visible. Transparent background. No object, sphere, ball, bomb, magic, glow or effects.\nseed: 20261103\nasset_id: 9af30041-3a6c-5c4f-97cf-9324c23407c2\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"8f0ea4fd-d957-474a-9a05-37c6326c7894\")"
+    },
+    "carry-idle-south": {
+      "id": "b72c6072-dfbc-4ab4-9d31-88c239d88ec4",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "b72c6072-dfbc-4ab4-9d31-88c239d88ec4",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-south\\0.png",
+      "action": "Front view facing the camera. Subtle breathing idle in this exact raised-arms pose. Feet planted, legs still. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    },
+    "carry-loop-south": {
+      "id": "194708b3-fb49-4974-b7c0-2c5164ba60c8",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "194708b3-fb49-4974-b7c0-2c5164ba60c8",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-south\\0.png",
+      "action": "Front view facing the camera. Seamless walking-in-place loop, six alternating natural steps and gentle robe sway. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    },
+    "carry-idle-east": {
+      "id": "c9c4a564-031a-4181-8dfb-3003d585746e",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "c9c4a564-031a-4181-8dfb-3003d585746e",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-east\\0.png",
+      "action": "Strict right side profile facing right; never turn. Subtle breathing idle in this exact raised-arms pose. Feet planted, legs still. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    },
+    "carry-loop-east": {
+      "id": "05c06300-341e-43ac-b20d-04130e72cd7a",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "05c06300-341e-43ac-b20d-04130e72cd7a",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-east\\0.png",
+      "action": "Strict right side profile facing right; never turn. Seamless walking-in-place loop, six alternating natural steps and gentle robe sway. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    },
+    "carry-idle-north": {
+      "id": "b9cdc5b4-534e-418c-a738-962c8d86d685",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "b9cdc5b4-534e-418c-a738-962c8d86d685",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-north\\0.png",
+      "action": "Back view facing away; no face or eyes visible; never turn. Subtle breathing idle in this exact raised-arms pose. Feet planted, legs still. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    },
+    "carry-loop-north": {
+      "id": "086461ce-00dd-475a-85c7-acdb6fc4339e",
+      "receipt": {
+        "usage": null,
+        "background_job_id": "086461ce-00dd-475a-85c7-acdb6fc4339e",
+        "status": "processing",
+        "enhanced_prompt": null,
+        "enhance_usage": null
+      },
+      "source": "frames\\carry-pose-north\\0.png",
+      "action": "Back view facing away; no face or eyes visible; never turn. Seamless walking-in-place loop, six alternating natural steps and gentle robe sway. BOTH hands must stay ABOVE the head at fixed height in every frame, palms UP, elbows bent naturally, both hands EMPTY. Preserve this exact Harry face, open eyes, round glasses, hair, uniform, detail and native scale. No lowering the hands. Character only, transparent background, locked camera. No wand, objects, balls, spheres, bombs, magic, Patronus, glow, particles or shadows."
+    }
+  }
+}

@@ -24,6 +24,11 @@ const drawn = (v: PublicView) => {
 };
 
 describe("KickPrediction", () => {
+  it.each([{ heldBy: "them" }, { thrown: { dir: "right", span: 3, tilesLeft: 3, progress: 0 } }])("does not kick while carried or thrown: %j", status => {
+    const { view, me } = scene();
+    Object.assign(me, status);
+    expect(new KickPrediction().check(view, me, "right", 0)).toBeNull();
+  });
   it.each([4, 5])("hands a kick on or approaching belt column %s to the server", (x) => {
     const k = new KickPrediction();
     const { view, me } = scene();

@@ -1,0 +1,145 @@
+[
+  {
+    "row": "carryIdle.down",
+    "action": "carry-idle",
+    "direction": "south",
+    "indices": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "source_sha256": [
+      "d0d77120beb55e4fdd86b81c94224a56be9d3aa8827c979eeab53ac483d9be05",
+      "78e9e9e4f46f23bdb5e6ea5626f7f0ce4590b48403b25a4e69be4bc00236461f",
+      "72169d1a99833f78aec92a1860751cc04815ec173fc18e947ead140ab594e2cb",
+      "ae271b1ff65046f1a6207ba91bfcf809300006e0a67332f0cde088288cd9873b"
+    ]
+  },
+  {
+    "row": "carryIdle.side",
+    "action": "carry-idle",
+    "direction": "east",
+    "indices": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "source_sha256": [
+      "e1acbd8bcf87c60f3b17c01f8bbeaf6e64dacc296fab285bf5f3db4f7daaea4d",
+      "59df4c824a4198fe524f9c37df510c7f140ffd0005594df9cb586a3d64076757",
+      "aee61bb5e07d338a390d2c2bf8b00fd0e7d3800ddef4bef8a16ba6d42ba4c440",
+      "e92713685be5ffb78238df922513a45f288496f87f01c52159ac3cff46b04683"
+    ]
+  },
+  {
+    "row": "carryIdle.up",
+    "action": "carry-idle",
+    "direction": "north",
+    "indices": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "source_sha256": [
+      "139f748402f891c6e69d3da383efd60efb845fa24f1567ac3ecf89adabe87e63",
+      "fd60d80a43ca751733b4de4ffcd311dcff7c0429fee68f3957f10e4c095158b9",
+      "a31c11a2d1469c45ac94473bb0731208eec34c0e6782e42a3cde05b6cca79f5a",
+      "a489295596e057c7af5a50e166b8f62c4110e4c086c0a7340b1fe552b6b3190e"
+    ]
+  },
+  {
+    "row": "carryWalk.down",
+    "action": "carry-walk",
+    "direction": "south",
+    "indices": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "source_sha256": [
+      "60918417e4a421dc389484c72299715f563b6c6ee81fd30d6b9a305fcb2c5dc6",
+      "762b911e94f87d2d3807b6047b97393a01de718aa31ba79a9820bd118c47346a",
+      "0b53c7f77b7195ea4638c6917cf9fe2fc13bfc5ce8b22fe2649e548e881e3322",
+      "bdc51fc4028efcf55b2042c189a1234e50e4121b34d0db24ff543b97289cbc49",
+      "365e4d9df9fb96023279aaa0ba50a0365a0df573c43e7ad59829dbf1c7f9bc78",
+      "3e89af170a20e099b070ed77f3baad7bcab0fbb7421de69ce1b70bf13577b18f"
+    ]
+  },
+  {
+    "row": "carryWalk.side",
+    "action": "carry-walk",
+    "direction": "east",
+    "indices": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "source_sha256": [
+      "e7501e80cb9412ef86b4c37d28eca76aa4c4ab03f194a796d9cce081dffab9f1",
+      "6f6d807c2fbdc19af7c0381630247dc223f3dd43ace0f2fc1564a02df1057e77",
+      "e40b859c7d745ec5251f41b22e863ed294e6c8d7722ec91c522cecfc60d3dcb3",
+      "7733346ee70f08d56bf395adea21ccaf4357646173045f0252b298b64f5acfd4",
+      "0c8d08de95ffec4242fda9294e695f51c3e6dfb13f2bd767cfa7e3901c3c4e75",
+      "7b05c3fdfc9e3e637f6e94a80f9bb6387cc8a49162d5dd78f89e253b56b7b176"
+    ]
+  },
+  {
+    "row": "carryWalk.up",
+    "action": "carry-walk",
+    "direction": "north",
+    "indices": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "source_sha256": [
+      "ee5b38aa35715c08736c56994cb7a7637d3bba3aacea0ab8d06b2a6d08f1624a",
+      "43808597462064dd7251203c8756ee8dea4fe12f515cc01ff73d5b74adf7bb99",
+      "08b85c255c03ef530d812b05f9962e235b6e3d0b8a4f0f2660f9e64677409616",
+      "f9e002b22ba97a0c7e8d12f0e83cc48a26fce28fb7aa0bb1e3e356a23dbf42a5",
+      "c79523b7e3639ee767f56b2353ad0cab5c21f2e87c27e9910bd7278a12add2ae",
+      "f9e6a544d072f9f1d9b8e3556db4a921ef7777787a98ef574096ecc3dca47c94"
+    ]
+  },
+  {
+    "row": "cast.up",
+    "action": "cast-north",
+    "indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      7,
+      9,
+      10
+    ]
+  },
+  {
+    "row": "lobby",
+    "action": "lobby",
+    "indices": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  }
+]

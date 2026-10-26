@@ -36,6 +36,7 @@ export class RemoteMotion {
     const players = view.players.map((p) => {
       if (p.id === this.me) return p;
       const from = sample.from.players.find((q) => q.id === p.id) ?? p;
+      if (p.heldBy || p.thrown || from.heldBy || from.thrown) return p;
       const target = sample.pastMs > 0 ? p : between(from, p, sample.alpha);
       const previous = this.drawn.get(p.id);
       let dx = (previous?.dx ?? 0) * decay;

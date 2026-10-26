@@ -17,6 +17,20 @@ function frame(tick = 2, x = 896): Sample {
 const xOf = (view: PublicView) => view.players[1]!.px;
 
 describe("remote motion recovery", () => {
+  it.each([{ heldBy: "me" }, { thrown: { dir: "right", span: 3, tilesLeft: 3, progress: 0 } }])("uses authoritative cargo and flight positions without old interpolation: %j", status => {
+    const motion = new RemoteMotion("me");
+    motion.sample(frame(), 0);
+    const sample = frame(4, 960);
+    sample.pastMs = 0;
+    sample.alpha = 0.25;
+    Object.assign(sample.to.players[1]!, status);
+    expect(motion.sample(sample, 16).players[1]).toEqual(sample.to.players[1]);
+    const landed = frame(6, 992);
+    landed.from = sample.to;
+    landed.pastMs = 0;
+    landed.alpha = 0.25;
+    expect(motion.sample(landed, 32).players[1]).toEqual(landed.to.players[1]);
+  });
   it("keeps progressing when every rendered frame gets a late snapshot", () => {
     const motion = new RemoteMotion("me");
     let previous = xOf(motion.sample(frame(), 0));

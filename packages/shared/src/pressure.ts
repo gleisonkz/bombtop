@@ -42,7 +42,7 @@ export function updatePressure(s: MatchState): void {
   // falling now: a player half across a tile's edge as it fell ended up inside it, alive, and the match never ended.
   for (const p of s.players) {
     const t = playerTile(p);
-    if (p.alive && getTile(s, t.x, t.y) === Tile.Wall) p.alive = false;
+    if (p.alive && !p.thrown && getTile(s, t.x, t.y) === Tile.Wall) p.alive = false;
   }
 }
 

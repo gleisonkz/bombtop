@@ -1,0 +1,31 @@
+{
+  "reference": "../pixellab-preview/option-1.png",
+  "character_id": "cd1e6b70-42c2-43d0-b5d6-10a3a3e47109",
+  "jobs": {
+    "idle-south": "ba5be5ae-3331-439f-b7d3-6bd9b662d5d5",
+    "walk-south": "224dda69-86c9-49cc-bc6a-21409abff724",
+    "stun-south": "ae91ea82-deec-44aa-b261-be47cd7bdd93",
+    "death-south": "2377aa54-a3ea-4b17-b917-68c9b28a0b63",
+    "cast-south": "1b371afc-1707-4e06-b4d9-40cf01bf3766",
+    "lobby-south": "19016ed2-4534-4f37-b8f5-2472b52f4f70",
+    "idle-east": "d8dc1011-794c-44a7-882b-9c29d0b5d376",
+    "walk-east": "e41a67a1-44c5-4202-8810-2dc07bef2281",
+    "cast-east": "8c9b4350-f076-4cfb-8c55-593921cb154e",
+    "idle-north": "0038bbed-fcbe-4fba-8467-ba5f68abc961",
+    "walk-north": "b1a6284b-3ce5-4821-b771-3edca8b1a1a5",
+    "cast-north": "233354a2-369c-485e-99e2-9d3ed704dc50",
+    "carryIdle-south": "7f9d1919-4e5c-48a7-8d9c-409bb57b46df",
+    "carryWalk-south": "6e49de64-a7aa-4006-b9cc-4744706e6a40",
+    "carryIdle-east": "0579af40-8faf-4e8e-895a-09f8819d0619",
+    "carryWalk-east": "2f0f0c22-8441-4843-b406-e66fcf311344",
+    "carryIdle-north": "030afaec-2b26-486f-8edc-0bf7443d3302",
+    "carryWalk-north": "08b598fe-f8c9-4387-9bd2-f5ee8196c53b",
+    "earfix-2": "f8eeca51-fffb-4c1e-bff7-7c7f3315d668",
+    "earfix-3": "1e704550-8f9a-4387-aead-a7bec2f7014d",
+    "earfix-4": "eedc809a-ccf4-4f61-9f1b-056688e8d3da",
+    "earfix-5": "0d2e0363-a2ca-4680-83a3-86f64ccf1e7e",
+    "earfix-6": "4f57c0de-31cc-44fe-9466-22ddbbf19de7"
+  },
+  "carry_character_id": "8fa45560-e08e-4467-b238-5bb9b51fd942",
+  "frame_counts": {"earfix-2": 1, "earfix-3": 1, "earfix-4": 1, "earfix-5": 1, "earfix-6": 1}
+}

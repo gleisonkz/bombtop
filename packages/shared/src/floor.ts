@@ -1,5 +1,6 @@
 import { CONVEYOR_SPEED } from "./constants";
 import { movePlayer } from "./movement";
+import { playerElevated } from "./player-carry";
 import { Floor, getFloor, playerTile, tileCenter, type Facing, type MatchState } from "./state";
 
 const BELTS: Partial<Record<Floor, Facing>> = {
@@ -16,7 +17,7 @@ export function conveyorDirection(floor: Floor): Facing | undefined {
 /** Conveyor belts carry players; warps teleport them to the paired warp. */
 export function applyFloor(s: MatchState): void {
   for (const p of s.players) {
-    if (!p.alive || p.jumpTicks > 0) continue;
+    if (!p.alive || p.jumpTicks > 0 || playerElevated(p)) continue;
     const { x, y } = playerTile(p);
     const floor = getFloor(s, x, y);
 

@@ -23,6 +23,11 @@ const posOf = (v: PublicView) => {
 };
 
 describe("carryOn", () => {
+  it.each([{ heldBy: "b" }, { thrown: { dir: "right", span: 3, tilesLeft: 3, progress: 0 } }])("does not extrapolate cargo or flight: %j", status => {
+    const { from, to } = moved(32, 0);
+    Object.assign(to.players[0]!, status);
+    expect(carryOn(from, to, 100).players[0]).toEqual(to.players[0]);
+  });
   it("keeps a walking player walking the same way while the next snapshot is late", () => {
     const { from, to } = moved(32, 0);
     expect(posOf(carryOn(from, to, 100))).toEqual({ px: CENTER + 6 * 16, py: CENTER });

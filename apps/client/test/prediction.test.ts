@@ -10,6 +10,26 @@ function snapshot(acks: Snapshot["acks"] = {}): Snapshot {
 }
 
 describe("Predictor", () => {
+  it("queues hold and release while captured and replays only inputs newer than the release ack", () => {
+    const predictor = new Predictor("me");
+    const held = snapshot();
+    held.players[0]!.heldBy = "them";
+    expect(predictor.step(input("right", { hold: true }))).toBe(1);
+    expect(predictor.predict(held)).toEqual(held.players[0]);
+    expect(predictor.step(input(null))).toBe(2);
+    expect(predictor.predict(held)).toEqual(held.players[0]);
+    const released = snapshot({ me: { seq: 2, ticks: 1 } });
+    expect(predictor.step(input("right"))).toBe(3);
+    expect(predictor.predict(released)!.px).toBe(released.players[0]!.px + released.players[0]!.speed);
+  });
+  it.each([{ heldBy: "them" }, { thrown: { dir: "right", span: 3, tilesLeft: 3, progress: 0 } }])("freezes authoritative cargo and flight: %j", status => {
+    const snap = snapshot();
+    Object.assign(snap.players[0]!, status);
+    const predictor = new Predictor("me");
+    predictor.step(input("right"));
+    predictor.step(input("right"));
+    expect(predictor.predict(snap)).toEqual(snap.players[0]);
+  });
   it("only asks to send when the input changes or a button is pressed", () => {
     const p = new Predictor("me");
     expect(p.step(input("right"))).toBe(1);

@@ -1,57 +1,43 @@
-# Spider — PixelLab e animação convencional
+# Homem-Aranha — spritesheet PixelLab
 
-Personagem de origem: https://www.pixellab.ai/create-character/439a18c5-85aa-4455-ac5a-f40f73947f85
+Atlas ativo: `apps/client/public/sprites/spider.png`. **108 quadros RGBA**, grade 9×18, células 130×161, âncora (64,5;155). Todas as poses são somente o personagem; objetos, bombas, teias e efeitos pertencem ao jogo.
 
-Atlas completo integrado em `apps/client/public/sprites/spider.png`: **108 células ocupadas**, com transparência, grade de 9×18, células de 130×161 e âncora (64,5; 155). Células excedentes transparentes; o renderer espelha a vista direita para o lado esquerdo.
+## Origem
 
-## Origem dos pixels
+Personagem original PixelLab: https://www.pixellab.ai/create-character/439a18c5-85aa-4455-ac5a-f40f73947f85
 
-`source-progress.zip` e `export/` conservam a exportação PixelLab sem retoques. O transporte original não servia diretamente: os braços começavam baixos e o perfil não erguia as mãos. A criação de uma referência nova ficou sem créditos, e o gerador alternativo não entregou imagem.
+Foram preservados **61 frames do free tier**, linhas 0–9, com os mesmos pixels. **47 poses novas** geradas pela API PixelLab substituem o disparo de costas, o transporte parado/andando nas três direções e a apresentação. As fontes antigas permanecem em `export/`; o rig anterior foi arquivado e não participa do atlas ativo.
 
-O usuário escolheu completar por **edição e animação convencional**, sem nova geração por IA. `rig-spider-pixellab.py` usa Pillow 11.2.1, biblioteca open source já instalada, para recortar partes existentes, articulá-las e compor frames com nearest-neighbor. Os métodos `Image.crop`, `Image.rotate` e `Image.resize` foram conferidos na documentação da instalação utilizada.
+As poses novas estão em `api-generated/`. `provenance.json` registra os índices escolhidos e hashes de origem. Os arquivos em `packed-sources/` somente retiram margem transparente e completam a tela para 96×96, sem redimensionar ou reconstruir membros. O empacotamento usa nearest-neighbor 2× e uma translação fixa por linha. Nenhum frame do atlas ativo contém a bolinha cinza da tentativa rejeitada.
 
-Os passos e pixels opacos da máscara são preservados nos seis frames de transporte por direção. Os braços seguem articulações de ombro, cotovelo e punho, compostas com tons originais do traje. As luvas são recortes do PixelLab redimensionados com nearest-neighbor e posicionados no mesmo punho ao longo de cada movimento. Há quatro poses respirando e seis passos por direção. A apresentação contém oito poses articuladas: repouso, braço erguido, sustentação, salto, descida, agachamento, recuperação e postura final. As pernas do salto e do agachamento também seguem articulações de quadril, joelho e tornozelo para evitar cortes e fragmentos soltos. Ela substitui a apresentação antiga no menu e nos resultados.
+## Posições do jogo
 
-A revisão detectou que o disparo de costas gerado apontava a mão para a direita. Essa linha foi refeita com o mesmo rig, mantendo as costas e uma extensão para cima. O disparo permanece na coluna 5. Frente e lado usam frames PixelLab mapeados explicitamente; a sustentação final lateral é um hold intencional.
+| Linhas (base zero) | Ação | Quadros por linha |
+| --- | --- | --- |
+| 0–2 | Parado: frente, direita, costas | 4 |
+| 3–5 | Andando: frente, direita, costas | 6 |
+| 6 | Dano | 6 |
+| 7 | Derrota | 7 |
+| 8–10 | Disparo: frente, direita, costas | 9 |
+| 11–13 | Transporte parado: frente, direita, costas | 4 |
+| 14–16 | Transporte andando: frente, direita, costas | 6 |
+| 17 | Apresentação | 8 |
 
-## Contrato
+O lado esquerdo é espelhado pelo renderer. Células excedentes permanecem transparentes. Os pontos das palmas foram registrados novamente; os olhos claros estão protegidos na troca da cor do traje. O disparo de costas usa sua nova posição de mão.
 
-| Linhas, base zero | Ação | Frames por linha | Vistas |
-| --- | --- | --- | --- |
-| 0–2 | Idle | 4 | frente, direita, costas |
-| 3–5 | Caminhada | 6 | frente, direita, costas |
-| 6 | Dano | 6 | frente |
-| 7 | Derrota | 7 | frente |
-| 8–10 | Disparo da teia | 9 | frente, direita, costas |
-| 11–13 | Transporte parado | 4 | frente, direita, costas |
-| 14–16 | Transporte andando | 6 | frente, direita, costas |
-| 17 | Apresentação | 8 | frente |
+## Reprodução
 
-Corpo medido: 124 px. Escala de arena: 0,1703871, conservando a altura aparente anterior de aproximadamente 21,13 px. A apresentação mede 122 px na pose inicial. Teia e bomba continuam pertencendo ao renderer, sem objetos incorporados ao corpo.
-
-## Arquivos de edição e metadados
-
-- `manifest.json`: mapeamento explícito de 108 frames e registro por linha.
-- `rigged/parts/`: recortes para edição convencional.
-- `rigged/report.json`: fontes, poses, cabeças, palmas e parâmetros de composição.
-- `rigged/palms.json`: 50 pontos de palma em 30 poses, nas coordenadas finais.
-- `spider-paint-regions.json`: proteção dos tons claros dos olhos na recoloração.
-- `runtime-metadata.json`: corpo, escala, limites do menu, retrato e origem dos disparos.
-- `rigged/review.png`, `rigged/carry-south.gif`, `rigged/carry-east.gif`, `rigged/carry-north.gif`, `rigged/presentation.gif`: revisão visual.
-
-## Reprodução, a partir da raiz
+Não executar `rig-spider-pixellab.py` para esta versão: ele representa o método convencional anterior e substitui o mapeamento.
 
 ```powershell
-python apps/client/scripts/rig-spider-pixellab.py
+python concept/spider/pixellab/integrate-api.py
 python apps/client/scripts/pack-spider-pixellab.py --output concept/spider/pixellab/spider-candidate.png > concept/spider/pixellab/candidate-report.json
 python apps/client/scripts/finalize-spider-pixellab.py --promote
 python apps/client/scripts/build-carry-anchors.py --character spider
 ```
 
-O empacotador rejeita fontes ausentes, contagens incorretas e cortes antes de gravar. O finalizador preserva os demais personagens nos JSON compartilhados. Os campos Spider em `sprites.ts` e `cast-layout.ts` correspondem a `runtime-metadata.json`.
+`collect-api.py` apenas baixa jobs existentes; não inicia gerações. A chave permanece no ambiente Windows `PIXELLAB_API_KEY`, fora do projeto. Os arquivos `api-*-job.json` registram os identificadores dos jobs. Tentativas rejeitadas não são referenciadas pelo manifesto.
 
-## Verificação
+## Revisão
 
-Passaram 14 testes do packer, 9 do rig, 7 de carry e 2 de retrato; 134 testes focados do cliente, além de typecheck e build do cliente. Os testes verificam máscara e passos originais, paleta somente de fontes existentes, ombro/cotovelo/punho ligados, ausência de membros soltos na apresentação, palmas visíveis, poses distintas, atlas promovido e direção do disparo de costas.
-
-O Browser Bridge verificou a página local `/personagens`, com Homem-Aranha selecionado e as animações renderizadas. A inspeção visual cobriu os sprites e a apresentação; os pontos de encaixe da bomba foram verificados pelos testes e pelos pixels das palmas.
+A pedido do usuário, a aprovação visual detalhada será feita por ele no spritesheet final. Foram verificadas grade, transparência, recortes, contagens, preservação das linhas do free tier e correspondência das palmas com os pixels. Prévias em `api-generated/carry-preview.gif` e `presentation-preview.gif` são montadas diretamente das células de produção.

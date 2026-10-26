@@ -1,0 +1,9 @@
+{
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "seed": 32187,
+  "strength": 0.28,
+  "identity_lora": 0.15,
+  "style_lora": 0.25,
+  "palette_colors": 24,
+  "note": "Previews with opaque background, not production sprites or trained custom LoRA."
+}

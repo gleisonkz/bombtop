@@ -2,6 +2,8 @@ import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE
 import type { MascotView, Mood } from "../ui/art";
 import bomberPaintRegions from "./bomber-paint-regions.json";
 import staticPaintRegions from "./static-paint-regions.json";
+import spiderPaintRegions from "./spider-paint-regions.json";
+import lanternPaintRegions from "./lantern-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
 
 type Rgb = readonly [number, number, number];
@@ -177,16 +179,16 @@ export const SHEETS = {
     hueBase: [8, 59, 137],
     scale: 0.15,
   },
-  /** Reference-redrawn Naruto; original 108-frame animation contract (scripts/pack-naruto.py). */
+  /** Approved Naruto model; original 108-frame poses (scripts/pack-naruto-approved.py). */
   naruto: {
-    url: "sprites/naruto.png?v=classic-reference-2",
-    width: 720,
-    height: 2088,
-    frameW: 80,
-    frameH: 116,
-    anchorX: 40,
-    anchorY: 112,
-    bodyH: 111,
+    url: "sprites/naruto.png?v=20261026-approved-base-v1",
+    width: 864,
+    height: 2304,
+    frameW: 96,
+    frameH: 128,
+    anchorX: 48,
+    anchorY: 124,
+    bodyH: 109,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -201,15 +203,15 @@ export const SHEETS = {
     /** Eight-frame celebration redrawn with the same reference and proportions. */
     lobby: { row: 17, frames: 8 },
     /** Visible palm positions in the redrawn Rasengan lunge. */
-    muzzle: { side: [30, -50], down: [-7, -51], up: [24, -54] },
+    muzzle: { side: [37, -48], down: [22, -52], up: [36, -58] },
     /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
     hues: [205, 232],
     hueBase: [6, 42, 92],
     /** White would bleach his jacket: that player keeps the navy. */
     keepFor: [[245, 245, 245]],
-    scale: 0.2,
+    scale: 0.20366972,
   },
-  /** PixelLab source art, with conventional Pillow carry/presentation animation. */
+  /** PixelLab character and directional animations. */
   spider: {
     url: "sprites/spider.png",
     width: 1170,
@@ -230,27 +232,27 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Articulated wrist lift, airborne pose, landing and recovery. */
     lobby: { row: 17, frames: 8, bodyH: 122 },
     /** His thrust hand, where the web leaves (the back view hides it: over his shoulder). */
-    muzzle: { side: [42.5, -55], down: [44.5, -57], up: [16.5, -121] },
+    muzzle: { side: [42.5, -55], down: [44.5, -57], up: [35.5, -87] },
     /** The blue of his suit's sides and legs (his red is the suit itself). */
     hues: [200, 240],
     hueBase: [5, 89, 194],
+    colorProtection: spiderPaintRegions,
     /** The original selection keeps the blue panels; alternate colors repaint them. */
     keepFor: [[245, 245, 245]],
     scale: 0.1703871,
   },
-  /** Pikachu (fan art), made in PixelLab (scripts/build-character-sheet.py pikachu lays out its frames). */
+  /** Approved compact Pikachu; concept/pikachu-pixellab-redraw/pack.py reproduces the atlas. */
   pikachu: {
-    url: "sprites/pikachu.png?v=20261026-local-v1",
+    url: "sprites/pikachu.png?v=20261026-approved-paws-v3",
     width: 1620,
     height: 2952,
     frameW: 180,
     frameH: 164,
     anchorX: 96,
     anchorY: 157,
-    bodyH: 146,
+    bodyH: 129,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -258,7 +260,7 @@ export const SHEETS = {
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 7 },
-    /** The thunder shock: crouched gathering the charge, then arms flung out crackling. */
+    /** Charge then release; the game draws the electrical effects. */
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
@@ -330,16 +332,17 @@ export const SHEETS = {
     /** White would bleach his whole suit (a ghost of the flash): that player keeps the red. */
     keepFor: [[245, 245, 245]],
     scale: 0.137,
-  },  /** Bugs Bunny (fan art), made in PixelLab (scripts/build-character-sheet.py bugs lays out its frames). */
+  },
+  /** Approved option 1; concept/bugs/pixellab-redraw/pack.py reproduces the atlas. */
   bugs: {
-    url: "sprites/bugs.png",
-    width: 1098,
-    height: 2952,
-    frameW: 122,
-    frameH: 164,
-    anchorX: 64.5,
-    anchorY: 161,
-    bodyH: 155,
+    url: "sprites/bugs.png?v=20261026-option1-v2",
+    width: 1728,
+    height: 3456,
+    frameW: 192,
+    frameH: 192,
+    anchorX: 96,
+    anchorY: 163,
+    bodyH: 127,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -351,24 +354,24 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Munching a carrot, then a wave. */
+    /** Empty-handed wave and celebration, consistent with the approved base. */
     lobby: { row: 17, frames: 8 },
     /** His blue scarf (his gray fur and white gloves stay his own). */
     hues: [195, 225],
     hueBase: [63, 122, 162],
     /** His tall ears take up a third of his height. */
-    scale: 0.145,
+    scale: 0.17,
   },
   /** The green lantern, John Stewart (fan art), made in PixelLab (scripts/build-character-sheet.py lantern lays out its frames). */
   lantern: {
-    url: "sprites/lantern.png",
-    width: 1170,
-    height: 2898,
-    frameW: 130,
-    frameH: 161,
+    url: "sprites/lantern.png?v=a1-approved-f7cd414a",
+    width: 1188,
+    height: 2952,
+    frameW: 132,
+    frameH: 164,
     anchorX: 67.5,
-    anchorY: 157,
-    bodyH: 150,
+    anchorY: 154,
+    bodyH: 142,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -382,21 +385,21 @@ export const SHEETS = {
     carryWalk: strips(14, 15, 16, 6),
     /** Ring fist to the sky, then fists on his hips. */
     lobby: { row: 17, frames: 8 },
-    /** His green suit and boots (his emerald irises sit past this range and keep their green). */
-    hues: [100, 140],
-    hueBase: [7, 180, 20],
-    scale: 0.145,
+    hues: [145, 180],
+    hueBase: [18, 120, 89],
+    colorProtection: lanternPaintRegions,
+    scale: 0.15316901,
   },
   /** Donatello (fan art), made in PixelLab (scripts/build-character-sheet.py donatello lays out its frames). */
   donatello: {
     url: "sprites/donatello.png",
-    width: 1992,
-    height: 2772,
-    frameW: 166,
-    frameH: 154,
-    anchorX: 87.5,
-    anchorY: 152,
-    bodyH: 130,
+    width: 3072,
+    height: 4032,
+    frameW: 256,
+    frameH: 224,
+    anchorX: 128,
+    anchorY: 208,
+    bodyH: 131,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -404,16 +407,15 @@ export const SHEETS = {
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 6 },
-    /** Both hands on his bo, swept round him (the whirl itself is drawn by the renderer, spinLook). */
+    /** Both hands keep their grip on the staff throughout the sweep. */
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** The planted lobby pose's feet end at 145; arena poses use the lower 152 baseline. */
-    lobby: { row: 17, frames: 12, image: { url: "sprites/donatello.png", width: 1992, height: 2772, frameW: 166, frameH: 154, anchorX: 87.5, anchorY: 145 } },
+    lobby: { row: 17, frames: 12, bodyH: 123 },
     /** His purple bandana and pads (his green skin, shell and staff stay his own). */
     hues: [250, 300],
     hueBase: [143, 33, 228],
-    scale: 0.165,
+    scale: 0.16374046,
   },
   /** Penelope Pitstop (fan art), made in PixelLab (scripts/build-character-sheet.py penelope lays out its frames). */
   penelope: {
@@ -450,14 +452,14 @@ export const SHEETS = {
 
   /** The pink panther (fan art), "Pink Panther HD 4" in PixelLab (scripts/build-character-sheet.py panther). */
   panther: {
-    url: "sprites/panther.png",
-    width: 1092,
-    height: 2601,
-    frameW: 156,
-    frameH: 153,
-    anchorX: 78.5,
-    anchorY: 149,
-    bodyH: 141,
+    url: "sprites/panther.png?v=20261026-slim2",
+    width: 1568,
+    height: 3808,
+    frameW: 224,
+    frameH: 224,
+    anchorX: 112,
+    anchorY: 208,
+    bodyH: 126,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -469,24 +471,23 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 6),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Tiptoeing in from the left, then a finger to his lips and a sly look (scripts/build-panther-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/panther-lobby.png", width: 4288, height: 150, frameW: 268, frameH: 150, anchorX: 134, anchorY: 149 } },
-    /** His blue scarf (his pink fur, yellow eyes and nose stay his own). */
-    hues: [182, 222],
-    hueBase: [18, 178, 214],
-    scale: 0.152,
+    lobby: { row: 0, frames: 16, bodyH: 126, image: { url: "sprites/panther-lobby.png?v=20261026-slim2", width: 3584, height: 224, frameW: 224, frameH: 224, anchorX: 112, anchorY: 208 } },
+    hues: [310, 350],
+    hueBase: [248, 128, 189],
+    keepFor: [[245, 245, 245]],
+    scale: 0.17009524,
   },
 
-  /** Harry Potter (fan art), "Harry Potter HD v3b" in PixelLab (scripts/build-character-sheet.py harry). */
+  /** Approved Harry model with native PixelLab directional animations. */
   harry: {
-    url: "sprites/harry.png",
-    width: 1368,
-    height: 2856,
-    frameW: 152,
-    frameH: 168,
-    anchorX: 78.5,
-    anchorY: 164,
-    bodyH: 157,
+    url: "sprites/harry.png?v=20261026-model1-clean-v5",
+    width: 2016,
+    height: 3808,
+    frameW: 224,
+    frameH: 224,
+    anchorX: 111.5,
+    anchorY: 211,
+    bodyH: 128,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -498,15 +499,13 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Charge, form a stag, gallop around Harry, dissolve and return to rest. */
-    lobby: { row: 0, frames: 48, image: { url: "sprites/harry-lobby-patronus-v2.png", width: 15360, height: 208, frameW: 320, frameH: 208, anchorX: 112, anchorY: 194 } },
-    /** A jump for joy, the golden snitch snatched out of the air and held up in his fist (scripts/build-harry-lobby.py). */
-    victory: { row: 0, frames: 16, image: { url: "sprites/harry-victory.png", width: 4192, height: 200, frameW: 262, frameH: 200, anchorX: 131, anchorY: 200 } },
+    lobby: { row: 0, frames: 8, bodyH: 126, image: { url: "sprites/harry-lobby-pixellab.png?v=20261026-model1-clean-v5", width: 1792, height: 224, frameW: 224, frameH: 224, anchorX: 111.5, anchorY: 211 } },
+    victory: { row: 0, frames: 16, bodyH: 126, image: { url: "sprites/harry-victory-pixellab.png?v=20261026-model1-clean-v5", width: 3584, height: 224, frameW: 224, frameH: 224, anchorX: 111.5, anchorY: 211 } },
     /** The red lining of his robe (his blush and scar, a redder hue, stay his own). */
-    hues: [1, 6],
-    hueBase: [161, 45, 38],
+    hues: [345, 359],
+    hueBase: [131, 28, 44],
     keepFor: [[232, 74, 74]],
-    scale: 0.137,
+    scale: 0.16803906,
   },
   optimus: {
     url: "sprites/optimus.png",
@@ -539,14 +538,14 @@ export const SHEETS = {
 
 
   pele: {
-    url: "sprites/pele-final.png",
-    width: 1440,
-    height: 2880,
-    frameW: 160,
-    frameH: 160,
-    anchorX: 80,
-    anchorY: 148,
-    bodyH: 128,
+    url: "sprites/pele-final.png?v=20261026-lula-option4-v1",
+    width: 1728,
+    height: 3456,
+    frameW: 192,
+    frameH: 192,
+    anchorX: 96,
+    anchorY: 156,
+    bodyH: 119,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -558,12 +557,12 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** The supplied raised-arm celebration, packed with the gameplay poses by scripts/pack-pele.py. */
+    /** The approved option-4 redraw celebration, packed with the gameplay poses. */
     lobby: { row: 17, frames: 7 },
     /** His blue shorts (the CBF crest's blue goes with them). */
     hues: [205, 230],
     hueBase: [30, 72, 137],
-    scale: 0.16875,
+    scale: 0.1815126,
   },
 
   lula: {
@@ -888,7 +887,23 @@ export function castTicks(
   if (p.rasengan > 0) return RASENGAN_TICKS - p.rasengan;
   if (p.truck && p.truck > TRUCK_TICKS) return TRUCK_SHIFT + TRUCK_TICKS - p.truck;
   if (!blast) return undefined;
+  if (blast.kind === "kamehameha") return Math.min(KAME_CHARGE + BLAST_TICKS - blast.ttl, 6 * CAST_TICKS_PER_FRAME);
   return (WINDUP[blast.kind] ?? 0) + blastLife({ kind: blast.kind, length: blast.length ?? 0 }) - blast.ttl;
+}
+
+const KAME_CHARGE_HANDS = {
+  down: [[40, 113], [38, 106], [40, 115], [48, 112], [68, 116]],
+  up: [[103, 95], [103, 95], [106, 94], [108, 104], [108, 104]],
+  side: [[63, 113], [62, 113], [70, 116], [66, 117], [79, 112]],
+} as const;
+
+export function kameChargeOrigin(dir: Facing, cx: number, cy: number, charge: number): [number, number] {
+  const frame = Math.max(0, Math.min(4, Math.floor((KAME_CHARGE - charge) / CAST_TICKS_PER_FRAME)));
+  const view = dir === "left" || dir === "right" ? "side" : dir;
+  const [x, y] = KAME_CHARGE_HANDS[view][frame]!;
+  const sheet = SHEETS.goku;
+  const flip = view === "side" && dir !== sheet.side ? -1 : 1;
+  return [cx + (x - sheet.anchorX) * sheet.scale * flip, cy + 6 + (y - sheet.anchorY) * sheet.scale];
 }
 
 /**

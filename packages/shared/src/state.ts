@@ -1,5 +1,6 @@
 import { TILE } from "./constants";
 import type { StageId } from "./stage";
+import type { StageState } from "./stage-state";
 
 export enum Tile {
   Empty = 0,
@@ -15,6 +16,13 @@ export enum Floor {
   ConveyorLeft = 3,
   ConveyorRight = 4,
   Warp = 5,
+  Pit = 6,
+  Surprise = 7,
+  Foliage = 8,
+  Slot = 9,
+  Seesaw = 10,
+  Rail = 11,
+  Flag = 12,
 }
 
 export interface Grid {
@@ -44,6 +52,10 @@ export const DIR_VECTORS: Record<Facing, readonly [number, number]> = {
   down: [0, 1],
   left: [-1, 0],
   right: [1, 0],
+};
+
+export const OPPOSITE_DIRECTIONS: Readonly<Record<Facing, Facing>> = {
+  up: "down", down: "up", left: "right", right: "left",
 };
 
 export interface PlayerInput {
@@ -81,11 +93,14 @@ export interface Player {
   canBlockPass?: boolean;
   fireSuitTicks?: number;
   hasHeart?: boolean;
+  costume?: "honey" | "kotetsu";
   hitPoints?: number;
   bombType: BombType;
   canPunch: boolean;
   canPush?: boolean;
   canGlove: boolean;
+  heldBy?: string;
+  thrown?: AirState & { bounces?: number };
   shove?: { dir: Facing; ticks: number; pace: number };
   /** Ticks left being stunned (no movement or actions). */
   stun: number;
@@ -157,6 +172,7 @@ export interface Bomb {
   type: BombType;
   /** Direction of ground movement (kick or conveyor), or null when resting. */
   slide: Facing | null;
+  kickedBy?: string;
   /** Ground movement is driven by the belt rather than a kick. */
   conveyor?: true;
   /** Units travelled from (x,y) toward the next tile while sliding. */
@@ -242,6 +258,7 @@ export interface MatchState {
   tick: number;
   stage?: StageId;
   tempo?: 0.5 | 1 | 2;
+  stageState?: StageState;
   /** PRNG state for in-match randomness (see nextRandom). */
   rng: number;
   /** Sudden death: how many spiral tiles have been processed. */

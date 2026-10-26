@@ -1,18 +1,19 @@
 import { TILE } from "./constants";
 import { movePlayer } from "./movement";
+import { playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, getTile, playerTile, tileCenter, Tile, type MatchState, type Player, type PlayerInput } from "./state";
 
 const PACE = TILE / 4;
 
 export function tryPush(s: MatchState, p: Player, inputs: Record<string, PlayerInput>): boolean {
-  if (!p.alive || !p.canPush || p.mount || p.shove || p.stun > 0 || p.webbed > 0) return false;
+  if (!p.alive || !p.canPush || p.mount || p.shove || p.stun > 0 || p.webbed > 0 || playerElevated(p)) return false;
   const { x, y } = playerTile(p);
   if (p.px !== tileCenter(x) || p.py !== tileCenter(y)) return false;
   const [dx, dy] = DIR_VECTORS[p.facing];
   const tx = x + dx;
   const ty = y + dy;
   if (getTile(s, tx, ty) !== Tile.Empty || bombAt(s, tx, ty)) return false;
-  const rival = s.players.find((other) => other.id !== p.id && other.alive && playerTile(other).x === tx && playerTile(other).y === ty);
+  const rival = s.players.find((other) => other.id !== p.id && other.alive && !playerElevated(other) && playerTile(other).x === tx && playerTile(other).y === ty);
   if (rival) {
     if (rival.shove || inputs[rival.id]?.brace) return false;
     const nx = tx + dx;

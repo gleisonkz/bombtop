@@ -1,5 +1,6 @@
 export * from "./constants";
 export * from "./air";
+export * from "./player-carry";
 export * from "./state";
 export * from "./arena";
 export * from "./bombs";
@@ -11,6 +12,9 @@ export * from "./pressure";
 export * from "./revenge";
 export * from "./floor";
 export * from "./stage";
+export * from "./stage-state";
+export * from "./stage-mechanics";
+export { moveSurprisePlayer } from "./stage-surprise";
 export * from "./maniac";
 export * from "./stage-rotation";
 export * from "./sb4-stage-definitions";

@@ -1,10 +1,17 @@
-# Pelé supplied sprite integration
+# Pelé supplied sprite integration (historical)
 
-Current source: the PNG inside the user's `pele_pixel_art_final.zip`, copied unchanged
+This documents the historical supplied-art pack. The approved option-4 full redraw
+is prepared in [lula-style-redraw](lula-style-redraw/), using the
+[approved concept](lula-style-preview/option-4.png). Its coordinator runs
+`lula-style-redraw/integrate.py` after candidate validation and visual review.
+The legacy packer now writes only `packed-supplied-final.png`; it cannot replace
+the production redraw. This artifact was copied from the pre-integration backup.
+
+Historical source: the PNG inside the user's `pele_pixel_art_final.zip`, copied unchanged
 to `supplied-final-atlas.png` (1024 × 1536 RGBA). The previous `supplied-atlas.png`
 (802 × 1962) is retained as historical source. No new character artwork was generated.
 
-Runtime: `apps/client/public/sprites/pele-final.png`, nine columns × eighteen rows of
+Historical layout: `packed-supplied-final.png`, nine columns × eighteen rows of
 160 × 160 cells. Anchor (80, 148), nominal body height 128, scale 0.16875: the same
 approximately 21.6-pixel standing height as before. Characters retain their native
 source resolution; the packer translates and isolates them without upscaling.
@@ -36,4 +43,4 @@ python apps/client/scripts/build-carry-anchors.py --check
 
 The existing Pillow/SciPy asset pipeline performs RGBA isolation and compositing;
 see [Pillow's Image reference](https://pillow.readthedocs.io/en/stable/reference/Image.html).
-The exact runtime PNG and its source mapping are checked by the regression tests.
+The exact historical PNG and its source mapping are checked by the regression tests.

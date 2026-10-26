@@ -1,0 +1,19 @@
+{
+  "frameW": 224,
+  "frameH": 224,
+  "width": 1568,
+  "height": 3808,
+  "anchorX": 112,
+  "anchorY": 208,
+  "bodyH": 126,
+  "scale": 0.17009524,
+  "lobby": {
+    "width": 3584,
+    "height": 224,
+    "bodyH": 126
+  },
+  "horizontalBounds": [
+    56,
+    151
+  ]
+}

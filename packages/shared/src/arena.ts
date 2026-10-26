@@ -6,6 +6,7 @@ import {
   ITEM_CHANCE,
   ITEM_WEIGHTS,
   MAX_PLAYERS,
+  MAX_SPEED,
   ROUND_TICKS,
   TICK_RATE,
   SPAWN_POINTS,
@@ -17,6 +18,7 @@ import { MANIAC_ITEM_KINDS, normalizeManiac, type ManiacItemKind } from "./mania
 import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
 import { buildStage, sb4Map, type StageId } from "./stage";
 import { firstPickers } from "./own-colors";
+import { initializeStageMechanics } from "./stage-mechanics";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
@@ -67,34 +69,34 @@ export function createMatch(opts: MatchOptions): MatchState {
     ? [SPAWN_POINTS[0]!, SPAWN_POINTS[2]!, SPAWN_POINTS[1]!, SPAWN_POINTS[3]!, { x: 7, y: 6 }]
     : SPAWN_POINTS;
   const safe = new Set([...safeTiles(width, spawnPoints), ...layout.keepClear]);
-  const tiles: Tile[] = [];
+  const tiles: Tile[] = layout.tiles?.slice() ?? [];
   const candidates: number[] = [];
 
-  for (let y = 0; y < height; y++) {
+  for (let y = 0; y < height && !layout.tiles; y++) {
     for (let x = 0; x < width; x++) {
       const border = x === 0 || y === 0 || x === width - 1 || y === height - 1;
       const pillar = x % 2 === 0 && y % 2 === 0;
       if (border || pillar) tiles.push(Tile.Wall);
       else if (safe.has(y * width + x)) tiles.push(Tile.Empty);
-      else if (original) {
-        candidates.push(y * width + x);
-        tiles.push(Tile.Empty);
-      } else tiles.push(rng() < blockDensity ? Tile.Block : Tile.Empty);
+      else tiles.push(rng() < blockDensity ? Tile.Block : Tile.Empty);
     }
   }
 
-  if (original) {
+  if (original && original.softBlocks > 0 && opts.blockDensity !== undefined) {
+    for (let index = 0; index < tiles.length; index++) {
+      if (tiles[index] === Tile.Wall || safe.has(index)) continue;
+      candidates.push(index);
+      tiles[index] = Tile.Empty;
+    }
     shuffle(candidates, rng);
-    const count = opts.blockDensity === undefined
-      ? original.softBlocks
-      : Math.round(candidates.length * Math.max(0, Math.min(1, opts.blockDensity)));
+    const count = Math.round(candidates.length * Math.max(0, Math.min(1, opts.blockDensity)));
     for (const index of candidates.slice(0, count)) tiles[index] = Tile.Block;
   }
 
   const character = (id: string): CharacterId => opts.characters?.[id] ?? DEFAULT_CHARACTER;
   const own = new Set(opts.ownColors ?? firstPickers(playerIds.map((id) => ({ id, character: character(id) }))));
 
-  return {
+  const state: MatchState = {
     tick: 0,
     ...(original && { stage, ...(original.timeFlow && { tempo: 1 as const }) }),
     rng: (seed ^ 0x85ebca6b) >>> 0,
@@ -110,15 +112,18 @@ export function createMatch(opts: MatchOptions): MatchState {
       px: tileCenter(spawnPoints[i]!.x),
       py: tileCenter(spawnPoints[i]!.y),
       alive: true,
-      bombCapacity: START_BOMB_CAPACITY,
-      fireRange: START_FIRE_RANGE,
-      speed: BASE_SPEED,
+      // Battle Royale loadout: https://bomberman.fandom.com/wiki/School_of_Hard_Shocks
+      bombCapacity: stage === "sb4-05" ? 5 : START_BOMB_CAPACITY,
+      fireRange: stage === "sb4-05" ? 6 : START_FIRE_RANGE,
+      // Battle Royale speed is still under investigation; use the requested local maximum.
+      speed: stage === "sb4-05" ? MAX_SPEED : BASE_SPEED,
       facing: "down" as const,
-      canKick: false,
+      canKick: stage === "sb4-05",
       ...(maniac && { hitPoints: maniac.hitPoints[id] }),
       bombType: "normal" as const,
-      canPunch: false,
-      canGlove: false,
+      canPunch: stage === "sb4-05",
+      ...(stage === "sb4-05" && { canPush: true }),
+      canGlove: stage === "sb4-05",
       stun: 0,
       character: character(id),
       ...(own.has(id) && { ownColors: true as const }),
@@ -143,6 +148,8 @@ export function createMatch(opts: MatchOptions): MatchState {
     flames: [],
     blasts: [],
   };
+  initializeStageMechanics(state);
+  return state;
 }
 
 /** Spawn tiles plus their orthogonal neighbours never get blocks, so nobody starts trapped. */
@@ -168,6 +175,7 @@ function shuffle<T>(values: T[], rng: () => number): void {
 }
 
 function hideItems(tiles: Tile[], width: number, seed: number, stage: StageId, maniacItems?: Partial<Record<ManiacItemKind, number>>): Item[] {
+  if (stage === "sb4-05" || stage === "sb4-08") return [];
   const rng = createRng(seed ^ 0x9e3779b9);
   if (maniacItems !== undefined) {
     const blocks = tiles.flatMap((tile, i) => tile === Tile.Block ? [i] : []);

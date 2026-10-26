@@ -1,4 +1,5 @@
 import { bombButton, punch, updateHeldBombs } from "./air";
+import { playerElevated, updateCarriedPlayers, updateThrownPlayers } from "./player-carry";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
 import { applyFloor } from "./floor";
@@ -8,6 +9,8 @@ import { tryPush, updatePushMotions } from "./push";
 import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { advanceStageTempo } from "./stage";
+import { carriesStageFlag, resolveStageHazards, stageInput, updateStageMechanics } from "./stage-mechanics";
+import { moveSurprisePlayer } from "./stage-surprise";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
 import { kamehameha, updateBlasts, updateRasengan, updateTruck, useSpecial } from "./special";
@@ -18,6 +21,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   s.tick++;
   advanceStageTempo(s);
   const living = s.players.filter((p) => p.alive);
+  updateCarriedPlayers(s);
   for (const p of living) {
     if (p.curse?.kind !== "hiccups") continue;
     p.curse.elapsed = (p.curse.elapsed ?? 0) + 1;
@@ -39,6 +43,8 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       continue;
     }
     if (p.invuln > 0) p.invuln--;
+    if (playerElevated(p)) continue;
+    if (stageInput(s, p, input)) continue;
     if (p.fireSuitTicks && p.fireSuitTicks > 0) p.fireSuitTicks--;
     if (p.bubble > 0) p.bubble--;
     if (p.sneak > 0) p.sneak--;
@@ -73,21 +79,24 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     if (input?.stopKick) stopKickedBombs(s, p);
     if (p.shove || input?.brace) continue;
     if (p.curse?.kind === "diarrhea") placeBomb(s, p.id);
-    if (!input && p.curse?.kind !== "cannotStop") continue;
+    if (!input && p.curse?.kind !== "cannotStop") {
+      moveSurprisePlayer(s, p);
+      continue;
+    }
     const dir = cursedDirection(p, input?.dir ?? null);
     if (dir && p.alive) p.facing = dir;
-    if (input) bombButton(s, p, input);
+    if (input) bombButton(s, p, input, inputs);
     if (input?.action && !detonateRemote(s, p.id)) {
       const punched = punch(s, p);
       const pushed = tryPush(s, p, inputs);
       if (!punched && !pushed) useMountAbility(s, p);
     }
-    if (input?.special) useSpecial(s, p);
+    if (input?.special && !p.mount && !carriesStageFlag(s, p.id)) useSpecial(s, p);
     if (p.stun > 0 || p.shove) continue;
     const forced = p.curse?.kind === "cannotStop" ? p.curse : null;
     const intended = dir ?? forced?.momentum ?? null;
     const [px, py] = [p.px, p.py];
-    const moved = steer(s, p, intended, cursedDirection(p, input?.alt ?? null));
+    const moved = moveSurprisePlayer(s, p, input) ? p.facing : steer(s, p, intended, cursedDirection(p, input?.alt ?? null));
     if (moved && moved !== dir) p.facing = moved;
     if (forced) {
       if (p.px !== px || p.py !== py) {
@@ -98,23 +107,28 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   }
 
   updatePushMotions(s);
+  updateThrownPlayers(s);
+  updateCarriedPlayers(s);
   updateBlasts(s);
   applyFloor(s);
   updateHeldBombs(s);
   collectItems(s);
   updateCurses(s);
+  updateStageMechanics(s, inputs);
 
   updateBombs(s);
   updatePressure(s);
+  resolveStageHazards(s);
 
   for (const p of s.players) {
     const { x, y } = playerTile(p);
     const flame = s.flames.find((f) => f.x === x && f.y === y);
-    if (!flame || p.bubble > 0 || (p.canBlockPass && getTile(s, x, y) === Tile.Block) || !hurt(p)) continue;
+    if (!flame || playerElevated(p) || s.stageState?.trolley?.riderId === p.id || s.stageState?.flights?.[p.id] || p.bubble > 0 || (p.canBlockPass && getTile(s, x, y) === Tile.Block) || !hurt(p)) continue;
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }
   for (const p of living) if (!p.alive) dropItems(s, p);
 
   updateHeldBombs(s);
+  updateCarriedPlayers(s);
 }

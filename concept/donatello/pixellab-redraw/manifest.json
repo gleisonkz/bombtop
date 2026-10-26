@@ -1,0 +1,4263 @@
+{
+  "cell": [
+    256,
+    224
+  ],
+  "columns": 12,
+  "size": [
+    3072,
+    4032
+  ],
+  "anchor": [
+    128,
+    208
+  ],
+  "pixel_scale": 1,
+  "frame_counts": [
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6,
+    9,
+    9,
+    9,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    12
+  ],
+  "frame_count": 111,
+  "bodyH": 131,
+  "bodyH_basis": "maximum alpha height across the first three idle rows; includes held props",
+  "rowoffsets": [
+    [
+      36,
+      54
+    ],
+    [
+      35,
+      47
+    ],
+    [
+      41,
+      55
+    ],
+    [
+      36,
+      54
+    ],
+    [
+      35,
+      47
+    ],
+    [
+      41,
+      55
+    ],
+    [
+      36,
+      54
+    ],
+    [
+      36,
+      54
+    ],
+    [
+      36,
+      54
+    ],
+    [
+      35,
+      47
+    ],
+    [
+      41,
+      55
+    ],
+    [
+      32,
+      48
+    ],
+    [
+      40,
+      46
+    ],
+    [
+      34,
+      49
+    ],
+    [
+      32,
+      48
+    ],
+    [
+      40,
+      46
+    ],
+    [
+      34,
+      49
+    ],
+    [
+      36,
+      54
+    ]
+  ],
+  "rows": [
+    {
+      "row": 0,
+      "name": "idle-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/idle-south/frame_001.png",
+          "sha256": "c5289484387c3ddb44253c41e6e2d21f612fd4464a16af00cbf188ccef36642d",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            44,
+            30,
+            140,
+            154
+          ],
+          "bounds": [
+            80,
+            84,
+            176,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-south/frame_002.png",
+          "sha256": "8466c527f2a63c7918e0d3bf345a604a497164767c58af9e80625c53c9ecc596",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            41,
+            28,
+            140,
+            154
+          ],
+          "bounds": [
+            77,
+            82,
+            176,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-south/frame_003.png",
+          "sha256": "68703944ef823f400b5a817b34cc5f47b27b687587c1573332163587d047642d",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            26,
+            141,
+            154
+          ],
+          "bounds": [
+            74,
+            80,
+            177,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-south/frame_004.png",
+          "sha256": "d40f538047469f70ff491a5126d0b62f116e1fdcdb675d6cffce5d4ced1e23b2",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            41,
+            27,
+            140,
+            154
+          ],
+          "bounds": [
+            77,
+            81,
+            176,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          80,
+          84,
+          176,
+          208
+        ],
+        [
+          77,
+          82,
+          176,
+          208
+        ],
+        [
+          74,
+          80,
+          177,
+          208
+        ],
+        [
+          77,
+          81,
+          176,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          108,
+          78,
+          168,
+          143
+        ],
+        [
+          108,
+          78,
+          168,
+          145
+        ],
+        [
+          107,
+          75,
+          167,
+          152
+        ],
+        [
+          107,
+          76,
+          167,
+          153
+        ]
+      ]
+    },
+    {
+      "row": 1,
+      "name": "idle-east",
+      "offset": [
+        35,
+        47
+      ],
+      "frames": [
+        {
+          "source": "generated/idle-east/frame_001.png",
+          "sha256": "0c300b038957c4211b952601e44fae96c8a10ba90271248435eb1db7665869ff",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            58,
+            38,
+            131,
+            159
+          ],
+          "bounds": [
+            93,
+            85,
+            166,
+            206
+          ]
+        },
+        {
+          "source": "generated/idle-east/frame_002.png",
+          "sha256": "c459c26944576200e184e3c2c1233ce6fc51967a45d06070663996dc7ed96073",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            58,
+            35,
+            130,
+            159
+          ],
+          "bounds": [
+            93,
+            82,
+            165,
+            206
+          ]
+        },
+        {
+          "source": "generated/idle-east/frame_003.png",
+          "sha256": "01b64c9e5fd0fe4f87102a367e944f01f2b020595eb8ea9aed22510d83b819f6",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            57,
+            28,
+            127,
+            159
+          ],
+          "bounds": [
+            92,
+            75,
+            162,
+            206
+          ]
+        },
+        {
+          "source": "generated/idle-east/frame_004.png",
+          "sha256": "8bbdee6ac05e1af40967b937642f3142e9ecb4a6935b196eb94414b704c4419f",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            53,
+            32,
+            126,
+            160
+          ],
+          "bounds": [
+            88,
+            79,
+            161,
+            207
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          93,
+          85,
+          166,
+          206
+        ],
+        [
+          93,
+          82,
+          165,
+          206
+        ],
+        [
+          92,
+          75,
+          162,
+          206
+        ],
+        [
+          88,
+          79,
+          161,
+          207
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          98,
+          81,
+          158,
+          150
+        ],
+        [
+          98,
+          82,
+          158,
+          151
+        ],
+        [
+          93,
+          79,
+          153,
+          152
+        ],
+        [
+          91,
+          78,
+          151,
+          152
+        ]
+      ]
+    },
+    {
+      "row": 2,
+      "name": "idle-north",
+      "offset": [
+        41,
+        55
+      ],
+      "frames": [
+        {
+          "source": "generated/idle-north/frame_001.png",
+          "sha256": "cf4c8621026b4a46e3da662e17a9b810a55cf577a311d2c194d3a1c1f76d48cf",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            39,
+            29,
+            132,
+            153
+          ],
+          "bounds": [
+            80,
+            84,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-north/frame_002.png",
+          "sha256": "e09d1e79418bfc67b2ed2f9d48b3cae479c4292c50679ec7dc505a02dc0cf51c",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            27,
+            131,
+            153
+          ],
+          "bounds": [
+            79,
+            82,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-north/frame_003.png",
+          "sha256": "335b3f0be3e93cb7993b08ee82a8eca0c070a9ff925eddbab3fbb7c9e8ff82f8",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            27,
+            131,
+            153
+          ],
+          "bounds": [
+            78,
+            82,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/idle-north/frame_004.png",
+          "sha256": "1df8ff6fe47832c691f385785124090b6a329661c9c09c3f1a9ddbdb63b20820",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            36,
+            28,
+            131,
+            153
+          ],
+          "bounds": [
+            77,
+            83,
+            172,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          80,
+          84,
+          173,
+          208
+        ],
+        [
+          79,
+          82,
+          172,
+          208
+        ],
+        [
+          78,
+          82,
+          172,
+          208
+        ],
+        [
+          77,
+          83,
+          172,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          89,
+          81,
+          149,
+          147
+        ],
+        [
+          87,
+          80,
+          147,
+          149
+        ],
+        [
+          86,
+          80,
+          146,
+          148
+        ],
+        [
+          86,
+          79,
+          146,
+          146
+        ]
+      ]
+    },
+    {
+      "row": 3,
+      "name": "walk-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/walk-south/frame_001.png",
+          "sha256": "873ad1bbf2cbdbcc70003646dfd8a6d67dd699c1ca98ce9241fd85f867fc7446",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            43,
+            34,
+            139,
+            154
+          ],
+          "bounds": [
+            79,
+            88,
+            175,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-south/frame_002.png",
+          "sha256": "5fb3383c549f60b5afbaf678ff94a5512efa68559618f6bd5e31efc8d1b25a90",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            47,
+            32,
+            140,
+            154
+          ],
+          "bounds": [
+            83,
+            86,
+            176,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-south/frame_003.png",
+          "sha256": "48e7e2a53bfafd4706953e32a9602dde7c1433c7f775361ed8b49a544d777039",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            29,
+            139,
+            153
+          ],
+          "bounds": [
+            87,
+            83,
+            175,
+            207
+          ]
+        },
+        {
+          "source": "generated/walk-south/frame_004.png",
+          "sha256": "f337d9360d04ff6c3d91891e1f2b98e9f6c87a8767923ce7891bd5546436dfde",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            54,
+            30,
+            134,
+            154
+          ],
+          "bounds": [
+            90,
+            84,
+            170,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-south/frame_005.png",
+          "sha256": "b909d7b4ce86ab6a68df896f10ffb4bc61d0efc8e008d6364b33f08bc1e58ca2",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            54,
+            33,
+            135,
+            154
+          ],
+          "bounds": [
+            90,
+            87,
+            171,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-south/frame_006.png",
+          "sha256": "af9c621f498d0d51e85e5222f6459bfbfb675d4b75bcc2406918d6adc684644a",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            30,
+            136,
+            154
+          ],
+          "bounds": [
+            87,
+            84,
+            172,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          79,
+          88,
+          175,
+          208
+        ],
+        [
+          83,
+          86,
+          176,
+          208
+        ],
+        [
+          87,
+          83,
+          175,
+          207
+        ],
+        [
+          90,
+          84,
+          170,
+          208
+        ],
+        [
+          90,
+          87,
+          171,
+          208
+        ],
+        [
+          87,
+          84,
+          172,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          108,
+          74,
+          168,
+          146
+        ],
+        [
+          107,
+          81,
+          167,
+          159
+        ],
+        [
+          105,
+          79,
+          165,
+          211
+        ],
+        [
+          102,
+          80,
+          162,
+          150
+        ],
+        [
+          102,
+          82,
+          162,
+          153
+        ],
+        [
+          102,
+          79,
+          162,
+          149
+        ]
+      ]
+    },
+    {
+      "row": 4,
+      "name": "walk-east",
+      "offset": [
+        35,
+        47
+      ],
+      "frames": [
+        {
+          "source": "generated/walk-east/frame_001.png",
+          "sha256": "2f4db838828f865772d3ebaca1c2cb1955ca57901979719e2181abfd3a5a2b24",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            56,
+            34,
+            127,
+            160
+          ],
+          "bounds": [
+            91,
+            81,
+            162,
+            207
+          ]
+        },
+        {
+          "source": "generated/walk-east/frame_002.png",
+          "sha256": "fd07ead33ad8ccff65baabd9cf35261b66afbe75af216dd82e5b5ba5dd3b74bd",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            55,
+            31,
+            127,
+            160
+          ],
+          "bounds": [
+            90,
+            78,
+            162,
+            207
+          ]
+        },
+        {
+          "source": "generated/walk-east/frame_003.png",
+          "sha256": "8e1875c6ccbf52aa56c5bca82a10f99b9b1beef78645908d968ff23728a086ba",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            57,
+            35,
+            127,
+            160
+          ],
+          "bounds": [
+            92,
+            82,
+            162,
+            207
+          ]
+        },
+        {
+          "source": "generated/walk-east/frame_004.png",
+          "sha256": "5c8d4658066017c336c045ce2f0291a05f19d8b56aa5c4094bed1b1d0a5aa7fa",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            56,
+            36,
+            129,
+            162
+          ],
+          "bounds": [
+            91,
+            83,
+            164,
+            209
+          ]
+        },
+        {
+          "source": "generated/walk-east/frame_005.png",
+          "sha256": "29302b75ca8bf1d24340d97c63776dacdac0efccbc6f159b01af673ee99d6b27",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            57,
+            34,
+            129,
+            159
+          ],
+          "bounds": [
+            92,
+            81,
+            164,
+            206
+          ]
+        },
+        {
+          "source": "generated/walk-east/frame_006.png",
+          "sha256": "b240511bfa5346d7846d303ac7f5a34630ac20936ddb30322b997e93f11da0cc",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            57,
+            31,
+            129,
+            159
+          ],
+          "bounds": [
+            92,
+            78,
+            164,
+            206
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          91,
+          81,
+          162,
+          207
+        ],
+        [
+          90,
+          78,
+          162,
+          207
+        ],
+        [
+          92,
+          82,
+          162,
+          207
+        ],
+        [
+          91,
+          83,
+          164,
+          209
+        ],
+        [
+          92,
+          81,
+          164,
+          206
+        ],
+        [
+          92,
+          78,
+          164,
+          206
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          94,
+          77,
+          154,
+          149
+        ],
+        [
+          94,
+          75,
+          154,
+          148
+        ],
+        [
+          95,
+          78,
+          155,
+          150
+        ],
+        [
+          96,
+          80,
+          156,
+          153
+        ],
+        [
+          96,
+          77,
+          156,
+          150
+        ],
+        [
+          96,
+          74,
+          156,
+          148
+        ]
+      ]
+    },
+    {
+      "row": 5,
+      "name": "walk-north",
+      "offset": [
+        41,
+        55
+      ],
+      "frames": [
+        {
+          "source": "generated/walk-north/frame_001.png",
+          "sha256": "b152a558d80fc61017910b64339a235a5a2e072851177b6b304ae1197a5906fd",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            30,
+            133,
+            153
+          ],
+          "bounds": [
+            79,
+            85,
+            174,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-north/frame_002.png",
+          "sha256": "998a88722473de6b7503cd8dc5719c8bc5b4453162732c23dfbc6e5c6c286c93",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            31,
+            131,
+            153
+          ],
+          "bounds": [
+            78,
+            86,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-north/frame_003.png",
+          "sha256": "e738af44a3640c869f0eddfb231bafcf5f7b2cdaf2f30097f1465c4861cf9bd0",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            30,
+            129,
+            153
+          ],
+          "bounds": [
+            79,
+            85,
+            170,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-north/frame_004.png",
+          "sha256": "e3087d6abc1665f5bcde5dcadbd7dc361871766ac71dfa1ba0348b29c87b3835",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            41,
+            28,
+            124,
+            153
+          ],
+          "bounds": [
+            82,
+            83,
+            165,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-north/frame_005.png",
+          "sha256": "19261f6fc80b8ce7b0ebc65acb4af18ef5ce5e52d45025d6516076ff041285a4",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            29,
+            125,
+            153
+          ],
+          "bounds": [
+            78,
+            84,
+            166,
+            208
+          ]
+        },
+        {
+          "source": "generated/walk-north/frame_006.png",
+          "sha256": "2238b75b27aba6c1e72dbe0020809a8c3cebe8ba72566f80b5404be3b9b032de",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            36,
+            32,
+            129,
+            153
+          ],
+          "bounds": [
+            77,
+            87,
+            170,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          79,
+          85,
+          174,
+          208
+        ],
+        [
+          78,
+          86,
+          172,
+          208
+        ],
+        [
+          79,
+          85,
+          170,
+          208
+        ],
+        [
+          82,
+          83,
+          165,
+          208
+        ],
+        [
+          78,
+          84,
+          166,
+          208
+        ],
+        [
+          77,
+          87,
+          170,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          88,
+          81,
+          148,
+          144
+        ],
+        [
+          88,
+          83,
+          148,
+          146
+        ],
+        [
+          89,
+          82,
+          149,
+          147
+        ],
+        [
+          90,
+          81,
+          150,
+          150
+        ],
+        [
+          88,
+          81,
+          148,
+          151
+        ],
+        [
+          87,
+          83,
+          147,
+          150
+        ]
+      ]
+    },
+    {
+      "row": 6,
+      "name": "stun-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/stun-south/frame_001.png",
+          "sha256": "d097e03c414c4adf3957815f11ad3775710510c880e6c6880b1788709a51dbc1",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            49,
+            32,
+            136,
+            154
+          ],
+          "bounds": [
+            85,
+            86,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/stun-south/frame_002.png",
+          "sha256": "3311212e8a263f242236f58fb619eda011961076f7bb243f6b6d7385d748ce6c",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            36,
+            133,
+            154
+          ],
+          "bounds": [
+            87,
+            90,
+            169,
+            208
+          ]
+        },
+        {
+          "source": "generated/stun-south/frame_003.png",
+          "sha256": "7f77e16ee5a3a7224a3234d96de48ce3a410cf236f4789c90284443cd7786179",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            34,
+            134,
+            154
+          ],
+          "bounds": [
+            87,
+            88,
+            170,
+            208
+          ]
+        },
+        {
+          "source": "generated/stun-south/frame_004.png",
+          "sha256": "bfd5a349c7ecd05800cd9801239a9e2ff1f437a403d4b7d05dd6d0f4fbe54a4a",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            39,
+            133,
+            154
+          ],
+          "bounds": [
+            87,
+            93,
+            169,
+            208
+          ]
+        },
+        {
+          "source": "generated/stun-south/frame_005.png",
+          "sha256": "1943a6aa68089d58e616482e58ac65a5d8d19209d97d42278b21e4b4a4f6fe53",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            51,
+            37,
+            136,
+            154
+          ],
+          "bounds": [
+            87,
+            91,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/stun-south/frame_006.png",
+          "sha256": "25b1532004ccf477b369b758b8118a6619cd359665329e2b2778911c9cb18a5e",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            46,
+            33,
+            142,
+            154
+          ],
+          "bounds": [
+            82,
+            87,
+            178,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          85,
+          86,
+          172,
+          208
+        ],
+        [
+          87,
+          90,
+          169,
+          208
+        ],
+        [
+          87,
+          88,
+          170,
+          208
+        ],
+        [
+          87,
+          93,
+          169,
+          208
+        ],
+        [
+          87,
+          91,
+          172,
+          208
+        ],
+        [
+          82,
+          87,
+          178,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          104,
+          80,
+          164,
+          155
+        ],
+        [
+          101,
+          83,
+          161,
+          163
+        ],
+        [
+          101,
+          84,
+          161,
+          151
+        ],
+        [
+          100,
+          86,
+          160,
+          155
+        ],
+        [
+          103,
+          83,
+          163,
+          152
+        ],
+        [
+          108,
+          83,
+          168,
+          148
+        ]
+      ]
+    },
+    {
+      "row": 7,
+      "name": "death-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/death-south/frame_001.png",
+          "sha256": "eccf7f345f95788450c230e9089b14389d71d4c13a004661d99ebdb6340fb086",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            54,
+            33,
+            139,
+            154
+          ],
+          "bounds": [
+            90,
+            87,
+            175,
+            208
+          ]
+        },
+        {
+          "source": "generated/death-south/frame_002.png",
+          "sha256": "fcaa211152fdba92d2000800e5220e5b9b12572eada04cfd059b25ca2298155d",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            52,
+            33,
+            139,
+            154
+          ],
+          "bounds": [
+            88,
+            87,
+            175,
+            208
+          ]
+        },
+        {
+          "source": "generated/death-south/frame_003.png",
+          "sha256": "d522c621d132f4f170ba451a5be22b2adbdc58cf4a132f5ad7a3238a5e2e29da",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            53,
+            33,
+            145,
+            152
+          ],
+          "bounds": [
+            89,
+            87,
+            181,
+            206
+          ]
+        },
+        {
+          "source": "generated/death-south/frame_004.png",
+          "sha256": "4ebc6991b33230ce46e5f5b03d3d985639a7e66305d2ac624204fb36b8945203",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            47,
+            37,
+            148,
+            153
+          ],
+          "bounds": [
+            83,
+            91,
+            184,
+            207
+          ]
+        },
+        {
+          "source": "generated/death-south/frame_005.png",
+          "sha256": "94c5c5d6380c62d54fdd69c49902fd6e2926922333a3693a8d6a5608dab8daeb",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            72,
+            166,
+            152
+          ],
+          "bounds": [
+            73,
+            126,
+            202,
+            206
+          ]
+        },
+        {
+          "source": "generated/death-south/frame_006.png",
+          "sha256": "55e21623641f5504cf19f8b9bcf77ed0d60aa5fe6032cf4cbd8efea9d84aec5a",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            30,
+            87,
+            166,
+            158
+          ],
+          "bounds": [
+            66,
+            141,
+            202,
+            212
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          90,
+          87,
+          175,
+          208
+        ],
+        [
+          88,
+          87,
+          175,
+          208
+        ],
+        [
+          89,
+          87,
+          181,
+          206
+        ],
+        [
+          83,
+          91,
+          184,
+          207
+        ],
+        [
+          73,
+          126,
+          202,
+          206
+        ],
+        [
+          66,
+          141,
+          202,
+          212
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          107,
+          81,
+          167,
+          147
+        ],
+        [
+          107,
+          81,
+          167,
+          200
+        ],
+        [
+          110,
+          80,
+          170,
+          220
+        ],
+        [
+          117,
+          83,
+          177,
+          150
+        ],
+        [
+          110,
+          105,
+          170,
+          195
+        ],
+        [
+          130,
+          135,
+          190,
+          200
+        ]
+      ]
+    },
+    {
+      "row": 8,
+      "name": "cast-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/cast-south/frame_001.png",
+          "sha256": "f031739fed747f9589e98b8c978aa794dc0620f13d14b2bafda4023f19480283",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            45,
+            32,
+            139,
+            153
+          ],
+          "bounds": [
+            81,
+            86,
+            175,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_002.png",
+          "sha256": "0c49a89e8109ca2043779171252ae27b1737c3276d0b38a9c9999aa292b3aec8",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            52,
+            33,
+            138,
+            154
+          ],
+          "bounds": [
+            88,
+            87,
+            174,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_003.png",
+          "sha256": "23c8cb2e574b3acdd1fd01818f7b1268745028a11d0ca7705b2a0548c81de768",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            40,
+            32,
+            139,
+            155
+          ],
+          "bounds": [
+            76,
+            86,
+            175,
+            209
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_004.png",
+          "sha256": "dceda59617a3e256d6728ad4bac1202512d8270813c6bb86fdbbf6c55e332ae5",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            29,
+            33,
+            140,
+            154
+          ],
+          "bounds": [
+            65,
+            87,
+            176,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_005.png",
+          "sha256": "18a7d8f971e46f3e36c58050c4b9e61285337c5e06c172cb26971ffebf526b93",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            35,
+            31,
+            144,
+            155
+          ],
+          "bounds": [
+            71,
+            85,
+            180,
+            209
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_006.png",
+          "sha256": "8eb62f1d5c07ca49a3fffbac31b323523790d7959f3dc4f8eca188c978341e7a",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            33,
+            31,
+            148,
+            155
+          ],
+          "bounds": [
+            69,
+            85,
+            184,
+            209
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_007.png",
+          "sha256": "c8b199396117bdb2696c75d3f6b0f548938dbaebc8870835b0692bc28873abb5",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            34,
+            31,
+            120,
+            155
+          ],
+          "bounds": [
+            70,
+            85,
+            156,
+            209
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_009.png",
+          "sha256": "bd687e24769a31c57f74818330a737f019b15e199368eeb35e3e680d0c1402f1",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            39,
+            32,
+            131,
+            155
+          ],
+          "bounds": [
+            75,
+            86,
+            167,
+            209
+          ]
+        },
+        {
+          "source": "generated/cast-south/frame_010.png",
+          "sha256": "5063c92944f6a47058a05310130aed00b5235d41352bed57ceea8e20f8863bed",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            52,
+            31,
+            139,
+            154
+          ],
+          "bounds": [
+            88,
+            85,
+            175,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          81,
+          86,
+          175,
+          207
+        ],
+        [
+          88,
+          87,
+          174,
+          208
+        ],
+        [
+          76,
+          86,
+          175,
+          209
+        ],
+        [
+          65,
+          87,
+          176,
+          208
+        ],
+        [
+          71,
+          85,
+          180,
+          209
+        ],
+        [
+          69,
+          85,
+          184,
+          209
+        ],
+        [
+          70,
+          85,
+          156,
+          209
+        ],
+        [
+          75,
+          86,
+          167,
+          209
+        ],
+        [
+          88,
+          85,
+          175,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          107,
+          81,
+          167,
+          155
+        ],
+        [
+          105,
+          77,
+          165,
+          145
+        ],
+        [
+          107,
+          77,
+          167,
+          145
+        ],
+        [
+          104,
+          83,
+          164,
+          145
+        ],
+        [
+          102,
+          80,
+          162,
+          144
+        ],
+        [
+          99,
+          80,
+          159,
+          145
+        ],
+        [
+          97,
+          84,
+          157,
+          145
+        ],
+        [
+          102,
+          76,
+          162,
+          145
+        ],
+        [
+          106,
+          79,
+          166,
+          143
+        ]
+      ]
+    },
+    {
+      "row": 9,
+      "name": "cast-east",
+      "offset": [
+        35,
+        47
+      ],
+      "frames": [
+        {
+          "source": "generated/cast-east/frame_001.png",
+          "sha256": "207200682c28fb097f5a67a13cdd8830fd4b633ce4f0f8c77ef52e7c2eb5f4a6",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            59,
+            35,
+            126,
+            161
+          ],
+          "bounds": [
+            94,
+            82,
+            161,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_002.png",
+          "sha256": "37e30ff2b1524879f0c4cb11f22e196ca43d233b869dd8066860551f6e4cae89",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            60,
+            34,
+            128,
+            160
+          ],
+          "bounds": [
+            95,
+            81,
+            163,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_003.png",
+          "sha256": "99956b1fc8827e53e03069fd7ef7922847af3b121c6ba3901a9ddc0e41f84478",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            45,
+            37,
+            157,
+            157
+          ],
+          "bounds": [
+            80,
+            84,
+            192,
+            204
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_004.png",
+          "sha256": "93480c82ce77b410dd3bf3f20a24b7ead8e9f5957598f12e86b27a3d943d91a8",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            51,
+            37,
+            165,
+            160
+          ],
+          "bounds": [
+            86,
+            84,
+            200,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_005.png",
+          "sha256": "bc8f59eeedd46d19d981870d3d93d3db2cd99e44eee1e262716dc5a57b2ff7a4",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            35,
+            36,
+            152,
+            160
+          ],
+          "bounds": [
+            70,
+            83,
+            187,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_006.png",
+          "sha256": "682d0517f0ef0fe980fd73535b6a0ab6db9d4573eff76226a2c53cdefddec6a8",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            26,
+            37,
+            141,
+            160
+          ],
+          "bounds": [
+            61,
+            84,
+            176,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_007.png",
+          "sha256": "66e86bc49cc68cc1e49db70a3cef612b66925d2ecd4039d4d8bdf3146b64992d",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            25,
+            37,
+            140,
+            160
+          ],
+          "bounds": [
+            60,
+            84,
+            175,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_009.png",
+          "sha256": "1fe52edb7a6b8be39022e2e1ddc2cab10a6b05e8ff8857a44aa6cc6f0fd98065",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            36,
+            37,
+            152,
+            160
+          ],
+          "bounds": [
+            71,
+            84,
+            187,
+            207
+          ]
+        },
+        {
+          "source": "generated/cast-east/frame_010.png",
+          "sha256": "5464f0064fc920d5460b93288624722197b00a7ec8d58a8163c74fe4d72112e4",
+          "source_size": [
+            188,
+            188
+          ],
+          "source_bounds": [
+            49,
+            34,
+            162,
+            158
+          ],
+          "bounds": [
+            84,
+            81,
+            197,
+            205
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          94,
+          82,
+          161,
+          208
+        ],
+        [
+          95,
+          81,
+          163,
+          207
+        ],
+        [
+          80,
+          84,
+          192,
+          204
+        ],
+        [
+          86,
+          84,
+          200,
+          207
+        ],
+        [
+          70,
+          83,
+          187,
+          207
+        ],
+        [
+          61,
+          84,
+          176,
+          207
+        ],
+        [
+          60,
+          84,
+          175,
+          207
+        ],
+        [
+          71,
+          84,
+          187,
+          207
+        ],
+        [
+          84,
+          81,
+          197,
+          205
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          96,
+          78,
+          156,
+          150
+        ],
+        [
+          97,
+          77,
+          157,
+          149
+        ],
+        [
+          100,
+          80,
+          160,
+          150
+        ],
+        [
+          102,
+          78,
+          162,
+          150
+        ],
+        [
+          100,
+          77,
+          160,
+          150
+        ],
+        [
+          96,
+          77,
+          156,
+          150
+        ],
+        [
+          96,
+          78,
+          156,
+          150
+        ],
+        [
+          101,
+          77,
+          161,
+          150
+        ],
+        [
+          99,
+          77,
+          159,
+          150
+        ]
+      ]
+    },
+    {
+      "row": 10,
+      "name": "cast-north",
+      "offset": [
+        41,
+        55
+      ],
+      "frames": [
+        {
+          "source": "generated/cast-north/frame_001.png",
+          "sha256": "9c20ee4ef2c8e50c0efbea008e38e397338c84014323ac79b253aba04930e3d2",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            35,
+            29,
+            138,
+            153
+          ],
+          "bounds": [
+            76,
+            84,
+            179,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_002.png",
+          "sha256": "3b46e55dd8e864b3a3eff73f83d1615688d808af3f8bf09720ce62572c2ecf52",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            29,
+            146,
+            153
+          ],
+          "bounds": [
+            79,
+            84,
+            187,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_003.png",
+          "sha256": "dff7d4ec62c5c2bfe9fd816008a81d2cf4fdbc6b40380e4e66c0a34c3bd45b80",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            30,
+            148,
+            153
+          ],
+          "bounds": [
+            78,
+            85,
+            189,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_004.png",
+          "sha256": "cf41707e22e627ee114d59fceb8d2715e79ed0af6157a6f3ccd9bd558f5eb066",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            22,
+            32,
+            120,
+            153
+          ],
+          "bounds": [
+            63,
+            87,
+            161,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_005.png",
+          "sha256": "525045b9177db4636e4a6ab49a741a9de0d481ff8ca3c486f174caca7f198ce9",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            35,
+            32,
+            138,
+            153
+          ],
+          "bounds": [
+            76,
+            87,
+            179,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_006.png",
+          "sha256": "94240fafc0aa43f58802882e3ca66095124c9f304cbaa11f737862be7cca2f45",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            32,
+            159,
+            153
+          ],
+          "bounds": [
+            79,
+            87,
+            200,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_007.png",
+          "sha256": "3d510b17ded482378aebedb8da776694cc1896caa10dcc8a513177fc8e7afa6d",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            32,
+            143,
+            153
+          ],
+          "bounds": [
+            78,
+            87,
+            184,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_009.png",
+          "sha256": "9b22357c682650aaafa166e37e7f17f946caeb18886eef45d570a44d367f74a7",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            35,
+            32,
+            138,
+            153
+          ],
+          "bounds": [
+            76,
+            87,
+            179,
+            208
+          ]
+        },
+        {
+          "source": "generated/cast-north/frame_010.png",
+          "sha256": "81f3b5b0c5012fc1ca03ec5f440a833aa768bf847e64666bdaa2a733aded5377",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            37,
+            29,
+            159,
+            153
+          ],
+          "bounds": [
+            78,
+            84,
+            200,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          76,
+          84,
+          179,
+          208
+        ],
+        [
+          79,
+          84,
+          187,
+          208
+        ],
+        [
+          78,
+          85,
+          189,
+          208
+        ],
+        [
+          63,
+          87,
+          161,
+          208
+        ],
+        [
+          76,
+          87,
+          179,
+          208
+        ],
+        [
+          79,
+          87,
+          200,
+          208
+        ],
+        [
+          78,
+          87,
+          184,
+          208
+        ],
+        [
+          76,
+          87,
+          179,
+          208
+        ],
+        [
+          78,
+          84,
+          200,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          86,
+          81,
+          146,
+          144
+        ],
+        [
+          88,
+          81,
+          148,
+          144
+        ],
+        [
+          87,
+          82,
+          147,
+          140
+        ],
+        [
+          87,
+          83,
+          147,
+          147
+        ],
+        [
+          88,
+          80,
+          148,
+          146
+        ],
+        [
+          88,
+          78,
+          148,
+          142
+        ],
+        [
+          87,
+          83,
+          147,
+          141
+        ],
+        [
+          87,
+          84,
+          147,
+          141
+        ],
+        [
+          88,
+          81,
+          148,
+          145
+        ]
+      ]
+    },
+    {
+      "row": 11,
+      "name": "carryIdle-south",
+      "offset": [
+        32,
+        48
+      ],
+      "frames": [
+        {
+          "source": "generated/carryIdle-south/frame_001.png",
+          "sha256": "5300c74d5c617cb1e5f7c02f4335fdce2de06cf2330ab012460a5c9fc3dd3143",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            38,
+            36,
+            155,
+            160
+          ],
+          "bounds": [
+            70,
+            84,
+            187,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-south/frame_002.png",
+          "sha256": "06e5cc0258a23c18262824e76b30094147d0bab6279f1bda5b9540c419b73a3b",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            38,
+            34,
+            155,
+            160
+          ],
+          "bounds": [
+            70,
+            82,
+            187,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-south/frame_003.png",
+          "sha256": "fa2e5d9f586817155c1878920557e1cab9b556b367c044f80e8242aa5110324d",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            39,
+            34,
+            155,
+            160
+          ],
+          "bounds": [
+            71,
+            82,
+            187,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-south/frame_004.png",
+          "sha256": "ce19751644e3c9a00ed18e3fbcafdebc2525d6555da69f65d864d393228d48f2",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            38,
+            35,
+            155,
+            160
+          ],
+          "bounds": [
+            70,
+            83,
+            187,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          70,
+          84,
+          187,
+          208
+        ],
+        [
+          70,
+          82,
+          187,
+          208
+        ],
+        [
+          71,
+          82,
+          187,
+          208
+        ],
+        [
+          70,
+          83,
+          187,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            114,
+            91
+          ],
+          [
+            175,
+            110
+          ]
+        ],
+        [
+          [
+            114,
+            89
+          ],
+          [
+            178,
+            106
+          ]
+        ],
+        [
+          [
+            114,
+            89
+          ],
+          [
+            177,
+            105
+          ]
+        ],
+        [
+          [
+            113,
+            91
+          ],
+          [
+            174,
+            109
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          103,
+          80,
+          163,
+          144
+        ],
+        [
+          103,
+          77,
+          163,
+          144
+        ],
+        [
+          103,
+          77,
+          163,
+          144
+        ],
+        [
+          102,
+          79,
+          162,
+          144
+        ]
+      ]
+    },
+    {
+      "row": 12,
+      "name": "carryIdle-east",
+      "offset": [
+        40,
+        46
+      ],
+      "frames": [
+        {
+          "source": "generated/carryIdle-east/frame_001.png",
+          "sha256": "45e075ba0e03e8c5f622802f0b32f2d0336feba0e1a1b80bc8c73545847d45f3",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            47,
+            27,
+            132,
+            162
+          ],
+          "bounds": [
+            87,
+            73,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-east/frame_002.png",
+          "sha256": "fc9b67b1ac2f933328aa6b7e9d326e0cb05d982f9f3a7e12402639ffff8fa60f",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            48,
+            29,
+            133,
+            162
+          ],
+          "bounds": [
+            88,
+            75,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-east/frame_003.png",
+          "sha256": "7245a8c794396be583a3370f93a77d4579e13a6cff918dae61830c5e4078b097",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            48,
+            31,
+            134,
+            162
+          ],
+          "bounds": [
+            88,
+            77,
+            174,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-east/frame_004.png",
+          "sha256": "2aba923441aceece304d39d667fdc342a1fc330fbd220e2ff2ffcdc0038e6324",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            48,
+            29,
+            133,
+            162
+          ],
+          "bounds": [
+            88,
+            75,
+            173,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          87,
+          73,
+          172,
+          208
+        ],
+        [
+          88,
+          75,
+          173,
+          208
+        ],
+        [
+          88,
+          77,
+          174,
+          208
+        ],
+        [
+          88,
+          75,
+          173,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            157,
+            79
+          ]
+        ],
+        [
+          [
+            151,
+            91
+          ]
+        ],
+        [
+          [
+            153,
+            93
+          ]
+        ],
+        [
+          [
+            151,
+            91
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          104,
+          82,
+          164,
+          152
+        ],
+        [
+          106,
+          84,
+          166,
+          159
+        ],
+        [
+          107,
+          85,
+          167,
+          157
+        ],
+        [
+          107,
+          84,
+          167,
+          155
+        ]
+      ]
+    },
+    {
+      "row": 13,
+      "name": "carryIdle-north",
+      "offset": [
+        34,
+        49
+      ],
+      "frames": [
+        {
+          "source": "generated/carryIdle-north/frame_001.png",
+          "sha256": "14182c526a5fff5f7e6c3d40548e7581898dde50f20f908353d404a9673fd6a4",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            40,
+            35,
+            149,
+            159
+          ],
+          "bounds": [
+            74,
+            84,
+            183,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-north/frame_002.png",
+          "sha256": "aab24929961da92e8f311162c079a8cb685e4976fa4d713b255905e1b4956a27",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            42,
+            36,
+            147,
+            159
+          ],
+          "bounds": [
+            76,
+            85,
+            181,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-north/frame_003.png",
+          "sha256": "82b07c7ff2050fe6b1b0c4e35eb67b82ceda22cf84a9272f6e96bbd62b37b8b6",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            42,
+            37,
+            147,
+            159
+          ],
+          "bounds": [
+            76,
+            86,
+            181,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryIdle-north/frame_004.png",
+          "sha256": "3e0e5147a8945a2f0bfebc86e7dbc5b1178e0628f7e417c889100890e1198993",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            41,
+            37,
+            148,
+            159
+          ],
+          "bounds": [
+            75,
+            86,
+            182,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          74,
+          84,
+          183,
+          208
+        ],
+        [
+          76,
+          85,
+          181,
+          208
+        ],
+        [
+          76,
+          86,
+          181,
+          208
+        ],
+        [
+          75,
+          86,
+          182,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            83,
+            97
+          ],
+          [
+            136,
+            88
+          ]
+        ],
+        [
+          [
+            95,
+            102
+          ],
+          [
+            136,
+            89
+          ]
+        ],
+        [
+          [
+            85,
+            104
+          ],
+          [
+            136,
+            90
+          ]
+        ],
+        [
+          [
+            83,
+            99
+          ],
+          [
+            136,
+            90
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          86,
+          75,
+          146,
+          144
+        ],
+        [
+          86,
+          73,
+          146,
+          144
+        ],
+        [
+          86,
+          83,
+          146,
+          148
+        ],
+        [
+          86,
+          83,
+          146,
+          150
+        ]
+      ]
+    },
+    {
+      "row": 14,
+      "name": "carryWalk-south",
+      "offset": [
+        32,
+        48
+      ],
+      "frames": [
+        {
+          "source": "generated/carryWalk-south/frame_001.png",
+          "sha256": "9e08b73ba054f49f8f73a67724c5cc34d92e4d1c4bf3f4f2bd17ea11e118cbbd",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            41,
+            35,
+            152,
+            158
+          ],
+          "bounds": [
+            73,
+            83,
+            184,
+            206
+          ]
+        },
+        {
+          "source": "generated/carryWalk-south/frame_002.png",
+          "sha256": "035b31026bc3c69f7b3d69c9ce5298301b497b19f0bf9a45fde3aa9341ccb93c",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            44,
+            34,
+            147,
+            158
+          ],
+          "bounds": [
+            76,
+            82,
+            179,
+            206
+          ]
+        },
+        {
+          "source": "generated/carryWalk-south/frame_003.png",
+          "sha256": "f5b5a0e21d4dc9cee38b4bb7781ae01972e52ad7a38187722657f71461f520b5",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            42,
+            34,
+            148,
+            158
+          ],
+          "bounds": [
+            74,
+            82,
+            180,
+            206
+          ]
+        },
+        {
+          "source": "generated/carryWalk-south/frame_004.png",
+          "sha256": "b0675bd8900b121afd2c5cdc10b6bad4e06295dfe93da7561aab13a0ab632385",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            40,
+            36,
+            149,
+            160
+          ],
+          "bounds": [
+            72,
+            84,
+            181,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryWalk-south/frame_005.png",
+          "sha256": "d292b1979e28eaa45853d8bca95a007b79aff7b1ad6f562f27395f701af60c6e",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            39,
+            34,
+            153,
+            160
+          ],
+          "bounds": [
+            71,
+            82,
+            185,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryWalk-south/frame_006.png",
+          "sha256": "2f92643bf061a5af67440e947fb8a733d411526920d62cc99f310ee929b7c482",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            36,
+            33,
+            157,
+            160
+          ],
+          "bounds": [
+            68,
+            81,
+            189,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          73,
+          83,
+          184,
+          206
+        ],
+        [
+          76,
+          82,
+          179,
+          206
+        ],
+        [
+          74,
+          82,
+          180,
+          206
+        ],
+        [
+          72,
+          84,
+          181,
+          208
+        ],
+        [
+          71,
+          82,
+          185,
+          208
+        ],
+        [
+          68,
+          81,
+          189,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            112,
+            92
+          ],
+          [
+            171,
+            108
+          ]
+        ],
+        [
+          [
+            119,
+            86
+          ],
+          [
+            169,
+            105
+          ]
+        ],
+        [
+          [
+            118,
+            86
+          ],
+          [
+            170,
+            104
+          ]
+        ],
+        [
+          [
+            110,
+            93
+          ],
+          [
+            171,
+            106
+          ]
+        ],
+        [
+          [
+            112,
+            90
+          ],
+          [
+            174,
+            107
+          ]
+        ],
+        [
+          [
+            114,
+            88
+          ],
+          [
+            177,
+            108
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          101,
+          79,
+          161,
+          142
+        ],
+        [
+          108,
+          76,
+          168,
+          152
+        ],
+        [
+          107,
+          77,
+          167,
+          140
+        ],
+        [
+          99,
+          79,
+          159,
+          142
+        ],
+        [
+          101,
+          77,
+          161,
+          142
+        ],
+        [
+          103,
+          76,
+          163,
+          142
+        ]
+      ]
+    },
+    {
+      "row": 15,
+      "name": "carryWalk-east",
+      "offset": [
+        40,
+        46
+      ],
+      "frames": [
+        {
+          "source": "generated/carryWalk-east/frame_001.png",
+          "sha256": "a83f4d7810026e003535da2b467d92da3b8c8d2b4533a75c4e697d643e767ac9",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            47,
+            29,
+            130,
+            166
+          ],
+          "bounds": [
+            87,
+            75,
+            170,
+            212
+          ]
+        },
+        {
+          "source": "generated/carryWalk-east/frame_002.png",
+          "sha256": "e7d1e4958d700a0b864f08447efd21dade33e285763271dd2cbb9f82fad17442",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            47,
+            32,
+            130,
+            166
+          ],
+          "bounds": [
+            87,
+            78,
+            170,
+            212
+          ]
+        },
+        {
+          "source": "generated/carryWalk-east/frame_003.png",
+          "sha256": "b57847bc997038bcc8d480f1d77681630ed76ec70311ad2f7d08c7c45aae9d14",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            46,
+            32,
+            132,
+            166
+          ],
+          "bounds": [
+            86,
+            78,
+            172,
+            212
+          ]
+        },
+        {
+          "source": "generated/carryWalk-east/frame_004.png",
+          "sha256": "dab15d4de088c1678682cb7f42885f7d59679260fe992c152a32df6175e9b9b8",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            47,
+            30,
+            132,
+            166
+          ],
+          "bounds": [
+            87,
+            76,
+            172,
+            212
+          ]
+        },
+        {
+          "source": "generated/carryWalk-east/frame_005.png",
+          "sha256": "8fe66cf7e6351d76c16ae63b3a905f651b1162ff4d4091aa7f0d467a4dbfba15",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            48,
+            27,
+            131,
+            163
+          ],
+          "bounds": [
+            88,
+            73,
+            171,
+            209
+          ]
+        },
+        {
+          "source": "generated/carryWalk-east/frame_006.png",
+          "sha256": "86a13877ea7b3bbe9f258ca09aa62b5f74317ff7be54507a7b1f9cf1652b98e8",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            48,
+            28,
+            130,
+            164
+          ],
+          "bounds": [
+            88,
+            74,
+            170,
+            210
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          87,
+          75,
+          170,
+          212
+        ],
+        [
+          87,
+          78,
+          170,
+          212
+        ],
+        [
+          86,
+          78,
+          172,
+          212
+        ],
+        [
+          87,
+          76,
+          172,
+          212
+        ],
+        [
+          88,
+          73,
+          171,
+          209
+        ],
+        [
+          88,
+          74,
+          170,
+          210
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            146,
+            89
+          ]
+        ],
+        [
+          [
+            145,
+            90
+          ]
+        ],
+        [
+          [
+            147,
+            89
+          ]
+        ],
+        [
+          [
+            147,
+            87
+          ]
+        ],
+        [
+          [
+            147,
+            87
+          ]
+        ],
+        [
+          [
+            146,
+            89
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          103,
+          81,
+          163,
+          154
+        ],
+        [
+          103,
+          83,
+          163,
+          156
+        ],
+        [
+          105,
+          82,
+          165,
+          154
+        ],
+        [
+          104,
+          80,
+          164,
+          151
+        ],
+        [
+          104,
+          80,
+          164,
+          148
+        ],
+        [
+          103,
+          82,
+          163,
+          154
+        ]
+      ]
+    },
+    {
+      "row": 16,
+      "name": "carryWalk-north",
+      "offset": [
+        34,
+        49
+      ],
+      "frames": [
+        {
+          "source": "generated/carryWalk-north/frame_001.png",
+          "sha256": "16f3ef71f81c60c03198bd1f1f48df515e218ef7f28e983717d1f6d8c6eea97c",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            43,
+            35,
+            145,
+            159
+          ],
+          "bounds": [
+            77,
+            84,
+            179,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryWalk-north/frame_002.png",
+          "sha256": "a31bdb16d0490f27910800712ede9e350416b8a002511bd7d9900a13a88b9a49",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            41,
+            35,
+            139,
+            159
+          ],
+          "bounds": [
+            75,
+            84,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryWalk-north/frame_003.png",
+          "sha256": "ccacc68c1f7cbd44f5b04a284d8e6a464a716c4cc77a19a7523e21f824138eba",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            41,
+            35,
+            135,
+            159
+          ],
+          "bounds": [
+            75,
+            84,
+            169,
+            208
+          ]
+        },
+        {
+          "source": "generated/carryWalk-north/frame_004.png",
+          "sha256": "db4827c259223f0717c4d8e401855008cd22de7aae25e6a7c329b5fdfc503176",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            42,
+            34,
+            138,
+            158
+          ],
+          "bounds": [
+            76,
+            83,
+            172,
+            207
+          ]
+        },
+        {
+          "source": "generated/carryWalk-north/frame_005.png",
+          "sha256": "8582063e37b3e90f475a339e9ac84ebf825bee021ce35e061dcef9bef181bcc4",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            45,
+            34,
+            144,
+            156
+          ],
+          "bounds": [
+            79,
+            83,
+            178,
+            205
+          ]
+        },
+        {
+          "source": "generated/carryWalk-north/frame_006.png",
+          "sha256": "4f0a08c6bdc73fae9a485ba68015e74711ddf608082355e32f9ef74119c5e33e",
+          "source_size": [
+            192,
+            192
+          ],
+          "source_bounds": [
+            40,
+            34,
+            149,
+            158
+          ],
+          "bounds": [
+            74,
+            83,
+            183,
+            207
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          77,
+          84,
+          179,
+          208
+        ],
+        [
+          75,
+          84,
+          173,
+          208
+        ],
+        [
+          75,
+          84,
+          169,
+          208
+        ],
+        [
+          76,
+          83,
+          172,
+          207
+        ],
+        [
+          79,
+          83,
+          178,
+          205
+        ],
+        [
+          74,
+          83,
+          183,
+          207
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "strapped to shell"
+      },
+      "palms": [
+        [
+          [
+            86,
+            97
+          ],
+          [
+            134,
+            88
+          ]
+        ],
+        [
+          [
+            91,
+            96
+          ],
+          [
+            134,
+            88
+          ]
+        ],
+        [
+          [
+            96,
+            99
+          ],
+          [
+            134,
+            88
+          ]
+        ],
+        [
+          [
+            94,
+            97
+          ],
+          [
+            134,
+            86
+          ]
+        ],
+        [
+          [
+            89,
+            100
+          ],
+          [
+            135,
+            87
+          ]
+        ],
+        [
+          [
+            84,
+            100
+          ],
+          [
+            135,
+            87
+          ]
+        ]
+      ],
+      "headbounds": [
+        [
+          86,
+          79,
+          146,
+          146
+        ],
+        [
+          85,
+          82,
+          145,
+          148
+        ],
+        [
+          85,
+          82,
+          145,
+          150
+        ],
+        [
+          86,
+          81,
+          146,
+          149
+        ],
+        [
+          87,
+          80,
+          147,
+          149
+        ],
+        [
+          86,
+          80,
+          146,
+          148
+        ]
+      ]
+    },
+    {
+      "row": 17,
+      "name": "lobby-south",
+      "offset": [
+        36,
+        54
+      ],
+      "frames": [
+        {
+          "source": "generated/lobby-south/frame_001.png",
+          "sha256": "9280067033dc89301420c1babdd686198dc1352d5694b5c0c87b0e722f556e4b",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            50,
+            32,
+            140,
+            154
+          ],
+          "bounds": [
+            86,
+            86,
+            176,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_002.png",
+          "sha256": "5656ecadc0b9b710f08baf4b22b8054121f6fb61a151590552dba07066a0bdf7",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            44,
+            34,
+            139,
+            154
+          ],
+          "bounds": [
+            80,
+            88,
+            175,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_003.png",
+          "sha256": "9ef54ff5ac182976e8e4fdfb488645e07f3eb3d7187e552aafc581034ab9fdef",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            46,
+            34,
+            138,
+            154
+          ],
+          "bounds": [
+            82,
+            88,
+            174,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_004.png",
+          "sha256": "f89fa363fc9896669673c6a187dea7934572ddc7de219b9c3c8fcb1d8f5b8cb9",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            39,
+            33,
+            137,
+            154
+          ],
+          "bounds": [
+            75,
+            87,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_005.png",
+          "sha256": "35bd7aaa7c44ea670270445df2aafcbfd14ee9dd098eaffcff8137619d627a3a",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            38,
+            33,
+            137,
+            154
+          ],
+          "bounds": [
+            74,
+            87,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_006.png",
+          "sha256": "f42cf34ef4a87fb8fbc36323db3fb7434a73091f57f564014a90e4df2726e806",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            42,
+            31,
+            138,
+            154
+          ],
+          "bounds": [
+            78,
+            85,
+            174,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_007.png",
+          "sha256": "3ec4100ba0cc4a232ef4e31370c7e02991fd15f4ea365a6185239c4f901b7fb8",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            48,
+            29,
+            136,
+            154
+          ],
+          "bounds": [
+            84,
+            83,
+            172,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_008.png",
+          "sha256": "9dc2886ac42fc92964a8e03435238a941329582d0e86b3a3452a050ba79dd3fa",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            49,
+            28,
+            135,
+            154
+          ],
+          "bounds": [
+            85,
+            82,
+            171,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_009.png",
+          "sha256": "7290c71f68d5628377890658df45af64a6a10650bcf1ef0c7bdd8ad23dd18eca",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            47,
+            28,
+            135,
+            154
+          ],
+          "bounds": [
+            83,
+            82,
+            171,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_010.png",
+          "sha256": "a9f3219ffe0e8e1045bcdf9cdd3ca2d45df64893e974b7f13306053d69ac97d4",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            43,
+            28,
+            137,
+            154
+          ],
+          "bounds": [
+            79,
+            82,
+            173,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_011.png",
+          "sha256": "4fb9345af6463c515ecb3afcb56f03c0552dd78d3a69e967986761ece8c60d25",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            40,
+            30,
+            141,
+            154
+          ],
+          "bounds": [
+            76,
+            84,
+            177,
+            208
+          ]
+        },
+        {
+          "source": "generated/lobby-south/frame_012.png",
+          "sha256": "c75f5a52d0dffea251e7dc35f3c28244c889e723017288440f9a5ae3fd54d9fc",
+          "source_size": [
+            180,
+            180
+          ],
+          "source_bounds": [
+            36,
+            32,
+            141,
+            154
+          ],
+          "bounds": [
+            72,
+            86,
+            177,
+            208
+          ]
+        }
+      ],
+      "bounds": [
+        [
+          86,
+          86,
+          176,
+          208
+        ],
+        [
+          80,
+          88,
+          175,
+          208
+        ],
+        [
+          82,
+          88,
+          174,
+          208
+        ],
+        [
+          75,
+          87,
+          173,
+          208
+        ],
+        [
+          74,
+          87,
+          173,
+          208
+        ],
+        [
+          78,
+          85,
+          174,
+          208
+        ],
+        [
+          84,
+          83,
+          172,
+          208
+        ],
+        [
+          85,
+          82,
+          171,
+          208
+        ],
+        [
+          83,
+          82,
+          171,
+          208
+        ],
+        [
+          79,
+          82,
+          173,
+          208
+        ],
+        [
+          76,
+          84,
+          177,
+          208
+        ],
+        [
+          72,
+          86,
+          177,
+          208
+        ]
+      ],
+      "metadata": {
+        "source": "PixelLab v3",
+        "staff": "held in visible grip"
+      },
+      "headbounds": [
+        [
+          106,
+          79,
+          166,
+          144
+        ],
+        [
+          106,
+          80,
+          166,
+          147
+        ],
+        [
+          105,
+          80,
+          165,
+          146
+        ],
+        [
+          105,
+          78,
+          165,
+          146
+        ],
+        [
+          105,
+          79,
+          165,
+          146
+        ],
+        [
+          106,
+          79,
+          166,
+          143
+        ],
+        [
+          106,
+          77,
+          166,
+          141
+        ],
+        [
+          106,
+          74,
+          166,
+          142
+        ],
+        [
+          106,
+          74,
+          166,
+          142
+        ],
+        [
+          107,
+          77,
+          167,
+          141
+        ],
+        [
+          108,
+          78,
+          168,
+          144
+        ],
+        [
+          107,
+          79,
+          167,
+          157
+        ]
+      ]
+    }
+  ]
+}

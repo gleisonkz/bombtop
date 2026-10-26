@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Graphics, Sprite } from "pixi.js";
 import { createMatch, FLAME_TICKS, Floor, getTile, ItemKind, publicView, TILE, Tile } from "@bombtop/shared";
-import { ITEMS, TILES } from "../src/render/sprites";
+import { ITEMS, TILES, SHEETS } from "../src/render/sprites";
+import type { AbilityPixelEffects } from "../src/render/ability-pixel-effects";
 import type { EnergyPixelEffects } from "../src/render/energy-pixel-effects";
 import type { CompanionPixelEffects } from "../src/render/companion-pixel-effects";
 import { specialInk } from "../src/render/special-palette";
@@ -59,6 +60,77 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("ground effects", () => {
+  it.each(["up", "down", "left", "right"] as const)("keeps the firing sprite facing its %s beam after input turns", dir => {
+    const renderer = new Renderer(true);
+    const state = createMatch({ seed: 1, playerIds: ["goku"], blockDensity: 0, characters: { goku: "goku" } });
+    const player = state.players[0]!;
+    player.facing = dir === "down" ? "up" : "down";
+    state.blasts = [{ ownerId: player.id, x: 1, y: 1, dir, length: 2, ttl: 10, kind: "kamehameha" }];
+    renderer.setCharacters(new Map([[player.id, "goku"]]));
+    const internal = renderer as unknown as { skins: Map<string, unknown>; placeSprite(...args: unknown[]): void };
+    internal.skins.set("goku", { sheet: SHEETS.goku, heads: new Map() });
+    const place = vi.spyOn(internal, "placeSprite").mockImplementation(() => {});
+    renderer.draw(publicView(state), new Map(), 1);
+    const view = dir === "left" || dir === "right" ? "side" : dir;
+    expect(place.mock.calls[0]![3]).toMatchObject({
+      x: 6 * SHEETS.goku.frameW, y: SHEETS.goku.cast[view].row * SHEETS.goku.frameH, flip: dir === "left",
+    });
+  });
+  it.each([
+    ["down", 20, 40, 113], ["down", 16, 38, 106], ["down", 4, 68, 116],
+    ["up", 20, 103, 95], ["up", 4, 108, 104],
+    ["right", 20, 63, 113], ["right", 4, 79, 112],
+    ["left", 20, 80, 113], ["left", 4, 64, 112],
+  ] as const)("attaches the %s charge sphere to the hands with %i ticks left", (facing, charge, handX, handY) => {
+    const renderer = new Renderer(true);
+    const state = createMatch({ seed: 1, playerIds: ["goku"], blockDensity: 0, characters: { goku: "goku" } });
+    const player = state.players[0]!;
+    player.facing = facing;
+    player.charge = charge;
+    renderer.setCharacters(new Map([[player.id, "goku"]]));
+    const effects = (renderer as unknown as { abilityEffects: AbilityPixelEffects }).abilityEffects;
+    const draw = vi.spyOn(effects, "draw").mockReturnValue(true);
+    renderer.draw(publicView(state), new Map(), 1);
+    expect(draw).toHaveBeenCalledWith("ki", expect.objectContaining({
+      x: player.px / TILE * 16 + (handX - SHEETS.goku.anchorX) * SHEETS.goku.scale,
+      y: player.py / TILE * 16 + 6 + (handY - SHEETS.goku.anchorY) * SHEETS.goku.scale,
+    }));
+  });
+  it("keeps original fallback seats when player two carries player one", () => {
+    const renderer = new Renderer(true);
+    const state = createMatch({ seed: 1, playerIds: ["first", "second"], blockDensity: 0 });
+    state.players[0]!.heldBy = "second";
+    renderer.draw(publicView(state), new Map(), 1);
+    const world = (renderer as unknown as { world: Graphics }).world;
+    const fills = vi.mocked(world.fill).mock.calls.map(([color]) => color).filter(color => color === 0xf5f5f5 || color === 0x3a3a48);
+    expect(fills).toEqual([0x3a3a48, 0xf5f5f5]);
+  });
+
+  it("keeps a held mega bomb in its creator's color when player two is the stack root", () => {
+    const renderer = new Renderer(true, { previewSpecialColors: true });
+    const state = createMatch({ seed: 1, playerIds: ["first", "second"], blockDensity: 0 });
+    delete state.players[1]!.ownColors;
+    state.players[0]!.heldBy = "second";
+    state.bombs = [{ ownerId: "second", x: 1, y: 1, fuse: 120, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: "first", mega: true }];
+    renderer.draw(publicView(state), new Map(), 1);
+    const overlay = (renderer as unknown as { overlay: Graphics }).overlay;
+    expect(overlay.fill).toHaveBeenCalledWith(specialInk(0x985bdb, 0x3a3a48));
+  });
+
+  it.each([false, true])("keeps a captured or thrown mount at its player's elevated feet (thrown=%s)", thrown => {
+    const renderer = new Renderer(true);
+    const state = createMatch({ seed: 1, playerIds: ["first", "second"], blockDensity: 0 });
+    const rider = state.players[0]!;
+    rider.mount = "hopper";
+    if (thrown) rider.thrown = { dir: "right", span: 3, tilesLeft: 2, progress: 3 };
+    else rider.heldBy = "second";
+    renderer.draw(publicView(state), new Map(), 0);
+    const world = (renderer as unknown as { world: Graphics }).world;
+    const mount = vi.mocked(world.ellipse).mock.calls.find(call => call[2] === 7 && call[3] === 4);
+    expect(mount).toBeDefined();
+    const ground = thrown ? rider : state.players[1]!;
+    expect(mount![1]).toBeLessThan(ground.py / TILE * 16 + 6);
+  });
   it("outlines each Lula's meat in the creator seat color during gameplay with original skins", () => {
     const renderer = new Renderer(true);
     const state = createMatch({ seed: 1, playerIds: ["first", "second"], characters: { first: "lula", second: "lula" }, blockDensity: 0 });
@@ -323,17 +395,18 @@ describe("ground effects", () => {
     renderer.draw(publicView(state), new Map(), 1);
     expect(overlay.circle).toHaveBeenCalled();
   });
-  it("keeps Donatello's staff rotating rather than holding a static sweep sprite", () => {
+  it("draws only Donatello's whoosh rings while the cast sprite supplies his staff", () => {
     const renderer = new Renderer(true) as unknown as { drawSpin(g: Graphics, x: number, y: number, age: number): void };
     const graphics = new Graphics();
     renderer.drawSpin(graphics, 40, 40, 2);
-    expect(graphics.fill).toHaveBeenCalledWith(expect.objectContaining({ color: 0x8a5a2b }));
-    const first = vi.mocked(graphics.rect).mock.calls.map(call => [...call]);
-    vi.mocked(graphics.rect).mockClear();
-    renderer.drawSpin(graphics, 40, 40, 5);
-    const next = vi.mocked(graphics.rect).mock.calls;
-    expect(first.length).toBeGreaterThan(30);
-    expect(next).not.toEqual(first);
+    expect(graphics.circle).toHaveBeenCalledTimes(2);
+    expect(graphics.stroke).toHaveBeenCalledTimes(2);
+    expect(graphics.stroke).toHaveBeenNthCalledWith(1, expect.objectContaining({ color: 0xffffff, width: 2 }));
+    expect(graphics.stroke).toHaveBeenNthCalledWith(2, expect.objectContaining({ color: 0xe8d9b0, width: 1 }));
+    expect(graphics.moveTo).not.toHaveBeenCalled();
+    expect(graphics.lineTo).not.toHaveBeenCalled();
+    expect(graphics.rect).not.toHaveBeenCalled();
+    expect(graphics.fill).not.toHaveBeenCalled();
   });
 
   it("combines Flash lightning with his speed streaks", () => {

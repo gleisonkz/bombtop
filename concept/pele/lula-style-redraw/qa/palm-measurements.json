@@ -1,0 +1,732 @@
+[
+  {
+    "row": 11,
+    "column": 0,
+    "source": "generated/carryIdle-south/00.png",
+    "sha256": "cd13aa5c1a40b490f54b74d4a14a3bf63a0ba714bd934575e571c87479dae740",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      14,
+      21,
+      115,
+      140
+    ]
+  },
+  {
+    "row": 11,
+    "column": 1,
+    "source": "generated/carryIdle-south/01.png",
+    "sha256": "8694cca9cb579247c8c18cbce094094b5d9b9a2d08c34d80feef0a16d62e729a",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      14,
+      22,
+      114,
+      140
+    ]
+  },
+  {
+    "row": 11,
+    "column": 2,
+    "source": "generated/carryIdle-south/02.png",
+    "sha256": "f2a40c9d2847c9b31a4fd4abdf0970cf965d6ff7262746c34dd3e0dc4f9eb22a",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      15,
+      23,
+      113,
+      140
+    ]
+  },
+  {
+    "row": 11,
+    "column": 3,
+    "source": "generated/carryIdle-south/03.png",
+    "sha256": "0ed7085d25ee768c1d2b46d1e55cf20c3bf31937e2bb8af2a2cfc3fbfd2bf5b8",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      15,
+      23,
+      113,
+      140
+    ]
+  },
+  {
+    "row": 12,
+    "column": 0,
+    "source": "generated/carryIdle-east/00.png",
+    "sha256": "39dc23de5bc5b074cf8f2a07099d45e59a0b9113a7fdd9bd40c18bd9a8a14048",
+    "palms": [
+      [
+        127.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      19,
+      22,
+      108,
+      142
+    ]
+  },
+  {
+    "row": 12,
+    "column": 1,
+    "source": "generated/carryIdle-east/01.png",
+    "sha256": "bdd499e5984c8d416a9d15374867cf4b3cbebc48ced00b3322baab42176f7a12",
+    "palms": [
+      [
+        127.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      19,
+      19,
+      108,
+      142
+    ]
+  },
+  {
+    "row": 12,
+    "column": 2,
+    "source": "generated/carryIdle-east/02.png",
+    "sha256": "7a78ca82ded382dd5c23974f6e980383c12823cec912c578b1791de1bd47a8fb",
+    "palms": [
+      [
+        127.5,
+        52.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      19,
+      17,
+      108,
+      142
+    ]
+  },
+  {
+    "row": 12,
+    "column": 3,
+    "source": "generated/carryIdle-east/03.png",
+    "sha256": "c5283583af595c077d8e986cffecf780b9f7537ffd4da20b778eeee4ea06565f",
+    "palms": [
+      [
+        125.5,
+        52.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      19,
+      18,
+      108,
+      142
+    ]
+  },
+  {
+    "row": 13,
+    "column": 0,
+    "source": "generated/carryIdle-north/00.png",
+    "sha256": "c59ac230b1d6763a484ed9c96ec0f2a90f5cd92924cf1efe5161efa9991729e2",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      14,
+      20,
+      114,
+      140
+    ]
+  },
+  {
+    "row": 13,
+    "column": 1,
+    "source": "generated/carryIdle-north/01.png",
+    "sha256": "00687bb481fcd719c5993eed81c8a09257d5608c59f6d1fb3c8e1affdf535767",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        134.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      15,
+      18,
+      113,
+      140
+    ]
+  },
+  {
+    "row": 13,
+    "column": 2,
+    "source": "generated/carryIdle-north/02.png",
+    "sha256": "ee480df9b565a3709e59ec2021c570a2aba42554df7cff2a9f5fe8009ac476d9",
+    "palms": [
+      [
+        57.5,
+        53.5
+      ],
+      [
+        133.5,
+        53.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      15,
+      18,
+      112,
+      140
+    ]
+  },
+  {
+    "row": 13,
+    "column": 3,
+    "source": "generated/carryIdle-north/03.png",
+    "sha256": "b03a4b45105b377a46dddcd47e1d51e3940a8643d24b438a5011ac9d2dda3ee9",
+    "palms": [
+      [
+        57.5,
+        53.5
+      ],
+      [
+        133.5,
+        53.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      15,
+      19,
+      112,
+      140
+    ]
+  },
+  {
+    "row": 14,
+    "column": 0,
+    "source": "generated/carryWalk-south/01.png",
+    "sha256": "a13cdd98784db05029b671db1761264a1948e1fb29dd0984c14070a8f10efe11",
+    "palms": [
+      [
+        57.5,
+        54.5
+      ],
+      [
+        137.5,
+        53.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      24
+    ],
+    "alphaBounds": [
+      16,
+      23,
+      113,
+      140
+    ]
+  },
+  {
+    "row": 14,
+    "column": 1,
+    "source": "generated/carryWalk-south/02.png",
+    "sha256": "a85b57237f07e8b67e86dd177cdccaf523b80f154e289e28a6770344684b288d",
+    "palms": [
+      [
+        56.5,
+        53.5
+      ],
+      [
+        136.5,
+        51.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      17,
+      23,
+      110,
+      140
+    ]
+  },
+  {
+    "row": 14,
+    "column": 2,
+    "source": "generated/carryWalk-south/03.png",
+    "sha256": "e30657f2af3371f0096833a4cab4c7fd2ed9cef09ce74a86aba38cca4d6ea3b9",
+    "palms": [
+      [
+        58.5,
+        52.5
+      ],
+      [
+        134.5,
+        50.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      20,
+      21,
+      108,
+      140
+    ]
+  },
+  {
+    "row": 14,
+    "column": 3,
+    "source": "generated/carryWalk-south/04.png",
+    "sha256": "3f45b9dcfc4573d75a240f02a5392e58470be1fe5fcb0de6740bb1da162d2a6c",
+    "palms": [
+      [
+        61.5,
+        50.5
+      ],
+      [
+        131.5,
+        48.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      20,
+      13
+    ],
+    "alphaBounds": [
+      27,
+      23,
+      101,
+      141
+    ]
+  },
+  {
+    "row": 14,
+    "column": 4,
+    "source": "generated/carryWalk-south/05.png",
+    "sha256": "3441582d2976ac4ee44c0730c14d7500b2a0c6c32b40f6f5cda01aa4369fbc97",
+    "palms": [
+      [
+        57.5,
+        51.5
+      ],
+      [
+        135.5,
+        50.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      20,
+      22,
+      108,
+      141
+    ]
+  },
+  {
+    "row": 14,
+    "column": 5,
+    "source": "generated/carryWalk-south/06.png",
+    "sha256": "e60c2acb2eb4c84d981a78c85fd6a03c2270ada758f6bae7aed4f8efe37e6549",
+    "palms": [
+      [
+        57.5,
+        53.5
+      ],
+      [
+        135.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      16,
+      21,
+      114,
+      141
+    ]
+  },
+  {
+    "row": 15,
+    "column": 0,
+    "source": "generated/carryWalk-east/01.png",
+    "sha256": "51dc8acd60c8cf7acf101570e77e4a0c587dd278b1bfecd51d9412408a59397e",
+    "palms": [
+      [
+        126.5,
+        53.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      18,
+      21,
+      107,
+      142
+    ]
+  },
+  {
+    "row": 15,
+    "column": 1,
+    "source": "generated/carryWalk-east/02.png",
+    "sha256": "94df878d1ae5aed28225c8fa8f4f416bd96e52248a5b4c671065a196364316dd",
+    "palms": [
+      [
+        127.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      19,
+      24,
+      106,
+      142
+    ]
+  },
+  {
+    "row": 15,
+    "column": 2,
+    "source": "generated/carryWalk-east/03.png",
+    "sha256": "22a6c127e8d4d7ab46969275840ebfe0c166f5f175553cb4a0d8875ef7411540",
+    "palms": [
+      [
+        127.5,
+        56.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      20,
+      25,
+      106,
+      142
+    ]
+  },
+  {
+    "row": 15,
+    "column": 3,
+    "source": "generated/carryWalk-east/04.png",
+    "sha256": "10e151ddd5b95977a0bcd227b695bfbfb55538f811b79d310cdf0792b45a5838",
+    "palms": [
+      [
+        128.5,
+        55.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      20,
+      22,
+      109,
+      140
+    ]
+  },
+  {
+    "row": 15,
+    "column": 4,
+    "source": "generated/carryWalk-east/05.png",
+    "sha256": "7b78ccafd4d6b39f865322e753784f0c98bd9bae5995397f495ef36a772cf95c",
+    "palms": [
+      [
+        127.5,
+        53.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      20,
+      21,
+      109,
+      139
+    ]
+  },
+  {
+    "row": 15,
+    "column": 5,
+    "source": "generated/carryWalk-east/06.png",
+    "sha256": "cb04d8dbb9bcc649b20cd613a6d0d8b8b05d90ee400c2e0d829b3863a3141740",
+    "palms": [
+      [
+        127.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25
+    ],
+    "alphaBounds": [
+      21,
+      24,
+      108,
+      142
+    ]
+  },
+  {
+    "row": 16,
+    "column": 0,
+    "source": "generated/carryWalk-north/01.png",
+    "sha256": "2f43cee47af6a674cd2f818358452499aa06510ea5ec28e48537f85d32fbeb10",
+    "palms": [
+      [
+        58.5,
+        54.5
+      ],
+      [
+        134.5,
+        54.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      16,
+      21,
+      113,
+      140
+    ]
+  },
+  {
+    "row": 16,
+    "column": 1,
+    "source": "generated/carryWalk-north/02.png",
+    "sha256": "96f3395496abe3c854fa0036ca4b04c24a317c48c252af3942dd0fad75348c1c",
+    "palms": [
+      [
+        56.5,
+        51.5
+      ],
+      [
+        136.5,
+        51.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      20,
+      23,
+      109,
+      140
+    ]
+  },
+  {
+    "row": 16,
+    "column": 2,
+    "source": "generated/carryWalk-north/03.png",
+    "sha256": "2693d75154abff5f9c42a5ef8cd1068beeb478cdee15a73505cb77c7b0f4217d",
+    "palms": [
+      [
+        56.5,
+        49.5
+      ],
+      [
+        136.5,
+        48.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      24
+    ],
+    "alphaBounds": [
+      19,
+      20,
+      109,
+      140
+    ]
+  },
+  {
+    "row": 16,
+    "column": 3,
+    "source": "generated/carryWalk-north/04.png",
+    "sha256": "67e580f48e6576b76d82377bce1facd57b1e514ccf6e84c64517bc889d1b9016",
+    "palms": [
+      [
+        60.5,
+        51.5
+      ],
+      [
+        132.5,
+        51.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      24,
+      23
+    ],
+    "alphaBounds": [
+      20,
+      18,
+      109,
+      140
+    ]
+  },
+  {
+    "row": 16,
+    "column": 4,
+    "source": "generated/carryWalk-north/05.png",
+    "sha256": "32a06025a942fa87cabbb7f94c0524b309b324393d67438ae7b23e0cccb2e17f",
+    "palms": [
+      [
+        57.5,
+        49.5
+      ],
+      [
+        134.5,
+        49.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      24,
+      21
+    ],
+    "alphaBounds": [
+      20,
+      21,
+      108,
+      140
+    ]
+  },
+  {
+    "row": 16,
+    "column": 5,
+    "source": "generated/carryWalk-north/06.png",
+    "sha256": "8ece024b3fcc6ef63f3c2b4b616b353f308cdf9098e538cf63218b0d444b6628",
+    "palms": [
+      [
+        56.5,
+        50.5
+      ],
+      [
+        135.5,
+        49.5
+      ]
+    ],
+    "brownPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      20,
+      23,
+      108,
+      140
+    ]
+  }
+]

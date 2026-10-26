@@ -3,9 +3,9 @@ import { CHARACTER_SHEETS, previewPose } from "./sheet-art";
 import animationBounds from "./cast-animation-bounds.json";
 
 export const CAST_BODY_HEIGHT: Record<Exclude<CharacterId, "bomb">, number> = {
-  captain: 124, thor: 127, goku: 142, naruto: 109, spider: 122, pikachu: 150,
-  static: CHARACTER_SHEETS.static.lobby!.bodyH!, flash: 158, bugs: 153, lantern: 146, donatello: 130, penelope: 148,
-  panther: 141, harry: 157, optimus: 165, pele: 125, lula: 166,
+  captain: 124, thor: 127, goku: 142, naruto: 109, spider: 122, pikachu: 129,
+  static: CHARACTER_SHEETS.static.lobby!.bodyH!, flash: 158, bugs: 127, lantern: 136, donatello: 123, penelope: 148,
+  panther: 126, harry: 126, optimus: 165, pele: 119, lula: 166,
 };
 
 /** Complete visible envelope, verified against every frame of each menu animation. */
@@ -13,7 +13,7 @@ export const CAST_HORIZONTAL_BOUNDS = animationBounds as Record<Exclude<Characte
 
 /** Keep the standing bodies close; travelling effects can cross the gaps between companions. */
 const BODY_SPACING: Partial<Record<CharacterId, readonly [number, number]>> = {
-  harry: [58, 175], optimus: [92, 229],
+  optimus: [92, 229],
 };
 
 export interface CastArt {

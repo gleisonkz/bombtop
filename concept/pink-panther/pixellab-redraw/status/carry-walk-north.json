@@ -1,0 +1,55 @@
+{
+  "usage": {
+    "type": "generations",
+    "generations": 8.0
+  },
+  "id": "eef35242-873a-41e7-a64b-1ebfcca41349",
+  "status": "completed",
+  "created_at": "2026-10-26T18:55:11.924883+00:00",
+  "last_response": {
+    "seed": 2576506234,
+    "type": "done",
+    "action": "Keep this exact approved classic Pink Panther, VERY SLIM narrow waist and torso, long THIN arms and legs, long thin tail, small head, original yellow eyes and elongated muzzle. Preserve native detail, pink colors and proportions. Full figure and tail visible. Only character on transparent background. No scarf, clothes, props, balls, bombs, particles, smoke, aura, magic, ground shadows or effects. Locked camera. Immediately lift BOTH EMPTY hands overhead with palms facing UP. Then keep both hands ABOVE head throughout remaining clip while walking IN PLACE in a smooth alternating stride. Natural connected shoulders elbows wrists and delicate pink paws. Empty hands support nothing visible. Keep original facing. Do not draw an object or sphere.",
+    "status": "initializing",
+    "progress": 0.9519512195121951,
+    "direction": "north",
+    "frame_count": 14,
+    "animation_id": "1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e",
+    "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+    "storage_urls": {
+      "frames": [
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/0.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/1.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/2.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/3.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/4.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/5.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/6.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/7.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/8.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/9.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/10.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/11.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/12.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1b78c7ef-3bbd-45e1-a41f-f479d9e36e6e/north/13.png"
+      ]
+    },
+    "billing_usage": {
+      "usd": 0.0,
+      "type": "generations",
+      "generations": 8
+    },
+    "generation_id": "ed29409a-ecb7-4604-be2b-778d7e17c848",
+    "animation_name": "custom-Keep this exact approved class",
+    "queue_position": 0,
+    "billing_charged": true,
+    "generation_model": "v3",
+    "keep_first_frame": false,
+    "saved_to_storage": true,
+    "animation_group_id": "a1f15827-7abd-43ea-8399-bbd789d2d2cd",
+    "input_frames_digest": null,
+    "generation_started_at": "2026-10-26T18:55:17.370421+00:00",
+    "requested_frame_count": 14,
+    "estimated_wait_seconds": 0
+  }
+}

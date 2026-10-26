@@ -1,0 +1,46 @@
+{
+  "usage": {
+    "type": "generations",
+    "generations": 3.0
+  },
+  "id": "9ac350a1-655d-4e88-ae89-0f5fdc9497eb",
+  "status": "completed",
+  "created_at": "2026-10-26T18:58:28.859644+00:00",
+  "last_response": {
+    "seed": 2646635402,
+    "type": "done",
+    "action": "Keep this exact approved classic Pink Panther, VERY SLIM narrow waist and torso, long THIN arms and legs, long thin tail, small head, original yellow eyes and elongated muzzle. Preserve native detail, pink colors and proportions. Full figure and tail visible. Only character on transparent background. No scarf, clothes, props, balls, bombs, particles, smoke, aura, magic, ground shadows or effects. Locked camera. Subtle breathing idle holding this EXACT overhead-arms pose, both EMPTY pink palms UP above head. Feet planted and legs stationary. Hands remain raised at fixed height, no walking, turning or lowering arms. Small chest breathing only.",
+    "status": "initializing",
+    "progress": 0.21069626510136155,
+    "direction": "south",
+    "frame_count": 4,
+    "animation_id": "4d1da3e4-4902-4c7f-9c09-5e783869d16c",
+    "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+    "storage_urls": {
+      "frames": [
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/4d1da3e4-4902-4c7f-9c09-5e783869d16c/south/0.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/4d1da3e4-4902-4c7f-9c09-5e783869d16c/south/1.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/4d1da3e4-4902-4c7f-9c09-5e783869d16c/south/2.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/4d1da3e4-4902-4c7f-9c09-5e783869d16c/south/3.png"
+      ],
+      "input_frames_digest": "8030766ee1e82336ec5ed30002519ea376b813e3a4c901e1bec0a6d87ab1a5d8"
+    },
+    "billing_usage": {
+      "usd": 0.0,
+      "type": "generations",
+      "generations": 3
+    },
+    "generation_id": "48efc2b7-7c72-4c6c-bd96-3861fd1cfcea",
+    "animation_name": "custom-Keep this exact approved class",
+    "queue_position": 0,
+    "billing_charged": true,
+    "generation_model": "v3_custom_frames",
+    "keep_first_frame": false,
+    "saved_to_storage": true,
+    "animation_group_id": "404e2284-d6ce-44a5-88e7-78107467f5c6",
+    "input_frames_digest": "8030766ee1e82336ec5ed30002519ea376b813e3a4c901e1bec0a6d87ab1a5d8",
+    "generation_started_at": "2026-10-26T18:58:34.144913+00:00",
+    "requested_frame_count": 4,
+    "estimated_wait_seconds": 0
+  }
+}

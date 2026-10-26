@@ -1,0 +1,28 @@
+{
+  "reference": "../lula-style-preview/option-4.png",
+  "character_id": "589007c3-22d5-42ef-8f76-0031e8b2ea26",
+  "jobs": {
+    "idle-south": "cb2db66a-dc58-48c4-80f2-39e412246ff5",
+    "walk-south": "5862c9b0-2f00-45cc-98fb-a2f8aa5540fa",
+    "stun-south": "31849ef9-64b4-4f57-8195-17094231566b",
+    "death-south": "b35df990-4204-4721-b3ac-49317e01a655",
+    "cast-south": "144b4cc0-062e-4ef6-b950-8e91ee040fc3",
+    "lobby-south": "cda27426-18cd-46dd-8394-69bc5400202c",
+    "idle-east": "0bcb3c35-2199-4333-946c-f0de0768620a",
+    "walk-east": "08266b91-7e6c-44ec-a9e1-fa7a915a9ecb",
+    "cast-east": "0c5cabfe-223a-4d50-b37b-4b22126b4e47",
+    "idle-north": "2afaf058-7245-4775-88f6-d6a5bc624746",
+    "walk-north": "27b331d4-1774-4fd4-a85c-7d9ffcf78d71",
+    "cast-north": "2d20db25-7bc0-4ef7-b0e3-77bbc3c1fd41",
+    "carryIdle-south": "8c01bba4-8ed3-4df0-ac0b-fd081abf5066",
+    "carryWalk-south": "dba4eeab-d692-456b-a27c-9f292fdab0a6",
+    "carryIdle-east": "7b5f1c6f-0b51-42c5-b90d-5dc252e55876",
+    "carryWalk-east": "bc5a0145-d7bb-4750-a8ca-fdb0bdea2548",
+    "carryIdle-north": "2653722f-6aed-47f0-b1a8-cc6c56827e1d",
+    "carryWalk-north": "e6d40c13-e1a8-48c0-a11b-2970c3d5248e"
+  },
+  "frame_counts": {
+    "lobby-south": 7
+  },
+  "carry_character_id": "e3cd8427-7023-4af6-bad4-cfcacb3c8826"
+}

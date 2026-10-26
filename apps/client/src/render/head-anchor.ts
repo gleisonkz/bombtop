@@ -5,6 +5,9 @@ export type HeadAnchors = ReadonlyMap<number, ArtAnchor>;
 
 export function buildHeadAnchors(data: Uint8ClampedArray, sheet: SheetLayout): HeadAnchors {
   const strips: Strip[] = [...Object.values(sheet.idle), ...Object.values(sheet.walk)];
+  const carryStrips = [...Object.values(sheet.carryIdle ?? {}), ...Object.values(sheet.carryWalk ?? {})];
+  const carryRows = new Set(carryStrips.map(strip => strip.row));
+  strips.push(...carryStrips);
   if (sheet.stun) strips.push(sheet.stun);
   const rows = new Map<number, Set<number>>();
   for (const strip of strips) {
@@ -14,6 +17,8 @@ export function buildHeadAnchors(data: Uint8ClampedArray, sheet: SheetLayout): H
   }
   const anchors = new Map<number, ArtAnchor>();
   for (const [row, columns] of rows) {
+    const scanLeft = carryRows.has(row) ? Math.max(0, Math.round(sheet.anchorX - sheet.bodyH / 8)) : 0;
+    const scanRight = carryRows.has(row) ? Math.min(sheet.frameW, Math.round(sheet.anchorX + sheet.bodyH / 8)) : sheet.frameW;
     let left = sheet.frameW;
     let right = -1;
     let top = sheet.frameH;
@@ -22,7 +27,7 @@ export function buildHeadAnchors(data: Uint8ClampedArray, sheet: SheetLayout): H
     for (const column of columns) {
       for (let y = 0; y < top; y++) {
         let found = false;
-        for (let x = 0; x < sheet.frameW; x++) {
+        for (let x = scanLeft; x < scanRight; x++) {
           if (!opaque(column, x, y)) continue;
           top = y;
           found = true;

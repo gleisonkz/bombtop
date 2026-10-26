@@ -1,0 +1,132 @@
+{
+  "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+  "approved_reference": "../pixellab-preview/option-2.png",
+  "clips": {
+    "idle-south": {
+      "job_id": "64970f99-189b-46af-980f-700c2d38c823",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle loop. Relaxed standing, both feet planted, arms at sides, tail gently sways. Do not walk or turn.",
+      "direction": "south",
+      "animation_group_id": "7ddcde27-1c8a-438f-b9c6-74a0692f1ca7"
+    },
+    "idle-east": {
+      "job_id": "8d02ee0b-88d0-4183-bc6b-079cb310e193",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle loop. Relaxed standing, both feet planted, arms at sides, tail gently sways. Do not walk or turn.",
+      "direction": "east",
+      "animation_group_id": "7ddcde27-1c8a-438f-b9c6-74a0692f1ca7"
+    },
+    "idle-north": {
+      "job_id": "45993c47-86c5-4d91-bb83-a0423472c307",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle loop. Relaxed standing, both feet planted, arms at sides, tail gently sways. Do not walk or turn.",
+      "direction": "north",
+      "animation_group_id": "7ddcde27-1c8a-438f-b9c6-74a0692f1ca7"
+    },
+    "walk-south": {
+      "job_id": "a9acfb59-efd6-4562-a52a-33e6f8121c3a",
+      "frames_requested": 6,
+      "action": "Smooth six-phase walking IN PLACE loop with clear alternating long slender legs and natural opposing arms. Keep original facing throughout. No running or turning.",
+      "direction": "south",
+      "animation_group_id": "2aa42f6f-d83c-4116-934b-404024899a12"
+    },
+    "walk-east": {
+      "job_id": "3f48a64f-63a3-4153-86c7-c06dd6f06587",
+      "frames_requested": 6,
+      "action": "Smooth six-phase walking IN PLACE loop with clear alternating long slender legs and natural opposing arms. Keep original facing throughout. No running or turning.",
+      "direction": "east",
+      "animation_group_id": "2aa42f6f-d83c-4116-934b-404024899a12"
+    },
+    "walk-north": {
+      "job_id": "2b7cc4c6-9a07-4d81-b195-26d7d1225ac7",
+      "frames_requested": 6,
+      "action": "Smooth six-phase walking IN PLACE loop with clear alternating long slender legs and natural opposing arms. Keep original facing throughout. No running or turning.",
+      "direction": "north",
+      "animation_group_id": "2aa42f6f-d83c-4116-934b-404024899a12"
+    },
+    "stun-south": {
+      "job_id": "83d7d00a-be34-4151-ab92-6f210b4098ec",
+      "frames_requested": 6,
+      "action": "Short hurt reaction: recoil slightly with surprised face and hands close to chest, then recover to original upright idle. Keep feet near same spot. No stars or impact effects.",
+      "direction": "south",
+      "animation_group_id": "70aa4191-b994-4262-80cc-663721f2e45b"
+    },
+    "death-south": {
+      "job_id": "70120355-5516-4cea-8128-cd9f4dc417f4",
+      "frames_requested": 8,
+      "action": "Comic defeat: wobble, bend knees, fall backwards gently and end lying on back on the ground. Long slim figure and tail stay connected. No stars, ghosts, symbols or effects.",
+      "direction": "south",
+      "animation_group_id": "d632a86c-9835-49cf-a2ac-1524717724a3"
+    },
+    "sneak-south": {
+      "job_id": "433a563b-9c7a-440b-b712-c7fa9fd8086f",
+      "frames_requested": 6,
+      "action": "Classic Pink Panther stealth TIPTOE walk in place. Slightly crouched thin torso, bent knees, raised heels, paws delicately held before chest, sly face. Alternate feet quietly. Stay fully visible and opaque. Never disappear. Maintain original facing and same slim body.",
+      "direction": "south",
+      "animation_group_id": "64b43610-b8d5-4552-9b9a-43f258e78141"
+    },
+    "sneak-east": {
+      "job_id": "06ab1b11-b656-455c-b69d-f75dc8234061",
+      "frames_requested": 6,
+      "action": "Classic Pink Panther stealth TIPTOE walk in place. Slightly crouched thin torso, bent knees, raised heels, paws delicately held before chest, sly face. Alternate feet quietly. Stay fully visible and opaque. Never disappear. Maintain original facing and same slim body.",
+      "direction": "east",
+      "animation_group_id": "64b43610-b8d5-4552-9b9a-43f258e78141"
+    },
+    "sneak-north": {
+      "job_id": "ca8afa0a-b046-444d-99d7-ceac25f948fa",
+      "frames_requested": 6,
+      "action": "Classic Pink Panther stealth TIPTOE walk in place. Slightly crouched thin torso, bent knees, raised heels, paws delicately held before chest, sly face. Alternate feet quietly. Stay fully visible and opaque. Never disappear. Maintain original facing and same slim body.",
+      "direction": "north",
+      "animation_group_id": "64b43610-b8d5-4552-9b9a-43f258e78141"
+    },
+    "carry-walk-south": {
+      "job_id": "c40ae67f-7553-408c-85e4-c997dd4330ae",
+      "frames_requested": 14,
+      "action": "Immediately lift BOTH EMPTY hands overhead with palms facing UP. Then keep both hands ABOVE head throughout remaining clip while walking IN PLACE in a smooth alternating stride. Natural connected shoulders elbows wrists and delicate pink paws. Empty hands support nothing visible. Keep original facing. Do not draw an object or sphere.",
+      "direction": "south",
+      "animation_group_id": "a1f15827-7abd-43ea-8399-bbd789d2d2cd"
+    },
+    "carry-walk-east": {
+      "job_id": "73d88f2e-abe7-404f-8f14-4af259191255",
+      "frames_requested": 14,
+      "action": "Immediately lift BOTH EMPTY hands overhead with palms facing UP. Then keep both hands ABOVE head throughout remaining clip while walking IN PLACE in a smooth alternating stride. Natural connected shoulders elbows wrists and delicate pink paws. Empty hands support nothing visible. Keep original facing. Do not draw an object or sphere.",
+      "direction": "east",
+      "animation_group_id": "a1f15827-7abd-43ea-8399-bbd789d2d2cd"
+    },
+    "carry-walk-north": {
+      "job_id": "eef35242-873a-41e7-a64b-1ebfcca41349",
+      "frames_requested": 14,
+      "action": "Immediately lift BOTH EMPTY hands overhead with palms facing UP. Then keep both hands ABOVE head throughout remaining clip while walking IN PLACE in a smooth alternating stride. Natural connected shoulders elbows wrists and delicate pink paws. Empty hands support nothing visible. Keep original facing. Do not draw an object or sphere.",
+      "direction": "north",
+      "animation_group_id": "a1f15827-7abd-43ea-8399-bbd789d2d2cd"
+    },
+    "lobby-south": {
+      "job_id": "c9af829e-1da3-491b-af03-fe92b5ccb8fa",
+      "frames_requested": 14,
+      "action": "Classic sly introduction: take two delicate tiptoe steps in place, turn head slightly toward viewer, raise one index finger gently to mouth in a shushing gesture, give a knowing half-lidded look, lower hand and return to relaxed pose. Slim long graceful limbs and tail. Stay near center. No letters or effects.",
+      "direction": "south",
+      "animation_group_id": "5402eb59-2b9f-4e24-ae82-7281b4652124"
+    },
+    "carry-idle-south": {
+      "job_id": "9ac350a1-655d-4e88-ae89-0f5fdc9497eb",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle holding this EXACT overhead-arms pose, both EMPTY pink palms UP above head. Feet planted and legs stationary. Hands remain raised at fixed height, no walking, turning or lowering arms. Small chest breathing only.",
+      "direction": "south",
+      "animation_group_id": "404e2284-d6ce-44a5-88e7-78107467f5c6"
+    },
+    "carry-idle-east": {
+      "job_id": "6a752e9e-1ceb-4692-a49a-5271a52ba558",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle holding this EXACT overhead-arms pose, both EMPTY pink palms UP above head. Feet planted and legs stationary. Hands remain raised at fixed height, no walking, turning or lowering arms. Small chest breathing only.",
+      "direction": "east",
+      "animation_group_id": "fdcf1128-4873-438f-bfed-5f5c672bfdc3"
+    },
+    "carry-idle-north": {
+      "job_id": "cf8babd4-9021-4a51-8735-94e6bb87db19",
+      "frames_requested": 4,
+      "action": "Subtle breathing idle holding this EXACT overhead-arms pose, both EMPTY pink palms UP above head. Feet planted and legs stationary. Hands remain raised at fixed height, no walking, turning or lowering arms. Small chest breathing only.",
+      "direction": "north",
+      "animation_group_id": "118bb554-6794-4d0b-80ab-5620e0ec6173"
+    }
+  }
+}

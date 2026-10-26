@@ -10,13 +10,14 @@ const sockets = new Map<string, CarryFrames>(Object.entries(anchors.characters).
 ]));
 
 /** The visible palms, transformed by exactly the same frame, scale and mirror as the character. */
-export function carriedBombPose({ sheet, frame, cx, feetY, bomb, tick }: {
+export function carriedBombPose({ sheet, frame, cx, feetY, bomb, tick, headY }: {
   sheet: SheetLayout;
   frame: FrameRect;
   cx: number;
   feetY: number;
   bomb: Pick<Bomb, "fuse" | "type" | "mega">;
   tick: number;
+  headY?: number;
 }): { x: number; y: number; scale: number; front: boolean } {
   const scale = sheet.scale ?? 1;
   const data = sockets.get(sheet.url.split("?")[0]!);
@@ -35,9 +36,11 @@ export function carriedBombPose({ sheet, frame, cx, feetY, bomb, tick }: {
   // A side pose exposes one palm: support the near lower corner rather than burying the body behind the head.
   const side = grip.span === 0;
   const forward = sheet.side === "right" ? mirror : -mirror;
+  const supportY = feetY + (grip.y - sheet.anchorY) * scale - ry * (side ? 0.6 : Math.sqrt(Math.max(0, 1 - (halfSpan / rx) ** 2)));
+  const headTop = headY ?? feetY - sheet.bodyH * scale;
   return {
     x: cx + (grip.x - sheet.anchorX) * scale * mirror + (side ? forward * rx * 0.8 : 0),
-    y: feetY + (grip.y - sheet.anchorY) * scale - ry * (side ? 0.6 : Math.sqrt(Math.max(0, 1 - (halfSpan / rx) ** 2))),
+    y: data!.front ? supportY : Math.min(supportY, headTop - ry - 0.5),
     scale: fit,
     front: data!.front,
   };

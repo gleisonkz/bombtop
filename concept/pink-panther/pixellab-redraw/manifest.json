@@ -1,0 +1,752 @@
+{
+  "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+  "approved_reference": "../pixellab-preview/option-2.png",
+  "pixel_scale": 1,
+  "effect_policy": "character poses only, no baked effects or props",
+  "rows": [
+    {
+      "name": "idle.down",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-south/frame_000.png"
+        },
+        {
+          "path": "generated/idle-south/frame_001.png"
+        },
+        {
+          "path": "generated/idle-south/frame_002.png"
+        },
+        {
+          "path": "generated/idle-south/frame_003.png"
+        }
+      ]
+    },
+    {
+      "name": "idle.side",
+      "anchor": [
+        98,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-east/frame_000.png"
+        },
+        {
+          "path": "generated/idle-east/frame_001.png"
+        },
+        {
+          "path": "generated/idle-east/frame_002.png"
+        },
+        {
+          "path": "generated/idle-east/frame_003.png"
+        }
+      ]
+    },
+    {
+      "name": "idle.up",
+      "anchor": [
+        97,
+        157
+      ],
+      "frames": [
+        {
+          "path": "generated/idle-north/frame_000.png"
+        },
+        {
+          "path": "generated/idle-north/frame_001.png"
+        },
+        {
+          "path": "generated/idle-north/frame_002.png"
+        },
+        {
+          "path": "generated/idle-north/frame_003.png"
+        }
+      ]
+    },
+    {
+      "name": "walk.down",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-south/frame_000.png"
+        },
+        {
+          "path": "generated/walk-south/frame_001.png"
+        },
+        {
+          "path": "generated/walk-south/frame_002.png"
+        },
+        {
+          "path": "generated/walk-south/frame_003.png"
+        },
+        {
+          "path": "generated/walk-south/frame_004.png"
+        },
+        {
+          "path": "generated/walk-south/frame_005.png"
+        }
+      ]
+    },
+    {
+      "name": "walk.side",
+      "anchor": [
+        98,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-east/frame_000.png"
+        },
+        {
+          "path": "generated/walk-east/frame_001.png"
+        },
+        {
+          "path": "generated/walk-east/frame_002.png"
+        },
+        {
+          "path": "generated/walk-east/frame_003.png"
+        },
+        {
+          "path": "generated/walk-east/frame_004.png"
+        },
+        {
+          "path": "generated/walk-east/frame_005.png"
+        }
+      ]
+    },
+    {
+      "name": "walk.up",
+      "anchor": [
+        97,
+        157
+      ],
+      "frames": [
+        {
+          "path": "generated/walk-north/frame_000.png"
+        },
+        {
+          "path": "generated/walk-north/frame_001.png"
+        },
+        {
+          "path": "generated/walk-north/frame_002.png"
+        },
+        {
+          "path": "generated/walk-north/frame_003.png"
+        },
+        {
+          "path": "generated/walk-north/frame_004.png"
+        },
+        {
+          "path": "generated/walk-north/frame_005.png"
+        }
+      ]
+    },
+    {
+      "name": "stun",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/stun-south/frame_000.png"
+        },
+        {
+          "path": "generated/stun-south/frame_001.png"
+        },
+        {
+          "path": "generated/stun-south/frame_002.png"
+        },
+        {
+          "path": "generated/stun-south/frame_003.png"
+        },
+        {
+          "path": "generated/stun-south/frame_004.png"
+        },
+        {
+          "path": "generated/stun-south/frame_006.png"
+        }
+      ]
+    },
+    {
+      "name": "death",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/death-south/frame_000.png"
+        },
+        {
+          "path": "generated/death-south/frame_002.png"
+        },
+        {
+          "path": "generated/death-south/frame_003.png"
+        },
+        {
+          "path": "generated/death-south/frame_004.png"
+        },
+        {
+          "path": "generated/death-south/frame_005.png"
+        },
+        {
+          "path": "generated/death-south/frame_007.png"
+        },
+        {
+          "path": "generated/death-south/frame_008.png"
+        }
+      ]
+    },
+    {
+      "name": "cast.down",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-south/frame_001.png"
+        },
+        {
+          "path": "generated/sneak-south/frame_002.png"
+        },
+        {
+          "path": "generated/sneak-south/frame_003.png"
+        },
+        {
+          "path": "generated/sneak-south/frame_004.png"
+        },
+        {
+          "path": "generated/sneak-south/frame_005.png"
+        },
+        {
+          "path": "generated/sneak-south/frame_006.png"
+        }
+      ]
+    },
+    {
+      "name": "cast.side",
+      "anchor": [
+        98,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-east/frame_001.png"
+        },
+        {
+          "path": "generated/sneak-east/frame_002.png"
+        },
+        {
+          "path": "generated/sneak-east/frame_003.png"
+        },
+        {
+          "path": "generated/sneak-east/frame_004.png"
+        },
+        {
+          "path": "generated/sneak-east/frame_005.png"
+        },
+        {
+          "path": "generated/sneak-east/frame_006.png"
+        }
+      ]
+    },
+    {
+      "name": "cast.up",
+      "anchor": [
+        97,
+        157
+      ],
+      "frames": [
+        {
+          "path": "generated/sneak-north/frame_001.png"
+        },
+        {
+          "path": "generated/sneak-north/frame_002.png"
+        },
+        {
+          "path": "generated/sneak-north/frame_003.png"
+        },
+        {
+          "path": "generated/sneak-north/frame_004.png"
+        },
+        {
+          "path": "generated/sneak-north/frame_005.png"
+        },
+        {
+          "path": "generated/sneak-north/frame_006.png"
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.down",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-south/frame_001.png",
+          "palms": [
+            {
+              "x": 52,
+              "y": 49
+            },
+            {
+              "x": 141,
+              "y": 50
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_002.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 52
+            },
+            {
+              "x": 139,
+              "y": 53
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_003.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 56
+            },
+            {
+              "x": 142,
+              "y": 56
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-south/frame_004.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 58
+            },
+            {
+              "x": 143,
+              "y": 58
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.side",
+      "anchor": [
+        98,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-east/frame_001.png",
+          "palms": [
+            {
+              "x": 140,
+              "y": 46
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_002.png",
+          "palms": [
+            {
+              "x": 137,
+              "y": 47
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_003.png",
+          "palms": [
+            {
+              "x": 139,
+              "y": 47
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-east/frame_004.png",
+          "palms": [
+            {
+              "x": 141,
+              "y": 48
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryIdle.up",
+      "anchor": [
+        97,
+        157
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-idle-north/frame_001.png",
+          "palms": [
+            {
+              "x": 61,
+              "y": 40
+            },
+            {
+              "x": 126,
+              "y": 40
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_002.png",
+          "palms": [
+            {
+              "x": 59,
+              "y": 43
+            },
+            {
+              "x": 127,
+              "y": 44
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_003.png",
+          "palms": [
+            {
+              "x": 61,
+              "y": 46
+            },
+            {
+              "x": 130,
+              "y": 46
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-idle-north/frame_004.png",
+          "palms": [
+            {
+              "x": 59,
+              "y": 44
+            },
+            {
+              "x": 132,
+              "y": 43
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.down",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-south/frame_007.png",
+          "palms": [
+            {
+              "x": 53,
+              "y": 51
+            },
+            {
+              "x": 143,
+              "y": 57
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_008.png",
+          "palms": [
+            {
+              "x": 52,
+              "y": 55
+            },
+            {
+              "x": 143,
+              "y": 61
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_009.png",
+          "palms": [
+            {
+              "x": 52,
+              "y": 52
+            },
+            {
+              "x": 143,
+              "y": 58
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_010.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 47
+            },
+            {
+              "x": 143,
+              "y": 53
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_011.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 49
+            },
+            {
+              "x": 142,
+              "y": 50
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-south/frame_012.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 49
+            },
+            {
+              "x": 142,
+              "y": 52
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.side",
+      "anchor": [
+        98,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-east/frame_007.png",
+          "palms": [
+            {
+              "x": 135,
+              "y": 42
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_008.png",
+          "palms": [
+            {
+              "x": 139,
+              "y": 51
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_009.png",
+          "palms": [
+            {
+              "x": 141,
+              "y": 54
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_010.png",
+          "palms": [
+            {
+              "x": 139,
+              "y": 49
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_011.png",
+          "palms": [
+            {
+              "x": 138,
+              "y": 41
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-east/frame_012.png",
+          "palms": [
+            {
+              "x": 135,
+              "y": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "carryWalk.up",
+      "anchor": [
+        97,
+        157
+      ],
+      "frames": [
+        {
+          "path": "generated/carry-walk-north/frame_007.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 47
+            },
+            {
+              "x": 136,
+              "y": 50
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_008.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 43
+            },
+            {
+              "x": 135,
+              "y": 46
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_009.png",
+          "palms": [
+            {
+              "x": 56,
+              "y": 40
+            },
+            {
+              "x": 134,
+              "y": 40
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_010.png",
+          "palms": [
+            {
+              "x": 59,
+              "y": 39
+            },
+            {
+              "x": 128,
+              "y": 39
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_011.png",
+          "palms": [
+            {
+              "x": 55,
+              "y": 42
+            },
+            {
+              "x": 129,
+              "y": 42
+            }
+          ]
+        },
+        {
+          "path": "generated/carry-walk-north/frame_012.png",
+          "palms": [
+            {
+              "x": 54,
+              "y": 48
+            },
+            {
+              "x": 135,
+              "y": 48
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lobby",
+      "anchor": [
+        100,
+        160
+      ],
+      "frames": [
+        {
+          "path": "generated/lobby-south/frame_000.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_001.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_002.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_003.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_004.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_005.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_006.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_007.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_008.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_009.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_010.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_011.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_012.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_013.png"
+        },
+        {
+          "path": "generated/lobby-south/frame_014.png"
+        },
+        {
+          "hold": 14
+        }
+      ],
+      "note": "14 generated poses, source resting pose and one explicit final rest hold."
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import {
 } from "./constants";
 import { applyRandomCurse } from "./curse";
 import { giveRandomMount } from "./mount";
+import { playerElevated } from "./player-carry";
 import { nextRandom } from "./rng";
 import { bombAt, getTile, hasFlame, ItemKind, playerTile, Tile, type MatchState, type Player } from "./state";
 
@@ -43,7 +44,7 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
 /** Living players collect any exposed item on their tile. */
 export function collectItems(s: MatchState): void {
   for (const p of s.players) {
-    if (!p.alive) continue;
+    if (!p.alive || playerElevated(p)) continue;
     const { x, y } = playerTile(p);
     if (getTile(s, x, y) !== Tile.Empty) continue;
     const item = s.items.find((i) => i.x === x && i.y === y);
@@ -144,6 +145,7 @@ export function dropItems(s: MatchState, p: Player): void {
   p.canKick = p.canPunch = p.canGlove = false;
   p.canBombPass = p.canBlockPass = false;
   p.hasHeart = false;
+  delete p.costume;
   p.fireSuitTicks = 0;
   if (p.canPush) p.canPush = false;
   p.bombType = "normal";

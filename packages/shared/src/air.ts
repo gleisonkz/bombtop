@@ -1,5 +1,6 @@
 import { AIR_DISTANCE, AIR_TICKS_PER_TILE, STUN_TICKS } from "./constants";
 import { placeBomb } from "./bombs";
+import { playerCarryButton, playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 
 /** Launches a grounded bomb into the air from its current tile. */
@@ -8,11 +9,12 @@ export function launch(b: Bomb, dir: Facing): void {
   b.slide = null;
   b.offset = 0;
   delete b.conveyor;
+  delete b.kickedBy;
 }
 
 /** Punches the grounded bomb on the tile the player is facing. Returns false if there was none. */
 export function punch(s: MatchState, p: Player): boolean {
-  if (!p.alive || !p.canPunch) return false;
+  if (!p.alive || !p.canPunch || p.mount || playerElevated(p)) return false;
   const { x, y } = playerTile(p);
   const [dx, dy] = DIR_VECTORS[p.facing];
   const bomb = bombAt(s, x + dx, y + dy);
@@ -24,7 +26,8 @@ export function punch(s: MatchState, p: Player): boolean {
  * The bomb button, glove included: a carried bomb is thrown once the button
  * is let go; a press on your own bomb lifts it; any other press places one.
  */
-export function bombButton(s: MatchState, p: Player, input: PlayerInput): void {
+export function bombButton(s: MatchState, p: Player, input: PlayerInput, inputs: Record<string, PlayerInput> = {}): void {
+  if (!p.alive || playerElevated(p)) return;
   const held = s.bombs.find((b) => b.heldBy === p.id);
   if (held) {
     if (input.hold) return;
@@ -32,6 +35,7 @@ export function bombButton(s: MatchState, p: Player, input: PlayerInput): void {
     launch(held, p.facing);
     return;
   }
+  if (playerCarryButton(s, p, input, inputs)) return;
   if (!input.bomb) return;
   if (!lift(s, p)) placeBomb(s, p.id);
 }
@@ -86,7 +90,7 @@ export function updateAir(s: MatchState): void {
 
     const hit = s.players.find((p) => {
       const t = playerTile(p);
-      return p.alive && t.x === b.x && t.y === b.y;
+      return p.alive && !playerElevated(p) && t.x === b.x && t.y === b.y;
     });
     // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned.
     if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) hit.stun = STUN_TICKS;

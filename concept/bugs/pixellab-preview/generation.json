@@ -1,0 +1,11 @@
+{
+  "job_id": "fdced5ae-1cfe-4f7d-ad44-f377a1e1e98a",
+  "tool": "PixelLab MCP create_image_pro",
+  "size": [128, 160],
+  "candidates": 4,
+  "scope": "base model preview only; no runtime replacement",
+  "direction": "slender canonical Bugs Bunny, gray/white fur, long ears, buck teeth, small blue scarf",
+  "style_references": ["captain-reference.png", "thor-reference.png"],
+  "identity_reference": "bugs-reference.png",
+  "references_uploaded_as_pixels": true
+}

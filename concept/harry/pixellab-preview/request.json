@@ -1,0 +1,14 @@
+{
+  "character_id": "3fbd5693-9045-41f6-89e8-97d2848846ab",
+  "mode": "pro",
+  "native_size": [
+    64,
+    64
+  ],
+  "directions": 8,
+  "style_character_id": "439a18c5-85aa-4455-ac5a-f40f73947f85",
+  "reference": "harry-reference-native.png",
+  "status": "ready-for-user-approval",
+  "scope": "Concept preview only; game assets unchanged",
+  "effects": "none"
+}

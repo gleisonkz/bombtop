@@ -1,0 +1,182 @@
+[
+  {
+    "source": "frames/carry-idle-east/0.png",
+    "output": "cleaned/carry-idle-east/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-east/1.png",
+    "output": "cleaned/carry-idle-east/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-east/2.png",
+    "output": "cleaned/carry-idle-east/2.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-east/3.png",
+    "output": "cleaned/carry-idle-east/3.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-east/4.png",
+    "output": "cleaned/carry-idle-east/4.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-north/0.png",
+    "output": "cleaned/carry-idle-north/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-north/1.png",
+    "output": "cleaned/carry-idle-north/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-north/2.png",
+    "output": "cleaned/carry-idle-north/2.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-north/3.png",
+    "output": "cleaned/carry-idle-north/3.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-north/4.png",
+    "output": "cleaned/carry-idle-north/4.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-south/0.png",
+    "output": "cleaned/carry-idle-south/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-south/1.png",
+    "output": "cleaned/carry-idle-south/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-south/2.png",
+    "output": "cleaned/carry-idle-south/2.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-south/3.png",
+    "output": "cleaned/carry-idle-south/3.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-idle-south/4.png",
+    "output": "cleaned/carry-idle-south/4.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/0.png",
+    "output": "cleaned/carry-loop-east/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/1.png",
+    "output": "cleaned/carry-loop-east/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/2.png",
+    "output": "cleaned/carry-loop-east/2.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/3.png",
+    "output": "cleaned/carry-loop-east/3.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/4.png",
+    "output": "cleaned/carry-loop-east/4.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/5.png",
+    "output": "cleaned/carry-loop-east/5.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-east/6.png",
+    "output": "cleaned/carry-loop-east/6.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-north/0.png",
+    "output": "cleaned/carry-loop-north/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-north/1.png",
+    "output": "cleaned/carry-loop-north/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-north/2.png",
+    "output": "cleaned/carry-loop-north/2.png",
+    "removed_detached_prop_pixels": 112
+  },
+  {
+    "source": "frames/carry-loop-north/3.png",
+    "output": "cleaned/carry-loop-north/3.png",
+    "removed_detached_prop_pixels": 184
+  },
+  {
+    "source": "frames/carry-loop-north/4.png",
+    "output": "cleaned/carry-loop-north/4.png",
+    "removed_detached_prop_pixels": 374
+  },
+  {
+    "source": "frames/carry-loop-north/5.png",
+    "output": "cleaned/carry-loop-north/5.png",
+    "removed_detached_prop_pixels": 391
+  },
+  {
+    "source": "frames/carry-loop-north/6.png",
+    "output": "cleaned/carry-loop-north/6.png",
+    "removed_detached_prop_pixels": 187
+  },
+  {
+    "source": "frames/carry-loop-south/0.png",
+    "output": "cleaned/carry-loop-south/0.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-south/1.png",
+    "output": "cleaned/carry-loop-south/1.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-south/2.png",
+    "output": "cleaned/carry-loop-south/2.png",
+    "removed_detached_prop_pixels": 0
+  },
+  {
+    "source": "frames/carry-loop-south/3.png",
+    "output": "cleaned/carry-loop-south/3.png",
+    "removed_detached_prop_pixels": 343
+  },
+  {
+    "source": "frames/carry-loop-south/4.png",
+    "output": "cleaned/carry-loop-south/4.png",
+    "removed_detached_prop_pixels": 834
+  },
+  {
+    "source": "frames/carry-loop-south/5.png",
+    "output": "cleaned/carry-loop-south/5.png",
+    "removed_detached_prop_pixels": 692
+  },
+  {
+    "source": "frames/carry-loop-south/6.png",
+    "output": "cleaned/carry-loop-south/6.png",
+    "removed_detached_prop_pixels": 568
+  }
+]

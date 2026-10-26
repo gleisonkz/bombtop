@@ -8,6 +8,25 @@ import anchors from "../src/render/carry-anchors.json";
 const bomb = { fuse: FUSE_TICKS, type: "normal" as const };
 
 describe("carried bomb attachment", () => {
+  it("keeps the bomb above the head across all clean carry sheets, frames and bomb kinds", () => {
+    for (const name of Object.keys(anchors.characters)) {
+      if (name === "captain") continue; // Its authored bomb must be covered at the original socket.
+      const sheet: SheetLayout = SHEETS[name as keyof typeof SHEETS];
+      const headY = 100 - sheet.bodyH * (sheet.scale ?? 1);
+      for (const moving of [false, true]) for (const facing of ["down", "up", "left", "right"] as const) {
+        for (const type of ["normal", "pierce", "remote"] as const) for (const mega of [false, true]) {
+          for (let tick = 0; tick < 120; tick++) {
+            const held = { ...bomb, fuse: 1, type, mega };
+            const frame = playerFrame(sheet, { facing, moving, carrying: true, tick });
+            const pose = carriedBombPose({ sheet, frame, cx: 80, feetY: 100, bomb: held, tick });
+            const art = mega ? BOMBS.mega : BOMBS;
+            const radius = (mega ? 175 : 42) * art.scale * bombLook({ ...held, tick, carrying: true }).sy;
+            expect(pose.y + radius, `${name} ${facing} ${moving} ${tick} ${type} ${mega}`).toBeLessThanOrEqual(headY);
+          }
+        }
+      }
+    }
+  });
   it("preserves round proportions throughout the held bomb fuse pulse", () => {
     for (const fuse of [FUSE_TICKS, 15, 1]) {
       for (let tick = 0; tick < 120; tick++) {
@@ -49,7 +68,7 @@ describe("carried bomb attachment", () => {
             const grip = data.rows[String(strip.row) as keyof typeof data.rows][frame.x / sheet.frameW]!;
             const scale = sheet.scale ?? 1;
             const expectedX = 80 + (grip.x - sheet.anchorX) * scale * (frame.flip ? -1 : 1);
-            // Palm points lie on the bomb's lower elliptical contour, including its fuse pulse.
+            // Preserve palm support unless head clearance requires lifting the bomb.
             const look = bombLook({ ...bomb, tick, carrying: true });
             const rx = 42 * BOMBS.scale * look.sx * pose.scale;
             const ry = 42 * BOMBS.scale * look.sy * pose.scale;
@@ -57,7 +76,10 @@ describe("carried bomb attachment", () => {
             const handY = 100 + (grip.y - sheet.anchorY) * scale;
             const horizontalContact = grip.span === 0 ? pose.x - expectedX : Math.min(halfSpan, rx);
             if (grip.span !== 0) expect(pose.x).toBeCloseTo(expectedX);
-            expect((horizontalContact / rx) ** 2 + ((handY - pose.y) / ry) ** 2).toBeCloseTo(1);
+            const contact = (horizontalContact / rx) ** 2 + ((handY - pose.y) / ry) ** 2;
+            const headTop = 100 - sheet.bodyH * scale;
+            if (name !== "captain" && pose.y + ry < headTop) expect(contact).toBeGreaterThanOrEqual(1 - 1e-8);
+            else expect(contact).toBeCloseTo(1);
           }
         }
       }

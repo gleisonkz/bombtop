@@ -1,5 +1,5 @@
 import { Assets, type Texture } from "pixi.js";
-import type { StageId } from "@bombtop/shared";
+import { SB4_STAGES, type StageId } from "@bombtop/shared";
 import { TILES } from "./sprites";
 import { sb4TileLayout } from "./stage-art";
 import { isolatedTextureRow } from "./texture-cells";
@@ -9,10 +9,10 @@ export class StageTileArt {
 
   async load(layout: typeof TILES): Promise<ReadonlyMap<StageId, Texture[]>> {
     if (layout.url !== TILES.url || layout.size !== TILES.size || layout.scale !== TILES.scale || layout.cells !== TILES.cells) return new Map();
-    const entries = await Promise.all((["sb4-01", "sb4-02"] as const).map(async (stage, index) => {
+    const entries = await Promise.all(SB4_STAGES.map(async stage => {
       let pending = this.loads.get(stage);
       if (!pending) {
-        pending = this.loadAtlas(index + 1).then(textures => {
+        pending = this.loadAtlas(Number(stage.slice(-2))).then(textures => {
           if (!textures) this.loads.delete(stage);
           return textures;
         });

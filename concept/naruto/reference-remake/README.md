@@ -1,3 +1,5 @@
+> Superseded by ../approved-redraw/ and scripts/pack-naruto-approved.py for the active approved model. This folder reproduces the previous artwork.
+
 # Naruto reference redraw
 
 Appearance master: `appearance-reference.png`, the user's attached classic Naruto.

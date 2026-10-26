@@ -1,5 +1,10 @@
 import { expect, it } from "vitest";
-import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, validateStageRotation } from "../src";
+import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SB4_STAGES, validateStageRotation } from "../src";
+
+it("accepts all twelve Group 1 stages as a complete rotation", () => {
+  const rotation = SB4_STAGES.map(stage => ({ stage }));
+  expect(validateStageRotation(rotation)).toEqual(rotation);
+});
 
 it("validates a whole playlist and returns detached entries", () => {
   const input = [{ stage: "warp" }];

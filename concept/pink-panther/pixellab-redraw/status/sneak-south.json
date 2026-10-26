@@ -1,0 +1,47 @@
+{
+  "usage": {
+    "type": "generations",
+    "generations": 4.0
+  },
+  "id": "433a563b-9c7a-440b-b712-c7fa9fd8086f",
+  "status": "completed",
+  "created_at": "2026-10-26T18:54:25.986720+00:00",
+  "last_response": {
+    "seed": 1931924064,
+    "type": "done",
+    "action": "Keep this exact approved classic Pink Panther, VERY SLIM narrow waist and torso, long THIN arms and legs, long thin tail, small head, original yellow eyes and elongated muzzle. Preserve native detail, pink colors and proportions. Full figure and tail visible. Only character on transparent background. No scarf, clothes, props, balls, bombs, particles, smoke, aura, magic, ground shadows or effects. Locked camera. Classic Pink Panther stealth TIPTOE walk in place. Slightly crouched thin torso, bent knees, raised heels, paws delicately held before chest, sly face. Alternate feet quietly. Stay fully visible and opaque. Never disappear. Maintain original facing and same slim body.",
+    "status": "initializing",
+    "progress": 0.925,
+    "direction": "south",
+    "frame_count": 6,
+    "animation_id": "1e2652d8-a6a6-4d31-90cd-e85cd75f985c",
+    "character_id": "d4a3e349-0c83-4c42-a0e3-72b4b85ff355",
+    "storage_urls": {
+      "frames": [
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/0.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/1.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/2.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/3.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/4.png",
+        "https://backblaze.pixellab.ai/file/pixellab-characters/38605f0c-d0b6-461d-90b9-b50c9d03d8fb/d4a3e349-0c83-4c42-a0e3-72b4b85ff355/animations/1e2652d8-a6a6-4d31-90cd-e85cd75f985c/south/5.png"
+      ]
+    },
+    "billing_usage": {
+      "usd": 0.0,
+      "type": "generations",
+      "generations": 4
+    },
+    "generation_id": "85e23f53-1e60-4532-a68e-72bdc180683b",
+    "animation_name": "custom-Keep this exact approved class",
+    "queue_position": 0,
+    "billing_charged": true,
+    "generation_model": "v3",
+    "keep_first_frame": false,
+    "saved_to_storage": true,
+    "animation_group_id": "64b43610-b8d5-4552-9b9a-43f258e78141",
+    "input_frames_digest": null,
+    "generation_started_at": "2026-10-26T18:54:31.692443+00:00",
+    "requested_frame_count": 6,
+    "estimated_wait_seconds": 0
+  }
+}

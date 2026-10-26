@@ -1,11 +1,13 @@
 import { TILE } from "./constants";
 import { effectiveSpeed } from "./curse";
+import { playerElevated } from "./player-carry";
 import { stageTempoRate } from "./stage";
+import { stageSolid } from "./stage-obstacles";
 import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
 function passable(s: MatchState, p: Player, x: number, y: number): boolean {
   const tile = getTile(s, x, y);
-  return (tile === Tile.Empty || (!!p.canBlockPass && tile === Tile.Block)) && (!!p.canBombPass || !bombAt(s, x, y));
+  return !stageSolid(s, x, y) && (tile === Tile.Empty || (!!p.canBlockPass && tile === Tile.Block)) && (!!p.canBombPass || !bombAt(s, x, y));
 }
 
 function canKickAhead(s: MatchState, p: Player, x: number, y: number): boolean {
@@ -32,7 +34,7 @@ export function steer(s: MatchState, p: Player, dir: Direction, alt: Direction):
 }
 
 export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = effectiveSpeed(p) * stageTempoRate(s)): void {
-  if (!dir || !p.alive) return;
+  if (!dir || !p.alive || playerElevated(p)) return;
   const [dx, dy] = DIR_VECTORS[dir];
   const horizontal = dx !== 0;
   const sign = horizontal ? dx : dy;

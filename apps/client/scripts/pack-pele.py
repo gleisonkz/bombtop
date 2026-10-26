@@ -13,7 +13,7 @@ from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parents[1] / "concept/pele/supplied-final-atlas.png"
-OUTPUT = ROOT / "public/sprites/pele-final.png"
+OUTPUT = ROOT.parents[1] / "concept/pele/packed-supplied-final.png"
 CELL = 160
 ANCHOR = (80, 148)
 BODY_HEIGHT = 128

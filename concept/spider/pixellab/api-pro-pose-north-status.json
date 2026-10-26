@@ -1,0 +1,20 @@
+{
+  "usage": {
+    "type": "usd",
+    "usd": 0.0
+  },
+  "id": "b2d3dba0-c9c8-492e-b9e9-84928841329c",
+  "status": "failed",
+  "created_at": "2026-10-26T13:37:05.136378-03:00",
+  "last_response": {
+    "code": 5000,
+    "type": "error",
+    "error": "Generation failed",
+    "trace": null,
+    "detail": "Generation failed because it is against policy. Try a different description or reference image.",
+    "progress": 0.38239053058624267,
+    "limit_type": null,
+    "generation_mode": "edit_images",
+    "generation_started_at": "2026-10-26T13:37:11.317105-03:00"
+  }
+}

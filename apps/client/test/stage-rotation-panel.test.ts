@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { LobbyInfo } from "@bombtop/shared";
+import { SB4_STAGES, type LobbyInfo } from "@bombtop/shared";
+import { STAGE_NAMES } from "../src/ui/stage-names";
 import { StageRotationPanel } from "../src/ui/stage-rotation-panel";
 
 class Node {
@@ -49,6 +50,69 @@ function fixture(editable = true) {
 }
 
 describe("stage sequence editor", () => {
+  it("replaces the creative draft with all twelve battle stages and commits only once on save", () => {
+    const f = fixture();
+    f.button("12 fases SB4").click();
+    expect(f.dialog.all().filter(node => node.tag === "select").map(node => node.value)).toEqual([...SB4_STAGES]);
+    expect(f.commit).not.toHaveBeenCalled();
+    expect(f.info.stageRotation).toEqual([{ stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }]);
+    f.button("Salvar sequência").click();
+    f.button("Salvar sequência").click();
+    expect(f.commit).toHaveBeenCalledOnce();
+    expect(f.commit).toHaveBeenCalledWith(SB4_STAGES.map(stage => ({ stage })));
+  });
+  it("keeps the battle preset unavailable to guests and outside the lobby", () => {
+    const guest = fixture(false);
+    expect(guest.button("12 fases SB4").disabled).toBe(true);
+    guest.button("12 fases SB4").emit("click");
+    expect(guest.dialog.all().filter(node => node.tag === "select").map(node => node.value)).toEqual(["classic", "conveyor", "warp"]);
+    expect(guest.commit).not.toHaveBeenCalled();
+    const host = fixture();
+    host.panel.update({ ...host.info, phase: "playing" }, true);
+    host.button("12 fases SB4").emit("click");
+    host.button("Salvar sequência").emit("click");
+    (host.panel.trigger as unknown as Node).click();
+    expect(host.dialog.open).toBe(false);
+    expect(host.button("12 fases SB4").disabled).toBe(true);
+    expect(host.commit).not.toHaveBeenCalled();
+  });
+  it("describes the previews as match images with local rules under validation", () => {
+    const f = fixture();
+    const hint = f.dialog.all().find(node => node.tag === "p" && node.textContent.includes("Arraste pela alça"))!.textContent;
+    expect(hint).toContain("imagens da partida");
+    expect(hint).toContain("12 mapas SB4");
+    expect(hint).toContain("regras locais em validação");
+    expect(hint).not.toContain("referências do SNES");
+  });
+  it("renders a twelve-stage battle sequence with fifteen choices per row", () => {
+    const f = fixture();
+    f.panel.close();
+    f.panel.update({ ...f.info, stageRotation: SB4_STAGES.map(stage => ({ stage })) }, true);
+    (f.panel.trigger as unknown as Node).click();
+    const selectors = f.dialog.all().filter(node => node.tag === "select");
+    expect(selectors.map(node => node.value)).toEqual([...SB4_STAGES]);
+    expect(selectors.every(node => node.children.filter(child => child.tag === "option").length === 15)).toBe(true);
+  });
+  it("shows all fifteen stage choices in each selector and the visible additions", () => {
+    const f = fixture();
+    const expected = ["classic", "conveyor", "warp", ...SB4_STAGES];
+    const additions = f.dialog.all().filter(node => node.tag === "button" && node.textContent.startsWith("＋ "));
+    expect(additions).toHaveLength(15);
+    expect(additions.every(node => !node.hidden && !node.disabled)).toBe(true);
+    for (const select of f.dialog.all().filter(node => node.tag === "select")) {
+      expect(select.children.filter(node => node.tag === "option").map(node => node.value)).toEqual(expected);
+    }
+  });
+  it.each(SB4_STAGES)("offers and saves %s from the full battle catalog", stage => {
+    const f = fixture();
+    const additions = f.dialog.all().filter(node => node.tag === "button" && node.textContent.startsWith("＋ SB4 "));
+    expect(additions).toHaveLength(12);
+    f.button(`＋ ${STAGE_NAMES[stage]}`).click();
+    f.button("Salvar sequência").click();
+    expect(f.commit).toHaveBeenCalledWith([
+      { stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }, { stage },
+    ]);
+  });
   it("offers the first two original SB4 battle stages next to the creative maps", () => {
     const f = fixture();
     f.button("＋ SB4 01 · Usual").click();

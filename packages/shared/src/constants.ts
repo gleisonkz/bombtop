@@ -33,7 +33,7 @@ export const START_BOMB_CAPACITY = 1;
 export const START_FIRE_RANGE = 1;
 
 export const MAX_BOMB_CAPACITY = 8;
-export const MAX_FIRE_RANGE = 8;
+export const MAX_FIRE_RANGE = 10;
 
 /** Speed gained per speed power-up (units per tick). */
 export const SPEED_STEP = 4;

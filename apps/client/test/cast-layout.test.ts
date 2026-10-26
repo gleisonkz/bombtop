@@ -33,11 +33,13 @@ describe("single-row menu cast", () => {
   });
   it("reserves Harry's visible animation rather than the transparent canvas", () => {
     const harry = art.find((item) => item.id === "harry")!;
-    const layout = castLayout({ art: [{ ...harry, horizontalBounds: [4, 223] }], width: 1000, heroWidth: 110, heroHeight: 128, maxBodyHeight: 76 });
+    const layout = castLayout({ art: [harry], width: 1000, heroWidth: 110, heroHeight: 128, maxBodyHeight: 76 });
     const member = layout.members[0]!;
-    expect(member.width).toBeCloseTo(117 * member.scale);
-    expect(member.anchorOffset).toBeCloseTo((harry.anchorX - 58) * member.scale);
-    expect(layout.wings.left.start * layout.bodyHeight + member.anchorOffset + (4 - harry.anchorX) * member.scale).toBeCloseTo(0);
+    const [left, right] = CAST_HORIZONTAL_BOUNDS.harry;
+    expect(member.width).toBeCloseTo((right - left) * member.scale);
+    expect(member.width).toBeLessThan(harry.frameW * member.scale);
+    expect(member.anchorOffset).toBeCloseTo((harry.anchorX - left) * member.scale);
+    expect(layout.wings.left.start * layout.bodyHeight + member.anchorOffset + (left - harry.anchorX) * member.scale).toBeCloseTo(0);
   });
   it("keeps Optimus close while reserving the truck's reach at the outer edges", () => {
     const optimus = art.find((item) => item.id === "optimus")!;
@@ -62,7 +64,7 @@ describe("single-row menu cast", () => {
     }
     for (const member of layout.members) {
       const source = art.find((item) => item.id === member.id)!;
-      const [left, right] = source.id === "harry" ? [58, 175] : source.id === "optimus" ? [92, 229] : source.horizontalBounds ?? [0, source.frameW];
+      const [left, right] = source.id === "optimus" ? [92, 229] : source.horizontalBounds ?? [0, source.frameW];
       expect(member.anchorOffset + (left! - source.anchorX) * member.scale).toBeGreaterThanOrEqual(-0.001);
       expect(member.anchorOffset + (right! - source.anchorX) * member.scale).toBeLessThanOrEqual(member.width + 0.001);
       expect(source.bodyH * member.scale).toBeCloseTo(layout.bodyHeight);

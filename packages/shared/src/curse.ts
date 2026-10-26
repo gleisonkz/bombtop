@@ -1,5 +1,6 @@
 import { FUSE_TICKS, MAX_SPEED, SLOW_SPEED, TICK_RATE } from "./constants";
 import { nextRandom } from "./rng";
+import { playerElevated } from "./player-carry";
 import { playerTile, type CurseKind, type Direction, type MatchState, type Player } from "./state";
 
 export const CURSES: readonly CurseKind[] = [
@@ -42,7 +43,7 @@ export function cursedDirection(p: Player, dir: Direction): Direction {
  * curse off them (one at a time, never straight back to who passed it on).
  */
 export function updateCurses(s: MatchState): void {
-  const alive = s.players.filter((p) => p.alive);
+  const alive = s.players.filter((p) => p.alive && !playerElevated(p));
   const touching = (a: Player, b: Player) => {
     const ta = playerTile(a);
     const tb = playerTile(b);

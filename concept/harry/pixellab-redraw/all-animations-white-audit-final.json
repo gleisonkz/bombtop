@@ -1,0 +1,36 @@
+{
+  "reviewed_frames": 124,
+  "edits": [
+    {
+      "name": "game-11-1",
+      "changed_pixels": 7
+    },
+    {
+      "name": "game-11-3",
+      "changed_pixels": 28
+    },
+    {
+      "name": "game-13-1",
+      "changed_pixels": 1007
+    },
+    {
+      "name": "game-13-2",
+      "changed_pixels": 1002
+    },
+    {
+      "name": "menu-5",
+      "changed_pixels": 25
+    },
+    {
+      "name": "menu-6",
+      "changed_pixels": 51
+    },
+    {
+      "name": "menu-7",
+      "changed_pixels": 95
+    }
+  ],
+  "victory": "16 frames visually reviewed; visible pixels unchanged",
+  "runtime": "HTTP5173 all 3 PNG hashes match; livebrowser lease unavailable",
+  "registration": "same grid, dimensions, offset and anchors"
+}

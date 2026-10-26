@@ -11,6 +11,30 @@ const real = (x: number, y: number): Bomb => ({
 });
 
 describe("GhostBombs", () => {
+  it("keeps pending bomb ownership and type while a different player becomes the stack root", () => {
+    const g = new GhostBombs("me");
+    const v = view();
+    v.players[1]!.heldBy = "me";
+    g.add(3, 1, 0, "pierce", 8);
+    expect(g.apply(v, 20).bombs[0]).toMatchObject({ ownerId: "me", type: "pierce" });
+    expect(g.apply({ ...v, players: [...v.players].reverse() }, 30).bombs[0]).toMatchObject({ ownerId: "me", type: "pierce" });
+  });
+  it("clears captured-player ghosts during reconciliation even before drawing", () => {
+    const g = new GhostBombs("me");
+    const v = view();
+    g.add(3, 1, 0);
+    Object.assign(v.players[0]!, { heldBy: "them" });
+    g.reconcile({ ...v, acks: {} });
+    expect(g.apply(view(), 20).bombs).toEqual([]);
+  });
+  it.each([{ heldBy: "them" }, { thrown: { dir: "right", span: 3, tilesLeft: 3, progress: 0 } }])("retires ghost placements when captured or thrown: %j", status => {
+    const g = new GhostBombs("me");
+    const v = view();
+    g.add(3, 1, 0);
+    Object.assign(v.players[0]!, status);
+    expect(g.apply(v, 20).bombs).toEqual([]);
+    expect(g.apply(view(), 30).bombs).toEqual([]);
+  });
   it("predicts a short-fuse Skull bomb using the owner's curse", () => {
     const g = new GhostBombs("me");
     const v = view();

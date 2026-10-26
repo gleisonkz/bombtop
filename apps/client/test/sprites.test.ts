@@ -837,6 +837,14 @@ describe("castTicks", () => {
 });
 
 describe("kameSegments", () => {
+  it.each(["up", "down"] as const)("keeps Goku's %s release pose throughout the beam", facing => {
+    for (let age = 4; age < BLAST_TICKS; age++) {
+      const casting = castTicks({ charge: 0, rasengan: 0 }, { kind: "kamehameha", ttl: BLAST_TICKS - age });
+      const frame = playerFrame(SHEETS.goku, { facing, moving: false, carrying: false, casting, tick: age });
+      expect(frame.x).toBe(6 * SHEETS.goku.frameW);
+      expect(frame.y).toBe(SHEETS.goku.cast[facing].row * SHEETS.goku.frameH);
+    }
+  });
   it("lays the kamehameha out: its ball at his hands, beam pieces a tile apart, its head where it stops", () => {
     const parts = kameSegments(0, 10, 64, 10);
     expect(parts[0]).toEqual({ kind: "orb", x: 0, y: 10, rot: 0 });
@@ -958,9 +966,9 @@ describe("captain sheet and shield", () => {
     }
   });
 
-  it("stands about as tall as pikachu on screen", () => {
+  it("stands taller than the compact Pikachu on screen", () => {
     const tall = (s: typeof captain | typeof SHEETS.pikachu) => s.bodyH * s.scale;
-    expect(Math.abs(tall(captain) - tall(SHEETS.pikachu))).toBeLessThan(2);
+    expect(tall(captain)).toBeGreaterThan(tall(SHEETS.pikachu));
   });
 
   it("raises the shield with the brace row and holds its last frame while the shield is up", () => {
@@ -994,8 +1002,10 @@ describe("pikachu sheet", () => {
     }
   });
 
-  it("stands about as tall as the captain on screen", () => {
-    expect(Math.abs(pikachu.bodyH * pikachu.scale - SHEETS.captain.bodyH * SHEETS.captain.scale)).toBeLessThan(2);
+  it("keeps the approved Pikachu smaller than the captain on screen", () => {
+    const relativeHeight = pikachu.bodyH * pikachu.scale / (SHEETS.captain.bodyH * SHEETS.captain.scale);
+    expect(relativeHeight).toBeGreaterThan(0.8);
+    expect(relativeHeight).toBeLessThan(0.95);
   });
 
   it("only his blue scarf takes the player's color", () => {
@@ -1049,9 +1059,9 @@ describe("lobby showpieces", () => {
   it("goku powers up into a Super Saiyan", () => showpiece("goku"));
   it("naruto uses the supplied eight-frame celebration", () => {
     expect(SHEETS.naruto.lobby).toEqual({ row: 17, frames: 8 });
-    expect(size(SHEETS.naruto.url)).toEqual([720, 2088]);
-    expect(SHEETS.naruto.frameW).toBe(80);
-    expect(SHEETS.naruto.frameH).toBe(116);
+    expect(size(SHEETS.naruto.url)).toEqual([864, 2304]);
+    expect(SHEETS.naruto.frameW).toBe(96);
+    expect(SHEETS.naruto.frameH).toBe(128);
   });
   it("spider-man uses eight articulated presentation poses from the gameplay atlas", () => {
     expect(SHEETS.spider.lobby).toEqual({ row: 17, frames: 8, bodyH: 122 });

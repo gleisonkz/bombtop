@@ -31,6 +31,11 @@ export function hurt(p: Player): boolean {
     p.invuln = INVULN_TICKS;
     return false;
   }
+  if (p.costume) {
+    delete p.costume;
+    p.invuln = INVULN_TICKS;
+    return false;
+  }
   if (p.hasHeart) {
     p.hasHeart = false;
     p.invuln = INVULN_TICKS;
