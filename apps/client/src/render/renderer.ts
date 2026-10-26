@@ -23,7 +23,6 @@ import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects } from "./ability-pixel-effects";
 import { FLAME_TICKS, SNEAK_TICKS } from "@bombtop/shared";
 import { scoreSlots } from "./score-bar";
-import { SpecialCooldownHud } from "./special-cooldown-hud";
 import { paintTo, PerColor, skinColor } from "./per-color";
 import { specialEffectColor, specialInk, specialTexture } from "./special-palette";
 import { BOMBS, FLAMES, RASENGAN, rasenganLook, between, ITEMS, MASCOT, TILES, burnCell, castsShadow, itemCell, itemFrame, tileCell, MotionTracker, beamAlpha, BEAM_DELAY, boltOrigin, boltPoints, magnetWaves, speedLines, tunnelMounds, spinLook, kissHearts, charmHearts, sneakAlpha, patronusLook, PATRONUS, truckLook, TRUCK, ballLook, BALL, bubbleLook, BUBBLE, bracing, castTicks, KAMEHAMEHA, kameSegments, outsideBeams, outsideBubbles, type KamePiece, flameFrame, flamePiece, flameVariant, flameConnections, bombFrame, bombLook, deathFrame,  webbedLook, cocoon, mascotDeath, mascotPose, paintSheet, playerFrame, SHEETS, SPIRAL, spiralFrame, type FrameRect, type SheetLayout } from "./sprites";
@@ -318,7 +317,6 @@ export class Renderer {
 
   /** The score bar on the top wall: each player's head and rounds won (setScore; none in the menus' scenes). */
   private readonly scoreLayer = new Container();
-  private readonly specialHud: SpecialCooldownHud;
   private score: readonly { id: string; wins: number }[] | null = null;
   private readonly scoreHeads = new Map<string, Sprite>();
   private readonly scoreWins = new Map<string, Text>();
@@ -366,7 +364,6 @@ export class Renderer {
   }
 
   private drawScore(s: PublicView): void {
-    this.specialHud.update(this.score?.map(({ id }) => s.players.find(p => p.id === id)) ?? [], s.grid.width * TILE_PX, s.grid.height * TILE_PX);
     this.scoreLayer.visible = !!this.score;
     if (!this.score) return;
     const xs = scoreSlots(this.score.length, s.grid.width * TILE_PX);
@@ -420,8 +417,6 @@ export class Renderer {
 
   /** `lite`: weak screens (smart TVs): text drawn at less detail, no particles. */
   constructor(private readonly lite = false, private readonly options: { previewSpecialColors?: boolean } = {}) {
-    this.specialHud = new SpecialCooldownHud(lite);
-    this.scoreLayer.addChild(this.specialHud.root);
     if (lite) this.banner.resolution = this.clock.resolution = 1.5;
     this.banner.anchor.set(0.5);
     this.clock.anchor.set(0.5, 0);
