@@ -125,4 +125,15 @@ describe("carried bomb attachment", () => {
     const walk = playerFrame(sheet, { facing: "down", moving: true, carrying: false, tick: 5 * sheet.ticksPerFrame });
     expect(walk.x).toBe(5 * sheet.frameW);
   });
+
+  it("centers Harry's side carry between both raised hands", () => {
+    const sheet = SHEETS.harry;
+    for (const row of ["12", "15"] as const) {
+      for (const grip of anchors.characters.harry.rows[row]) {
+        expect(grip.span).toBeGreaterThan(50);
+        expect(grip.x).toBeGreaterThan(sheet.anchorX - 10);
+        expect(grip.x).toBeLessThan(sheet.anchorX + 10);
+      }
+    }
+  });
 });
