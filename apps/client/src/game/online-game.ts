@@ -369,7 +369,7 @@ export class OnlineGame implements GameMode {
 
   keyDown(code: string): boolean {
     if (code === "Escape") {
-      void this.leave();
+      this.panel.confirmLeave();
       return true;
     }
     return this.inputs.map((k) => k.keyDown(code)).some(Boolean);

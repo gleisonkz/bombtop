@@ -21,6 +21,7 @@ describe("online snapshot rendering", () => {
   let send: ReturnType<typeof vi.fn>;
   let specialCooldown: ReturnType<typeof vi.fn>;
   let setScore: ReturnType<typeof vi.fn>;
+  let confirmLeave: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
@@ -42,7 +43,8 @@ describe("online snapshot rendering", () => {
       sound: { play: vi.fn(), cues: vi.fn() },
       touch: { sample: () => ({ dir: null, bomb: false }) }, fit: vi.fn(), exit: vi.fn(), specialCooldown,
     } as unknown as ModeContext;
-    const panel = { update: vi.fn(), hide: vi.fn(), setWatching: vi.fn() } as unknown as LobbyPanel;
+    confirmLeave = vi.fn();
+    const panel = { update: vi.fn(), hide: vi.fn(), setWatching: vi.fn(), confirmLeave } as unknown as LobbyPanel;
     game = OnlineGame.over(link, ctx, panel);
     handlers.get(S2C.lobby)!({ phase: "playing", members: [{ id: "me", name: "Eu", character: "bomb" }, { id: "bot", name: "Robô", bot: "easy", character: "bomb" }] });
   });
@@ -89,6 +91,13 @@ describe("online snapshot rendering", () => {
     game.setManiac(maniac);
     expect(send).toHaveBeenCalledWith(C2S.rules, { battleMode: "maniac" });
     expect(send).toHaveBeenCalledWith(C2S.rules, { maniac });
+  });
+
+  it("Esc asks before leaving the room instead of leaving at once", () => {
+    const leave = vi.spyOn(game, "leave");
+    expect(game.keyDown("Escape")).toBe(true);
+    expect(confirmLeave).toHaveBeenCalledOnce();
+    expect(leave).not.toHaveBeenCalled();
   });
 
   it("a guest says they are ready, or not yet", () => {

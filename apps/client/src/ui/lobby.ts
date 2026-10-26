@@ -2,6 +2,7 @@ import { BOT_LEVELS, MAX_PLAYERS, type BattleMode, type BattleTeam, type BattleT
 import { inviteText, inviteUrl } from "../net/invite";
 import { MASCOT_COLOR } from "./art";
 import { backButton, button, el } from "./dom";
+import { LeaveConfirm } from "./leave-confirm";
 import { lobbySlots, seatClass } from "./lobby-slots";
 import { ResultScreen } from "./result-screen";
 import { characterArt } from "./sheet-art";
@@ -62,6 +63,7 @@ export class LobbyPanel {
   private readonly modeButtons: HTMLButtonElement[];
   private readonly maniacNotice = el("span", { class: "lobby-maniac-notice", text: "Maniac: 3 vitórias, 3 minutos, fase Clássica e morte súbita OFF" });
   private readonly startBtn: HTMLButtonElement;
+  private readonly leaveConfirm: LeaveConfirm;
   /** A guest's "ready" toggle, where the host has the start button. */
   private readonly readyBtn: HTMLButtonElement;
   private ready = false;
@@ -132,6 +134,7 @@ export class LobbyPanel {
     this.root.hidden = true;
     parent.appendChild(this.root);
     this.results = new ResultScreen(parent);
+    this.leaveConfirm = new LeaveConfirm(parent, handlers.leave);
   }
 
   /** TV mode: this screen only shows the room (no seat): no start or invite, a word on what it is for. */
@@ -305,7 +308,13 @@ export class LobbyPanel {
     this.results.show(placings, info.members, me, winnerId, setOver, info.winsToWin, winnerTeam);
   }
 
+  /** Esc in the room: asks before leaving (Esc again goes back). */
+  confirmLeave(): void {
+    this.leaveConfirm.toggle();
+  }
+
   hide(): void {
+    this.leaveConfirm.close();
     this.stageRotation.close();
     this.root.hidden = true;
     this.results.hide();

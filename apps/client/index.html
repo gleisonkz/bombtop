@@ -941,6 +941,12 @@
       .match-panel button { font-size: 15px; min-height: 38px; padding: 6px 10px; }
       .match-leave { background: #ff7a6b; }
       .match-leave.sure { background: #e84a4a; color: #fff; }
+      .leave-confirm { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; background: #0b0b16b3; pointer-events: auto; animation: fade-in 0.15s ease-out; }
+      .leave-card { width: min(100%, 360px); background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 6px 0 var(--ink); border-radius: 18px; padding: 18px; display: grid; gap: 12px; text-align: center; }
+      .leave-card h2 { margin: 0; font-family: var(--display); font-size: 28px; color: var(--accent); }
+      .leave-card p { margin: 0; color: var(--muted); font-weight: 700; }
+      .leave-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .leave-go { background: #ff7a6b; }
 
       /* Touch controls */
       .touch { position: fixed; inset: 0; z-index: 1; display: flex; touch-action: none; user-select: none; -webkit-user-select: none; }
