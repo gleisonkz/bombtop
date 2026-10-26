@@ -221,6 +221,10 @@ export class OnlineGame implements GameMode {
     this.room.send(C2S.rules, { battleMode });
   }
 
+  setReady(ready: boolean): void {
+    this.room.send(C2S.ready, { ready });
+  }
+
   setTeam(id: string, team: BattleTeam): void {
     this.room.send(C2S.team, { id, team });
   }

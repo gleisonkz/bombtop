@@ -9,6 +9,7 @@ function battleRoom() {
   });
   core.join("host", "Host", "bomb");
   core.join("guest", "Guest", "bomb");
+  core.message("guest", C2S.ready, { ready: true });
   return { core, lobbies };
 }
 

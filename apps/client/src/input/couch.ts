@@ -30,6 +30,8 @@ interface Seat {
   input: GamepadInput;
   last: string;
   seq: number;
+  /** Said ready in this lobby (on one screen, Start is everyone's say). */
+  ready: boolean;
 }
 
 /**
@@ -75,9 +77,14 @@ export class CouchSeats {
         if (phase === "lobby" && pressed(A)) this.sit(index, order + 1, inUse);
         return;
       }
+      if (phase !== "lobby") seat.ready = false;
       if (phase === "playing") return this.play(seat);
       seat.input.sample(); // keeps its presses and holds current for the next match
       if (phase !== "lobby") return;
+      if (!seat.ready) {
+        seat.ready = true;
+        seat.link.send(C2S.ready, { ready: true });
+      }
       if (pressed(B)) return this.free(index, seat);
       if (pressed(Y)) {
         seat.character = CHARACTERS[(CHARACTERS.indexOf(seat.character) + 1) % CHARACTERS.length]!;
@@ -98,7 +105,7 @@ export class CouchSeats {
     if (!link) return;
     const input = new GamepadInput(() => this.pads().find((p) => p.index === index)?.state ?? null);
     input.sample(); // the A that seated it is not a bomb
-    this.seats.set(index, { link, character, input, last: "", seq: 0 });
+    this.seats.set(index, { link, character, input, last: "", seq: 0, ready: false });
   }
 
   /** Sends the pad's input when it changes (the room keeps a held direction). */

@@ -83,6 +83,8 @@ describe("own colors in the match", () => {
     s.join("c", "C", "captain");
     s.setCharacter("b", "thor");
     s.setCharacter("b", "captain"); // now after c
+    s.setReady("b", true);
+    s.setReady("c", true);
     s.start("a");
     const view = publicView(s.match!);
     expect(view.players.map((p) => [p.id, !!p.ownColors])).toEqual([

@@ -6,6 +6,7 @@ describe("SB4 full map cycle and snapshots", () => {
     const session = new BattleSession({ seed: () => 14, blockDensity: 0 });
     session.join("host", "Host");
     session.join("guest", "Guest");
+    session.setReady("guest", true);
     expect(session.setRules("host", { stageRotation: SB4_STAGES.map(stage => ({ stage })) })).toBe(true);
     expect(session.start("host")).toBe(true);
     for (const stage of SB4_STAGES) {

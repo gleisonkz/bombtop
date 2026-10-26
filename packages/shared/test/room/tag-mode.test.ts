@@ -4,6 +4,7 @@ import { BattleSession, C2S, RESULTS_TICKS, RoomCore } from "../../src";
 function session(count = 3) {
   const s = new BattleSession({ seed: () => 64, blockDensity: 0, winsToWin: 2 });
   for (let i = 0; i < count; i++) s.join(`player-${i}`, `Jogador ${i + 1}`);
+  for (let i = 1; i < count; i++) s.setReady(`player-${i}`, true);
   return s;
 }
 
@@ -27,6 +28,7 @@ describe("Super Bomberman 4 TAG", () => {
     });
     core.join("host", "Anfitrião", "bomb");
     core.join("guest", "Convidado", "bomb");
+    core.message("guest", C2S.ready, { ready: true });
     core.message("host", C2S.rules, { battleMode: "tag" });
     core.message("guest", C2S.team, { id: "host", team: "blue" });
     expect(core.session.members[0]?.team).toBe("red");

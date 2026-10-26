@@ -497,6 +497,7 @@
         .stage-row-actions button { min-width: 44px; }
       }
       .lobby-foot .start:not(:disabled) { animation: start-pulse 1.6s ease-in-out infinite; }
+      .lobby-foot .ready-btn[aria-pressed="true"] { animation: none; background: linear-gradient(#8ee88a, #4cc35a); border-color: #2f8f3c; color: #10331a; }
       @keyframes start-pulse { 50% { box-shadow: 0 4px 0 var(--ink), 0 0 0 6px #ffd23f40; } }
 
       /* Tablets and phones turned sideways: one row for the room bar, seats as standing cards */

@@ -226,6 +226,7 @@ const lobby = new LobbyPanel(ui, {
   setSuddenDeath: (enabled) => online?.setSuddenDeath(enabled),
   setBattleMode: (mode) => online?.setBattleMode(mode),
   setTeam: (id, team) => online?.setTeam(id, team),
+  setReady: (ready) => online?.setReady(ready),
   setManiac: (config) => online?.setManiac(config),
   setStageRotation: (rotation) => online?.setStageRotation(rotation),
   leave: () => void online?.leave(),

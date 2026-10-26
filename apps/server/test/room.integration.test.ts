@@ -36,6 +36,13 @@ function next<T>(room: { onMessage: (t: string, cb: (m: T) => void) => () => voi
   });
 }
 
+/** The guest says it is ready to play; resolves once the host's lobby shows it, so a start sent next is not refused. */
+async function ready(host: Room, guest: Room) {
+  const seen = next<LobbyInfo>(host, S2C.lobby, (l) => l.members.some((m) => m.id === guest.sessionId && m.ready));
+  guest.send(C2S.ready, { ready: true });
+  await seen;
+}
+
 /** Resolves with the first view, rebuilt from whole snapshots and differences, matching `pred`; counts the differences. */
 function view(room: Room, base: PublicView, pred: (v: PublicView) => boolean) {
   const r = new DeltaReceiver<PublicView>();
@@ -84,6 +91,7 @@ describe("BattleRoom over the network", () => {
   it("synchronizes TAG teams and only starts while both teams have a player", async () => {
     const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
     const guest = await client().joinById(host.roomId, { name: "Guest" });
+    await ready(host, guest);
     const chosen = next<LobbyInfo>(guest, S2C.lobby, lobby => lobby.battleMode === "tag");
     host.send(C2S.rules, { battleMode: "tag", winsToWin: 2 });
     const first = await chosen.catch(() => { throw new Error("TAG mode not broadcast"); });
@@ -107,6 +115,7 @@ describe("BattleRoom over the network", () => {
   it("shares Maniac item/HP settings and fixed rules over Colyseus", async () => {
     const host = await client().create(ROOM_NAME, { private: true, name: "Host" });
     const guest = await client().joinById(host.roomId, { name: "Guest" });
+    await ready(host, guest);
     const chosen = next<LobbyInfo>(guest, S2C.lobby, (l) => l.battleMode === "maniac");
     host.send(C2S.rules, { battleMode: "maniac", maniac: { items: { heart: 2 }, hitPoints: { [host.sessionId]: 5, [guest.sessionId]: 2 } } });
     expect(await chosen).toMatchObject({ battleMode: "maniac", winsToWin: 3, timeMinutes: 3, suddenDeath: false,
@@ -137,6 +146,7 @@ describe("BattleRoom over the network", () => {
     const lobby = await lobbyWithTwo;
     expect(lobby.members.map((m) => m.name)).toEqual(["Ana", "Bia"]);
     expect(lobby.hostId).toBe(a.sessionId);
+    await ready(a, b);
 
     const snapA = next<PublicView>(a, S2C.snapshot);
     const snapB = next<PublicView>(b, S2C.snapshot);
@@ -178,6 +188,7 @@ describe("BattleRoom over the network", () => {
   it("sync replays the current match to a client that just attached its handlers", async () => {
     const a = await client().joinOrCreate(ROOM_NAME, { name: "A" });
     const b = await client().joinOrCreate(ROOM_NAME, { name: "B" });
+    await ready(a, b);
     const started = next<LobbyInfo>(a, S2C.lobby, (l) => l.phase === "playing");
     a.send(C2S.start);
     await started;
@@ -192,6 +203,7 @@ describe("BattleRoom over the network", () => {
   it("a TV joins by code mid-match to watch: it gets the match without taking a seat", async () => {
     const a = await client().create(ROOM_NAME, { private: true, name: "Ana" });
     const b = await client().joinById(a.roomId, { name: "Bia" });
+    await ready(a, b);
     const started = next<LobbyInfo>(a, S2C.lobby, (l) => l.phase === "playing");
     a.send(C2S.start);
     await started;
@@ -215,6 +227,7 @@ describe("BattleRoom over the network", () => {
     const a = await client().joinOrCreate(ROOM_NAME, { name: "A" });
     const b = await client().joinOrCreate(ROOM_NAME, { name: "B" });
     expect(b.roomId).toBe(a.roomId);
+    await ready(a, b);
     const started = next<LobbyInfo>(a, S2C.lobby, (l) => l.phase === "playing");
     a.send(C2S.start);
     await started;

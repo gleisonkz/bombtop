@@ -28,6 +28,8 @@ export const C2S = {
   removeBot: "removeBot",
   character: "character",
   team: "team",
+  /** A guest in the lobby is ready to play, or not yet: `{ ready }`. */
+  ready: "ready",
   /** The host has a bot play another character: `{ id, character }`. */
   botCharacter: "botCharacter",
   /** Connection measurements from a ?debug client, logged on the server. */
@@ -46,6 +48,8 @@ export interface LobbyMember {
   connected: boolean;
   character: CharacterId;
   team?: BattleTeam;
+  /** A guest who said they are ready; the host can start once every connected guest is. */
+  ready?: true;
   /** Wears the character's original colors (first to pick it, see `firstPickers`); otherwise the seat color. */
   ownColors?: true;
   /** Set for computer players: their difficulty. */

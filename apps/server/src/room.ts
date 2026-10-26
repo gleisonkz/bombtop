@@ -44,7 +44,7 @@ export class BattleRoom extends Room {
     this.hidden = this.privateRoom;
     this.setPatchRate(null);
 
-    for (const type of [C2S.input, C2S.sync, C2S.addBot, C2S.removeBot, C2S.character, C2S.botCharacter, C2S.team, C2S.start, C2S.rules, C2S.beat]) {
+    for (const type of [C2S.input, C2S.sync, C2S.addBot, C2S.removeBot, C2S.character, C2S.botCharacter, C2S.team, C2S.ready, C2S.start, C2S.rules, C2S.beat]) {
       this.onMessage(type, (client, message) => this.core.message(client.sessionId, type, message));
     }
     this.onMessage(C2S.stats, (client, message) => {

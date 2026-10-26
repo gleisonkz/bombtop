@@ -5,6 +5,7 @@ function session() {
   const s = new BattleSession({ seed: () => 64, blockDensity: 1 });
   s.join("host", "Host");
   s.join("guest", "Guest");
+  s.setReady("guest", true);
   return s;
 }
 
@@ -24,6 +25,7 @@ describe("Super Bomberman 4 Maniac match mode", () => {
     const core = new RoomCore("X", { broadcast: (type, message) => { if (type === "lobby") broadcasts.push(message); }, send: () => {} });
     core.join("host", "Host", "bomb");
     core.join("guest", "Guest", "bomb");
+    core.message("guest", C2S.ready, { ready: true });
     const items = { [ItemKind.Bomb]: 9, [ItemKind.Heart]: 9, [ItemKind.BombPass]: 9, [ItemKind.BlockPass]: 9, [ItemKind.FireSuit]: 9, [ItemKind.Speed]: 9, [ItemKind.Fire]: 6 };
     core.message("host", C2S.rules, { battleMode: "maniac", maniac: { items, hitPoints: { host: 5, guest: 3 } } });
     expect(broadcasts.at(-1)).toMatchObject({ battleMode: "maniac", maniac: { items, hitPoints: { host: 5, guest: 3 } } });

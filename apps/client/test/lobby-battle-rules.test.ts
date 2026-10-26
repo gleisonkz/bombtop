@@ -39,7 +39,7 @@ describe("Battle Mode lobby controls", () => {
     const panel = new LobbyPanel(parent as unknown as HTMLElement, {
       start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
       pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
-      setWinsToWin, setTimeMinutes, setSuddenDeath, setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(),
+      setWinsToWin, setTimeMinutes, setSuddenDeath, setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(), setReady: vi.fn(),
     });
     const lobby: LobbyInfo = {
       phase: "lobby", code: "TST", stage: "classic", hostId: "host", members: [],
@@ -80,7 +80,7 @@ describe("Battle Mode lobby controls", () => {
     const panel = new LobbyPanel(parent as unknown as HTMLElement, {
       start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
       pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
-      setWinsToWin, setTimeMinutes, setSuddenDeath, setBattleMode, setManiac: vi.fn(), setTeam: vi.fn(),
+      setWinsToWin, setTimeMinutes, setSuddenDeath, setBattleMode, setManiac: vi.fn(), setTeam: vi.fn(), setReady: vi.fn(),
     });
     const info: LobbyInfo = {
       phase: "lobby", code: "X", stage: "classic", hostId: "host", members: [],
@@ -109,7 +109,7 @@ describe("Battle Mode lobby controls", () => {
       start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
       pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
       setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(),
-      setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam,
+      setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam, setReady: vi.fn(),
     });
     const info: LobbyInfo = {
       phase: "lobby", code: "TAG", stage: "classic", hostId: "host", battleMode: "tag",
@@ -142,7 +142,7 @@ describe("Battle Mode lobby controls", () => {
     const panel = new LobbyPanel(parent as unknown as HTMLElement, {
       start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
       pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
-      setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(), setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(),
+      setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(), setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(), setReady: vi.fn(),
     });
     const lobby: LobbyInfo = {
       phase: "lobby", code: "TST", stage: "classic", hostId: "host",
@@ -157,5 +157,45 @@ describe("Battle Mode lobby controls", () => {
     expect(teamButtons()).toHaveLength(0);
     panel.update({ ...lobby, battleMode: "tag", members: lobby.members.map((m, i) => ({ ...m, team: i ? "blue" : "red" })) }, "host");
     expect(teamButtons()).toHaveLength(2);
+  });
+
+  it("gives guests a ready button and holds the host's start until every guest is ready", () => {
+    const parent = new Node();
+    const setReady = vi.fn();
+    const panel = new LobbyPanel(parent as unknown as HTMLElement, {
+      start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
+      pickCharacter: vi.fn(), pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
+      setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(), setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(), setReady,
+    });
+    const lobby: LobbyInfo = {
+      phase: "lobby", code: "TST", stage: "classic", hostId: "host",
+      members: [
+        { id: "host", name: "Host", wins: 0, connected: true, character: "bomb" },
+        { id: "guest", name: "Guest", wins: 0, connected: true, character: "goku" },
+        { id: "bot-1", name: "Bot", wins: 0, connected: true, character: "thor", bot: "easy" },
+      ],
+      winsToWin: 3, timeMinutes: null, suddenDeath: true, stageRotation: [...DEFAULT_STAGE_ROTATION],
+    };
+    const find = (cls: string) => parent.all().find((node) => node.className.split(" ").includes(cls))!;
+
+    panel.update(lobby, "host");
+    expect(find("ready-btn").hidden).toBe(true);
+    expect(find("start").disabled).toBe(true);
+
+    panel.update(lobby, "guest");
+    const ready = find("ready-btn");
+    expect(ready.hidden).toBe(false);
+    expect(ready.attributes.get("aria-pressed")).toBe("false");
+    ready.click();
+    expect(setReady).toHaveBeenLastCalledWith(true);
+
+    const readyLobby = { ...lobby, members: lobby.members.map((m) => (m.id === "guest" ? { ...m, ready: true as const } : m)) };
+    panel.update(readyLobby, "guest");
+    expect(find("ready-btn").attributes.get("aria-pressed")).toBe("true");
+    find("ready-btn").click();
+    expect(setReady).toHaveBeenLastCalledWith(false);
+
+    panel.update(readyLobby, "host");
+    expect(find("start").disabled).toBe(false);
   });
 });

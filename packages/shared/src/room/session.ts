@@ -129,6 +129,20 @@ export class BattleSession {
     return true;
   }
 
+  /** In the lobby, a guest (a person, not the host) says they are ready, or not yet. */
+  setReady(id: string, ready: boolean): boolean {
+    const m = this.members.find((m) => m.id === id && !m.bot);
+    if (this.phase !== "lobby" || !m || id === this.hostId || !m.connected) return false;
+    if (ready) m.ready = true;
+    else delete m.ready;
+    return true;
+  }
+
+  /** Every guest still connected is ready (the host starts; bots always are). */
+  private everyoneReady(): boolean {
+    return this.members.every((m) => m.bot || m.id === this.hostId || !m.connected || m.ready);
+  }
+
   setTeam(requesterId: string, memberId: string, team: unknown): boolean {
     if (this.phase !== "lobby" || this.battleMode !== "tag" || (team !== "red" && team !== "blue")) return false;
     const member = this.members.find((m) => m.id === memberId);
@@ -291,7 +305,7 @@ export class BattleSession {
 
   /** The host starts a match from the lobby: rounds until someone has won WINS_TO_WIN of them. */
   start(requesterId: string): boolean {
-    if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2) return false;
+    if (this.phase !== "lobby" || requesterId !== this.hostId || this.members.length < 2 || !this.everyoneReady()) return false;
     if (this.battleMode === "tag" && new Set(this.members.map((member) => member.team)).size !== 2) return false;
     for (const m of this.members) m.wins = 0;
     this.round = 0;
@@ -343,6 +357,7 @@ export class BattleSession {
         if (this.setOver || this.members.length < 2 || this.hostId === undefined) {
           this.phase = "lobby";
           this.round = 0;
+          for (const m of this.members) delete m.ready;
           this.match = null;
         } else this.startRound();
       }

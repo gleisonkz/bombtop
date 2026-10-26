@@ -22,6 +22,7 @@ describe("RoomCore", () => {
     const r = room();
     r.core.join("a", "Ana", "bomb");
     r.core.join("b", "Bia", "bomb");
+    r.core.message("b", C2S.ready, { ready: true });
     r.core.message("a", C2S.start);
     const match = r.core.session.match!;
     for (const x of [3, 4, 5, 6, 7]) setTile(match, x, 5, Tile.Empty);
@@ -41,6 +42,7 @@ describe("RoomCore", () => {
     const r = room();
     r.core.join("a", "Ana", "bomb");
     r.core.join("b", "Bia", "bomb");
+    r.core.message("b", C2S.ready, { ready: true });
     r.core.message("a", C2S.start);
     const match = r.core.session.match!;
     match.players[0]!.canKick = true;
@@ -136,6 +138,7 @@ describe("RoomCore", () => {
     const r = room();
     r.core.join("a", "Ana", "bomb");
     r.core.join("b", "Bia", "bomb");
+    r.core.message("b", C2S.ready, { ready: true });
     r.core.message("a", C2S.start);
     for (let i = 0; i < 4; i++) r.core.update();
     r.core.message("b", C2S.sync);

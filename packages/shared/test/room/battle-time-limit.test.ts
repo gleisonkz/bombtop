@@ -9,6 +9,7 @@ function room() {
   });
   core.join("host", "Host", "bomb");
   core.join("guest", "Guest", "bomb");
+  core.message("guest", C2S.ready, { ready: true });
   return { core, lobbies };
 }
 
@@ -78,6 +79,7 @@ describe("Battle Mode TIME", () => {
     const session = new BattleSession();
     session.join("a", "A");
     session.join("b", "B");
+    session.setReady("b", true);
     session.setTimeMinutes("a", 1);
     session.start("a");
     session.match!.pressureAt = Number.MAX_SAFE_INTEGER;

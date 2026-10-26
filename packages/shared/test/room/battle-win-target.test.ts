@@ -6,6 +6,7 @@ function lobby() {
   const core = new RoomCore("CODE", { broadcast: (type, message) => broadcast.push({ type, message }), send: () => {} });
   core.join("host", "Host", "bomb");
   core.join("guest", "Guest", "bomb");
+  core.message("guest", C2S.ready, { ready: true });
   return { core, broadcast };
 }
 
@@ -58,6 +59,7 @@ describe("Battle Mode victory target", () => {
     scoreForHost(core);
     expect(core.session.phase).toBe("lobby");
     expect(core.session.members.find((m) => m.id === "host")!.wins).toBe(2);
+    core.message("guest", C2S.ready, { ready: true });
     core.message("host", C2S.start);
     expect(core.session.members.find((m) => m.id === "host")!.wins).toBe(0);
     expect(core.session.lobbyInfo("X").winsToWin).toBe(2);

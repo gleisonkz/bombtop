@@ -29,6 +29,8 @@ export interface LobbyHandlers {
   start(): void;
   setBattleMode(mode: BattleMode): void;
   setTeam(id: string, team: BattleTeam): void;
+  /** A guest says they are ready to play, or not yet. */
+  setReady(ready: boolean): void;
   setManiac(config: ManiacConfig): void;
   setWinsToWin(wins: number): void;
   setTimeMinutes(minutes: BattleTimeMinutes): void;
@@ -60,6 +62,9 @@ export class LobbyPanel {
   private readonly modeButtons: HTMLButtonElement[];
   private readonly maniacNotice = el("span", { class: "lobby-maniac-notice", text: "Maniac: 3 vitórias, 3 minutos, fase Clássica e morte súbita OFF" });
   private readonly startBtn: HTMLButtonElement;
+  /** A guest's "ready" toggle, where the host has the start button. */
+  private readonly readyBtn: HTMLButtonElement;
+  private ready = false;
   private readonly results: ResultScreen;
   private readonly codeLabel = el("small", { text: "Código da sala" });
   private readonly inviteBtn: HTMLButtonElement;
@@ -75,6 +80,7 @@ export class LobbyPanel {
     private readonly handlers: LobbyHandlers,
   ) {
     this.startBtn = button("Começar partida", handlers.start, "primary big start");
+    this.readyBtn = button("Estou pronto!", () => handlers.setReady(!this.ready), "primary big start ready-btn");
     this.stageRotation = new StageRotationPanel(parent, handlers.setStageRotation);
     this.maniacPanel = new ManiacPanel(parent, handlers.setManiac);
     this.modeButtons = (["single", "tag", "maniac"] as const).map((mode) => {
@@ -119,7 +125,7 @@ export class LobbyPanel {
             el("div", { class: "lobby-rules" }, [el("span", { class: "lobby-rules-title", text: "Modo" }), el("div", { class: "lobby-rules-options" }, this.modeButtons)]),
             this.stageRotation.trigger, this.maniacPanel.trigger, this.winRules, this.timeRules, this.suddenDeathToggle,
           ]),
-          this.maniacNotice, this.status, this.startBtn,
+          this.maniacNotice, this.status, this.startBtn, this.readyBtn,
         ]),
       ]),
     ]);
@@ -212,7 +218,7 @@ export class LobbyPanel {
         const sub = member.bot
           ? `🤖 ${LEVEL_NAMES[member.bot]}${member.persona ? ` ${PERSONA_NAMES[member.persona]}` : ""} • ${member.wins} 🏆`
           : member.connected
-            ? `${you ? "você • " : ""}${member.wins} 🏆`
+            ? `${you ? "você • " : ""}${member.wins} 🏆${member.ready ? " • ✓ pronto" : ""}`
             : "reconectando…";
         return el("div", { class: cls }, [
           slotTag,
@@ -235,8 +241,14 @@ export class LobbyPanel {
       }),
     );
     const enough = info.members.length >= 2 && (!tag || new Set(info.members.map(member => member.team)).size === 2);
+    // Guests still connected who have not said they are ready (the host starts; bots always are).
+    const waiting = info.members.filter((m) => !m.bot && m.id !== info.hostId && m.connected && !m.ready);
     this.startBtn.hidden = !isHost;
-    this.startBtn.disabled = !enough;
+    this.startBtn.disabled = !enough || waiting.length > 0;
+    this.ready = !!info.members.find((m) => m.id === me)?.ready;
+    this.readyBtn.hidden = isHost || this.watching || !info.members.some((m) => m.id === me);
+    this.readyBtn.textContent = this.ready ? "✓ Pronto! (cancelar)" : "Estou pronto!";
+    this.readyBtn.setAttribute("aria-pressed", String(this.ready));
     if (this.watching) {
       this.startBtn.hidden = true;
       this.status.textContent = "📺 Modo TV: esta tela mostra a partida. Cada um joga pelo seu celular (ou controle) com o código da sala.";
@@ -249,6 +261,10 @@ export class LobbyPanel {
       ? isHost
         ? "Convide a galera ou coloque bots nas vagas!"
         : "Esperando mais jogadores…"
+      : waiting.length
+      ? isHost
+        ? `Esperando ${waiting.length === 1 ? waiting[0]!.name : `${waiting.length} jogadores`} ficar${waiting.length === 1 ? "" : "em"} pronto${waiting.length === 1 ? "" : "s"}…`
+        : this.ready ? "Você está pronto! Esperando os outros…" : "Escolha seu personagem e aperte \"Estou pronto!\""
       : isHost
         ? tag ? "TAG: vence a última equipe com alguém vivo. Bora!" : "Todo mundo pronto? Bora!"
         : "Esperando o anfitrião começar…");

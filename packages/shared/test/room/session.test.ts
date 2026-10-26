@@ -8,8 +8,15 @@ function lobby(n: number) {
   return s;
 }
 
-function playing(n = 2) {
+/** A lobby whose guests have all said they are ready. */
+function readyLobby(n: number) {
   const s = lobby(n);
+  for (let i = 2; i <= n; i++) s.setReady(`c${i}`, true);
+  return s;
+}
+
+function playing(n = 2) {
+  const s = readyLobby(n);
   s.start("c1");
   return s;
 }
@@ -35,11 +42,51 @@ describe("lobby", () => {
 
   it("only the host can start, and only with 2+ players", () => {
     expect(lobby(1).start("c1")).toBe(false);
-    const s = lobby(2);
+    const s = readyLobby(2);
     expect(s.start("c2")).toBe(false);
     expect(s.start("c1")).toBe(true);
     expect(s.phase).toBe("playing");
     expect(s.match!.players.map((p) => p.id)).toEqual(["c1", "c2"]);
+  });
+
+  it("waits for every human guest to be ready before the host can start", () => {
+    const s = lobby(3);
+    s.addBot("c1", "easy");
+    expect(s.lobbyInfo("R").members.map((m) => m.ready ?? false)).toEqual([false, false, false, false]);
+    expect(s.start("c1")).toBe(false);
+    expect(s.setReady("c2", true)).toBe(true);
+    expect(s.start("c1")).toBe(false);
+    expect(s.setReady("c3", true)).toBe(true);
+    expect(s.lobbyInfo("R").members.map((m) => m.ready ?? false)).toEqual([false, true, true, false]);
+    s.setReady("c3", false);
+    expect(s.start("c1")).toBe(false);
+    s.setReady("c3", true);
+    expect(s.start("c1")).toBe(true);
+  });
+
+  it("only guests in the lobby mark themselves ready, and a dropped guest does not hold the start", () => {
+    const s = lobby(3);
+    expect(s.setReady("c1", true)).toBe(false); // the host starts instead
+    expect(s.setReady("nobody", true)).toBe(false);
+    s.setReady("c2", true);
+    s.setConnected("c3", false);
+    expect(s.start("c1")).toBe(true);
+    expect(s.setReady("c3", true)).toBe(false);
+  });
+
+  it("everyone is unready again when the match is over and the room is back in the lobby", () => {
+    const s = lobby(2);
+    s.setWinsToWin("c1", 1);
+    s.setReady("c2", true);
+    s.start("c1");
+    const { x, y } = playerTile(s.match!.players[1]!);
+    s.match!.revenge = false;
+    s.match!.flames.push({ x, y, ttl: FLAME_TICKS });
+    s.tick();
+    for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
+    expect(s.phase).toBe("lobby");
+    expect(s.members.find((m) => m.id === "c2")!.ready).toBeFalsy();
+    expect(s.start("c1")).toBe(false);
   });
 
   it("tracks temporarily disconnected members", () => {
@@ -74,6 +121,7 @@ describe("lobby", () => {
   it("each player picks a character: the bomb unless chosen on joining, changeable in the lobby", () => {
     const s = lobby(1);
     s.join("c2", "Thor", "thor");
+    s.setReady("c2", true);
     expect(s.members.map((m) => m.character)).toEqual(["bomb", "thor"]);
     expect(s.setCharacter("c1", "thor")).toBe(true);
     expect(s.members[0]!.character).toBe("thor");
@@ -83,7 +131,7 @@ describe("lobby", () => {
   });
 
   it("plays each member as the character they picked", () => {
-    const s = lobby(2);
+    const s = readyLobby(2);
     s.setCharacter("c2", "thor");
     s.start("c1");
     expect(s.match!.players.map((p) => p.character)).toEqual(["bomb", "thor"]);
@@ -236,6 +284,7 @@ describe("playing", () => {
   it("a new match from the lobby starts the score from zero", () => {
     const s = playing();
     for (let i = 0; i < WINS_TO_WIN; i++) winRound(s, "c1");
+    s.setReady("c2", true);
     s.start("c1");
     expect(s.members.map((m) => m.wins)).toEqual([0, 0]);
   });
@@ -282,7 +331,7 @@ describe("snapshots", () => {
 
 describe("stages", () => {
   it("the lobby announces the stage of the next match", () => {
-    const s = lobby(2);
+    const s = readyLobby(2);
     expect(s.lobbyInfo("X").stage).toBe("classic");
     s.start("c1");
     expect(s.lobbyInfo("X").stage).toBe("classic");
@@ -294,7 +343,7 @@ describe("stages", () => {
   });
 
   it("rotate through classic, conveyor and warp in successive rounds", () => {
-    const s = lobby(2);
+    const s = readyLobby(2);
     const stages: string[] = [];
     for (let r = 0; r < 4; r++) {
       s.start("c1");
@@ -395,7 +444,7 @@ describe("bots", () => {
   });
 
   it("the host changes a bot's character in the lobby, and the bot takes a name of its new character", () => {
-    const s = lobby(2);
+    const s = readyLobby(2);
     s.addBot("c1", "easy");
     const bot = s.members[2]!;
     const persona = bot.persona;

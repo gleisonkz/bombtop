@@ -91,6 +91,13 @@ describe("online snapshot rendering", () => {
     expect(send).toHaveBeenCalledWith(C2S.rules, { maniac });
   });
 
+  it("a guest says they are ready, or not yet", () => {
+    game.setReady(true);
+    game.setReady(false);
+    expect(send).toHaveBeenCalledWith(C2S.ready, { ready: true });
+    expect(send).toHaveBeenLastCalledWith(C2S.ready, { ready: false });
+  });
+
   it("envia seleção e mudança de equipe TAG em sala online ou Wi-Fi", () => {
     game.setBattleMode("tag");
     game.setTeam("me", "blue");

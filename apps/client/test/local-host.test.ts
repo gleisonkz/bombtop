@@ -57,6 +57,7 @@ describe("LocalHost", () => {
     me.send(C2S.sync);
     await flush();
     expect(lobbies.at(-1)!.members.map((m) => [m.name, m.character])).toEqual([["Ana", "bomb"], ["Controle 2", "thor"]]);
+    pad.send(C2S.ready, { ready: true });
     me.send(C2S.start);
     await flush();
     pad.send(C2S.input, { dir: "left", bomb: false, seq: 1 });
@@ -131,6 +132,7 @@ describe("LocalHost", () => {
     friend.send(C2S.rules, { battleMode: "single" });
     await flush();
     expect(host.core.session.lobbyInfo("X").battleMode).toBe("maniac");
+    friend.send(C2S.ready, { ready: true });
     me.send(C2S.start);
     await flush();
     expect(host.core.session.match!.items).toHaveLength(5);
@@ -145,6 +147,7 @@ describe("LocalHost", () => {
     host.addPeer(hostEnd);
     const friend = await PeerLink.join(guestEnd, "Bia", "bomb");
     const snaps = inbox(friend, S2C.snapshot);
+    friend.send(C2S.ready, { ready: true });
     me.send(C2S.start);
     await flush();
     friend.send(C2S.input, { dir: "left", bomb: false, seq: 1 });

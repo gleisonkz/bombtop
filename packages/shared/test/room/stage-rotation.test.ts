@@ -16,6 +16,7 @@ function lobby() {
   const session = new BattleSession({ seed: () => 1, blockDensity: 0 });
   session.join("host", "Host");
   session.join("guest", "Guest");
+  session.setReady("guest", true);
   return session;
 }
 
@@ -45,6 +46,7 @@ function room() {
   });
   core.join("host", "Host", "bomb");
   core.join("guest", "Guest", "bomb");
+  core.message("guest", C2S.ready, { ready: true });
   broadcasts.length = 0;
   return { core, broadcasts };
 }
@@ -251,6 +253,7 @@ describe("stage rotation rules", () => {
     expect(session.phase).toBe("lobby");
     expect(session.match).toBeNull();
     expect(session.members[0]!.wins).toBe(1);
+    session.setReady("guest", true);
     expect(session.start("host")).toBe(true);
     expect(session.stage).toBe("warp");
     expect(session.members.map((member) => member.wins)).toEqual([0, 0]);
@@ -279,6 +282,7 @@ describe("stage rotation rules", () => {
     finishRound(session, "host");
     advanceResults(session);
     expect(session.lobbyInfo("CODE")).toMatchObject({ phase: "lobby", stage: "sb4-01", stageRotation });
+    session.setReady("guest", true);
     session.start("host");
     expect(session.stage).toBe("sb4-01");
     expect(session.match!.stage).toBe("sb4-01");

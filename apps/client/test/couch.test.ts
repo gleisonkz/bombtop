@@ -71,7 +71,7 @@ describe("couch seats", () => {
     couch.tick("lobby", taken);
     state = pad(3);
     couch.tick("lobby", taken);
-    expect(seats[0]!.sent).toEqual([[C2S.character, { character: "thor" }]]);
+    expect(seats[0]!.sent.filter(([type]) => type === C2S.character)).toEqual([[C2S.character, { character: "thor" }]]);
     state = pad(1);
     couch.tick("lobby", taken);
     expect(seats[0]!.left).toBe(true);
@@ -133,6 +133,23 @@ describe("couch seats", () => {
     p1 = pad(9);
     couch.tick("playing", ["bomb"]);
     expect(started).toBe(1);
+  });
+
+  it("a controller's seat is ready as it sits down, and again each time the room is back in the lobby", () => {
+    const { host, seats } = room();
+    let p2 = pad();
+    const couch = new CouchSeats(host, () => [{ index: 0, state: pad() }, { index: 1, state: p2 }]);
+    couch.tick("lobby", ["bomb"]);
+    p2 = pad(0);
+    couch.tick("lobby", ["bomb"]);
+    couch.tick("lobby", ["bomb"]);
+    const ready = () => seats[0]!.sent.filter(([type]) => type === C2S.ready);
+    expect(ready()).toEqual([[C2S.ready, { ready: true }]]);
+    couch.tick("playing", ["bomb"]);
+    couch.tick("results", ["bomb"]);
+    couch.tick("lobby", ["bomb"]);
+    couch.tick("lobby", ["bomb"]);
+    expect(ready()).toHaveLength(2);
   });
 
   it("leaving the room gives every seat up", () => {
