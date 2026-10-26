@@ -70,6 +70,24 @@ describe("kick", () => {
     expect(b.x).toBe(8);
   });
 
+  it("kicks back a bomb kicked at them, though it stopped against them as they walked into it", () => {
+    // Walking at the bomb, they are past their tile's center when it stops in front: still a kick.
+    for (const [x2, wait] of [[9, 0], [9, 5], [10, 10], [12, 0], [12, 5]] as const) {
+      const s = emptyMatch();
+      for (const p of s.players) p.canKick = true;
+      placePlayerAt(s, "p1", 4, 5);
+      placeBomb(s, "p1");
+      placePlayerAt(s, "p1", 3, 5);
+      placePlayerAt(s, "p2", x2, 5);
+      run(s, 2, { p1: { dir: "right", bomb: false } });
+      placePlayerAt(s, "p1", 1, 1);
+      run(s, wait);
+      run(s, 80, { p2: { dir: "left", bomb: false } });
+      const b = s.bombs[0]!;
+      expect(b.slide === "left" || b.x <= 3, `p2 from ${x2}, ${wait} ticks later: bomb at ${b.x}, ${b.slide}`).toBe(true);
+    }
+  });
+
   it("kicked bombs keep their fuse and explode where they are", () => {
     const s = withKick();
     const b = bombAt(s, 3, 1);

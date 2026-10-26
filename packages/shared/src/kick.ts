@@ -18,14 +18,17 @@ import {
 } from "./state";
 
 /**
- * A player with kick who is pressed against a resting bomb (stopped at their
- * tile center, facing it) sends it sliding.
+ * A player with kick who is pressed against a resting bomb (in its lane, at their
+ * tile center or past it toward the bomb, facing it) sends it sliding. Past the
+ * center: a bomb kicked at them stopped in front while they walked into it.
  */
 export function tryKick(s: MatchState, p: Player, dir: Direction): void {
   if (!dir || !p.alive || playerElevated(p) || p.stun > 0 || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
   const { x, y } = playerTile(p);
-  if (p.px !== tileCenter(x) || p.py !== tileCenter(y)) return;
   const [dx, dy] = DIR_VECTORS[dir];
+  const ahead = (p.px - tileCenter(x)) * dx + (p.py - tileCenter(y)) * dy;
+  const aside = dx !== 0 ? p.py - tileCenter(y) : p.px - tileCenter(x);
+  if (ahead < 0 || aside !== 0) return;
   const bomb = bombAt(s, x + dx, y + dy);
   if (bomb && !bomb.slide) {
     bomb.slide = dir;
