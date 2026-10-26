@@ -13,6 +13,7 @@ import { Renderer, TILE_PX } from "./render/renderer";
 import { SHEETS } from "./render/sprites";
 import { LobbyPanel } from "./ui/lobby";
 import { MatchMenu } from "./ui/match-menu";
+import { SideHud } from "./ui/side-hud";
 import { Pairing } from "./ui/pairing";
 import { CouchSeats } from "./input/couch";
 import { LocalHost } from "./net/local-host";
@@ -101,6 +102,7 @@ function refit(): void {
   const h = height * TILE_PX;
   const scale = fitScale(window.innerWidth, window.innerHeight, w, h);
   app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
+  sideHud.setRoom((window.innerWidth - Math.floor(w * scale)) / 2);
   app.stage.scale.set(scale);
   app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
 }
@@ -172,6 +174,7 @@ document.body.appendChild(el("div", { class: "sound" }, [el("div", { class: "cor
 
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
+const sideHud = new SideHud(document.body);
 // Touch steering (setas or joystick), switchable mid-match from the ☰ menu, which also leaves the match.
 const CONTROLS_KEY = "bombtop.controls";
 touch.setStyle(controlStyle(storage.get(CONTROLS_KEY)));
@@ -189,6 +192,7 @@ function setMode(next: GameMode | null, controls = !!next): void {
   renderer.hide(); // the last frame of the previous mode must not linger behind menus
   touch.setVisible(controls);
   matchMenu.setVisible(controls);
+  sideHud.setVisible(controls);
 }
 
 // The room lives in the address (/sala/CODE) while the player is in it.
@@ -208,7 +212,10 @@ const ctx: ModeContext = {
   renderer,
   sound,
   touch: touch.input,
-  specialCooldown: (ticks) => touch.setSpecialCooldown(ticks),
+  specialCooldown: (ticks, character) => {
+    touch.setSpecialCooldown(ticks);
+    sideHud.setSpecial(ticks, character);
+  },
   fit,
   exit: (message) => {
     route.left();

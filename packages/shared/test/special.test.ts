@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, placePlayerAt, sanitizeInput, SPECIAL_STUN_TICKS, step, type MatchState } from "../src";
+import { CHARACTERS, createMatch, specialRecharge, placePlayerAt, sanitizeInput, SPECIAL_STUN_TICKS, step, type MatchState } from "../src";
 import { center, player, run } from "./helpers";
 
 /** p1 (thor) at (3,5) facing right; p2 (bomb) `gap` tiles in front of it. */
@@ -46,5 +46,18 @@ describe("blast geometry", () => {
     player(s).px = center(3) + 5;
     cast(s);
     expect(player(s, "p2").stun).toBeGreaterThanOrEqual(SPECIAL_STUN_TICKS - 1); // may already have ticked once
+  });
+});
+
+describe("special recharge", () => {
+  it("tells each character's full recharge, the cooldown their special starts", () => {
+    for (const character of CHARACTERS) {
+      const s = createMatch({ seed: 1, playerIds: ["p1", "p2"], blockDensity: 0, characters: { p1: character, p2: "bomb" } });
+      placePlayerAt(s, "p1", 7, 5);
+      placePlayerAt(s, "p2", 1, 1);
+      player(s).facing = "right";
+      step(s, { p1: sanitizeInput({ special: true }) });
+      expect(player(s).specialCooldown, character).toBe(specialRecharge(character));
+    }
   });
 });

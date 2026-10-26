@@ -287,7 +287,7 @@ export class OnlineGame implements GameMode {
       this.echo.played(got, nowMs);
     }
     view = this.pickups.apply(view, nowMs);
-    this.ctx.specialCooldown?.(me?.specialCooldown ?? 0);
+    this.ctx.specialCooldown?.(me?.specialCooldown ?? 0, me?.character);
     if (!me) {
       this.measureJumps(view, prev, 1, null);
       return this.ctx.renderer.draw(view, prev, 1);

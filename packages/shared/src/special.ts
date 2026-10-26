@@ -2,9 +2,27 @@ import { launch } from "./air";
 import { addFlame } from "./bombs";
 import { effectiveRange } from "./curse";
 import { BLAST_TICKS, FUSE_TICKS, BOLT_RANGE, BUBBLE_COOLDOWN, BUBBLE_TICKS, FLASH_RANGE, KAME_CHARGE, KAME_COOLDOWN, KAME_RANGE, MAGNET_RANGE, MEGA_COOLDOWN, RASENGAN_PUSH, RASENGAN_TICKS, RASENGAN_TICKS_PER_TILE, SHIELD_TICKS, SPECIAL_COOLDOWN, SPECIAL_STUN_TICKS, THUNDER_RANGE, KISS_RANGE, SNEAK_TICKS, PATRONUS_COOLDOWN, PATRONUS_FADE, PATRONUS_TICKS_PER_TILE, BALL_RANGE, TILE, TRUCK_COOLDOWN, TRUCK_SHIFT, TRUCK_TICKS, TRUCK_TICKS_PER_TILE, TUNNEL_RANGE, WEB_RANGE, WEB_TICKS } from "./constants";
-import { bombAt, DIR_VECTORS, getTile, hasFlame, ItemKind, playerTile, Tile, tileCenter, type Blast, type BlastKind, type Facing, type MatchState, type Player } from "./state";
+import { bombAt, DIR_VECTORS, getTile, hasFlame, ItemKind, playerTile, Tile, tileCenter, type Blast, type BlastKind, type CharacterId, type Facing, type MatchState, type Player } from "./state";
 
 const OPPOSITE: Record<Facing, Facing> = { up: "down", down: "up", left: "right", right: "left" };
+
+/** How long a character's special takes to recharge, in ticks: the cooldown it starts when used. */
+export function specialRecharge(character: CharacterId): number {
+  switch (character) {
+    case "harry":
+      return PATRONUS_COOLDOWN;
+    case "optimus":
+      return TRUCK_COOLDOWN;
+    case "lantern":
+      return BUBBLE_COOLDOWN;
+    case "goku":
+      return KAME_COOLDOWN;
+    case "bomb":
+      return MEGA_COOLDOWN;
+    default:
+      return SPECIAL_COOLDOWN;
+  }
+}
 
 /**
  * The player's special, when ready.

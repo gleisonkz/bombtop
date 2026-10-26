@@ -220,7 +220,7 @@ describe("online snapshot rendering", () => {
     now += 1000 / 30;
     receive(64, 896, 0);
     game.frame(0, now);
-    expect(specialCooldown).toHaveBeenLastCalledWith(0);
+    expect(specialCooldown).toHaveBeenLastCalledWith(0, "bomb");
     receive(66, 896, 300);
     game.frame(0, now);
     game.dispose();
