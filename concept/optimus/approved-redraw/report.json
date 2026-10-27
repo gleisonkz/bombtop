@@ -1,0 +1,8328 @@
+{
+  "alpha_threshold": 128,
+  "sources": {
+    "idle": {
+      "file": "idle.generated.png",
+      "sha256": "827a8f92abbf70f725babb88f4c2ad6ad4c48758a0bcc3b76ac1eaf1cbac3940",
+      "size": [
+        1416,
+        1111
+      ]
+    },
+    "walk": {
+      "file": "walk.generated.png",
+      "sha256": "9b667a232f095cca4bc42e5316b04ffbdb545f76c48ed6181719fcc1607746e5",
+      "size": [
+        1774,
+        887
+      ]
+    },
+    "reaction": {
+      "file": "reaction.generated.png",
+      "sha256": "be4b77980347a99ceef30c68c714b8acfc2257cc7c5ed2de4b3aaf62e24e1537",
+      "size": [
+        1855,
+        848
+      ]
+    },
+    "carry-idle": {
+      "file": "carry-idle.generated.png",
+      "sha256": "91c286334d791b57ce8c18129f51b04396f5d0cace2d18e8b827b5e7b5267fa9",
+      "size": [
+        1415,
+        1111
+      ]
+    },
+    "carry-walk": {
+      "file": "carry-walk.generated.png",
+      "sha256": "f57be29a5a87d28e20739e1502190b611efb91c7f8ba715a382f24995e973ad2",
+      "size": [
+        1734,
+        907
+      ]
+    },
+    "transform": {
+      "file": "transform.generated.png",
+      "sha256": "4880789d44ff08a6125fdab90df03b8955d78e06b74182e534002b71dab50678",
+      "size": [
+        1344,
+        1344
+      ]
+    },
+    "truck": {
+      "file": "truck.generated.png",
+      "sha256": "4995cd7d48889d243a1d8e9ef7c01e5295c2b3d1dbe09fece9fab8e5f0d43d52",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    "fist": {
+      "file": "fist.generated.png",
+      "sha256": "02388c166e2c6e88e48b27740179478db6121d35adb0c8802ced86c2e9221c84",
+      "size": [
+        1536,
+        1024
+      ]
+    }
+  },
+  "gameplay": {
+    "size": [
+      2688,
+      3808
+    ],
+    "frame": [
+      224,
+      224
+    ],
+    "anchor": [
+      111.5,
+      211
+    ],
+    "frame_count": 109,
+    "frames": [
+      {
+        "family": "idle",
+        "row": 0,
+        "column": 0,
+        "source_box": [
+          57,
+          22,
+          326,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            57,
+            22,
+            326,
+            384
+          ]
+        ],
+        "source_pixels": 66918,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.4530386740331492
+        ],
+        "source_anchor": [
+          135.0,
+          362
+        ],
+        "source_anchor_absolute": [
+          192.0,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.2267657992565,
+          211.0
+        ],
+        "bbox": [
+          50,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "b83ad74d2241c0cd9e7edd77cde027f8d0ac8cddbe6a1177eb4e37da41807f79"
+      },
+      {
+        "family": "idle",
+        "row": 0,
+        "column": 1,
+        "source_box": [
+          411,
+          32,
+          681,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            411,
+            32,
+            681,
+            384
+          ]
+        ],
+        "source_pixels": 65041,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45185185185185184,
+          0.45170454545454547
+        ],
+        "source_anchor": [
+          135.0,
+          352
+        ],
+        "source_anchor_absolute": [
+          546.0,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          52
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          50,
+          52,
+          172,
+          211
+        ],
+        "body_height": 159,
+        "sha256": "0ee8f05af375d9f2ef3c3654b4d44264532bab7d55a223e1968b53c53c9d94d0"
+      },
+      {
+        "family": "idle",
+        "row": 0,
+        "column": 2,
+        "source_box": [
+          749,
+          23,
+          1018,
+          385
+        ],
+        "source_component_boxes": [
+          [
+            749,
+            23,
+            1018,
+            385
+          ]
+        ],
+        "source_pixels": 66661,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.4530386740331492
+        ],
+        "source_anchor": [
+          133.5,
+          362
+        ],
+        "source_anchor_absolute": [
+          882.5,
+          385
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          51,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.54646840148699,
+          211.0
+        ],
+        "bbox": [
+          51,
+          47,
+          173,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "5327db56c081087eee70608937cf3ca1f11900ad87949b76c7102ba63cd3d987"
+      },
+      {
+        "family": "idle",
+        "row": 0,
+        "column": 3,
+        "source_box": [
+          1103,
+          25,
+          1376,
+          385
+        ],
+        "source_component_boxes": [
+          [
+            1103,
+            25,
+            1376,
+            385
+          ]
+        ],
+        "source_pixels": 66241,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4542124542124542,
+          0.4527777777777778
+        ],
+        "source_anchor": [
+          138.0,
+          360
+        ],
+        "source_anchor_absolute": [
+          1241.0,
+          385
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          49,
+          48
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.68131868131869,
+          211.0
+        ],
+        "bbox": [
+          49,
+          48,
+          173,
+          211
+        ],
+        "body_height": 163,
+        "sha256": "c06fe8ce4be501ae4b745bbb05c08729c4afefc53c45aea0d2eaf234ae1c54b6"
+      },
+      {
+        "family": "idle",
+        "row": 1,
+        "column": 0,
+        "source_box": [
+          125,
+          393,
+          270,
+          735
+        ],
+        "source_component_boxes": [
+          [
+            125,
+            393,
+            270,
+            735
+          ]
+        ],
+        "source_pixels": 38252,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45517241379310347,
+          0.45321637426900585
+        ],
+        "source_anchor": [
+          72.5,
+          342
+        ],
+        "source_anchor_absolute": [
+          197.5,
+          735
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          78,
+          56
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          78,
+          56,
+          144,
+          211
+        ],
+        "body_height": 155,
+        "sha256": "666fcc25d04d48e5ba2420a117ea90051a809b1d886d20aaa795d21f44c7891b"
+      },
+      {
+        "family": "idle",
+        "row": 1,
+        "column": 1,
+        "source_box": [
+          478,
+          401,
+          617,
+          736
+        ],
+        "source_component_boxes": [
+          [
+            478,
+            401,
+            617,
+            736
+          ]
+        ],
+        "source_pixels": 35636,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45323741007194246,
+          0.4537313432835821
+        ],
+        "source_anchor": [
+          72.0,
+          335
+        ],
+        "source_anchor_absolute": [
+          550.0,
+          736
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          79,
+          59
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.63309352517986,
+          211.0
+        ],
+        "bbox": [
+          79,
+          59,
+          142,
+          211
+        ],
+        "body_height": 152,
+        "sha256": "232cafd616bf3fcc9d442204f1ae9cb0e35d7fb28e1202893c3a34d19710925d"
+      },
+      {
+        "family": "idle",
+        "row": 1,
+        "column": 2,
+        "source_box": [
+          818,
+          394,
+          962,
+          737
+        ],
+        "source_component_boxes": [
+          [
+            818,
+            394,
+            962,
+            737
+          ]
+        ],
+        "source_pixels": 37626,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4513888888888889,
+          0.4518950437317784
+        ],
+        "source_anchor": [
+          78.0,
+          343
+        ],
+        "source_anchor_absolute": [
+          896.0,
+          737
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          76,
+          56
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.20833333333334,
+          211.0
+        ],
+        "bbox": [
+          76,
+          56,
+          141,
+          211
+        ],
+        "body_height": 155,
+        "sha256": "ade8b7cb012ced35c5855b746a9420f8b7c02a095cec58d765c62e83a7ea635f"
+      },
+      {
+        "family": "idle",
+        "row": 1,
+        "column": 3,
+        "source_box": [
+          1167,
+          398,
+          1313,
+          737
+        ],
+        "source_component_boxes": [
+          [
+            1167,
+            398,
+            1313,
+            737
+          ]
+        ],
+        "source_pixels": 37156,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4520547945205479,
+          0.45427728613569324
+        ],
+        "source_anchor": [
+          80.5,
+          339
+        ],
+        "source_anchor_absolute": [
+          1247.5,
+          737
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          75,
+          57
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.39041095890411,
+          211.0
+        ],
+        "bbox": [
+          75,
+          57,
+          141,
+          211
+        ],
+        "body_height": 154,
+        "sha256": "86916e36bd0500d140824eea9e84fd8b55921b5e695faeb269863d5e15c265b3"
+      },
+      {
+        "family": "idle",
+        "row": 2,
+        "column": 0,
+        "source_box": [
+          58,
+          750,
+          327,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            58,
+            750,
+            327,
+            1095
+          ]
+        ],
+        "source_pixels": 64318,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.45217391304347826
+        ],
+        "source_anchor": [
+          135.5,
+          345
+        ],
+        "source_anchor_absolute": [
+          193.5,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          55
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.45353159851302,
+          211.0
+        ],
+        "bbox": [
+          50,
+          55,
+          172,
+          211
+        ],
+        "body_height": 156,
+        "sha256": "9954ee33dd246f85702bf7b8270a69251270ee11c8b5e495f182748be7a8e4d3"
+      },
+      {
+        "family": "idle",
+        "row": 2,
+        "column": 1,
+        "source_box": [
+          414,
+          766,
+          677,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            414,
+            766,
+            677,
+            1095
+          ]
+        ],
+        "source_pixels": 60489,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4524714828897338,
+          0.45288753799392095
+        ],
+        "source_anchor": [
+          132.0,
+          329
+        ],
+        "source_anchor_absolute": [
+          546.0,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          62
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.72623574144487,
+          211.0
+        ],
+        "bbox": [
+          52,
+          62,
+          171,
+          211
+        ],
+        "body_height": 149,
+        "sha256": "aa4e7caf1edb572497fee9592cd2ceca47dfe0433afddbc38a26ab51c504e0ae"
+      },
+      {
+        "family": "idle",
+        "row": 2,
+        "column": 2,
+        "source_box": [
+          749,
+          753,
+          1016,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            749,
+            753,
+            1016,
+            1095
+          ]
+        ],
+        "source_pixels": 63044,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45318352059925093,
+          0.45321637426900585
+        ],
+        "source_anchor": [
+          134.5,
+          342
+        ],
+        "source_anchor_absolute": [
+          883.5,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          51,
+          56
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.95318352059925,
+          211.0
+        ],
+        "bbox": [
+          51,
+          56,
+          172,
+          211
+        ],
+        "body_height": 155,
+        "sha256": "846bdaa720cf094754335371b098dfc24483f3545e01b99195fd466d317d11ee"
+      },
+      {
+        "family": "idle",
+        "row": 2,
+        "column": 3,
+        "source_box": [
+          1104,
+          750,
+          1372,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            1104,
+            750,
+            1372,
+            1095
+          ]
+        ],
+        "source_pixels": 63455,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45149253731343286,
+          0.45217391304347826
+        ],
+        "source_anchor": [
+          134.0,
+          345
+        ],
+        "source_anchor_absolute": [
+          1238.0,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          51,
+          55
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          51,
+          55,
+          172,
+          211
+        ],
+        "body_height": 156,
+        "sha256": "36df9400573cb05a1abdc3d9a1605afbfb7316b1ef336d67d9c20bfd83415c98"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 0,
+        "source_box": [
+          84,
+          14,
+          311,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            84,
+            14,
+            311,
+            289
+          ]
+        ],
+        "source_pixels": 39224,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5947136563876652,
+          0.5963636363636363
+        ],
+        "source_anchor": [
+          111.5,
+          275
+        ],
+        "source_anchor_absolute": [
+          195.5,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          45,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.31057268722466,
+          211.0
+        ],
+        "bbox": [
+          45,
+          47,
+          180,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "58d2bde6e33eb6289c3195f933997f193b393d0571d62d957a403297c5a22477"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 1,
+        "source_box": [
+          364,
+          13,
+          585,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            364,
+            13,
+            585,
+            289
+          ]
+        ],
+        "source_pixels": 37439,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5972850678733032,
+          0.5978260869565217
+        ],
+        "source_anchor": [
+          103.0,
+          276
+        ],
+        "source_anchor_absolute": [
+          467.0,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.52036199095022,
+          211.0
+        ],
+        "bbox": [
+          50,
+          46,
+          182,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "743e049b3cb4c3f8ff6480ec0c08927c45f3f4161e416dee0225584db4f4d774"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 2,
+        "source_box": [
+          638,
+          13,
+          859,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            638,
+            13,
+            859,
+            289
+          ]
+        ],
+        "source_pixels": 38711,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5972850678733032,
+          0.5978260869565217
+        ],
+        "source_anchor": [
+          120.0,
+          276
+        ],
+        "source_anchor_absolute": [
+          758.0,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.67420814479638,
+          211.0
+        ],
+        "bbox": [
+          40,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "87e76102b7fc83e5cf1d1187c5706ca84f194a7e7ec969fb1d9e308c59d50e38"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 3,
+        "source_box": [
+          909,
+          13,
+          1135,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            909,
+            13,
+            1135,
+            289
+          ]
+        ],
+        "source_pixels": 38025,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5973451327433629,
+          0.5978260869565217
+        ],
+        "source_anchor": [
+          110.0,
+          276
+        ],
+        "source_anchor_absolute": [
+          1019.0,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          46,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.70796460176992,
+          211.0
+        ],
+        "bbox": [
+          46,
+          47,
+          181,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "ad71b634e3f26c7c33809ed68d158a6cec8e54cd5434c0ad0090b1a0126e29b4"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 4,
+        "source_box": [
+          1182,
+          13,
+          1408,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            1182,
+            13,
+            1408,
+            289
+          ]
+        ],
+        "source_pixels": 38244,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5973451327433629,
+          0.5978260869565217
+        ],
+        "source_anchor": [
+          108.0,
+          276
+        ],
+        "source_anchor_absolute": [
+          1290.0,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          47,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.51327433628319,
+          211.0
+        ],
+        "bbox": [
+          47,
+          46,
+          182,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "2356e369cf394c4d27eb826c3c6112b5e8fc3d63e560472d228f6f2f9c75f63e"
+      },
+      {
+        "family": "walk",
+        "row": 3,
+        "column": 5,
+        "source_box": [
+          1464,
+          14,
+          1691,
+          289
+        ],
+        "source_component_boxes": [
+          [
+            1464,
+            14,
+            1691,
+            289
+          ]
+        ],
+        "source_pixels": 39912,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5947136563876652,
+          0.5963636363636363
+        ],
+        "source_anchor": [
+          112.5,
+          275
+        ],
+        "source_anchor_absolute": [
+          1576.5,
+          289
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          45,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.90528634361233,
+          211.0
+        ],
+        "bbox": [
+          45,
+          47,
+          180,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "4a63600a532f68fcb74d54794c635f933c5ba8cdf98fadfd099f14b532216307"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 0,
+        "source_box": [
+          121,
+          294,
+          275,
+          576
+        ],
+        "source_component_boxes": [
+          [
+            121,
+            294,
+            275,
+            576
+          ]
+        ],
+        "source_pixels": 31070,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5974025974025974,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          77.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          198.0,
+          576
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          66,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          112.0,
+          211.0
+        ],
+        "bbox": [
+          66,
+          43,
+          158,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "ac03bc96450be3eb4e187bd910f34b0368479b728d0d504d59df2eccc9a4268d"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 1,
+        "source_box": [
+          392,
+          294,
+          571,
+          576
+        ],
+        "source_component_boxes": [
+          [
+            392,
+            294,
+            571,
+            576
+          ]
+        ],
+        "source_pixels": 30693,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5977653631284916,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          90.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          482.0,
+          576
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          58,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.79888268156424,
+          211.0
+        ],
+        "bbox": [
+          58,
+          43,
+          164,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "159c9cdb6148e6409cb6d3f2f4aaec384540fd8327f74f19d29a4d2fe0207ea3"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 2,
+        "source_box": [
+          689,
+          295,
+          816,
+          571
+        ],
+        "source_component_boxes": [
+          [
+            689,
+            295,
+            816,
+            571
+          ]
+        ],
+        "source_pixels": 25993,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5984251968503937,
+          0.5978260869565217
+        ],
+        "source_anchor": [
+          60.0,
+          276
+        ],
+        "source_anchor_absolute": [
+          749.0,
+          571
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          76,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.90551181102362,
+          211.0
+        ],
+        "bbox": [
+          76,
+          46,
+          152,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "88b0e244b5dcc13420a9b46d1b5a7d9a39132e95195cd2ffddc252886e87efe3"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 3,
+        "source_box": [
+          952,
+          295,
+          1120,
+          575
+        ],
+        "source_component_boxes": [
+          [
+            952,
+            295,
+            1120,
+            575
+          ]
+        ],
+        "source_pixels": 29721,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5952380952380952,
+          0.5964285714285714
+        ],
+        "source_anchor": [
+          85.0,
+          280
+        ],
+        "source_anchor_absolute": [
+          1037.0,
+          575
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          61,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5952380952381,
+          211.0
+        ],
+        "bbox": [
+          61,
+          44,
+          161,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "692e9c5c0e52b8693d928f440d2ce6c10c2f921a971875bdc38906e8842607ae"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 4,
+        "source_box": [
+          1238,
+          294,
+          1400,
+          575
+        ],
+        "source_component_boxes": [
+          [
+            1238,
+            294,
+            1400,
+            575
+          ]
+        ],
+        "source_pixels": 29863,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5987654320987654,
+          0.597864768683274
+        ],
+        "source_anchor": [
+          81.0,
+          281
+        ],
+        "source_anchor_absolute": [
+          1319.0,
+          575
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          63,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          63,
+          43,
+          160,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "e303c7d7cfd520e8d955f073ec5a32218f7a475cd20ed72b165af5cfe723ca94"
+      },
+      {
+        "family": "walk",
+        "row": 4,
+        "column": 5,
+        "source_box": [
+          1520,
+          294,
+          1657,
+          576
+        ],
+        "source_component_boxes": [
+          [
+            1520,
+            294,
+            1657,
+            576
+          ]
+        ],
+        "source_pixels": 28538,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5985401459854015,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          68.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          1588.5,
+          576
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          70,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          70,
+          43,
+          152,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "62bc3b54a235368da3e6ff3c3d1db13ec45656fec052e82b219e5a7c19429c1e"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 0,
+        "source_box": [
+          72,
+          582,
+          300,
+          864
+        ],
+        "source_component_boxes": [
+          [
+            72,
+            582,
+            300,
+            864
+          ]
+        ],
+        "source_pixels": 41639,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5964912280701754,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          115.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          187.0,
+          864
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          43,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.59649122807018,
+          211.0
+        ],
+        "bbox": [
+          43,
+          43,
+          179,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "fa68fbd810c3d4d93af2a86cd843e1b2abb12381074154d73e40fcdfde01c566"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 1,
+        "source_box": [
+          359,
+          584,
+          588,
+          864
+        ],
+        "source_component_boxes": [
+          [
+            359,
+            584,
+            588,
+            864
+          ]
+        ],
+        "source_pixels": 40479,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5982532751091703,
+          0.5964285714285714
+        ],
+        "source_anchor": [
+          112.0,
+          280
+        ],
+        "source_anchor_absolute": [
+          471.0,
+          864
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          44,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.00436681222706,
+          211.0
+        ],
+        "bbox": [
+          44,
+          44,
+          181,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "29fe80863c88cc0018268078f20726887ef2a7f55a4f82516f054588a9749862"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 2,
+        "source_box": [
+          634,
+          582,
+          864,
+          864
+        ],
+        "source_component_boxes": [
+          [
+            634,
+            582,
+            864,
+            864
+          ]
+        ],
+        "source_pixels": 40511,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5956521739130435,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          113.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          747.0,
+          864
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          44,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.30869565217391,
+          211.0
+        ],
+        "bbox": [
+          44,
+          43,
+          181,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "a96f0fc145516c1dba7efb2db749359bc5cf7102088d844d344768f088cb8909"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 3,
+        "source_box": [
+          902,
+          582,
+          1133,
+          864
+        ],
+        "source_component_boxes": [
+          [
+            902,
+            582,
+            1133,
+            864
+          ]
+        ],
+        "source_pixels": 40549,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5974025974025974,
+          0.5957446808510638
+        ],
+        "source_anchor": [
+          113.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          1015.0,
+          864
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          44,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5064935064935,
+          211.0
+        ],
+        "bbox": [
+          44,
+          43,
+          182,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "c12b0734a74dc2725ee6c6aad47e45f6b781dc99638e25b3d91ee115b2b94487"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 4,
+        "source_box": [
+          1182,
+          583,
+          1417,
+          863
+        ],
+        "source_component_boxes": [
+          [
+            1182,
+            583,
+            1417,
+            863
+          ]
+        ],
+        "source_pixels": 39688,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5957446808510638,
+          0.5964285714285714
+        ],
+        "source_anchor": [
+          117.5,
+          280
+        ],
+        "source_anchor_absolute": [
+          1299.5,
+          863
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          42,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          112.0,
+          211.0
+        ],
+        "bbox": [
+          42,
+          44,
+          182,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "ef147471195195f7a2fc14c0cb0a6f345e87c2ab5c863284cb0ae0bfdbd74b3a"
+      },
+      {
+        "family": "walk",
+        "row": 5,
+        "column": 5,
+        "source_box": [
+          1471,
+          584,
+          1704,
+          864
+        ],
+        "source_component_boxes": [
+          [
+            1471,
+            584,
+            1704,
+            864
+          ]
+        ],
+        "source_pixels": 41766,
+        "scale": 0.5963636363636363,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            84,
+            14,
+            311,
+            289
+          ],
+          "height": 275,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.5965665236051502,
+          0.5964285714285714
+        ],
+        "source_anchor": [
+          120.5,
+          280
+        ],
+        "source_anchor_absolute": [
+          1591.5,
+          864
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.88626609442059,
+          211.0
+        ],
+        "bbox": [
+          40,
+          44,
+          179,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "417fd58d93f19dd58d0fd0b3ab8cb4452e6d6608dc0f548317a2c2924ce7298a"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 0,
+        "source_box": [
+          48,
+          78,
+          298,
+          438
+        ],
+        "source_component_boxes": [
+          [
+            48,
+            78,
+            298,
+            438
+          ]
+        ],
+        "source_pixels": 57623,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.456,
+          0.45555555555555555
+        ],
+        "source_anchor": [
+          125.0,
+          360
+        ],
+        "source_anchor_absolute": [
+          173.0,
+          438
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          54,
+          47,
+          168,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "00d6c7c4097c17dcc62153e9e15c9bcd83d0c24ae2023b2a2fce27d4f4241dfc"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 1,
+        "source_box": [
+          319,
+          107,
+          545,
+          439
+        ],
+        "source_component_boxes": [
+          [
+            319,
+            107,
+            545,
+            439
+          ]
+        ],
+        "source_pixels": 52129,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4557522123893805,
+          0.45481927710843373
+        ],
+        "source_anchor": [
+          119.5,
+          332
+        ],
+        "source_anchor_absolute": [
+          438.5,
+          439
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          57,
+          60
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.46238938053096,
+          211.0
+        ],
+        "bbox": [
+          57,
+          60,
+          160,
+          211
+        ],
+        "body_height": 151,
+        "sha256": "8a1ce0e3a7a4475f5635e3228ca580723fe3157991ecf1974dbee00e9b901781"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 2,
+        "source_box": [
+          584,
+          137,
+          812,
+          437
+        ],
+        "source_component_boxes": [
+          [
+            584,
+            137,
+            812,
+            437
+          ]
+        ],
+        "source_pixels": 50895,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45614035087719296,
+          0.45666666666666667
+        ],
+        "source_anchor": [
+          116.5,
+          300
+        ],
+        "source_anchor_absolute": [
+          700.5,
+          437
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          58,
+          74
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.14035087719299,
+          211.0
+        ],
+        "bbox": [
+          58,
+          74,
+          162,
+          211
+        ],
+        "body_height": 137,
+        "sha256": "ca000d1918149c0812b60854cedb6da88a64d53ebae3a5fb1bdbd3a9d580c9e4"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 3,
+        "source_box": [
+          836,
+          91,
+          1090,
+          441
+        ],
+        "source_component_boxes": [
+          [
+            836,
+            91,
+            1090,
+            441
+          ]
+        ],
+        "source_pixels": 57159,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4566929133858268,
+          0.4542857142857143
+        ],
+        "source_anchor": [
+          140.5,
+          350
+        ],
+        "source_anchor_absolute": [
+          976.5,
+          441
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          47,
+          52
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.16535433070867,
+          211.0
+        ],
+        "bbox": [
+          47,
+          52,
+          163,
+          211
+        ],
+        "body_height": 159,
+        "sha256": "a10f41a37c0bca78f27f68f88a12303c642187d9a007ac55fdd729e6c0f2532d"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 4,
+        "source_box": [
+          1099,
+          99,
+          1340,
+          441
+        ],
+        "source_component_boxes": [
+          [
+            1099,
+            99,
+            1340,
+            441
+          ]
+        ],
+        "source_pixels": 51606,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45643153526970953,
+          0.45614035087719296
+        ],
+        "source_anchor": [
+          127.0,
+          342
+        ],
+        "source_anchor_absolute": [
+          1226.0,
+          441
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          55
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.96680497925311,
+          211.0
+        ],
+        "bbox": [
+          54,
+          55,
+          164,
+          211
+        ],
+        "body_height": 156,
+        "sha256": "781c152e0391a70346202ea9f339a84c075b95c5739f802261c6c1f1064e1579"
+      },
+      {
+        "family": "reaction",
+        "row": 6,
+        "column": 5,
+        "source_box": [
+          1348,
+          150,
+          1549,
+          442
+        ],
+        "source_component_boxes": [
+          [
+            1348,
+            150,
+            1549,
+            442
+          ]
+        ],
+        "source_pixels": 47270,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4577114427860697,
+          0.4554794520547945
+        ],
+        "source_anchor": [
+          105.0,
+          292
+        ],
+        "source_anchor_absolute": [
+          1453.0,
+          442
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          63,
+          78
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.05970149253731,
+          211.0
+        ],
+        "bbox": [
+          63,
+          78,
+          155,
+          211
+        ],
+        "body_height": 133,
+        "sha256": "0acd8795a88501654f518209a329d10108e23fb618214163f62a593814e0f923"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 0,
+        "source_box": [
+          27,
+          483,
+          278,
+          806
+        ],
+        "source_component_boxes": [
+          [
+            27,
+            483,
+            278,
+            806
+          ]
+        ],
+        "source_pixels": 47445,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4541832669322709,
+          0.4551083591331269
+        ],
+        "source_anchor": [
+          125.5,
+          323
+        ],
+        "source_anchor_absolute": [
+          152.5,
+          806
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          64
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          54,
+          64,
+          168,
+          211
+        ],
+        "body_height": 147,
+        "sha256": "0f776aa9ca109bb6eac0947624340355dc8b6660aebc312d0e331e60b46fd65c"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 1,
+        "source_box": [
+          261,
+          514,
+          572,
+          807
+        ],
+        "source_component_boxes": [
+          [
+            261,
+            514,
+            572,
+            807
+          ]
+        ],
+        "source_pixels": 44428,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4565916398713826,
+          0.4539249146757679
+        ],
+        "source_anchor": [
+          155.5,
+          293
+        ],
+        "source_anchor_absolute": [
+          416.5,
+          807
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          78
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          40,
+          78,
+          182,
+          211
+        ],
+        "body_height": 133,
+        "sha256": "929b7027a948ababac37ae43bc4e7e5bf80493b6b312dd96da319017c7f952be"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 2,
+        "source_box": [
+          544,
+          501,
+          841,
+          807
+        ],
+        "source_component_boxes": [
+          [
+            544,
+            501,
+            841,
+            807
+          ]
+        ],
+        "source_pixels": 43534,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45454545454545453,
+          0.4542483660130719
+        ],
+        "source_anchor": [
+          148.5,
+          306
+        ],
+        "source_anchor_absolute": [
+          692.5,
+          807
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          44,
+          72
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          44,
+          72,
+          179,
+          211
+        ],
+        "body_height": 139,
+        "sha256": "9f09c2a998d5a2bb7d754497ae0c5db148af89bea956905b9679792b4ec42871"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 3,
+        "source_box": [
+          797,
+          529,
+          1059,
+          794
+        ],
+        "source_component_boxes": [
+          [
+            797,
+            529,
+            1059,
+            794
+          ]
+        ],
+        "source_pixels": 34410,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4541984732824427,
+          0.45660377358490567
+        ],
+        "source_anchor": [
+          131.0,
+          265
+        ],
+        "source_anchor_absolute": [
+          928.0,
+          794
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          90
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          52,
+          90,
+          171,
+          211
+        ],
+        "body_height": 121,
+        "sha256": "6d0393abe42d9af65493517d5cb3c27e23dd9926a00c4f72bc3892d9fbaafd7f"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 4,
+        "source_box": [
+          1069,
+          591,
+          1323,
+          812
+        ],
+        "source_component_boxes": [
+          [
+            1069,
+            591,
+            1323,
+            812
+          ]
+        ],
+        "source_pixels": 35180,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4566929133858268,
+          0.45701357466063347
+        ],
+        "source_anchor": [
+          127.0,
+          221
+        ],
+        "source_anchor_absolute": [
+          1196.0,
+          812
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          110
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          112.0,
+          211.0
+        ],
+        "bbox": [
+          54,
+          110,
+          170,
+          211
+        ],
+        "body_height": 101,
+        "sha256": "18d9782d6db14d9b465dfe987b32b1e5e8daeb8b3ae4dd99326f54558c990bb5"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 5,
+        "source_box": [
+          1303,
+          641,
+          1595,
+          812
+        ],
+        "source_component_boxes": [
+          [
+            1303,
+            641,
+            1595,
+            812
+          ]
+        ],
+        "source_pixels": 29005,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4554794520547945,
+          0.45614035087719296
+        ],
+        "source_anchor": [
+          146.0,
+          171
+        ],
+        "source_anchor_absolute": [
+          1449.0,
+          812
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          45,
+          133
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          45,
+          133,
+          178,
+          211
+        ],
+        "body_height": 78,
+        "sha256": "044acd8992d5ba2feff861f50bcb5c0ac1abcab663d5066a8ab3a176c465b141"
+      },
+      {
+        "family": "reaction",
+        "row": 7,
+        "column": 6,
+        "source_box": [
+          1604,
+          684,
+          1835,
+          812
+        ],
+        "source_component_boxes": [
+          [
+            1604,
+            684,
+            1835,
+            812
+          ]
+        ],
+        "source_pixels": 20553,
+        "scale": 0.45555555555555555,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            48,
+            78,
+            298,
+            438
+          ],
+          "height": 360,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45454545454545453,
+          0.453125
+        ],
+        "source_anchor": [
+          115.5,
+          128
+        ],
+        "source_anchor_absolute": [
+          1719.5,
+          812
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          59,
+          153
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          59,
+          153,
+          164,
+          211
+        ],
+        "body_height": 58,
+        "sha256": "95b4a83383382e77e10ac5590ee098cc2b5d9ff6238490a6520e0efe1c5db772"
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 0,
+        "source_box": [
+          57,
+          22,
+          326,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            57,
+            22,
+            326,
+            384
+          ]
+        ],
+        "source_pixels": 66918,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.4530386740331492
+        ],
+        "source_anchor": [
+          135.0,
+          362
+        ],
+        "source_anchor_absolute": [
+          192.0,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.2267657992565,
+          211.0
+        ],
+        "bbox": [
+          50,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "b83ad74d2241c0cd9e7edd77cde027f8d0ac8cddbe6a1177eb4e37da41807f79",
+        "source_family": "idle",
+        "source_row": 0,
+        "source_column": 0,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 1,
+        "source_box": [
+          79,
+          36,
+          368,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            79,
+            36,
+            368,
+            424
+          ]
+        ],
+        "source_pixels": 80641,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42214532871972316,
+          0.422680412371134
+        ],
+        "source_anchor": [
+          145.5,
+          388
+        ],
+        "source_anchor_absolute": [
+          224.5,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.42214532871972,
+          211.0
+        ],
+        "bbox": [
+          50,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "6c5079fb92ddcfc130ee22a24c499750acf6b7fca690fb05b9d6af7bc1477d9b",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 2,
+        "source_box": [
+          528,
+          110,
+          816,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            528,
+            110,
+            816,
+            424
+          ]
+        ],
+        "source_pixels": 69856,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4236111111111111,
+          0.42356687898089174
+        ],
+        "source_anchor": [
+          139.5,
+          314
+        ],
+        "source_anchor_absolute": [
+          667.5,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          78
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.09375,
+          211.0
+        ],
+        "bbox": [
+          52,
+          78,
+          174,
+          211
+        ],
+        "body_height": 133,
+        "sha256": "e39ac097c675b0c43369d49869d7ac5213235147474d9eb9a9f24b7d593c14c8",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 3,
+        "source_box": [
+          965,
+          164,
+          1275,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            965,
+            164,
+            1275,
+            424
+          ]
+        ],
+        "source_pixels": 63665,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42258064516129035,
+          0.4230769230769231
+        ],
+        "source_anchor": [
+          155.0,
+          260
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          46,
+          101
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          46,
+          101,
+          177,
+          211
+        ],
+        "body_height": 110,
+        "sha256": "d0c497f67b210dadf13e5b3aa2e4e074b8e24727a8ec5171a7f13692b4da4267",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 1,
+        "source_column": 1,
+        "native_box": [
+          36,
+          29,
+          91,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9454545454545455,
+          1.9344262295081966
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          57,
+          93
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.47272727272727,
+          211.0
+        ],
+        "bbox": [
+          57,
+          93,
+          164,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "7fbfab8cb38133661725c6c33b7e35822b7fd5756ce73e26a196eee84d2be712",
+        "family": "cast",
+        "row": 8,
+        "column": 4,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 1,
+        "source_column": 0,
+        "native_box": [
+          38,
+          30,
+          91,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9433962264150944,
+          1.9333333333333333
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          61,
+          95
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.52830188679246,
+          211.0
+        ],
+        "bbox": [
+          61,
+          95,
+          164,
+          211
+        ],
+        "body_height": 116,
+        "sha256": "63089957e7ec8bd559e11b1b87cb4d005a27993712c57df6623e47414380ab4f",
+        "family": "cast",
+        "row": 8,
+        "column": 5,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 1,
+        "source_column": 0,
+        "native_box": [
+          38,
+          30,
+          91,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9433962264150944,
+          1.9333333333333333
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          61,
+          95
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.52830188679246,
+          211.0
+        ],
+        "bbox": [
+          61,
+          95,
+          164,
+          211
+        ],
+        "body_height": 116,
+        "sha256": "63089957e7ec8bd559e11b1b87cb4d005a27993712c57df6623e47414380ab4f",
+        "family": "cast",
+        "row": 8,
+        "column": 6,
+        "intentional_reverse": true,
+        "reverse_of_column": 5
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 1,
+        "source_column": 1,
+        "native_box": [
+          36,
+          29,
+          91,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9454545454545455,
+          1.9344262295081966
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          57,
+          93
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.47272727272727,
+          211.0
+        ],
+        "bbox": [
+          57,
+          93,
+          164,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "7fbfab8cb38133661725c6c33b7e35822b7fd5756ce73e26a196eee84d2be712",
+        "family": "cast",
+        "row": 8,
+        "column": 7,
+        "intentional_reverse": true,
+        "reverse_of_column": 4
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 8,
+        "source_box": [
+          965,
+          164,
+          1275,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            965,
+            164,
+            1275,
+            424
+          ]
+        ],
+        "source_pixels": 63665,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42258064516129035,
+          0.4230769230769231
+        ],
+        "source_anchor": [
+          155.0,
+          260
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          46,
+          101
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          46,
+          101,
+          177,
+          211
+        ],
+        "body_height": 110,
+        "sha256": "d0c497f67b210dadf13e5b3aa2e4e074b8e24727a8ec5171a7f13692b4da4267",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 3
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 9,
+        "source_box": [
+          528,
+          110,
+          816,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            528,
+            110,
+            816,
+            424
+          ]
+        ],
+        "source_pixels": 69856,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4236111111111111,
+          0.42356687898089174
+        ],
+        "source_anchor": [
+          139.5,
+          314
+        ],
+        "source_anchor_absolute": [
+          667.5,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          78
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.09375,
+          211.0
+        ],
+        "bbox": [
+          52,
+          78,
+          174,
+          211
+        ],
+        "body_height": 133,
+        "sha256": "e39ac097c675b0c43369d49869d7ac5213235147474d9eb9a9f24b7d593c14c8",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 2
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 10,
+        "source_box": [
+          79,
+          36,
+          368,
+          424
+        ],
+        "source_component_boxes": [
+          [
+            79,
+            36,
+            368,
+            424
+          ]
+        ],
+        "source_pixels": 80641,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42214532871972316,
+          0.422680412371134
+        ],
+        "source_anchor": [
+          145.5,
+          388
+        ],
+        "source_anchor_absolute": [
+          224.5,
+          424
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.42214532871972,
+          211.0
+        ],
+        "bbox": [
+          50,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "6c5079fb92ddcfc130ee22a24c499750acf6b7fca690fb05b9d6af7bc1477d9b",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 1
+      },
+      {
+        "family": "cast",
+        "row": 8,
+        "column": 11,
+        "source_box": [
+          57,
+          22,
+          326,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            57,
+            22,
+            326,
+            384
+          ]
+        ],
+        "source_pixels": 66918,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.4530386740331492
+        ],
+        "source_anchor": [
+          135.0,
+          362
+        ],
+        "source_anchor_absolute": [
+          192.0,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.2267657992565,
+          211.0
+        ],
+        "bbox": [
+          50,
+          47,
+          172,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "b83ad74d2241c0cd9e7edd77cde027f8d0ac8cddbe6a1177eb4e37da41807f79",
+        "source_family": "idle",
+        "source_row": 0,
+        "source_column": 0,
+        "intentional_reverse": true,
+        "reverse_of_column": 0
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 0,
+        "source_box": [
+          125,
+          393,
+          270,
+          735
+        ],
+        "source_component_boxes": [
+          [
+            125,
+            393,
+            270,
+            735
+          ]
+        ],
+        "source_pixels": 38252,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45517241379310347,
+          0.45321637426900585
+        ],
+        "source_anchor": [
+          72.5,
+          342
+        ],
+        "source_anchor_absolute": [
+          197.5,
+          735
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          78,
+          56
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          78,
+          56,
+          144,
+          211
+        ],
+        "body_height": 155,
+        "sha256": "666fcc25d04d48e5ba2420a117ea90051a809b1d886d20aaa795d21f44c7891b",
+        "source_family": "idle",
+        "source_row": 1,
+        "source_column": 0,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 1,
+        "source_box": [
+          143,
+          564,
+          305,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            143,
+            564,
+            305,
+            872
+          ]
+        ],
+        "source_pixels": 35455,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.41975308641975306,
+          0.42207792207792205
+        ],
+        "source_anchor": [
+          82.5,
+          308
+        ],
+        "source_anchor_absolute": [
+          225.5,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          77,
+          81
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.62962962962962,
+          211.0
+        ],
+        "bbox": [
+          77,
+          81,
+          145,
+          211
+        ],
+        "body_height": 130,
+        "sha256": "95da7d2ed3332bd1b28d213740a9d4545f9c20b8cbd1437cc2ce99f933028da6",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 2,
+        "source_box": [
+          529,
+          590,
+          815,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            529,
+            590,
+            815,
+            872
+          ]
+        ],
+        "source_pixels": 52979,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4230769230769231,
+          0.4219858156028369
+        ],
+        "source_anchor": [
+          136.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          665.5,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          92
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.75,
+          211.0
+        ],
+        "bbox": [
+          54,
+          92,
+          175,
+          211
+        ],
+        "body_height": 119,
+        "sha256": "669f4d61275f034758b53ae24505557d2fcb19623d9c609eeccdf66c3297b0a9",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 3,
+        "source_box": [
+          948,
+          629,
+          1291,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            948,
+            629,
+            1291,
+            872
+          ]
+        ],
+        "source_pixels": 49106,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4227405247813411,
+          0.42386831275720166
+        ],
+        "source_anchor": [
+          172.0,
+          243
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          108
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.71137026239067,
+          211.0
+        ],
+        "bbox": [
+          39,
+          108,
+          184,
+          211
+        ],
+        "body_height": 103,
+        "sha256": "25125a13000bb95134cee022d5ca80b226c43b4378e8c1e83d54fe902efcd70b",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 0,
+        "source_column": 1,
+        "native_box": [
+          16,
+          34,
+          112,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9375,
+          1.9464285714285714
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          18,
+          102
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          18,
+          102,
+          204,
+          211
+        ],
+        "body_height": 109,
+        "sha256": "f64b06f3d8655758dcdda18164229bca531415ca3b54ec56767fea3d225da446",
+        "family": "cast",
+        "row": 9,
+        "column": 4,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 0,
+        "source_column": 0,
+        "native_box": [
+          16,
+          34,
+          113,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9381443298969072,
+          1.9464285714285714
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          18,
+          102
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.03092783505154,
+          211.0
+        ],
+        "bbox": [
+          18,
+          102,
+          206,
+          211
+        ],
+        "body_height": 109,
+        "sha256": "45aeb2148bfff5438568a15548fdd9b1532c894cae6c78835d64249045c2a3bf",
+        "family": "cast",
+        "row": 9,
+        "column": 5,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 0,
+        "source_column": 0,
+        "native_box": [
+          16,
+          34,
+          113,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9381443298969072,
+          1.9464285714285714
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          18,
+          102
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.03092783505154,
+          211.0
+        ],
+        "bbox": [
+          18,
+          102,
+          206,
+          211
+        ],
+        "body_height": 109,
+        "sha256": "45aeb2148bfff5438568a15548fdd9b1532c894cae6c78835d64249045c2a3bf",
+        "family": "cast",
+        "row": 9,
+        "column": 6,
+        "intentional_reverse": true,
+        "reverse_of_column": 5
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 0,
+        "source_column": 1,
+        "native_box": [
+          16,
+          34,
+          112,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9375,
+          1.9464285714285714
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          18,
+          102
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          18,
+          102,
+          204,
+          211
+        ],
+        "body_height": 109,
+        "sha256": "f64b06f3d8655758dcdda18164229bca531415ca3b54ec56767fea3d225da446",
+        "family": "cast",
+        "row": 9,
+        "column": 7,
+        "intentional_reverse": true,
+        "reverse_of_column": 4
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 8,
+        "source_box": [
+          948,
+          629,
+          1291,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            948,
+            629,
+            1291,
+            872
+          ]
+        ],
+        "source_pixels": 49106,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4227405247813411,
+          0.42386831275720166
+        ],
+        "source_anchor": [
+          172.0,
+          243
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          108
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.71137026239067,
+          211.0
+        ],
+        "bbox": [
+          39,
+          108,
+          184,
+          211
+        ],
+        "body_height": 103,
+        "sha256": "25125a13000bb95134cee022d5ca80b226c43b4378e8c1e83d54fe902efcd70b",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 3
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 9,
+        "source_box": [
+          529,
+          590,
+          815,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            529,
+            590,
+            815,
+            872
+          ]
+        ],
+        "source_pixels": 52979,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4230769230769231,
+          0.4219858156028369
+        ],
+        "source_anchor": [
+          136.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          665.5,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          54,
+          92
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.75,
+          211.0
+        ],
+        "bbox": [
+          54,
+          92,
+          175,
+          211
+        ],
+        "body_height": 119,
+        "sha256": "669f4d61275f034758b53ae24505557d2fcb19623d9c609eeccdf66c3297b0a9",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 2
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 10,
+        "source_box": [
+          143,
+          564,
+          305,
+          872
+        ],
+        "source_component_boxes": [
+          [
+            143,
+            564,
+            305,
+            872
+          ]
+        ],
+        "source_pixels": 35455,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.41975308641975306,
+          0.42207792207792205
+        ],
+        "source_anchor": [
+          82.5,
+          308
+        ],
+        "source_anchor_absolute": [
+          225.5,
+          872
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          77,
+          81
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.62962962962962,
+          211.0
+        ],
+        "bbox": [
+          77,
+          81,
+          145,
+          211
+        ],
+        "body_height": 130,
+        "sha256": "95da7d2ed3332bd1b28d213740a9d4545f9c20b8cbd1437cc2ce99f933028da6",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 1
+      },
+      {
+        "family": "cast",
+        "row": 9,
+        "column": 11,
+        "source_box": [
+          125,
+          393,
+          270,
+          735
+        ],
+        "source_component_boxes": [
+          [
+            125,
+            393,
+            270,
+            735
+          ]
+        ],
+        "source_pixels": 38252,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45517241379310347,
+          0.45321637426900585
+        ],
+        "source_anchor": [
+          72.5,
+          342
+        ],
+        "source_anchor_absolute": [
+          197.5,
+          735
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          78,
+          56
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          78,
+          56,
+          144,
+          211
+        ],
+        "body_height": 155,
+        "sha256": "666fcc25d04d48e5ba2420a117ea90051a809b1d886d20aaa795d21f44c7891b",
+        "source_family": "idle",
+        "source_row": 1,
+        "source_column": 0,
+        "intentional_reverse": true,
+        "reverse_of_column": 0
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 0,
+        "source_box": [
+          58,
+          750,
+          327,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            58,
+            750,
+            327,
+            1095
+          ]
+        ],
+        "source_pixels": 64318,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.45217391304347826
+        ],
+        "source_anchor": [
+          135.5,
+          345
+        ],
+        "source_anchor_absolute": [
+          193.5,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          55
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.45353159851302,
+          211.0
+        ],
+        "bbox": [
+          50,
+          55,
+          172,
+          211
+        ],
+        "body_height": 156,
+        "sha256": "9954ee33dd246f85702bf7b8270a69251270ee11c8b5e495f182748be7a8e4d3",
+        "source_family": "idle",
+        "source_row": 2,
+        "source_column": 0,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 1,
+        "source_box": [
+          93,
+          997,
+          355,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            93,
+            997,
+            355,
+            1320
+          ]
+        ],
+        "source_pixels": 59183,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42366412213740456,
+          0.4241486068111455
+        ],
+        "source_anchor": [
+          131.0,
+          323
+        ],
+        "source_anchor_absolute": [
+          224.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          56,
+          74
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          56,
+          74,
+          167,
+          211
+        ],
+        "body_height": 137,
+        "sha256": "0449aaf75d8490861e0170cbab609f2f3e67681ec790eede345447699f2cf015",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 2,
+        "source_box": [
+          533,
+          1042,
+          811,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            533,
+            1042,
+            811,
+            1320
+          ]
+        ],
+        "source_pixels": 55851,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4244604316546763,
+          0.4244604316546763
+        ],
+        "source_anchor": [
+          139.0,
+          278
+        ],
+        "source_anchor_absolute": [
+          672.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          93
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          52,
+          93,
+          170,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "c8a303e6e5237935064ad554fc5e0dcecd83f7b367fe8ebce9aa753a248dac75",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 3,
+        "source_box": [
+          972,
+          1041,
+          1268,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            972,
+            1041,
+            1268,
+            1320
+          ]
+        ],
+        "source_pixels": 55621,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4222972972972973,
+          0.4229390681003584
+        ],
+        "source_anchor": [
+          148.0,
+          279
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          49,
+          93
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          49,
+          93,
+          174,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "f3ab4d04df78bf69ee9f121af209e649a682fbffe347c027954b8d3d0791f116",
+        "source_family": "transform",
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 2,
+        "source_column": 1,
+        "native_box": [
+          34,
+          32,
+          94,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9333333333333333,
+          1.9482758620689655
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          54,
+          98
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          112.0,
+          211.0
+        ],
+        "bbox": [
+          54,
+          98,
+          170,
+          211
+        ],
+        "body_height": 113,
+        "sha256": "8852e81f60bf5f1e75e99155d8d43abdeb7e87605f2b638bf8875490da119886",
+        "family": "cast",
+        "row": 10,
+        "column": 4,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 2,
+        "source_column": 0,
+        "native_box": [
+          34,
+          32,
+          95,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9344262295081966,
+          1.9482758620689655
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          53,
+          98
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.0327868852459,
+          211.0
+        ],
+        "bbox": [
+          53,
+          98,
+          171,
+          211
+        ],
+        "body_height": 113,
+        "sha256": "ae0ab770c252a4f2bd34125f90520b4252eff86b69a799e4f7767e1c0a4a02de",
+        "family": "cast",
+        "row": 10,
+        "column": 5,
+        "intentional_reverse": false,
+        "reverse_of_column": null
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 2,
+        "source_column": 0,
+        "native_box": [
+          34,
+          32,
+          95,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9344262295081966,
+          1.9482758620689655
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          53,
+          98
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          111.0327868852459,
+          211.0
+        ],
+        "bbox": [
+          53,
+          98,
+          171,
+          211
+        ],
+        "body_height": 113,
+        "sha256": "ae0ab770c252a4f2bd34125f90520b4252eff86b69a799e4f7767e1c0a4a02de",
+        "family": "cast",
+        "row": 10,
+        "column": 6,
+        "intentional_reverse": true,
+        "reverse_of_column": 5
+      },
+      {
+        "source_family": "truck",
+        "truck_row": 2,
+        "source_column": 1,
+        "native_box": [
+          34,
+          32,
+          94,
+          90
+        ],
+        "native_anchor": [
+          64,
+          90
+        ],
+        "scale": 1.9402985074626866,
+        "effective_scale": [
+          1.9333333333333333,
+          1.9482758620689655
+        ],
+        "runtime_scale": 0.26,
+        "robot_runtime_scale": 0.134,
+        "offset": [
+          54,
+          98
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "registered_anchor": [
+          112.0,
+          211.0
+        ],
+        "bbox": [
+          54,
+          98,
+          170,
+          211
+        ],
+        "body_height": 113,
+        "sha256": "8852e81f60bf5f1e75e99155d8d43abdeb7e87605f2b638bf8875490da119886",
+        "family": "cast",
+        "row": 10,
+        "column": 7,
+        "intentional_reverse": true,
+        "reverse_of_column": 4
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 8,
+        "source_box": [
+          972,
+          1041,
+          1268,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            972,
+            1041,
+            1268,
+            1320
+          ]
+        ],
+        "source_pixels": 55621,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4222972972972973,
+          0.4229390681003584
+        ],
+        "source_anchor": [
+          148.0,
+          279
+        ],
+        "source_anchor_absolute": [
+          1120.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          49,
+          93
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          49,
+          93,
+          174,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "f3ab4d04df78bf69ee9f121af209e649a682fbffe347c027954b8d3d0791f116",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 3
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 9,
+        "source_box": [
+          533,
+          1042,
+          811,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            533,
+            1042,
+            811,
+            1320
+          ]
+        ],
+        "source_pixels": 55851,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.4244604316546763,
+          0.4244604316546763
+        ],
+        "source_anchor": [
+          139.0,
+          278
+        ],
+        "source_anchor_absolute": [
+          672.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          52,
+          93
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.0,
+          211.0
+        ],
+        "bbox": [
+          52,
+          93,
+          170,
+          211
+        ],
+        "body_height": 118,
+        "sha256": "c8a303e6e5237935064ad554fc5e0dcecd83f7b367fe8ebce9aa753a248dac75",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 2
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 10,
+        "source_box": [
+          93,
+          997,
+          355,
+          1320
+        ],
+        "source_component_boxes": [
+          [
+            93,
+            997,
+            355,
+            1320
+          ]
+        ],
+        "source_pixels": 59183,
+        "scale": 0.422680412371134,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            79,
+            36,
+            368,
+            424
+          ],
+          "height": 388,
+          "target_body_height": 164,
+          "file": "transform.generated.png"
+        },
+        "effective_scale": [
+          0.42366412213740456,
+          0.4241486068111455
+        ],
+        "source_anchor": [
+          131.0,
+          323
+        ],
+        "source_anchor_absolute": [
+          224.0,
+          1320
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          56,
+          74
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.0
+        ],
+        "bbox": [
+          56,
+          74,
+          167,
+          211
+        ],
+        "body_height": 137,
+        "sha256": "0449aaf75d8490861e0170cbab609f2f3e67681ec790eede345447699f2cf015",
+        "source_family": "transform",
+        "intentional_reverse": true,
+        "reverse_of_column": 1
+      },
+      {
+        "family": "cast",
+        "row": 10,
+        "column": 11,
+        "source_box": [
+          58,
+          750,
+          327,
+          1095
+        ],
+        "source_component_boxes": [
+          [
+            58,
+            750,
+            327,
+            1095
+          ]
+        ],
+        "source_pixels": 64318,
+        "scale": 0.4530386740331492,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            57,
+            22,
+            326,
+            384
+          ],
+          "height": 362,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.45353159851301117,
+          0.45217391304347826
+        ],
+        "source_anchor": [
+          135.5,
+          345
+        ],
+        "source_anchor_absolute": [
+          193.5,
+          1095
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          55
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.45353159851302,
+          211.0
+        ],
+        "bbox": [
+          50,
+          55,
+          172,
+          211
+        ],
+        "body_height": 156,
+        "sha256": "9954ee33dd246f85702bf7b8270a69251270ee11c8b5e495f182748be7a8e4d3",
+        "source_family": "idle",
+        "source_row": 2,
+        "source_column": 0,
+        "intentional_reverse": true,
+        "reverse_of_column": 0
+      },
+      {
+        "family": "carry-idle",
+        "row": 11,
+        "column": 0,
+        "source_box": [
+          54,
+          16,
+          362,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            54,
+            16,
+            362,
+            384
+          ]
+        ],
+        "source_pixels": 71310,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.487012987012987,
+          0.48641304347826086
+        ],
+        "source_anchor": [
+          152.5,
+          368
+        ],
+        "source_anchor_absolute": [
+          206.5,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          37,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.26948051948052,
+          211.0
+        ],
+        "bbox": [
+          37,
+          32,
+          187,
+          211
+        ],
+        "body_height": 179,
+        "sha256": "3ffeb6752efb2f8fa10f098d937957ad94edac49ea681c4e2d39decc2f36bca8"
+      },
+      {
+        "family": "carry-idle",
+        "row": 11,
+        "column": 1,
+        "source_box": [
+          391,
+          16,
+          699,
+          384
+        ],
+        "source_component_boxes": [
+          [
+            391,
+            16,
+            699,
+            384
+          ]
+        ],
+        "source_pixels": 71606,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.487012987012987,
+          0.48641304347826086
+        ],
+        "source_anchor": [
+          157.0,
+          368
+        ],
+        "source_anchor_absolute": [
+          548.0,
+          384
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          35,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.46103896103897,
+          211.0
+        ],
+        "bbox": [
+          35,
+          32,
+          185,
+          211
+        ],
+        "body_height": 179,
+        "sha256": "df18539ac839c9860f5a2e5b3c84e1e051b55899e4f462bb48b0a96946c8e192"
+      },
+      {
+        "family": "carry-idle",
+        "row": 11,
+        "column": 2,
+        "source_box": [
+          719,
+          19,
+          1027,
+          385
+        ],
+        "source_component_boxes": [
+          [
+            719,
+            19,
+            1027,
+            385
+          ]
+        ],
+        "source_pixels": 70999,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.487012987012987,
+          0.48633879781420764
+        ],
+        "source_anchor": [
+          155.0,
+          366
+        ],
+        "source_anchor_absolute": [
+          874.0,
+          385
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          36,
+          33
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.48701298701299,
+          211.0
+        ],
+        "bbox": [
+          36,
+          33,
+          186,
+          211
+        ],
+        "body_height": 178,
+        "sha256": "a4713bcdeba7f4f27b9cfbb785ac99c5e94d1ca7e58d8ed4ca697d8b17cfc9ea"
+      },
+      {
+        "family": "carry-idle",
+        "row": 11,
+        "column": 3,
+        "source_box": [
+          1059,
+          9,
+          1364,
+          385
+        ],
+        "source_component_boxes": [
+          [
+            1059,
+            9,
+            1364,
+            385
+          ]
+        ],
+        "source_pixels": 71165,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4852459016393443,
+          0.4867021276595745
+        ],
+        "source_anchor": [
+          155.5,
+          376
+        ],
+        "source_anchor_absolute": [
+          1214.5,
+          385
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          36,
+          28
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.45573770491804,
+          211.0
+        ],
+        "bbox": [
+          36,
+          28,
+          184,
+          211
+        ],
+        "body_height": 183,
+        "sha256": "cfc676021eca64164a6ebbfc8740f8b18df986e9c9517e10c8767ec294e0dd1f"
+      },
+      {
+        "family": "carry-idle",
+        "row": 12,
+        "column": 0,
+        "source_box": [
+          117,
+          396,
+          279,
+          744
+        ],
+        "source_component_boxes": [
+          [
+            117,
+            396,
+            279,
+            744
+          ]
+        ],
+        "source_pixels": 41751,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4876543209876543,
+          0.48563218390804597
+        ],
+        "source_anchor": [
+          86.5,
+          348
+        ],
+        "source_anchor_absolute": [
+          203.5,
+          744
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          69,
+          42
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.1820987654321,
+          211.0
+        ],
+        "bbox": [
+          69,
+          42,
+          148,
+          211
+        ],
+        "body_height": 169,
+        "sha256": "0d26da650078146ea969f72c3d4dd35f20c025bec2bd61dbd19a52923f9de229"
+      },
+      {
+        "family": "carry-idle",
+        "row": 12,
+        "column": 1,
+        "source_box": [
+          469,
+          400,
+          622,
+          744
+        ],
+        "source_component_boxes": [
+          [
+            469,
+            400,
+            622,
+            744
+          ]
+        ],
+        "source_pixels": 39952,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.48366013071895425,
+          0.48546511627906974
+        ],
+        "source_anchor": [
+          82.0,
+          344
+        ],
+        "source_anchor_absolute": [
+          551.0,
+          744
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          72,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.66013071895425,
+          211.0
+        ],
+        "bbox": [
+          72,
+          44,
+          146,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "d233c1dada9c94101915eb854435dbad27d4205cd6c3d06a4ad0f038a1dd3546"
+      },
+      {
+        "family": "carry-idle",
+        "row": 12,
+        "column": 2,
+        "source_box": [
+          803,
+          399,
+          958,
+          744
+        ],
+        "source_component_boxes": [
+          [
+            803,
+            399,
+            958,
+            744
+          ]
+        ],
+        "source_pixels": 39941,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4838709677419355,
+          0.48695652173913045
+        ],
+        "source_anchor": [
+          79.0,
+          345
+        ],
+        "source_anchor_absolute": [
+          882.0,
+          744
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          73,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.2258064516129,
+          211.0
+        ],
+        "bbox": [
+          73,
+          43,
+          148,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "29059ba8020a218f10583bfe3425e63ffcf9cf01f18f3cb75430ff58d0cccc1a"
+      },
+      {
+        "family": "carry-idle",
+        "row": 12,
+        "column": 3,
+        "source_box": [
+          1139,
+          399,
+          1297,
+          744
+        ],
+        "source_component_boxes": [
+          [
+            1139,
+            399,
+            1297,
+            744
+          ]
+        ],
+        "source_pixels": 38903,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4873417721518987,
+          0.48695652173913045
+        ],
+        "source_anchor": [
+          83.5,
+          345
+        ],
+        "source_anchor_absolute": [
+          1222.5,
+          744
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          71,
+          43
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.69303797468353,
+          211.0
+        ],
+        "bbox": [
+          71,
+          43,
+          148,
+          211
+        ],
+        "body_height": 168,
+        "sha256": "94f0780d245c30d0e74d8ec13e077fd0533099a9f6e2544848943c6cae688a07"
+      },
+      {
+        "family": "carry-idle",
+        "row": 13,
+        "column": 0,
+        "source_box": [
+          56,
+          756,
+          356,
+          1094
+        ],
+        "source_component_boxes": [
+          [
+            56,
+            756,
+            356,
+            1094
+          ]
+        ],
+        "source_pixels": 66437,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4866666666666667,
+          0.48520710059171596
+        ],
+        "source_anchor": [
+          149.0,
+          338
+        ],
+        "source_anchor_absolute": [
+          205.0,
+          1094
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.51333333333334,
+          211.0
+        ],
+        "bbox": [
+          39,
+          47,
+          185,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "f7ad8bffb67b418fff6f3628a59cd9bc88075a770aeb6c72175f709b18308a29"
+      },
+      {
+        "family": "carry-idle",
+        "row": 13,
+        "column": 1,
+        "source_box": [
+          399,
+          757,
+          697,
+          1094
+        ],
+        "source_component_boxes": [
+          [
+            399,
+            757,
+            697,
+            1094
+          ]
+        ],
+        "source_pixels": 65834,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4865771812080537,
+          0.486646884272997
+        ],
+        "source_anchor": [
+          146.5,
+          337
+        ],
+        "source_anchor_absolute": [
+          545.5,
+          1094
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.28355704697987,
+          211.0
+        ],
+        "bbox": [
+          40,
+          47,
+          185,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "5256b7da938417936eb8a01ef8ca1bf30e9fcddc091d2239ae18840af5c5f44a"
+      },
+      {
+        "family": "carry-idle",
+        "row": 13,
+        "column": 2,
+        "source_box": [
+          721,
+          754,
+          1019,
+          1094
+        ],
+        "source_component_boxes": [
+          [
+            721,
+            754,
+            1019,
+            1094
+          ]
+        ],
+        "source_pixels": 65768,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4865771812080537,
+          0.4852941176470588
+        ],
+        "source_anchor": [
+          147.0,
+          340
+        ],
+        "source_anchor_absolute": [
+          868.0,
+          1094
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.52684563758389,
+          211.0
+        ],
+        "bbox": [
+          40,
+          46,
+          185,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "1d016754aff70fe8939872d1717aee54b1a848bec8f1fd16768c337ba5c4dec5"
+      },
+      {
+        "family": "carry-idle",
+        "row": 13,
+        "column": 3,
+        "source_box": [
+          1058,
+          755,
+          1359,
+          1094
+        ],
+        "source_component_boxes": [
+          [
+            1058,
+            755,
+            1359,
+            1094
+          ]
+        ],
+        "source_pixels": 66999,
+        "scale": 0.486646884272997,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            161,
+            47,
+            254,
+            384
+          ],
+          "height": 337,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.4850498338870432,
+          0.48672566371681414
+        ],
+        "source_anchor": [
+          152.0,
+          339
+        ],
+        "source_anchor_absolute": [
+          1210.0,
+          1094
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          38,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.72757475083057,
+          211.0
+        ],
+        "bbox": [
+          38,
+          46,
+          184,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "91a57347e10826359019e20f1d4bada554a94c2541a68b947605f223bb9d8f25"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 0,
+        "source_box": [
+          59,
+          10,
+          303,
+          312
+        ],
+        "source_component_boxes": [
+          [
+            59,
+            10,
+            303,
+            312
+          ]
+        ],
+        "source_pixels": 43303,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6147540983606558,
+          0.6125827814569537
+        ],
+        "source_anchor": [
+          119.5,
+          302
+        ],
+        "source_anchor_absolute": [
+          178.5,
+          312
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          38,
+          26
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.46311475409836,
+          211.0
+        ],
+        "bbox": [
+          38,
+          27,
+          188,
+          211
+        ],
+        "body_height": 184,
+        "sha256": "cc764c7597bf1b02b08e9f3036eab9219dba68b3d412aa509e83d31e82b746b5"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 1,
+        "source_box": [
+          343,
+          7,
+          585,
+          312
+        ],
+        "source_component_boxes": [
+          [
+            343,
+            7,
+            585,
+            312
+          ]
+        ],
+        "source_pixels": 42403,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6157024793388429,
+          0.6131147540983607
+        ],
+        "source_anchor": [
+          120.5,
+          305
+        ],
+        "source_anchor_absolute": [
+          463.5,
+          312
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          37,
+          24
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.19214876033057,
+          211.0
+        ],
+        "bbox": [
+          37,
+          24,
+          186,
+          211
+        ],
+        "body_height": 187,
+        "sha256": "c179e0a7bc519486265ab18448c327c4261fe578898fd5739e83cff6c4ab4af3"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 2,
+        "source_box": [
+          618,
+          9,
+          860,
+          312
+        ],
+        "source_component_boxes": [
+          [
+            618,
+            9,
+            860,
+            312
+          ]
+        ],
+        "source_pixels": 43700,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6157024793388429,
+          0.6138613861386139
+        ],
+        "source_anchor": [
+          118.0,
+          303
+        ],
+        "source_anchor_absolute": [
+          736.0,
+          312
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          25
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.65289256198346,
+          211.0
+        ],
+        "bbox": [
+          39,
+          25,
+          188,
+          211
+        ],
+        "body_height": 186,
+        "sha256": "891a466908c01ed8aa1c059c8c2b9c7d8aaa68985099cf82b14967aecc44ea08"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 3,
+        "source_box": [
+          888,
+          9,
+          1134,
+          312
+        ],
+        "source_component_boxes": [
+          [
+            888,
+            9,
+            1134,
+            312
+          ]
+        ],
+        "source_pixels": 43922,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6138211382113821,
+          0.6138613861386139
+        ],
+        "source_anchor": [
+          117.0,
+          303
+        ],
+        "source_anchor_absolute": [
+          1005.0,
+          312
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          25
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.8170731707317,
+          211.0
+        ],
+        "bbox": [
+          40,
+          25,
+          191,
+          211
+        ],
+        "body_height": 186,
+        "sha256": "c2d920e431434d6cc27549dfcd73750adbab1d784f8e8178bf2b29044936173d"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 4,
+        "source_box": [
+          1167,
+          8,
+          1403,
+          312
+        ],
+        "source_component_boxes": [
+          [
+            1167,
+            8,
+            1403,
+            312
+          ]
+        ],
+        "source_pixels": 41034,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.614406779661017,
+          0.6151315789473685
+        ],
+        "source_anchor": [
+          112.0,
+          304
+        ],
+        "source_anchor_absolute": [
+          1279.0,
+          312
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          43,
+          24
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.8135593220339,
+          211.00000000000003
+        ],
+        "bbox": [
+          43,
+          24,
+          188,
+          211
+        ],
+        "body_height": 187,
+        "sha256": "7d5989c0143fc1670fd8bc2c12b653c324c5ecd9b1485e34e9f7a98066e15a64"
+      },
+      {
+        "family": "carry-walk",
+        "row": 14,
+        "column": 5,
+        "source_box": [
+          1435,
+          8,
+          1675,
+          311
+        ],
+        "source_component_boxes": [
+          [
+            1435,
+            8,
+            1675,
+            311
+          ]
+        ],
+        "source_pixels": 42661,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6125,
+          0.6138613861386139
+        ],
+        "source_anchor": [
+          118.0,
+          303
+        ],
+        "source_anchor_absolute": [
+          1553.0,
+          311
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          25
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.275,
+          211.0
+        ],
+        "bbox": [
+          39,
+          25,
+          186,
+          211
+        ],
+        "body_height": 186,
+        "sha256": "89f7d74275b861f25792efc82b75b27d780a9cb06c3063dc3836c00630c64ab4"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 0,
+        "source_box": [
+          106,
+          320,
+          237,
+          592
+        ],
+        "source_component_boxes": [
+          [
+            106,
+            320,
+            237,
+            592
+          ]
+        ],
+        "source_pixels": 25798,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6106870229007634,
+          0.6139705882352942
+        ],
+        "source_anchor": [
+          67.0,
+          272
+        ],
+        "source_anchor_absolute": [
+          173.0,
+          592
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          71,
+          44
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.91603053435114,
+          211.0
+        ],
+        "bbox": [
+          72,
+          44,
+          151,
+          211
+        ],
+        "body_height": 167,
+        "sha256": "3a8bb394d438c7617e95705f7c8f2df3bab970d2e2c5ece28a422a684d1274f7"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 1,
+        "source_box": [
+          395,
+          322,
+          519,
+          593
+        ],
+        "source_component_boxes": [
+          [
+            395,
+            322,
+            519,
+            593
+          ]
+        ],
+        "source_pixels": 24598,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6129032258064516,
+          0.6125461254612546
+        ],
+        "source_anchor": [
+          65.5,
+          271
+        ],
+        "source_anchor_absolute": [
+          460.5,
+          593
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          71,
+          45
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.14516129032259,
+          211.0
+        ],
+        "bbox": [
+          71,
+          45,
+          147,
+          211
+        ],
+        "body_height": 166,
+        "sha256": "e54dd4aea3694815a66440a4f4c3a8f0d8128ae58c693bf62ee3bd02d90e44cf"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 2,
+        "source_box": [
+          672,
+          322,
+          798,
+          592
+        ],
+        "source_component_boxes": [
+          [
+            672,
+            322,
+            798,
+            592
+          ]
+        ],
+        "source_pixels": 25081,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6111111111111112,
+          0.6148148148148148
+        ],
+        "source_anchor": [
+          66.0,
+          270
+        ],
+        "source_anchor_absolute": [
+          738.0,
+          592
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          71,
+          45
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.33333333333334,
+          211.0
+        ],
+        "bbox": [
+          71,
+          45,
+          148,
+          211
+        ],
+        "body_height": 166,
+        "sha256": "d1408c0bfacf15152356f94d1cd007e572358fc2db41f0ac6485cd860a251327"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 3,
+        "source_box": [
+          952,
+          326,
+          1081,
+          593
+        ],
+        "source_component_boxes": [
+          [
+            952,
+            326,
+            1081,
+            593
+          ]
+        ],
+        "source_pixels": 25057,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6124031007751938,
+          0.6142322097378277
+        ],
+        "source_anchor": [
+          65.5,
+          267
+        ],
+        "source_anchor_absolute": [
+          1017.5,
+          593
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          71,
+          47
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.1124031007752,
+          210.99999999999997
+        ],
+        "bbox": [
+          71,
+          47,
+          150,
+          211
+        ],
+        "body_height": 164,
+        "sha256": "b82385e68bf615c1d1f1675ab1ff981342c1a64de539df9708560940edb151fa"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 4,
+        "source_box": [
+          1226,
+          322,
+          1352,
+          593
+        ],
+        "source_component_boxes": [
+          [
+            1226,
+            322,
+            1352,
+            593
+          ]
+        ],
+        "source_pixels": 24872,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6111111111111112,
+          0.6125461254612546
+        ],
+        "source_anchor": [
+          63.5,
+          271
+        ],
+        "source_anchor_absolute": [
+          1289.5,
+          593
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          73,
+          45
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.80555555555556,
+          211.0
+        ],
+        "bbox": [
+          73,
+          45,
+          150,
+          211
+        ],
+        "body_height": 166,
+        "sha256": "eb7655cb7d671a35eba5730e249eb83c3902ffd9404b462a2a54c7e931eba8d6"
+      },
+      {
+        "family": "carry-walk",
+        "row": 15,
+        "column": 5,
+        "source_box": [
+          1495,
+          323,
+          1622,
+          593
+        ],
+        "source_component_boxes": [
+          [
+            1495,
+            323,
+            1622,
+            593
+          ]
+        ],
+        "source_pixels": 25287,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6141732283464567,
+          0.6148148148148148
+        ],
+        "source_anchor": [
+          67.0,
+          270
+        ],
+        "source_anchor_absolute": [
+          1562.0,
+          593
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          70,
+          45
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.14960629921259,
+          211.0
+        ],
+        "bbox": [
+          70,
+          45,
+          148,
+          211
+        ],
+        "body_height": 166,
+        "sha256": "2d1b610c8826e107aa49664223d5cfdf850cab96be588953778f98e31cb459ca"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 0,
+        "source_box": [
+          49,
+          592,
+          294,
+          877
+        ],
+        "source_component_boxes": [
+          [
+            49,
+            592,
+            294,
+            877
+          ]
+        ],
+        "source_pixels": 41666,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6122448979591837,
+          0.6140350877192983
+        ],
+        "source_anchor": [
+          117.0,
+          285
+        ],
+        "source_anchor_absolute": [
+          166.0,
+          877
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          40,
+          36
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.63265306122449,
+          211.0
+        ],
+        "bbox": [
+          40,
+          36,
+          190,
+          211
+        ],
+        "body_height": 175,
+        "sha256": "9c28fcaab791a9d2323a9ea7e88f40711e5c06c4e2f137e6893bc4f64cb434c6"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 1,
+        "source_box": [
+          337,
+          595,
+          577,
+          877
+        ],
+        "source_component_boxes": [
+          [
+            337,
+            595,
+            577,
+            877
+          ]
+        ],
+        "source_pixels": 40710,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6125,
+          0.6134751773049646
+        ],
+        "source_anchor": [
+          120.0,
+          282
+        ],
+        "source_anchor_absolute": [
+          457.0,
+          877
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          38,
+          38
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.5,
+          211.00000000000003
+        ],
+        "bbox": [
+          38,
+          38,
+          185,
+          211
+        ],
+        "body_height": 173,
+        "sha256": "b4a1c369512ff79b3e10c26d6b6eb310de7db7234142644408157557aa3959c8"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 2,
+        "source_box": [
+          616,
+          595,
+          859,
+          877
+        ],
+        "source_component_boxes": [
+          [
+            616,
+            595,
+            859,
+            877
+          ]
+        ],
+        "source_pixels": 41116,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6131687242798354,
+          0.6134751773049646
+        ],
+        "source_anchor": [
+          119.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          735.5,
+          877
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          38,
+          38
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.27366255144032,
+          211.00000000000003
+        ],
+        "bbox": [
+          38,
+          38,
+          187,
+          211
+        ],
+        "body_height": 173,
+        "sha256": "510bae117d61136e95b125e8ec9ca6efda005beef6a0a42b05fc06ee7900372c"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 3,
+        "source_box": [
+          891,
+          595,
+          1130,
+          877
+        ],
+        "source_component_boxes": [
+          [
+            891,
+            595,
+            1130,
+            877
+          ]
+        ],
+        "source_pixels": 41129,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6150627615062761,
+          0.6134751773049646
+        ],
+        "source_anchor": [
+          122.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          1013.5,
+          877
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          36,
+          38
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.34518828451883,
+          211.00000000000003
+        ],
+        "bbox": [
+          36,
+          38,
+          183,
+          211
+        ],
+        "body_height": 173,
+        "sha256": "36b71796b13b4adbd62ad41aa6d6840ada794056e9971100cf5ba1f3f1c09707"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 4,
+        "source_box": [
+          1160,
+          594,
+          1403,
+          877
+        ],
+        "source_component_boxes": [
+          [
+            1160,
+            594,
+            1403,
+            877
+          ]
+        ],
+        "source_pixels": 40064,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6131687242798354,
+          0.6148409893992933
+        ],
+        "source_anchor": [
+          118.0,
+          283
+        ],
+        "source_anchor_absolute": [
+          1278.0,
+          877
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          39,
+          37
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.35390946502058,
+          211.0
+        ],
+        "bbox": [
+          39,
+          37,
+          188,
+          211
+        ],
+        "body_height": 174,
+        "sha256": "4aec6fe3a193610aa97f79d60ef9a6dcee2df28e1ff176935e695768bae21230"
+      },
+      {
+        "family": "carry-walk",
+        "row": 16,
+        "column": 5,
+        "source_box": [
+          1436,
+          594,
+          1682,
+          876
+        ],
+        "source_component_boxes": [
+          [
+            1436,
+            594,
+            1682,
+            876
+          ]
+        ],
+        "source_pixels": 41733,
+        "scale": 0.6142322097378277,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            144,
+            45,
+            217,
+            312
+          ],
+          "height": 267,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.6138211382113821,
+          0.6134751773049646
+        ],
+        "source_anchor": [
+          119.5,
+          282
+        ],
+        "source_anchor_absolute": [
+          1555.5,
+          876
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          38,
+          38
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.35162601626016,
+          211.00000000000003
+        ],
+        "bbox": [
+          38,
+          38,
+          189,
+          211
+        ],
+        "body_height": 173,
+        "sha256": "46f95366274bc1ebfbccd5462f285c0c05e52e96a36df76625dd1aedd395a974"
+      }
+    ],
+    "atlas_sha256": "88748199da5d6c18619273dc3df75421030366130ce7ceb5f40aea90b25aac3d",
+    "cast_composition": "idle, transform0..2, truck1, truck0, truck0, truck1, transform2..0, idle; intentional mechanical reverse"
+  },
+  "truck": {
+    "size": [
+      512,
+      288
+    ],
+    "frame": [
+      128,
+      96
+    ],
+    "anchor": [
+      64,
+      90
+    ],
+    "frame_count": 12,
+    "frames": [
+      {
+        "family": "truck",
+        "row": 0,
+        "column": 0,
+        "source_box": [
+          18,
+          88,
+          401,
+          309
+        ],
+        "source_component_boxes": [
+          [
+            18,
+            88,
+            401,
+            309
+          ]
+        ],
+        "source_pixels": 44156,
+        "scale": 0.25339366515837103,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            18,
+            88,
+            401,
+            309
+          ],
+          "height": 221,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.25326370757180156,
+          0.25339366515837103
+        ],
+        "source_anchor": [
+          191.5,
+          221
+        ],
+        "source_anchor_absolute": [
+          209.5,
+          309
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          16,
+          34
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          16,
+          34,
+          113,
+          90
+        ],
+        "body_height": 56,
+        "sha256": "e0554efdf5a917240f6935e94b3201d78364db544337317e988351a4355537d3"
+      },
+      {
+        "family": "truck",
+        "row": 0,
+        "column": 1,
+        "source_box": [
+          439,
+          88,
+          816,
+          309
+        ],
+        "source_component_boxes": [
+          [
+            439,
+            88,
+            816,
+            309
+          ]
+        ],
+        "source_pixels": 43610,
+        "scale": 0.25339366515837103,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            18,
+            88,
+            401,
+            309
+          ],
+          "height": 221,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.2546419098143236,
+          0.25339366515837103
+        ],
+        "source_anchor": [
+          188.5,
+          221
+        ],
+        "source_anchor_absolute": [
+          627.5,
+          309
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          16,
+          34
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.0,
+          90.0
+        ],
+        "bbox": [
+          16,
+          34,
+          112,
+          90
+        ],
+        "body_height": 56,
+        "sha256": "77233be2b65107462b444fc941a9c15db58a22e1ec61f20887b70f57cdc6a9cc"
+      },
+      {
+        "family": "truck",
+        "row": 0,
+        "column": 2,
+        "source_box": [
+          853,
+          88,
+          1237,
+          309
+        ],
+        "source_component_boxes": [
+          [
+            853,
+            88,
+            1237,
+            309
+          ]
+        ],
+        "source_pixels": 44177,
+        "scale": 0.25339366515837103,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            18,
+            88,
+            401,
+            309
+          ],
+          "height": 221,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.2526041666666667,
+          0.25339366515837103
+        ],
+        "source_anchor": [
+          192.0,
+          221
+        ],
+        "source_anchor_absolute": [
+          1045.0,
+          309
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          16,
+          34
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          16,
+          34,
+          113,
+          90
+        ],
+        "body_height": 56,
+        "sha256": "296b6afd9bc504075ec6ea8582e89eb960c0d64cfae61df6effe53b467d33b6d"
+      },
+      {
+        "family": "truck",
+        "row": 0,
+        "column": 3,
+        "source_box": [
+          1272,
+          88,
+          1654,
+          309
+        ],
+        "source_component_boxes": [
+          [
+            1272,
+            88,
+            1654,
+            309
+          ]
+        ],
+        "source_pixels": 44019,
+        "scale": 0.25339366515837103,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            18,
+            88,
+            401,
+            309
+          ],
+          "height": 221,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.25392670157068065,
+          0.25339366515837103
+        ],
+        "source_anchor": [
+          191.0,
+          221
+        ],
+        "source_anchor_absolute": [
+          1463.0,
+          309
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          16,
+          34
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          16,
+          34,
+          113,
+          90
+        ],
+        "body_height": 56,
+        "sha256": "4d0d6027cdec764f89a4c799838a2a5b04a70894c4d34e28eb6275c5e25f109f"
+      },
+      {
+        "family": "truck",
+        "row": 1,
+        "column": 0,
+        "source_box": [
+          106,
+          375,
+          322,
+          619
+        ],
+        "source_component_boxes": [
+          [
+            106,
+            375,
+            322,
+            619
+          ]
+        ],
+        "source_pixels": 40317,
+        "scale": 0.2459016393442623,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            106,
+            375,
+            322,
+            619
+          ],
+          "height": 244,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24537037037037038,
+          0.2459016393442623
+        ],
+        "source_anchor": [
+          108.0,
+          244
+        ],
+        "source_anchor_absolute": [
+          214.0,
+          619
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          38,
+          30
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          38,
+          30,
+          91,
+          90
+        ],
+        "body_height": 60,
+        "sha256": "54ddcc87d1ba34d2dbeec8d1082324aea4f5c7995eaed309a7cbc776b7929bb1"
+      },
+      {
+        "family": "truck",
+        "row": 1,
+        "column": 1,
+        "source_box": [
+          531,
+          371,
+          756,
+          619
+        ],
+        "source_component_boxes": [
+          [
+            531,
+            371,
+            756,
+            619
+          ]
+        ],
+        "source_pixels": 42457,
+        "scale": 0.2459016393442623,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            106,
+            375,
+            322,
+            619
+          ],
+          "height": 244,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24444444444444444,
+          0.24596774193548387
+        ],
+        "source_anchor": [
+          112.5,
+          248
+        ],
+        "source_anchor_absolute": [
+          643.5,
+          619
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          36,
+          29
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          63.5,
+          90.0
+        ],
+        "bbox": [
+          36,
+          29,
+          91,
+          90
+        ],
+        "body_height": 61,
+        "sha256": "bc02094f3994899c8337ef139c2fb42690a61c36c7ad4c3a157c4b7d6767ac31"
+      },
+      {
+        "family": "truck",
+        "row": 1,
+        "column": 2,
+        "source_box": [
+          943,
+          375,
+          1159,
+          619
+        ],
+        "source_component_boxes": [
+          [
+            943,
+            375,
+            1159,
+            619
+          ]
+        ],
+        "source_pixels": 40540,
+        "scale": 0.2459016393442623,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            106,
+            375,
+            322,
+            619
+          ],
+          "height": 244,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24537037037037038,
+          0.2459016393442623
+        ],
+        "source_anchor": [
+          107.5,
+          244
+        ],
+        "source_anchor_absolute": [
+          1050.5,
+          619
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          38,
+          30
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.37731481481481,
+          90.0
+        ],
+        "bbox": [
+          38,
+          30,
+          91,
+          90
+        ],
+        "body_height": 60,
+        "sha256": "45fe675078a9a74a434a32d373094be6341d4e8cfc11da4c115a24ab5f0e740d"
+      },
+      {
+        "family": "truck",
+        "row": 1,
+        "column": 3,
+        "source_box": [
+          1359,
+          374,
+          1575,
+          619
+        ],
+        "source_component_boxes": [
+          [
+            1359,
+            374,
+            1575,
+            619
+          ]
+        ],
+        "source_pixels": 40420,
+        "scale": 0.2459016393442623,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            106,
+            375,
+            322,
+            619
+          ],
+          "height": 244,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24537037037037038,
+          0.24489795918367346
+        ],
+        "source_anchor": [
+          108.0,
+          245
+        ],
+        "source_anchor_absolute": [
+          1467.0,
+          619
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          38,
+          30
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          38,
+          30,
+          91,
+          90
+        ],
+        "body_height": 60,
+        "sha256": "51d5e53deab7ba94747ce543bd20d7e367cb274991eb8fd128aacbeaeac08610"
+      },
+      {
+        "family": "truck",
+        "row": 2,
+        "column": 0,
+        "source_box": [
+          89,
+          660,
+          337,
+          896
+        ],
+        "source_component_boxes": [
+          [
+            89,
+            660,
+            337,
+            896
+          ]
+        ],
+        "source_pixels": 41474,
+        "scale": 0.2457627118644068,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            89,
+            660,
+            337,
+            896
+          ],
+          "height": 236,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24596774193548387,
+          0.2457627118644068
+        ],
+        "source_anchor": [
+          124.0,
+          236
+        ],
+        "source_anchor_absolute": [
+          213.0,
+          896
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          34,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          34,
+          32,
+          95,
+          90
+        ],
+        "body_height": 58,
+        "sha256": "d433bffab5eb1865cc380c357605cc6957797934134eb93eac93f6fcbf246537"
+      },
+      {
+        "family": "truck",
+        "row": 2,
+        "column": 1,
+        "source_box": [
+          517,
+          659,
+          763,
+          895
+        ],
+        "source_component_boxes": [
+          [
+            517,
+            659,
+            763,
+            895
+          ]
+        ],
+        "source_pixels": 41413,
+        "scale": 0.2457627118644068,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            89,
+            660,
+            337,
+            896
+          ],
+          "height": 236,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24390243902439024,
+          0.2457627118644068
+        ],
+        "source_anchor": [
+          123.0,
+          236
+        ],
+        "source_anchor_absolute": [
+          640.0,
+          895
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          34,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.0,
+          90.0
+        ],
+        "bbox": [
+          34,
+          32,
+          94,
+          90
+        ],
+        "body_height": 58,
+        "sha256": "bf587b9fe8d3ba9a83aab3d9e1ac095f04d0840a2afb5b00435f1a920239940a"
+      },
+      {
+        "family": "truck",
+        "row": 2,
+        "column": 2,
+        "source_box": [
+          924,
+          660,
+          1172,
+          895
+        ],
+        "source_component_boxes": [
+          [
+            924,
+            660,
+            1172,
+            895
+          ]
+        ],
+        "source_pixels": 41431,
+        "scale": 0.2457627118644068,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            89,
+            660,
+            337,
+            896
+          ],
+          "height": 236,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24596774193548387,
+          0.24680851063829787
+        ],
+        "source_anchor": [
+          124.0,
+          235
+        ],
+        "source_anchor_absolute": [
+          1048.0,
+          895
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          34,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          34,
+          32,
+          95,
+          90
+        ],
+        "body_height": 58,
+        "sha256": "113f534bfe9ad3ccd07e6727da5a2542e1262d9bb39fc8eef9a0771c85557d1a"
+      },
+      {
+        "family": "truck",
+        "row": 2,
+        "column": 3,
+        "source_box": [
+          1342,
+          660,
+          1591,
+          895
+        ],
+        "source_component_boxes": [
+          [
+            1342,
+            660,
+            1591,
+            895
+          ]
+        ],
+        "source_pixels": 41548,
+        "scale": 0.2457627118644068,
+        "scale_reference": {
+          "mode": "full-first-pose",
+          "source_box": [
+            89,
+            660,
+            337,
+            896
+          ],
+          "height": 236,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.24497991967871485,
+          0.24680851063829787
+        ],
+        "source_anchor": [
+          124.5,
+          235
+        ],
+        "source_anchor_absolute": [
+          1466.5,
+          895
+        ],
+        "target_anchor": [
+          64,
+          90
+        ],
+        "offset": [
+          34,
+          32
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          64.5,
+          90.0
+        ],
+        "bbox": [
+          34,
+          32,
+          95,
+          90
+        ],
+        "body_height": 58,
+        "sha256": "10ed1f382fde453970b8a2cb77cf103bf7eb5755f729cf62134d2e46b32c716f"
+      }
+    ],
+    "atlas_sha256": "3ba8f667c1146e26d7b33838677dde593d9412316030f12242f527a7c3db7505"
+  },
+  "fist": {
+    "size": [
+      448,
+      224
+    ],
+    "frame": [
+      224,
+      224
+    ],
+    "anchor": [
+      111.5,
+      211
+    ],
+    "frame_count": 2,
+    "frames": [
+      {
+        "family": "fist",
+        "row": 0,
+        "column": 0,
+        "source_box": [
+          136,
+          114,
+          768,
+          923
+        ],
+        "source_component_boxes": [
+          [
+            136,
+            114,
+            768,
+            923
+          ]
+        ],
+        "source_pixels": 320324,
+        "scale": 0.20448877805486285,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            357,
+            121,
+            546,
+            923
+          ],
+          "height": 802,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.20411392405063292,
+          0.20395550061804696
+        ],
+        "source_anchor": [
+          336.0,
+          809
+        ],
+        "source_anchor_absolute": [
+          472.0,
+          923
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          43,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.58227848101266,
+          211.0
+        ],
+        "bbox": [
+          43,
+          46,
+          172,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "f73b72df9dbf4ca8b9d60a9241c9f51f7600e0418b343abd30c86b4d6ae793b5"
+      },
+      {
+        "family": "fist",
+        "row": 0,
+        "column": 1,
+        "source_box": [
+          842,
+          116,
+          1440,
+          923
+        ],
+        "source_component_boxes": [
+          [
+            842,
+            116,
+            1440,
+            923
+          ]
+        ],
+        "source_pixels": 326582,
+        "scale": 0.20448877805486285,
+        "scale_reference": {
+          "mode": "central-35-65-percent",
+          "source_box": [
+            357,
+            121,
+            546,
+            923
+          ],
+          "height": 802,
+          "target_body_height": 164
+        },
+        "effective_scale": [
+          0.2040133779264214,
+          0.20446096654275092
+        ],
+        "source_anchor": [
+          303.0,
+          807
+        ],
+        "source_anchor_absolute": [
+          1145.0,
+          923
+        ],
+        "target_anchor": [
+          111.5,
+          211
+        ],
+        "offset": [
+          50,
+          46
+        ],
+        "horizontal_fit_shift": 0,
+        "registered_anchor": [
+          111.81605351170569,
+          211.0
+        ],
+        "bbox": [
+          50,
+          46,
+          172,
+          211
+        ],
+        "body_height": 165,
+        "sha256": "99c070e678d2f5b11e3e5aaead85f24a85e983fb09e48f35f784d100ec1eb3a1"
+      }
+    ],
+    "atlas_sha256": "d427479e92653b71f8028523d8ffbca594285b5900169067c90eb9110880e861"
+  },
+  "menu": {
+    "size": [
+      5120,
+      224
+    ],
+    "frame": [
+      320,
+      224
+    ],
+    "anchor": [
+      160,
+      211
+    ],
+    "frame_count": 16,
+    "effects": "none",
+    "robot_center_shift": 48.5,
+    "truck_scale": 2,
+    "frames": [
+      {
+        "column": 0,
+        "kind": "robot",
+        "source_row": 0,
+        "source_column": 0,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          98,
+          47,
+          220,
+          211
+        ]
+      },
+      {
+        "column": 1,
+        "kind": "robot",
+        "source_row": 8,
+        "source_column": 1,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          98,
+          47,
+          220,
+          211
+        ]
+      },
+      {
+        "column": 2,
+        "kind": "robot",
+        "source_row": 8,
+        "source_column": 2,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          100,
+          78,
+          222,
+          211
+        ]
+      },
+      {
+        "column": 3,
+        "kind": "robot",
+        "source_row": 8,
+        "source_column": 3,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          94,
+          101,
+          225,
+          211
+        ]
+      },
+      {
+        "column": 4,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 0,
+        "center_x": 160,
+        "offset": [
+          32,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          64,
+          99,
+          258,
+          211
+        ]
+      },
+      {
+        "column": 5,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 1,
+        "center_x": 176,
+        "offset": [
+          48,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          80,
+          99,
+          272,
+          211
+        ]
+      },
+      {
+        "column": 6,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 2,
+        "center_x": 232,
+        "offset": [
+          104,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          136,
+          99,
+          320,
+          211
+        ]
+      },
+      {
+        "column": 7,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 3,
+        "center_x": 314,
+        "offset": [
+          186,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          218,
+          99,
+          320,
+          211
+        ]
+      },
+      {
+        "column": 8,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 0,
+        "center_x": 430,
+        "offset": [
+          302,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": null
+      },
+      {
+        "column": 9,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 1,
+        "center_x": -30,
+        "offset": [
+          -158,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          0,
+          125,
+          66,
+          211
+        ]
+      },
+      {
+        "column": 10,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 2,
+        "center_x": 70,
+        "offset": [
+          -58,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          0,
+          99,
+          168,
+          211
+        ]
+      },
+      {
+        "column": 11,
+        "kind": "truck",
+        "source_row": 0,
+        "source_column": 3,
+        "center_x": 152,
+        "offset": [
+          24,
+          31
+        ],
+        "allow_offcard": true,
+        "bbox": [
+          56,
+          99,
+          250,
+          211
+        ]
+      },
+      {
+        "column": 12,
+        "kind": "robot",
+        "source_row": 8,
+        "source_column": 9,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          100,
+          78,
+          222,
+          211
+        ]
+      },
+      {
+        "column": 13,
+        "kind": "robot",
+        "source_row": 8,
+        "source_column": 10,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          98,
+          47,
+          220,
+          211
+        ]
+      },
+      {
+        "column": 14,
+        "kind": "fist",
+        "source_row": 0,
+        "source_column": 0,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          91,
+          46,
+          220,
+          211
+        ]
+      },
+      {
+        "column": 15,
+        "kind": "fist",
+        "source_row": 0,
+        "source_column": 1,
+        "center_x": 160,
+        "offset": [
+          48,
+          0
+        ],
+        "allow_offcard": false,
+        "bbox": [
+          98,
+          46,
+          220,
+          211
+        ]
+      }
+    ],
+    "atlas_sha256": "d2b07487e883fa020657864686f0ff2795f6a1e4b5091aada8d44a7554c001ed"
+  },
+  "status": "promoted; requires coordinator registration and visual QA",
+  "outputs": {
+    "optimus": "optimus-candidate.png",
+    "truck": "truck-candidate.png",
+    "fist2": "fist2-candidate.png",
+    "optimus-menu16": "optimus-menu16-candidate.png"
+  },
+  "diagnostics": [
+    "optimus-contact.png",
+    "optimus-preview.gif",
+    "truck-contact.png",
+    "truck-preview.gif",
+    "fist2-contact.png",
+    "fist2-preview.gif",
+    "optimus-menu16-contact.png",
+    "optimus-menu16-preview.gif",
+    "optimus-cast-contact.png",
+    "optimus-cast-preview.gif"
+  ]
+}

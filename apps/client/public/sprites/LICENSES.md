@@ -29,13 +29,15 @@ gameplay idle pixels. Earlier supplied/selected sources remain archived in
 
 ## naruto.png
 
-Fan art of Naruto for this non-commercial project. Current artwork was redrawn
-with the built-in image generator from the user's classic Naruto appearance
-reference, preserving the supplied atlas's 108-frame animation contract.
-`scripts/pack-naruto.py` registers 80 x 116 cells in nine columns and 18 rows;
-row 17 supplies the eight-frame celebration. Actual references, generated sources,
-prompts and registration measurements are in `concept/naruto/reference-remake/`.
-The original supplied atlas/metadata remain untouched in `concept/naruto/`.
+Fan art of Naruto for this non-commercial project. The approved user-selected
+appearance was animated with the built-in image generator, using the previous
+atlas only for pose order. All108 frames are newly drawn without baked-in FX.
+`scripts/pack-naruto-approved.py` registers96x128 cells in a9-column,18-row
+864x2304 atlas; row17 supplies both the eight-frame menu and victory animation.
+The slightly wider transparent cells retain full-size extended hands and falls.
+References, raw generations, pose guides, exact PixelLab edge-cleanup ledger,
+packing measurements and palm positions are in `concept/naruto/approved-redraw/`.
+The original supplied atlas and prior reference-remake remain preserved.
 
 ## spider.png
 
@@ -130,18 +132,24 @@ lobby's ball and confetti are drawn by `scripts/build-pele-lobby.py`, laid out b
 
 ## lula.png
 
-Caricature of Luiz Inácio Lula da Silva for this non-commercial project, made in PixelLab (pixellab.ai) (character
-"Lula HD V2", after a vinyl toy of him: red t-shirt with a yellow star; his setting the picanha down and carry walk posed
-from our own skeletons, his "L" raised high a v3 animation); laid out by `scripts/build-character-sheet.py lula`; rows =
-`SHEETS.lula`. The picanha he leaves is an item in `items.png` (`pack-concept-items.py`).
+Caricature of Luiz Inácio Lula da Silva for this non-commercial project, redrawn
+with PixelLab from the approved option 1 in the new Pelé pixel-art family.
+All 108 poses are packed by `concept/lula/pele-style-redraw/pack.py` into
+192 × 192 cells; sources, generation IDs, prior artwork and reviewed palm/head
+regions are retained there. The same new celebration serves menus and victory.
+The picanha he leaves remains a separate item in `items.png` (`pack-concept-items.py`).
 
 ## optimus.png, optimus-lobby.png, truck.png
 
-Fan art of Optimus Prime (Hasbro / Takara Tomy) for this non-commercial project, made in PixelLab (pixellab.ai) (character
-"Optimus Prime HD"; his crouch from PixelLab's crouching template, his carry walk and raised fist posed from our own
-skeletons); laid out by `scripts/build-character-sheet.py optimus`; rows = `SHEETS.optimus`. The truck is three PixelLab
-images (side, front, back: `scripts/build-truck.py`); the lobby's glow, plates, sparks, speed lines, exhaust and dust are
-drawn by `scripts/build-optimus-lobby.py`, laid out by `scripts/build-lobby-image.py`.
+Fan art of Optimus Prime (Hasbro / Takara Tomy) for this non-commercial project.
+The user-approved armored option3 was drawn with the built-in image generator,
+using existing game art only as pose/direction references. New robot, truck and
+raised-fist art share one appearance; no visual effects are baked into the PNGs.
+`pack-optimus-approved.py` packs224px gameplay cells and composes a clean16-frame
+menu/victory. The special uses articulated panel-folding intermediates plus exact
+idle/truck endpoints and explicit reverse playback. References, raw generations,
+component selections, geometry and source hashes are in
+`concept/optimus/approved-redraw/`. Legacy builders remain historical only.
 
 ## lantern-bubble.png
 
@@ -216,3 +224,7 @@ by the user. `concept/conveyors/conveyor-concept.png` retains the source.
 `Imagem do ChatGPT 25 de out. de 2026, 21_48_03.png`. The original image is retained in
 `concept/static/supplied-20261025-214803.png`; packing and fallback animation notes
 are in `concept/static/README.md`. No additional licensing grant was supplied.
+
+### Approved Super Choque option4 redraw
+
+The107 characterframes were regenerated from the user-approved PixelLab option4, using the previous spritesheet only for poses. The new168x224 cells retain full-size raised arms; electricity and aura remain separate runtime art. The menu retains its physical metaldisc. Actualreferences, generatedfamilies, measuredsourceboxes, palmpositions and reproduciblepacking are in concept/static/option4-redraw/; build with scripts/pack-static-approved.py.

@@ -69,15 +69,15 @@ O sorteio de estação foi observado em `C3:02AF`, Y=3, antes de criar o objeto.
 
 Relatórios: `.agent/sb4-rom/station-bottom-report.md` e `station-right-report.md`. Nove trajetórias Group 1 não comprovam todas as variantes dos outros grupos.
 
-## Nova diferença encontrada nas bombas, ainda sem alteração de regra
+## Fuse normal integrado e variantes pendentes
 
 Uma bomba colocada por A na fixture normal de dois humanos inicializou `WRAM 0x87A=126`, por escrita executada em `C1:1FC7`, e decrementou a cada atualização em `C1:3CE9`. A rotina passou a explosão em `C1:3DB8`. Artefatos: `bomb-first-ten-frames.json`, `bomb-timer-write-trace.json`, `bomb-timer-original.json`. REA leu os bytes de inicialização (`ev_d33e4e555835dfc75ff64ac58f7797c0c18a60ac6d3e7f62431bce99e26be11d`) e do contador (`ev_8cb5d6ce99491d66aefba9ae6033a5b78e7402c2fef7bf76e98a32fc305f6357`). O valor 126 também foi lido em `C1:56EA` (`ev_cce91f64a1a6f7c69f95f25eaabfdff1f8fa639046f4427818ee1eb23e8787b6`).
 
-Isso contradiz os 180 ticks atuais do Bombtop nesse caso. Confirmar outras arenas, tipos de bomba, maldições e a ordem de atualização de spawn antes de alterar a regra global ou as arenas autorais. As tentativas de expor o passageiro às chamas não chegaram a embarcar antes da explosão e **não provam imunidade**. O teste de bomba contra carrinho parado não mediu extensão da chama atrás dele; portanto também não prova bloqueio de raios.
+O fuse de bombas normais SB4 foi corrigido para 126, preservando o valor no tick de criação e começando o decremento na atualização seguinte. Os mapas 03 e 11 e os bytes da rotina comum sustentam a mudança. Arenas autorais, remote/pierce e maldições curta/longa conservaram suas regras anteriores. Tipos e condições restantes, inclusive tempo02, precisam confronto específico. As tentativas antigas de expor o passageiro às chamas não chegaram a embarcar e não provam imunidade; o teste da estação parada não mediu extensão da chama atrás dela e não prova bloqueio de raios.
 
 ## Pendências
 
-O mapa 03 confirmou a inicialização de bombas em 126 em quatro colocações reais, fortalecendo a investigação do temporizador acima. Ver `SB4-BOLAS-ROM.md`; a regra de fuse ainda não foi alterada.
+O mapa 03 confirmou a inicialização 126 em quatro colocações reais. A integração do fuse e as correções da interpretação de direção das bolas estão descritas em `SB4-BOLAS-ROM.md`.
 
 1. Extrair grupos/variantes restantes e substituir timers de saída por física geral de salto confirmada.
 2. Confirmar danos a adversários protegidos, bombas, itens, imunidade do passageiro e o que ocorre com a estação durante destruição/pressão.
@@ -87,4 +87,4 @@ O mapa 03 confirmou a inicialização de bombas em 126 em quatro colocações re
 
 ## Validação desta correção
 
-95 testes focados shared e 48 focados client passaram no root ativo; typecheck de shared/server/client e build Vite/PWA passaram. A suíte shared ampla anterior teve 803 passes e quatro falhas: três snapshots de partidas autorais e o teste de aquecimento da IA. O agente client relatou suíte ampla com 1098 passes e quatro falhas fora do renderer, em maniac-health-hud/stage-rotation-panel; o coordenador confirmou os 48 focados, o typecheck e o build. Nenhum snapshot foi regravado para ocultar diferenças concorrentes. Bridge saudável, mas duas tentativas limitadas de adquirir a fila compartilhada retornaram queue_timeout; nenhuma captura do cliente é alegada nesta rodada. Nenhum commit/push.
+Nesta rodada, a suíte shared completa teve 848 passes e quatro falhas já observadas: três snapshots de partidas autorais e o teste de aquecimento da IA. Os 104 testes focados client, o typecheck shared/server/client e o build Vite/PWA passaram. Log: `.agent/sb4-latest-shared-tests.log`. Nenhum snapshot foi regravado para ocultar diferenças. A validação visual Bridge continua pendente da rodada anterior; nenhuma captura do cliente é alegada aqui. Sem commit/push por este agente.

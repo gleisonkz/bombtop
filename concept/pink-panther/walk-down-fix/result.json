@@ -1,0 +1,38 @@
+{
+  "job_id": "3fea86c1-268c-4fe0-af09-e543b144e631",
+  "mode": "skeleton-v3",
+  "template": "walking",
+  "direction": "south",
+  "frames": 6,
+  "source_canvas": [
+    192,
+    192
+  ],
+  "source_anchor": [
+    100,
+    164
+  ],
+  "packed_anchor": [
+    112,
+    208
+  ],
+  "sha256": "2d1a80891e8a54c1a00e903b1ca99837fb22725410d33689830f40f782838e5a",
+  "unchanged_rows": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

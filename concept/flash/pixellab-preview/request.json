@@ -1,0 +1,17 @@
+{
+  "job_id": "711c015b-9540-48f0-bfda-e230a20c051e",
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "reference_images": [
+    "captain-style.png",
+    "thor-style.png"
+  ],
+  "identity": "Flash / Barry Allen, classic crimson and gold suit",
+  "scope": "Preview only; approval before spritesheet",
+  "effects": "none",
+  "status": "ready-for-approval"
+}

@@ -110,6 +110,17 @@ def frame_protection(frame, x, y, disc=False):
 
 
 def build(protection_rows=None):
+    approved = ROOT.parents[1] / 'concept/static/option4-redraw'
+    if (approved / 'integration.json').exists():
+        spec = importlib.util.spec_from_file_location('static_approved', Path(__file__).with_name('pack-static-approved.py'))
+        current = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(current)
+        contract = json.loads((approved / 'contract.json').read_text(encoding='utf-8'))
+        manifest = json.loads((approved / 'measurements.json').read_text(encoding='utf-8'))
+        atlas, report = current.build_sheet(approved, contract, manifest=manifest)
+        if protection_rows is not None:
+            protection_rows.extend(report['paint_regions']['rows'])
+        return atlas
     source = Image.open(SOURCE).convert('RGBA')
     spec = importlib.util.spec_from_file_location('static_carry', Path(__file__).with_name('pack-static-carry.py'))
     carry = importlib.util.module_from_spec(spec)
@@ -144,6 +155,7 @@ def build(protection_rows=None):
 
 if __name__ == '__main__':
     rows = []
-    build(rows).save(OUTPUT)
-    PROTECTION.write_text(json.dumps({'frameW': CELL[0], 'frameH': CELL[1], 'rows': rows}, separators=(',', ':')) + '\n', encoding='utf-8')
+    atlas = build(rows)
+    atlas.save(OUTPUT)
+    PROTECTION.write_text(json.dumps({'frameW': atlas.width // 14, 'frameH': atlas.height // len(MAP), 'rows': rows}, separators=(',', ':')) + '\n', encoding='utf-8')
     print(OUTPUT)

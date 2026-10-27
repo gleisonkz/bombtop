@@ -64,22 +64,22 @@ describe("SB4 stage transport", () => {
     expect({ px: trolley.px, py: trolley.py }).toEqual(position);
   });
 
-  it.each(["block", "flame", "bomb", "pit"] as const)("revalidates a landing that acquires a %s during flight", hazard => {
+  it.each(["block", "flame", "bomb", "pit"] as const)("keeps the provisional safe-landing fallback for a new %s", hazard => {
     const s = arena("sb4-09");
     s.stageState = { seesaws: [{ x: 4, y: 3, dir: "right", raised: false }] };
     placePlayerAt(s, "a", 3, 3);
     placePlayerAt(s, "b", 5, 3);
     updateStageTransport(s);
     expect(s.stageState.flights?.b).toBeDefined();
-    for (let i = 0; i < 23; i++) updateStageTransport(s);
-    if (hazard === "block") s.grid.tiles[3 * s.grid.width + 8] = Tile.Block;
-    if (hazard === "flame") s.flames.push({ x: 8, y: 3, ttl: 30 });
-    if (hazard === "pit") s.grid.floor[3 * s.grid.width + 8] = Floor.Pit;
-    if (hazard === "bomb") s.bombs.push({ x: 8, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
+    for (let i = 0; i < 14; i++) updateStageTransport(s);
+    if (hazard === "block") s.grid.tiles[3 * s.grid.width + 5] = Tile.Block;
+    if (hazard === "flame") s.flames.push({ x: 5, y: 3, ttl: 30 });
+    if (hazard === "pit") s.grid.floor[3 * s.grid.width + 5] = Floor.Pit;
+    if (hazard === "bomb") s.bombs.push({ x: 5, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
     updateStageTransport(s);
     expect(s.stageState.flights?.b).toBeUndefined();
-    expect(playerTile(s.players[1]!)).toEqual({ x: 7, y: 3 });
-    expect(s.players[1]!.px).toBe(tileCenter(7));
+    expect(playerTile(s.players[1]!)).toEqual({ x: 4, y: 3 });
+    expect(s.players[1]!.px).toBe(tileCenter(4));
     expect(s.players[1]!.alive).toBe(true);
     expect(s.players[1]!.jumpTicks).toBe(0);
   });
@@ -130,7 +130,7 @@ describe("SB4 stage transport", () => {
       updateStageTransport(s);
       expect(Number.isInteger(s.players[1]!.px)).toBe(true);
     }
-    expect(playerTile(s.players[1]!)).toEqual({ x: 12, y: 9 });
+    expect(playerTile(s.players[1]!)).toEqual({ x: 11, y: 9 });
     expect(s.stageState.flights?.b).toBeUndefined();
     expect(stageTransportInput(s, s.players[1]!, input)).toBe(false);
   });

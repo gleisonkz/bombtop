@@ -1,5 +1,6 @@
 import {
   cursedDirection,
+  flagPickupBlocksInput,
   moveSurprisePlayer,
   steer,
   type Direction,
@@ -97,8 +98,8 @@ export class Predictor {
       const start = Math.max(e.tick + (e.seq === ack.seq ? ack.ticks : 0), this.tick - MAX_PREDICTION_TICKS);
       let ticks = (this.log[i + 1]?.tick ?? this.tick) - start;
       for (; ticks > 0; ticks--) {
-        if (e.brace) continue;
         state.tick++;
+        if (e.brace || flagPickupBlocksInput(state, p)) continue;
         if (moveSurprisePlayer(state, p, { dir: e.dir, alt: e.alt, bomb: false })) continue;
         const dir = cursedDirection(p, e.dir);
         const moved = steer(state, p, dir, cursedDirection(p, e.alt));

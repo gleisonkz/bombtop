@@ -35,7 +35,7 @@ export class GhostBombs {
   }
 
   /** `view` plus pending bombs, for rendering and actionCues placement/capacity checks. */
-  apply<V extends Pick<PublicView, "bombs" | "players">>(view: V, nowMs: number): V {
+  apply<V extends Pick<PublicView, "bombs" | "players" | "stage">>(view: V, nowMs: number): V {
     const owner = view.players.find((p) => p.id === this.me);
     if (owner?.heldBy || owner?.thrown) {
       this.clear();
@@ -43,7 +43,7 @@ export class GhostBombs {
     }
     this.ghosts = this.ghosts.filter((g) => nowMs - g.at < GHOST_MS && !bombAt(view, g.x, g.y));
     if (!this.ghosts.length) return view;
-    const fuse = owner ? effectiveFuse(owner) : FUSE_TICKS;
+    const fuse = owner ? effectiveFuse(owner, view.stage) : FUSE_TICKS;
     const extra = this.ghosts.map((g) => ({
       ownerId: this.me, x: g.x, y: g.y, fuse: Math.max(1, fuse - Math.floor((nowMs - g.at) * TICK_RATE / 1000)), range: 1, type: g.type,
       slide: null, offset: 0, air: null, heldBy: null,

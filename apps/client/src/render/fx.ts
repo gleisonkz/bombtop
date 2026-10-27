@@ -1,8 +1,6 @@
-import { specialInk } from "./special-palette";
-
 /** A short-lived bit of visual flair, in stage pixels. */
 export interface Particle {
-  kind: "spark" | "smoke" | "debris";
+  kind: "spark" | "smoke" | "debris" | "transform";
   x: number;
   y: number;
   vx: number;
@@ -16,9 +14,6 @@ export interface Particle {
 
 const SPARK_COLORS = [0xfff6c8, 0xffd23f, 0xff7a1a];
 const DEBRIS_COLORS = [0xa86b3c, 0x7a4a26, 0xc98a52];
-/** Optimus's plates: red, blue and chrome; his sparks blue-white. */
-const PLATE_COLORS = [0xd8262e, 0x2456c8, 0xc8ccd6, 0x8a9099];
-const TECH_SPARKS = [0xdff4ff, 0x7fd0ff, 0x3aa0ff];
 /** Most ticks a frame may advance the effects (a hidden tab catching up). */
 const MAX_STEP = 120;
 
@@ -107,20 +102,9 @@ export class Fx {
     }
   }
 
-  /** Optimus turning into his truck, or back: his plates fly apart in a burst of blue sparks, with a small shake. */
+  /** Optimus's four-frame transformation accent, anchored to the change of form. */
   transform(x: number, y: number, color?: number | null): void {
-    const plates = color == null ? PLATE_COLORS : PLATE_COLORS.map(ink => specialInk(ink, color));
-    const sparks = color == null ? TECH_SPARKS : TECH_SPARKS.map(ink => specialInk(ink, color));
-    for (let i = 0; i < 10; i++) {
-      const a = (i / 10) * Math.PI * 2 + this.random() * 0.4;
-      const v = 0.5 + this.random() * 0.7;
-      this.add("debris", x + Math.cos(a) * 2, y + Math.sin(a) * 2, Math.cos(a) * v, Math.sin(a) * v * 0.6 - 0.7, 16 + this.random() * 10, 1.2 + this.random() * 1.2, plates);
-    }
-    for (let i = 0; i < 8; i++) {
-      const a = this.random() * Math.PI * 2;
-      const v = 0.8 + this.random();
-      this.add("spark", x, y, Math.cos(a) * v, Math.sin(a) * v, 8 + this.random() * 8, 0.8 + this.random() * 0.6, sparks);
-    }
+    this.particles.push({ kind: "transform", x, y, vx: 0, vy: 0, age: 0, life: 16, size: 26, color: color ?? 0xffffff });
     this.shake = Math.min(3, this.shake + 0.8);
   }
 

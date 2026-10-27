@@ -11,6 +11,13 @@ const real = (x: number, y: number): Bomb => ({
 });
 
 describe("GhostBombs", () => {
+  it("predicts a normal SB4 fuse from the authoritative stage", () => {
+    const ghosts = new GhostBombs("me");
+    const v = publicView(createMatch({ seed: 17, stage: "sb4-03", playerIds: ["me", "them"], blockDensity: 0 }));
+    ghosts.add(3, 1, 0);
+    expect(ghosts.apply(v, 0).bombs[0]?.fuse).toBe(126);
+    expect(ghosts.apply(v, 500).bombs[0]?.fuse).toBe(96);
+  });
   it("keeps pending bomb ownership and type while a different player becomes the stack root", () => {
     const g = new GhostBombs("me");
     const v = view();

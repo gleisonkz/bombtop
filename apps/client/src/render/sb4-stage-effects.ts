@@ -1,5 +1,5 @@
 import { Assets, Container, Graphics, Sprite, Text, type Texture } from "pixi.js";
-import { Floor, TILE, Tile, getFloor, getTile, type Facing, type MatchState } from "@bombtop/shared";
+import { Floor, TILE, Tile, getFloor, getTile, seesawHopLift, type Facing, type MatchState } from "@bombtop/shared";
 
 type Scene = Pick<MatchState, "grid" | "stageState" | "stage" | "tick">;
 const PROPS = ["clock", "rolling-ball", "forest-pit", "electric-fence", "direction-panel", "foliage", "slots", "slot-switch", "seesaw", "costume-mask", "trolley", "flag"] as const;
@@ -12,9 +12,10 @@ const FLOOR_PROPS = new Map<Floor, Prop>([
 const ANGLES: Record<Facing, number> = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 };
 
 export function stageFlightLift({ flight, y, bodyHeight, elevated }: {
-  flight: { ticks: number } | undefined; y: number; bodyHeight: number; elevated: boolean;
+  flight: { ticks: number; kind?: "seesaw" } | undefined; y: number; bodyHeight: number; elevated: boolean;
 }): number {
   if (!flight || elevated || !Number.isFinite(flight.ticks)) return 0;
+  if (flight.kind === "seesaw") return Math.min(seesawHopLift(flight), Math.max(0, y - bodyHeight));
   const progress = Math.max(0, Math.min(1, flight.ticks / 24));
   return Math.min(48 * progress * (1 - progress), Math.max(0, y - bodyHeight));
 }
@@ -95,6 +96,7 @@ export class Sb4StageEffects {
         if (floor === Floor.Seesaw && dynamic?.seesaws) continue;
         const prop = FLOOR_PROPS.get(floor);
         const surprise = dynamic?.surprise?.[y * state.grid.width + x];
+        if (floor === Floor.Surprise && (!surprise || surprise.kind === "normal")) continue;
         if (prop) this.place(prop, { ...pose, above: floor === Floor.Foliage,
           tint: surprise ? SURPRISE_COLORS[surprise.kind] : 0xffffff,
           rotation: surprise?.kind === "reverse" ? Math.PI : 0 });

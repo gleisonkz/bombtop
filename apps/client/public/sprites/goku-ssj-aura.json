@@ -1,0 +1,52 @@
+{
+  "image": "sprites/goku-ssj-aura.png",
+  "width": 1280,
+  "height": 1280,
+  "frameW": 320,
+  "frameH": 320,
+  "columns": 4,
+  "rows": 4,
+  "frames": 16,
+  "anchorX": 160,
+  "anchorY": 304,
+  "fps": 20,
+  "intro": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "loop": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "release": [
+    7,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1,
+    0
+  ],
+  "layer": "behind-character",
+  "blendMode": "add",
+  "referenceBodyH": 104,
+  "fullAuraHeight": 285.875,
+  "desiredAuraToBodyHeight": 1.45,
+  "nativeScaleForA1": 0.5275032794053345,
+  "containsCharacter": false,
+  "generator": "built-in image_gen; no PixelLab",
+  "sourceSha256": "74e6daeff3657ffbe125b78e84a4bdf94bee5f342e6c362cf40265a6db5b23b5"
+}

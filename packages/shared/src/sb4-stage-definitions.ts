@@ -1,5 +1,11 @@
 import { ItemKind } from "./state";
 
+/** C31CB0..C31E04: native flag constructor, in owner/seat order. */
+export const SB4_FLAG_SPAWNS = [
+  { x: 2, y: 1 }, { x: 12, y: 11 }, { x: 12, y: 1 },
+  { x: 2, y: 11 }, { x: 7, y: 7 },
+] as const;
+
 export const SB4_STAGE_ITEM_KINDS = [
   ItemKind.Bomb,
   ItemKind.Fire,

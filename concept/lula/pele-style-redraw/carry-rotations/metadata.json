@@ -1,0 +1,57 @@
+{
+  "group_id": "0aab5992-b28f-4d60-bda3-d166603d0625",
+  "states": [
+    {
+      "character": {
+        "id": "1c3aa319-5281-4024-b67f-d716b13d1714",
+        "name": "Idle",
+        "prompt": "Rotate this exact approved Lula sprite preserving pixels and identity: elderly man swept wavy silver white hair, thick white eyebrows, full white beard, light warm tan skin, red shirt with yellow star on FRONT ONLY and yellow sleeve stripes, charcoal trousers black shoes. Same compact slim adult caricature proportions and pixel rendering. North strict rear view back of silver hair, plain red shirt back WITHOUT star, no face, eyes, beard on rear. No props, effects or shadows.",
+        "size": {
+          "width": 128,
+          "height": 160
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-10-26T22:17:56.776446+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "west": "Idle/rotations/west.png",
+          "east": "Idle/rotations/east.png",
+          "north": "Idle/rotations/north.png"
+        },
+        "animations": {}
+      }
+    },
+    {
+      "character": {
+        "id": "651a9bac-80f8-4a73-b344-ebc25da1c330",
+        "name": "Carry overhead empty hands",
+        "prompt": "Rotate this exact approved Lula sprite preserving pixels and identity: elderly man swept wavy silver white hair, thick white eyebrows, full white beard, light warm tan skin, red shirt with yellow star on FRONT ONLY and yellow sleeve stripes, charcoal trousers black shoes. Same compact slim adult caricature proportions and pixel rendering. North strict rear view back of silver hair, plain red shirt back WITHOUT star, no face, eyes, beard on rear. No props, effects or shadows.",
+        "size": {
+          "width": 128,
+          "height": 160
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "low top-down",
+        "created_at": "2026-10-26T22:20:53.750422+00:00"
+      },
+      "folder": "Carry_overhead_empty_hands",
+      "frames": {
+        "rotations": {
+          "south": "Carry_overhead_empty_hands/rotations/south.png",
+          "west": "Carry_overhead_empty_hands/rotations/west.png",
+          "east": "Carry_overhead_empty_hands/rotations/east.png",
+          "north": "Carry_overhead_empty_hands/rotations/north.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-26T22:24:02.210266"
+}

@@ -46,7 +46,7 @@ export interface Cue {
   size?: number;
 }
 
-type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "blasts" | "pressure">;
+type View = Pick<PublicView, "tick" | "grid" | "players" | "bombs" | "flames" | "items" | "blasts" | "pressure" | "stage">;
 
 /** The sound each blast makes as it starts (the kamehameha and the rasengan are heard from their charge or dash). */
 const BLAST_CUES: Record<Exclude<BlastKind, "kamehameha" | "rasengan">, CueName> = {
@@ -101,7 +101,7 @@ export function soundCues(prev: View, next: View): Cue[] {
   const oldBombs = new Set(prev.bombs.map(bombKey));
   for (const b of next.bombs) {
     const owner = next.players.find((player) => player.id === b.ownerId);
-    const expectedFuse = owner ? effectiveFuse(owner) : FUSE_TICKS;
+    const expectedFuse = owner ? effectiveFuse(owner, next.stage) : FUSE_TICKS;
     if (grounded(b) && !oldBombs.has(bombKey(b)) && b.fuse >= expectedFuse - elapsed) cues.push({ name: b.mega ? "mega" : "place", x: mid(b.x) });
   }
   const count = (v: View, f: (b: Bomb) => unknown) => v.bombs.filter(f).length;

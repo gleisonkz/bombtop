@@ -1,35 +1,20 @@
 import { cursedDirection, effectiveSpeed } from "./curse";
 import { movePlayer, steer } from "./movement";
-import { nextRandom } from "./rng";
+import type { StageSurpriseKind as SurpriseKind } from "./stage-state";
+import { moveIcePlayer } from "./stage-ice";
 import { stageTempoRate } from "./stage";
 import { Floor, getFloor, playerTile, type Direction, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 
-/** Provisional tuning, not measured SNES timing. Reverse ends on leaving its tile. */
-export const SURPRISE_CONFIG = { stickySpeedScale: 0.5, reverseTicks: 120 } as const;
+export { igniteSurpriseFloor, initializeSurpriseSelection } from "./stage-surprise-flames";
+
+/** ROM: 1C08 halves base movement; 1C0C refreshes 64 quarter-rate reverse counts. */
+export const SURPRISE_CONFIG = { stickySpeedScale: 0.5, reverseTicks: 256 } as const;
 
 const KINDS = ["normal", "ice", "sticky", "reverse"] as const;
 const DIRECTIONS: readonly Facing[] = ["up", "down", "left", "right"];
-type SurpriseKind = (typeof KINDS)[number];
-
-/** Each flame tick changes a tile once. Choosing another state is a provisional rule. */
-export function igniteSurpriseFloor(s: MatchState, x: number, y: number): void {
-  if (String(s.stage) !== "sb4-06" || getFloor(s, x, y) !== Floor.Surprise) return;
-  const stage = s.stageState ??= {};
-  const locks = stage.floorLocks ??= {};
-  const index = y * s.grid.width + x;
-  const key = `surprise:hit:${index}`;
-  if (locks[key] === s.tick) return;
-  const floors = stage.surprise ??= {};
-  const current = floors[index] ?? { kind: "normal", hits: 0 };
-  const choices = KINDS.filter(kind => kind !== current.kind);
-  floors[index] = { kind: choices[Math.floor(nextRandom(s) * choices.length)]!, hits: current.hits + 1 };
-  locks[key] = s.tick;
-}
 
 function clearVisit(locks: Record<string, number>, id: string): void {
   delete locks[`surprise:entry:${id}`];
-  delete locks[`surprise:momentum:${id}`];
-  delete locks[`surprise:reverse:${id}`];
 }
 
 function floorKind(s: MatchState, p: Player): SurpriseKind {
@@ -50,39 +35,21 @@ function startVisit(s: MatchState, p: Player, kind: SurpriseKind, locks: Record<
   const key = `surprise:entry:${p.id}`;
   if (locks[key] === entry) return;
   locks[key] = entry;
-  if (kind !== "ice") delete locks[`surprise:momentum:${p.id}`];
-  if (kind === "reverse") locks[`surprise:reverse:${p.id}`] = s.tick + SURPRISE_CONFIG.reverseTicks;
-  else delete locks[`surprise:reverse:${p.id}`];
 }
 
 function reverse(dir: Direction): Direction {
   return dir ? DIRECTIONS[DIRECTIONS.indexOf(dir) ^ 1]! : null;
 }
 
-function slide(s: MatchState, p: Player, input: PlayerInput | undefined, locks: Record<string, number>): void {
-  const key = `surprise:momentum:${p.id}`;
-  const stored = locks[key];
-  const dir = stored === undefined ? cursedDirection(p, input?.dir ?? p.facing) : DIRECTIONS[stored]!;
-  if (!dir) return;
-  const { px, py } = p;
-  p.facing = dir;
-  movePlayer(s, p, dir);
-  if (p.px === px && p.py === py) delete locks[key];
-  else locks[key] = DIRECTIONS.indexOf(dir);
+function floorDirection(s: MatchState, p: Player, dir: Direction): Direction {
+  const intended = cursedDirection(p, dir);
+  const until = s.stageState?.floorLocks?.[`surprise:reverse:${p.id}`] ?? 0;
+  return s.tick < until && p.curse?.kind !== "reverse" ? reverse(intended) : intended;
 }
 
 function moveOnFloor(s: MatchState, p: Player, kind: SurpriseKind, input: PlayerInput | undefined): void {
-  const locks = s.stageState!.floorLocks!;
-  if (kind === "ice") {
-    slide(s, p, input, locks);
-    return;
-  }
-  let dir = cursedDirection(p, input?.dir ?? null);
-  let alt = cursedDirection(p, input?.alt ?? null);
-  if (kind === "reverse" && s.tick < locks[`surprise:reverse:${p.id}`]!) {
-    dir = reverse(dir);
-    alt = reverse(alt);
-  }
+  let dir = floorDirection(s, p, input?.dir ?? null);
+  const alt = floorDirection(s, p, input?.alt ?? null);
   if (kind === "sticky") {
     const speed = effectiveSpeed(p) * stageTempoRate(s) * SURPRISE_CONFIG.stickySpeedScale;
     const { px, py } = p;
@@ -109,29 +76,41 @@ export function stopStageStickyBombs(s: MatchState): void {
 /**
  * Replaces steer for one player; true means floor movement was assumed, even if blocked.
  * Input is raw: existing curses are read, never replaced. Facing is the selected direction.
- * Numeric locks store tile/kind entry, direction index, reverse deadline and last move tick.
+ * Numeric locks store tile/kind entry, reverse deadline and last move tick.
+ * Typed iceSlides retain their destination after the player leaves an ice tile.
  */
-export function moveSurprisePlayer(s: MatchState, p: Player, input?: PlayerInput): boolean {
+export function moveSurprisePlayer(s: MatchState, p: Player, input?: PlayerInput, entryFacing = p.facing): boolean {
   if (String(s.stage) !== "sb4-06") return false;
   const stage = s.stageState ??= {};
   const locks = stage.floorLocks ??= {};
   const key = `surprise:move:${p.id}`;
   if (!p.alive) {
+    if (stage.iceSlides) delete stage.iceSlides[p.id];
     clearVisit(locks, p.id);
+    delete locks[`surprise:reverse:${p.id}`];
     delete locks[key];
     return false;
   }
   if (locks[key] === s.tick) return true;
   const kind = floorKind(s, p);
-  if (kind === "normal") {
+  const sliding = !!stage.iceSlides?.[p.id];
+  const reverseKey = `surprise:reverse:${p.id}`;
+  if (kind === "reverse") {
+    // Native C24CB4 decrements on a global four-update phase; refresh on contact.
+    locks[reverseKey] = s.tick - s.tick % 4 + SURPRISE_CONFIG.reverseTicks;
+  }
+  if (kind === "normal" && !sliding && s.tick >= (locks[reverseKey] ?? 0)) {
     clearVisit(locks, p.id);
+    delete locks[reverseKey];
     delete locks[key];
     return false;
   }
   locks[key] = s.tick;
   startVisit(s, p, kind, locks);
   if (!isBusy(s, p, input)) {
-    moveOnFloor(s, p, kind, input);
+    if (sliding || kind === "ice") {
+      if (!moveIcePlayer(s, p, entryFacing)) moveOnFloor(s, p, "normal", input);
+    } else moveOnFloor(s, p, kind, input);
     if (floorKind(s, p) !== kind) clearVisit(locks, p.id);
   }
   return true;

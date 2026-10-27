@@ -21,7 +21,7 @@ describe("surprise floor ignition", () => {
   it("changes the floor once per tile per tick, consuming no duplicate random draws", () => {
     const { s, index } = fixture();
     igniteSurpriseFloor(s, 5, 5);
-    expect(s.stageState!.surprise![index]!.kind).not.toBe("normal");
+    expect(s.stageState!.surprise![index]!.kind).toBeDefined();
     expect(s.stageState!.surprise![index]!.hits).toBe(1);
     const snapshot = structuredClone(s);
     igniteSurpriseFloor(s, 5, 5);
@@ -41,6 +41,23 @@ describe("surprise floor ignition", () => {
     }
     expect(s).toEqual(replay);
     expect(s.rng).not.toBe(42);
+  });
+
+  it("uses one stage counter across panel hits and emits reverse at exhaustion", () => {
+    const { s, index } = fixture();
+    s.stageState!.surpriseCounter = 3;
+    igniteSurpriseFloor(s, 5, 5);
+    expect(s.stageState!.surprise![index]!.kind).toBe("sticky");
+    expect(s.stageState!.surpriseCounter).toBe(2);
+    s.tick++;
+    s.grid.floor[index + 1] = Floor.Surprise;
+    igniteSurpriseFloor(s, 6, 5);
+    expect(s.stageState!.surpriseCounter).toBe(1);
+    s.tick++;
+    igniteSurpriseFloor(s, 5, 5);
+    expect(s.stageState!.surprise![index]!.kind).toBe("reverse");
+    expect(s.stageState!.surpriseCounter).toBeGreaterThanOrEqual(64);
+    expect(s.stageState!.surpriseCounter).toBeLessThanOrEqual(127);
   });
 
   it("ignores other stages, ordinary floors and out-of-bounds positions", () => {
@@ -107,7 +124,7 @@ describe("surprise floor movement", () => {
     updateSurpriseFloors(s, input("left"));
     s.tick++;
     updateSurpriseFloors(s, {});
-    expect(p.px).toBe(tileCenter(5) + 3 * p.speed);
+    expect(p.px).toBe(tileCenter(5) + 4 * p.speed);
     expect(p.facing).toBe("right");
   });
 
@@ -129,7 +146,7 @@ describe("surprise floor movement", () => {
     expect(p.px).toBe(px);
   });
 
-  it("bounds reverse to a temporary visit without creating a skull curse", () => {
+  it("refreshes reverse while standing on its panel without creating a skull curse", () => {
     const { s, p } = fixture("reverse");
     updateSurpriseFloors(s, input("right"));
     expect(p.px).toBe(tileCenter(5) - p.speed);
@@ -137,14 +154,37 @@ describe("surprise floor movement", () => {
     placePlayerAt(s, p.id, 5, 5);
     s.tick = SURPRISE_CONFIG.reverseTicks;
     updateSurpriseFloors(s, input("right"));
-    expect(p.px).toBe(tileCenter(5) + p.speed);
+    expect(p.px).toBe(tileCenter(5) - p.speed);
     placePlayerAt(s, p.id, 7, 5);
     s.tick++;
-    expect(updateSurpriseFloors(s, input("right"))).toEqual(new Set());
+    expect(updateSurpriseFloors(s, input("right"))).toEqual(new Set(["p1"]));
+    expect(p.px).toBe(tileCenter(7) - p.speed);
     placePlayerAt(s, p.id, 5, 5);
     s.tick++;
     updateSurpriseFloors(s, input("right"));
     expect(p.px).toBe(tileCenter(5) - p.speed);
+  });
+
+  it("keeps reverse after leaving, then expires after 64 four-update counter steps", () => {
+    const { s, p } = fixture("reverse");
+    updateSurpriseFloors(s, input("right"));
+    placePlayerAt(s, p.id, 7, 5);
+    s.tick = 252;
+    expect(updateSurpriseFloors(s, input("right"))).toEqual(new Set(["p1"]));
+    expect(p.px).toBe(tileCenter(7) - p.speed);
+    placePlayerAt(s, p.id, 7, 5);
+    s.tick = 256;
+    expect(updateSurpriseFloors(s, input("right"))).toEqual(new Set());
+    expect(p.px).toBe(tileCenter(7));
+    expect(SURPRISE_CONFIG.reverseTicks).toBe(256);
+  });
+
+  it("does not cancel an existing reverse curse by reversing twice", () => {
+    const { s, p } = fixture("reverse");
+    p.curse = { kind: "reverse" };
+    updateSurpriseFloors(s, input("right"));
+    expect(p.px).toBe(tileCenter(5) - p.speed);
+    expect(p.curse).toEqual({ kind: "reverse" });
   });
 
   it.each(["stun", "webbed", "shield", "charge", "rasengan", "truck", "jumpTicks", "dashTicks"] as const)("does not move a player busy with %s", field => {

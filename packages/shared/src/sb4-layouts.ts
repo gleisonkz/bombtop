@@ -1,19 +1,19 @@
 import { Floor, Tile } from "./state";
 import type { StageLayout } from "./stage";
-import type { Sb4StageNumber } from "./sb4-stage-definitions";
+import { SB4_FLAG_SPAWNS, type Sb4StageNumber } from "./sb4-stage-definitions";
 import { sb4TrolleyRoute } from "./sb4-trolley-route";
 
 /**
  * Group 1, concept/references/sb4-battle/stage-NN.png, 13x11 interior.
  * # hard wall, B soft block, . clear, P pit, F foliage, S surprise panel,
- * L slot button, T seesaw pivot, R rail, G flag, U/D directional floor.
- * Borders are hard walls. Flag posts follow the five seat anchors; the flags
+ * L slot button, T seesaw pivot, R rail, U/D directional floor.
+ * Borders are hard walls. Flag posts follow the native constructor; the flags
  * themselves are initialized by stage mechanics, independently of this floor.
  * Raised art and players obscure some cells: those cells and paths beneath
  * foliage are inferred from adjacent tiles, not measured ROM collision data.
  * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle.
  * 03 clears the two ball anchors agreed with stage mechanics. 04's pit edges,
- * 06's nine exposed panels, 07's concealed paths/directions, 09's pivots and
+ * 07's concealed paths/directions, 09's pivots and
  * the other obscured cells are capture-based reconstructions. In these
  * stages the exact obscured soft-block cells still require ROM verification.
  * 05/08 visibly have no soft blocks; 10/12 use the dense visible block pattern.
@@ -88,16 +88,16 @@ const ROWS: readonly (readonly string[])[] = [
   ],
   USUAL,
   [
-    "G.BBBB.BBBB.G", ".#B#B#B#B#B#.", "BBBBBBBBBBBBB",
-    "B#B#B#B#B#B#B", "BBBBB...BBBBB", "B#B#B#G#B#B#B",
+    "..BBBB.BBBB..", ".#B#B#B#B#B#.", "BBBBBBBBBBBBB",
+    "B#B#B#B#B#B#B", "BBBBB...BBBBB", "B#B#B#.#B#B#B",
     "BBBBB...BBBBB", "B#B#B#B#B#B#B", "BBBBBBBBBBBBB",
-    ".#B#B#B#B#B#.", "G.BBBB.BBBB.G",
+    ".#B#B#B#B#B#.", "..BBBB.BBBB..",
   ],
 ];
 
 const FEATURES: Readonly<Record<string, Floor>> = {
   P: Floor.Pit, F: Floor.Foliage, S: Floor.Surprise, L: Floor.Slot,
-  T: Floor.Seesaw, R: Floor.Rail, G: Floor.Flag,
+  T: Floor.Seesaw, R: Floor.Rail,
   U: Floor.ConveyorUp, D: Floor.ConveyorDown,
 };
 
@@ -120,6 +120,21 @@ export function buildSb4Layout(number: Sb4StageNumber, width: number, height: nu
     }
   }
   const layout: StageLayout = { tiles, floor, warps: [], keepClear };
+  if (number === 12) {
+    for (const point of SB4_FLAG_SPAWNS) {
+      const index = point.y * width + point.x;
+      floor[index] = Floor.Flag;
+      tiles[index] = Tile.Empty;
+      keepClear.add(index);
+    }
+  }
+  if (number === 6) {
+    // Native persistent map: all 113 non-wall cells are 1C06, including blocks.
+    // Do not add these to keepClear: a surprise floor can be buried under a block.
+    for (let index = 0; index < tiles.length; index++) {
+      if (tiles[index] !== Tile.Wall) floor[index] = Floor.Surprise;
+    }
+  }
   if (number === 11) {
     for (const point of sb4TrolleyRoute()) {
       const index = Math.floor(point.y + 0.5) * width + Math.floor(point.x + 0.5);

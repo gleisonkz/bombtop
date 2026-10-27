@@ -1,4 +1,4 @@
-import { FLAME_TICKS, FUSE_TICKS } from "./constants";
+import { FLAME_TICKS, SB4_NORMAL_FUSE_TICKS } from "./constants";
 import { updateAir } from "./air";
 import { playerElevated } from "./player-carry";
 import { effectiveCapacity, effectiveFuse, effectiveRange } from "./curse";
@@ -7,10 +7,23 @@ import { stageFuseTicks } from "./stage";
 import { stageFlame } from "./stage-mechanics";
 import { stageSolid } from "./stage-obstacles";
 import { stopStageStickyBombs } from "./stage-surprise";
+import { beginSurpriseBurst, startSurpriseCenter, updateSurpriseCenters } from "./stage-surprise-flames";
+import type { StageSurpriseSamples } from "./stage-state";
 import { shieldAt } from "./special";
 import { bombAt, Floor, getFloor, getTile, hasFlame, playerTile, setTile, Tile, type Bomb, type MatchState } from "./state";
 
 const DIRECTIONS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
+const SB4_SURPRISE_DIRECTIONS = [[0, -1], [1, 0], [0, 1], [-1, 0]] as const;
+
+interface BurnRay {
+  dx: number;
+  dy: number;
+  from: number;
+  to: number;
+  ownerId: string;
+  queue: Bomb[];
+  samples: StageSurpriseSamples | undefined;
+}
 
 export function placeBomb(s: MatchState, playerId: string): boolean {
   const p = s.players.find((p) => p.id === playerId);
@@ -21,7 +34,8 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   const active = s.bombs.filter((b) => b.ownerId === playerId && !b.mega).length;
   if (active >= effectiveCapacity(p)) return false;
 
-  s.bombs.push({ ownerId: playerId, x, y, fuse: effectiveFuse(p), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
+  const fuse = effectiveFuse(p, s.stage);
+  s.bombs.push({ ownerId: playerId, x, y, fuse, ...(fuse === SB4_NORMAL_FUSE_TICKS && { bornAt: s.tick }), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
   return true;
 }
 
@@ -32,6 +46,7 @@ export function updateBombs(s: MatchState): void {
     if ((f.ttl -= rate) <= 0 && f.block) setTile(s, f.x, f.y, Tile.Empty);
   }
   s.flames = s.flames.filter((f) => f.ttl > 0);
+  updateSurpriseCenters(s);
 
   stopStageStickyBombs(s);
   updateSlides(s);
@@ -43,7 +58,7 @@ export function updateBombs(s: MatchState): void {
   for (const b of s.bombs) {
     // A remote stays armed while its owner can trigger it; abandoned bombs use their normal fuse.
     const remoteArmed = b.type === "remote" && s.players.some((p) => p.id === b.ownerId && p.alive);
-    if (!remoteArmed && !b.air && !b.heldBy) b.fuse -= rate;
+    if (!remoteArmed && !b.air && !b.heldBy && b.bornAt !== s.tick) b.fuse -= rate;
   }
   const queue = s.bombs.filter((b) => b.fuse <= 0 || (!b.air && !b.heldBy && hasFlame(s, b.x, b.y)));
   while (queue.length > 0) {
@@ -64,19 +79,21 @@ export function detonateRemote(s: MatchState, playerId: string): boolean {
 function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
   if (!s.bombs.includes(bomb)) return;
   s.bombs = s.bombs.filter((b) => b !== bomb);
-  addFlame(s, bomb.x, bomb.y, bomb.ownerId);
+  const samples = beginSurpriseBurst(s);
+  addFlame(s, bomb.x, bomb.y, bomb.ownerId, false, { surpriseSample: null });
 
   const reachedEnd = new Map<string, boolean>();
   const reflected: { dx: number; dy: number; by: string }[] = [];
-  for (const [dx, dy] of DIRECTIONS) {
-    const end = burnRay(s, bomb, dx, dy, 1, bomb.range, bomb.ownerId, queue);
+  for (const [dx, dy] of samples ? SB4_SURPRISE_DIRECTIONS : DIRECTIONS) {
+    const end = burnRay(s, bomb, { dx, dy, from: 1, to: bomb.range, ownerId: bomb.ownerId, queue, samples });
     reachedEnd.set(`${dx},${dy}`, end === true);
     if (typeof end === "string") reflected.push({ dx, dy, by: end });
   }
   // A shield sends its arm back: the far arm burns on for another `range` tiles, as the captain's fire.
   for (const { dx, dy, by } of reflected) {
-    if (reachedEnd.get(`${-dx},${-dy}`)) burnRay(s, bomb, -dx, -dy, bomb.range + 1, bomb.range * 2, by, queue);
+    if (reachedEnd.get(`${-dx},${-dy}`)) burnRay(s, bomb, { dx: -dx, dy: -dy, from: bomb.range + 1, to: bomb.range * 2, ownerId: by, queue, samples });
   }
+  startSurpriseCenter(s, bomb.x, bomb.y);
 }
 
 /**
@@ -84,7 +101,8 @@ function explode(s: MatchState, bomb: Bomb, queue: Bomb[]): void {
  * when the ray ran its full length, false when something stopped it, or the id of
  * the shielded captain it hit.
  */
-function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number, to: number, ownerId: string, queue: Bomb[]): boolean | string {
+function burnRay(s: MatchState, bomb: Bomb, ray: BurnRay): boolean | string {
+  const { dx, dy, from, to, ownerId, queue, samples } = ray;
   // Pierce flames run through blocks, items and bombs; only walls (and shields) stop them.
   const pierce = bomb.type === "pierce";
   for (let i = from; i <= to; i++) {
@@ -93,10 +111,10 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
     const tile = getTile(s, x, y);
     if (tile === Tile.Wall) return false;
     const direction = dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up";
-    if (stageFlame(s, x, y, ownerId, direction)) return false;
+    if (stageFlame(s, x, y, ownerId, direction, samples?.[direction])) return false;
     const shield = shieldAt(s, x, y, dx, dy);
     if (shield) return shield.id;
-    addFlame(s, x, y, ownerId, tile === Tile.Block);
+    addFlame(s, x, y, ownerId, tile === Tile.Block, { surpriseSample: null });
     if (tile === Tile.Block) {
       if (pierce) continue;
       return false;
@@ -116,8 +134,8 @@ function burnRay(s: MatchState, bomb: Bomb, dx: number, dy: number, from: number
 }
 
 /** Sets (x,y) on fire; `block` when it is a block burning away, which clears when the flame dies. */
-export function addFlame(s: MatchState, x: number, y: number, ownerId: string, block = false): void {
-  stageFlame(s, x, y, ownerId);
+export function addFlame(s: MatchState, x: number, y: number, ownerId: string, block = false, options?: { surpriseSample?: number | null }): void {
+  stageFlame(s, x, y, ownerId, undefined, options?.surpriseSample);
   const existing = s.flames.find((f) => f.x === x && f.y === y);
   if (existing) {
     existing.ttl = FLAME_TICKS;

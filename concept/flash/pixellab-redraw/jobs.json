@@ -1,0 +1,100 @@
+{
+  "character_id": "f3994080-cdc6-4419-95bb-f9030fad2a5b",
+  "jobs": {
+    "lobby": {
+      "id": "2c899de4-eb19-4d81-a893-6edd04df1cf6",
+      "receipt": "id: 2c899de4-eb19-4d81-a893-6edd04df1cf6\njob_id: 2c899de4-eb19-4d81-a893-6edd04df1cf6\naction: Front facing superhero introduction. Flash lowers into a short runner's starting stance, does a few quick running-in-place steps, brakes into a clean skid with feet still visible, straightens proudly, gives a small thumbs-up, and returns to the initial neutral standing pose. Fixed camera, centered in place throughout. Preserve exact reference Flash appearance, face with clear eyes, costume, head scale, natural connected limbs, sharp emblem and fine detailed sprite finish. Full head, hands and boots remain inside canvas. Character ONLY, transparent background. No lightning, spark, speed trail, glow, smoke, aura, sphere, ball, floor, shadow, captions or other effects. Do not vanish or leave the canvas.\nframes: 16\nsize: 160x160px\ntransparent: True\nseed: 20261105\nasset_id: 99ec8cef-5bec-5a26-ad0f-944cd1ccec34\nasset_status: pending (saved when generation completes)\ncost: 7 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"2c899de4-eb19-4d81-a893-6edd04df1cf6\")"
+    },
+    "idle-south": {
+      "id": "7316c6a4-8135-42f6-9cad-cfb501a30488",
+      "receipt": "id: 7316c6a4-8135-42f6-9cad-cfb501a30488\njob_id: 7316c6a4-8135-42f6-9cad-cfb501a30488\naction: Front view facing camera. Subtle breathing idle loop, both feet planted, relaxed fists beside hips, eyes open. Keep the mask, eyes, chest emblem and suit completely consistent. No walking, turning or blinking. Preserve this EXACT approved Flash, native scale, finely defined mask and eyes, crimson suit, sharp white-gold chest emblem, gold belt and boots. Complete head hands and feet inside canvas, locked camera. ONLY character on transparent background. No lightning, electricity, speed trails, smoke, glow, sparks, aura, spheres, balls, props, floor or shadows. No style simplification.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261106\nasset_id: 97ecea27-e1b4-55fb-a593-c33669f8ba78\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"7316c6a4-8135-42f6-9cad-cfb501a30488\")"
+    },
+    "walk-south": {
+      "id": "4a72bfc0-d658-47b9-9fe2-b3fbeaf2b02c",
+      "receipt": "id: 4a72bfc0-d658-47b9-9fe2-b3fbeaf2b02c\njob_id: 4a72bfc0-d658-47b9-9fe2-b3fbeaf2b02c\naction: Front view facing camera throughout. Seamless six-step walking-in-place loop with alternating natural steps and arm swing. Same head scale, eyes and costume. Do not approach camera or turn. Preserve this EXACT approved Flash, native scale, finely defined mask and eyes, crimson suit, sharp white-gold chest emblem, gold belt and boots. Complete head hands and feet inside canvas, locked camera. ONLY character on transparent background. No lightning, electricity, speed trails, smoke, glow, sparks, aura, spheres, balls, props, floor or shadows. No style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261106\nasset_id: 08560be5-4082-5327-9fa3-b0ece493a51f\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"4a72bfc0-d658-47b9-9fe2-b3fbeaf2b02c\")"
+    },
+    "stun": {
+      "id": "9c65f9fd-4ea6-4f60-9ee7-a1e782c8bb35",
+      "receipt": "id: 9c65f9fd-4ea6-4f60-9ee7-a1e782c8bb35\njob_id: 9c65f9fd-4ea6-4f60-9ee7-a1e782c8bb35\naction: Front view. A short readable hit reaction: brace, shoulders recoil slightly, bend knees, regain balance and return to standing. Keep arms connected naturally and eyes clearly readable. No attacker or impact marks. Preserve this EXACT approved Flash, native scale, finely defined mask and eyes, crimson suit, sharp white-gold chest emblem, gold belt and boots. Complete head hands and feet inside canvas, locked camera. ONLY character on transparent background. No lightning, electricity, speed trails, smoke, glow, sparks, aura, spheres, balls, props, floor or shadows. No style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261106\nasset_id: 55d06079-bbcb-502a-aeb9-93590a5b83f0\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"9c65f9fd-4ea6-4f60-9ee7-a1e782c8bb35\")"
+    },
+    "death": {
+      "id": "c3afd2af-bdf8-41ba-aef5-b0ff06c45055",
+      "receipt": "id: c3afd2af-bdf8-41ba-aef5-b0ff06c45055\njob_id: c3afd2af-bdf8-41ba-aef5-b0ff06c45055\naction: Front view at start. Lose balance and fall backward to the floor, finishing lying down with yellow boots and both hands fully visible. Keep the complete character and costume, no disappearing, blood or impact effects. Preserve this EXACT approved Flash, native scale, finely defined mask and eyes, crimson suit, sharp white-gold chest emblem, gold belt and boots. Complete head hands and feet inside canvas, locked camera. ONLY character on transparent background. No lightning, electricity, speed trails, smoke, glow, sparks, aura, spheres, balls, props, floor or shadows. No style simplification.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261106\nasset_id: 2b30d683-f814-5329-9d3c-b6d903155e06\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"c3afd2af-bdf8-41ba-aef5-b0ff06c45055\")"
+    },
+    "cast-south": {
+      "id": "baa1276b-2b0b-4007-8a30-0671c7175f82",
+      "receipt": "id: baa1276b-2b0b-4007-8a30-0671c7175f82\njob_id: baa1276b-2b0b-4007-8a30-0671c7175f82\naction: Facing camera throughout. A short speedster braking gesture: quickly lean forward into a running stance, step in place, brake with one foot forward and the other back, arms balancing naturally, hold the skidding stance in the middle, then return to rest. Stationary centered character; do not turn or move across the canvas. Preserve this EXACT approved Flash, native scale, finely defined mask and eyes, crimson suit, sharp white-gold chest emblem, gold belt and boots. Complete head hands and feet inside canvas, locked camera. ONLY character on transparent background. No lightning, electricity, speed trails, smoke, glow, sparks, aura, spheres, balls, props, floor or shadows. No style simplification.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261106\nasset_id: 488e0771-ec93-5e68-890f-4d4e514bdba9\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"baa1276b-2b0b-4007-8a30-0671c7175f82\")"
+    },
+    "carry-pose-south": {
+      "id": "92c91075-5862-460c-ace0-c26b852bcf14"
+    },
+    "carry-idle-south": {
+      "id": "38a19f0b-be6f-4634-919b-cc68917ba0b6",
+      "receipt": "id: 38a19f0b-be6f-4634-919b-cc68917ba0b6\njob_id: 38a19f0b-be6f-4634-919b-cc68917ba0b6\naction: FRONT VIEW facing camera. Subtle breathing idle in this exact overhead-arms stance. Feet planted and legs still. BOTH hands stay fixed ABOVE the head throughout EVERY frame, palms UP and EMPTY, elbows naturally bent. Keep the exact Flash costume, proportions, clear eyes, emblem, connected limbs and fine details. Standalone complete character on transparent background, fixed camera. Do not lower hands or turn. No additional objects or visual effects.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261108\nasset_id: 4f59828b-c54a-5f86-ad85-cbcd73a4b885\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"38a19f0b-be6f-4634-919b-cc68917ba0b6\")"
+    },
+    "carry-loop-south": {
+      "id": "5aa00e04-5034-4940-be37-9980cc2dc51c",
+      "receipt": "id: 5aa00e04-5034-4940-be37-9980cc2dc51c\njob_id: 5aa00e04-5034-4940-be37-9980cc2dc51c\naction: FRONT VIEW facing camera. Seamless six-step walking in place, legs alternating naturally and slight torso bob. BOTH hands stay fixed ABOVE the head throughout EVERY frame, palms UP and EMPTY, elbows naturally bent. Keep the exact Flash costume, proportions, clear eyes, emblem, connected limbs and fine details. Standalone complete character on transparent background, fixed camera. Do not lower hands or turn. No additional objects or visual effects.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261108\nasset_id: cda1cc1e-3653-5674-bfdf-f3d67f3626dc\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"5aa00e04-5034-4940-be37-9980cc2dc51c\")"
+    },
+    "idle-east": {
+      "id": "4cb14e72-a93f-412e-9fd5-030b8fa97a08",
+      "receipt": "id: 4cb14e72-a93f-412e-9fd5-030b8fa97a08\njob_id: 4cb14e72-a93f-412e-9fd5-030b8fa97a08\naction: STRICT RIGHT SIDE PROFILE facing right, one eye visible. Subtle breathing idle with feet planted, relaxed arms. Eyes open, no turning. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: 4d6e836a-b9ee-5bf1-8359-12e19ee09dea\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"4cb14e72-a93f-412e-9fd5-030b8fa97a08\")"
+    },
+    "walk-east": {
+      "id": "c945643e-1c05-4467-a8db-67b547b917cd",
+      "receipt": "id: c945643e-1c05-4467-a8db-67b547b917cd\njob_id: c945643e-1c05-4467-a8db-67b547b917cd\naction: STRICT RIGHT SIDE PROFILE facing right, one eye visible. Seamless six-step walking in place, alternating legs and natural arm swing. No translation. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: 37d0659c-80d2-539a-ba6f-8ef2423ff113\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"c945643e-1c05-4467-a8db-67b547b917cd\")"
+    },
+    "cast-east": {
+      "id": "eca89091-5985-415a-91d9-6ff5b66caea3",
+      "receipt": "id: eca89091-5985-415a-91d9-6ff5b66caea3\njob_id: eca89091-5985-415a-91d9-6ff5b66caea3\naction: STRICT RIGHT SIDE PROFILE facing right, one eye visible. Short speedster skid-stop gesture: lean forward in running stance, step in place quickly, brake with one foot forward and one back, arms balance, hold the brake stance in the middle of clip, then recover to standing. Do not change facing. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: 816ec805-6e74-53f9-b161-074238c4cf87\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"eca89091-5985-415a-91d9-6ff5b66caea3\")"
+    },
+    "idle-north": {
+      "id": "b7884209-1b0f-481a-a2e1-c8023f0c935e",
+      "receipt": "id: b7884209-1b0f-481a-a2e1-c8023f0c935e\njob_id: b7884209-1b0f-481a-a2e1-c8023f0c935e\naction: BACK VIEW facing away, back of cowl and suit only, NO face or chest emblem visible. Subtle breathing idle with feet planted, relaxed arms. Eyes open, no turning. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 4\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: 13efcd16-a5da-5cbe-a9f1-0e9adf4fae82\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"b7884209-1b0f-481a-a2e1-c8023f0c935e\")"
+    },
+    "walk-north": {
+      "id": "a84ed1e2-5896-4461-a135-edb46c21cf6d",
+      "receipt": "id: a84ed1e2-5896-4461-a135-edb46c21cf6d\njob_id: a84ed1e2-5896-4461-a135-edb46c21cf6d\naction: BACK VIEW facing away, back of cowl and suit only, NO face or chest emblem visible. Seamless six-step walking in place, alternating legs and natural arm swing. No translation. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 6\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: 7bbb6845-f14b-5b05-ab8f-fcf9839025e3\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"a84ed1e2-5896-4461-a135-edb46c21cf6d\")"
+    },
+    "cast-north": {
+      "id": "77844865-dfe2-4db1-830d-a9da714de6e1",
+      "receipt": "id: 77844865-dfe2-4db1-830d-a9da714de6e1\njob_id: 77844865-dfe2-4db1-830d-a9da714de6e1\naction: BACK VIEW facing away, back of cowl and suit only, NO face or chest emblem visible. Short speedster skid-stop gesture: lean forward in running stance, step in place quickly, brake with one foot forward and one back, arms balance, hold the brake stance in the middle of clip, then recover to standing. Do not change facing. Preserve exact approved Flash appearance, head size, red/gold suit, details, natural limbs and native scale. Centered complete figure, locked camera, transparent background. Do not turn, simplify or leave frame. Character only; no visual effects, lighting streaks or additional objects.\nframes: 8\nsize: 160x160px\ntransparent: True\nseed: 20261109\nasset_id: c13c2d19-06d4-516c-83b5-79276791547b\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"77844865-dfe2-4db1-830d-a9da714de6e1\")"
+    },
+    "carry-pose2-south": {
+      "id": "8a507606-7c5b-4e05-a6c2-2714267f3bd6",
+      "receipt": "id: 8a507606-7c5b-4e05-a6c2-2714267f3bd6\njob_id: 8a507606-7c5b-4e05-a6c2-2714267f3bd6\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: FRONT VIEW looking at camera. Edit only arm position: stretch BOTH arms STRAIGHT UP vertically beside the head. BOTH open red-gloved palms must be HIGHER THAN THE TOP OF THE COWL and the HIGHEST points of the entire sprite. Empty palms face UP, arms extended vertically with almost straight elbows, shoulders naturally connected. Keep exact original head position and size, face, detailed red-gold costume, torso, legs, boots, colors and rendering. Full character and fingers visible. Transparent background; character only, no held object or visual effect.\nseed: 20261110\nasset_id: 91b83265-879d-51d6-aa0a-4d0198cfe30b\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"8a507606-7c5b-4e05-a6c2-2714267f3bd6\")"
+    },
+    "carry-pose2-east": {
+      "id": "b8b048b4-f164-4df3-b4c2-cf13cbe0957c",
+      "receipt": "id: b8b048b4-f164-4df3-b4c2-cf13cbe0957c\njob_id: b8b048b4-f164-4df3-b4c2-cf13cbe0957c\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: RIGHT SIDE PROFILE facing right. Edit only arm position: stretch BOTH arms STRAIGHT UP vertically beside the head. BOTH open red-gloved palms must be HIGHER THAN THE TOP OF THE COWL and the HIGHEST points of the entire sprite. Empty palms face UP, arms extended vertically with almost straight elbows, shoulders naturally connected. Keep exact original head position and size, face, detailed red-gold costume, torso, legs, boots, colors and rendering. Full character and fingers visible. Transparent background; character only, no held object or visual effect.\nseed: 20261110\nasset_id: f1e39b96-010d-5005-81f2-7bf4ca378130\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"b8b048b4-f164-4df3-b4c2-cf13cbe0957c\")"
+    },
+    "carry-pose2-north": {
+      "id": "7b3ff05c-0028-4d44-a737-56281d263737",
+      "receipt": "id: 7b3ff05c-0028-4d44-a737-56281d263737\njob_id: 7b3ff05c-0028-4d44-a737-56281d263737\nmode: text\nframes: 1\nsize: 160x160px\ntransparent: True\nedit: BACK VIEW facing away, NO face. Edit only arm position: stretch BOTH arms STRAIGHT UP vertically beside the head. BOTH open red-gloved palms must be HIGHER THAN THE TOP OF THE COWL and the HIGHEST points of the entire sprite. Empty palms face UP, arms extended vertically with almost straight elbows, shoulders naturally connected. Keep exact original head position and size, face, detailed red-gold costume, torso, legs, boots, colors and rendering. Full character and fingers visible. Transparent background; character only, no held object or visual effect.\nseed: 20261110\nasset_id: 8a870b67-d441-5595-b4a9-139818093a04\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"7b3ff05c-0028-4d44-a737-56281d263737\")"
+    },
+    "carry-idle2-south": {
+      "id": "bf98d4c6-f70f-49c1-a89c-34b8b9b75d5b"
+    },
+    "carry-loop2-south": {
+      "id": "11d936a9-6b8f-4eae-b940-b0aeb75f8aac"
+    },
+    "carry-idle2-east": {
+      "id": "00dfd18b-0a33-4ead-b8b9-464e0aa5bf9b"
+    },
+    "carry-loop2-east": {
+      "id": "0e3ed0a7-e320-4c89-9818-42a86df3d9c9"
+    },
+    "carry-idle2-north": {
+      "id": "c07ce7f0-b521-45a2-b99f-85362094b5aa"
+    },
+    "carry-loop2-north": {
+      "id": "afa64383-a94e-4e90-be07-40d93e64a927"
+    },
+    "cast-south-fxfree": {
+      "id": "00a58b5e-5b13-468f-a6ed-e359a07380f6"
+    },
+    "death-fxfree": {
+      "id": "7df80002-f496-4924-ab64-a5117f6e160f"
+    }
+  }
+}

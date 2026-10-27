@@ -25,7 +25,7 @@ import { StageTileArt } from "./stage-tile-art";
 import { Sb4StageEffects, stageFlightLift } from "./sb4-stage-effects";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
-import { AbilityPixelEffects } from "./ability-pixel-effects";
+import { AbilityPixelEffects, OPTIMUS_PIXEL_EFFECTS } from "./ability-pixel-effects";
 import { FLAME_TICKS, SNEAK_TICKS } from "@bombtop/shared";
 import { scoreSlots } from "./score-bar";
 import { paintTo, PerColor, skinColor } from "./per-color";
@@ -45,8 +45,6 @@ const COLORS = {
   heart: 0xff4f9a,
   /** The glow round harry's stag and its sparkles. */
   patronus: 0xbfe8ff,
-  energon: 0x7fd0ff,
-  exhaust: 0x8c8c96,
   truck: 0xd8262e,
   /** The puff the pink panther leaves as he slips out of sight. */
   sneakPuff: 0xf7a6cf,
@@ -206,6 +204,7 @@ export class Renderer {
   private readonly energyEffects = new EnergyPixelEffects();
   private readonly companionEffects = new CompanionPixelEffects();
   private readonly abilityEffects = new AbilityPixelEffects();
+  private readonly optimusEffects = new AbilityPixelEffects(OPTIMUS_PIXEL_EFFECTS);
   /** Flames sit on the floor, under players and bombs. */
   private readonly flameLayer = new Container();
   /** Goku's Kamehameha, over the players. */
@@ -227,11 +226,9 @@ export class Renderer {
   /** Optimus's truck, one per player driving it, among the players (sorted by depth with them). */
   private truckArt: Record<"side" | "down" | "up", Texture[]> | null = null;
   private readonly truckSprites = new Map<string, Sprite>();
-  /** Who is turning into the truck, and who drives it: each change bursts into plates and sparks. */
+  /** Who is turning into the truck, and who drives it. */
   private shifting = new Set<string>();
   private driving = new Set<string>();
-  /** Last tick each truck puffed exhaust. */
-  private exhaustAt = new Map<string, number>();
   private rasenUsed = 0;
   private bubbleArt: Texture[][] | null = null;
   private readonly bubbleSprites: Sprite[] = [];
@@ -454,7 +451,7 @@ export class Renderer {
     this.clock.anchor.set(0.5, 0);
     this.tempoLabel.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.sb4Effects.ground, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.people, this.sb4Effects.above, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
+    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.sb4Effects.ground, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.optimusEffects.root, this.people, this.sb4Effects.above, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -617,19 +614,11 @@ export class Renderer {
   }
 
   /**
-   * Optimus turning into his truck and driving it: a blue glow as he turns, plates and sparks bursting when he becomes
-   * the truck and when he turns back, the truck (rumbling, puffing exhaust from its stacks, speed lines behind it)
+   * Optimus turning into his truck and driving it: drawn transformation sparks and a pixel-art dust wake
    * in his place while he drives, its wheels turning. True while the truck stands in for him.
    */
   private drawTruck(g: Graphics, p: Pick<PublicView["players"][number], "id" | "truck" | "facing">, cx: number, cy: number, tick: number, alpha: number, color: number | null = null): boolean {
-    if (p.truck > 0) {
-      const [dx, dy] = DIR_VECTORS[p.facing];
-      this.abilityEffects.draw("exhaust", { x: cx - dx * 6, y: cy - 14 - dy * 4, tick, size: 14, alpha, rotation: Math.atan2(-dy, -dx), color });
-    }
     if (p.truck > TRUCK_TICKS) {
-      const t = 1 - (p.truck - TRUCK_TICKS) / 12;
-      g.circle(cx, cy - 6, 6 + t * 6).fill({ color: specialInk(COLORS.energon, color), alpha: 0.12 + 0.2 * t });
-      g.circle(cx, cy - 6, 3 + t * 3).fill({ color: 0xffffff, alpha: 0.15 * t });
       if (!this.shifting.has(p.id) && !this.lite) this.fx.transform(cx, cy - 8, color);
       this.shifting.add(p.id);
     } else this.shifting.delete(p.id);
@@ -642,20 +631,10 @@ export class Renderer {
     if (!this.driving.has(p.id) && !this.lite) this.fx.transform(cx, cy - 6, color);
     this.driving.add(p.id);
     const [dx, dy] = DIR_VECTORS[p.facing];
-    // speed lines behind it
-    for (let k = 0; k < 3; k++) {
-      const off = (k - 1) * 5 - 6;
-      const len = 6 + ((tick + k * 3) % 5);
-      const bx = cx - dx * 12;
-      const by = cy - dy * 8;
-      if (dx) g.moveTo(bx, by + off).lineTo(bx - dx * len, by + off).stroke({ color: 0xffffff, width: 1, alpha: 0.55 * alpha });
-      else g.moveTo(bx + off + 6, by).lineTo(bx + off + 6, by - dy * len).stroke({ color: 0xffffff, width: 1, alpha: 0.55 * alpha });
-    }
-    // exhaust from the stacks, now and then
-    if (!this.lite && tick - (this.exhaustAt.get(p.id) ?? -99) >= 5) {
-      this.exhaustAt.set(p.id, tick);
-      this.fx.puff(cx - dx * 6, cy - 20 - dy * 4, COLORS.exhaust);
-    }
+    const rotation = dx ? 0 : Math.atan2(dy, dx);
+    const flipX = dx < 0;
+    this.optimusEffects.draw("truckDust", { x: cx - dx * 16, y: cy + PLAYER_FEET_OFFSET - dy * 16, tick, size: 24, alpha: alpha * 0.7, rotation, flipX });
+    if (!this.lite) this.optimusEffects.draw("truckSpeed", { x: cx - dx * 19, y: cy + PLAYER_FEET_OFFSET - dy * 19, tick, size: 30, alpha: alpha * 0.6, rotation, flipX, color });
     if (!this.truckArt) {
       g.roundRect(cx - 10, cy - 12, 20, 14, 3).fill({ color: specialInk(COLORS.truck, color), alpha }).stroke({ color: 0x000000, width: 1 });
       return true;
@@ -773,6 +752,7 @@ export class Renderer {
       this.energyEffects.load().catch((e) => console.error("pixel energy art", e)),
       this.companionEffects.load(),
       this.abilityEffects.load().catch((e) => console.error("pixel ability art", e)),
+      this.optimusEffects.load().catch((e) => console.error("Optimus effect art", e)),
     ]);
     if (request !== this.tileArtRequest) return;
     base.source.scaleMode = "linear"; // drawn smaller than the art
@@ -900,7 +880,8 @@ export class Renderer {
     if (this.lite) return;
     for (const p of this.fx.particles) {
       const k = p.age / p.life;
-      if (p.kind === "smoke") g.circle(p.x, p.y, p.size * (1 + k)).fill({ color: p.color, alpha: 0.35 * (1 - k) });
+      if (p.kind === "transform") this.optimusEffects.draw("truckShift", { x: p.x, y: p.y, tick: p.age, size: p.size, alpha: 1 - k * k, color: p.color === 0xffffff ? null : p.color });
+      else if (p.kind === "smoke") g.circle(p.x, p.y, p.size * (1 + k)).fill({ color: p.color, alpha: 0.35 * (1 - k) });
       else if (p.kind === "debris") g.rect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size).fill({ color: p.color, alpha: 1 - k * k });
       else g.circle(p.x, p.y, p.size * (1 - k * 0.6)).fill({ color: p.color, alpha: 1 - k });
     }
@@ -1069,6 +1050,7 @@ export class Renderer {
     this.energyEffects.beginFrame();
     this.companionEffects.beginFrame();
     this.abilityEffects.beginFrame();
+    this.optimusEffects.beginFrame();
     this.root.visible = true;
     const g = this.world.clear();
     const top = this.overlay.clear();

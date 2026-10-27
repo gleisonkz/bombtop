@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createMatch } from "../src/arena";
 import { buildStage, sb4Map, SB4_STAGES, STAGES, SELECTABLE_STAGES } from "../src/stage";
 import { SB4_STAGE_DEFINITIONS } from "../src/sb4-stage-definitions";
-import { MAX_SPEED } from "../src/constants";
+import { BASE_SPEED, START_FIRE_RANGE } from "../src/constants";
 import { Floor, playerTile, Tile } from "../src/state";
 
 const seats = ["a", "b", "c", "d", "e"];
@@ -29,7 +29,7 @@ describe("SB4 Group 1 layouts", () => {
     const match = createMatch({ stage, seed: 17, playerIds: seats });
     expect(match.grid).toEqual(createMatch({ stage, seed: 90, playerIds: seats }).grid);
     expect(match.players.map(playerTile)).toEqual([
-      { x: 1, y: 1 }, { x: 13, y: 1 }, { x: 13, y: 11 }, { x: 1, y: 11 }, { x: 7, y: 6 },
+      { x: 1, y: 1 }, { x: 13, y: 11 }, { x: 13, y: 1 }, { x: 1, y: 11 }, { x: 7, y: 6 },
     ]);
     const empty = createMatch({ stage, seed: 17, playerIds: seats, blockDensity: 0 });
     expect(empty.grid.tiles).not.toContain(Tile.Block);
@@ -70,7 +70,17 @@ describe("SB4 Group 1 layouts", () => {
 
   it("gives stage 05 the Battle Royale loadout", () => {
     const match = createMatch({ stage: "sb4-05", seed: 7, playerIds: seats });
-    for (const player of match.players) expect(player).toMatchObject({ bombCapacity: 5, fireRange: 6, speed: MAX_SPEED, canGlove: true, canPunch: true, canKick: true, canPush: true });
+    for (const player of match.players) expect(player).toMatchObject({ bombCapacity: 5, fireRange: 6, speed: BASE_SPEED, canGlove: true, canPunch: true, canKick: true, canPush: true });
+  });
+
+  it.each(SB4_STAGES.filter(stage => stage !== "sb4-05"))("starts %s with the ROM's two-cell normal blast", stage => {
+    const match = createMatch({ stage, seed: 7, playerIds: seats });
+    for (const player of match.players) expect(player.fireRange).toBe(2);
+  });
+
+  it.each(STAGES)("preserves the authored starting range on %s", stage => {
+    const match = createMatch({ stage, seed: 7, playerIds: seats });
+    for (const player of match.players) expect(player.fireRange).toBe(START_FIRE_RANGE);
   });
 
   it("keeps both rolling-ball anchors clear even with a full density override", () => {
@@ -85,11 +95,11 @@ describe("SB4 Group 1 layouts", () => {
     }
   });
 
-  it("marks nine exposed panels, three slot switches and the five flag posts", () => {
-    expect(buildStage("sb4-06", 15, 13).floor.filter(f => f === Floor.Surprise)).toHaveLength(9);
+  it("marks all surprise floor cells, three slot switches and the five flag posts", () => {
+    expect(buildStage("sb4-06", 15, 13).floor.filter(f => f === Floor.Surprise)).toHaveLength(113);
     expect(buildStage("sb4-08", 15, 13).floor.filter(f => f === Floor.Slot)).toHaveLength(3);
     const flags = buildStage("sb4-12", 15, 13);
-    for (const [x, y] of [[1, 1], [13, 1], [13, 11], [1, 11], [7, 6]]) expect(flags.floor[y! * 15 + x!]).toBe(Floor.Flag);
+    for (const [x, y] of [[2, 1], [12, 1], [12, 11], [2, 11], [7, 7]]) expect(flags.floor[y! * 15 + x!]).toBe(Floor.Flag);
   });
 
   it("keeps both ends of all four seesaws available at any block density", () => {

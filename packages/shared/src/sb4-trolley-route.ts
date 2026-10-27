@@ -1,5 +1,6 @@
 import type { StageTrolleyStation, StageTrolleyVariant } from "./stage-state";
 import { SB4_TROLLEY_PATHS } from "./sb4-trolley-paths";
+import { nextSb4Random } from "./sb4-rng";
 
 type Point = { x: number; y: number };
 
@@ -8,8 +9,8 @@ export function sb4TrolleyExit(variant: StageTrolleyVariant, station: StageTroll
 }
 
 export function nextSb4TrolleyRoute(seed: number): { seed: number; variant: StageTrolleyVariant } {
-  const next = ((seed | 1) * 0x383) & 0xffff;
-  return { seed: next, variant: Math.floor(next * 3 / 0x10000) as StageTrolleyVariant };
+  const next = nextSb4Random({ seed, bound: 3 });
+  return { seed: next.seed, variant: next.value as StageTrolleyVariant };
 }
 
 function direction(from: Point, to: Point): Point {

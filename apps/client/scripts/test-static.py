@@ -1,145 +1,123 @@
-"""Image contracts for the 2026-10-25 21:48 Super Choque integration."""
-import importlib.util
+"""Production contracts for the approved 107-pose option4 Static atlas.
+
+Synthetic packer edge cases live separately in test-static-approved.py.
+"""
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import unittest
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 
-SPEC = importlib.util.spec_from_file_location('pack_static', Path(__file__).with_name('pack-static.py'))
+SPEC = importlib.util.spec_from_file_location('pack_static_approved', Path(__file__).with_name('pack-static-approved.py'))
 PACK = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(PACK)
+COUNTS = (4, 4, 4, 5, 4, 5, 6, 7, 6, 7, 4, 4, 4, 4, 6, 6, 6, 10, 11)
 
 
 class StaticAtlasTests(unittest.TestCase):
-    def test_redraw_preserves_all_rows_outside_carry_and_menu(self):
-        directory = PACK.ROOT.parents[1] / 'concept/static/carry-redraw'
-        contract = json.loads((directory / 'contract.json').read_text(encoding='utf-8'))
-        image = Image.open(PACK.OUTPUT)
-        for row, digest in contract['preservedRows'].items():
-            strip = image.crop((0, int(row) * 186, 2352, (int(row) + 1) * 186))
-            self.assertEqual(hashlib.sha256(strip.tobytes()).hexdigest(), digest, row)
-        poses = set()
-        for row in range(11, 17):
-            for column in range(len(PACK.MAP[row][1])):
-                frame = image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186))
-                poses.add(hashlib.sha256(frame.tobytes()).hexdigest())
-        self.assertEqual(len(poses), 30, 'Carry must have thirty distinct authored drawings')
+    @classmethod
+    def setUpClass(cls):
+        cls.directory = PACK.SOURCE_DIR
+        cls.contract = json.loads((cls.directory / 'contract.json').read_text())
+        cls.manifest = json.loads((cls.directory / 'measurements.json').read_text())
+        cls.image = Image.open(PACK.ROOT / 'apps/client/public/sprites/static-final.png').convert('RGBA')
+        cls.rebuilt, cls.report = PACK.build_sheet(cls.directory, cls.contract, manifest=cls.manifest)
 
-    def test_menu_disc_stays_thin_and_body_measurement_excludes_it(self):
-        image = Image.open(PACK.OUTPUT)
-        frame = np.array(image.crop((0, 17 * 186, 168, 18 * 186)))
-        rgb = frame[:, :, :3].astype(int)
-        yy = np.indices(frame.shape[:2])[0]
-        board = (frame[:, :, 3] >= 128) & (yy >= 156) & (rgb.min(2) > 45) & (rgb.max(2) - rgb.min(2) < 65)
-        y, x = np.where(board)
-        self.assertLessEqual(int(y.max() - y.min() + 1), 16)
-        self.assertLessEqual(int(x.max() - x.min() + 1), 96)
-        self.assertEqual(frame[:, :, 3].nonzero()[0].min(), 17)
-        # Authored boot contact at 159; body height is 159 - 17 = 142.
-        self.assertGreater(np.count_nonzero(frame[154:160, 50:115, 3]), 100)
-
-    def test_each_action_has_distinct_authored_frames_without_baked_effects(self):
-        image = Image.open(PACK.OUTPUT)
-        for row in (6, 7, 8, 9, 10, 17, 18):
-            poses = []
-            for column in range(len(PACK.MAP[row][1])):
-                frame = np.array(image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186)))
-                poses.append(frame.tobytes())
-                rgb = frame[:, :, :3].astype(int)
-                cyan = (frame[:, :, 3] >= 128) & (rgb[:, :, 1] > 160) & (rgb[:, :, 2] > 160) & (rgb[:, :, 0] < 100)
-                self.assertFalse(cyan.any(), (row, column, 'baked electricity'))
-                labels, _ = ndimage.label(frame[:, :, 3] >= 64)
-                areas = sorted(np.bincount(labels.ravel())[1:], reverse=True)
-                self.assertTrue(all(area < 50 for area in areas[1:]), (row, column, 'detached effect'))
-            self.assertEqual(len(set(poses)), len(poses), row)
-
-    def test_source_inventory_has_all_99_distinct_poses(self):
-        owners, rows = PACK.geometry()
-        self.assertEqual(tuple(map(len, rows)), PACK.COUNTS)
-        self.assertEqual(sum(map(len, rows)), 99)
-        self.assertEqual(len(np.unique(owners)) - 1, 99)
-
-    def test_protection_matches_the_packed_frames(self):
-        rows = []
-        PACK.build(rows)
-        data = json.loads(PACK.PROTECTION.read_text(encoding='utf-8'))
-        self.assertEqual(data, {'frameW': 168, 'frameH': 186, 'rows': rows})
-        for row, (_, columns) in zip(rows, PACK.MAP):
-            self.assertEqual(len(row), len(columns))
-            for regions in row:
-                self.assertTrue(regions)
-                for region in regions:
-                    self.assertTrue(0 <= region['left'] < region['right'] <= 168)
-                    self.assertTrue(0 <= region['top'] < region['bottom'] <= 186)
-
-    def test_isolation_keeps_source_rgb_and_alpha_inside_each_character(self):
-        source = Image.open(PACK.SOURCE).convert('RGBA')
-        owners, rows = PACK.geometry()
-        for row in rows:
-            for box, label in row:
-                left, top, right, bottom = box
-                mask = owners[top:bottom, left:right] == label
-                original = np.array(source.crop(box))
-                isolated = np.array(PACK.extract(source, box, mask))
-                self.assertEqual(original.shape, isolated.shape)
-                np.testing.assert_array_equal(isolated[mask], original[mask])
-                self.assertFalse(np.any(isolated[~mask, 3]))
+    def frame(self, row, column):
+        return self.image.crop((column * 168, row * 224, (column + 1) * 168, (row + 1) * 224))
 
     def test_export_matches_native_grid_and_deterministic_rebuild(self):
-        with Image.open(PACK.OUTPUT) as image:
-            self.assertEqual(image.mode, 'RGBA')
-            self.assertEqual(image.size, (2352, 3534))
-            self.assertEqual(image.tobytes(), PACK.build().tobytes())
+        self.assertEqual(self.image.size, (2352, 4256))
+        self.assertEqual(self.image.tobytes(), self.rebuilt.tobytes())
+        second, report = PACK.build_sheet(self.directory, self.contract, manifest=self.manifest)
+        self.assertEqual(PACK.png_bytes(second), PACK.png_bytes(self.rebuilt))
+        self.assertEqual(report, self.report)
 
-    def test_registered_cells_are_complete_and_unused_cells_are_empty(self):
-        image = Image.open(PACK.OUTPUT)
-        for row, (_, columns) in enumerate(PACK.MAP):
+    def test_107_occupied_cells_unused_tails_alpha_and_gutters(self):
+        self.assertEqual(tuple(PACK.COUNTS), COUNTS)
+        self.assertEqual(self.report['frame_count'], 107)
+        pixels = np.array(self.image)
+        self.assertEqual(set(np.unique(pixels[:, :, 3])), {0, 255})
+        self.assertFalse(pixels[pixels[:, :, 3] == 0].any())
+        for row, count in enumerate(COUNTS):
             for column in range(14):
-                frame = image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186))
-                bounds = frame.getchannel('A').getbbox()
-                if column >= len(columns):
+                bounds = self.frame(row, column).getbbox()
+                if column >= count:
                     self.assertIsNone(bounds, (row, column))
                     continue
-                self.assertIsNotNone(bounds)
-                self.assertGreater(bounds[0], 1)
-                self.assertGreater(bounds[1], 1)
-                self.assertLess(bounds[2], 167)
-                self.assertEqual(bounds[3], PACK.ANCHOR[1] - (12 if (row, column) == (18, 6) else 0))
-                labels, _ = ndimage.label(np.array(frame)[:, :, 3] >= 64)
+                self.assertIsNotNone(bounds, (row, column))
+                left, top, right, bottom = bounds
+                self.assertGreaterEqual(left, 1)
+                self.assertGreaterEqual(top, 1)
+                self.assertLessEqual(right, 167)
+                self.assertEqual(bottom, 208 - (12 if (row, column) == (18, 6) else 0))
+
+    def test_all_authored_phases_are_distinct_without_detached_electricity(self):
+        drawings = set()
+        for row, count in enumerate(COUNTS):
+            for column in range(count):
+                frame = self.frame(row, column)
+                # Compare tight drawings too: translation alone is not an authored phase.
+                drawing = frame.crop(frame.getbbox())
+                digest = (drawing.size, hashlib.sha256(drawing.tobytes()).hexdigest())
+                self.assertNotIn(digest, drawings, (row, column))
+                drawings.add(digest)
+                pixels = np.array(frame)
+                rgb = pixels[:, :, :3].astype(int)
+                cyan = (pixels[:, :, 3] > 0) & (rgb[:, :, 1] > 160) & (rgb[:, :, 2] > 160) & (rgb[:, :, 0] < 100)
+                self.assertFalse(cyan.any(), (row, column, 'baked electricity'))
+                labels, _ = ndimage.label(pixels[:, :, 3] > 0)
                 areas = sorted(np.bincount(labels.ravel())[1:], reverse=True)
                 self.assertTrue(all(area < 50 for area in areas[1:]), (row, column, areas))
+        self.assertEqual(len(drawings), 107)
 
-    def test_walking_keeps_the_standing_scale(self):
-        image = Image.open(PACK.OUTPUT)
-        heights = []
-        for row in range(6):
-            current = []
-            for column in range(len(PACK.MAP[row][1])):
-                frame = np.array(image.crop((column * 168, row * 186, (column + 1) * 168, (row + 1) * 186)))
-                ys = np.where((frame[:, :, 3] >= 64).any(axis=1))[0]
-                current.append(ys.max() - ys.min() + 1)
-            heights.append(float(np.median(current)))
-        self.assertLess(max(heights) / min(heights), 1.04, heights)
+    def test_whole_families_keep_one_measured_scale_and_source_pixels(self):
+        for family, source in self.report['sources'].items():
+            self.assertAlmostEqual(source['scale'] * source['standing_height'], 148)
+            frames = [f for f in self.report['frames'] if f['family'] == family]
+            self.assertEqual({f['scale'] for f in frames}, {source['scale']})
+            for record in frames:
+                self.assertEqual(record['standing_height'], source['standing_height'])
+                self.assertEqual(record['target_anchor'], [82, 208])
+                left, top, right, bottom = record['source_box']
+                for dimension, effective in zip((right - left, bottom - top), record['effective_scale']):
+                    self.assertAlmostEqual(effective * dimension, round(dimension * source['scale']))
+                frame = self.frame(record['row'], record['column'])
+                self.assertEqual(hashlib.sha256(frame.tobytes()).hexdigest(), record['sha256'])
 
-    def test_death_finishes_prone_instead_of_getting_up(self):
-        image = Image.open(PACK.OUTPUT)
-        frame = image.crop((6 * 168, 7 * 186, 7 * 168, 8 * 186))
-        left, top, right, bottom = frame.getchannel('A').getbbox()
+    def test_carry_hand_metadata_matches_visible_new_art(self):
+        data = json.loads((PACK.ROOT / 'apps/client/src/render/carry-anchors.json').read_text())['characters']['static']
+        self.assertEqual((data['frameW'], data['frameH']), (168, 224))
+        for row in range(11, 17):
+            anchors = data['rows'][str(row)]
+            self.assertEqual(len(anchors), COUNTS[row])
+            for column, anchor in enumerate(anchors):
+                pixels = np.array(self.frame(row, column))
+                for x in (anchor['x'] - anchor['span'] / 2, anchor['x'] + anchor['span'] / 2):
+                    y = anchor['y']
+                    self.assertTrue(0 <= x < 168 and 0 <= y < 224, (row, column, anchor))
+                    # Palm anchors may sit in a gap between fingers; require nearby visible art.
+                    patch = pixels[max(0, round(y) - 5):round(y) + 6, max(0, round(x) - 5):round(x) + 6, 3]
+                    self.assertTrue(patch.any(), (row, column, anchor))
+
+    def test_production_palette_protection_matches_new_drawings(self):
+        data = json.loads((PACK.ROOT / 'apps/client/src/render/static-paint-regions.json').read_text())
+        self.assertTrue(data == self.report['paint_regions'], 'Production protection must equal the option4 rebuild')
+        self.assertEqual([len(row) for row in data['rows']], list(COUNTS))
+        for row, columns in enumerate(data['rows']):
+            for column, regions in enumerate(columns):
+                self.assertTrue(regions, (row, column))
+                for region in regions:
+                    self.assertTrue(0 <= region['left'] < region['right'] <= 168)
+                    self.assertTrue(0 <= region['top'] < region['bottom'] <= 224)
+
+    def test_death_finishes_prone(self):
+        left, top, right, bottom = self.frame(7, 6).getbbox()
         self.assertGreater(right - left, bottom - top)
-
-    def test_extract_preserves_black_and_partial_alpha(self):
-        source = Image.new('RGBA', (20, 20))
-        for x in range(5, 15):
-            for y in range(5, 15):
-                source.putpixel((x, y), (240, 180, 20, 128))
-        source.putpixel((10, 10), (0, 0, 0, 254))
-        frame = PACK.extract(source, (0, 0, 20, 20))
-        self.assertEqual(frame.size, (10, 10))
-        self.assertEqual(frame.getpixel((5, 5)), (0, 0, 0, 254))
-        self.assertEqual(frame.getpixel((0, 0)), (240, 180, 20, 128))
 
 
 if __name__ == '__main__':

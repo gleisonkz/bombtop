@@ -1049,9 +1049,9 @@ describe("lobby showpieces", () => {
   const showpiece = (name: "goku" | "naruto" | "spider" | "thor") => {
     const sheet: SheetLayout = SHEETS[name];
     const image = sheet.lobby!.image!;
-    expect(sheet.lobby).toMatchObject({ row: 0, frames: 16 });
+    expect(sheet.lobby).toMatchObject({ row: 0, frames: name === "goku" ? 60 : 16 });
     expect(size(image.url)).toEqual([image.width, image.height]);
-    expect([image.frameW * 16, image.frameH]).toEqual([image.width, image.height]);
+    expect([image.frameW * (name === "goku" ? 60 : 16), image.frameH]).toEqual([image.width, image.height]);
     expect(size(sheet.url)).toEqual([sheet.width, sheet.height]);
     expect([sheet.frameW * 9, sheet.frameH * 18]).toEqual([sheet.width, sheet.height]);
   };

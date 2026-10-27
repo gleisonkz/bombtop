@@ -13,6 +13,8 @@ export * from "./revenge";
 export * from "./floor";
 export * from "./stage";
 export * from "./stage-state";
+export { flagPickupBlocksInput } from "./stage-flags";
+export { seesawHopLift } from "./stage-seesaw-flight";
 export * from "./stage-mechanics";
 export { moveSurprisePlayer } from "./stage-surprise";
 export * from "./maniac";

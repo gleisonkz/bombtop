@@ -1,0 +1,11 @@
+character: d4a3e349-0c83-4c42-a0e3-72b4b85ff355
+animation: walking
+mode: skeleton-v3
+directions: south (1 jobs)
+job_ids: south=3fea86c1-268c-4fe0-af09-e543b144e631
+group: a42bcea4-880c-43b1-b80c-1e74c4f539b0
+cost: 3 generations (3/dir x 1)
+eta: ~3-5 min/direction
+add more directions to this group: animate_character(character_id="d4a3e349-0c83-4c42-a0e3-72b4b85ff355", template_animation_id="walking", animation_group_id="a42bcea4-880c-43b1-b80c-1e74c4f539b0", directions=[...])
+
+hint: get_character(character_id="d4a3e349-0c83-4c42-a0e3-72b4b85ff355")

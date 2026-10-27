@@ -1,0 +1,27 @@
+{
+  "version": "20261026-armored-v1",
+  "gameplay": [
+    2688,
+    3808
+  ],
+  "frame": [
+    224,
+    224
+  ],
+  "anchor": [
+    111.5,
+    211
+  ],
+  "slots": 109,
+  "special_stages": 6,
+  "special_reverse": "explicit",
+  "truck": [
+    512,
+    288
+  ],
+  "menu": [
+    5120,
+    224
+  ],
+  "effects": "none baked in"
+}

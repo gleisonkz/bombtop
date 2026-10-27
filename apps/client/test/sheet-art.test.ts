@@ -44,11 +44,11 @@ describe("character previews", () => {
     const s = SHEETS.goku;
     const image = s.lobby!.image!;
     const pose = previewPose(s, "walk");
-    expect(pose).toMatchObject({ row: 0, frames: 16 });
+    expect(pose).toMatchObject({ row: 0, frames: 60 });
     expect(pose.sheet).toMatchObject({ ...image, hues: s.hues, scale: s.scale });
     expect(previewPose(s, "idle").sheet).toBeUndefined();
     const win = characterMoves(s).find((m) => m.label === "Vitória")!;
-    expect(win).toMatchObject({ row: 0, frames: 16, sheet: { url: image.url } });
+    expect(win).toMatchObject({ row: 0, frames: 60, sheet: { url: image.url } });
     expect(characterMoves(s).find((m) => m.label === "Parado")!.sheet).toBeUndefined();
   });
 
@@ -64,6 +64,15 @@ describe("character previews", () => {
     expect(moves.find((m) => m.label === "Vitória")!.sheet!.url).toBe(image.url);
     expect(moves.find((m) => m.label === "Na sala")!.sheet!.url).toBe(goku.lobby!.image!.url);
     expect(characterMoves(goku).some((m) => m.label === "Na sala")).toBe(false);
+  });
+
+  it("uses a showpiece image's cadence without changing gameplay or idle cadence", () => {
+    const goku = SHEETS.goku;
+    const custom = { ...goku, lobby: { ...goku.lobby!, image: { ...goku.lobby!.image!, ticksPerFrame: 3 } } };
+    expect(previewPose(custom, "walk").seconds).toBe((custom.lobby.frames * 3) / TICK_RATE);
+    expect(previewPose(custom, "idle").seconds).toBe((custom.idle.down.frames * custom.idleTicksPerFrame) / TICK_RATE);
+    expect(custom.ticksPerFrame).toBe(goku.ticksPerFrame);
+    expect(characterMoves(custom).find((move) => move.label === "Vitória")!.seconds).toBe((custom.lobby.frames * 3) / TICK_RATE);
   });
 
   it("falls back to idle when a sheet has no stun row", () => {

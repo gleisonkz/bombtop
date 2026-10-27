@@ -1,0 +1,137 @@
+{
+  "frame": [
+    168,
+    224
+  ],
+  "anchor": [
+    82,
+    208
+  ],
+  "columns": 14,
+  "families": [
+    {
+      "name": "idle",
+      "guide": "idle.pose-guide.png",
+      "rows": [
+        {
+          "row": 0,
+          "count": 4
+        },
+        {
+          "row": 1,
+          "count": 4
+        },
+        {
+          "row": 2,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "guide": "walk.pose-guide.png",
+      "rows": [
+        {
+          "row": 3,
+          "count": 5
+        },
+        {
+          "row": 4,
+          "count": 4
+        },
+        {
+          "row": 5,
+          "count": 5
+        }
+      ]
+    },
+    {
+      "name": "reaction",
+      "guide": "reaction.pose-guide.png",
+      "rows": [
+        {
+          "row": 6,
+          "count": 6
+        },
+        {
+          "row": 7,
+          "count": 7
+        }
+      ]
+    },
+    {
+      "name": "cast",
+      "guide": "cast.pose-guide.png",
+      "rows": [
+        {
+          "row": 8,
+          "count": 6
+        },
+        {
+          "row": 9,
+          "count": 7
+        },
+        {
+          "row": 10,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "carry-idle",
+      "guide": "carry-idle.pose-guide.png",
+      "rows": [
+        {
+          "row": 11,
+          "count": 4
+        },
+        {
+          "row": 12,
+          "count": 4
+        },
+        {
+          "row": 13,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "carry-walk",
+      "guide": "carry-walk.pose-guide.png",
+      "rows": [
+        {
+          "row": 14,
+          "count": 6
+        },
+        {
+          "row": 15,
+          "count": 6
+        },
+        {
+          "row": 16,
+          "count": 6
+        }
+      ]
+    },
+    {
+      "name": "menu",
+      "guide": "menu.pose-guide.png",
+      "rows": [
+        {
+          "row": 17,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "name": "victory",
+      "guide": "victory.pose-guide.png",
+      "rows": [
+        {
+          "row": 18,
+          "count": 11
+        }
+      ]
+    }
+  ]
+}

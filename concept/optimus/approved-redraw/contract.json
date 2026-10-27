@@ -1,0 +1,139 @@
+{
+  "frame": [
+    224,
+    224
+  ],
+  "anchor": [
+    111.5,
+    211
+  ],
+  "gameplay_counts": [
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    7,
+    12,
+    12,
+    12,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6
+  ],
+  "target_body_height": 164,
+  "families": [
+    {
+      "name": "idle",
+      "guide": "idle.pose-guide.png",
+      "rows": [
+        {
+          "row": 0,
+          "count": 4
+        },
+        {
+          "row": 1,
+          "count": 4
+        },
+        {
+          "row": 2,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "walk",
+      "guide": "walk.pose-guide.png",
+      "rows": [
+        {
+          "row": 3,
+          "count": 6
+        },
+        {
+          "row": 4,
+          "count": 6
+        },
+        {
+          "row": 5,
+          "count": 6
+        }
+      ]
+    },
+    {
+      "name": "reaction",
+      "guide": "reaction.pose-guide.png",
+      "rows": [
+        {
+          "row": 6,
+          "count": 6
+        },
+        {
+          "row": 7,
+          "count": 7
+        }
+      ]
+    },
+    {
+      "name": "cast",
+      "guide": "cast.pose-guide.png",
+      "rows": [
+        {
+          "row": 8,
+          "count": 12
+        },
+        {
+          "row": 9,
+          "count": 12
+        },
+        {
+          "row": 10,
+          "count": 12
+        }
+      ],
+      "source": "transform.generated.png",
+      "composition": "idle, transform0..2, truck1, truck0, truck0, truck1, transform2..0, idle; intentional mechanical reverse"
+    },
+    {
+      "name": "carry-idle",
+      "guide": "carry-idle.pose-guide.png",
+      "rows": [
+        {
+          "row": 11,
+          "count": 4
+        },
+        {
+          "row": 12,
+          "count": 4
+        },
+        {
+          "row": 13,
+          "count": 4
+        }
+      ]
+    },
+    {
+      "name": "carry-walk",
+      "guide": "carry-walk.pose-guide.png",
+      "rows": [
+        {
+          "row": 14,
+          "count": 6
+        },
+        {
+          "row": 15,
+          "count": 6
+        },
+        {
+          "row": 16,
+          "count": 6
+        }
+      ]
+    }
+  ],
+  "columns": 12
+}

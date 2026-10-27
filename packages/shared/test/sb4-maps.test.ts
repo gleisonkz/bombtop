@@ -12,7 +12,7 @@ describe("Super Bomberman 4 battle maps", () => {
   it.each(originals)("uses the five original seat positions on %s", stage => {
     const original = createMatch({ stage, seed: 14, playerIds: players });
     expect(original.players.map(playerTile)).toEqual([
-      { x: 1, y: 1 }, { x: 13, y: 1 }, { x: 13, y: 11 },
+      { x: 1, y: 1 }, { x: 13, y: 11 }, { x: 13, y: 1 },
       { x: 1, y: 11 }, { x: 7, y: 6 },
     ]);
     for (const p of original.players) {

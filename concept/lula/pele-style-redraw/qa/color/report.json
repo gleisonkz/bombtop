@@ -1,0 +1,1303 @@
+{
+  "candidate": true,
+  "reviewDigest": "9f6b922fca046b774e514ce17ae636000f58a17cf98cf944cb8b6e9d7087c34b",
+  "frames": [
+    {
+      "key": "idle-south/00",
+      "box": [
+        67,
+        33,
+        124,
+        95
+      ],
+      "protectedRed": 258,
+      "dyeableRed": 750,
+      "sha256": "dc169ce497000ce6d5e190ffe0ff8bf6283461717cdf1775880dc782547e9b51"
+    },
+    {
+      "key": "idle-south/01",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 274,
+      "dyeableRed": 745,
+      "sha256": "c41dc3bb5f028c7f8dd006660749ca9f39187ac8b7cf2638dc25604c3c641c9a"
+    },
+    {
+      "key": "idle-south/02",
+      "box": [
+        67,
+        36,
+        124,
+        98
+      ],
+      "protectedRed": 274,
+      "dyeableRed": 688,
+      "sha256": "630b761c5b00018055c5be88a731c1616c1a66eb8beaa503496dd6121e257cc1"
+    },
+    {
+      "key": "idle-south/03",
+      "box": [
+        67,
+        34,
+        124,
+        96
+      ],
+      "protectedRed": 293,
+      "dyeableRed": 734,
+      "sha256": "a7851bef3b5a872ceb0822a84ba2a68d00c523ed7aba87ecfdb9f1b1548e60b4"
+    },
+    {
+      "key": "idle-east/00",
+      "box": [
+        68,
+        34,
+        119,
+        92
+      ],
+      "protectedRed": 85,
+      "dyeableRed": 470,
+      "sha256": "210de930dc8202b03de3fa46f730d4c4458eecabd470aba3f271d30597bc9e2d"
+    },
+    {
+      "key": "idle-east/01",
+      "box": [
+        69,
+        35,
+        119,
+        93
+      ],
+      "protectedRed": 92,
+      "dyeableRed": 453,
+      "sha256": "92d6fd0315aab3abeb4abda94548c7a9e4ce14d592e2c59220595dd902c76325"
+    },
+    {
+      "key": "idle-east/02",
+      "box": [
+        70,
+        37,
+        120,
+        94
+      ],
+      "protectedRed": 107,
+      "dyeableRed": 446,
+      "sha256": "559d3eb4d4473a43bb25645ef6e4d68388e08fed613bcf80dabf631399bb2de0"
+    },
+    {
+      "key": "idle-east/03",
+      "box": [
+        69,
+        36,
+        119,
+        93
+      ],
+      "protectedRed": 99,
+      "dyeableRed": 458,
+      "sha256": "10ada06107a5cdc62a0079ee52e4bded5484fde13002621183f561a1d2565982"
+    },
+    {
+      "key": "idle-north/00",
+      "box": [
+        69,
+        36,
+        122,
+        86
+      ],
+      "protectedRed": 41,
+      "dyeableRed": 1060,
+      "sha256": "e245547d8dc46f81d82076ad67a6f11189b70e01559608140201c5a9067980f4"
+    },
+    {
+      "key": "idle-north/01",
+      "box": [
+        69,
+        37,
+        122,
+        87
+      ],
+      "protectedRed": 35,
+      "dyeableRed": 1054,
+      "sha256": "d5e5e548bb44b8b4acd324d15aeb03cf12080519ed3133c98481072090af300e"
+    },
+    {
+      "key": "idle-north/02",
+      "box": [
+        69,
+        37,
+        122,
+        87
+      ],
+      "protectedRed": 49,
+      "dyeableRed": 1045,
+      "sha256": "696ce73836082c64be05429e598013757810642650483b297c0752b78cb059cb"
+    },
+    {
+      "key": "idle-north/03",
+      "box": [
+        69,
+        38,
+        122,
+        88
+      ],
+      "protectedRed": 33,
+      "dyeableRed": 1022,
+      "sha256": "748ca172a8aa4020692691594da0e6ac2c07d3108398f0d5799c6827bb68342c"
+    },
+    {
+      "key": "walk-south/01",
+      "box": [
+        66,
+        34,
+        123,
+        96
+      ],
+      "protectedRed": 262,
+      "dyeableRed": 745,
+      "sha256": "c19d999f9a0399220345a964f987dad8311b8a18484c8ba44cecccc87a6b5c08"
+    },
+    {
+      "key": "walk-south/02",
+      "box": [
+        66,
+        36,
+        123,
+        98
+      ],
+      "protectedRed": 272,
+      "dyeableRed": 721,
+      "sha256": "10007e9df5f5720a93a0779760100dfde550dc7809821522329d814a6ed8359d"
+    },
+    {
+      "key": "walk-south/03",
+      "box": [
+        67,
+        34,
+        124,
+        96
+      ],
+      "protectedRed": 287,
+      "dyeableRed": 727,
+      "sha256": "1cabd286fab7954c6771c1ce8c7d9125731d148203ec3e65d711aea1a6f743a5"
+    },
+    {
+      "key": "walk-south/04",
+      "box": [
+        68,
+        31,
+        125,
+        93
+      ],
+      "protectedRed": 262,
+      "dyeableRed": 696,
+      "sha256": "0b3e1d1130918008050c6864c482fc601163b8950a2ecaeb85c4907360704a57"
+    },
+    {
+      "key": "walk-south/05",
+      "box": [
+        68,
+        32,
+        125,
+        94
+      ],
+      "protectedRed": 257,
+      "dyeableRed": 734,
+      "sha256": "4c3be91d338963bf5eb4edf2fd2136855d39124a4088ff69d567309da3f6eec1"
+    },
+    {
+      "key": "walk-south/06",
+      "box": [
+        68,
+        35,
+        125,
+        97
+      ],
+      "protectedRed": 267,
+      "dyeableRed": 700,
+      "sha256": "5d25eb38f128552e2572b30385ab8118dfeeece551e854b3cbe4ab3856fdbbca"
+    },
+    {
+      "key": "walk-east/01",
+      "box": [
+        68,
+        34,
+        119,
+        92
+      ],
+      "protectedRed": 88,
+      "dyeableRed": 437,
+      "sha256": "ecc161b57badc18280c92f56e497806b080cab52307db4e313b356f0e6599f6a"
+    },
+    {
+      "key": "walk-east/02",
+      "box": [
+        68,
+        37,
+        119,
+        94
+      ],
+      "protectedRed": 84,
+      "dyeableRed": 473,
+      "sha256": "b6d56c852d028dccee23a68e4d322c4c37e66407e69f635489144f1f46ee2f69"
+    },
+    {
+      "key": "walk-east/03",
+      "box": [
+        69,
+        36,
+        120,
+        94
+      ],
+      "protectedRed": 86,
+      "dyeableRed": 421,
+      "sha256": "f250ea7b6fd551d8e0ecbe0d646e9865fb75cdae0b483378470ff3882221f49f"
+    },
+    {
+      "key": "walk-east/04",
+      "box": [
+        69,
+        34,
+        120,
+        92
+      ],
+      "protectedRed": 87,
+      "dyeableRed": 455,
+      "sha256": "70c32eb8ad931c7af6519375c3000138a1e5e7d31a0140ba1d60743201f5a228"
+    },
+    {
+      "key": "walk-east/05",
+      "box": [
+        69,
+        34,
+        120,
+        92
+      ],
+      "protectedRed": 86,
+      "dyeableRed": 523,
+      "sha256": "7ea1e0a508f5bfe2807a475a88ad158b2f3fefe5bc111cf70e848995f82e136d"
+    },
+    {
+      "key": "walk-east/06",
+      "box": [
+        69,
+        36,
+        120,
+        94
+      ],
+      "protectedRed": 85,
+      "dyeableRed": 553,
+      "sha256": "e204343d72404cbe280649aa62b095b51dcfba937dedc6c739851ca781d9ff61"
+    },
+    {
+      "key": "walk-north/01",
+      "box": [
+        70,
+        36,
+        123,
+        86
+      ],
+      "protectedRed": 32,
+      "dyeableRed": 1116,
+      "sha256": "f73426c0fe8857075ae526308e74dc1ceefc8ae79b711ea78d765256c5264d6b"
+    },
+    {
+      "key": "walk-north/02",
+      "box": [
+        70,
+        38,
+        123,
+        88
+      ],
+      "protectedRed": 32,
+      "dyeableRed": 1073,
+      "sha256": "0480e75e43c7bd6dfcb0b3d3f4773c8ea5f4f20ef4bc5f445ff83de1d7418921"
+    },
+    {
+      "key": "walk-north/03",
+      "box": [
+        68,
+        37,
+        121,
+        86
+      ],
+      "protectedRed": 29,
+      "dyeableRed": 1071,
+      "sha256": "229a213ebabf6397642ee218d26267302ee217c5d58b7e73d0aa0998f6f4a44c"
+    },
+    {
+      "key": "walk-north/04",
+      "box": [
+        68,
+        35,
+        121,
+        85
+      ],
+      "protectedRed": 32,
+      "dyeableRed": 1048,
+      "sha256": "5e2c57c177e86c992b2314b0c6b42b3106a5707485a6c6857f4b446608cbc04a"
+    },
+    {
+      "key": "walk-north/05",
+      "box": [
+        69,
+        36,
+        122,
+        86
+      ],
+      "protectedRed": 35,
+      "dyeableRed": 1063,
+      "sha256": "952c7a71973e1a517ca2dabf36eed75e726670c1750b1383005ea7d13366b0b4"
+    },
+    {
+      "key": "walk-north/06",
+      "box": [
+        70,
+        38,
+        123,
+        88
+      ],
+      "protectedRed": 32,
+      "dyeableRed": 1038,
+      "sha256": "376fa6c97f7ddf7620f8f276141d180afd2d4994f75ffb5707dcc75c2a9ce83f"
+    },
+    {
+      "key": "stun-south/01",
+      "box": [
+        67,
+        34,
+        124,
+        95
+      ],
+      "protectedRed": 267,
+      "dyeableRed": 791,
+      "sha256": "d5f1d098dc64075212278a4f16643ec0628d3fca0a14a57aaebb7b95348e5e63"
+    },
+    {
+      "key": "stun-south/02",
+      "box": [
+        67,
+        37,
+        124,
+        99
+      ],
+      "protectedRed": 383,
+      "dyeableRed": 627,
+      "sha256": "022c26b12e192cbee4e84ddf41c58db6c4fa4b38758220934afd39a057dd76a3"
+    },
+    {
+      "key": "stun-south/03",
+      "box": [
+        67,
+        40,
+        124,
+        101
+      ],
+      "protectedRed": 379,
+      "dyeableRed": 613,
+      "sha256": "11172ca57acbae30d2d1a91e04c8e73eb8adbca46f6ba79d09b6438f770d8e34"
+    },
+    {
+      "key": "stun-south/04",
+      "box": [
+        67,
+        43,
+        124,
+        104
+      ],
+      "protectedRed": 367,
+      "dyeableRed": 516,
+      "sha256": "94a52ca5ca93e97bda7a87ee61b3fa40244402162fdd3e94b835d9c0067738c3"
+    },
+    {
+      "key": "stun-south/05",
+      "box": [
+        67,
+        38,
+        124,
+        99
+      ],
+      "protectedRed": 339,
+      "dyeableRed": 678,
+      "sha256": "ecabf44287314a4f2f9e2c4a76bd31f7b2fe921b1bd6fe38d84c590b15e154bc"
+    },
+    {
+      "key": "stun-south/06",
+      "box": [
+        67,
+        34,
+        124,
+        96
+      ],
+      "protectedRed": 321,
+      "dyeableRed": 747,
+      "sha256": "55873c2fec8529fb6127694515dfe093fbf60e38efd2120c29d28c8f8120cc45"
+    },
+    {
+      "key": "death-south/00",
+      "box": [
+        67,
+        33,
+        124,
+        95
+      ],
+      "protectedRed": 258,
+      "dyeableRed": 750,
+      "sha256": "dc169ce497000ce6d5e190ffe0ff8bf6283461717cdf1775880dc782547e9b51"
+    },
+    {
+      "key": "death-south/01",
+      "box": [
+        69,
+        35,
+        126,
+        97
+      ],
+      "protectedRed": 287,
+      "dyeableRed": 723,
+      "sha256": "48f005f8f363568b20fb597022e8d1bb65268ee1dc4a3b5a80e14ca6a45b072b"
+    },
+    {
+      "key": "death-south/02",
+      "box": [
+        71,
+        38,
+        128,
+        100
+      ],
+      "protectedRed": 275,
+      "dyeableRed": 708,
+      "sha256": "f79d7a076a79143fe92a8dc9551f69ef13b7996b0066519353f89e7979ab3bd7"
+    },
+    {
+      "key": "death-south/03",
+      "box": [
+        81,
+        51,
+        136,
+        112
+      ],
+      "protectedRed": 266,
+      "dyeableRed": 449,
+      "sha256": "22097a461700d8f8985977949bcfba5c51fa562e09b93108caebbaa9c091d360"
+    },
+    {
+      "key": "death-south/04",
+      "box": [
+        89,
+        94,
+        144,
+        155
+      ],
+      "protectedRed": 183,
+      "dyeableRed": 51,
+      "sha256": "e1861f32fc4fe76c3659162ccc70ab1a57cda68c707df9b1b80a5f0767d16829"
+    },
+    {
+      "key": "death-south/05",
+      "box": [
+        91,
+        96,
+        147,
+        157
+      ],
+      "protectedRed": 190,
+      "dyeableRed": 85,
+      "sha256": "c9b73b81bca38fc06bea0a185ef8dca7c9d71a87f27280f71967840b07ba50b8"
+    },
+    {
+      "key": "death-south/06",
+      "box": [
+        91,
+        96,
+        147,
+        157
+      ],
+      "protectedRed": 193,
+      "dyeableRed": 89,
+      "sha256": "7b085415750de60939f8f0719309dbe189f4888978e203513168c70f2bef5fef"
+    },
+    {
+      "key": "cast-south/00",
+      "box": [
+        67,
+        33,
+        124,
+        95
+      ],
+      "protectedRed": 258,
+      "dyeableRed": 750,
+      "sha256": "dc169ce497000ce6d5e190ffe0ff8bf6283461717cdf1775880dc782547e9b51"
+    },
+    {
+      "key": "cast-south/01",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 241,
+      "dyeableRed": 735,
+      "sha256": "846a8666be5d524032993afc2c93594e986a72d481ea6118dc3c5eaf61e1e030"
+    },
+    {
+      "key": "cast-south/02",
+      "box": [
+        67,
+        39,
+        124,
+        101
+      ],
+      "protectedRed": 255,
+      "dyeableRed": 588,
+      "sha256": "c86a801d1dd169d61e962948d1ad711eb001ddab73f6c1c50681b0c43359919c"
+    },
+    {
+      "key": "cast-south/03",
+      "box": [
+        67,
+        45,
+        124,
+        107
+      ],
+      "protectedRed": 266,
+      "dyeableRed": 424,
+      "sha256": "703ef6ac8a54cddd62f0443e095712134f3b6e5a1a9ec0e61575239200c7b6e7"
+    },
+    {
+      "key": "cast-south/04",
+      "box": [
+        67,
+        50,
+        124,
+        112
+      ],
+      "protectedRed": 296,
+      "dyeableRed": 333,
+      "sha256": "1aef77b94257c7d12134ad01242f0fa2f24743222fe0ad872685bfecab9743d1"
+    },
+    {
+      "key": "cast-south/05",
+      "box": [
+        67,
+        48,
+        124,
+        110
+      ],
+      "protectedRed": 248,
+      "dyeableRed": 358,
+      "sha256": "aa58f65bd548f5896737f32b5dbbdb5d2e5ec7c5624ef3b1286817b8cefaef90"
+    },
+    {
+      "key": "cast-south/06",
+      "box": [
+        67,
+        45,
+        124,
+        107
+      ],
+      "protectedRed": 281,
+      "dyeableRed": 408,
+      "sha256": "726b9a490f32451645555ee49b1bdd52b6cf79a0076d843db57258fac0122b7a"
+    },
+    {
+      "key": "cast-south/07",
+      "box": [
+        67,
+        42,
+        125,
+        103
+      ],
+      "protectedRed": 254,
+      "dyeableRed": 565,
+      "sha256": "ac5263b5414c5263e5eaa1f69acc2e0e616743edafeb5ce89cb35dc4b403c734"
+    },
+    {
+      "key": "cast-south/08",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 256,
+      "dyeableRed": 722,
+      "sha256": "90349bb65a2067794f19dbab65d8da6881db3d04ca37079d19e4551531308364"
+    },
+    {
+      "key": "cast-east/00",
+      "box": [
+        68,
+        34,
+        119,
+        92
+      ],
+      "protectedRed": 85,
+      "dyeableRed": 470,
+      "sha256": "210de930dc8202b03de3fa46f730d4c4458eecabd470aba3f271d30597bc9e2d"
+    },
+    {
+      "key": "cast-east/01",
+      "box": [
+        71,
+        34,
+        122,
+        92
+      ],
+      "protectedRed": 70,
+      "dyeableRed": 422,
+      "sha256": "18c41c4ea09cd464388322c4c5f4a62cb8dded70cc16409aad59ef799593acdc"
+    },
+    {
+      "key": "cast-east/02",
+      "box": [
+        74,
+        37,
+        125,
+        95
+      ],
+      "protectedRed": 100,
+      "dyeableRed": 396,
+      "sha256": "2433efc7f45f84e959d2e773b6db36dc0b4b0b6435eddd58b183091d6f564537"
+    },
+    {
+      "key": "cast-east/03",
+      "box": [
+        77,
+        40,
+        128,
+        98
+      ],
+      "protectedRed": 129,
+      "dyeableRed": 476,
+      "sha256": "ee93f02ac019d77cc41dd65deeafa4ed9d98c87b99e573631d53ab55eee96efe"
+    },
+    {
+      "key": "cast-east/04",
+      "box": [
+        78,
+        44,
+        129,
+        102
+      ],
+      "protectedRed": 138,
+      "dyeableRed": 472,
+      "sha256": "aaf9690a27901e471fbff34457d3fe1b4e1b8b2dbb37d168cf36547226b95edb"
+    },
+    {
+      "key": "cast-east/05",
+      "box": [
+        79,
+        43,
+        129,
+        102
+      ],
+      "protectedRed": 159,
+      "dyeableRed": 449,
+      "sha256": "da4a0f4ff2c07544cc73e21531c02ce84473b1831c6779e78a00062dca91fe34"
+    },
+    {
+      "key": "cast-east/06",
+      "box": [
+        76,
+        39,
+        127,
+        97
+      ],
+      "protectedRed": 100,
+      "dyeableRed": 433,
+      "sha256": "6df14491f2cf1095b20588f4e5dc9d082bafaae98e4219e7a531fdc3319e0006"
+    },
+    {
+      "key": "cast-east/07",
+      "box": [
+        73,
+        35,
+        124,
+        93
+      ],
+      "protectedRed": 89,
+      "dyeableRed": 402,
+      "sha256": "50db0255cd1371630d5cc8d9ca0eb18f2c13039d4413494058a6a970148bfd38"
+    },
+    {
+      "key": "cast-east/08",
+      "box": [
+        70,
+        34,
+        121,
+        92
+      ],
+      "protectedRed": 79,
+      "dyeableRed": 470,
+      "sha256": "bc9a13fc97f1fb75cead19f054317be0c127f3774e6ff8e21c2291ac1058080b"
+    },
+    {
+      "key": "cast-north/00",
+      "box": [
+        69,
+        36,
+        122,
+        86
+      ],
+      "protectedRed": 41,
+      "dyeableRed": 1060,
+      "sha256": "e245547d8dc46f81d82076ad67a6f11189b70e01559608140201c5a9067980f4"
+    },
+    {
+      "key": "cast-north/01",
+      "box": [
+        69,
+        38,
+        122,
+        88
+      ],
+      "protectedRed": 40,
+      "dyeableRed": 1075,
+      "sha256": "9f639d6fc9afcbc4bbe162bfd7c392b621852ab3ebe09f610d884eee157420c4"
+    },
+    {
+      "key": "cast-north/02",
+      "box": [
+        69,
+        40,
+        122,
+        90
+      ],
+      "protectedRed": 30,
+      "dyeableRed": 983,
+      "sha256": "66fd87d22a78b0ab4bdb866a95b22c5e7c397f171da7a87454b6e871c53ce6eb"
+    },
+    {
+      "key": "cast-north/03",
+      "box": [
+        69,
+        43,
+        122,
+        93
+      ],
+      "protectedRed": 60,
+      "dyeableRed": 909,
+      "sha256": "e32862ad97ed410fd618d385fa0230a4b760348e812acfcc7b745ae406354ccc"
+    },
+    {
+      "key": "cast-north/04",
+      "box": [
+        69,
+        46,
+        122,
+        95
+      ],
+      "protectedRed": 74,
+      "dyeableRed": 867,
+      "sha256": "9b9fbc73e2ceb8c838ca45644546b9b87fc4233b5ecf211f17cd7775d7f0ee91"
+    },
+    {
+      "key": "cast-north/05",
+      "box": [
+        69,
+        46,
+        122,
+        95
+      ],
+      "protectedRed": 74,
+      "dyeableRed": 867,
+      "sha256": "49e66461a8e5eb10f1f291db2e32ac597f7889634576b60c4a2926b45a310f57"
+    },
+    {
+      "key": "cast-north/06",
+      "box": [
+        69,
+        46,
+        122,
+        95
+      ],
+      "protectedRed": 74,
+      "dyeableRed": 867,
+      "sha256": "cdcd2d753b97267eebfe6b70b8b03ebe771907b716de152c71df3f169c48c3c8"
+    },
+    {
+      "key": "cast-north/07",
+      "box": [
+        69,
+        41,
+        122,
+        91
+      ],
+      "protectedRed": 40,
+      "dyeableRed": 979,
+      "sha256": "21a77d6b21148724d39ed5b6f7855252253de7d4f8e0ed884fe964bdace64505"
+    },
+    {
+      "key": "cast-north/08",
+      "box": [
+        69,
+        38,
+        122,
+        88
+      ],
+      "protectedRed": 36,
+      "dyeableRed": 1016,
+      "sha256": "ac23893307b488bdcee74d39e53b0ce69786f90a2617fed4d2434e5bbe457043"
+    },
+    {
+      "key": "carryIdle-south/00",
+      "box": [
+        67,
+        33,
+        124,
+        95
+      ],
+      "protectedRed": 355,
+      "dyeableRed": 698,
+      "sha256": "0294b81aab953289ca380324af86e7dc4abc7f009b8b1d02354412c81aef2316"
+    },
+    {
+      "key": "carryIdle-south/01",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 426,
+      "dyeableRed": 708,
+      "sha256": "75bf45e6bb1da88fbea7bce0b1e2487ed77904c073c72cc8edbb51b316d50fad"
+    },
+    {
+      "key": "carryIdle-south/02",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 400,
+      "dyeableRed": 723,
+      "sha256": "f87c207382f33f1d4e8d61b1f307757781f4d0667b89a3730d4680a3875d16b4"
+    },
+    {
+      "key": "carryIdle-south/03",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 460,
+      "dyeableRed": 695,
+      "sha256": "06ebf46ff2d1cdf4b91cbbab9901c86854d19c1a91c0e58d53adfe0716423cc5"
+    },
+    {
+      "key": "carryIdle-east/00",
+      "box": [
+        68,
+        34,
+        117,
+        88
+      ],
+      "protectedRed": 28,
+      "dyeableRed": 635,
+      "sha256": "5fb0028a292c3f8dd6c5b2974d8a33b0f080c2f9734a0871110ccd1a39ab0736"
+    },
+    {
+      "key": "carryIdle-east/01",
+      "box": [
+        69,
+        36,
+        119,
+        88
+      ],
+      "protectedRed": 60,
+      "dyeableRed": 671,
+      "sha256": "c54703f5bae48e628c0312569faea7c130608337f1af4c7b9e754cb92b764837"
+    },
+    {
+      "key": "carryIdle-east/02",
+      "box": [
+        69,
+        38,
+        118,
+        89
+      ],
+      "protectedRed": 66,
+      "dyeableRed": 666,
+      "sha256": "9ad918be95bcb843884afb7cab5a5ae0f976c0ea80cb9f8417335d1343061d38"
+    },
+    {
+      "key": "carryIdle-east/03",
+      "box": [
+        67,
+        36,
+        116,
+        89
+      ],
+      "protectedRed": 74,
+      "dyeableRed": 651,
+      "sha256": "bbe4bab575cab053b9ae1ccd11cccc12e4a9ff9e76123403983c7bac2a66d02c"
+    },
+    {
+      "key": "carryIdle-north/00",
+      "box": [
+        69,
+        36,
+        122,
+        85
+      ],
+      "protectedRed": 37,
+      "dyeableRed": 1169,
+      "sha256": "e7ccff185597d653e593be3803168016bc4ea941cdf9773eecd9c2a07fa682b2"
+    },
+    {
+      "key": "carryIdle-north/01",
+      "box": [
+        69,
+        36,
+        122,
+        84
+      ],
+      "protectedRed": 71,
+      "dyeableRed": 1241,
+      "sha256": "0c25427631d735fc1d77444d7d85df88be2c4d4dbc84c08f48c7d82437845d0a"
+    },
+    {
+      "key": "carryIdle-north/02",
+      "box": [
+        69,
+        39,
+        122,
+        87
+      ],
+      "protectedRed": 87,
+      "dyeableRed": 1088,
+      "sha256": "849f1c3f1c7c3edba67025cefd46438ab43e753fac305c7cbc8b11325304ddfc"
+    },
+    {
+      "key": "carryIdle-north/03",
+      "box": [
+        69,
+        40,
+        122,
+        87
+      ],
+      "protectedRed": 99,
+      "dyeableRed": 1098,
+      "sha256": "2b7b86fb2100f04f942c8ca2c5e6a817d2a7dfe022113cc4179fce12f2d510ea"
+    },
+    {
+      "key": "carryWalk-south/01",
+      "box": [
+        67,
+        36,
+        124,
+        97
+      ],
+      "protectedRed": 399,
+      "dyeableRed": 729,
+      "sha256": "28d4446899c932fed383b1d4acfdf41bfdf16c4a752f69516fc1d0b6e63c1001"
+    },
+    {
+      "key": "carryWalk-south/02",
+      "box": [
+        67,
+        38,
+        124,
+        99
+      ],
+      "protectedRed": 415,
+      "dyeableRed": 717,
+      "sha256": "7858b03998f6645f7c78a388fe1cc7faccc91356961ef8a6ca40f079c2024236"
+    },
+    {
+      "key": "carryWalk-south/03",
+      "box": [
+        67,
+        36,
+        124,
+        97
+      ],
+      "protectedRed": 434,
+      "dyeableRed": 701,
+      "sha256": "f992a51a77ea5fd661a2d017d7edce837850fc6319ce3ca425058e2edd49ef0f"
+    },
+    {
+      "key": "carryWalk-south/04",
+      "box": [
+        67,
+        34,
+        124,
+        95
+      ],
+      "protectedRed": 408,
+      "dyeableRed": 701,
+      "sha256": "ffd11f1880a175022db65c31c849c70076259cd6e5bf42a71123c5bd87cb893c"
+    },
+    {
+      "key": "carryWalk-south/05",
+      "box": [
+        67,
+        36,
+        124,
+        97
+      ],
+      "protectedRed": 421,
+      "dyeableRed": 700,
+      "sha256": "7ba0b90ff0e9c0008bd882720d44deb5671f0ed56fa8074d78fd486f3a239e9e"
+    },
+    {
+      "key": "carryWalk-south/06",
+      "box": [
+        67,
+        38,
+        124,
+        99
+      ],
+      "protectedRed": 420,
+      "dyeableRed": 683,
+      "sha256": "0502d933a6109d82d5295b7bc42fc272dec8a86a8a89be39272b8f57e1b77247"
+    },
+    {
+      "key": "carryWalk-east/01",
+      "box": [
+        68,
+        34,
+        117,
+        87
+      ],
+      "protectedRed": 52,
+      "dyeableRed": 672,
+      "sha256": "565840897fdffd1aeb608453751c196f49a6c8d0683bb4452df14564944ea3ec"
+    },
+    {
+      "key": "carryWalk-east/02",
+      "box": [
+        69,
+        37,
+        117,
+        89
+      ],
+      "protectedRed": 34,
+      "dyeableRed": 697,
+      "sha256": "aa4364a18c720e7ae39fd99ac0608c38118f29105f783e923a0edc0687c69bde"
+    },
+    {
+      "key": "carryWalk-east/03",
+      "box": [
+        71,
+        37,
+        119,
+        89
+      ],
+      "protectedRed": 62,
+      "dyeableRed": 756,
+      "sha256": "74fd06f2289505b19ee80005c5505d7366c02ab66e26685e7cc6e9142298981a"
+    },
+    {
+      "key": "carryWalk-east/04",
+      "box": [
+        71,
+        34,
+        119,
+        87
+      ],
+      "protectedRed": 41,
+      "dyeableRed": 762,
+      "sha256": "8d8873e10ee981e8d0aedc8239429f511c502159ab2f52d5c5699de6967a3314"
+    },
+    {
+      "key": "carryWalk-east/05",
+      "box": [
+        70,
+        34,
+        118,
+        87
+      ],
+      "protectedRed": 55,
+      "dyeableRed": 808,
+      "sha256": "8bd4653d91893c67aba45114b787d349eba88381ed11e009b0b0edb2228522be"
+    },
+    {
+      "key": "carryWalk-east/06",
+      "box": [
+        70,
+        36,
+        118,
+        89
+      ],
+      "protectedRed": 51,
+      "dyeableRed": 781,
+      "sha256": "4664b21b899df523f597b4beb1004eae721147cc0ebf8e1334f5dc819a380514"
+    },
+    {
+      "key": "carryWalk-north/01",
+      "box": [
+        69,
+        38,
+        122,
+        87
+      ],
+      "protectedRed": 62,
+      "dyeableRed": 1159,
+      "sha256": "f683d9c33742b6bc20d49fe6641366fc93602656300bd4e4f95e1f27e1dbe6e4"
+    },
+    {
+      "key": "carryWalk-north/02",
+      "box": [
+        69,
+        40,
+        122,
+        89
+      ],
+      "protectedRed": 71,
+      "dyeableRed": 1122,
+      "sha256": "dd2ae17a79804b878f77b619d5d815ca7c5abc87deb7ce0773cdb56040c35f71"
+    },
+    {
+      "key": "carryWalk-north/03",
+      "box": [
+        69,
+        37,
+        122,
+        88
+      ],
+      "protectedRed": 129,
+      "dyeableRed": 1037,
+      "sha256": "565509f16c8d0a0d3dbe1f0f79faecf6503b73b5f0a7d7b002b276384c24e581"
+    },
+    {
+      "key": "carryWalk-north/04",
+      "box": [
+        69,
+        35,
+        122,
+        86
+      ],
+      "protectedRed": 94,
+      "dyeableRed": 1073,
+      "sha256": "05e54776a696cf2e30779ba51b027955970eeef7a04cc4334bf9a78a71f07b32"
+    },
+    {
+      "key": "carryWalk-north/05",
+      "box": [
+        69,
+        38,
+        122,
+        86
+      ],
+      "protectedRed": 53,
+      "dyeableRed": 1162,
+      "sha256": "ba5c35c0a7ca7d32fa39a7e41c88c6a9a4098f390e8a434ae9036721e180216e"
+    },
+    {
+      "key": "carryWalk-north/06",
+      "box": [
+        69,
+        40,
+        122,
+        88
+      ],
+      "protectedRed": 52,
+      "dyeableRed": 1132,
+      "sha256": "532173a432f15b01cbf7092ca76e3e7af0426628b511953bdeb8f2ce3355da9c"
+    },
+    {
+      "key": "lobby-south/00",
+      "box": [
+        67,
+        33,
+        124,
+        95
+      ],
+      "protectedRed": 258,
+      "dyeableRed": 750,
+      "sha256": "dc169ce497000ce6d5e190ffe0ff8bf6283461717cdf1775880dc782547e9b51"
+    },
+    {
+      "key": "lobby-south/01",
+      "box": [
+        67,
+        35,
+        124,
+        97
+      ],
+      "protectedRed": 268,
+      "dyeableRed": 767,
+      "sha256": "21b348b1ec365587f80503371cbae1e7d4fee382bab63d9d43f2199b77baaec5"
+    },
+    {
+      "key": "lobby-south/02",
+      "box": [
+        66,
+        36,
+        123,
+        99
+      ],
+      "protectedRed": 351,
+      "dyeableRed": 664,
+      "sha256": "a1afaff2f1280cf98764e48b2e0e1d8a124c6e8ba7e7b82a394b587f3e973463"
+    },
+    {
+      "key": "lobby-south/03",
+      "box": [
+        66,
+        34,
+        123,
+        97
+      ],
+      "protectedRed": 393,
+      "dyeableRed": 681,
+      "sha256": "6a2dc7e6bc8c64c63b4e555d158ce096c232faef7be1f576a273fa09ec6d6bff"
+    },
+    {
+      "key": "lobby-south/04",
+      "box": [
+        66,
+        32,
+        123,
+        95
+      ],
+      "protectedRed": 404,
+      "dyeableRed": 679,
+      "sha256": "28a14df2993a8b978aab6dcdf5d0179f5629239102747f0b9d23ae0d55e7449d"
+    },
+    {
+      "key": "lobby-south/05",
+      "box": [
+        66,
+        33,
+        123,
+        96
+      ],
+      "protectedRed": 415,
+      "dyeableRed": 676,
+      "sha256": "bd87f52241e24016a1a10437de2f81de8005dbe0f3b7eb53d175a06645d00329"
+    },
+    {
+      "key": "lobby-south/06",
+      "box": [
+        66,
+        34,
+        123,
+        97
+      ],
+      "protectedRed": 373,
+      "dyeableRed": 662,
+      "sha256": "53438efaa762b5836430e85e9934c204e0c4f7143d7572315dea5a01566f6b6f"
+    },
+    {
+      "key": "lobby-south/07",
+      "box": [
+        66,
+        35,
+        123,
+        96
+      ],
+      "protectedRed": 275,
+      "dyeableRed": 774,
+      "sha256": "8bc02ea60f18863bd7c139f96664cb418b0884460ab8d6fdd690c1870ac71b8d"
+    }
+  ],
+  "missing": []
+}

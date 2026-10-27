@@ -6,6 +6,8 @@ export interface StageBall {
   dir: Facing | null;
   ownerId?: string;
   travelRemaining?: number;
+  segmentRemaining?: number;
+  turnOrder?: number;
 }
 
 export interface StageFlag {
@@ -14,6 +16,8 @@ export interface StageFlag {
   ownerId?: string;
   carriedBy?: string;
   destroyed?: boolean;
+  /** Native previous-carrier exclusion lasts until that player leaves the cell. */
+  droppedBy?: string;
 }
 
 export interface StageSeesaw {
@@ -43,15 +47,45 @@ export interface StageTrolley {
   station?: StageTrolleyStation;
 }
 
+export type StageSurpriseKind = "normal" | "ice" | "sticky" | "reverse";
+
+export interface StageIceSlide {
+  dir: Facing;
+  targetPx: number;
+  targetPy: number;
+}
+
+export type StageSurpriseSamples = Record<Facing, number>;
+
+export interface StageSurpriseCenter {
+  x: number;
+  y: number;
+  nextAt: number;
+  remaining: number;
+}
+
+export interface StageFlight {
+  dir: Facing;
+  ticks: number;
+  remaining: number;
+  kind?: "seesaw";
+  steering?: "left" | "right";
+}
+
 export interface StageState {
   balls?: StageBall[];
   flags?: StageFlag[];
+  flagPickupUntil?: Record<string, number>;
   roulette?: { cooldown: number; until: number; active?: boolean; result?: ItemKind; reels?: ("seven" | "bar" | "fire" | "skull")[]; stopped?: boolean[] };
   seesaws?: StageSeesaw[];
   trolley?: StageTrolley;
   honey?: { x: number; y: number; takenBy?: string }[];
   winnerId?: string;
   floorLocks?: Record<string, number>;
-  surprise?: Record<number, { kind: "normal" | "ice" | "sticky" | "reverse"; hits: number }>;
-  flights?: Record<string, { dir: Facing; ticks: number; remaining: number }>;
+  surprise?: Record<number, { kind: StageSurpriseKind; hits: number }>;
+  /** Native $1EAA: selection count shared by every surprise panel. */
+  surpriseCounter?: number;
+  surpriseCenters?: StageSurpriseCenter[];
+  iceSlides?: Record<string, StageIceSlide>;
+  flights?: Record<string, StageFlight>;
 }

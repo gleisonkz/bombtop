@@ -6,7 +6,6 @@ import {
   ITEM_CHANCE,
   ITEM_WEIGHTS,
   MAX_PLAYERS,
-  MAX_SPEED,
   ROUND_TICKS,
   TICK_RATE,
   SPAWN_POINTS,
@@ -65,8 +64,9 @@ export function createMatch(opts: MatchOptions): MatchState {
   const rng = createRng(seed);
   const layout = buildStage(stage, width, height);
   const original = sb4Map(stage);
+  const startingFireRange = original ? 2 : START_FIRE_RANGE;
   const spawnPoints = original
-    ? [SPAWN_POINTS[0]!, SPAWN_POINTS[2]!, SPAWN_POINTS[1]!, SPAWN_POINTS[3]!, { x: 7, y: 6 }]
+    ? [SPAWN_POINTS[0]!, SPAWN_POINTS[1]!, SPAWN_POINTS[2]!, SPAWN_POINTS[3]!, { x: 7, y: 6 }]
     : SPAWN_POINTS;
   const safe = new Set([...safeTiles(width, spawnPoints), ...layout.keepClear]);
   const tiles: Tile[] = layout.tiles?.slice() ?? [];
@@ -112,11 +112,11 @@ export function createMatch(opts: MatchOptions): MatchState {
       px: tileCenter(spawnPoints[i]!.x),
       py: tileCenter(spawnPoints[i]!.y),
       alive: true,
-      // Battle Royale loadout: https://bomberman.fandom.com/wiki/School_of_Hard_Shocks
+      // ROM: normal reach table C11A77 starts at two; stage 05 starts at six.
       bombCapacity: stage === "sb4-05" ? 5 : START_BOMB_CAPACITY,
-      fireRange: stage === "sb4-05" ? 6 : START_FIRE_RANGE,
-      // Battle Royale speed is still under investigation; use the requested local maximum.
-      speed: stage === "sb4-05" ? MAX_SPEED : BASE_SPEED,
+      fireRange: stage === "sb4-05" ? 6 : startingFireRange,
+      // Stage 05 native held-RIGHT replay advances one pixel per logic update.
+      speed: BASE_SPEED,
       facing: "down" as const,
       canKick: stage === "sb4-05",
       ...(maniac && { hitPoints: maniac.hitPoints[id] }),

@@ -12,7 +12,7 @@ function arena(stage: "sb4-03" | "sb4-04" | "sb4-05" | "sb4-06" | "sb4-08" | "sb
 }
 
 describe("SB4 dynamic stage mechanics", () => {
-  it("rolls toward the bomb after a blast and blocks fire beyond the ball", () => {
+  it("rolls away from the bomb in clear space and blocks fire beyond the ball", () => {
     const s = arena("sb4-03");
     s.stageState = { balls: [{ px: tileCenter(5), py: tileCenter(5), dir: null }] };
     placePlayerAt(s, "a", 3, 5);
@@ -21,9 +21,9 @@ describe("SB4 dynamic stage mechanics", () => {
     s.bombs[0]!.fuse = 1;
     placePlayerAt(s, "a", 1, 1);
     step(s);
-    expect(s.stageState.balls![0]!.dir).toBe("left");
+    expect(s.stageState.balls![0]!.dir).toBe("right");
     expect(s.flames.some(f => f.x === 6 && f.y === 5)).toBe(false);
-    placePlayerAt(s, "b", 4, 5);
+    placePlayerAt(s, "b", 6, 5);
     for (let tick = 0; tick < 16; tick++) step(s);
     expect(s.players[1]!.alive).toBe(false);
   });
@@ -71,7 +71,7 @@ describe("SB4 dynamic stage mechanics", () => {
     s.stageState = { flags: [{ x: 3, y: 3, ownerId: "a" }] };
     step(s);
     expect(s.stageState.flags![0]!.carriedBy).toBe("a");
-    step(s, { a: { dir: null, bomb: false, action: true } });
+    step(s, { a: { dir: null, bomb: false, brace: true } });
     expect(s.stageState.flags![0]!.carriedBy).toBeUndefined();
   });
 
@@ -95,7 +95,9 @@ describe("SB4 dynamic stage mechanics", () => {
     s.stageState.surprise![key] = { kind: "ice", hits: 2 };
     const before = p.px;
     step(s);
-    expect(p.px - before).toBe(p.speed);
+    expect(p.px).toBe(before);
+    step(s);
+    expect(p.px - before).toBe(TILE / 8);
   });
 
   it("creates eight buried cosplays and no overlap with normal item bags", () => {

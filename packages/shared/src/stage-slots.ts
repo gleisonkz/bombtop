@@ -1,4 +1,5 @@
 import { nextRandom } from "./rng";
+import { sb4SlotOutcome } from "./sb4-slot-rom";
 import { Floor, getFloor, ItemKind, playerTile, Tile, type MatchState } from "./state";
 import type { StageState } from "./stage-state";
 
@@ -6,15 +7,19 @@ export const SLOT_SYMBOLS = ["seven", "bar", "fire", "skull"] as const;
 export const SLOT_CONFIG = { timeoutTicks: 300, cooldownTicks: 180, jackpotItems: 30 };
 type Symbol = (typeof SLOT_SYMBOLS)[number];
 type Roulette = NonNullable<StageState["roulette"]>;
-const GOOD_ITEMS = [ItemKind.Bomb, ItemKind.Fire, ItemKind.Speed, ItemKind.Kick, ItemKind.Heart, ItemKind.Glove, ItemKind.Punch, ItemKind.Remote];
-
-/** Approximate gameplay table, NOT a claim of original SB4 payout fidelity.
- * Exactly two: seven -> 3 Bomb, bar -> 3 Speed, fire -> 3 Fire, skull -> 1 Skull.
- * Three distinct symbols pay nothing. Only triple skull starts sudden death.
- */
-const DOUBLE_PAYOUT: Record<Symbol, { kind: ItemKind; count: number }> = {
-  seven: { kind: ItemKind.Bomb, count: 3 }, bar: { kind: ItemKind.Speed, count: 3 },
-  fire: { kind: ItemKind.Fire, count: 3 }, skull: { kind: ItemKind.Skull, count: 1 },
+const PROVISIONAL_NATIVE_SYMBOL: Readonly<Record<Symbol, number>> = { skull: 0, bar: 1, seven: 2, fire: 3 };
+const PROVISIONAL_NATIVE_ITEM_KIND: Readonly<Record<number, ItemKind>> = {
+  1: ItemKind.Bomb,
+  3: ItemKind.Speed,
+  4: ItemKind.Egg,
+  5: ItemKind.Fire,
+  7: ItemKind.Glove,
+  13: ItemKind.Kick,
+  14: ItemKind.Punch,
+  17: ItemKind.Bomb,
+  36: ItemKind.Skull,
+  37: ItemKind.Skull,
+  43: ItemKind.Skull,
 };
 
 export function igniteStageSlots(s: MatchState, x: number, y: number): void {
@@ -28,29 +33,14 @@ export function igniteStageSlots(s: MatchState, x: number, y: number): void {
   };
 }
 
-function payout(s: MatchState, reels: Symbol[]): ItemKind[] {
-  const counts = new Map<Symbol, number>();
-  for (const symbol of reels) counts.set(symbol, (counts.get(symbol) ?? 0) + 1);
-  const triple = reels[0];
-  if (triple && counts.get(triple) === 3) {
-    switch (triple) {
-      case "skull":
-        s.pressureAt = s.tick;
-        delete s.pressureLimit;
-        return Array<ItemKind>(3).fill(ItemKind.Skull);
-      case "fire": return Array.from({ length: 9 }, (_, i) => i === 8 ? ItemKind.FullFire : ItemKind.Fire);
-      case "bar": return [ItemKind.Egg, ...Array.from({ length: 18 }, () => GOOD_ITEMS[Math.floor(nextRandom(s) * GOOD_ITEMS.length)]!)];
-      case "seven": {
-        // Keep mutable configuration finite and bounded even if configured incorrectly.
-        const count = Number.isFinite(SLOT_CONFIG.jackpotItems) ? Math.max(0, Math.min(100, Math.floor(SLOT_CONFIG.jackpotItems))) : 0;
-        return Array.from({ length: count }, () => ItemKind.Bomb);
-      }
-    }
+function payout(reels: Symbol[]): ItemKind[] {
+  const outcome = sb4SlotOutcome(reels.map(symbol => PROVISIONAL_NATIVE_SYMBOL[symbol]));
+  if (!outcome) return [];
+  if (outcome.cascade) {
+    const count = Number.isFinite(SLOT_CONFIG.jackpotItems) ? Math.max(0, Math.min(100, Math.floor(SLOT_CONFIG.jackpotItems))) : 0;
+    return Array<ItemKind>(count).fill(ItemKind.Bomb);
   }
-  for (const [symbol, count] of counts) {
-    if (count === 2) return Array<ItemKind>(DOUBLE_PAYOUT[symbol].count).fill(DOUBLE_PAYOUT[symbol].kind);
-  }
-  return [];
+  return outcome.itemIds.map(id => PROVISIONAL_NATIVE_ITEM_KIND[id]!);
 }
 
 function dropItems(s: MatchState, kinds: ItemKind[]): void {
@@ -93,7 +83,7 @@ export function updateStageSlots(s: MatchState): void {
   roulette.cooldown = SLOT_CONFIG.cooldownTicks;
   delete roulette.result;
   if (roulette.reels?.length !== 3) return;
-  const kinds = payout(s, roulette.reels);
+  const kinds = payout(roulette.reels);
   if (kinds[0]) roulette.result = kinds[0];
   dropItems(s, kinds);
 }

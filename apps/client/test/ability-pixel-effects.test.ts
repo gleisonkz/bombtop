@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Assets, Sprite, Texture, TextureSource } from "pixi.js";
-import { AbilityPixelEffects, ABILITY_PIXEL_EFFECTS } from "../src/render/ability-pixel-effects";
+import { AbilityPixelEffects, ABILITY_PIXEL_EFFECTS, OPTIMUS_PIXEL_EFFECTS } from "../src/render/ability-pixel-effects";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -9,6 +9,31 @@ function atlas(): Texture {
 }
 
 describe("ability pixel effects", () => {
+  it("loads Optimus's own atlas and advances dust, wake and transformation independently", async () => {
+    const base = new Texture({ source: new TextureSource({ width: 256, height: 192 }) });
+    const load = vi.spyOn(Assets, "load").mockResolvedValue({ source: base.source });
+    const fx = new AbilityPixelEffects(OPTIMUS_PIXEL_EFFECTS);
+    await fx.load();
+    expect(load).toHaveBeenCalledWith(expect.stringContaining("optimus-effects-pixel-v1.png"));
+    for (const [row, kind] of ["truckDust", "truckSpeed", "truckShift"].entries()) {
+      for (let frame = 0; frame < 4; frame++) {
+        fx.draw(kind as "truckDust" | "truckSpeed" | "truckShift", { x: 30, y: 40, tick: frame * 4, size: 24 });
+        const sprite = fx.root.children.at(-1) as Sprite;
+        expect(sprite.texture.frame).toMatchObject({ x: frame * 64, y: row * 64, width: 64, height: 64 });
+        expect(sprite.width).toBe(24);
+        expect(sprite.anchor.y).toBe(kind === "truckShift" ? 0.5 : 62 / 64);
+      }
+    }
+    expect(fx.draw("ki", { x: 0, y: 0, tick: 0 })).toBe(false);
+    fx.beginFrame();
+    fx.draw("truckDust", { x: 0, y: 0, tick: 0, flipX: true });
+    expect((fx.root.children[0] as Sprite).scale.x).toBeLessThan(0);
+    expect((fx.root.children[0] as Sprite).scale.y).toBeGreaterThan(0);
+    fx.beginFrame();
+    fx.draw("truckShift", { x: 0, y: 0, tick: 0 });
+    expect((fx.root.children[0] as Sprite).scale.x).toBeGreaterThan(0);
+    expect((fx.root.children[0] as Sprite).anchor.y).toBe(0.5);
+  });
   it("returns false before load so the renderer can retain its fallback", () => {
     const fx = new AbilityPixelEffects();
     expect(fx.draw("ki", { x: 0, y: 0, tick: 0 })).toBe(false);

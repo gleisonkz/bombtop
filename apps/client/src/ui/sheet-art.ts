@@ -1,5 +1,6 @@
 import { TICK_RATE, type CharacterId } from "@bombtop/shared";
 import { CAST_TICKS_PER_FRAME, paintSheet, SHEETS, type SheetLayout, type Strip } from "../render/sprites";
+import { gokuAuraPreview } from "./goku-aura-preview";
 
 const bomberPreview: SheetLayout = {
   ...SHEETS.bomber,
@@ -50,9 +51,9 @@ function ownSheet(sheet: SheetLayout, strip: Strip): SheetLayout | undefined {
 export function previewPose(sheet: SheetLayout, state: PreviewState): { row: number; frames: number; seconds: number; sheet?: SheetLayout } {
   const lobby = sheet.lobby ?? sheet.walk.down;
   const strip = state === "walk" ? lobby : state === "win" ? (sheet.victory ?? lobby) : state === "dizzy" && sheet.stun ? sheet.stun : sheet.idle.down;
-  const per = state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame;
-  const pose = { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
   const own = ownSheet(sheet, strip);
+  const per = own?.ticksPerFrame ?? (state === "idle" && sheet.idleTicksPerFrame ? sheet.idleTicksPerFrame : sheet.ticksPerFrame);
+  const pose = { row: strip.row, frames: strip.frames, seconds: (strip.frames * per) / TICK_RATE };
   return own ? { ...pose, sheet: own } : pose;
 }
 
@@ -70,8 +71,8 @@ export interface Move {
 export function characterMoves(sheet: SheetLayout): Move[] {
   const move = (label: string, strip: Strip | undefined, ticksPerFrame: number): Move[] => {
     if (!strip) return [];
-    const m: Move = { label, row: strip.row, frames: strip.frames, seconds: (strip.frames * ticksPerFrame) / TICK_RATE };
     const own = ownSheet(sheet, strip);
+    const m: Move = { label, row: strip.row, frames: strip.frames, seconds: (strip.frames * (own?.ticksPerFrame ?? ticksPerFrame)) / TICK_RATE };
     return [own ? { ...m, sheet: own } : m];
   };
   const per = sheet.ticksPerFrame;
@@ -156,8 +157,7 @@ export function characterArt(character: CharacterId, color: string | null, state
   const span = document.createElement("span");
   span.className = `mascot sheet ${character}`;
   // Only entrances baked into these lobby strips reach the edge of their cells.
-  if (sheet.url === "sprites/panther-lobby.png" || sheet.url === "sprites/spider-lobby.png"
-    || (character === "flash" && pose.row === SHEETS.flash.lobby.row)) {
+  if (sheet.url === "sprites/panther-lobby.png" || sheet.url === "sprites/spider-lobby.png") {
     span.classList.add("soft-entry");
   }
   const sprite = document.createElement("i");
@@ -176,6 +176,10 @@ export function characterArt(character: CharacterId, color: string | null, state
     "--s": `var(--cast-scale, calc(var(--k) * ${previewScale}))`,
   };
   for (const [k, v] of Object.entries(vars)) sprite.style.setProperty(k, v);
+  if (character === "goku" && sheet.url === SHEETS.goku.lobby.image.url
+    && pose.row === SHEETS.goku.lobby.row && pose.frames === SHEETS.goku.lobby.frames) {
+    span.appendChild(gokuAuraPreview(sprite, pose.seconds));
+  }
   span.appendChild(sprite);
   sheetUrl(sheet, color, pose.row)
     .then((url) => (sprite.style.backgroundImage = `url(${url})`))

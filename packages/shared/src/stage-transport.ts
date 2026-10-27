@@ -4,10 +4,10 @@ import { playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, OPPOSITE_DIRECTIONS, Floor, getTile, hasFlame, playerTile, tileCenter, Tile, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 import type { StageSeesaw } from "./stage-state";
 import { initializeTrolley, updateTrolley } from "./stage-trolley";
+import { startSeesawFlight, updateSeesawFlights } from "./stage-seesaw-flight";
 
-const FLIGHT_TICKS = 24;
 const FLIGHT_TILES = 3;
-const SEESAW_COOLDOWN = 30;
+const SEESAW_COOLDOWN = 3;
 
 function seesawGroups(s: MatchState): StageSeesaw[] {
   const visited = new Set<number>();
@@ -25,7 +25,7 @@ function seesawGroups(s: MatchState): StageSeesaw[] {
       if (horizontal) cx++; else cy++;
     }
     const center = cells[Math.floor(cells.length / 2)]!;
-    groups.push({ ...center, dir: horizontal ? "right" : "down", raised: false, cooldown: 0 });
+    groups.push({ ...center, dir: horizontal ? "right" : "down", raised: center.x < s.grid.width / 2, cooldown: 0 });
   }
   return groups;
 }
@@ -56,27 +56,12 @@ function finishFlight(s: MatchState, p: Player, dir: Facing): void {
   p.alive = false;
 }
 
-function startFlight(s: MatchState, p: Player, dir: Facing): void {
-  if (playerElevated(p)) return;
-  const [dx, dy] = DIR_VECTORS[dir];
-  const from = playerTile(p);
-  let distance = 0;
-  for (let step = 1; step <= FLIGHT_TILES; step++) {
-    const x = from.x + dx * step;
-    const y = from.y + dy * step;
-    if (getTile(s, x, y) === Tile.Wall) break;
-    if (safeLanding(s, x, y)) distance = step;
-  }
-  if (!distance) return;
-  p.px = tileCenter(from.x);
-  p.py = tileCenter(from.y);
-  (s.stageState!.flights ??= {})[p.id] = { dir, ticks: FLIGHT_TICKS, remaining: distance * TILE };
-}
-
-function updateFlights(s: MatchState): void {
+function updateFlights(s: MatchState, inputs: Record<string, PlayerInput>): void {
+  for (const landing of updateSeesawFlights(s, inputs)) finishFlight(s, landing.player, landing.dir);
   const flights = s.stageState?.flights;
   if (!flights) return;
   for (const [id, flight] of Object.entries(flights)) {
+    if (flight.kind === "seesaw") continue;
     const p = s.players.find(player => player.id === id);
     if (!p?.alive || flight.ticks <= 0) { delete flights[id]; continue; }
     const amount = Math.ceil(flight.remaining / flight.ticks);
@@ -113,7 +98,7 @@ function updateSeesaws(s: MatchState): void {
     const low = endpoint(saw, true);
     return s.players.some(p => {
       const tile = playerTile(p);
-      return p.alive && !playerElevated(p) && !s.stageState?.flights?.[p.id] && !p.jumpTicks && tile.x === low.x && tile.y === low.y;
+      return p.alive && !playerElevated(p) && !s.stageState?.flights?.[p.id] && s.stageState?.floorLocks?.[`seesaw:land:${p.id}`] !== s.tick && !p.jumpTicks && tile.x === low.x && tile.y === low.y;
     });
   });
   if (!triggered) return;
@@ -121,7 +106,7 @@ function updateSeesaws(s: MatchState): void {
     const high = endpoint(saw, false);
     for (const p of s.players) {
       const tile = playerTile(p);
-      if (p.alive && !s.stageState?.flights?.[p.id] && tile.x === high.x && tile.y === high.y) startFlight(s, p, high.dir);
+      if (p.alive && !s.stageState?.flights?.[p.id] && tile.x === high.x && tile.y === high.y) startSeesawFlight(s, p, high.dir);
     }
     for (const bomb of s.bombs) if (!bomb.air && !bomb.heldBy && bomb.x === high.x && bomb.y === high.y) launch(bomb, high.dir);
     saw.raised = !saw.raised;
@@ -130,8 +115,8 @@ function updateSeesaws(s: MatchState): void {
 }
 
 
-export function updateStageTransport(s: MatchState): void {
-  if (s.stage === "sb4-09") { updateFlights(s); updateSeesaws(s); }
+export function updateStageTransport(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
+  if (s.stage === "sb4-09") { updateFlights(s, inputs); updateSeesaws(s); }
   if (s.stage === "sb4-11") updateTrolley(s);
 }
 

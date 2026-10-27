@@ -1,0 +1,25 @@
+{
+  "status": "active",
+  "model": "option4",
+  "frames": 107,
+  "frame": [
+    168,
+    224
+  ],
+  "size": [
+    2352,
+    4256
+  ],
+  "anchor": [
+    82,
+    208
+  ],
+  "bodyH": 148,
+  "menuBodyH": 136,
+  "bounds": [
+    11,
+    154
+  ],
+  "effects": "none baked into character; physical menu disc retained",
+  "url_version": "20261026-option4-v1"
+}

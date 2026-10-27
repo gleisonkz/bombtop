@@ -5,7 +5,7 @@ import { stageTempoRate } from "./stage";
 import { stageSolid } from "./stage-obstacles";
 import { bombAt, DIR_VECTORS, getTile, tileCenter, Tile, type Direction, type MatchState, type Player } from "./state";
 
-function passable(s: MatchState, p: Player, x: number, y: number): boolean {
+export function canPlayerEnterTile(s: MatchState, p: Player, x: number, y: number): boolean {
   const tile = getTile(s, x, y);
   return !stageSolid(s, x, y) && (tile === Tile.Empty || (!!p.canBlockPass && tile === Tile.Block)) && (!!p.canBombPass || !bombAt(s, x, y));
 }
@@ -42,7 +42,7 @@ export function movePlayer(s: MatchState, p: Player, dir: Direction, speed = eff
   let along = horizontal ? p.px : p.py;
   let across = horizontal ? p.py : p.px;
   const tileAt = (a: number, c: number) =>
-    horizontal ? passable(s, p, a, c) : passable(s, p, c, a);
+    horizontal ? canPlayerEnterTile(s, p, a, c) : canPlayerEnterTile(s, p, c, a);
 
   const ta = Math.floor(along / TILE);
   const tc = Math.floor(across / TILE);

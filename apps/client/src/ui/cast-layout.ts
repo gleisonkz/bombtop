@@ -3,9 +3,9 @@ import { CHARACTER_SHEETS, previewPose } from "./sheet-art";
 import animationBounds from "./cast-animation-bounds.json";
 
 export const CAST_BODY_HEIGHT: Record<Exclude<CharacterId, "bomb">, number> = {
-  captain: 124, thor: 127, goku: 142, naruto: 109, spider: 122, pikachu: 129,
-  static: CHARACTER_SHEETS.static.lobby!.bodyH!, flash: 158, bugs: 127, lantern: 136, donatello: 123, penelope: 148,
-  panther: 126, harry: 126, optimus: 165, pele: 119, lula: 166,
+  captain: 124, thor: 127, goku: 104, naruto: 109, spider: 122, pikachu: 129,
+  static: CHARACTER_SHEETS.static.lobby!.bodyH!, flash: 124, bugs: 127, lantern: 136, donatello: 123, penelope: 124,
+  panther: 126, harry: 126, optimus: 164, pele: 119, lula: 120,
 };
 
 /** Complete visible envelope, verified against every frame of each menu animation. */

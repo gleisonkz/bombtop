@@ -22,6 +22,25 @@ function finish(s: MatchState, reels: NonNullable<NonNullable<NonNullable<MatchS
 }
 
 describe("stage slots", () => {
+  it("keeps 0-0-3 without a prize even with two skull symbols", () => {
+    const s = arena();
+    finish(s, ["skull", "skull", "fire"]);
+    expect(s.items).toEqual([]);
+  });
+
+  it("pays the native 1-2-3 combination even though all symbols differ", () => {
+    const s = arena();
+    finish(s, ["bar", "seven", "fire"]);
+    expect(s.items).toHaveLength(3);
+  });
+
+  it("does not start sudden death for native triple skull", () => {
+    const s = arena();
+    finish(s, ["skull", "skull", "skull"]);
+    expect(s.items).toHaveLength(3);
+    expect(s.pressureAt).toBe(999);
+  });
+
   it("uses only the match PRNG to select reels", () => {
     const s = arena();
     const expected = { rng: s.rng };
@@ -91,16 +110,17 @@ describe("stage slots", () => {
   });
 
   it.each([
-    ["skull", 3, ItemKind.Skull], ["fire", 9, ItemKind.Fire], ["bar", 19, ItemKind.Egg], ["seven", 30, ItemKind.Bomb],
+    ["skull", 3, ItemKind.Skull], ["fire", 3, ItemKind.Speed], ["bar", 3, ItemKind.Glove], ["seven", 30, ItemKind.Bomb],
   ] as const)("pays triple %s once", (symbol, count, result) => {
     const s = arena();
     s.pressureLimit = 8;
     finish(s, [symbol, symbol, symbol]);
     expect(s.items).toHaveLength(count);
     expect(s.stageState?.roulette).toMatchObject({ active: false, cooldown: SLOT_CONFIG.cooldownTicks, result, stopped: [true, true, true] });
-    if (symbol === "skull") { expect(s.pressureAt).toBe(s.tick); expect(s.pressureLimit).toBeUndefined(); }
-    if (symbol === "fire") expect(s.items.every(item => item.kind === ItemKind.Fire || item.kind === ItemKind.FullFire)).toBe(true);
-    if (symbol === "bar") { expect(s.items.filter(item => item.kind === ItemKind.Egg)).toHaveLength(1); expect(s.items.every(item => item.kind !== ItemKind.Skull)).toBe(true); }
+    expect(s.pressureAt).toBe(999);
+    expect(s.pressureLimit).toBe(8);
+    if (symbol === "fire") expect(s.items.map(item => item.kind)).toEqual([ItemKind.Speed, ItemKind.Egg, ItemKind.Speed]);
+    if (symbol === "bar") expect(s.items.map(item => item.kind)).toEqual([ItemKind.Glove, ItemKind.Bomb, ItemKind.Bomb]);
     updateStageSlots(s);
     expect(s.items).toHaveLength(count);
   });
@@ -121,22 +141,24 @@ describe("stage slots", () => {
   });
 
   it.each([
-    ["seven", ItemKind.Bomb, 3], ["bar", ItemKind.Speed, 3], ["fire", ItemKind.Fire, 3], ["skull", ItemKind.Skull, 1],
-  ] as const)("uses the approximate double %s table", (symbol, kind, count) => {
+    [["seven", "seven", "bar"], [ItemKind.Kick]],
+    [["bar", "bar", "seven"], [ItemKind.Fire, ItemKind.Bomb, ItemKind.Speed]],
+    [["fire", "fire", "bar"], [ItemKind.Bomb, ItemKind.Bomb, ItemKind.Bomb]],
+    [["skull", "skull", "bar"], [ItemKind.Skull, ItemKind.Skull, ItemKind.Skull]],
+  ] as const)("pays native double combination %j", (reels, kinds) => {
     const s = arena();
-    finish(s, [symbol, symbol, symbol === "bar" ? "seven" : "bar"]);
-    expect(s.items).toHaveLength(count);
-    expect(s.items.every(item => item.kind === kind)).toBe(true);
+    finish(s, [...reels]);
+    expect(s.items.map(item => item.kind)).toEqual(kinds);
     expect(s.pressureAt).toBe(999);
   });
 
-  it("has no payout for distinct symbols and honors configurable timing", () => {
+  it("has no payout for native 0-1-3 and honors configurable timing", () => {
     const s = arena();
     SLOT_CONFIG.timeoutTicks = 2;
     SLOT_CONFIG.cooldownTicks = 3;
     igniteStageSlots(s, 1, 1);
     expect(s.stageState?.roulette?.until).toBe(22);
-    finish(s, ["seven", "bar", "fire"]);
+    finish(s, ["skull", "bar", "fire"]);
     expect(s.items).toEqual([]);
     igniteStageSlots(s, 1, 1);
     expect(s.stageState?.roulette?.active).toBe(false);

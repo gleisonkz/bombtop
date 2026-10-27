@@ -83,6 +83,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
       moveSurprisePlayer(s, p);
       continue;
     }
+    const entryFacing = p.facing;
     const dir = cursedDirection(p, input?.dir ?? null);
     if (dir && p.alive) p.facing = dir;
     if (input) bombButton(s, p, input, inputs);
@@ -96,7 +97,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
     const forced = p.curse?.kind === "cannotStop" ? p.curse : null;
     const intended = dir ?? forced?.momentum ?? null;
     const [px, py] = [p.px, p.py];
-    const moved = moveSurprisePlayer(s, p, input) ? p.facing : steer(s, p, intended, cursedDirection(p, input?.alt ?? null));
+    const moved = moveSurprisePlayer(s, p, input, entryFacing) ? p.facing : steer(s, p, intended, cursedDirection(p, input?.alt ?? null));
     if (moved && moved !== dir) p.facing = moved;
     if (forced) {
       if (p.px !== px || p.py !== py) {

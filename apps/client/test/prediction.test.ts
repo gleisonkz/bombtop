@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMatch, publicView, TILE, type PlayerInput, type Snapshot } from "@bombtop/shared";
+import { createMatch, Floor, publicView, step, TILE, type PlayerInput, type Snapshot } from "@bombtop/shared";
 import { Predictor } from "../src/net/prediction";
 
 const input = (dir: PlayerInput["dir"], extra: Partial<PlayerInput> = {}): PlayerInput => ({ dir, bomb: false, ...extra });
@@ -10,6 +10,35 @@ function snapshot(acks: Snapshot["acks"] = {}): Snapshot {
 }
 
 describe("Predictor", () => {
+  it("respects the server flag pickup pause before resuming ordinary prediction", () => {
+    const s = createMatch({ stage: "sb4-12", seed: 7, playerIds: ["me", "them"], blockDensity: 0 });
+    s.players[0]!.px = 2.5 * TILE;
+    const predictor = new Predictor("me");
+    for (let tick = 0; tick < 11; tick++) predictor.step(input("right"));
+    step(s, { me: input("right") });
+    const snap: Snapshot = { ...publicView(s), acks: { me: { seq: 1, ticks: 1 } } };
+    const original = structuredClone(snap);
+    for (let tick = 0; tick < 10; tick++) step(s, { me: input("right") });
+    expect(predictor.predict(snap)).toEqual(s.players[0]);
+    expect(snap).toEqual(original);
+  });
+  it("continues a server ice slide through ordinary floor without mutating its snapshot", () => {
+    const s = createMatch({ stage: "sb4-06", seed: 7, playerIds: ["me", "them"], blockDensity: 0 });
+    s.players[0]!.facing = "right";
+    const index = s.grid.width + 1;
+    s.grid.floor[index] = Floor.Surprise;
+    s.grid.floor[index + 1] = Floor.Normal;
+    s.stageState!.surprise = { [index]: { kind: "ice", hits: 1 } };
+    const predictor = new Predictor("me");
+    for (let tick = 0; tick < 9; tick++) predictor.step(input("left"));
+    for (let tick = 0; tick < 5; tick++) step(s, { me: input("left") });
+    const snap: Snapshot = { ...publicView(s), acks: { me: { seq: 1, ticks: 5 } } };
+    const before = structuredClone(snap);
+    for (let tick = 0; tick < 4; tick++) step(s, { me: input("left") });
+    expect(predictor.predict(snap)).toEqual(s.players[0]);
+    expect(predictor.predict(snap)).toEqual(s.players[0]);
+    expect(snap).toEqual(before);
+  });
   it("queues hold and release while captured and replays only inputs newer than the release ack", () => {
     const predictor = new Predictor("me");
     const held = snapshot();

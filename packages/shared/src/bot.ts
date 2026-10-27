@@ -1,4 +1,5 @@
 import { FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
+import { forecastStageBalls } from "./stage-balls";
 import { pressureOrder } from "./pressure";
 import { cursedDirection, effectiveCapacity, effectiveFuse, effectiveRange, effectiveSpeed } from "./curse";
 import { createRng } from "./rng";
@@ -270,7 +271,7 @@ export class Bot {
     const mine = s.bombs.filter((b) => b.ownerId === p.id).length;
     const canBomb = p.curse?.kind !== "constipation" && !bombAt(s, here.x, here.y) && mine < Math.min(effectiveCapacity(p), t.bombs + this.heat);
     if (canBomb) {
-      const possible = ownBomb(p, here);
+      const possible = ownBomb(p, here, s.stage);
       const after = dangerMap(s, p.id, possible);
       const worth = bombValue(s, p, here.x, here.y) > 0 || ((t.cunning || this.heat >= 2) && this.traps(s, p, after));
       if (worth && this.canEscape(s, p, dangerMap(s, p.id, possible, true))) return { dir: null, bomb: true };
@@ -419,15 +420,7 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
     s.grid.floor.forEach((floor, index) => {
       if (floor === Floor.Pit) mark(index % w, Math.floor(index / w), 0);
     });
-    for (const ball of s.stageState?.balls ?? []) {
-      const x = Math.floor(ball.px / TILE);
-      const y = Math.floor(ball.py / TILE);
-      mark(x, y, 0);
-      if (!ball.dir) continue;
-      const [dx, dy] = DIR_VECTORS[ball.dir];
-      const reach = Math.min(3, Math.ceil((ball.travelRemaining ?? 8 * TILE) / TILE));
-      for (let offset = 1; offset <= reach && getTile(s, x + dx * offset, y + dy * offset) === Tile.Empty; offset++) mark(x + dx * offset, y + dy * offset, offset * 16);
-    }
+    for (const ball of forecastStageBalls(s, 48)) mark(ball.x, ball.y, ball.ticks);
     const trolley = s.stageState?.trolley;
     if (trolley?.riderId && trolley.route?.length && trolley.phase !== "leaving") {
       const delay = trolley.phase === "boarding" ? trolley.phaseTicks ?? 0 : 0;
@@ -623,8 +616,8 @@ export function heading(p: Player, x: number, y: number): Facing | null {
   return Math.abs(cx) >= Math.abs(cy) ? (cx > 0 ? "right" : "left") : cy > 0 ? "down" : "up";
 }
 
-function ownBomb(p: Player, at: { x: number; y: number }): Bomb {
-  return { ownerId: p.id, x: at.x, y: at.y, fuse: effectiveFuse(p), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null };
+function ownBomb(p: Player, at: { x: number; y: number }, stage?: MatchState["stage"]): Bomb {
+  return { ownerId: p.id, x: at.x, y: at.y, fuse: effectiveFuse(p, stage), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null };
 }
 
 /** What a bomb at (x, y) would hit: blocks to break and rivals to catch. */

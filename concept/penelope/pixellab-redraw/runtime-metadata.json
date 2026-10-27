@@ -1,0 +1,58 @@
+{
+  "width": 1728,
+  "height": 3264,
+  "frameW": 192,
+  "frameH": 192,
+  "anchorX": 97.0,
+  "anchorY": 158,
+  "bodyH": 124,
+  "scale": 0.17306452,
+  "portraitCrop": [
+    58,
+    31,
+    69,
+    72
+  ],
+  "menuBodyH": 124,
+  "menuBounds": [
+    45,
+    129
+  ],
+  "lobby": {
+    "anchorX": 97.0,
+    "anchorY": 158,
+    "bodyH": 124,
+    "bounds": [
+      45,
+      129
+    ]
+  },
+  "victory": {
+    "anchorX": 97.0,
+    "anchorY": 158,
+    "bodyH": 124,
+    "bounds": [
+      37,
+      150
+    ]
+  },
+  "muzzle": {
+    "down": [
+      -0.47,
+      -72.03
+    ],
+    "side": [
+      24.38,
+      -73.56
+    ],
+    "up": [
+      -1.86,
+      -107
+    ]
+  },
+  "sha256": {
+    "gameplay": "2370b4b17ff4dd4c76c283f66b0fac405ba237a0b6b54a4bc452d04c7e775b64",
+    "lobby": "77cff736283a933d8cd8e6e823975ced38bc42e259ef3adc2c74fe08f68a08c1",
+    "victory": "e31ccb1baaa9ea4de2d57f69424e893a68231ef2a26f2d896f0ac65b7699271f"
+  }
+}

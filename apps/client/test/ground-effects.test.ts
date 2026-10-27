@@ -60,6 +60,31 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("ground effects", () => {
+  it.each(["up", "down", "left", "right"] as const)("draws the Optimus wake behind its %s travel without old exhaust or square plates", facing => {
+    const renderer = new Renderer(false);
+    const state = createMatch({ seed: 1, playerIds: ["optimus"], blockDensity: 0, characters: { optimus: "optimus" } });
+    const player = state.players[0]!;
+    player.truck = 20;
+    player.facing = facing;
+    renderer.setCharacters(new Map([[player.id, "optimus"]]));
+    const internal = renderer as unknown as { optimusEffects: AbilityPixelEffects; abilityEffects: AbilityPixelEffects; fx: { particles: { kind: string }[] }; skins: Map<string, unknown>; placeSprite(...args: unknown[]): void };
+    internal.skins.set("optimus", { sheet: SHEETS.optimus, heads: new Map() });
+    vi.spyOn(internal, "placeSprite").mockImplementation(() => {});
+    const effects = vi.spyOn(internal.optimusEffects, "draw").mockReturnValue(true);
+    const oldEffects = vi.spyOn(internal.abilityEffects, "draw");
+    renderer.draw(publicView(state), new Map(), 1);
+    const wake = effects.mock.calls.find(([kind]) => kind === "truckSpeed")![1];
+    const center = { x: player.px / TILE * 16, y: player.py / TILE * 16 };
+    if (facing === "right") expect(wake.x).toBeLessThan(center.x);
+    if (facing === "left") expect(wake.x).toBeGreaterThan(center.x);
+    if (facing === "up") expect(wake.y).toBeGreaterThan(center.y);
+    if (facing === "down") expect(wake.y).toBeLessThan(center.y);
+    expect(effects).toHaveBeenCalledWith("truckDust", expect.anything());
+    expect(effects).toHaveBeenCalledWith("truckShift", expect.objectContaining({ tick: 0 }));
+    expect(oldEffects.mock.calls.some(([kind]) => kind === "exhaust")).toBe(false);
+    expect(internal.fx.particles.some(p => p.kind === "debris" || p.kind === "smoke")).toBe(false);
+  });
+
   it.each(["up", "down", "left", "right"] as const)("keeps the firing sprite facing its %s beam after input turns", dir => {
     const renderer = new Renderer(true);
     const state = createMatch({ seed: 1, playerIds: ["goku"], blockDensity: 0, characters: { goku: "goku" } });

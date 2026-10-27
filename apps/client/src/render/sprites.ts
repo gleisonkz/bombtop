@@ -1,3 +1,5 @@
+import flashPaintRegions from "./flash-paint-regions.json";
+import lulaPaintRegions from "./lula-paint-regions.json";
 import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE_TICKS, DIR_VECTORS, FUSE_TICKS, KAME_CHARGE, RASENGAN_TICKS, SHIELD_TICKS, SPECIAL_COOLDOWN, type Blast, type Bomb, type Player, type Flame, FLAME_TICKS, TICK_RATE, TILE, ItemKind, Tile, type BombType, type Facing } from "@bombtop/shared";
 import type { MascotView, Mood } from "../ui/art";
 import bomberPaintRegions from "./bomber-paint-regions.json";
@@ -29,6 +31,7 @@ export interface LobbyImage {
   frameH: number;
   anchorX: number;
   anchorY: number;
+  ticksPerFrame?: number;
 }
 
 /** Where each animation sits on a character sheet (all frames are one fixed cell size). */
@@ -76,6 +79,8 @@ export interface SheetLayout {
   victory?: Strip & { image?: LobbyImage };
   /** Casting the special, once per use (CAST_TICKS_PER_FRAME each frame). */
   cast?: Record<"down" | "up" | "side", Strip>;
+  /** Optional opening phase fitted into a fixed gameplay windup. */
+  castWindup?: { ticks: number; frames: number };
   /** Drawn size relative to the sheet (big sheets are shrunk to the tile). */
   scale?: number;
 }
@@ -151,14 +156,14 @@ export const SHEETS = {
   },
   /** Broader pixel-art Goku; original animation geometry (scripts/pack-goku.py). */
   goku: {
-    url: "sprites/goku.png?v=wide-pixel-2",
-    width: 1314,
-    height: 2862,
-    frameW: 146,
-    frameH: 159,
-    anchorX: 71.5,
-    anchorY: 153,
-    bodyH: 148,
+    url: "sprites/goku.png?v=a1-skeleton-20261026",
+    width: 1188,
+    height: 2952,
+    frameW: 132,
+    frameH: 164,
+    anchorX: 66,
+    anchorY: 150,
+    bodyH: 104,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -170,14 +175,14 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Power-up redrawn from the broader gameplay Goku, then reversed back to his exact idle. */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/goku-lobby.png?v=wide-transform-5", width: 2048, height: 207, frameW: 128, frameH: 207, anchorX: 64, anchorY: 194 } },
+    /** Explicit rising-black, mixed and golden hair phases; menu playback uses 20fps. */
+    lobby: { row: 0, frames: 60, image: { url: "sprites/goku-lobby.png?v=a1-ssj1-72df66b3e95d", width: 7920, height: 164, frameW: 132, frameH: 164, anchorX: 66, anchorY: 150, ticksPerFrame: 3 } },
     /** Visible hand positions in the redrawn release pose. */
-    muzzle: { side: [54.5, -75], down: [0.5, -62], up: [39.5, -80] },
+    muzzle: { down: [0.999, -31.807], side: [26.836, -52.766], up: [7.874, -60.395] },
     /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */
     hues: [205, 235],
-    hueBase: [8, 59, 137],
-    scale: 0.15,
+    hueBase: [36, 56, 114],
+    scale: 0.21153846,
   },
   /** Approved Naruto model; original 108-frame poses (scripts/pack-naruto-approved.py). */
   naruto: {
@@ -270,15 +275,15 @@ export const SHEETS = {
     hueBase: [34, 82, 149],
     scale: 0.145,
   },
-  /** Super Choque: supplied locomotion and redrawn action/carry/menu poses. */
+  /** Approved Super Choque option4 model, 107 pose-matched frames without baked-in effects. */
   static: {
-    url: "sprites/static-final.png?v=20261026-carry-menu-v1",
+    url: "sprites/static-final.png?v=20261026-option4-v1",
     width: 2352,
-    height: 3534,
+    height: 4256,
     frameW: 168,
-    frameH: 186,
+    frameH: 224,
     anchorX: 82,
-    anchorY: 170,
+    anchorY: 208,
     bodyH: 148,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
@@ -291,10 +296,10 @@ export const SHEETS = {
     cast: { down: { row: 8, frames: 6 }, side: { row: 9, frames: 7 }, up: { row: 10, frames: 4 } },
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 17, frames: 10, bodyH: 142 },
+    lobby: { row: 17, frames: 10, bodyH: 136 },
     victory: { row: 18, frames: 11 },
     /** Open palms in the first pull pose, relative to the native feet anchor. */
-    muzzle: { side: [50, -84], down: [34, -84], up: [0, -92] },
+    muzzle: { side: [52, -84], down: [37, -84], up: [0, -101] },
     /** His long blue coat. */
     hues: [195, 245],
     hueBase: [24, 61, 94],
@@ -303,16 +308,16 @@ export const SHEETS = {
     keepFor: [[245, 245, 245]],
     scale: 0.14586486486486486,
   },
-  /** The Flash (fan art), made in PixelLab (scripts/build-character-sheet.py flash lays out its frames). */
+  /** Approved Flash option 1; concept/flash/pixellab-redraw/integrate.py prepares and promotes native PixelLab poses. */
   flash: {
-    url: "sprites/flash.png",
-    width: 2880,
-    height: 3024,
-    frameW: 180,
-    frameH: 168,
-    anchorX: 91,
-    anchorY: 161,
-    bodyH: 157,
+    url: "sprites/flash.png?v=20261026-option1-v1",
+    width: 3584,
+    height: 4032,
+    frameW: 224,
+    frameH: 224,
+    anchorX: 111.5,
+    anchorY: 211,
+    bodyH: 126,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -324,14 +329,15 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** Crackling, gone in a flash, streaking across and back, a skid and a thumbs up (scripts/build-flash-lobby.py). */
-    lobby: { row: 17, frames: 16 },
+    /** Sixteen native lobby poses; the game renders effects separately. */
+    lobby: { row: 17, frames: 16, bodyH: 124 },
     /** His red suit (the range wraps through 360; his yellow boots, belt and ear wings stay his own). */
     hues: [335, 12],
+    colorProtection: flashPaintRegions,
     hueBase: [210, 56, 53],
     /** White would bleach his whole suit (a ghost of the flash): that player keeps the red. */
     keepFor: [[245, 245, 245]],
-    scale: 0.137,
+    scale: 0.17070634920634922,
   },
   /** Approved option 1; concept/bugs/pixellab-redraw/pack.py reproduces the atlas. */
   bugs: {
@@ -419,14 +425,14 @@ export const SHEETS = {
   },
   /** Penelope Pitstop (fan art), made in PixelLab (scripts/build-character-sheet.py penelope lays out its frames). */
   penelope: {
-    url: "sprites/penelope.png",
-    width: 1656,
-    height: 2686,
-    frameW: 184,
-    frameH: 158,
-    anchorX: 87,
-    anchorY: 156,
-    bodyH: 148,
+    url: "sprites/penelope.png?v=base3-2370b4b1",
+    width: 1728,
+    height: 3264,
+    frameW: 192,
+    frameH: 192,
+    anchorX: 97.0,
+    anchorY: 158,
+    bodyH: 124,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -438,21 +444,21 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 9),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** A touch-up in her compact mirror, powder, a fluff of her ponytail and a kiss blown at us (scripts/build-penelope-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/penelope-lobby.png", width: 2208, height: 154, frameW: 138, frameH: 154, anchorX: 64, anchorY: 154 } },
-    /** A jump for joy, then a checkered race flag waved over her head, hearts floating up (scripts/build-penelope-victory.py). */
-    victory: { row: 0, frames: 16, image: { url: "sprites/penelope-victory.png", width: 3200, height: 164, frameW: 200, frameH: 164, anchorX: 95, anchorY: 164 } },
+    /** Approved option 3 presentation gestures, without baked props or effects. */
+    lobby: { row: 0, frames: 16, bodyH: 124, image: { url: "sprites/penelope-lobby.png?v=base3-77cff736", width: 3072, height: 192, frameW: 192, frameH: 192, anchorX: 97.0, anchorY: 158 } },
+    /** Approved option 3 jump and wave, without baked props or effects. */
+    victory: { row: 0, frames: 16, bodyH: 124, image: { url: "sprites/penelope-victory.png?v=base3-e31ccb1b", width: 3072, height: 192, frameW: 192, frameH: 192, anchorX: 97.0, anchorY: 158 } },
     /** Her lips (the kiss leaves from them; the back view: over her head). */
-    muzzle: { side: [30, -80], down: [0, -76], up: [0, -100] },
+    muzzle: { down: [-0.47, -72.03], side: [24.38, -73.56], up: [-1.86, -107] },
     /** Her pink helmet and suit (her blonde hair, white goggles, gloves and boots stay her own). */
     hues: [322, 348],
     hueBase: [235, 77, 133],
-    scale: 0.145,
+    scale: 0.17306452,
   },
 
   /** The pink panther (fan art), "Pink Panther HD 4" in PixelLab (scripts/build-character-sheet.py panther). */
   panther: {
-    url: "sprites/panther.png?v=20261026-slim2",
+    url: "sprites/panther.png?v=walk-down-2d1a8089",
     width: 1568,
     height: 3808,
     frameW: 224,
@@ -508,13 +514,13 @@ export const SHEETS = {
     scale: 0.16803906,
   },
   optimus: {
-    url: "sprites/optimus.png",
-    width: 1566,
-    height: 3094,
-    frameW: 174,
-    frameH: 182,
-    anchorX: 90.5,
-    anchorY: 169,
+    url: "sprites/optimus.png?v=20261026-armored-v1",
+    width: 2688,
+    height: 3808,
+    frameW: 224,
+    frameH: 224,
+    anchorX: 111.5,
+    anchorY: 211,
     bodyH: 164,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
@@ -523,14 +529,15 @@ export const SHEETS = {
     walk: strips(3, 4, 5, 6),
     stun: { row: 6, frames: 6 },
     death: { row: 7, frames: 7 },
-    /** Turning into his truck: down into a crouch, then (where it stopped) back up (the truck is its own art, TRUCK). */
-    cast: strips(8, 9, 10, 9),
+    /** Six mechanical folding stages, truck handoff, then the same joints unfold on return. */
+    cast: strips(8, 9, 10, 12),
+    castWindup: { ticks: TRUCK_SHIFT, frames: 6 },
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    /** His eyes flare, he bursts into his truck, which drives off the card and brakes back in, and he rises with his fist high (scripts/build-optimus-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/optimus-lobby.png", width: 5120, height: 182, frameW: 320, frameH: 182, anchorX: 160, anchorY: 166 } },
+    /** Clean transformation and raised-fist celebration, sharing the approved robot and truck artwork. */
+    lobby: { row: 0, frames: 16, bodyH: 164, image: { url: "sprites/optimus-lobby.png?v=20261026-armored-v2", width: 5120, height: 224, frameW: 320, frameH: 224, anchorX: 160, anchorY: 211 } },
     /** His helmet, hands, thighs' plates and boots (the blue of his eyes and windows, a paler cyan, stay his own). */
-    hues: [200, 240],
+    hues: [215, 240],
     hueBase: [5, 80, 174],
     keepFor: [[245, 245, 245], [232, 74, 74]],
     scale: 0.134,
@@ -566,14 +573,14 @@ export const SHEETS = {
   },
 
   lula: {
-    url: "sprites/lula.png",
-    width: 1386,
-    height: 3384,
-    frameW: 154,
-    frameH: 188,
-    anchorX: 77.5,
-    anchorY: 184,
-    bodyH: 172,
+    url: "sprites/lula.png?v=20261026-pele-style-option1-v1",
+    width: 1728,
+    height: 3456,
+    frameW: 192,
+    frameH: 192,
+    anchorX: 96,
+    anchorY: 155,
+    bodyH: 120,
     ticksPerFrame: 7,
     idleTicksPerFrame: 15,
     side: "right",
@@ -587,11 +594,12 @@ export const SHEETS = {
     carryWalk: strips(14, 15, 16, 6),
     /** The "L" raised high, laughing. */
     lobby: { row: 17, frames: 8 },
-    /** His red t-shirt (the yellow star and the reds of his face stay his own: build-character-sheet.py face_reds). */
+    /** His red shirt is recolored; the reviewed head regions preserve the face and beard. */
+    colorProtection: lulaPaintRegions,
     hues: [336, 6],
     hueBase: [217, 45, 29],
     keepFor: [[232, 74, 74]],
-    scale: 0.126,
+    scale: 0.1806,
   },
 
   /** The bomb mascot, a demolition trooper with an iron bomb for a head, drawn in code as pixel art (scripts/build-bomber.py). */
@@ -892,9 +900,9 @@ export function castTicks(
 }
 
 const KAME_CHARGE_HANDS = {
-  down: [[40, 113], [38, 106], [40, 115], [48, 112], [68, 116]],
-  up: [[103, 95], [103, 95], [106, 94], [108, 104], [108, 104]],
-  side: [[63, 113], [62, 113], [70, 116], [66, 117], [79, 112]],
+  down: [[51.582, 118.311], [49.167, 117.653], [48.597, 117.9], [53.693, 117.387], [65.399, 120.421]],
+  side: [[61.119, 120.142], [60.987, 120.421], [66.338, 123.214], [64.924, 121.561], [67.404, 121.356]],
+  up: [[66.219, 118.936], [63.278, 118.153], [64.112, 117.477], [68.658, 117.438], [71.79, 117.641]],
 } as const;
 
 export function kameChargeOrigin(dir: Facing, cx: number, cy: number, charge: number): [number, number] {
@@ -1265,6 +1273,14 @@ export interface FrameRect {
   flip: boolean;
 }
 
+function castFrameColumn(sheet: SheetLayout, ticks: number | undefined): number {
+  if (ticks === undefined) return -1;
+  const windup = sheet.castWindup;
+  if (!windup) return Math.floor(ticks / CAST_TICKS_PER_FRAME);
+  if (ticks < windup.ticks) return Math.floor(ticks * windup.frames / windup.ticks);
+  return windup.frames + Math.floor((ticks - windup.ticks) / CAST_TICKS_PER_FRAME);
+}
+
 /** The sheet cell to draw for a player this tick. */
 export function playerFrame(
   sheet: SheetLayout,
@@ -1291,7 +1307,7 @@ export function playerFrame(
     const strip = sheet.cast[view];
     return { ...cell(sheet, strip, Math.min(Math.floor(shielding / CAST_TICKS_PER_FRAME), strip.frames - 1)), flip };
   }
-  const castCol = casting === undefined ? -1 : Math.floor(casting / CAST_TICKS_PER_FRAME);
+  const castCol = castFrameColumn(sheet, casting);
   if (sheet.cast && castCol >= 0 && castCol < sheet.cast[view].frames && !carrying) return { ...cell(sheet, sheet.cast[view], castCol), flip };
   const set = carrying && sheet.carryIdle ? (moving ? sheet.carryWalk! : sheet.carryIdle) : moving ? sheet.walk : sheet.idle;
   const strip = set[view];
@@ -1465,7 +1481,7 @@ export function between(from: Pos, to: Pos, alpha: number): Pos {
  * (coming down) and its back (going up), FRAMES frames driving each (the side's wheels turning, the cab rocking), its
  * wheels on the anchor's line.
  */
-export const TRUCK = { url: "sprites/truck.png", w: 128, h: 96, frames: 4, rows: { side: 0, down: 1, up: 2 }, anchorX: 64, anchorY: 90, scale: 0.26 };
+export const TRUCK = { url: "sprites/truck.png?v=20261026-armored-v1", w: 128, h: 96, frames: 4, rows: { side: 0, down: 1, up: 2 }, anchorX: 64, anchorY: 90, scale: 0.26 };
 const TRUCK_FRAME_TICKS = 2;
 
 /** The truck as he drives (null while he is not driving): the view his facing shows, and its driving frame. */

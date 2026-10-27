@@ -1,7 +1,8 @@
-import { FUSE_TICKS, MAX_SPEED, SLOW_SPEED, TICK_RATE } from "./constants";
+import { FUSE_TICKS, MAX_SPEED, SB4_NORMAL_FUSE_TICKS, SLOW_SPEED, TICK_RATE } from "./constants";
 import { nextRandom } from "./rng";
 import { playerElevated } from "./player-carry";
 import { playerTile, type CurseKind, type Direction, type MatchState, type Player } from "./state";
+import type { StageId } from "./stage";
 
 export const CURSES: readonly CurseKind[] = [
   "diarrhea", "weakFire", "hiccups", "fast", "shortFuse", "invisible",
@@ -28,9 +29,10 @@ export function effectiveCapacity(p: Player): number {
   return p.curse?.kind === "weakFire" ? 1 : p.bombCapacity;
 }
 
-export function effectiveFuse(p: Player): number {
+export function effectiveFuse(p: Player, stage?: StageId): number {
   if (p.curse?.kind === "shortFuse") return TICK_RATE;
   if (p.curse?.kind === "longFuse") return 4 * TICK_RATE;
+  if (p.bombType === "normal" && stage?.startsWith("sb4-")) return SB4_NORMAL_FUSE_TICKS;
   return FUSE_TICKS;
 }
 

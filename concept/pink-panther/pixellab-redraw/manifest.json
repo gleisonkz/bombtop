@@ -71,26 +71,26 @@
       "name": "walk.down",
       "anchor": [
         100,
-        160
+        164
       ],
       "frames": [
         {
-          "path": "generated/walk-south/frame_000.png"
+          "path": "../walk-down-fix/generated/frame_000.png"
         },
         {
-          "path": "generated/walk-south/frame_001.png"
+          "path": "../walk-down-fix/generated/frame_001.png"
         },
         {
-          "path": "generated/walk-south/frame_002.png"
+          "path": "../walk-down-fix/generated/frame_002.png"
         },
         {
-          "path": "generated/walk-south/frame_003.png"
+          "path": "../walk-down-fix/generated/frame_003.png"
         },
         {
-          "path": "generated/walk-south/frame_004.png"
+          "path": "../walk-down-fix/generated/frame_004.png"
         },
         {
-          "path": "generated/walk-south/frame_005.png"
+          "path": "../walk-down-fix/generated/frame_005.png"
         }
       ]
     },

@@ -1,0 +1,728 @@
+{
+  "source_root": ".",
+  "approved_reference": "../pixellab-preview/option-1.png",
+  "pixel_scale": 1,
+  "rows": [
+    {
+      "name": "idle.down",
+      "frames": [
+        "frames/idle-south/0.png",
+        "frames/idle-south/1.png",
+        "frames/idle-south/2.png",
+        "frames/idle-south/3.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "idle-south",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "idle.side",
+      "frames": [
+        "frames/idle-east/0.png",
+        "frames/idle-east/1.png",
+        "frames/idle-east/2.png",
+        "frames/idle-east/3.png"
+      ],
+      "anchor": [
+        84,
+        143
+      ],
+      "source_action": "idle-east",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "idle.up",
+      "frames": [
+        "frames/idle-north/0.png",
+        "frames/idle-north/1.png",
+        "frames/idle-north/2.png",
+        "frames/idle-north/3.png"
+      ],
+      "anchor": [
+        80,
+        142
+      ],
+      "source_action": "idle-north",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "walk.down",
+      "frames": [
+        "frames/walk-south/1.png",
+        "frames/walk-south/2.png",
+        "frames/walk-south/3.png",
+        "frames/walk-south/4.png",
+        "frames/walk-south/5.png",
+        "frames/walk-south/6.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "walk-south",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "walk.side",
+      "frames": [
+        "frames/walk-east/1.png",
+        "frames/walk-east/2.png",
+        "frames/walk-east/3.png",
+        "frames/walk-east/4.png",
+        "frames/walk-east/5.png",
+        "frames/walk-east/6.png"
+      ],
+      "anchor": [
+        84,
+        143
+      ],
+      "source_action": "walk-east",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "walk.up",
+      "frames": [
+        "frames/walk-north/1.png",
+        "frames/walk-north/2.png",
+        "frames/walk-north/3.png",
+        "frames/walk-north/4.png",
+        "frames/walk-north/5.png",
+        "frames/walk-north/6.png"
+      ],
+      "anchor": [
+        80,
+        142
+      ],
+      "source_action": "walk-north",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "stun",
+      "frames": [
+        "frames/stun/1.png",
+        "frames/stun/2.png",
+        "frames/stun/3.png",
+        "frames/stun/4.png",
+        "frames/stun/5.png",
+        "frames/stun/6.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "stun",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "death",
+      "frames": [
+        "frames/death-fxfree/0.png",
+        "frames/death-fxfree/1.png",
+        "frames/death-fxfree/2.png",
+        "frames/death-fxfree/3.png",
+        "frames/death-fxfree/4.png",
+        "frames/death-fxfree/5.png",
+        "frames/death-fxfree/6.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "death-fxfree",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "name": "cast.down",
+      "frames": [
+        "frames/cast-south-fxfree/0.png",
+        "frames/cast-south-fxfree/1.png",
+        "frames/cast-south-fxfree/2.png",
+        "frames/cast-south-fxfree/3.png",
+        "frames/cast-south-fxfree/4.png",
+        "frames/cast-south-fxfree/5.png",
+        "frames/cast-south-fxfree/6.png",
+        "frames/cast-south-fxfree/7.png",
+        "frames/cast-south-fxfree/8.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "cast-south-fxfree",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "name": "cast.side",
+      "frames": [
+        "frames/cast-east/0.png",
+        "frames/cast-east/1.png",
+        "frames/cast-east/2.png",
+        "frames/cast-east/3.png",
+        "frames/cast-east/4.png",
+        "frames/cast-east/5.png",
+        "frames/cast-east/6.png",
+        "frames/cast-east/7.png",
+        "frames/cast-east/8.png"
+      ],
+      "anchor": [
+        84,
+        143
+      ],
+      "source_action": "cast-east",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "name": "cast.up",
+      "frames": [
+        "frames/cast-north/0.png",
+        "frames/cast-north/1.png",
+        "frames/cast-north/2.png",
+        "frames/cast-north/3.png",
+        "frames/cast-north/4.png",
+        "frames/cast-north/5.png",
+        "frames/cast-north/6.png",
+        "frames/cast-north/7.png",
+        "frames/cast-north/8.png"
+      ],
+      "anchor": [
+        80,
+        142
+      ],
+      "source_action": "cast-north",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "name": "carryIdle.down",
+      "frames": [
+        "frames/carry-idle2-south/0.png",
+        "frames/carry-idle2-south/1.png",
+        "frames/carry-idle2-south/2.png",
+        "frames/carry-idle2-south/3.png"
+      ],
+      "anchor": [
+        94,
+        154
+      ],
+      "source_action": "carry-idle2-south",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "palms": [
+        [
+          [
+            57,
+            25
+          ],
+          [
+            126,
+            25
+          ]
+        ],
+        [
+          [
+            57,
+            21
+          ],
+          [
+            125,
+            22
+          ]
+        ],
+        [
+          [
+            58,
+            15
+          ],
+          [
+            124,
+            15
+          ]
+        ],
+        [
+          [
+            58,
+            14
+          ],
+          [
+            124,
+            13
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "carryIdle.side",
+      "frames": [
+        "frames/carry-idle2-east/0.png",
+        "frames/carry-idle2-east/1.png",
+        "frames/carry-idle2-east/2.png",
+        "frames/carry-idle2-east/3.png"
+      ],
+      "anchor": [
+        82,
+        151
+      ],
+      "source_action": "carry-idle2-east",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "palms": [
+        [
+          [
+            84,
+            17
+          ]
+        ],
+        [
+          [
+            83,
+            18
+          ]
+        ],
+        [
+          [
+            83,
+            21
+          ]
+        ],
+        [
+          [
+            84,
+            22
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "carryIdle.up",
+      "frames": [
+        "frames/carry-idle2-north/0.png",
+        "frames/carry-idle2-north/1.png",
+        "frames/carry-idle2-north/2.png",
+        "frames/carry-idle2-north/3.png"
+      ],
+      "anchor": [
+        88,
+        157
+      ],
+      "source_action": "carry-idle2-north",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "palms": [
+        [
+          [
+            59,
+            26
+          ],
+          [
+            116,
+            26
+          ]
+        ],
+        [
+          [
+            59,
+            23
+          ],
+          [
+            116,
+            23
+          ]
+        ],
+        [
+          [
+            59,
+            21
+          ],
+          [
+            116,
+            21
+          ]
+        ],
+        [
+          [
+            59,
+            16
+          ],
+          [
+            116,
+            16
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "carryWalk.down",
+      "frames": [
+        "frames/carry-loop2-south/1.png",
+        "frames/carry-loop2-south/2.png",
+        "frames/carry-loop2-south/3.png",
+        "frames/carry-loop2-south/4.png",
+        "frames/carry-loop2-south/5.png",
+        "frames/carry-loop2-south/6.png"
+      ],
+      "anchor": [
+        94,
+        154
+      ],
+      "source_action": "carry-loop2-south",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "palms": [
+        [
+          [
+            58,
+            22
+          ],
+          [
+            124,
+            22
+          ]
+        ],
+        [
+          [
+            58,
+            18
+          ],
+          [
+            123,
+            18
+          ]
+        ],
+        [
+          [
+            55,
+            31
+          ],
+          [
+            127,
+            31
+          ]
+        ],
+        [
+          [
+            53,
+            42
+          ],
+          [
+            130,
+            41
+          ]
+        ],
+        [
+          [
+            53,
+            40
+          ],
+          [
+            130,
+            39
+          ]
+        ],
+        [
+          [
+            56,
+            34
+          ],
+          [
+            127,
+            34
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "carryWalk.side",
+      "frames": [
+        "frames/carry-loop2-east/1.png",
+        "frames/carry-loop2-east/2.png",
+        "frames/carry-loop2-east/3.png",
+        "frames/carry-loop2-east/4.png",
+        "frames/carry-loop2-east/5.png",
+        "frames/carry-loop2-east/6.png"
+      ],
+      "anchor": [
+        82,
+        151
+      ],
+      "source_action": "carry-loop2-east",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "palms": [
+        [
+          [
+            84,
+            16
+          ]
+        ],
+        [
+          [
+            85,
+            19
+          ]
+        ],
+        [
+          [
+            87,
+            20
+          ]
+        ],
+        [
+          [
+            89,
+            18
+          ]
+        ],
+        [
+          [
+            90,
+            17
+          ]
+        ],
+        [
+          [
+            89,
+            20
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "carryWalk.up",
+      "frames": [
+        "frames/carry-loop2-north/1.png",
+        "frames/carry-loop2-north/2.png",
+        "frames/carry-loop2-north/3.png",
+        "frames/carry-loop2-north/4.png",
+        "frames/carry-loop2-north/5.png",
+        "frames/carry-loop2-north/6.png"
+      ],
+      "anchor": [
+        88,
+        157
+      ],
+      "source_action": "carry-loop2-north",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "palms": [
+        [
+          [
+            59,
+            24
+          ],
+          [
+            116,
+            24
+          ]
+        ],
+        [
+          [
+            59,
+            21
+          ],
+          [
+            116,
+            21
+          ]
+        ],
+        [
+          [
+            59,
+            19
+          ],
+          [
+            116,
+            19
+          ]
+        ],
+        [
+          [
+            59,
+            19
+          ],
+          [
+            116,
+            19
+          ]
+        ],
+        [
+          [
+            59,
+            21
+          ],
+          [
+            116,
+            21
+          ]
+        ],
+        [
+          [
+            59,
+            24
+          ],
+          [
+            116,
+            24
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "lobby",
+      "frames": [
+        "frames/lobby/0.png",
+        "frames/lobby/2.png",
+        "frames/lobby/3.png",
+        "frames/lobby/4.png",
+        "frames/lobby/5.png",
+        "frames/lobby/6.png",
+        "frames/lobby/7.png",
+        "frames/lobby/8.png",
+        "frames/lobby/9.png",
+        "frames/lobby/10.png",
+        "frames/lobby/11.png",
+        "frames/lobby/12.png",
+        "frames/lobby/13.png",
+        "frames/lobby/14.png",
+        "frames/lobby/15.png",
+        "frames/lobby/16.png"
+      ],
+      "anchor": [
+        82,
+        142
+      ],
+      "source_action": "lobby",
+      "source_indices": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ]
+    }
+  ],
+  "effects": "character poses only; game renders effects separately"
+}

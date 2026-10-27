@@ -4,6 +4,9 @@ export const TICK_RATE = 60;
 /** Ticks between placing a bomb and its explosion. */
 export const FUSE_TICKS = 3 * TICK_RATE;
 
+/** Normal SB4 bomb initialization observed at C1:1FC7 (maps 03 and 11). */
+export const SB4_NORMAL_FUSE_TICKS = 126;
+
 /** Ticks a flame tile stays lethal. */
 export const FLAME_TICKS = Math.round(0.5 * TICK_RATE);
 

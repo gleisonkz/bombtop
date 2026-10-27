@@ -168,6 +168,8 @@ export interface Bomb {
   y: number;
   /** Ticks left until explosion. */
   fuse: number;
+  /** SB4 normal bombs first count down on the tick following placement. */
+  bornAt?: number;
   range: number;
   type: BombType;
   /** Direction of ground movement (kick or conveyor), or null when resting. */

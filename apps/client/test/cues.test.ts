@@ -21,6 +21,11 @@ const bomb = (x: number, y: number, extra: Partial<Bomb> = {}): Bomb => ({
 const names = (prev: PublicView, next: PublicView) => soundCues(prev, next).map((c) => c.name);
 
 describe("soundCues", () => {
+  it("hears placement of a fresh normal SB4 bomb with its shorter fuse", () => {
+    const prev = publicView(createMatch({ seed: 17, stage: "sb4-03", playerIds: ["a", "b"], blockDensity: 0 }));
+    const next = later(prev, n => n.bombs.push(bomb(3, 1, { fuse: 125 })));
+    expect(names(prev, next)).toContain("place");
+  });
   it("is silent when nothing happened", () => {
     const v = view();
     expect(soundCues(v, later(v, () => {}))).toEqual([]);

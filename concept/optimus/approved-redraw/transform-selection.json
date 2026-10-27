@@ -1,0 +1,96 @@
+{
+  "raw": "transform-raw.generated.png",
+  "selected": "first3articulatedstagesperview;fullyvehicle4thcolumnreplacedbyexactapprovedtruckframes",
+  "records": [
+    {
+      "row": 0,
+      "col": 0,
+      "source_box": [
+        56,
+        20,
+        345,
+        408
+      ]
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "source_box": [
+        412,
+        94,
+        700,
+        408
+      ]
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "source_box": [
+        756,
+        148,
+        1066,
+        408
+      ]
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "source_box": [
+        85,
+        421,
+        247,
+        729
+      ]
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "source_box": [
+        370,
+        447,
+        656,
+        729
+      ]
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "source_box": [
+        710,
+        486,
+        1053,
+        729
+      ]
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "source_box": [
+        67,
+        740,
+        329,
+        1063
+      ]
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "source_box": [
+        399,
+        781,
+        677,
+        1059
+      ]
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "source_box": [
+        754,
+        776,
+        1050,
+        1055
+      ]
+    }
+  ]
+}

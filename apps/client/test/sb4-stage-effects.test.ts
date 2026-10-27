@@ -138,6 +138,15 @@ it("colors surviving defensive flags by owner and hides destroyed flags", async 
   expect(flags[0]).toMatchObject({ tint: 0xe84a4a });
 });
 
+it.each([undefined, "normal"] as const)("keeps ordinary surprise floor free of effect indicators (%s)", async kind => {
+  const effects = new Sb4StageEffects(); await effects.load();
+  const state = arena();
+  state.grid.floor[18] = Floor.Surprise;
+  state.stageState = kind ? { surprise: { 18: { kind, hits: 1 } } } : {};
+  effects.draw(state);
+  expect(visible(effects.ground).filter(node => node.texture.url.includes("direction-panel"))).toHaveLength(0);
+});
+
 it("tints surprise panels from authoritative kind without changing their state", async () => {
   const effects = new Sb4StageEffects(); await effects.load();
   const state = arena();
@@ -187,6 +196,14 @@ it("lifts stage flights on a 24-tick parabola without double-lifting carried pla
   expect(stageFlightLift({ ...pose, flight: { ticks: 0 } })).toBe(0);
   expect(stageFlightLift({ ...pose, flight: undefined })).toBe(0);
   expect(stageFlightLift({ ...pose, flight: { ticks: 12 }, elevated: true })).toBe(0);
+});
+
+it("uses the ROM seesaw hop profile rather than the legacy flight parabola", () => {
+  const pose = { y: 80, bodyHeight: 24, elevated: false };
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesaw", ticks: 16 } })).toBe(0);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesaw", ticks: 12 } })).toBe(6);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesaw", ticks: 8 } })).toBe(16);
+  expect(stageFlightLift({ ...pose, elevated: true, flight: { kind: "seesaw", ticks: 8 } })).toBe(0);
 });
 
 it("caps flight lift at the top edge so the measured character body stays inside the viewport", () => {

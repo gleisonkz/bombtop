@@ -1,0 +1,1462 @@
+[
+  {
+    "row": 11,
+    "column": 0,
+    "source": "generated/carryIdle-south/00.png",
+    "sha256": "ce324047230e1dddd09bcb777ac83efa8d89437de676f64ef1ceb1cb5f3dcd9e",
+    "palms": [
+      [
+        58.5,
+        55.5
+      ],
+      [
+        133.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        26.5,
+        39.5
+      ],
+      [
+        101.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        25,
+        39
+      ],
+      [
+        102,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      16,
+      19,
+      111,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 11,
+    "column": 1,
+    "source": "generated/carryIdle-south/01.png",
+    "sha256": "b377fab09aa9a754fc34b34233527e923cac244d0aff2862ac5acc03835b6abc",
+    "palms": [
+      [
+        59.5,
+        55.5
+      ],
+      [
+        132.5,
+        55.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        39.5
+      ],
+      [
+        100.5,
+        39.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        25,
+        39
+      ],
+      [
+        102,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      19,
+      21,
+      108,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 11,
+    "column": 2,
+    "source": "generated/carryIdle-south/02.png",
+    "sha256": "243c90cccc1870703be08b9d5156628d0b431f7bc9981130c87b9477f7a73213",
+    "palms": [
+      [
+        59.5,
+        54.5
+      ],
+      [
+        132.5,
+        54.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        38.5
+      ],
+      [
+        100.5,
+        38.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        25,
+        39
+      ],
+      [
+        102,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      23,
+      20
+    ],
+    "alphaBounds": [
+      21,
+      21,
+      106,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 11,
+    "column": 3,
+    "source": "generated/carryIdle-south/03.png",
+    "sha256": "79e723ae82a14d377d195084bb7a23d4b1b50bd3e614dff0d06157439b3d8f00",
+    "palms": [
+      [
+        58.5,
+        55.5
+      ],
+      [
+        132.5,
+        55.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        26.5,
+        39.5
+      ],
+      [
+        100.5,
+        39.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        25,
+        39
+      ],
+      [
+        102,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      18,
+      21,
+      109,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 12,
+    "column": 0,
+    "source": "generated/carryIdle-east/00.png",
+    "sha256": "3ecf3c52aa89dff0a39b29c57d8600181ede19298d56b67397e35dc125e10432",
+    "palms": [
+      [
+        132.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        100.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        102,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      19
+    ],
+    "alphaBounds": [
+      39,
+      20,
+      109,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 12,
+    "column": 1,
+    "source": "generated/carryIdle-east/01.png",
+    "sha256": "4712b2cc125c2e039ec63e6ed77e2f7540d4dc81e93ae6d3252c69a21741b056",
+    "palms": [
+      [
+        129.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        97.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        40
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      20
+    ],
+    "alphaBounds": [
+      40,
+      22,
+      104,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 12,
+    "column": 2,
+    "source": "generated/carryIdle-east/02.png",
+    "sha256": "a7949db9bd984a2bffd790e3f6b2ae07ec833589c337e15c72df5fbf02b65b43",
+    "palms": [
+      [
+        125.5,
+        54.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        93.5,
+        38.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        94,
+        38
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24
+    ],
+    "alphaBounds": [
+      40,
+      20,
+      102,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 12,
+    "column": 3,
+    "source": "generated/carryIdle-east/03.png",
+    "sha256": "f7635f1b5c7ad5b9516134887325c2bfb8e245382a31bf10202d45465ed1ef88",
+    "palms": [
+      [
+        125.5,
+        55.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        93.5,
+        39.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        94,
+        38
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24
+    ],
+    "alphaBounds": [
+      38,
+      22,
+      102,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 13,
+    "column": 0,
+    "source": "generated/carryIdle-north/00.png",
+    "sha256": "5f40a4c8f6eb5ba4d353ec74e405a21a09d7806704a1165f8d66ef45230d239c",
+    "palms": [
+      [
+        60.5,
+        56.5
+      ],
+      [
+        132.5,
+        55.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        28.5,
+        40.5
+      ],
+      [
+        100.5,
+        39.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        27,
+        39
+      ],
+      [
+        101,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      24
+    ],
+    "alphaBounds": [
+      18,
+      22,
+      110,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 13,
+    "column": 1,
+    "source": "generated/carryIdle-north/01.png",
+    "sha256": "776289c555c6a09a7c2274232208a224647ef6274952b413df0dfa7aa019572f",
+    "palms": [
+      [
+        61.5,
+        55.5
+      ],
+      [
+        130.5,
+        55.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        29.5,
+        39.5
+      ],
+      [
+        98.5,
+        39.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        28,
+        39
+      ],
+      [
+        100,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24,
+      23
+    ],
+    "alphaBounds": [
+      21,
+      22,
+      107,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 13,
+    "column": 2,
+    "source": "generated/carryIdle-north/02.png",
+    "sha256": "ea243b3e5c5311180ad709cae00302341632da8e1cc227d9cff71fe8815efe05",
+    "palms": [
+      [
+        68.5,
+        51.5
+      ],
+      [
+        122.5,
+        51.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        36.5,
+        35.5
+      ],
+      [
+        90.5,
+        35.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        35,
+        34
+      ],
+      [
+        91,
+        34
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24,
+      25
+    ],
+    "alphaBounds": [
+      31,
+      24,
+      96,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 13,
+    "column": 3,
+    "source": "generated/carryIdle-north/03.png",
+    "sha256": "82e6e2ba41f3d89578aef90b1f0e352d8bff390bd9ef12b124cc4b99f0a2c2d4",
+    "palms": [
+      [
+        68.5,
+        49.5
+      ],
+      [
+        122.5,
+        49.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        36.5,
+        33.5
+      ],
+      [
+        90.5,
+        33.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        36,
+        33
+      ],
+      [
+        91,
+        33
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      25
+    ],
+    "alphaBounds": [
+      31,
+      21,
+      96,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 0,
+    "source": "generated/carryWalk-south/01.png",
+    "sha256": "258c060a11cd9d5f1a362085a809e623b1e3fea85c6e17b8ba405c2baabd865a",
+    "palms": [
+      [
+        59.5,
+        57.5
+      ],
+      [
+        132.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        41.5
+      ],
+      [
+        100.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        27,
+        39
+      ],
+      [
+        101,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      19,
+      22,
+      109,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 1,
+    "source": "generated/carryWalk-south/02.png",
+    "sha256": "7d0f2ed550dd33d2712c1273c1b95c4ff705ca77cb14a2d5ef746a77a452ab65",
+    "palms": [
+      [
+        60.5,
+        58.5
+      ],
+      [
+        132.5,
+        57.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        28.5,
+        42.5
+      ],
+      [
+        100.5,
+        41.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        27,
+        40
+      ],
+      [
+        101,
+        40
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24,
+      22
+    ],
+    "alphaBounds": [
+      19,
+      24,
+      109,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 2,
+    "source": "generated/carryWalk-south/03.png",
+    "sha256": "a1a9dc46859d4e5a042c7eb791d0f4e4f2dcedd974ca070fd33baf9d9144dd0a",
+    "palms": [
+      [
+        59.5,
+        56.5
+      ],
+      [
+        133.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        40.5
+      ],
+      [
+        101.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        26,
+        39
+      ],
+      [
+        102,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      17,
+      22,
+      110,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 3,
+    "source": "generated/carryWalk-south/04.png",
+    "sha256": "5cdf5508f65a6107b3a7c869f19a464bd6c035bbc40e1a0eb29643d1b003c6dc",
+    "palms": [
+      [
+        57.5,
+        55.5
+      ],
+      [
+        134.5,
+        54.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        25.5,
+        39.5
+      ],
+      [
+        102.5,
+        38.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        25,
+        37
+      ],
+      [
+        104,
+        37
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      17,
+      20,
+      111,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 4,
+    "source": "generated/carryWalk-south/05.png",
+    "sha256": "23a40e9b77eef0389b5034fa1111ba79935cdbf6ac121771ce0e891a0d6f7122",
+    "palms": [
+      [
+        59.5,
+        56.5
+      ],
+      [
+        134.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        40.5
+      ],
+      [
+        102.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        27,
+        39
+      ],
+      [
+        103,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      24
+    ],
+    "alphaBounds": [
+      16,
+      22,
+      112,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 14,
+    "column": 5,
+    "source": "generated/carryWalk-south/06.png",
+    "sha256": "17292b38ea82895c2990081482ab377307fea18c409d76f521dccfad6847bf04",
+    "palms": [
+      [
+        59.5,
+        58.5
+      ],
+      [
+        134.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        27.5,
+        42.5
+      ],
+      [
+        102.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        27,
+        41
+      ],
+      [
+        104,
+        41
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24,
+      23
+    ],
+    "alphaBounds": [
+      16,
+      24,
+      112,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 0,
+    "source": "generated/carryWalk-east/01.png",
+    "sha256": "de17fe6fb3de6a6810cbf3919319719b96173736a2c5d310ea36792579e81a19",
+    "palms": [
+      [
+        129.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        97.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      18
+    ],
+    "alphaBounds": [
+      39,
+      20,
+      106,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 1,
+    "source": "generated/carryWalk-east/02.png",
+    "sha256": "e58320ec0f89b48adab8c56251db6fbe7125b0473b4e6639720c112e9b173267",
+    "palms": [
+      [
+        129.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        97.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      15
+    ],
+    "alphaBounds": [
+      22,
+      23,
+      104,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 2,
+    "source": "generated/carryWalk-east/03.png",
+    "sha256": "dce22785d902017922ab5ab7e834b0fa0715ae291bdf593a84317ad0c16f71bb",
+    "palms": [
+      [
+        129.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        97.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      23
+    ],
+    "alphaBounds": [
+      19,
+      23,
+      107,
+      139
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 3,
+    "source": "generated/carryWalk-east/04.png",
+    "sha256": "b63db8864915e9f7a06fd4af11eb50a11dd43f5135f341a46e798a80fe3750bb",
+    "palms": [
+      [
+        130.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        98.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24
+    ],
+    "alphaBounds": [
+      17,
+      20,
+      109,
+      140
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 4,
+    "source": "generated/carryWalk-east/05.png",
+    "sha256": "e8c1c9c9e91abbd18ee1abc4379fbccd28a91a2ed480071abe5c2352290fa9ef",
+    "palms": [
+      [
+        130.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        98.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      23
+    ],
+    "alphaBounds": [
+      17,
+      20,
+      107,
+      136
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 15,
+    "column": 5,
+    "source": "generated/carryWalk-east/06.png",
+    "sha256": "839af12086d9433c642ccf6a358b75973e909f1dff00d136a1501cb25cad7807",
+    "palms": [
+      [
+        129.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        97.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        99,
+        42
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      23
+    ],
+    "alphaBounds": [
+      17,
+      22,
+      106,
+      137
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 0,
+    "source": "generated/carryWalk-north/01.png",
+    "sha256": "56cf96b93eb854e21a87537ff0dc54232d44347046f42e3eb2758dfc2f774681",
+    "palms": [
+      [
+        63.5,
+        58.5
+      ],
+      [
+        129.5,
+        57.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        31.5,
+        42.5
+      ],
+      [
+        97.5,
+        41.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        31,
+        40
+      ],
+      [
+        97,
+        40
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      24
+    ],
+    "alphaBounds": [
+      22,
+      24,
+      106,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 1,
+    "source": "generated/carryWalk-north/02.png",
+    "sha256": "24e2225bdd2176cf62cd9a8397f8f4eeed02c83b21d2fbe5bf39ec02a967c9fc",
+    "palms": [
+      [
+        66.5,
+        58.5
+      ],
+      [
+        125.5,
+        58.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        34.5,
+        42.5
+      ],
+      [
+        93.5,
+        42.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        33,
+        40
+      ],
+      [
+        95,
+        40
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      21,
+      16
+    ],
+    "alphaBounds": [
+      27,
+      26,
+      100,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 2,
+    "source": "generated/carryWalk-north/03.png",
+    "sha256": "cc083f8e668f39e3caa79bf1ebaa277d46b8abf0c3abeebad5a9b2001fb2ac48",
+    "palms": [
+      [
+        69.5,
+        55.5
+      ],
+      [
+        122.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        37.5,
+        39.5
+      ],
+      [
+        90.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        36,
+        38
+      ],
+      [
+        92,
+        38
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      13,
+      15
+    ],
+    "alphaBounds": [
+      32,
+      23,
+      94,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 3,
+    "source": "generated/carryWalk-north/04.png",
+    "sha256": "f5a30af61eaf4365948f35c4538aa2e15a155db8dff250932715ebbd341a8535",
+    "palms": [
+      [
+        68.5,
+        55.5
+      ],
+      [
+        123.5,
+        56.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        36.5,
+        39.5
+      ],
+      [
+        91.5,
+        40.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        35,
+        39
+      ],
+      [
+        93,
+        39
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      23
+    ],
+    "alphaBounds": [
+      29,
+      21,
+      98,
+      136
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 4,
+    "source": "generated/carryWalk-north/05.png",
+    "sha256": "71feba7eac6d8c55b921cb818e4da83a844d7454b61f9b77453bdad6f0c07408",
+    "palms": [
+      [
+        65.5,
+        58.5
+      ],
+      [
+        127.5,
+        57.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        33.5,
+        42.5
+      ],
+      [
+        95.5,
+        41.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        32,
+        40
+      ],
+      [
+        97,
+        40
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      25,
+      16
+    ],
+    "alphaBounds": [
+      24,
+      24,
+      103,
+      138
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  },
+  {
+    "row": 16,
+    "column": 5,
+    "source": "generated/carryWalk-north/06.png",
+    "sha256": "f9406bb2eb8079af1a226deac74d4792d66c0f34be900650522451ad0d833ebd",
+    "palms": [
+      [
+        61.5,
+        58.5
+      ],
+      [
+        131.5,
+        59.5
+      ]
+    ],
+    "rawPalmPixelCenters": [
+      [
+        29.5,
+        42.5
+      ],
+      [
+        99.5,
+        43.5
+      ]
+    ],
+    "searchSeeds": [
+      [
+        29,
+        41
+      ],
+      [
+        100,
+        41
+      ]
+    ],
+    "searchRadius": 2,
+    "skinPixelsIn5x5": [
+      24,
+      24
+    ],
+    "alphaBounds": [
+      19,
+      26,
+      109,
+      137
+    ],
+    "sourceSize": [
+      128,
+      160
+    ],
+    "sourceMode": "RGBA",
+    "densePalmAccepted": true
+  }
+]

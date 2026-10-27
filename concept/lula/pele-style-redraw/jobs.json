@@ -1,0 +1,33 @@
+{
+  "reference": "../pele-style-preview/option-1.png",
+  "character_id": "1c3aa319-5281-4024-b67f-d716b13d1714",
+  "carry_character_id": "651a9bac-80f8-4a73-b344-ebc25da1c330",
+  "jobs": {
+    "idle-south": "383862dc-658b-4e9b-ba2c-8fabb1d491a0",
+    "walk-south": "1569ef26-1cd0-4e8a-bcd8-a25d149efcf5",
+    "stun-south": "56ef13bf-1a41-4005-adc6-96579c063ddc",
+    "death-south": "28f0af0d-35f4-4806-8f5e-0cda46fbfb23",
+    "cast-south": "414aac1c-879d-425b-b0ae-4e191cb212b1",
+    "lobby-south": "94fe889e-62fa-486c-bfbb-0ff051512a2e",
+    "idle-east": "07c10272-4e16-4cad-91c0-0c55e1060e06",
+    "walk-east": "cdbfbec5-c832-4266-821f-7a3d82104f51",
+    "cast-east": "e11bbac3-08c6-4eb3-982c-8dae1e2ba371",
+    "idle-north": "0726bd69-4fc6-40c0-a20e-91244ac696df",
+    "walk-north": "5e493ce6-15a1-4e9c-8e6b-994b829bdc70",
+    "cast-north": "111f75dc-083b-4e48-9f8b-8914ebb6b3d9",
+    "carryIdle-south": "9e97f6fc-8942-4a9a-be87-b449cf4b2c56",
+    "carryWalk-south": "ee6a84cf-c82c-4695-ad22-3f473f187a61",
+    "carryIdle-east": "2ec6e746-5e4c-418b-8b9f-63f301a82f66",
+    "carryWalk-east": "40b933f5-5e80-48a9-8d4f-a7d03d1aaf37",
+    "carryIdle-north": "f2ad9be6-464d-4161-b8bb-ce6f24e17c10",
+    "carryWalk-north": "d5571e79-7934-4f57-b501-ef4184c64621"
+  },
+  "frame_counts": {
+    "lobby-south": 9
+  },
+  "rejected_jobs": {
+    "cast-south": "6e3a2bb7-c016-465a-8bf1-77a41f1bb7f4",
+    "walk-north": "d519feb1-1d62-4b86-9596-97f8a3a49e09",
+    "carryWalk-south": "ec803f0c-adc1-47c2-8107-75e82eeb630d"
+  }
+}

@@ -20,19 +20,24 @@ from PIL import Image
 
 
 CLIENT = Path(__file__).resolve().parents[1]
-STATIC_PALMS = json.loads((CLIENT.parents[1] / 'concept/static/carry-redraw/palms.json').read_text(encoding='utf-8'))
+STATIC_PALMS = json.loads((CLIENT.parents[1] / 'concept/static/option4-redraw/palms.json').read_text(encoding='utf-8'))
 OUTPUT = CLIENT / "src/render/carry-anchors.json"
 COUNTS = (4, 4, 4, 6, 6, 6)
 SPIDER_PALMS = json.loads((CLIENT.parents[1] / "concept/spider/pixellab/rigged/palms.json").read_text(encoding="utf-8"))
 HARRY_PALMS_PATH = CLIENT.parents[1] / "concept/harry/pixellab-redraw/palms.json"
 HARRY_PALMS = json.loads(HARRY_PALMS_PATH.read_text(encoding="utf-8")) if HARRY_PALMS_PATH.exists() else None
+FLASH_PALMS_PATH = CLIENT.parents[1] / "concept/flash/pixellab-redraw/palms.json"
+FLASH_PALMS = json.loads(FLASH_PALMS_PATH.read_text(encoding="utf-8")) if FLASH_PALMS_PATH.exists() else None
 PIKACHU_PALMS = json.loads((CLIENT.parents[1] / "concept/pikachu-pixellab-redraw/palms.json").read_text(encoding="utf-8"))
 DONATELLO_PALMS = json.loads((CLIENT.parents[1] / "concept/donatello/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
 LANTERN_PALMS = json.loads((CLIENT.parents[1] / "concept/lantern/restart-skeleton/native-palms.json").read_text(encoding="utf-8"))
+PENELOPE_PALMS = json.loads((CLIENT.parents[1] / "concept/penelope/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
 PANTHER_PALMS = json.loads((CLIENT.parents[1] / "concept/pink-panther/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
 BUGS_PALMS = json.loads((CLIENT.parents[1] / "concept/bugs/pixellab-redraw/palms.json").read_text(encoding="utf-8"))
 PELE_PALMS = json.loads((CLIENT.parents[1] / "concept/pele/lula-style-redraw/palms.json").read_text(encoding="utf-8"))
 NARUTO_PALMS = json.loads((CLIENT.parents[1] / "concept/naruto/approved-redraw/palms.json").read_text(encoding="utf-8"))
+LULA_PALMS = json.loads((CLIENT.parents[1] / "concept/lula/pele-style-redraw/palms.json").read_text(encoding="utf-8"))
+OPTIMUS_PALMS = json.loads((CLIENT.parents[1] / "concept/optimus/approved-redraw/palms.json").read_text(encoding="utf-8"))
 SEEDS = {
     "captain": (((52, 53), (122, 53)), ((96, 58),), ((57, 49), (123, 49))),
     "thor": (((64, 12), (112, 12)), ((95, 6),), ((68, 6), (112, 6))),
@@ -48,8 +53,10 @@ SEEDS = {
     "pikachu": tuple(tuple((x * 180 / PIKACHU_PALMS["frameW"], y * 180 / PIKACHU_PALMS["frameH"])
                           for x, y in PIKACHU_PALMS["rows"][str(11 + direction)][0])
                     for direction in range(3)),
-    "static": tuple(tuple((x * 180 / 168, y * 180 / 186) for x, y in STATIC_PALMS[str(row)][0]) for row in (11, 12, 13)),
-    "flash": (((58, 46), (124, 46)), ((93, 52),), ((52, 72), (127, 72))),
+    "static": tuple(tuple((x * 180 / 168, y * 180 / 224) for x, y in STATIC_PALMS[str(row)][0]) for row in (11, 12, 13)),
+    "flash": tuple(tuple((x * 180 / FLASH_PALMS["frameW"], y * 180 / FLASH_PALMS["frameH"])
+                         for x, y in FLASH_PALMS["rows"][str(11 + direction)][0])
+                   for direction in range(3)) if FLASH_PALMS else (((58, 46), (124, 46)), ((93, 52),), ((52, 72), (127, 72))),
     "bugs": tuple(tuple((x * 180 / BUGS_PALMS["frameW"], y * 180 / BUGS_PALMS["frameH"])
                        for x, y in BUGS_PALMS["rows"][str(11 + direction)][0])
                  for direction in range(3)),
@@ -59,7 +66,9 @@ SEEDS = {
     "donatello": tuple(tuple((x * 180 / DONATELLO_PALMS["frameW"], y * 180 / DONATELLO_PALMS["frameH"])
                               for x, y in DONATELLO_PALMS["rows"][str(11 + direction)][0])
                         for direction in range(3)),
-    "penelope": (((58, 70), (124, 70)), ((103, 73),), ((57, 63), (126, 63))),
+    "penelope": tuple(tuple((x * 180 / PENELOPE_PALMS["frameW"], y * 180 / PENELOPE_PALMS["frameH"])
+                             for x, y in PENELOPE_PALMS["rows"][str(11 + direction)][0])
+                       for direction in range(3)),
     "panther": tuple(tuple((x * 180 / PANTHER_PALMS["frameW"], y * 180 / PANTHER_PALMS["frameH"])
                             for x, y in PANTHER_PALMS["rows"][str(11 + direction)][0])
                       for direction in range(3)),
@@ -70,7 +79,9 @@ SEEDS = {
     "pele": tuple(tuple((x * 180 / PELE_PALMS["frameW"], y * 180 / PELE_PALMS["frameH"])
                        for x, y in PELE_PALMS["rows"][str(11 + direction)][0])
                  for direction in range(3)),
-    "lula": (((44, 66), (141, 66)), ((76, 60),), ((38, 62), (139, 62))),
+    "lula": tuple(tuple((x * 180 / LULA_PALMS["frameW"], y * 180 / LULA_PALMS["frameH"])
+                       for x, y in LULA_PALMS["rows"][str(11 + direction)][0])
+                 for direction in range(3)),
     "bomber": (((50, 85), (137, 85)), ((78, 82),), ((43, 77), (136, 77))),
 }
 
@@ -122,6 +133,11 @@ def reviewed_point(name, row, col, palm):
             return None, None
         x, y = poses[row][col][palm]
         return (x * 180 / 146, y * 180 / 159), "manual: visible palm center inspected on final 146x159 Goku carry cell"
+    if name == "optimus":
+        if str(row) not in OPTIMUS_PALMS["rows"]:
+            return None, None
+        x, y = OPTIMUS_PALMS["rows"][str(row)][col][palm]
+        return (x * 180 / OPTIMUS_PALMS["frameW"], y * 180 / OPTIMUS_PALMS["frameH"]), "manual: inspected blue robot palm centers on approved 224px Optimus armor"
     if name == "naruto":
         if str(row) not in NARUTO_PALMS["rows"]:
             return None, None
@@ -131,7 +147,7 @@ def reviewed_point(name, row, col, palm):
         if str(row) not in STATIC_PALMS:
             return None, None
         x, y = STATIC_PALMS[str(row)][col][palm]
-        return (x * 180 / 168, y * 180 / 186), "manual: inspected raised glove support on final 168x186 Static carry redraw"
+        return (x * 180 / 168, y * 180 / 224), "manual: inspected raised glove support on final 168x224 Static option4 redraw"
     return None, None
 
 
@@ -206,8 +222,9 @@ def build(only=None):
         if only is not None and name != only:
             continue
         width, height = dimensions["frameW"], dimensions["frameH"]
-        registered = {"pikachu": PIKACHU_PALMS, "harry": HARRY_PALMS, "lantern": LANTERN_PALMS,
-                      "panther": PANTHER_PALMS, "bugs": BUGS_PALMS, "pele": PELE_PALMS}.get(name)
+        registered = {"penelope": PENELOPE_PALMS, "pikachu": PIKACHU_PALMS, "harry": HARRY_PALMS, "flash": FLASH_PALMS, "lantern": LANTERN_PALMS,
+                      "panther": PANTHER_PALMS, "bugs": BUGS_PALMS, "pele": PELE_PALMS,
+                      "lula": LULA_PALMS}.get(name)
         with Image.open(path) as image:
             if image.mode != "RGBA" or image.size != (dimensions["width"], dimensions["height"]):
                 raise ValueError(f"Sheet differs from runtime layout: {path}")
