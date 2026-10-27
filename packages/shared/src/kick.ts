@@ -93,7 +93,8 @@ export function updateSlides(s: MatchState): void {
       b.x += dx;
       b.y += dy;
       b.offset -= TILE;
-      if (b.conveyor) s.items = s.items.filter(item => item.x !== b.x || item.y !== b.y);
+      // Kicked or carried by a belt, a sliding bomb crushes the items it runs over.
+      s.items = s.items.filter(item => item.x !== b.x || item.y !== b.y);
     }
   }
 }

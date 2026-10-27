@@ -42,6 +42,16 @@ describe("kick", () => {
     expect(b.slide).toBeNull();
   });
 
+  it("a kicked bomb crushes every item it slides over, where it stops too", () => {
+    const s = withKick();
+    s.items.push({ x: 5, y: 1, kind: ItemKind.Fire }, { x: 8, y: 1, kind: ItemKind.Bomb }, { x: 13, y: 1, kind: ItemKind.Speed }, { x: 9, y: 3, kind: ItemKind.Kick });
+    const b = bombAt(s, 3, 1);
+    hold(s, "right", 20);
+    hold(s, null, 90);
+    expect(b.x).toBe(13);
+    expect(s.items).toEqual([{ x: 9, y: 3, kind: ItemKind.Kick }]); // off its path: left alone
+  });
+
   it("stops before a block", () => {
     const s = withKick();
     setTile(s, 7, 1, Tile.Block);

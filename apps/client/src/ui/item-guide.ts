@@ -25,7 +25,7 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   },
   [ItemKind.Kick]: {
     name: "Chute",
-    text: "Ande contra uma bomba para chutá-la: ela desliza até bater em algo.",
+    text: "Ande contra uma bomba para chutá-la: ela desliza até bater em algo e destrói os itens por onde passa.",
     tips: ["Chute bombas na direção dos rivais.", "Segure PARAR (R/Numpad1, RB no controle) para frear uma bomba sua enquanto ela desliza.", "A bomba para em blocos, outras bombas e jogadores."],
   },
   [ItemKind.BombPass]: {
