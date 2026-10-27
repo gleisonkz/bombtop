@@ -136,6 +136,7 @@ interface Node {
 export class Bot {
   private readonly tune: Tuning;
   private readonly traits: Traits;
+  private readonly facings: readonly Facing[];
   /** This bot's own dice (deterministic: the same seed plays the same match). */
   private readonly random: () => number;
   private goal: { x: number; y: number } | null = null;
@@ -163,6 +164,8 @@ export class Bot {
     const base = TUNING[level];
     this.tune = { ...base, hunt: base.hunt || this.traits.hunts };
     this.random = createRng(seed);
+    const turn = (seed >>> 0) % FACINGS.length;
+    this.facings = [...FACINGS.slice(turn), ...FACINGS.slice(0, turn)];
   }
 
   /** This tick's input; `humansAlive` false once only bots are left (they go all out: botHeat). */
@@ -184,19 +187,19 @@ export class Bot {
     // Survival first, every tick, on every level: may cross tiles that burn later.
     if (!safe(here.x, here.y)) {
       this.goal = null;
-      const preferred = reach(s, p, danger, this.tune.margin, false, true);
+      const preferred = reach(s, p, danger, this.tune.margin, false, true, this.facings);
       let out = preferred.find((n) => safe(n.x, n.y));
       if (!out) {
-        const escape = reach(s, p, danger, this.tune.margin, false);
+        const escape = reach(s, p, danger, this.tune.margin, false, false, this.facings);
         out = escape.find((n) => safe(n.x, n.y)) ?? latestToBurn(escape, danger, k);
       }
       if (out && s.bombs.some((b) => b.ownerId === this.id)) {
         const conservative = dangerMap(s, this.id, undefined, true);
         if (conservative.has(k(out.x, out.y))) {
-          const alternatives = reach(s, p, conservative, this.tune.margin, false, true);
+          const alternatives = reach(s, p, conservative, this.tune.margin, false, true, this.facings);
           out = alternatives.find((n) => !conservative.has(k(n.x, n.y)));
           if (!out) {
-            const fallback = reach(s, p, conservative, this.tune.margin, false);
+            const fallback = reach(s, p, conservative, this.tune.margin, false, false, this.facings);
             out = fallback.find((n) => !conservative.has(k(n.x, n.y))) ?? latestToBurn(fallback, conservative, k);
           }
         }
@@ -216,7 +219,7 @@ export class Bot {
     if (this.striding(s, p, here, safe)) return { dir: this.stride!.dir, bomb: false };
 
     // Everything else only walks through tiles that are safe for good.
-    const nodes = reach(s, p, danger, this.tune.margin, true);
+    const nodes = reach(s, p, danger, this.tune.margin, true, true, this.facings);
     if (s.tick >= this.nextThink) {
       const think = (this.tune.think * this.traits.slow) / (1 + this.heat);
       this.nextThink = s.tick + Math.round(think + this.random() * think * 0.5);
@@ -560,7 +563,7 @@ function blast(s: MatchState, b: Pick<Bomb, "x" | "y" | "range" | "type">, occ =
  * Every tile the player can get to, nearest first. A tile on fire, or one
  * that would burn before the player is through it, is not entered.
  */
-function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict: boolean, avoidSkulls = strict): Node[] {
+function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict: boolean, avoidSkulls = strict, facings: readonly Facing[] = FACINGS): Node[] {
   const skulls = new Set(s.items.filter((i) => i.kind === ItemKind.Skull).map((i) => i.y * s.grid.width + i.x));
   const w = s.grid.width;
   const start = playerTile(p);
@@ -572,7 +575,7 @@ function reach(s: MatchState, p: Player, danger: Danger, margin: number, strict:
   const out: Node[] = [{ ...start, steps: 0, first: start }];
   for (let i = 0; i < out.length; i++) {
     const n = out[i]!;
-    for (const f of FACINGS) {
+    for (const f of facings) {
       const [dx, dy] = DIR_VECTORS[f];
       const x = n.x + dx;
       const y = n.y + dy;
