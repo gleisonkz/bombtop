@@ -1,0 +1,18 @@
+{
+  "job_id": "c85be23c-0b82-48b9-bffd-1646a99606ec",
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "direction": "Compactgame sprite withanime face/hair,4heads tall, restrained celshading",
+  "references": [
+    "anime Goku face/hair froma7daa1b4-9235-4014-9dc6-0471d175dde0",
+    "Captain America spritefinish",
+    "Thor characterweight"
+  ],
+  "effects": "none",
+  "scope": "concept only no production changes",
+  "status": "ready-for-approval"
+}

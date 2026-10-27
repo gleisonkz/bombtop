@@ -36,9 +36,10 @@ export function gokuAuraPreview(sprite: HTMLElement, seconds: number): HTMLEleme
     backgroundSize: `${auraSheet.width}px ${auraSheet.height}px`,
     backgroundRepeat: "no-repeat",
     imageRendering: "pixelated",
-    mixBlendMode: "screen",
+    mixBlendMode: "normal",
     opacity: "0",
-    zIndex: "0",
+    // Cast CSS keeps the ancestors context-free so this joins the shared cast backdrop.
+    zIndex: "-2",
   });
   sprite.style.zIndex = "1";
   const keyframes: Keyframe[] = Array.from({ length: LOBBY_FRAMES + 1 }, (_, frame) => {

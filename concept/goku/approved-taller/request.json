@@ -1,0 +1,118 @@
+{
+  "status": "generating",
+  "reference": "concept\\goku\\naruto-sheet-preview\\round-2\\goku-option-1-taller-native.png",
+  "reference_sha256": "8a941d2909f32dd0c35aaf7eec13dbe5e3d1d4e4189d038da68dd26f7e137629",
+  "character_id": "34193328-8a43-4f1e-96e2-97b324304661",
+  "upload": "upload:cd4eac9f-64cb-4392-9da9-3d4496d10744",
+  "contract": {
+    "frame": [
+      146,
+      159
+    ],
+    "atlas": [
+      9,
+      18
+    ],
+    "anchor": [
+      71.5,
+      153
+    ],
+    "panels": [
+      {
+        "name": "locomotion",
+        "columns": 6,
+        "rows": [
+          {
+            "runtimeRow": 0,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 1,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 2,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 3,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 4,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 5,
+            "frames": 6
+          }
+        ]
+      },
+      {
+        "name": "actions",
+        "columns": 9,
+        "rows": [
+          {
+            "runtimeRow": 6,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 7,
+            "frames": 7
+          },
+          {
+            "runtimeRow": 8,
+            "frames": 9
+          },
+          {
+            "runtimeRow": 9,
+            "frames": 9
+          },
+          {
+            "runtimeRow": 10,
+            "frames": 9
+          }
+        ]
+      },
+      {
+        "name": "carry-celebrate",
+        "columns": 8,
+        "rows": [
+          {
+            "runtimeRow": 11,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 12,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 13,
+            "frames": 4
+          },
+          {
+            "runtimeRow": 14,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 15,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 16,
+            "frames": 6
+          },
+          {
+            "runtimeRow": 17,
+            "frames": 8
+          }
+        ]
+      }
+    ]
+  },
+  "animation_groups": {
+    "idle": "4e3d5390-ceb7-4eeb-936b-9f13f4232db3",
+    "walk": "989268ac-9d96-4f5a-a563-7a22f4d4a065"
+  },
+  "requirements": "approved taller proportions, exact character identity, no effects, preserve runtime poses"
+}

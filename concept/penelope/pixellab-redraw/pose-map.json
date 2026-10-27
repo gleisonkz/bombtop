@@ -1,0 +1,1859 @@
+{
+  "counts": {
+    "gameplay": 98,
+    "lobby": 16,
+    "victory": 16,
+    "total": 130,
+    "unique_poses": 111,
+    "duplicates": 19,
+    "empty_cells": 55,
+    "unique_by_sheet": {
+      "gameplay": 79,
+      "lobby": 16,
+      "victory": 16
+    }
+  },
+  "cells": [
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 0,
+      "pose": "g-r00-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 1,
+      "pose": "g-r00-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 2,
+      "pose": "g-r00-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 3,
+      "pose": "g-r00-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 0,
+      "pose": "g-r01-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 1,
+      "pose": "g-r01-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 2,
+      "pose": "g-r01-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 3,
+      "pose": "g-r01-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 0,
+      "pose": "g-r02-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 1,
+      "pose": "g-r02-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 2,
+      "pose": "g-r02-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 3,
+      "pose": "g-r02-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 0,
+      "pose": "g-r03-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 1,
+      "pose": "g-r03-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 2,
+      "pose": "g-r03-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 3,
+      "pose": "g-r03-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 4,
+      "pose": "g-r03-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 5,
+      "pose": "g-r03-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 0,
+      "pose": "g-r04-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 1,
+      "pose": "g-r04-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 2,
+      "pose": "g-r04-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 3,
+      "pose": "g-r04-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 4,
+      "pose": "g-r04-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 5,
+      "pose": "g-r04-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 0,
+      "pose": "g-r05-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 1,
+      "pose": "g-r05-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 2,
+      "pose": "g-r05-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 3,
+      "pose": "g-r05-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 4,
+      "pose": "g-r05-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 5,
+      "pose": "g-r05-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 0,
+      "pose": "g-r06-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 1,
+      "pose": "g-r06-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 2,
+      "pose": "g-r06-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 3,
+      "pose": "g-r06-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 4,
+      "pose": "g-r06-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 5,
+      "pose": "g-r06-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 0,
+      "pose": "g-r07-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 1,
+      "pose": "g-r07-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 2,
+      "pose": "g-r07-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 3,
+      "pose": "g-r07-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 4,
+      "pose": "g-r07-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 0,
+      "pose": "g-r08-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 1,
+      "pose": "g-r08-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 2,
+      "pose": "g-r08-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 3,
+      "pose": "g-r08-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 4,
+      "pose": "g-r08-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 5,
+      "pose": "g-r08-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 6,
+      "pose": "g-r08-c06"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 7,
+      "pose": "g-r08-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 8,
+      "pose": "g-r08-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 0,
+      "pose": "g-r09-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 1,
+      "pose": "g-r09-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 2,
+      "pose": "g-r09-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 3,
+      "pose": "g-r09-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 4,
+      "pose": "g-r09-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 5,
+      "pose": "g-r09-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 6,
+      "pose": "g-r09-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 7,
+      "pose": "g-r09-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 8,
+      "pose": "g-r09-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 0,
+      "pose": "g-r10-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 1,
+      "pose": "g-r10-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 2,
+      "pose": "g-r10-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 3,
+      "pose": "g-r10-c03"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 4,
+      "pose": "g-r10-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 5,
+      "pose": "g-r10-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 6,
+      "pose": "g-r10-c06"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 7,
+      "pose": "g-r10-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 8,
+      "pose": "g-r10-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 0,
+      "pose": "g-r11-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 1,
+      "pose": "g-r11-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 2,
+      "pose": "g-r11-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 3,
+      "pose": "g-r11-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 0,
+      "pose": "g-r12-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 1,
+      "pose": "g-r12-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 2,
+      "pose": "g-r12-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 3,
+      "pose": "g-r12-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 0,
+      "pose": "g-r13-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 1,
+      "pose": "g-r13-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 2,
+      "pose": "g-r13-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 3,
+      "pose": "g-r13-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 0,
+      "pose": "g-r11-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 1,
+      "pose": "g-r14-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 2,
+      "pose": "g-r14-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 3,
+      "pose": "g-r11-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 4,
+      "pose": "g-r14-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 5,
+      "pose": "g-r14-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 0,
+      "pose": "g-r12-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 1,
+      "pose": "g-r15-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 2,
+      "pose": "g-r15-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 3,
+      "pose": "g-r12-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 4,
+      "pose": "g-r15-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 5,
+      "pose": "g-r15-c05"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 0,
+      "pose": "g-r13-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 1,
+      "pose": "g-r16-c01"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 2,
+      "pose": "g-r16-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 3,
+      "pose": "g-r13-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 4,
+      "pose": "g-r16-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 5,
+      "pose": "g-r16-c05"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 0,
+      "pose": "l-c00"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 1,
+      "pose": "l-c01"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 2,
+      "pose": "l-c02"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 3,
+      "pose": "l-c03"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 4,
+      "pose": "l-c04"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 5,
+      "pose": "l-c05"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 6,
+      "pose": "l-c06"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 7,
+      "pose": "l-c07"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 8,
+      "pose": "l-c08"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 9,
+      "pose": "l-c09"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 10,
+      "pose": "l-c10"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 11,
+      "pose": "l-c11"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 12,
+      "pose": "l-c12"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 13,
+      "pose": "l-c13"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 14,
+      "pose": "l-c14"
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 15,
+      "pose": "l-c15"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 0,
+      "pose": "v-c00"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 1,
+      "pose": "v-c01"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 2,
+      "pose": "v-c02"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 3,
+      "pose": "v-c03"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 4,
+      "pose": "v-c04"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 5,
+      "pose": "v-c05"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 6,
+      "pose": "v-c06"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 7,
+      "pose": "v-c07"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 8,
+      "pose": "v-c08"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 9,
+      "pose": "v-c09"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 10,
+      "pose": "v-c10"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 11,
+      "pose": "v-c11"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 12,
+      "pose": "v-c12"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 13,
+      "pose": "v-c13"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 14,
+      "pose": "v-c14"
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 15,
+      "pose": "v-c15"
+    }
+  ],
+  "unique_poses": [
+    "g-r00-c00",
+    "g-r00-c02",
+    "g-r01-c00",
+    "g-r01-c01",
+    "g-r01-c02",
+    "g-r01-c03",
+    "g-r02-c00",
+    "g-r02-c01",
+    "g-r02-c02",
+    "g-r02-c03",
+    "g-r03-c00",
+    "g-r03-c01",
+    "g-r03-c02",
+    "g-r03-c03",
+    "g-r03-c04",
+    "g-r03-c05",
+    "g-r04-c00",
+    "g-r04-c01",
+    "g-r04-c02",
+    "g-r04-c03",
+    "g-r04-c04",
+    "g-r04-c05",
+    "g-r05-c00",
+    "g-r05-c01",
+    "g-r05-c02",
+    "g-r05-c03",
+    "g-r05-c04",
+    "g-r05-c05",
+    "g-r06-c00",
+    "g-r06-c01",
+    "g-r06-c02",
+    "g-r06-c03",
+    "g-r06-c04",
+    "g-r06-c05",
+    "g-r07-c00",
+    "g-r07-c01",
+    "g-r07-c02",
+    "g-r07-c03",
+    "g-r07-c04",
+    "g-r08-c00",
+    "g-r08-c01",
+    "g-r08-c02",
+    "g-r08-c03",
+    "g-r08-c04",
+    "g-r08-c05",
+    "g-r08-c06",
+    "g-r08-c07",
+    "g-r09-c00",
+    "g-r09-c01",
+    "g-r09-c02",
+    "g-r09-c03",
+    "g-r09-c04",
+    "g-r09-c07",
+    "g-r10-c00",
+    "g-r10-c01",
+    "g-r10-c02",
+    "g-r10-c03",
+    "g-r10-c04",
+    "g-r10-c05",
+    "g-r10-c06",
+    "g-r10-c07",
+    "g-r11-c00",
+    "g-r11-c02",
+    "g-r12-c00",
+    "g-r12-c02",
+    "g-r13-c00",
+    "g-r13-c02",
+    "g-r14-c01",
+    "g-r14-c02",
+    "g-r14-c04",
+    "g-r14-c05",
+    "g-r15-c01",
+    "g-r15-c02",
+    "g-r15-c04",
+    "g-r15-c05",
+    "g-r16-c01",
+    "g-r16-c02",
+    "g-r16-c04",
+    "g-r16-c05",
+    "l-c00",
+    "l-c01",
+    "l-c02",
+    "l-c03",
+    "l-c04",
+    "l-c05",
+    "l-c06",
+    "l-c07",
+    "l-c08",
+    "l-c09",
+    "l-c10",
+    "l-c11",
+    "l-c12",
+    "l-c13",
+    "l-c14",
+    "l-c15",
+    "v-c00",
+    "v-c01",
+    "v-c02",
+    "v-c03",
+    "v-c04",
+    "v-c05",
+    "v-c06",
+    "v-c07",
+    "v-c08",
+    "v-c09",
+    "v-c10",
+    "v-c11",
+    "v-c12",
+    "v-c13",
+    "v-c14",
+    "v-c15"
+  ],
+  "poses": {
+    "g-r00-c00": {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r00-c02": {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r01-c00": {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r01-c01": {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r01-c02": {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r01-c03": {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r02-c00": {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r02-c01": {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r02-c02": {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r02-c03": {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c00": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c01": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c02": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c03": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c04": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r03-c05": {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c00": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c01": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c02": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c03": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c04": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r04-c05": {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c00": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c01": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c02": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c03": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c04": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r05-c05": {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c00": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c01": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c02": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c03": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c04": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r06-c05": {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r07-c00": {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r07-c01": {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r07-c02": {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r07-c03": {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r07-c04": {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c00": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c01": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c02": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c03": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c04": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c05": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c06": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 6,
+      "width": 184,
+      "height": 158
+    },
+    "g-r08-c07": {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 7,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c00": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c01": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c02": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c03": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c04": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r09-c07": {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 7,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c00": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c01": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c02": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c03": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 3,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c04": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c05": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c06": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 6,
+      "width": 184,
+      "height": 158
+    },
+    "g-r10-c07": {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 7,
+      "width": 184,
+      "height": 158
+    },
+    "g-r11-c00": {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r11-c02": {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r12-c00": {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r12-c02": {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r13-c00": {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 0,
+      "width": 184,
+      "height": 158
+    },
+    "g-r13-c02": {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r14-c01": {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r14-c02": {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r14-c04": {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r14-c05": {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r15-c01": {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r15-c02": {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r15-c04": {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r15-c05": {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "g-r16-c01": {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 1,
+      "width": 184,
+      "height": 158
+    },
+    "g-r16-c02": {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 2,
+      "width": 184,
+      "height": 158
+    },
+    "g-r16-c04": {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 4,
+      "width": 184,
+      "height": 158
+    },
+    "g-r16-c05": {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 5,
+      "width": 184,
+      "height": 158
+    },
+    "l-c00": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 0,
+      "width": 138,
+      "height": 154
+    },
+    "l-c01": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 1,
+      "width": 138,
+      "height": 154
+    },
+    "l-c02": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 2,
+      "width": 138,
+      "height": 154
+    },
+    "l-c03": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 3,
+      "width": 138,
+      "height": 154
+    },
+    "l-c04": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 4,
+      "width": 138,
+      "height": 154
+    },
+    "l-c05": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 5,
+      "width": 138,
+      "height": 154
+    },
+    "l-c06": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 6,
+      "width": 138,
+      "height": 154
+    },
+    "l-c07": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 7,
+      "width": 138,
+      "height": 154
+    },
+    "l-c08": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 8,
+      "width": 138,
+      "height": 154
+    },
+    "l-c09": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 9,
+      "width": 138,
+      "height": 154
+    },
+    "l-c10": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 10,
+      "width": 138,
+      "height": 154
+    },
+    "l-c11": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 11,
+      "width": 138,
+      "height": 154
+    },
+    "l-c12": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 12,
+      "width": 138,
+      "height": 154
+    },
+    "l-c13": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 13,
+      "width": 138,
+      "height": 154
+    },
+    "l-c14": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 14,
+      "width": 138,
+      "height": 154
+    },
+    "l-c15": {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 15,
+      "width": 138,
+      "height": 154
+    },
+    "v-c00": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 0,
+      "width": 200,
+      "height": 164
+    },
+    "v-c01": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 1,
+      "width": 200,
+      "height": 164
+    },
+    "v-c02": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 2,
+      "width": 200,
+      "height": 164
+    },
+    "v-c03": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 3,
+      "width": 200,
+      "height": 164
+    },
+    "v-c04": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 4,
+      "width": 200,
+      "height": 164
+    },
+    "v-c05": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 5,
+      "width": 200,
+      "height": 164
+    },
+    "v-c06": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 6,
+      "width": 200,
+      "height": 164
+    },
+    "v-c07": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 7,
+      "width": 200,
+      "height": 164
+    },
+    "v-c08": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 8,
+      "width": 200,
+      "height": 164
+    },
+    "v-c09": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 9,
+      "width": 200,
+      "height": 164
+    },
+    "v-c10": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 10,
+      "width": 200,
+      "height": 164
+    },
+    "v-c11": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 11,
+      "width": 200,
+      "height": 164
+    },
+    "v-c12": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 12,
+      "width": 200,
+      "height": 164
+    },
+    "v-c13": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 13,
+      "width": 200,
+      "height": 164
+    },
+    "v-c14": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 14,
+      "width": 200,
+      "height": 164
+    },
+    "v-c15": {
+      "sheet": "victory",
+      "row": 0,
+      "col": 15,
+      "width": 200,
+      "height": 164
+    }
+  },
+  "sheets": {
+    "gameplay": {
+      "path": "apps/client/public/sprites/penelope.png",
+      "width": 1656,
+      "height": 2686,
+      "frameW": 184,
+      "frameH": 158,
+      "anchorX": 87,
+      "anchorY": 156,
+      "rows": [
+        {
+          "row": 0,
+          "action": "idle",
+          "direction": "south",
+          "frames": 4
+        },
+        {
+          "row": 1,
+          "action": "idle",
+          "direction": "east",
+          "frames": 4
+        },
+        {
+          "row": 2,
+          "action": "idle",
+          "direction": "north",
+          "frames": 4
+        },
+        {
+          "row": 3,
+          "action": "walk",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 4,
+          "action": "walk",
+          "direction": "east",
+          "frames": 6
+        },
+        {
+          "row": 5,
+          "action": "walk",
+          "direction": "north",
+          "frames": 6
+        },
+        {
+          "row": 6,
+          "action": "stun",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 7,
+          "action": "death",
+          "direction": "south",
+          "frames": 5
+        },
+        {
+          "row": 8,
+          "action": "cast",
+          "direction": "south",
+          "frames": 9
+        },
+        {
+          "row": 9,
+          "action": "cast",
+          "direction": "east",
+          "frames": 9
+        },
+        {
+          "row": 10,
+          "action": "cast",
+          "direction": "north",
+          "frames": 9
+        },
+        {
+          "row": 11,
+          "action": "carryIdle",
+          "direction": "south",
+          "frames": 4
+        },
+        {
+          "row": 12,
+          "action": "carryIdle",
+          "direction": "east",
+          "frames": 4
+        },
+        {
+          "row": 13,
+          "action": "carryIdle",
+          "direction": "north",
+          "frames": 4
+        },
+        {
+          "row": 14,
+          "action": "carryWalk",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 15,
+          "action": "carryWalk",
+          "direction": "east",
+          "frames": 6
+        },
+        {
+          "row": 16,
+          "action": "carryWalk",
+          "direction": "north",
+          "frames": 6
+        }
+      ],
+      "occupied_cells": 98,
+      "unique_poses": 79,
+      "source_file_sha256": "b953627eb2cc59c73365400bae8e838bd7f50d20abd86728fe37a5c4ac8d7aea",
+      "decoded_rgba_sha256": "e35da1ebd9cd080e54be35ddf9615f56c177c72743259fef168ce02797bf7538"
+    },
+    "lobby": {
+      "path": "apps/client/public/sprites/penelope-lobby.png",
+      "width": 2208,
+      "height": 154,
+      "frameW": 138,
+      "frameH": 154,
+      "anchorX": 64,
+      "anchorY": 154,
+      "rows": [
+        {
+          "row": 0,
+          "action": "lobby",
+          "direction": "south",
+          "frames": 16
+        }
+      ],
+      "occupied_cells": 16,
+      "unique_poses": 16,
+      "source_file_sha256": "cdd6eca38b2d084438b96888945945a5ce27fdf8af327be68b482393417b6037",
+      "decoded_rgba_sha256": "73e5c8ab9929eb8005cdcfe3a347021e477a436aa9db2eedd323595f6e4b5e41"
+    },
+    "victory": {
+      "path": "apps/client/public/sprites/penelope-victory.png",
+      "width": 3200,
+      "height": 164,
+      "frameW": 200,
+      "frameH": 164,
+      "anchorX": 95,
+      "anchorY": 164,
+      "rows": [
+        {
+          "row": 0,
+          "action": "victory",
+          "direction": "south",
+          "frames": 16
+        }
+      ],
+      "occupied_cells": 16,
+      "unique_poses": 16,
+      "source_file_sha256": "37df107ac1229597762c29ccc8a8148503e0c616dd2a63d13c90c1147cc22ffa",
+      "decoded_rgba_sha256": "20acc6864e3515592deb6be898e3ed19d65064deffdf716d7e2f62e1e70b319f"
+    }
+  },
+  "policy": {
+    "source_use": "Old frames are pose estimation references only; never appearance references.",
+    "appearance_reference": "concept/penelope/pixellab-preview/base-3.png",
+    "appearance": "Keep approved base-3 identity, palette and proportions consistent across all sheets.",
+    "target_effects": "No FX; do not redraw baked hearts, powder, glints or sparkles.",
+    "extraction": "Full native cells, decoded RGBA unmodified, alpha preserved, no resize, no scripted FX removal.",
+    "deduplication": "SHA-256 of full decoded RGBA bytes within each sheet; first row-major occurrence is canonical. Transparent RGB participates."
+  }
+}

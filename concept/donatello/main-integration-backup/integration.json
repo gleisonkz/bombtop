@@ -1,0 +1,18 @@
+{
+  "target": "D:\\Programa\u00e7\u00e3o\\Jogos\\New folder\\bombtop",
+  "changed": [
+    "apps/client/src/render/sprites.ts",
+    "apps/client/src/render/renderer.ts",
+    "apps/client/src/ui/cast-layout.ts",
+    "apps/client/src/render/carry-anchors.json",
+    "apps/client/src/render/score-portraits.json",
+    "apps/client/src/ui/cast-animation-bounds.json",
+    "apps/client/scripts/build-carry-anchors.py",
+    "apps/client/scripts/test-score-portraits.py",
+    "apps/client/test/ground-effects.test.ts",
+    "apps/client/public/sprites/LICENSES.md",
+    "apps/client/public/sprites/donatello.png",
+    "apps/client/scripts/test-donatello-pixellab.py"
+  ],
+  "preserved": "all non-Donatello JSON entries and unrelated source blocks"
+}

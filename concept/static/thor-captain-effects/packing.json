@@ -1,0 +1,435 @@
+{
+  "cell": 128,
+  "paletteLimit": 16,
+  "binaryAlpha": true,
+  "records": [
+    {
+      "kind": "special",
+      "row": 0,
+      "col": 0,
+      "sourceBox": [
+        0,
+        0,
+        362,
+        362
+      ],
+      "opaqueBox": [
+        18,
+        142,
+        347,
+        304
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 0,
+      "col": 1,
+      "sourceBox": [
+        362,
+        0,
+        724,
+        362
+      ],
+      "opaqueBox": [
+        18,
+        114,
+        351,
+        302
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 0,
+      "col": 2,
+      "sourceBox": [
+        724,
+        0,
+        1086,
+        362
+      ],
+      "opaqueBox": [
+        16,
+        125,
+        345,
+        302
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 0,
+      "col": 3,
+      "sourceBox": [
+        1086,
+        0,
+        1448,
+        362
+      ],
+      "opaqueBox": [
+        16,
+        133,
+        344,
+        312
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 1,
+      "col": 0,
+      "sourceBox": [
+        0,
+        362,
+        362,
+        724
+      ],
+      "opaqueBox": [
+        36,
+        42,
+        339,
+        322
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 1,
+      "col": 1,
+      "sourceBox": [
+        362,
+        362,
+        724,
+        724
+      ],
+      "opaqueBox": [
+        29,
+        34,
+        331,
+        322
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 1,
+      "col": 2,
+      "sourceBox": [
+        724,
+        362,
+        1086,
+        724
+      ],
+      "opaqueBox": [
+        38,
+        42,
+        334,
+        328
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 1,
+      "col": 3,
+      "sourceBox": [
+        1086,
+        362,
+        1448,
+        724
+      ],
+      "opaqueBox": [
+        34,
+        45,
+        315,
+        333
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 2,
+      "col": 0,
+      "sourceBox": [
+        0,
+        724,
+        362,
+        1086
+      ],
+      "opaqueBox": [
+        77,
+        28,
+        292,
+        318
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 2,
+      "col": 1,
+      "sourceBox": [
+        362,
+        724,
+        724,
+        1086
+      ],
+      "opaqueBox": [
+        71,
+        12,
+        303,
+        328
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 2,
+      "col": 2,
+      "sourceBox": [
+        724,
+        724,
+        1086,
+        1086
+      ],
+      "opaqueBox": [
+        61,
+        28,
+        295,
+        318
+      ]
+    },
+    {
+      "kind": "special",
+      "row": 2,
+      "col": 3,
+      "sourceBox": [
+        1086,
+        724,
+        1448,
+        1086
+      ],
+      "opaqueBox": [
+        67,
+        22,
+        293,
+        323
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 0,
+      "sourceBox": [
+        0,
+        0,
+        384,
+        286
+      ],
+      "offset": [
+        11,
+        42
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 4,
+      "sourceBox": [
+        0,
+        286,
+        384,
+        583
+      ],
+      "offset": [
+        11,
+        40
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 8,
+      "sourceBox": [
+        0,
+        583,
+        384,
+        803
+      ],
+      "offset": [
+        13,
+        76
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 12,
+      "sourceBox": [
+        0,
+        803,
+        384,
+        1024
+      ],
+      "offset": [
+        15,
+        78
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 1,
+      "sourceBox": [
+        384,
+        0,
+        768,
+        289
+      ],
+      "offset": [
+        11,
+        38
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 5,
+      "sourceBox": [
+        384,
+        289,
+        768,
+        583
+      ],
+      "offset": [
+        10,
+        41
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 9,
+      "sourceBox": [
+        384,
+        583,
+        768,
+        804
+      ],
+      "offset": [
+        13,
+        79
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 13,
+      "sourceBox": [
+        384,
+        804,
+        768,
+        1024
+      ],
+      "offset": [
+        12,
+        78
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 2,
+      "sourceBox": [
+        768,
+        0,
+        1152,
+        287
+      ],
+      "offset": [
+        9,
+        39
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 6,
+      "sourceBox": [
+        768,
+        287,
+        1152,
+        584
+      ],
+      "offset": [
+        9,
+        40
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 10,
+      "sourceBox": [
+        768,
+        584,
+        1152,
+        798
+      ],
+      "offset": [
+        11,
+        75
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 14,
+      "sourceBox": [
+        768,
+        798,
+        1152,
+        1024
+      ],
+      "offset": [
+        12,
+        74
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 3,
+      "sourceBox": [
+        1152,
+        0,
+        1536,
+        287
+      ],
+      "offset": [
+        7,
+        38
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 7,
+      "sourceBox": [
+        1152,
+        287,
+        1536,
+        577
+      ],
+      "offset": [
+        7,
+        40
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 11,
+      "sourceBox": [
+        1152,
+        577,
+        1536,
+        799
+      ],
+      "offset": [
+        12,
+        69
+      ]
+    },
+    {
+      "kind": "charge",
+      "phase": 15,
+      "sourceBox": [
+        1152,
+        799,
+        1536,
+        1024
+      ],
+      "offset": [
+        10,
+        75
+      ]
+    }
+  ]
+}

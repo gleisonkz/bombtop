@@ -8,3 +8,7 @@ coverage/
 .agent/
 *.log
 __pycache__/
+
+outputs/
+
+*.before

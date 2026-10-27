@@ -1,0 +1,32 @@
+[
+  {
+    "phase": "rise",
+    "mask": [
+      24,
+      12,
+      80,
+      66
+    ],
+    "unmasked_RGBA_identical": true
+  },
+  {
+    "phase": "half",
+    "mask": [
+      24,
+      12,
+      80,
+      66
+    ],
+    "unmasked_RGBA_identical": true
+  },
+  {
+    "phase": "almost",
+    "mask": [
+      24,
+      12,
+      80,
+      66
+    ],
+    "unmasked_RGBA_identical": true
+  }
+]

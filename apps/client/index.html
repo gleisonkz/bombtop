@@ -221,6 +221,11 @@
         .cast .star .title-bomber { --fly-cell: 208px; width: 208px; height: 208px; }
       }
       .menu.guiding > .cast { display: none; }
+      /* Standalone previews contain their backdrop; casts share one behind every member.
+         Keep Goku's ancestors context-free: a child z-index cannot escape a filter/transform. */
+      .mascot.sheet.goku:has(> .goku-aura-preview) { isolation: isolate; }
+      .cast .cast-member:has(> .mascot.sheet.goku > .goku-aura-preview),
+      .cast .mascot.sheet.goku:has(> .goku-aura-preview) { isolation: auto; z-index: auto; transform: none; translate: none; rotate: none; scale: none; filter: none; }
       .logo { margin: 0; width: min(76vw, clamp(240px, 30vw, 420px)); max-width: 100%; line-height: 0;
         animation: logo-in 0.7s cubic-bezier(0.2, 1.7, 0.4, 1) both; }
       .logo img { display: block; width: 100%; height: auto; }

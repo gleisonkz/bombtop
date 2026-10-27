@@ -1,0 +1,16 @@
+{
+  "character_id": "a2190442-8767-46f0-a293-9a62cc83107c",
+  "name": "GOKU A1",
+  "reference": "approved-reference.png",
+  "reference_sha256": "8a941d2909f32dd0c35aaf7eec13dbe5e3d1d4e4189d038da68dd26f7e137629",
+  "method": "create_character v3 reference4directions, asLanterna A1 restart-skeleton",
+  "appearance_source": "approved taller sprite ONLY",
+  "future_pose_source": "COCO18 skeletoncoordinates ONLY; no previoussheet pixels, transferoutfit or mixing other generated characters",
+  "status": "completed",
+  "native_size": [
+    60,
+    104
+  ],
+  "front_pixels_identical": true,
+  "directions_root": "source\\Idle\\rotations"
+}

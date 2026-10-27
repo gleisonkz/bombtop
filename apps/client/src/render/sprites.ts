@@ -1064,16 +1064,16 @@ export function skullAlpha(p: Pick<Player, "curse">, tick: number): number {
   return p.curse?.kind === "invisible" && Math.floor(tick / (TICK_RATE / 2)) % 2 === 1 ? 0 : 1;
 }
 
-/** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */
+/** Generated emerald construct shield: forming, sustained highlights, dissolving armor. */
 export const BUBBLE = {
-  url: "sprites/lantern-bubble.png",
-  size: 192,
+  url: "sprites/lantern-construct-shield.png?v=20261026-thor-cap-3",
+  size: 320,
   rows: { form: 0, loop: 1, pop: 2 },
-  frames: { form: 8, loop: 12, pop: 8 },
-  /** Ticks each frame stays on screen. */
-  ticks: 2,
-  /** Drawn about 28 px across, round a player. */
-  scale: 0.18,
+  frames: { form: 4, loop: 8, pop: 4 },
+  /** Ticks each frame stays on screen; opening and release still take 16 ticks. */
+  ticks: 4,
+  /** Armored energy rim around the player, including transparent padding. */
+  scale: 0.15,
 };
 
 /**

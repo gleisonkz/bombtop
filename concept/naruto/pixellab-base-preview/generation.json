@@ -1,0 +1,14 @@
+{
+  "job_id": "4431e874-8be2-4141-9199-3a8cbe06577a",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "reference_files": [
+    "concept/donatello/pixellab-preview/captain-style.png",
+    "concept/donatello/pixellab-preview/thor-style.png"
+  ],
+  "prompt": "Create a NEW full-body front-facing base sprite of classic young Naruto Uzumaki for the same game cast as both attached Captain America and Thor sprites. These two references are ART STYLE AND PROPORTION references only: match their polished crisp detailed pixel-art finish, readable clean face, solid compact chibi anatomy, large head about 40 percent of body height, clear hands and feet, precise dark outlines, coherent small shaded clusters, strong clean silhouette. Naruto has recognizable golden spiky hair, natural blue irises with dark pupils, three subtle whisker marks on each cheek, navy forehead cloth with silver engraved Leaf symbol plate, orange zippered tracksuit with navy shoulder panels and cream high collar, navy cuffs, right thigh wrap/pouch, blue open-toed ninja sandals. Calm confident neutral stance facing directly forward, arms relaxed a little away from torso, fingers coherent, shoulders symmetrical. Maintain native pixel sharpness and detail density of both style references, no oversized coarse pixel blocks, no blur, no glossy white skin highlights, no white flecks on hair or clothes. One isolated character per candidate, entire body uncropped, centered with transparent padding. Transparent background, no floor shadow, no label, no text, no scene, no aura, no Rasengan, no particles, no glow, no weapons, no floating objects. This is a fresh Naruto design, do not copy Captain or Thor costumes, shields, helmets or hammer.",
+  "production_status": "preview only; existing game sprites unchanged"
+}

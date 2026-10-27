@@ -1,0 +1,10 @@
+{
+  "character_id": "e209a97e-98a4-4f0d-9152-37abfc8587cb",
+  "reference": "concept/lantern/pixellab-preview/bald-1.png",
+  "method": "create_character v3 reference, four directions; skeleton-v3 animation",
+  "appearance_source": "approved A1 only",
+  "pose_source": "current production poses, COCO-18 skeleton coordinates only",
+  "effects": false,
+  "previous_character": null,
+  "previous_character_note": "No Lantern character existed in the remote character inventory; rejected attempts were loose image jobs."
+}

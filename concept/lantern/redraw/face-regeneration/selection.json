@@ -1,0 +1,422 @@
+{
+  "r00-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r00-c00.png",
+    "job_id": "507e551d-e36f-4dff-8dac-20d6eb2add62",
+    "sha256": "85e6ba41d5a08aeb4e9ad0ceaa22ff640ccdd67e4ca7d22ba7223b78a332a71f"
+  },
+  "r00-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r00-c02.png",
+    "job_id": "6f3e5c18-90c2-42c4-931b-034c63e0cbc1",
+    "sha256": "b745dae844ccd8b71f7b993d369c467036e51242d8d9c3db9d84e22f418d7036"
+  },
+  "r01-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r01-c00.png",
+    "job_id": "8bd1d6bc-d779-4c3d-94de-b8d1c7247f4b",
+    "sha256": "b8ab12aee7d41ca917269853e3b29f23a352db0c7c911188fcab6288f181bb76"
+  },
+  "r01-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r01-c01.png",
+    "job_id": "0527e8b0-471c-421a-9a35-d7a304e58cc1",
+    "sha256": "c3074a0611fdd2860eaf2ebdade9032e8d5398c255f9eb757ab7e230bbbd0674"
+  },
+  "r01-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r01-c02.png",
+    "job_id": "58d41af2-f287-4d05-a97a-e9e014cbcdef",
+    "sha256": "ffd867e03d5ff5d4779fb04675733111a3480f990354b3002bbc7369e7e3fb1b"
+  },
+  "r01-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r01-c03.png",
+    "job_id": "658524c5-d680-4a30-a0a9-4cc556606370",
+    "sha256": "278378bf383cc1a6ef883586a78106112046bfca3c03d882fe0a490ea4091731"
+  },
+  "r02-c00": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r02-c00.png",
+    "job_id": null,
+    "sha256": "9bc30481e4669dd74839e005874c8bd3712284a679237a28e80a018d6a7114d0"
+  },
+  "r02-c01": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r02-c01.png",
+    "job_id": null,
+    "sha256": "18d79ac796c6e5033c3ea316f68287cbb44085e72fc9a91c10bd0385e7374940"
+  },
+  "r02-c02": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r02-c02.png",
+    "job_id": null,
+    "sha256": "89ba23ee363b7349eabb04d922db71588bf496b411554f6324d354862db26774"
+  },
+  "r02-c03": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r02-c03.png",
+    "job_id": null,
+    "sha256": "c5aac6b713fd00b4155f7b1ff1e02d508e1a0ba7dfdc9b78c1234b78627c5247"
+  },
+  "r03-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r03-c00.png",
+    "job_id": "287f0ed2-67da-47d0-84ec-98b8a50e5989",
+    "sha256": "c6e1a82dd3886ba2dddfe34b16804234bf81ab35569897f58d91098ec3e81879"
+  },
+  "r03-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r03-c01.png",
+    "job_id": "8b564b62-bb37-44cd-8d89-6917ac41b1d6",
+    "sha256": "7bee6c01517f4a0f08873c0e92bca348e19123cba2ceb2038bef107bf5421803"
+  },
+  "r03-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r03-c02.png",
+    "job_id": "a4253fac-3e7b-4d2f-bf8a-340b173e3e22",
+    "sha256": "71961c8e54130a2450e2756642df4c74d230f010d5c882eed2efffa662f02fe7"
+  },
+  "r03-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r03-c03.png",
+    "job_id": "daa9e1b5-caef-48cc-bec8-3bba3320bd15",
+    "sha256": "b6575dee4c75a1d5054df6c681ba6d0d00b104ae81f45294cd37ee6fe172b0d7"
+  },
+  "r03-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r03-c04.png",
+    "job_id": "cad0ace6-1eb2-4262-94e0-078d7db2aa61",
+    "sha256": "69d46a59bae28d5ab629c1fabbf9e1440b08e14bbef5027fd617618decfaaab4"
+  },
+  "r03-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r03-c05.png",
+    "job_id": "7350dd89-f4b0-47bf-8dfa-2de759d0aac4",
+    "sha256": "29eeaf9225948737c15b4cbab2aa769a1432ce32935cebfa1f45233b755b1bba"
+  },
+  "r04-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c00.png",
+    "job_id": "6a98e5c0-4e1f-4012-9545-9e27700e0882",
+    "sha256": "cc532327c9909637315a97e5d7e418e729e407bfe96db25f452d49af66fd5d47"
+  },
+  "r04-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c01.png",
+    "job_id": "8ff745b1-b51b-474c-8c52-5ca77b07e6af",
+    "sha256": "c17aa1250d56d641a6d41a57fef0516244b136abf30257f42e8bef6ebaa4a9f5"
+  },
+  "r04-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c02.png",
+    "job_id": "1b5a5cc7-2edc-43fa-a08c-e0631f0007e6",
+    "sha256": "4410e90ee3398836a88125ced8775f819403e7a680a412d17b42472f44f068d3"
+  },
+  "r04-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c03.png",
+    "job_id": "e91fef01-127b-4106-ade1-903da9abf90e",
+    "sha256": "fc07223fbbe254e72d6dada77834ca0123a93bfaa76ed088950763d3ff1c1f72"
+  },
+  "r04-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c04.png",
+    "job_id": "56822cd5-87b5-429e-94dd-b4f87cd89675",
+    "sha256": "c8912a8679305c78f5cdc83e6594d10b48bc27d1685dfe599e56c49ff77ed755"
+  },
+  "r04-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r04-c05.png",
+    "job_id": "4ecddcd2-7d2d-42cd-b84a-61827763f1f2",
+    "sha256": "95809371b7266575549d3e09fadd380b03ff0bb4d4c9ed2bcd2171bf5ad46eb9"
+  },
+  "r05-c00": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c00.png",
+    "job_id": null,
+    "sha256": "9755e01c5a16f2577c701a613b8dab1e72a35e796424cf1d5f6784943550698b"
+  },
+  "r05-c01": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c01.png",
+    "job_id": null,
+    "sha256": "73f788473d862311d4c9c10c5538f49db89e82b41d30c12c78f9d94c2a4a3aee"
+  },
+  "r05-c02": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c02.png",
+    "job_id": null,
+    "sha256": "bfb3d27073b616b4ec2bce205b32e095fab84a01df8e26b0d4eee0c4e9b7bd3c"
+  },
+  "r05-c03": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c03.png",
+    "job_id": null,
+    "sha256": "583d74588b8c4c2da7ea825fb707db6e573fb4ba976f3cc8506a68e8fb16d78b"
+  },
+  "r05-c04": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c04.png",
+    "job_id": null,
+    "sha256": "346c472d5e86fa2a68a69aa84e450a43af000d99eec1ba59f641ca69911ecaa1"
+  },
+  "r05-c05": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r05-c05.png",
+    "job_id": null,
+    "sha256": "149624a24e0fa8993838c76a3fc759c92388fa876aaebff2df07918a1b1baaa0"
+  },
+  "r06-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r06-c00.png",
+    "job_id": "6846f7cf-6ca7-4d9b-af8f-5222f1608f39",
+    "sha256": "5446361e38f42dfaef2a15ee39c935a265f0e9454d0c27f9d8fa42735e5966c5"
+  },
+  "r06-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r06-c01.png",
+    "job_id": "22c1d34d-2754-4e38-be7c-99aed96eddfa",
+    "sha256": "55d9517d49497f628813694af3176d8ac09021a376706939cedce3c0b1788af1"
+  },
+  "r06-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r06-c02.png",
+    "job_id": "17f0db3a-cffa-4e75-ba8f-594d8a843864",
+    "sha256": "183dd8ab47e109599281fcc212840f2415d94ee63c8ac03a9c69d45d3839b858"
+  },
+  "r06-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r06-c03.png",
+    "job_id": "ce9f19c2-7ec7-4332-9b85-403a55dbebc5",
+    "sha256": "8f5b569c7efc1eaa2beb9602e3417628dc755d652c29193298db1054647744db"
+  },
+  "r06-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r06-c04-final.png",
+    "job_id": "e395364e-a856-44da-8664-d64dec12f603",
+    "sha256": "0756b88007f92c09e77a380ff003261385b2088476d9af98526aae5a42141be8"
+  },
+  "r06-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r06-c05.png",
+    "job_id": "dadb6b55-1612-4748-9027-55e4f8f38821",
+    "sha256": "2fb01e58f426ac5777d59c86e985ef25230c65eb3c2dfe39c43d835b7154bc81"
+  },
+  "r07-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c00.png",
+    "job_id": "f545e35f-91a8-4a71-9267-c670a3299c3a",
+    "sha256": "f01d2ba48f46ca68adeb401560fbd203b5dae0ce9a0afcb71e3404f739091239"
+  },
+  "r07-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c01.png",
+    "job_id": "9c03bc57-695f-407a-965f-e3550ca2b4ce",
+    "sha256": "44f77aa77a65c5ea14a3f60e9465720b1ec62b15ef3db153a7c904bbe7a4277a"
+  },
+  "r07-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c02.png",
+    "job_id": "5fd8044b-7c4d-41ac-a169-87ab786259e1",
+    "sha256": "30633e87a3c53b269eca842219689fef5aa1af7ea3e4f161ecf6d6b6a493f509"
+  },
+  "r07-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c03.png",
+    "job_id": "eea4bc82-68c5-4cb3-93a1-1b721ce5f0da",
+    "sha256": "5dc5078096c78a4df1956c46bea17d05f464422f05d1a63d0d6b9f5459cc113b"
+  },
+  "r07-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c04.png",
+    "job_id": "3a512ea5-49a9-4d5b-be88-5fa4b9e03219",
+    "sha256": "aa3c85836e495a537524f35e98b65e348568213df3aa4284c7112e91e04c6534"
+  },
+  "r07-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c05.png",
+    "job_id": "8fc422dd-22af-40a1-ba64-ffb114c8f9f8",
+    "sha256": "aa29a08f6d480ab5f8232d5a1b0980bf7c932b261513ec86d14992843ae31921"
+  },
+  "r07-c06": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r07-c06.png",
+    "job_id": "0e8a5549-86f9-4e1f-8e6d-3698a5f4b926",
+    "sha256": "b0bfd668b4df9387b195049b6c2b5205557ffb6db1401c819bc261973c8a59af"
+  },
+  "r08-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r08-c00.png",
+    "job_id": "e151f2c4-d142-44c5-a26d-63bf94189fc3",
+    "sha256": "96c1afffa81b774ce68da2a660905d4b91e5d620b7fa08951407a24400f87a1f"
+  },
+  "r08-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r08-c01.png",
+    "job_id": "dffa021a-5a5f-4405-a083-44de218ff00e",
+    "sha256": "32e99be54661634bb5da5a8654c5dc4abf816611743127699c56c1878244f03a"
+  },
+  "r08-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r08-c02.png",
+    "job_id": "39f81ba0-59aa-441c-b75b-886b67e8d84a",
+    "sha256": "afd19f452e5c0de386849f04c0fe32943bd7d4f9e8818a45c7b420d971b3c308"
+  },
+  "r08-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r08-c03.png",
+    "job_id": "7b04d6c3-bf70-448d-8e07-6ba9901eb524",
+    "sha256": "b95a4568af984d6d6fc01941cf8d8f6eee36d4140cff9675633e94921b7826cd"
+  },
+  "r08-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r08-c04.png",
+    "job_id": "c676abf8-62ba-47df-9846-8ad7d2a32deb",
+    "sha256": "a983bb8d93dc149a77c0de9b35a4ac1bd04944fc4614ab7ea92dbb1acdfaa203"
+  },
+  "r08-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r08-c05.png",
+    "job_id": "53dd9d67-e203-4ec3-8d6a-fc7283946e10",
+    "sha256": "883214c22ae5b5c8401a208fa19b8fee1e3b38bc756bcd212b0f4824edcc613d"
+  },
+  "r09-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c00.png",
+    "job_id": "152eb28b-8458-4b37-add8-ef9117d8c517",
+    "sha256": "96be8246370d02b7f72e272e4e6da6f2a9563feffad1c59a11d81ee65a7186ff"
+  },
+  "r09-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c01.png",
+    "job_id": "93602b06-0077-45df-b2e8-87e55f66d5c0",
+    "sha256": "dee71b517f8a659cb19f6fc4a53291a4d8ede2301ad80162f0f3ed96d28716e5"
+  },
+  "r09-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c02.png",
+    "job_id": "0f0fd233-5f66-40ed-a663-d0565e45acfa",
+    "sha256": "f2fcb926aca3fd89b872cbad5826a8b675002bf6967477be443b3eb66ebbe508"
+  },
+  "r09-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c03.png",
+    "job_id": "0fb859b8-9915-411e-867a-665d77b3033b",
+    "sha256": "ab2163ffda717236d43d4e15ef9a70ffecd393be000f62fbba0bf5d6f03d6c00"
+  },
+  "r09-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c04.png",
+    "job_id": "b4a18d75-3050-49cd-85a0-21db5bebd7ae",
+    "sha256": "f860a5437c7890b27a7640e2d483ab300317a67a7bdfee69fa4e825b518c6704"
+  },
+  "r09-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r09-c05.png",
+    "job_id": "a8d22b71-b1f7-4876-b9cd-2a5d742bdf98",
+    "sha256": "09b5e64685e64f75423491b38c48280812a39b3a019aa5e061ba03bf635d6a53"
+  },
+  "r10-c00": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r10-c00.png",
+    "job_id": null,
+    "sha256": "d2073b35cb2c3e372392edf6bf02a61075f94e1bf8229ece87c22683a56b141f"
+  },
+  "r10-c01": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r10-c01.png",
+    "job_id": null,
+    "sha256": "343d40daf7381e22fba44a79d8afb0546afea4655fed9f8c1ebea0ab807ba46d"
+  },
+  "r10-c02": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r10-c02.png",
+    "job_id": null,
+    "sha256": "23f35ad964eddeba5fc173b7238b3b159d1c2f694cc8f0a4a3199733a5d89f1f"
+  },
+  "r10-c03": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r10-c03.png",
+    "job_id": null,
+    "sha256": "8947851064510a1dd9c908ae7d1d26ed7b6fdf1ff037d4fba73c7e01daf499fe"
+  },
+  "r10-c04": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r10-c04.png",
+    "job_id": null,
+    "sha256": "a759699573524ff14a40b6b3a5d3f69812a3951a0d81c2e67a34cd22044f1cfd"
+  },
+  "r11-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r11-c00.png",
+    "job_id": "cbf4f898-4474-4f88-86b0-3eebd5c85e6f",
+    "sha256": "223af2dd65ea5025685bb332ed9b657e5f0610a7db2b6e3d0279b703a2df72d7"
+  },
+  "r11-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r11-c02.png",
+    "job_id": "2b35e427-c488-4d7d-b452-f1f54fb71bb7",
+    "sha256": "e3a93a73fc089cd37fcafa151a9883e39b1fb744a77f10f4e2a8f4ef784f0a32"
+  },
+  "r12-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r12-c00.png",
+    "job_id": "811a7680-6958-4f85-8948-03d97b7f1958",
+    "sha256": "1427744d2f959f98664162522152f6aba0af8b9b2c61beb601e266e893cde6dc"
+  },
+  "r12-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r12-c02.png",
+    "job_id": "42255fa0-084d-4f74-81de-4b9b8da2974c",
+    "sha256": "1755e97871608b04c515d35ef19419b9095d37969d79cba1a76a1313922213bb"
+  },
+  "r13-c00": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r13-c00.png",
+    "job_id": null,
+    "sha256": "4285c88d382cc58c1057bcc7cb3acdb18a38981d5f5fc4f7e165c7e98932b842"
+  },
+  "r13-c02": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r13-c02.png",
+    "job_id": null,
+    "sha256": "de55cd5a7686f42659b81f3349e6bc8b7207c19132ede7045719a1b2d6dc82cf"
+  },
+  "r14-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r14-c01.png",
+    "job_id": "ddda6ac2-67e3-4d90-bcaa-3bf821426915",
+    "sha256": "c5250e6c2eb3f6381fa826ad98faaf5cc73b21bd4b0538f0255b478b7f3c640f"
+  },
+  "r14-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r14-c02.png",
+    "job_id": "64fe765e-9ecf-4b31-993b-a019734c52cf",
+    "sha256": "b53dfd81e8d93a81aed25b2c4963420a3b83f75608311ebae5de615ad612df56"
+  },
+  "r14-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r14-c04.png",
+    "job_id": "68b9a9c8-1a1f-4e3b-b464-1e854e54c120",
+    "sha256": "ca78a59a8fd1761a7f0ec5fcaaf068ea6219ce315dc892a255f703f4e4db351c"
+  },
+  "r14-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r14-c05.png",
+    "job_id": "d2f97332-6370-4e7e-96da-0a9822d76ecf",
+    "sha256": "3ed4cd9cfa3c5e9ea2d31f8d0d92d324d11671d3b260389568ac6407f147b0e0"
+  },
+  "r15-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r15-c01.png",
+    "job_id": "1a40b6d0-7980-4c73-835b-c4003d0a9f9e",
+    "sha256": "d3166d890aa329f93cad2677c2bfe26a2b1e2ecacc216b96d47325144677aea2"
+  },
+  "r15-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r15-c02.png",
+    "job_id": "6ea26df1-b112-4de8-af3b-ac3bc2414d1d",
+    "sha256": "2c76a54beba50cbdca91aa206edcc50af5fce7597148a44c54966176f6ffd43c"
+  },
+  "r15-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r15-c04.png",
+    "job_id": "ded939b4-5d58-4d57-85dd-57b7989921bb",
+    "sha256": "c8d6a3ec943b7617d15607269aa5392b98e0891c51a2905d0078eb0f370f894e"
+  },
+  "r15-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r15-c05.png",
+    "job_id": "69f8c3e5-d76f-4cd2-aff6-a8ac096f0a62",
+    "sha256": "63e14b33a08d9e008f84bfd82836da1bdaa74cfc3d788c432d8495ff824e9660"
+  },
+  "r16-c01": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r16-c01.png",
+    "job_id": null,
+    "sha256": "19937e596bfc6c4ca0ac6984194bfa0cad5cdab0b14187cbe40a137fe6ae5f91"
+  },
+  "r16-c02": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r16-c02.png",
+    "job_id": null,
+    "sha256": "79126e73f48190338a720f9764fb73cab79f92adc3884051dd41859516b26094"
+  },
+  "r16-c04": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r16-c04.png",
+    "job_id": null,
+    "sha256": "bb069c88558f389b7be8989214b9ca9550e8e23c1399be550f14526039ce699a"
+  },
+  "r16-c05": {
+    "source": "concept/lantern/redraw/face-normalization/before-generated/r16-c05.png",
+    "job_id": null,
+    "sha256": "7360fceb508feb311c18c072c11ce62f3e249a422dd1508fbe263fac7952c6ce"
+  },
+  "r17-c00": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r17-c00.png",
+    "job_id": "4474d5a0-1341-4b4e-8443-c1d07b6637d5",
+    "sha256": "413f93df5667e0f83bba2628d672077e1f3261eea9d63bdf3fcf5732249b4b19"
+  },
+  "r17-c01": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r17-c01.png",
+    "job_id": "fe370483-94fd-48c7-835c-0f2ba474a69d",
+    "sha256": "d104d7680f734ca2f1bbc7bc9d6863ca2880ab5fe2b075fa081b9329da1462aa"
+  },
+  "r17-c02": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r17-c02.png",
+    "job_id": "9f0070a6-25da-4ac6-972e-48ecbce18dcf",
+    "sha256": "bcfcffdb7a5b24879197316975eb9e6a3cf5cd99b4c27f538341d4fe33295a82"
+  },
+  "r17-c03": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r17-c03.png",
+    "job_id": "ff635c3b-2ac5-429b-87c0-99795642ced2",
+    "sha256": "e8e788b6fd82e7831b135e007d32e2d46adb5e267a6042fff73abaad6d5f02f6"
+  },
+  "r17-c04": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r17-c04.png",
+    "job_id": "dabca9b2-b917-4e98-8245-f95afdf64797",
+    "sha256": "a6b1145053b820c6e8d9cd8aa0a3f6cb6ea63e6930bd84d3d491dd9dc8c7faea"
+  },
+  "r17-c05": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r17-c05.png",
+    "job_id": "f05fa8dc-72be-4ac8-a0dc-5ed1b06e07d7",
+    "sha256": "454eff3538b4cec5c2c6192d95ed4e825800c5f12cbe325faeef687811e79d29"
+  },
+  "r17-c06": {
+    "source": "concept/lantern/redraw/face-regeneration/results/r17-c06.png",
+    "job_id": "10df1cd9-8ca5-498a-9e3f-d90e92a4376a",
+    "sha256": "385467430863b530d6a24a3986130187d0afd34218fc3b69ffcbb63e42522404"
+  },
+  "r17-c07": {
+    "source": "concept/lantern/redraw/face-regeneration/repair-results/r17-c07.png",
+    "job_id": "7c402e05-a901-4301-92cc-6b2a25411667",
+    "sha256": "24cab4402dee0323f5d7409c35b8cbd810509ae9ebe2d93bec2e8ab582cddf1e"
+  }
+}

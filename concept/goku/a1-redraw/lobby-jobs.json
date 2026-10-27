@@ -1,0 +1,44 @@
+[
+  {
+    "row": 18,
+    "direction": "south",
+    "poses": [
+      "lobby-c00",
+      "lobby-c01",
+      "lobby-c02",
+      "lobby-c03",
+      "lobby-c04",
+      "lobby-c05"
+    ],
+    "job_id": "c0fdcf28-7dd0-456e-adad-4e21bd36a7e7",
+    "response": "id: c0fdcf28-7dd0-456e-adad-4e21bd36a7e7\njob_id: c0fdcf28-7dd0-456e-adad-4e21bd36a7e7\ndescription: Goku A1, black spiky hair, determined expression, clenched bare fists, plain orange gi with identical navy undershirt belt wristbands boots, isolated character\naction: stance\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"c0fdcf28-7dd0-456e-adad-4e21bd36a7e7\")\nasset_id: 280c3435-343a-5e29-b1b1-16b52d6bf797\nasset_status: pending (saved to your gallery when generation completes)",
+    "overrides": {
+      "lobby-c03": {
+        "job_id": "42435c50-122e-405e-ab42-637b644b3a69",
+        "index": 0
+      },
+      "lobby-c04": {
+        "job_id": "42435c50-122e-405e-ab42-637b644b3a69",
+        "index": 1
+      },
+      "lobby-c05": {
+        "job_id": "42435c50-122e-405e-ab42-637b644b3a69",
+        "index": 2
+      }
+    }
+  },
+  {
+    "row": 19,
+    "direction": "south",
+    "poses": [
+      "lobby-c06",
+      "lobby-c07",
+      "lobby-c08",
+      "lobby-c09",
+      "lobby-c10",
+      "lobby-c11"
+    ],
+    "job_id": "c7fc5897-4fd4-44b2-b82d-f21c068adb86",
+    "response": "id: 083849ea-193f-42a3-a550-9b4700f23768\njob_id: 083849ea-193f-42a3-a550-9b4700f23768\ndescription: Goku A1 with golden yellow spiky hair and teal eyes, determined expression, clenched bare fists, exactly the same plain orange gi and navy undershirt belt wristbands boots, isolated character\naction: stance\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"083849ea-193f-42a3-a550-9b4700f23768\")\nasset_id: 20691b45-531b-5f02-b35b-eef1bb4b81a3\nasset_status: pending (saved to your gallery when generation completes)"
+  }
+]

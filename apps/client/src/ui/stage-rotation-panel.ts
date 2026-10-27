@@ -1,4 +1,4 @@
-import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SELECTABLE_STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
+import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SB4_STAGES, SELECTABLE_STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
 import { button, el } from "./dom";
 import { STAGE_NAMES } from "./stage-names";
 import { stagePreview } from "./stage-preview";
@@ -10,10 +10,12 @@ export class StageRotationPanel {
   private readonly list = el("ol", { class: "stage-rotation-list" });
   private readonly summary = el("p", { class: "hint" });
   private readonly save: HTMLButtonElement;
+  private readonly battlePreset: HTMLButtonElement;
   private readonly additions: HTMLButtonElement[];
   private draft: StageRotationEntry[] = [];
   private current: StageRotationEntry[] = [];
   private editable = false;
+  private inLobby = false;
   private readonly drag: StageDragOrder;
 
   constructor(parent: HTMLElement, private readonly commit: (rotation: StageRotationEntry[]) => void) {
@@ -34,10 +36,15 @@ export class StageRotationPanel {
     this.dialog.setAttribute("aria-labelledby", title.id);
     this.summary.setAttribute("aria-live", "polite");
     this.save = button("Salvar sequência", () => {
-      if (!this.editable) return;
+      if (!this.editable || !this.dialog.open) return;
       this.commit(this.draft.map(entry => ({ ...entry })));
       this.close();
     }, "primary");
+    this.battlePreset = button("12 fases SB4", () => {
+      if (!this.editable || !this.dialog.open) return;
+      this.draft = SB4_STAGES.map(stage => ({ stage }));
+      this.render();
+    });
     const cancel = button("Fechar", () => this.close(), "ghost");
     cancel.dataset.padBack = "";
     cancel.autofocus = true;
@@ -50,16 +57,19 @@ export class StageRotationPanel {
       add.appendChild(stagePreview(stage));
       return add;
     });
-    this.dialog.append(title, el("p", { class: "hint", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens das fases SB4 são referências do SNES; a reprodução das mecânicas ainda está em andamento." }),
-      this.list, el("div", { class: "stage-additions" }, this.additions), this.summary,
+    this.dialog.append(title, el("p", { class: "hint", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As prévias são imagens da partida; os 12 mapas SB4 usam regras locais em validação." }),
+      this.battlePreset, this.list, el("div", { class: "stage-additions" }, this.additions), this.summary,
       el("div", { class: "stage-dialog-actions" }, [cancel, this.save]));
     parent.appendChild(this.dialog);
   }
 
   update(info: LobbyInfo, editable: boolean): void {
     this.current = (info.stageRotation ?? DEFAULT_STAGE_ROTATION).map(entry => ({ ...entry }));
-    const permissionChanged = this.editable !== editable;
-    this.editable = editable;
+    this.inLobby = info.phase === "lobby";
+    const canEdit = editable && this.inLobby;
+    const permissionChanged = this.editable !== canEdit;
+    this.editable = canEdit;
+    this.battlePreset.disabled = !canEdit;
     this.trigger.textContent = editable ? "Configurar fases" : "Ver fases";
     this.trigger.title = this.current.map(entry => STAGE_NAMES[entry.stage]).join(" → ");
     this.trigger.textContent += ` (${this.current.length})`;
@@ -79,6 +89,7 @@ export class StageRotationPanel {
   }
 
   private open(): void {
+    if (!this.inLobby) return;
     this.draft = this.current.map(entry => ({ ...entry }));
     this.render();
     if (!this.dialog.open) this.dialog.showModal();
@@ -89,6 +100,7 @@ export class StageRotationPanel {
     this.list.replaceChildren(...this.draft.map((entry, index) => this.row(entry, index)));
     this.summary.textContent = `${this.draft.length} de ${MAX_STAGE_ROTATION} fases na sequência${this.editable ? "" : " · Só o anfitrião pode alterar"}`;
     this.save.hidden = !this.editable;
+    this.battlePreset.disabled = !this.editable;
     for (const add of this.additions) add.disabled = !this.editable || this.draft.length >= MAX_STAGE_ROTATION;
   }
 

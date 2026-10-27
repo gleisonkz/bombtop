@@ -427,7 +427,7 @@ export class Renderer {
       text.text = String(wins);
       text.position.set(xs[k]! + 3, TILE_PX / 2);
       if (hp) {
-        hp.text = p?.hitPoints === undefined ? "" : `â™¥${p.hitPoints}`;
+        hp.text = p?.hitPoints === undefined ? "" : `♥${p.hitPoints}`;
         hp.visible = p?.hitPoints !== undefined;
         hp.position.set(xs[k]! + 3, TILE_PX / 2 + 7);
         hp.alpha = p?.alive ? 1 : 0.4;
@@ -545,7 +545,7 @@ export class Renderer {
 
   async useBubbleArt(): Promise<void> {
     const base: Texture = await Assets.load(`${import.meta.env.BASE_URL}${BUBBLE.url}`);
-    base.source.scaleMode = "linear";
+    base.source.scaleMode = "nearest";
     const row = (r: number, n: number) =>
       Array.from({ length: n }, (_, f) => new Texture({ source: base.source, frame: new Rectangle(f * BUBBLE.size, r * BUBBLE.size, BUBBLE.size, BUBBLE.size) }));
     const { rows, frames } = BUBBLE;
@@ -684,11 +684,11 @@ export class Renderer {
 
   /** The green lantern's bubble round (x,y), from the art once loaded (else a plain green ring). */
   private placeBubble(g: Graphics, look: { row: number; frame: number; alpha: number }, x: number, y: number, color: number | null = null): void {
-    const phase = look.frame * BUBBLE.ticks;
-    const opening = look.row === BUBBLE.rows.form ? 0.65 + look.frame / BUBBLE.frames.form * 0.35 : 1;
-    const closing = look.row === BUBBLE.rows.pop ? 1 - look.frame / BUBBLE.frames.pop : 1;
-    if (this.abilityEffects.draw("lantern", { x, y, tick: phase, size: 37 * opening, alpha: look.alpha * closing, color })) return;
     if (!this.bubbleArt) {
+      const phase = look.frame * BUBBLE.ticks;
+      const opening = look.row === BUBBLE.rows.form ? 0.65 + look.frame / BUBBLE.frames.form * 0.35 : 1;
+      const closing = look.row === BUBBLE.rows.pop ? 1 - look.frame / BUBBLE.frames.pop : 1;
+      if (this.abilityEffects.draw("lantern", { x, y, tick: phase, size: 37 * opening, alpha: look.alpha * closing, color })) return;
       g.circle(x, y, 13).fill({ color: specialInk(COLORS.lantern, color), alpha: 0.15 * look.alpha }).stroke({ color: specialInk(COLORS.lantern, color), width: 1.5, alpha: look.alpha });
       return;
     }
@@ -696,7 +696,7 @@ export class Renderer {
     if (!sprite) {
       sprite = new Sprite();
       sprite.anchor.set(0.5);
-      sprite.blendMode = "add";
+      sprite.blendMode = "normal";
       this.bubbleSprites.push(sprite);
       this.beamLayer.addChild(sprite);
     }
@@ -1460,7 +1460,7 @@ export class Renderer {
     const [dx, dy] = DIR_VECTORS[b.dir];
     const reach = b.length * TILE_PX + TILE_PX * 0.3;
     const path = { x0: ox + dx * 4, y0: oy + dy * 4, x1: ox + dx * reach, y1: oy + dy * reach, tick: BLAST_TICKS - b.ttl, alpha, color };
-    if (!this.energyEffects.draw("shock", path)) this.drawBolt(g, path, b.ttl, alpha);
+    if (!this.energyEffects.draw("thunder", path)) this.drawBolt(g, path, b.ttl, alpha);
   }
 
   /**
@@ -1509,11 +1509,12 @@ export class Renderer {
     }
   }
 
-  /** Donatello's staff spin: his bo whirling round him with a blur trailing it, a whoosh ring swelling out. */
+  /** Donatello's whoosh rings; the cast sprite draws his gripped staff. */
   private drawSpin(g: Graphics, x: number, y: number, age: number): void {
     const { ring, alpha } = spinLook(age);
     if (alpha <= 0) return;
     const cy = y - 4; // round his waist, not his feet
+    if (this.companionEffects.spin({ x, y: cy, tick: age, size: 2 * ring + 8, alpha })) return;
     g.circle(x, cy, ring).stroke({ color: 0xffffff, width: 2, alpha: alpha * 0.55 });
     g.circle(x, cy, ring * 0.8).stroke({ color: COLORS.staffBlur, width: 1, alpha: alpha * 0.4 });
   }
@@ -1521,13 +1522,15 @@ export class Renderer {
   /** The flash's dash: red and yellow speed lines from where he left to where he stopped, a bolt crackling along them. */
   private drawSpeed(g: Graphics, path: SpecialPath, age: number, alpha: number): void {
     const { x0, y0, x1, y1, color } = path;
-    this.energyEffects.draw("shock", { x0, y0, x1, y1, tick: age, alpha, power: 0.7, color });
+    this.energyEffects.draw("speedForce", { x0, y0, x1, y1, tick: age, alpha, power: 0.7, color });
     const length = Math.hypot(x1 - x0, y1 - y0);
     const rotation = Math.atan2(y1 - y0, x1 - x0);
-    if (this.companionEffects.draw("speed", { x: x0, y: y0, tick: age, size: 22, rotation, alpha, color })) {
-      for (let step = 8; step < length; step += 12) {
+    const originAlpha = alpha * Math.max(0, 1 - age / 12);
+    if (this.companionEffects.draw("speed", { x: x0, y: y0, tick: age, size: 22, rotation, alpha: originAlpha, color })) {
+      const flow = (age * 4) % 12;
+      for (let step = 8 + flow; step < length; step += 12) {
         const t = step / length;
-        this.companionEffects.draw("speed", { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, tick: age + step, size: 22, rotation, alpha, color });
+        this.companionEffects.draw("speed", { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t, tick: age + step / 4, size: 22, rotation, alpha: alpha * (0.35 + 0.65 * t), color });
       }
       return;
     }

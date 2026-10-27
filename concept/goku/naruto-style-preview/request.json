@@ -1,0 +1,17 @@
+{
+  "job_id": "d51241b1-2ce1-44f0-9c5f-0ca88713aaa8",
+  "model": "PixelLab Pro edit",
+  "size": [
+    192,
+    256
+  ],
+  "frames": 1,
+  "reference": "naruto-user-reference.png",
+  "reference_upload": "upload:0c4b0062-83d8-4bc2-8886-c0b87f12cfb3",
+  "unzoom_job": "5516deeb-f73f-427c-a11f-059f1708717b",
+  "direction": "Adapt actual Naruto sprite into Goku; preserve reference drawing, proportions and pose",
+  "effects": "none",
+  "background": "transparent",
+  "status": "ready-for-user-approval",
+  "scope": "base concept only, no game replacement"
+}

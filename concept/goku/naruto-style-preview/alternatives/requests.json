@@ -1,0 +1,32 @@
+{
+  "existing_option_1": "../goku-base.png",
+  "naruto_reference": "../naruto-user-reference.png",
+  "size": [
+    192,
+    256
+  ],
+  "jobs": [
+    {
+      "option": 2,
+      "job_id": "5a3d6ff3-6a5e-40cf-aa2d-a5975872395d",
+      "variation": "determined, broad classic hair"
+    },
+    {
+      "option": 3,
+      "job_id": "7ffde77b-a725-4962-bb41-17275f220ca0",
+      "variation": "friendly smile, athletic chest"
+    },
+    {
+      "option": 4,
+      "job_id": "f91992b4-a847-4a3f-9550-e4bcb5bb38bb",
+      "variation": "focused, sharper face, clenched fists"
+    },
+    {
+      "option": 5,
+      "job_id": "5783717b-9ac2-48cd-b971-56a2aa9b27bd",
+      "variation": "calm, wider hair silhouette, clear cloth folds"
+    }
+  ],
+  "status": "ready-for-comparison",
+  "scope": "concept comparisons only, no game edits"
+}

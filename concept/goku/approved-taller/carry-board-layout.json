@@ -1,0 +1,242 @@
+[
+  {
+    "index": 0,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/south/frame_000.png",
+    "xy": [
+      0,
+      0
+    ]
+  },
+  {
+    "index": 1,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/south/frame_001.png",
+    "xy": [
+      192,
+      0
+    ]
+  },
+  {
+    "index": 2,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/south/frame_002.png",
+    "xy": [
+      384,
+      0
+    ]
+  },
+  {
+    "index": 3,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/south/frame_003.png",
+    "xy": [
+      576,
+      0
+    ]
+  },
+  {
+    "index": 4,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/east/frame_000.png",
+    "xy": [
+      768,
+      0
+    ]
+  },
+  {
+    "index": 5,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/east/frame_001.png",
+    "xy": [
+      960,
+      0
+    ]
+  },
+  {
+    "index": 6,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/east/frame_002.png",
+    "xy": [
+      0,
+      192
+    ]
+  },
+  {
+    "index": 7,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/east/frame_003.png",
+    "xy": [
+      192,
+      192
+    ]
+  },
+  {
+    "index": 8,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/north/frame_000.png",
+    "xy": [
+      384,
+      192
+    ]
+  },
+  {
+    "index": 9,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/north/frame_001.png",
+    "xy": [
+      576,
+      192
+    ]
+  },
+  {
+    "index": 10,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/north/frame_002.png",
+    "xy": [
+      768,
+      192
+    ]
+  },
+  {
+    "index": 11,
+    "source": "carry-fixed/Idle/animations/carry-fixed-idle/north/frame_003.png",
+    "xy": [
+      960,
+      192
+    ]
+  },
+  {
+    "index": 12,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_000.png",
+    "xy": [
+      0,
+      384
+    ]
+  },
+  {
+    "index": 13,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_001.png",
+    "xy": [
+      192,
+      384
+    ]
+  },
+  {
+    "index": 14,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_002.png",
+    "xy": [
+      384,
+      384
+    ]
+  },
+  {
+    "index": 15,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_003.png",
+    "xy": [
+      576,
+      384
+    ]
+  },
+  {
+    "index": 16,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_004.png",
+    "xy": [
+      768,
+      384
+    ]
+  },
+  {
+    "index": 17,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/south/frame_005.png",
+    "xy": [
+      960,
+      384
+    ]
+  },
+  {
+    "index": 18,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_000.png",
+    "xy": [
+      0,
+      576
+    ]
+  },
+  {
+    "index": 19,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_001.png",
+    "xy": [
+      192,
+      576
+    ]
+  },
+  {
+    "index": 20,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_002.png",
+    "xy": [
+      384,
+      576
+    ]
+  },
+  {
+    "index": 21,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_003.png",
+    "xy": [
+      576,
+      576
+    ]
+  },
+  {
+    "index": 22,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_004.png",
+    "xy": [
+      768,
+      576
+    ]
+  },
+  {
+    "index": 23,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/east/frame_005.png",
+    "xy": [
+      960,
+      576
+    ]
+  },
+  {
+    "index": 24,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_000.png",
+    "xy": [
+      0,
+      768
+    ]
+  },
+  {
+    "index": 25,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_001.png",
+    "xy": [
+      192,
+      768
+    ]
+  },
+  {
+    "index": 26,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_002.png",
+    "xy": [
+      384,
+      768
+    ]
+  },
+  {
+    "index": 27,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_003.png",
+    "xy": [
+      576,
+      768
+    ]
+  },
+  {
+    "index": 28,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_004.png",
+    "xy": [
+      768,
+      768
+    ]
+  },
+  {
+    "index": 29,
+    "source": "carry-fixed/Idle/animations/carry-fixed-walk/north/frame_005.png",
+    "xy": [
+      960,
+      768
+    ]
+  }
+]

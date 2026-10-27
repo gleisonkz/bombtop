@@ -1,0 +1,24 @@
+{
+  "status": "complete-integrated-current-workspace",
+  "reference": "../naruto-sheet-preview/round-2/goku-option-1-taller-native.png",
+  "gameplay": [
+    1314,
+    3456
+  ],
+  "cell": [
+    146,
+    192
+  ],
+  "anchor": [
+    71.5,
+    186
+  ],
+  "frames": 108,
+  "lobby_keyposes": 8,
+  "lobby_playback": 16,
+  "notes": "PixelLab reskin of original game poses; regenerated miniature carry and back walk; exact registered upper head/empty-palms rig from clean bases retains animated torso/legs. Powers removed via guarded PixelLab pixel workbench edits, not another generative prompt. All108framesdistinct. Original generator outputs retained for provenance.",
+  "hashes": {
+    "apps/client/public/sprites/goku.png": "183e8c11b73b6e6bf0619f0c1ea4067d1e30152394d7c2570317bf58c7084e50",
+    "apps/client/public/sprites/goku-lobby.png": "2c9397a2394addb80b579539aa443e158449164132884093b6f65b14b762c4a4"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "status": "complete-integrated-current-workspace",
+  "root": "C:\\Users\\jovipds\\.codex\\worktrees\\8090\\bombtop",
+  "character_id": "a2190442-8767-46f0-a293-9a62cc83107c",
+  "gameplay_cells": 108,
+  "gameplay_unique_drawings": 105,
+  "explicit_idle_holds": 3,
+  "transform_drawings": 27,
+  "transform_playback_frames": 60,
+  "fps": 20,
+  "hair_phases": [
+    "base black",
+    "black lifting",
+    "half black/gold",
+    "gold with black roots",
+    "full upright Super Saiyan1"
+  ],
+  "tests": {
+    "native_packer": 9,
+    "portraits": 2,
+    "client_focused": 142,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "native_pixel_copy_verified": true,
+  "hashes": {
+    "apps/client/public/sprites/goku.png": "0bbab32a16580028dc00e0a90cefaae956c68069ddc7c7dc126ffec06c88222c",
+    "apps/client/public/sprites/goku-lobby.png": "72df66b3e95d3d9925eef4f658c9b491a11cdfdabb0eb71663b6d9755aaf5d87"
+  }
+}

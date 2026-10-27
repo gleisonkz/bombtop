@@ -1,0 +1,21 @@
+{
+  "width": 1188,
+  "height": 2952,
+  "frameW": 132,
+  "frameH": 164,
+  "anchorX": 68.5,
+  "anchorY": 158,
+  "bodyH": 150,
+  "scale": 0.145,
+  "menuBodyH": 146,
+  "menuBounds": [
+    5,
+    113
+  ],
+  "portraitCrop": [
+    36,
+    9,
+    65,
+    80
+  ]
+}
