@@ -3,7 +3,7 @@ the card; it comes back down and he jumps to head it away, in a shower of green 
 
 His poses are PixelLab frames ("Pele HD") posed from our own skeletons: the knees raised in turn
 (FRAMES_DIR/juggle/south/<i>.png) and the header (FRAMES_DIR/header/south/<i>.png); where his knees and head are comes
-from the same skeletons (E:/pele-src/kp/juggle-south.json, header-south.json). The ball is public/sprites/ball.png. The
+from the same skeletons (E:/Projetos/bombtop-src/pele/kp/juggle-south.json, header-south.json). The ball is public/sprites/ball.png. The
 jump is lifted here (the skeleton keeps his feet down). Writes FRAMES_DIR/lobby/south/<i>.png for build-lobby-image.py.
 Usage: python build-pele-lobby.py FRAMES_DIR"""
 import json, math, sys
@@ -11,7 +11,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 HERE = Path(__file__).resolve().parent
-KP = Path("E:/pele-src/kp")
+KP = Path("E:/Projetos/bombtop-src/pele/kp")
 W, H = 300, 240
 GROUND = 226
 MID = W // 2

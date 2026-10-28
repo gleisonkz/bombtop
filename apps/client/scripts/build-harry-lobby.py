@@ -19,7 +19,7 @@ import numpy as np
 from PIL import Image
 
 HERE = Path(__file__).resolve().parent
-KP = Path("E:/harry-src/kp")  # our own skeletons (make.py), for where the wand's tip is
+KP = Path("E:/Projetos/bombtop-src/harry/kp")  # our own skeletons (make.py), for where the wand's tip is
 W, H = 300, 240
 GROUND = 226
 MID = W // 2

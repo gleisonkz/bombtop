@@ -1,5 +1,5 @@
 // Builds public/sfx/*.m4a from the original sound libraries (kept outside the repo).
-// usage: SFX_SRC=E:/sfx-src node scripts/build-sfx.mjs [name...]   (needs ffmpeg on PATH; names rebuild only those)
+// usage: SFX_SRC=E:/Projetos/bombtop-src/sfx node scripts/build-sfx.mjs [name...]   (needs ffmpeg on PATH; names rebuild only those)
 //
 // Sources: Kenney packs (CC0, kenney.nl; incl. the fighter voiceover and music jingles) and the Sonniss GDC 2026 Game Audio Bundle
 // (royalty-free, no attribution; may ship inside the game, not as a sound library).
@@ -47,7 +47,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-const SRC = process.env.SFX_SRC ?? "E:/sfx-src";
+const SRC = process.env.SFX_SRC ?? "E:/Projetos/bombtop-src/sfx";
 const OUT = new URL("../public/sfx/", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");
 
 const K = (pack, file) => join(SRC, "kenney", `kenney_${pack}`, "Audio", file);

@@ -274,7 +274,7 @@ first standard-mode tries did not look like him), laid out by `scripts/build-cha
 the player's color; the reds of his face fall in the same hues, so the sheet script turns every red patch too small to be
 the shirt, or up among his head, a little toward orange (`face_reds`). Idle front and side are his rotation bobbing (the
 breathing template frowned and puffed breath). His cast (he bends over and sets the picanha down) and carry walk are posed
-from our own skeletons (E:/lula-src/kp); in the side view PixelLab drew a gray lump in his hands, so those frames are left
+from our own skeletons (E:/Projetos/bombtop-src/lula/kp); in the side view PixelLab drew a gray lump in his hands, so those frames are left
 out and what is left of it cut off (`no_lump`); the cast plays from when he uses his special (`castTicks`: it leaves no
 blast). The picanha is an item (drawn by `build-items.py`: on a skewer, its fat cap on top; set in the power-ups' gold ring by `pack-concept-items.py`, which builds `items.png` from the concept art: never write it with `build-items.py`, that is the old art), its own entry in the item guide's data
 but left out of the guide (it never comes out of a block). Lobby: a v3 animation, the "L" raised high, laughing. Heard
@@ -288,7 +288,7 @@ or `animate_with_skeleton_v3` with our own keypoints when no template fits): `te
 modes redraw every frame and drop details (shield vanished, chest star on the back). The skeleton's limbs must
 match the sprite's pose: a template walk on the arms-up Carry state drew extra arms, so carry walk uses our keypoints.
 Sound: `audio/cues.ts` reads what changed between views; files built by `scripts/build-sfx.mjs` (sources outside the repo,
-`E:/sfx-src`). Character voices (`audio/voices.ts`), every character: a line when picked in the lobby, their own death cry,
+`E:/Projetos/bombtop-src/sfx`). Character voices (`audio/voices.ts`), every character: a line when picked in the lobby, their own death cry,
 a cheer when they win, and a shout when they use their special (heard when `specialCooldown` starts; Goku and Naruto
 shout inside their kamehameha/rasengan sounds instead). Sources ripped on The Sounds Resource (asset ids in `build-sfx.mjs`):
 Goku from Dragon Ball FighterZ (Japanese, also his Kamehameha sound), Naruto from Ultimate Ninja Storm 2 (Japanese),
