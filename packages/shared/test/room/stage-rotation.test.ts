@@ -5,6 +5,7 @@ import {
   DEFAULT_STAGE_ROTATION,
   RESULTS_TICKS,
   RoomCore,
+  SB4_STAGES,
   S2C,
   STAGES,
   WINS_TO_WIN,
@@ -368,5 +369,23 @@ describe("RoomCore rotation rules", () => {
     earlier.stageRotation![0]!.stage = "conveyor";
     earlier.stageRotation!.push({ stage: "warp" });
     expect(core.session.lobbyInfo("CODE").stageRotation).toEqual([{ stage: "classic" }]);
+  });
+});
+
+describe("a new room's rotation", () => {
+  it("starts with five different SB4 stages drawn at random", () => {
+    const core = new RoomCore("CODE", { send() {}, broadcast() {} });
+    const rotation = core.session.lobbyInfo("CODE").stageRotation!;
+    expect(rotation).toHaveLength(5);
+    expect(new Set(rotation.map(entry => entry.stage)).size).toBe(5);
+    for (const { stage } of rotation) expect(SB4_STAGES).toContain(stage);
+    expect(core.session.stage).toBe(rotation[0]!.stage);
+  });
+
+  it("takes a rotation given to the session", () => {
+    const stageRotation = [{ stage: "sb4-03" as const }, { stage: "warp" as const }];
+    const session = new BattleSession({ stageRotation });
+    expect(session.lobbyInfo("CODE").stageRotation).toEqual(stageRotation);
+    expect(session.stage).toBe("sb4-03");
   });
 });

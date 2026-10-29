@@ -31,7 +31,7 @@ import {
   type StageId,
 } from "../index";
 import { InputQueue } from "./input-queue";
-import { DEFAULT_STAGE_ROTATION, validateStageRotation } from "../stage-rotation";
+import { DEFAULT_STAGE_ROTATION, validateStageRotation, type StageRotationEntry } from "../stage-rotation";
 
 
 /** Broadcast a snapshot every N simulation ticks (60/2 = 30 Hz). */
@@ -73,6 +73,8 @@ export interface SessionOptions {
   winsToWin?: number;
   timeMinutes?: BattleTimeMinutes;
   suddenDeath?: boolean;
+  /** The stages a new room plays in turn (DEFAULT_STAGE_ROTATION when left out). */
+  stageRotation?: readonly Readonly<StageRotationEntry>[];
 }
 
 /**
@@ -89,7 +91,7 @@ export class BattleSession {
   private suddenDeath: boolean;
   private battleMode: BattleMode = "single";
   private maniacSettings: ManiacConfig = { items: {}, hitPoints: {} };
-  private stageRotation = DEFAULT_STAGE_ROTATION.map((entry) => ({ ...entry }));
+  private stageRotation: StageRotationEntry[];
   private round = 0;
   private resultsLeft = 0;
   /** The last round's winner won the match: after its results, back to the lobby. */
@@ -105,6 +107,8 @@ export class BattleSession {
     this.winsToWin = opts.winsToWin ?? WINS_TO_WIN;
     this.timeMinutes = opts.timeMinutes ?? null;
     this.suddenDeath = opts.suddenDeath ?? true;
+    this.stageRotation = (opts.stageRotation ?? DEFAULT_STAGE_ROTATION).map((entry) => ({ ...entry }));
+    this.stage = this.stageRotation[0]!.stage;
   }
 
   /** The first person in the room (bots never host). */
