@@ -4,6 +4,7 @@ import { BLAST_TICKS, blastLife, PATRONUS_FADE, TRUCK_SHIFT, TRUCK_TICKS, BUBBLE
 import type { MascotView, Mood } from "../ui/art";
 import bomberPaintRegions from "./bomber-paint-regions.json";
 import staticPaintRegions from "./static-paint-regions.json";
+import staticVictoryPaintRegions from "./static-victory-paint-regions.json";
 import spiderPaintRegions from "./spider-paint-regions.json";
 import lanternPaintRegions from "./lantern-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
@@ -32,6 +33,8 @@ export interface LobbyImage {
   anchorX: number;
   anchorY: number;
   ticksPerFrame?: number;
+  /** The sheet's paint regions for this image's own rows, when the sheet has some. */
+  colorProtection?: ColorProtection;
 }
 
 /** Where each animation sits on a character sheet (all frames are one fixed cell size). */
@@ -277,9 +280,9 @@ export const SHEETS = {
   },
   /** Approved Super Choque option4 model, 107 pose-matched frames without baked-in effects. */
   static: {
-    url: "sprites/static-final.png?v=20261026-option4-v1",
+    url: "sprites/static-final.png?v=20261028-4096",
     width: 2352,
-    height: 4256,
+    height: 4032,
     frameW: 168,
     frameH: 224,
     anchorX: 82,
@@ -297,7 +300,8 @@ export const SHEETS = {
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     lobby: { row: 17, frames: 10, bodyH: 136 },
-    victory: { row: 18, frames: 11 },
+    /** In its own image: a 19th row would make the sheet taller than a phone GPU's 4096 px texture (drawn black). */
+    victory: { row: 0, frames: 11, image: { url: "sprites/static-victory.png?v=20261028-4096", width: 2352, height: 224, frameW: 168, frameH: 224, anchorX: 82, anchorY: 208, colorProtection: staticVictoryPaintRegions } },
     /** Open palms in the first pull pose, relative to the native feet anchor. */
     muzzle: { side: [52, -84], down: [37, -84], up: [0, -101] },
     /** His long blue coat. */

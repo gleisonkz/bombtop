@@ -1136,3 +1136,18 @@ describe("pelé's ball", () => {
     expect(ballLook(0, 0, 112, 0, 7, 4)!.lift).toBeGreaterThan(0); // in the air on its way
   });
 });
+
+describe("sheet textures", () => {
+  // Many phone GPUs cap a texture at 4096 px a side: a bigger sheet draws as a black box in the arena.
+  it("fit in a 4096 px texture", () => {
+    for (const [name, sheet] of Object.entries(SHEETS) as [string, SheetLayout][]) {
+      expect([name, Math.max(sheet.width, sheet.height) <= 4096]).toEqual([name, true]);
+    }
+  });
+
+  it("keep the super shock's sheet in step with its paint regions", () => {
+    const sheet = SHEETS.static;
+    expect(sheet.colorProtection!.rows).toHaveLength(sheet.height / sheet.frameH);
+    expect(sheet.victory!.image!.colorProtection!.rows).toHaveLength(1);
+  });
+});

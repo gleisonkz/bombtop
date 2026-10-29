@@ -348,6 +348,9 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
   restart the dev server if a just-created module "does not exist".
 - Some browser extensions swallow letter keys (R, Q seen) before the page sees them.
   Never rely on a single letter key for essential actions; bomb keys also work.
+- A character sheet (`SHEETS`) must stay within 4096 px a side: many phone GPUs cap textures there and draw a
+  bigger sheet as a black box in the arena (`test/sprites.test.ts`). A showpiece that does not fit goes in its own
+  image (`SheetLayout.lobby/victory.image`, as Static's victory).
 - Automated/background Chrome tabs throttle requestAnimationFrame (~1 fps), so the
   game runs at ~5 ticks/s there (FixedStep caps catch-up). Not a game bug.
 

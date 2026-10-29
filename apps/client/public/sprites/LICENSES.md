@@ -220,7 +220,7 @@ by the user. `concept/conveyors/conveyor-concept.png` retains the source.
 
 ## Supplied Super Choque replacement
 
-`static-final.png` is packed from the image supplied by the user in
+`static-final.png` (and its victory row, `static-victory.png`) is packed from the image supplied by the user in
 `Imagem do ChatGPT 25 de out. de 2026, 21_48_03.png`. The original image is retained in
 `concept/static/supplied-20261025-214803.png`; packing and fallback animation notes
 are in `concept/static/README.md`. No additional licensing grant was supplied.
