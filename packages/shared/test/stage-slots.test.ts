@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { createMatch } from "../src/arena";
 import { nextRandom } from "../src/rng";
+import { createSb4SlotClock } from "../src/sb4-slot-clock";
 import { Floor, ItemKind, Tile, tileCenter, type MatchState } from "../src/state";
 import { igniteStageSlots, updateStageSlots, SLOT_CONFIG, SLOT_SYMBOLS } from "../src/stage-slots";
 
@@ -21,7 +22,100 @@ function finish(s: MatchState, reels: NonNullable<NonNullable<NonNullable<MatchS
   updateStageSlots(s);
 }
 
+function advance(s: MatchState, ticks: number) {
+  for (let i = 0; i < ticks; i++) {
+    s.tick++;
+    updateStageSlots(s);
+  }
+}
+
 describe("stage slots", () => {
+  it("spins and stops using native reel counters rather than fixed stop timestamps", () => {
+    const s = arena();
+    igniteStageSlots(s, 1, 1);
+    const roulette = s.stageState!.roulette!;
+    expect(roulette.nativeClock).toBeDefined();
+    roulette.nativeClock = createSb4SlotClock([16, 24, 16], s.tick);
+    roulette.reels = ["seven", "fire", "seven"];
+    updateStageSlots(s);
+    expect(roulette.nativeClock.reels[0]?.counter).toBe(0);
+    advance(s, 1028);
+    expect(roulette.stopped).toEqual([false, true, false]);
+    expect(roulette.active).toBe(true);
+    advance(s, 73);
+    expect(roulette.stopped).toEqual([false, true, true]);
+    advance(s, 130);
+    expect(roulette.stopped).toEqual([true, true, true]);
+    expect(roulette.active).toBe(true);
+    advance(s, 2);
+    expect(roulette.active).toBe(false);
+    expect(roulette.nativeClock).toBeUndefined();
+    expect(roulette.reels).toEqual(["skull", "skull", "bar"]);
+    expect(s.items.map(item => item.sb4Status)).toEqual([43, 36, 37]);
+    updateStageSlots(s);
+    expect(s.items).toHaveLength(3);
+  });
+
+  it("preserves the active native spin and its eventual payout through match serialization", () => {
+    const original = arena();
+    igniteStageSlots(original, 1, 1);
+    advance(original, 900);
+    const recovered = structuredClone(original);
+    expect(recovered.stageState?.roulette?.nativeClock?.lastTick).toBe(original.tick);
+    advance(original, 350);
+    advance(recovered, 350);
+    expect(recovered).toEqual(original);
+    expect(original.stageState?.roulette?.nativeClock).toBeUndefined();
+    expect(original.stageState?.roulette?.active).toBe(false);
+  });
+
+  it("streams native 7-7-7 rewards at measured wave intervals", () => {
+    const s = arena();
+    SLOT_CONFIG.jackpotItems = 64;
+    finish(s, ["seven", "seven", "seven"]);
+    expect(s.items).toHaveLength(0);
+    advance(s, 49);
+    expect(s.items).toHaveLength(0);
+    advance(s, 1);
+    expect(s.items.map(item => item.kind)).toEqual(Array(4).fill(ItemKind.Bomb));
+    advance(s, 64);
+    expect(s.items).toHaveLength(4);
+    advance(s, 1);
+    expect(s.items.slice(4).map(item => item.kind)).toEqual(Array(4).fill(ItemKind.Speed));
+    advance(s, 64);
+    expect(s.items.slice(8).map(item => item.kind)).toEqual(Array(5).fill(ItemKind.Bomb));
+    advance(s, 65);
+    expect(s.items.slice(13).map(item => item.kind)).toEqual(Array(3).fill(ItemKind.Fire));
+    advance(s, 64);
+    expect(s.items.slice(16).map(item => item.kind)).toEqual(Array(5).fill(ItemKind.Egg));
+    advance(s, 67);
+    expect(s.items.slice(21).map(item => item.kind)).toEqual(Array(3).fill(ItemKind.Punch));
+    advance(s, 64);
+    expect(s.items.slice(24).map(item => item.kind)).toEqual(Array(4).fill(ItemKind.Glove));
+    advance(s, 64);
+    expect(s.items.slice(28).map(item => item.kind)).toEqual(Array(4).fill(ItemKind.Kick));
+    advance(s, 64);
+    expect(s.items.slice(32).map(item => item.kind)).toEqual(Array(4).fill(ItemKind.Bomb));
+  });
+
+  it("preserves the jackpot across snapshots and blocks a second spin until the last wave", () => {
+    const s = arena();
+    SLOT_CONFIG.jackpotItems = 34;
+    finish(s, ["seven", "seven", "seven"]);
+    const resumed = structuredClone(s);
+    advance(s, 375);
+    advance(resumed, 375);
+    expect(s).toEqual(resumed);
+    igniteStageSlots(s, 1, 1);
+    expect(s.stageState?.roulette?.active).toBe(false);
+    expect(s.stageState?.roulette?.cascade?.issued).toBe(24);
+    advance(s, 192);
+    expect(s.items).toHaveLength(34);
+    expect(s.stageState?.roulette?.cascade).toBeUndefined();
+    igniteStageSlots(s, 1, 1);
+    expect(s.stageState?.roulette?.active).toBe(true);
+  });
+
   it("keeps 0-0-3 without a prize even with two skull symbols", () => {
     const s = arena();
     finish(s, ["skull", "skull", "fire"]);
@@ -38,6 +132,7 @@ describe("stage slots", () => {
     const s = arena();
     finish(s, ["skull", "skull", "skull"]);
     expect(s.items).toHaveLength(3);
+    expect(s.items.map(item => item.sb4Status)).toEqual([43, 36, 37]);
     expect(s.pressureAt).toBe(999);
   });
 
@@ -50,7 +145,7 @@ describe("stage slots", () => {
     expect(s.rng).toBe(expected.rng);
   });
 
-  it("maps entries to row-major reels, ignores dead players, and preserves other locks", () => {
+  it("stops the reels automatically in the measured native order without floor entry", () => {
     const s = arena();
     s.players = createMatch({ seed: 1, playerIds: ["a", "b"], blockDensity: 0 }).players;
     const a = s.players[0]!;
@@ -60,23 +155,19 @@ describe("stage slots", () => {
     s.stageState = { floorLocks: { "flag:a": 500 } };
     igniteStageSlots(s, 1, 1);
     updateStageSlots(s);
-    expect(s.stageState.roulette?.stopped).toEqual([false, true, false]);
-    expect(s.stageState.floorLocks?.["flag:a"]).toBe(500);
-    expect(s.stageState.floorLocks?.["slots:entry:a"]).toBe(13);
-    expect(s.stageState.floorLocks?.["slots:entry:b"]).toBeUndefined();
-    s.stageState.roulette!.stopped![1] = false;
-    updateStageSlots(s);
     expect(s.stageState.roulette?.stopped).toEqual([false, false, false]);
-    a.px = tileCenter(4);
-    updateStageSlots(s);
-    a.px = tileCenter(3);
-    updateStageSlots(s);
+    expect(s.stageState.floorLocks).toEqual({ "flag:a": 500 });
+    expect(SLOT_CONFIG.timeoutTicks).toBe(1242);
+    advance(s, 1027);
+    expect(s.stageState.roulette?.stopped).toEqual([false, false, false]);
+    advance(s, 1);
     expect(s.stageState.roulette?.stopped).toEqual([false, true, false]);
-    Object.assign(a, { px: tileCenter(1), py: tileCenter(3) });
-    updateStageSlots(s);
+    advance(s, 73);
     expect(s.stageState.roulette?.stopped).toEqual([false, true, true]);
-    a.py = tileCenter(1);
-    updateStageSlots(s);
+    advance(s, 130);
+    expect(s.stageState.roulette?.stopped).toEqual([true, true, true]);
+    expect(s.stageState.roulette?.active).toBe(true);
+    advance(s, 2);
     expect(s.stageState.roulette?.active).toBe(false);
   });
 
@@ -84,11 +175,13 @@ describe("stage slots", () => {
     const s = arena();
     SLOT_CONFIG.jackpotItems = 4;
     finish(s, ["seven", "seven", "seven"]);
+    advance(s, 50);
     expect(s.items).toHaveLength(4);
     expect(new Set(s.items.map(item => `${item.x},${item.y}`)).size).toBe(4);
     const other = arena();
     SLOT_CONFIG.jackpotItems = 10000;
     finish(other, ["seven", "seven", "seven"]);
+    advance(other, 2700);
     expect(other.items).toHaveLength(100);
   });
 
@@ -115,8 +208,9 @@ describe("stage slots", () => {
     const s = arena();
     s.pressureLimit = 8;
     finish(s, [symbol, symbol, symbol]);
-    expect(s.items).toHaveLength(count);
     expect(s.stageState?.roulette).toMatchObject({ active: false, cooldown: SLOT_CONFIG.cooldownTicks, result, stopped: [true, true, true] });
+    if (symbol === "seven") advance(s, 503);
+    expect(s.items).toHaveLength(count);
     expect(s.pressureAt).toBe(999);
     expect(s.pressureLimit).toBe(8);
     if (symbol === "fire") expect(s.items.map(item => item.kind)).toEqual([ItemKind.Speed, ItemKind.Egg, ItemKind.Speed]);
@@ -135,6 +229,8 @@ describe("stage slots", () => {
     const copy = structuredClone(s);
     finish(s, ["seven", "seven", "seven"]);
     finish(copy, ["seven", "seven", "seven"]);
+    advance(s, 50);
+    advance(copy, 50);
     expect(s).toEqual(copy);
     expect(s.items).toHaveLength(2);
     expect(s.items[1]).toMatchObject({ x: 4, y: 1 });

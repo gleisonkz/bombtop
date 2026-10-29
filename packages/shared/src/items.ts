@@ -50,7 +50,12 @@ export function collectItems(s: MatchState): void {
     const item = s.items.find((i) => i.x === x && i.y === y);
     if (!item || item.owner === p.id) continue;
     if (item.kind !== ItemKind.Skull && item.kind !== ItemKind.Picanha && item.kind !== ItemKind.Egg) p.curse = null;
-    EFFECTS[item.kind](p, s);
+    if (item.sb4Status === 36) p.curse = { kind: "constipation", sb4Status: 36 };
+    else if (item.sb4Status === 43) p.curse = { kind: "hiccups", sb4Status: 43 };
+    else if (item.sb4Status === 37) p.curse = { kind: "dangerBomb", sb4Status: 37 };
+    else {
+      EFFECTS[item.kind](p, s);
+    }
     s.items = s.items.filter((i) => i !== item);
   }
 }
@@ -139,6 +144,7 @@ export function scatterCurseItem(s: MatchState, p: Player): boolean {
  */
 export function dropItems(s: MatchState, p: Player): void {
   const drops = carried(p);
+  if (p.curse?.sb4Status) p.curse = null;
   p.fireRange = START_FIRE_RANGE;
   p.bombCapacity = START_BOMB_CAPACITY;
   p.speed = BASE_SPEED;

@@ -35,7 +35,7 @@ describe("companion pixel effects", () => {
     expect(effects.draw("heart", { x: 0, y: 0, tick: 0 })).toBe(false);
     await Promise.all([effects.load(), effects.load()]);
     await effects.load();
-    expect(mocks.load).toHaveBeenCalledTimes(2);
+    expect(mocks.load).toHaveBeenCalledTimes(4);
     expect(effects.draw("heart", { x: 0, y: 0, tick: 0 })).toBe(true);
   });
 
@@ -122,4 +122,87 @@ it("keeps simultaneous colors independent and restores pooled original textures"
   draw(null);
   expect(added[0]!.texture).toBe(original);
   expect(added[0]!.tint).toBe(0xffffff);
+});
+
+it("plays eight dedicated Donatello air trails at three ticks without changing other companions", async () => {
+  const detailed = new Texture({ source: new TextureSource({ width: 1024, height: 128 }) });
+  const base = new Texture({ source: new TextureSource({ width: 256, height: 448 }) });
+  mocks.load.mockImplementation(async (url: string) => url.includes("donatello-spin-detailed") ? detailed : base);
+  const fx = new CompanionPixelEffects();
+  expect(fx.spin({ x: 0, y: 0, tick: 0 })).toBe(false);
+  await fx.load();
+  for (let phase = 0; phase < 8; phase++) {
+    fx.beginFrame(); expect(fx.spin({ x: 4, y: 5, tick: phase * 3, size: 32 })).toBe(true);
+    const sprite = fx.root.children[0] as Sprite;
+    expect(sprite.texture.source).toBe(detailed.source);
+    expect(sprite.texture.frame).toMatchObject({ x: phase * 128, y: 0, width: 128, height: 128 });
+    expect(sprite.width).toBe(32);
+  }
+  fx.beginFrame(); fx.draw("heart", { x: 0, y: 0, tick: 6 });
+  expect((fx.root.children[0] as Sprite).texture.source).toBe(base.source);
+  expect((fx.root.children[0] as Sprite).texture.frame.width).toBe(64);
+});
+
+it("plays only Flash's third atlas row at two ticks while preserving companion sources", async () => {
+  const base = new Texture({ source: new TextureSource({ width: 256, height: 448 }) });
+  const flash = new Texture({ source: new TextureSource({ width: 512, height: 192 }) });
+  const spin = new Texture({ source: new TextureSource({ width: 1024, height: 128 }) });
+  mocks.load.mockImplementation(async (url: string) => {
+    if (url.includes("flash-speed-force")) return flash;
+    if (url.includes("donatello-spin-detailed")) return spin;
+    return base;
+  });
+  const fx = new CompanionPixelEffects();
+  await fx.load();
+  expect(mocks.load).toHaveBeenCalledWith(expect.stringContaining("sprites/flash-speed-force.png?v=native-game-20261026"));
+  for (const [tick, phase] of [[0, 0], [1, 0], [2, 1], [13, 6], [14, 7], [15, 7], [16, 0], [-1, 0], [NaN, 0], [Infinity, 0]]) {
+    fx.beginFrame();
+    expect(fx.draw("speed", { x: 4, y: 5, tick: tick!, size: 24 })).toBe(true);
+    const sprite = fx.root.children[0] as Sprite;
+    expect(sprite.texture.source).toBe(flash.source);
+    expect(sprite.texture.frame).toMatchObject({ x: phase! * 64, y: 128, width: 64, height: 64 });
+    expect(sprite.width).toBe(24);
+    expect(sprite.texture.source.scaleMode).toBe("nearest");
+  }
+  fx.beginFrame();
+  fx.draw("heart", { x: 0, y: 0, tick: 6 });
+  expect((fx.root.children[0] as Sprite).texture.source).toBe(base.source);
+  fx.beginFrame();
+  fx.spin({ x: 0, y: 0, tick: 23, size: 32 });
+  const sprite = fx.root.children[0] as Sprite;
+  expect(sprite.texture.source).toBe(spin.source);
+  expect(sprite.texture.frame).toMatchObject({ x: 896, y: 0, width: 128, height: 128 });
+  expect(sprite.width).toBe(32);
+});
+
+it("loads Flash even when the optional Donatello atlas is missing", async () => {
+  const flash = new Texture({ source: new TextureSource({ width: 512, height: 192 }) });
+  const base = new Texture({ source: new TextureSource({ width: 256, height: 448 }) });
+  mocks.load.mockImplementation(async (url: string) => {
+    if (url.includes("donatello-spin-detailed")) throw new Error("missing spin");
+    return url.includes("flash-speed-force") ? flash : base;
+  });
+  const fx = new CompanionPixelEffects();
+  await fx.load();
+  fx.draw("speed", { x: 0, y: 0, tick: 14 });
+  expect((fx.root.children[0] as Sprite).texture.source).toBe(flash.source);
+  expect(fx.spin({ x: 0, y: 0, tick: 0 })).toBe(false);
+});
+
+it.each(["missing", "undersized"])("retains four legacy speed frames when Flash is %s", async availability => {
+  const base = new Texture({ source: new TextureSource({ width: 256, height: 448 }) });
+  mocks.load.mockImplementation(async (url: string) => {
+    if (url.includes("flash-speed-force") && availability === "missing") throw new Error("missing Flash");
+    return base;
+  });
+  const fx = new CompanionPixelEffects();
+  await fx.load();
+  for (const [tick, phase] of [[0, 0], [5, 0], [6, 1], [18, 3], [23, 3], [24, 0]]) {
+    fx.beginFrame();
+    fx.draw("speed", { x: 0, y: 0, tick: tick! });
+    const sprite = fx.root.children[0] as Sprite;
+    expect(sprite.texture.source).toBe(base.source);
+    expect(sprite.texture.frame).toMatchObject({ x: phase! * 64, y: 192, width: 64, height: 64 });
+    expect(sprite.width).toBe(24);
+  }
 });

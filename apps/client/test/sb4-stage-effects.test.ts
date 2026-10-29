@@ -206,6 +206,15 @@ it("uses the ROM seesaw hop profile rather than the legacy flight parabola", () 
   expect(stageFlightLift({ ...pose, elevated: true, flight: { kind: "seesaw", ticks: 8 } })).toBe(0);
 });
 
+it("renders the repeated native C22026 rebound arcs through the shared lift profile", () => {
+  const pose = { y: 79, bodyHeight: 24, elevated: false };
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesawRebound", ticks: 32 } })).toBe(0);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesawRebound", ticks: 31 } })).toBe(4);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesawRebound", ticks: 30 } })).toBe(6);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesawRebound", ticks: 24 } })).toBe(0);
+  expect(stageFlightLift({ ...pose, flight: { kind: "seesawRebound", ticks: 23 } })).toBe(4);
+});
+
 it("caps flight lift at the top edge so the measured character body stays inside the viewport", () => {
   const flight = Object.freeze({ ticks: 12 });
   for (const y of [24, 25, 30, 32, 48]) {

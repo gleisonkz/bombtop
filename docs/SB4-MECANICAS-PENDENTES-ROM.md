@@ -4,6 +4,8 @@ Auditoria estática de 26/10/2026, no root `D:\Programação\Jogos\New folder\bo
 
 Escopo principal: `packages/shared/src/stage-mechanics.ts`, `stage-transport.ts`, `stage-slots.ts`, `stage-surprise.ts`, `stage-state.ts` e `sb4-layouts.ts`. Foram lidos consumidores relevantes e testes locais para distinguir implementação de evidência. Os caminhos abaixo são relativos ao root.
 
+Atualização de integração em 26/10/2026: `DEFAULT_STAGE_ROTATION` agora inicia com `sb4-01` a `sb4-12`, nessa ordem. Os três mapas autorais (`classic`, `conveyor`, `warp`) permanecem selecionáveis no editor, que oferece o preset **12 fases SB4** e só salva as escolhas ao confirmar. Os testes de sessão e do painel verificam o ciclo padrão e as permissões de anfitrião. Isso comprova a seleção no Bombtop, não a paridade de todas as regras dos mapas com a ROM.
+
 ## Como fechar cada pendência
 
 - [ ] Identificar ROM/revisão/hash, região, modo/grupo/mapa, opções, número de jogadores, personagens e estado inicial reproduzível.
@@ -91,20 +93,9 @@ Implementado: `Foliage` em caminhos inferidos e duas direções de piso, Down em
 
 ### 08 — Spinny Slots (`sb4-08`) — prioridade alta
 
-Implementado em `stage-slots.ts`: chama em botão inicia roleta, salvo ativa/cooldown. Três símbolos são escolhidos imediatamente pelo PRNG, independentemente de quando cada rolo para; conjunto uniforme `seven/bar/fire/skull`. Entrar nos três primeiros botões em ordem row-major para o rolo correspondente; só filtra jogador morto, sem excluir expressamente salto/carry/throw. Timeout 300 ticks, cooldown 180. `placeBomb` proíbe bomba em botão. Botões do layout estão em `(3,7)`, `(7,7)`, `(11,7)`.
+Atualização em 26/10/2026: `stage-slots.ts` aciona a roleta pela chama no botão e para os três rolos automaticamente. `sb4-slot-rom.ts` contém o despacho das 64 combinações extraído da ROM, incluindo combinações distintas premiadas e triplas caveiras sem sudden death automático. Os índices nativos são `0=caveira`, `1=BAR`, `2=7`, `3=fogo`. `sb4-slot-clock.ts` reproduz o acumulador, divisor, fase e contadores dos três rolos: a fixture original completou 1233 atualizações lógicas; o relógio e a cascata são serializáveis em `StageState`. As recompensas `7-7-7` surgem em ondas medidas, ainda com limite de segurança configurável de 30 a 100 objetos. Os status nativos 36/37/43 continuam identificáveis no snapshot. A comprovação e as limitações estão em `SB4-MAPA08-ROM.md`.
 
-Tabela atual, **explicitamente aproximada** no código:
-
-| Combinação | Resultado local |
-| --- | --- |
-| 777 | 30 itens `Bomb` (jackpot configurável, limitado a 100) |
-| BAR×3 | 1 Egg + 18 sorteios de Bomb/Fire/Speed/Kick/Heart/Glove/Punch/Remote |
-| FIRE×3 | 8 Fire + 1 FullFire |
-| SKULL×3 | 3 Skull, `pressureAt=tick`, remove `pressureLimit` |
-| Exatamente dois iguais | seven: 3 Bomb; bar: 3 Speed; fire: 3 Fire; skull: 1 Skull |
-| Três distintos | Nada |
-
-`dropItems` espalha imediatamente em células `Tile.Empty` sem item/bomba/chama, limitado à capacidade; não exclui por jogador ou tipo de piso. `roulette.result` guarda só o primeiro tipo pago, não descreve o evento completo.
+Ainda são aproximações: inicialização e distribuição dos símbolos por RNG, cooldown de 180 ticks, posição aleatória das recompensas em células livres, limite total da cascata e efeito físico do modificador nativo `10` aplicado à bomba do status 37. O status 37 agora não sorteia uma maldição aleatória, mas a explosão especial ainda não está implementada. Os IDs 4/7/13/14 precisam de correspondência funcional com poderes do Bombtop. `roulette.result` guarda somente o primeiro tipo pago, não a lista completa.
 
 - [ ] **DangerousBomb:** não há símbolo, payout ou tipo de bomba correspondente nos arquivos auditados; `BombType` local é `normal/remote/pierce`. Observar se existe tal resultado na ROM, qual combinação o produz, quantidade, entidade criada (bomba ativa ou item), área/forma de explosão, pavio, dono, possibilidade de chute/carry e efeito em cadeia. Não equiparar `Bomb` a DangerousBomb nem a ausência de tipo a prova de ausência na ROM.
 - [ ] Confirmar símbolos/ordem dos rolos, animação e se o instante de parar determina o símbolo; repetir com mesmo estado inicial e delays diferentes.
@@ -125,20 +116,23 @@ Implementado em `stage-transport.ts`: pivôs `(4,3)`, `(10,3)`, `(4,9)`, `(10,9)
 
 ### 11 — Trolley (`sb4-11`) — prioridade alta
 
-Implementado em `stage-transport.ts::trolleyRoute/updateTrolley`:
+Atualização de 27/10/2026: a descrição antiga de percurso retangular e saída imediata está **obsoleta**. A implementação atual reside em `sb4-trolley-paths.ts`, `sb4-trolley-route.ts`, `stage-trolley.ts` e `stage-transport.ts`. Fonte e limites em `SB4-CARRINHO-ROM.md`.
 
-- Rota **calculada pelo retângulo interno**, sem consultar `Floor.Rail` nem colisões: sai de `(7,11)` à direita até `(13,11)`, sobe até `(13,1)`, vai à esquerda até `(1,1)`, desce até `(1,11)` e retorna. São 44 posições no perímetro 15×13.
-- Sem passageiro e sem cooldown, fica parado até encontrar o primeiro jogador vivo elegível na mesma célula; não exige centralização nem botão. Exclui elevação/voo, mas não testa salto explicitamente nesse predicado.
-- Ao embarcar, começa a mover no mesmo update, prende posição do jogador ao carrinho e percorre uma volta inteira a `TILE/8` por tick (8 ticks por trecho; nominalmente 352 updates de movimento para 44 trechos). Bloqueia input por `stageTransportInput`; não implementa saída voluntária.
-- Ao completar volta, remove passageiro no ponto inicial e aplica cooldown 60. Se continuar na célula depois do cooldown, pode reembarcar. Se passageiro morrer/desaparecer, para no ponto corrente, limpa viagem e aplica cooldown; pode ficar fora do centro de tile.
-- Ao passar, apaga bloco diretamente, zera pavio de qualquer bomba coincidente e mata diretamente todo jogador vivo na célula salvo passageiro, sem filtros de proteção/salto/elevação em `trolleyHits`. Passageiro é isento do dano final de chama em `step.ts`.
+- **Comprovado no Group 1:** três estações nativas `(128,112)`, `(192,144)`, `(128,208)` e três trajetos por estação, com nove replays de coordenadas, curvas de raio quatro pixels, velocidades e desembarques medidos. A seleção das estações e variantes segue o RNG16 `C3:54B3`; a simulação conserva esse sorteio em estado serializável, mas ainda não reproduz a agenda global de RNG da ROM.
+- **Embarque e percurso medidos:** o carrinho aguarda 43 atualizações lógicas sem deslocamento próprio, durante as quais o passageiro executa um arco de embarque calculado pelo campo de 16×16 direções extraído de `C3:2DB0` e pela animação vertical. A reprodução alcançou 2.624 movimentos controlados sem desvios, 13 replays de posições iniciais não centrais por hash, seis replays nas estações direita/inferior e prioridade comprovada de P1 diante de dois candidatos. O primeiro movimento põe o passageiro em `(stationX-1,stationY-1)`; depois ele acompanha a posição anterior do carrinho 8 pixels acima, inclusive nas curvas. O ajuste de colisão normal anterior ao embarque ainda depende de investigação específica. Input do passageiro continua bloqueado na simulação.
+- **Valor extremo `0x40` do embarque comprovado apenas sob mutação controlada:** `C3:2DB0[159]` indexa dois words além da tabela regular de vetores, em `C2:373C`, resultando nos deslocamentos `0x6B01`/`0x20C2`. O replay do tick 3 com posições interna e visível forçadas em `(135,113)` terminou em `(27528,8498)`, com WRAM idêntica com e sem hooks; duas células vizinhas serviram de controles positivos. O Bombtop reproduz os 41 movimentos seguintes, o alinhamento nativo por máscara `0x01F0` em t44 (`399,303`) e a retomada do trajeto t45–62; os demais replays normais continuam válidos. A varredura das 256 posições iniciais da estação central resultou em 256 embarques e 10.496 leituras da matriz sem alcançar o índice 159. Sua ocorrência sob interação dinâmica ainda não foi provada. Detalhes e evidências REA em `SB4-CARRINHO-ROM.md`.
+- **Desembarque medido:** os nove retornos do controle mantêm os ticks e coordenadas finais validados. A saída inclui agora arcos de 50 atualizações à esquerda/para cima e 61 à direita, com hashes nativos conferidos na estação central, direita e pelo menos uma rota da inferior. Três trajetos possuem uma atualização adicional de posição antes do salto. Essa paridade de posições não comprova colisões da trajetória com obstáculos, itens, montarias ou efeitos visuais completos.
+- **Atropelamento medido:** `C2:5A1A` registra contato e `C2:4BC0` inicia a rotina de morte na atualização seguinte. A simulação conserva IDs atingidos em `StageTrolley.pendingHitIds`, com regressões de fronteira em quatro sentidos e serialização JSON. Imunidade, proteção, montaria e saltos continuam sem contrato completo.
+- **Bomba no trajeto medida:** em `(127,95)` e `(127,63)`, o carrinho marca objeto+$2E antes de iniciar a detonação na atualização posterior; `Bomb.trolleyContactPending` reproduz essa separação, inclusive após restaurar snapshot. O controle com carrinho parado não detona antecipadamente. A faixa exata de contato para blocos, bombas móveis, objetos protegidos e todos os grupos de rotas permanece pendente.
+- **Chama de bomba normal medida:** o passageiro manteve a rotina nativa de embarque, viagem e saída durante explosões controladas; um jogador parado no mesmo fogo morreu pela rotina original. A isenção de chama já existente em `step.ts` está respaldada por esses controles, mas não por testes de bombas especiais e múltiplas explosões.
+- **Aproximações ainda presentes:** colisão/destruição imediata de blocos no tile de chegada, cooldown fixo de 60 após perda do passageiro, ajuste inicial de colisão normal antes do embarque, interações da saída com obstáculos, animação gráfica de sprites e proteção especial/montaria sem reprodução conclusiva na ROM.
 
-- [ ] **Rota:** mapear trilhos e trajetória real, pontos de curva e direção inicial; observar uma viagem completa e se existem desvios, retorno ou parada intermediária. Não inferir percurso somente pela arte.
-- [ ] **Embarque:** testar carrinho vazio sem input, quatro lados, centro/borda da célula, apertar/manter/soltar botões, salto, montaria, carry e dois candidatos simultâneos. Medir posição de encaixe e prioridade.
+- [ ] **Rota:** as nove rotas Group 1 estão medidas; extrair variantes/grupos restantes e confirmar geração de layout, pontos de curva e direções por configuração natural da ROM. Não tratar Group 1 como cobertura de todos os grupos.
+- [ ] **Embarque:** a prioridade entre dois candidatos e trajetórias após alinhamento da entrada foram medidas; ainda faltam ajuste inicial com colisores reais, comandos durante aproximação, salto, montaria, carry e casos com obstáculos concorrentes. Investigar se a célula `0x40` pode ocorrer numa partida natural.
 - [ ] **Desembarque:** testar comandos durante reta/curva, chegada ao início, uma volta/múltiplas voltas, obstáculos na saída e jogador parado após sair. Medir posição, orientação, proteção e tempo até novo embarque.
 - [ ] Medir velocidade por trecho, aceleração, duração de volta e cooldown. Registrar se move sem passageiro ou após morte do condutor, inclusive no meio de um trecho.
 - [ ] Testar bloco/item/bomba no trilho, bomba aérea/carregada, reação em cadeia e efeitos sobre item enterrado; observar se destrói, empurra, detona ou para.
-- [ ] Testar atropelamento de jogador normal, protegido, montado, pulando ou elevado; observar passageiro sob fogo e eventual proteção residual ao desembarcar.
+- [ ] Testar atropelamento de jogador protegido, montado, pulando ou elevado; a imunidade a fogo normal durante as três fases foi medida, mas ainda faltam bombas especiais, múltiplos focos, proteção residual e efeitos ao desembarcar.
 - [ ] Reproduzir interrupção por eliminação/parede de pressão e observar recuperação; não tomar serialização determinística local como prova da rota original.
 
 ### 10 — Costume/Cosplay (`sb4-10`)

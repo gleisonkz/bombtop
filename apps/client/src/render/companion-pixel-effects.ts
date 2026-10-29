@@ -20,6 +20,8 @@ export class CompanionPixelEffects {
   readonly root = new Container();
   readonly ground = new Container();
   private frames: Texture[][] | null = null;
+  private spinFrames: Texture[] | null = null;
+  private speedFrames: Texture[] | null = null;
   private loading: Promise<void> | null = null;
   private readonly sprites: Sprite[] = [];
   private used = 0;
@@ -41,6 +43,20 @@ export class CompanionPixelEffects {
           frame: new Rectangle(frame * CELL, row * CELL, CELL, CELL),
         })),
       );
+      const [spin, speed] = await Promise.all([
+        Assets.load<Texture>(`${import.meta.env.BASE_URL}sprites/donatello-spin-detailed.png?v=thor-cap-20261026`).catch(() => null),
+        Assets.load<Texture>(`${import.meta.env.BASE_URL}sprites/flash-speed-force.png?v=native-game-20261026`).catch(() => null),
+      ]);
+      if (spin && spin.source.width >= 1024 && spin.source.height >= 128) {
+        spin.source.scaleMode = "nearest";
+        this.spinFrames = Array.from({ length: 8 }, (_, frame) => new Texture({ source: spin.source,
+          frame: new Rectangle(frame * 128, 0, 128, 128) }));
+      }
+      if (speed && speed.source.width >= CELL * 8 && speed.source.height >= CELL * 3) {
+        speed.source.scaleMode = "nearest";
+        this.speedFrames = Array.from({ length: 8 }, (_, frame) => new Texture({ source: speed.source,
+          frame: new Rectangle(frame * CELL, CELL * 2, CELL, CELL) }));
+      }
     } catch {
       this.frames = null;
     }
@@ -51,10 +67,25 @@ export class CompanionPixelEffects {
     for (const sprite of this.sprites) sprite.visible = false;
   }
 
+  spin(pose: CompanionEffectPose): boolean {
+    return this.spinFrames !== null && this.draw("spin", pose);
+  }
+
   draw(kind: CompanionEffectKind, pose: CompanionEffectPose): boolean {
     if (!this.frames) return false;
     const tick = Number.isFinite(pose.tick) ? Math.max(0, pose.tick) : 0;
-    const texture = this.frames[ROWS[kind]]![Math.floor(tick / 6) % 4]!;
+    const detailedSpin = kind === "spin" && this.spinFrames !== null;
+    let frames = this.frames[ROWS[kind]]!;
+    let ticksPerFrame = 6;
+    if (detailedSpin) {
+      frames = this.spinFrames!;
+      ticksPerFrame = 3;
+    } else if (kind === "speed" && this.speedFrames) {
+      frames = this.speedFrames;
+      ticksPerFrame = 2;
+    }
+    const texture = frames[Math.floor(tick / ticksPerFrame) % frames.length]!;
+    const cell = detailedSpin ? 128 : CELL;
     let sprite = this.sprites[this.used++];
     if (!sprite) {
       sprite = new Sprite(texture);
@@ -66,7 +97,7 @@ export class CompanionPixelEffects {
     sprite.anchor.set(0.5);
     sprite.pivot.set(0);
     sprite.skew.set(0);
-    sprite.scale.set((pose.size ?? FOOTPRINT[kind]) / CELL);
+    sprite.scale.set((pose.size ?? FOOTPRINT[kind]) / cell);
     sprite.position.set(Math.round(pose.x), Math.round(pose.y));
     sprite.rotation = pose.rotation ?? 0;
     sprite.alpha = Math.max(0, Math.min(1, pose.alpha ?? 1));

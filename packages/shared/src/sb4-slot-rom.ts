@@ -23,6 +23,19 @@ const SLOT_REWARDS: Readonly<Record<number, readonly number[]>> = {
   0x17ad: [1],
 };
 
+export const SB4_SLOT_JACKPOT_WAVES = [
+  { at: 50, itemId: 1, count: 4 },
+  { at: 115, itemId: 3, count: 4 },
+  { at: 179, itemId: 17, count: 5 },
+  { at: 244, itemId: 5, count: 3 },
+  { at: 308, itemId: 4, count: 5 },
+  { at: 375, itemId: 14, count: 3 },
+  { at: 439, itemId: 7, count: 4 },
+  { at: 503, itemId: 13, count: 4 },
+] as const;
+
+export const SB4_SLOT_JACKPOT_CYCLE_TICKS = 517;
+
 export interface Sb4SlotOutcome {
   callback: number;
   itemIds: readonly number[];

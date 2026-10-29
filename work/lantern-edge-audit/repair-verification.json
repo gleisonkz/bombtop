@@ -1,0 +1,14 @@
+{
+  "changes": 57,
+  "unique_patch_coords": 57,
+  "only_manifest": true,
+  "source_hash_matches": true,
+  "repaired_hash_matches": true,
+  "alpha_identical": true,
+  "geometry": [
+    1188,
+    2952
+  ],
+  "bright_whites_unchanged": true,
+  "all_patches_boundary": true
+}

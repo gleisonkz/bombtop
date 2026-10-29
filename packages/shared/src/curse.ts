@@ -62,7 +62,7 @@ export function updateCurses(s: MatchState): void {
     if (taker) passes.push([carrier, taker]);
   }
   for (const [carrier, taker] of passes) {
-    taker.curse = { kind: carrier.curse!.kind, from: carrier.id };
+    taker.curse = { kind: carrier.curse!.kind, from: carrier.id, ...(carrier.curse!.sb4Status ? { sb4Status: carrier.curse!.sb4Status } : {}) };
     carrier.curse = null;
   }
 }

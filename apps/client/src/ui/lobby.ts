@@ -182,8 +182,11 @@ export class LobbyPanel {
     this.suddenDeathToggle.textContent = `Morte súbita: ${info.suddenDeath ? "ON" : "OFF"}`;
     this.suddenDeathToggle.setAttribute("aria-pressed", String(info.suddenDeath));
     this.suddenDeathToggle.disabled = !mayEdit || maniac;
-    this.seats.replaceChildren(
-      ...lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
+    const seats = lobbySlots(info.members, MAX_PLAYERS).map(({ member, color }, i) => {
+        const key = JSON.stringify({ member, color, me, hostId: info.hostId, tag, watching: this.watching, couch: !!this.offline?.couch, code: info.code });
+        const previous = this.seats.children[i] as HTMLElement | undefined;
+        if (previous?.dataset.seatKey === key) return previous;
+        const seat = (() => {
         const slotTag = el("span", { class: "slot-tag", text: `P${i + 1}` });
         if (!member && isHost) {
           return el("div", { class: "seat empty add-bot" }, [
@@ -245,8 +248,15 @@ export class LobbyPanel {
             this.pickArrow("›", "Próximo personagem", pick, member.character, 1),
           ]),
         ]);
-      }),
-    );
+        })();
+        seat.dataset.seatKey = key;
+        return seat;
+      });
+    for (const [index, seat] of seats.entries()) {
+      const previous = this.seats.children[index];
+      if (!previous) this.seats.appendChild(seat);
+      else if (previous !== seat) this.seats.replaceChild(seat, previous);
+    }
     const enough = info.members.length >= 2 && (!tag || new Set(info.members.map(member => member.team)).size === 2);
     // Guests still connected who have not said they are ready (the host starts; bots always are).
     const waiting = info.members.filter((m) => !m.bot && m.id !== info.hostId && m.connected && !m.ready);

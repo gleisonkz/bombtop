@@ -7,7 +7,6 @@ import {
   matchResult,
   MAX_PLAYERS,
   publicView,
-  STAGES,
   step,
   TICK_RATE,
   CHARACTERS,
@@ -83,7 +82,7 @@ export class BattleSession {
   phase: RoomPhase = "lobby";
   members: LobbyMember[] = [];
   match: MatchState | null = null;
-  stage: StageId = STAGES[0]!;
+  stage: StageId = DEFAULT_STAGE_ROTATION[0]!.stage;
   private winsToWin: number;
   private timeMinutes: BattleTimeMinutes;
   private suddenDeath: boolean;

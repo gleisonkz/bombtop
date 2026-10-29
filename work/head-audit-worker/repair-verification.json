@@ -1,0 +1,37 @@
+[
+  [
+    "goku.png",
+    419,
+    true,
+    true,
+    true
+  ],
+  [
+    "goku-lobby.png",
+    28,
+    true,
+    true,
+    true
+  ],
+  [
+    "spider.png",
+    4,
+    true,
+    true,
+    false
+  ],
+  [
+    "panther-lobby.png",
+    9,
+    true,
+    true,
+    false
+  ],
+  [
+    "panther.png",
+    2,
+    true,
+    true,
+    false
+  ]
+]

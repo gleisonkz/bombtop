@@ -1,5 +1,5 @@
 {
-  "image": "sprites/goku-ssj-aura.png",
+  "image": "sprites/goku-ssj-aura-detailed.png?v=thor-cap-20261026",
   "width": 1280,
   "height": 1280,
   "frameW": 320,
@@ -43,10 +43,15 @@
   "layer": "behind-character",
   "blendMode": "add",
   "referenceBodyH": 104,
-  "fullAuraHeight": 285.875,
+  "fullAuraHeight": 202.5,
   "desiredAuraToBodyHeight": 1.45,
-  "nativeScaleForA1": 0.5275032794053345,
+  "nativeScaleForA1": 0.7446913580246912,
   "containsCharacter": false,
   "generator": "built-in image_gen; no PixelLab",
-  "sourceSha256": "74e6daeff3657ffbe125b78e84a4bdf94bee5f342e6c362cf40265a6db5b23b5"
+  "sourceSha256": "c0f07e1f1ee6f117bd0f6ec30417ac6d68665975cdabeecea0a4cb75bde56d4e",
+  "style": "detailed-pixel-art-thor-captain",
+  "logicalFrameW": 160,
+  "logicalFrameH": 160,
+  "binaryAlpha": true,
+  "paletteLimit": 16
 }

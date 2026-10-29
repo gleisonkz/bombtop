@@ -19,6 +19,7 @@ class Node {
   appendChild(child: Node) { this.children.push(child); return child; }
   append(...children: Node[]) { this.children.push(...children); }
   replaceChildren(...children: Node[]) { this.children = children; }
+  replaceChild(child: Node, previous: Node) { this.children[this.children.indexOf(previous)] = child; return previous; }
   setAttribute(key: string, value: string) { this.attributes.set(key, value); }
   addEventListener(event: string, callback: () => void) { this.events.set(event, [...this.events.get(event) ?? [], callback]); }
   click() { if (!this.disabled) for (const callback of this.events.get("click") ?? []) callback(); }
@@ -31,6 +32,38 @@ beforeEach(() => vi.stubGlobal("document", { createElement: () => new Node() }))
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Battle Mode lobby controls", () => {
+  it("keeps other seats mounted when a character changes or a player joins", () => {
+    const parent = new Node();
+    const pickCharacter = vi.fn();
+    const panel = new LobbyPanel(parent as unknown as HTMLElement, {
+      start: vi.fn(), leave: vi.fn(), addBot: vi.fn(), removeBot: vi.fn(),
+      pickCharacter, pickBotCharacter: vi.fn(), setStageRotation: vi.fn(),
+      setWinsToWin: vi.fn(), setTimeMinutes: vi.fn(), setSuddenDeath: vi.fn(),
+      setBattleMode: vi.fn(), setManiac: vi.fn(), setTeam: vi.fn(), setReady: vi.fn(),
+    });
+    const lobby: LobbyInfo = {
+      phase: "lobby", code: "TST", stage: "classic", hostId: "host",
+      winsToWin: 3, timeMinutes: 3, suddenDeath: true,
+      members: [
+        { id: "host", name: "Host", wins: 0, connected: true, character: "bomb" },
+        { id: "guest", name: "Guest", wins: 0, connected: true, character: "goku" },
+      ],
+    };
+    panel.update(lobby, "host");
+    const seats = parent.all().find(node => node.className === "seats")!;
+    const original = [...seats.children];
+    const changed: LobbyInfo = { ...lobby, members: lobby.members.map(member => member.id === "host" ? { ...member, character: "thor" } : member) };
+    panel.update(changed, "host");
+    expect(seats.children[0]).not.toBe(original[0]);
+    expect(seats.children[1]).toBe(original[1]);
+    const host = seats.children[0];
+    host!.all().filter(node => node.className.includes("pick-arrow"))[1]!.click();
+    expect(pickCharacter).toHaveBeenCalledWith("goku");
+    panel.update({ ...changed, members: [...changed.members, { id: "new", name: "New", wins: 0, connected: true, character: "pikachu" }] }, "host");
+    expect(seats.children[0]).toBe(host);
+    expect(seats.children[1]).toBe(original[1]);
+    expect(seats.children[2]).not.toBe(original[2]);
+  });
   it("shows the saved settings and allows only the host to change them", () => {
     const parent = new Node();
     const setWinsToWin = vi.fn();

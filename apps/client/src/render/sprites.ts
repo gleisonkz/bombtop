@@ -6,6 +6,10 @@ import bomberPaintRegions from "./bomber-paint-regions.json";
 import staticPaintRegions from "./static-paint-regions.json";
 import spiderPaintRegions from "./spider-paint-regions.json";
 import lanternPaintRegions from "./lantern-paint-regions.json";
+import narutoPaintRegions from "./naruto-paint-regions.json";
+import captainPaintRegions from "./captain-paint-regions.json";
+import thorPaintRegions from "./thor-paint-regions.json";
+import thorLobbyPaintRegions from "./thor-lobby-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
 
 type Rgb = readonly [number, number, number];
@@ -32,6 +36,7 @@ export interface LobbyImage {
   anchorX: number;
   anchorY: number;
   ticksPerFrame?: number;
+  colorProtection?: ColorProtection;
 }
 
 /** Where each animation sits on a character sheet (all frames are one fixed cell size). */
@@ -118,6 +123,7 @@ export const SHEETS = {
     /** The navy suit and helmet (the carried bomb's blue-black stays). */
     hues: [200, 232],
     hueBase: [35, 56, 92],
+    colorProtection: captainPaintRegions,
     /** White would melt his suit into his stars, stripes and shield: that player keeps the navy. */
     keepFor: [[245, 245, 245]],
     scale: 0.17,
@@ -146,17 +152,18 @@ export const SHEETS = {
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     /** Mjolnir raised, struck by lightning, crackling, then slammed down in a shockwave (scripts/build-thor-lobby.py). */
-    lobby: { row: 0, frames: 16, image: { url: "sprites/thor-lobby.png", width: 2880, height: 204, frameW: 180, frameH: 204, anchorX: 91, anchorY: 191 } },
+    lobby: { row: 0, frames: 16, image: { url: "sprites/thor-lobby.png", width: 2880, height: 204, frameW: 180, frameH: 204, anchorX: 91, anchorY: 191, colorProtection: thorLobbyPaintRegions } },
     /** The navy armor (the silver helmet and chest discs sit just past it, at hue 229). */
     hues: [205, 226],
     hueBase: [47, 56, 73],
+    colorProtection: thorPaintRegions,
     /** White would melt his armor into his silver helmet and discs: that player keeps the navy. */
     keepFor: [[245, 245, 245]],
     scale: 0.17,
   },
   /** Broader pixel-art Goku; original animation geometry (scripts/pack-goku.py). */
   goku: {
-    url: "sprites/goku.png?v=a1-skeleton-20261026",
+    url: "sprites/goku.png?v=cutout-b2531fd9",
     width: 1188,
     height: 2952,
     frameW: 132,
@@ -176,7 +183,7 @@ export const SHEETS = {
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
     /** Explicit rising-black, mixed and golden hair phases; menu playback uses 20fps. */
-    lobby: { row: 0, frames: 60, image: { url: "sprites/goku-lobby.png?v=a1-ssj1-72df66b3e95d", width: 7920, height: 164, frameW: 132, frameH: 164, anchorX: 66, anchorY: 150, ticksPerFrame: 3 } },
+    lobby: { row: 0, frames: 60, image: { url: "sprites/goku-lobby.png?v=cutout-cf3fd104", width: 7920, height: 164, frameW: 132, frameH: 164, anchorX: 66, anchorY: 150, ticksPerFrame: 3 } },
     /** Visible hand positions in the redrawn release pose. */
     muzzle: { down: [0.999, -31.807], side: [26.836, -52.766], up: [7.874, -60.395] },
     /** The blue undershirt, sash, wristbands and boots (his orange gi is too close to his skin to repaint). */
@@ -212,13 +219,14 @@ export const SHEETS = {
     /** The navy of his jacket, headband and sandals (his orange is too close to his skin to repaint). */
     hues: [205, 232],
     hueBase: [6, 42, 92],
+    colorProtection: narutoPaintRegions,
     /** White would bleach his jacket: that player keeps the navy. */
     keepFor: [[245, 245, 245]],
     scale: 0.20366972,
   },
   /** PixelLab character and directional animations. */
   spider: {
-    url: "sprites/spider.png",
+    url: "sprites/spider.png?v=cutout-7c080e9b",
     width: 1170,
     height: 2898,
     frameW: 130,
@@ -370,7 +378,7 @@ export const SHEETS = {
   },
   /** The green lantern, John Stewart (fan art), made in PixelLab (scripts/build-character-sheet.py lantern lays out its frames). */
   lantern: {
-    url: "sprites/lantern.png?v=a1-approved-f7cd414a",
+    url: "sprites/lantern.png?v=cutout-55f20f00",
     width: 1188,
     height: 2952,
     frameW: 132,
@@ -458,7 +466,7 @@ export const SHEETS = {
 
   /** The pink panther (fan art), "Pink Panther HD 4" in PixelLab (scripts/build-character-sheet.py panther). */
   panther: {
-    url: "sprites/panther.png?v=walk-down-2d1a8089",
+    url: "sprites/panther.png?v=cutout-29137996",
     width: 1568,
     height: 3808,
     frameW: 224,
@@ -477,8 +485,8 @@ export const SHEETS = {
     cast: strips(8, 9, 10, 6),
     carryIdle: strips(11, 12, 13, 4),
     carryWalk: strips(14, 15, 16, 6),
-    lobby: { row: 0, frames: 16, bodyH: 126, image: { url: "sprites/panther-lobby.png?v=20261026-slim2", width: 3584, height: 224, frameW: 224, frameH: 224, anchorX: 112, anchorY: 208 } },
-    hues: [310, 350],
+    lobby: { row: 0, frames: 16, bodyH: 126, image: { url: "sprites/panther-lobby.png?v=cutout-019fa13b", width: 3584, height: 224, frameW: 224, frameH: 224, anchorX: 112, anchorY: 208 } },
+    hues: [285, 6],
     hueBase: [248, 128, 189],
     keepFor: [[245, 245, 245]],
     scale: 0.17009524,
@@ -508,9 +516,8 @@ export const SHEETS = {
     lobby: { row: 0, frames: 8, bodyH: 126, image: { url: "sprites/harry-lobby-pixellab.png?v=20261026-model1-clean-v5", width: 1792, height: 224, frameW: 224, frameH: 224, anchorX: 111.5, anchorY: 211 } },
     victory: { row: 0, frames: 16, bodyH: 126, image: { url: "sprites/harry-victory-pixellab.png?v=20261026-model1-clean-v5", width: 3584, height: 224, frameW: 224, frameH: 224, anchorX: 111.5, anchorY: 211 } },
     /** The red lining of his robe (his blush and scar, a redder hue, stay his own). */
-    hues: [345, 359],
+    hues: [343, 359],
     hueBase: [131, 28, 44],
-    keepFor: [[232, 74, 74]],
     scale: 0.16803906,
   },
   optimus: {
@@ -539,7 +546,7 @@ export const SHEETS = {
     /** His helmet, hands, thighs' plates and boots (the blue of his eyes and windows, a paler cyan, stay his own). */
     hues: [215, 240],
     hueBase: [5, 80, 174],
-    keepFor: [[245, 245, 245], [232, 74, 74]],
+    keepFor: [[245, 245, 245]],
     scale: 0.134,
   },
 
@@ -598,7 +605,6 @@ export const SHEETS = {
     colorProtection: lulaPaintRegions,
     hues: [336, 6],
     hueBase: [217, 45, 29],
-    keepFor: [[232, 74, 74]],
     scale: 0.1806,
   },
 
@@ -1064,16 +1070,16 @@ export function skullAlpha(p: Pick<Player, "curse">, tick: number): number {
   return p.curse?.kind === "invisible" && Math.floor(tick / (TICK_RATE / 2)) % 2 === 1 ? 0 : 1;
 }
 
-/** The green lantern's bubble (scripts/build-lantern-bubble.py): forming, held (a loop), giving way. */
+/** Generated emerald construct shield: forming, sustained highlights, dissolving armor. */
 export const BUBBLE = {
-  url: "sprites/lantern-bubble.png",
-  size: 192,
+  url: "sprites/lantern-construct-shield.png?v=20261026-thor-cap-3",
+  size: 320,
   rows: { form: 0, loop: 1, pop: 2 },
-  frames: { form: 8, loop: 12, pop: 8 },
-  /** Ticks each frame stays on screen. */
-  ticks: 2,
-  /** Drawn about 28 px across, round a player. */
-  scale: 0.18,
+  frames: { form: 4, loop: 8, pop: 4 },
+  /** Ticks each frame stays on screen; opening and release still take 16 ticks. */
+  ticks: 4,
+  /** Armored energy rim around the player, including transparent padding. */
+  scale: 0.15,
 };
 
 /**

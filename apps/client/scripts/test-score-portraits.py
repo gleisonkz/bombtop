@@ -12,6 +12,36 @@ PROFILES = json.loads((CLIENT / "src/render/score-portraits.json").read_text())
 
 
 class ScorePortraitTests(unittest.TestCase):
+    def test_preserves_hair_ears_and_bandanas_but_removes_shoulders(self):
+        included = {
+            "captain": [(61, 70)], "goku": [(61, 49), (66, 88)],
+            "lantern": [(37, 54), (67, 73)], "donatello": [(173, 108), (139, 133)],
+            "lula": [(96, 92)], "pikachu": [(128, 31), (94, 94)],
+            "static": [(85, 119), (85, 125)], "naruto": [(48, 62)],
+            "spider": [(45, 82), (81, 80), (63, 88)],
+        }
+        excluded = {
+            "goku": [(52, 94), (66, 93)], "static": [(61, 130), (71, 122), (98, 124), (95, 129), (85, 129)], "spider": [(45, 95), (63, 93)],
+            "lula": [(80, 92)], "naruto": [(36, 65)],
+            "lantern": [(45, 83), (67, 83)], "donatello": [(117, 142), (132, 145), (138, 141)],
+            "pele": [(80, 90), (97, 89)], "harry": [(96, 150)], "bomber": [(57, 104)],
+            "flash": [(93, 150), (111, 148)], "panther": [(113, 118)],
+        }
+        for expected, landmarks in [(True, included), (False, excluded)]:
+            for name, points in landmarks.items():
+                profile = PROFILES[name]
+                image = Image.open(CLIENT / "public" / profile["url"]).convert("RGBA")
+                x, y, w, h = profile["crop"]
+                mask = Image.new("L", tuple(profile["frame"]), 255)
+                if "outline" in profile:
+                    mask = Image.new("L", tuple(profile["frame"]))
+                    ImageDraw.Draw(mask).polygon([tuple(p) for p in profile["outline"]], fill=255)
+                for point in points:
+                    with self.subTest(character=name, point=point, expected=expected):
+                        self.assertGreater(image.getpixel(point)[3], 32)
+                        visible = x <= point[0] < x + w and y <= point[1] < y + h and mask.getpixel(point) > 0
+                        self.assertEqual(visible, expected)
+
     def test_all_eighteen_profiles_match_current_sheet_and_preserve_visible_heads(self):
         source = (CLIENT / "src/render/sprites.ts").read_text(encoding="utf-8")
         self.assertEqual(len(PROFILES), 18)
@@ -36,11 +66,13 @@ class ScorePortraitTests(unittest.TestCase):
                 self.assertGreater(int(visible.sum()), 200)
                 ys, xs = np.where(visible)
                 width, height = int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1)
-                box = profile.get("box", (13, 13))
+                self.assertNotIn("box", profile)
+                self.assertNotIn("bottom", profile)
+                box = (15.5, 15)
                 scale = min(box[0] / width, box[1] / height)
                 self.assertLessEqual(width * scale, box[0] + 0.000001)
                 self.assertLessEqual(height * scale, box[1] + 0.000001)
-                self.assertGreaterEqual(profile.get("bottom", 14.5) - height * scale, 0.499999)
+                self.assertGreaterEqual(15.5 - height * scale, 0.499999)
                 offset = -5 - max(0, (width * scale - 13) / 2)
                 self.assertGreater(3 - (offset + width * scale / 2), 1)
 

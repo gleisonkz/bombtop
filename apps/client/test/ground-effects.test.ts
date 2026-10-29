@@ -249,7 +249,7 @@ describe("ground effects", () => {
     const source = { width: 1000, height: 1000 };
     const clear = vi.fn(() => { source.width = source.height = 0; });
     const skin = {
-      portrait: { x: 20, y: 10, width: 100, height: 40 },
+      portrait: { x: 20, y: 10, width: 100, height: 40, box: [13, 13], bottom: 14.5 },
       sources: { get: () => ({ source: { resource: source } }), clear },
     };
     const internal = renderer as unknown as {
@@ -443,8 +443,29 @@ describe("ground effects", () => {
     const lightning = vi.spyOn(renderer.energyEffects, "draw").mockReturnValue(true);
     const streaks = vi.spyOn(renderer.companionEffects, "draw").mockReturnValue(true);
     renderer.drawSpeed(new Graphics(), { x0: 8, y0: 8, x1: 72, y1: 8 }, 5, 1);
-    expect(lightning).toHaveBeenCalledWith("shock", expect.objectContaining({ x0: 8, x1: 72, tick: 5 }));
+    expect(lightning).toHaveBeenCalledWith("speedForce", expect.objectContaining({ x0: 8, x1: 72, tick: 5 }));
     expect(streaks).toHaveBeenCalledWith("speed", expect.objectContaining({ tick: 5 }));
+  });
+
+  it("advances Flash streaks along the dash every tick and tapers the stationary origin", () => {
+    const renderer = new Renderer(true) as unknown as {
+      drawSpeed(g: Graphics, path: { x0: number; y0: number; x1: number; y1: number }, age: number, alpha: number): void;
+      energyEffects: EnergyPixelEffects;
+      companionEffects: CompanionPixelEffects;
+    };
+    vi.spyOn(renderer.energyEffects, "draw").mockReturnValue(true);
+    const streaks = vi.spyOn(renderer.companionEffects, "draw").mockReturnValue(true);
+    const path = { x0: 8, y0: 8, x1: 72, y1: 8 };
+    renderer.drawSpeed(new Graphics(), path, 0, 1);
+    const start = streaks.mock.calls[1]![1].x;
+    streaks.mockClear();
+    renderer.drawSpeed(new Graphics(), path, 1, 1);
+    expect(streaks.mock.calls[1]![1].x).toBeGreaterThan(start);
+    expect(streaks.mock.calls[0]![1].alpha).toBeLessThan(1);
+    for (const [, pose] of streaks.mock.calls) {
+      expect(pose.x).toBeGreaterThanOrEqual(path.x0);
+      expect(pose.x).toBeLessThanOrEqual(path.x1);
+    }
   });
 
   it("uses the new picanha art and resets scale when an item sprite is reused", async () => {

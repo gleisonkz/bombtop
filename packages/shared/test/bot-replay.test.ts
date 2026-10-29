@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BattleSession, type BotLevel } from "../src";
+import { BattleSession, STAGES, type BotLevel } from "../src";
 
 /**
  * Seeded bot matches, fingerprinted tick by tick. Speeding up the bots or the
@@ -11,6 +11,7 @@ function replay(level: BotLevel, loaded: boolean, ticks: number): string {
   const s = new BattleSession({ seed: () => 99, random: () => (n++ % 7) / 7 });
   s.join("human", "Human");
   for (let i = 0; i < 4; i++) s.addBot("human", level);
+  s.setRules("human", { stageRotation: STAGES.map(stage => ({ stage })) });
   s.start("human");
   if (loaded) {
     for (const p of s.match!.players) {

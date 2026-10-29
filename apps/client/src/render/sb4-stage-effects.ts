@@ -12,10 +12,10 @@ const FLOOR_PROPS = new Map<Floor, Prop>([
 const ANGLES: Record<Facing, number> = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 };
 
 export function stageFlightLift({ flight, y, bodyHeight, elevated }: {
-  flight: { ticks: number; kind?: "seesaw" } | undefined; y: number; bodyHeight: number; elevated: boolean;
+  flight: { ticks: number; kind?: "seesaw" | "seesawRebound" } | undefined; y: number; bodyHeight: number; elevated: boolean;
 }): number {
   if (!flight || elevated || !Number.isFinite(flight.ticks)) return 0;
-  if (flight.kind === "seesaw") return Math.min(seesawHopLift(flight), Math.max(0, y - bodyHeight));
+  if (flight.kind === "seesaw" || flight.kind === "seesawRebound") return Math.min(seesawHopLift(flight), Math.max(0, y - bodyHeight));
   const progress = Math.max(0, Math.min(1, flight.ticks / 24));
   return Math.min(48 * progress * (1 - progress), Math.max(0, y - bodyHeight));
 }

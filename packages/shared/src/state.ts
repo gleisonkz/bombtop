@@ -151,11 +151,13 @@ export interface Cart {
 
 export type MountKind = "hopper" | "dasher" | "pusher";
 
-export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire" | "hiccups" | "shortFuse" | "longFuse" | "invisible" | "cannotStop";
+export type CurseKind = "slow" | "fast" | "reverse" | "diarrhea" | "constipation" | "weakFire" | "hiccups" | "shortFuse" | "longFuse" | "invisible" | "cannotStop" | "dangerBomb";
+export type Sb4SlotStatus = 36 | 37 | 43;
 
 /** A skull's curse: it lasts until passed on by touch or cured by picking up another item. */
 export interface Curse {
   kind: CurseKind;
+  sb4Status?: Sb4SlotStatus;
   /** Who just passed it on: it cannot go back to them until the two have parted. */
   from?: string;
   elapsed?: number;
@@ -172,6 +174,8 @@ export interface Bomb {
   bornAt?: number;
   range: number;
   type: BombType;
+  sb4SlotVariant?: 10;
+  trolleyContactPending?: true;
   /** Direction of ground movement (kick or conveyor), or null when resting. */
   slide: Facing | null;
   kickedBy?: string;
@@ -223,6 +227,7 @@ export interface Item {
   x: number;
   y: number;
   kind: ItemKind;
+  sb4Status?: Sb4SlotStatus;
   /** Who left it there (lula's picanha): they walk over it. */
   owner?: string;
 }

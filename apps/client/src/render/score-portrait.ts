@@ -2,7 +2,9 @@ import profiles from "./score-portraits.json";
 import type { SheetLayout } from "./sprites";
 
 type Point = readonly number[];
-interface Profile { url: string; frame: number[]; crop: number[]; outline?: Point[]; box?: number[]; bottom?: number }
+interface Profile { url: string; frame: number[]; crop: number[]; outline?: Point[] }
+export const SCORE_PORTRAIT_BOX = [15.5, 15] as const;
+export const SCORE_PORTRAIT_BOTTOM = 15.5;
 export interface ScorePortraitCrop {
   x: number; y: number; width: number; height: number;
   outline?: readonly Point[];
@@ -52,14 +54,15 @@ export function scorePortraitCrop({ sheet, pixels }: { sheet: SheetLayout; pixel
   const y0 = Math.min(sheet.frameH - 1, region[1]!);
   const x1 = Math.min(sheet.frameW, x0 + region[2]!);
   const y1 = Math.min(sheet.frameH, y0 + region[3]!);
-  const crop: ScorePortraitCrop = { x: ox + x0, y: oy + y0, width: x1 - x0, height: y1 - y0 };
+  const crop: ScorePortraitCrop = {
+    x: ox + x0, y: oy + y0, width: x1 - x0, height: y1 - y0,
+    box: SCORE_PORTRAIT_BOX, bottom: SCORE_PORTRAIT_BOTTOM,
+  };
   if (profile?.outline) crop.outline = profile.outline.map(([x, y]) => [ox + x!, oy + y!]);
-  if (profile?.box) crop.box = profile.box;
-  if (profile?.bottom !== undefined) crop.bottom = profile.bottom;
   return trimTransparent({ pixels, width: sheet.width, crop });
 }
 
-/** Aspect-preserving fit, with reviewed optical allowances for wide hair and tall ears. */
-export const scorePortraitScale = ({ width, height, box = [13, 13] }: {
+/** One aspect-preserving envelope for every head, including wide hair and tall ears. */
+export const scorePortraitScale = ({ width, height, box = SCORE_PORTRAIT_BOX }: {
   width: number; height: number; box?: readonly number[] | undefined;
 }): number => Math.min(box[0]! / width, box[1]! / height);

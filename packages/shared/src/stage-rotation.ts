@@ -1,4 +1,4 @@
-import { SELECTABLE_STAGES, STAGES, type StageId } from "./stage";
+import { SB4_STAGES, SELECTABLE_STAGES, type StageId } from "./stage";
 
 export interface StageRotationEntry {
   stage: StageId;
@@ -7,7 +7,7 @@ export interface StageRotationEntry {
 export const MAX_STAGE_ROTATION = 12;
 
 export const DEFAULT_STAGE_ROTATION: readonly Readonly<StageRotationEntry>[] = Object.freeze(
-  STAGES.map((stage) => Object.freeze({ stage })),
+  SB4_STAGES.map((stage) => Object.freeze({ stage })),
 );
 
 const stageIds = new Set<unknown>(SELECTABLE_STAGES);

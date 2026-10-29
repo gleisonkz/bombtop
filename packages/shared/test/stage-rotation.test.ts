@@ -16,9 +16,7 @@ it("validates a whole playlist and returns detached entries", () => {
     { stage: "warp" }, { stage: "warp" },
   ]);
   expect(MAX_STAGE_ROTATION).toBe(12);
-  expect(DEFAULT_STAGE_ROTATION).toEqual([
-    { stage: "classic" }, { stage: "conveyor" }, { stage: "warp" },
-  ]);
+  expect(DEFAULT_STAGE_ROTATION).toEqual(SB4_STAGES.map(stage => ({ stage })));
 });
 
 it("rejects malformed playlists without filtering or coercing entries", () => {

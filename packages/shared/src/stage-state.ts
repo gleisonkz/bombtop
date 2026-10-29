@@ -36,6 +36,7 @@ export interface StageTrolley {
   py: number;
   dir: Facing;
   riderId?: string;
+  pendingHitIds?: string[];
   cooldown?: number;
   route?: { x: number; y: number }[];
   index?: number;
@@ -68,15 +69,38 @@ export interface StageFlight {
   dir: Facing;
   ticks: number;
   remaining: number;
-  kind?: "seesaw";
+  kind?: "seesaw" | "seesawRebound";
   steering?: "left" | "right";
+  preSteered?: true;
+}
+
+export interface StageSlotCascade {
+  startedAt: number;
+  waveIndex: number;
+  issued: number;
+  limit: number;
+}
+
+export interface StageSlotReelClock {
+  counter: number;
+  interval: number;
+  accumulator: number;
+  phase: number;
+  stopped: boolean;
+}
+
+export interface StageSlotClock {
+  lastTick: number;
+  cursor: number;
+  afterAll: number;
+  reels: StageSlotReelClock[];
 }
 
 export interface StageState {
   balls?: StageBall[];
   flags?: StageFlag[];
   flagPickupUntil?: Record<string, number>;
-  roulette?: { cooldown: number; until: number; active?: boolean; result?: ItemKind; reels?: ("seven" | "bar" | "fire" | "skull")[]; stopped?: boolean[] };
+  roulette?: { cooldown: number; until: number; startedAt?: number; active?: boolean; result?: ItemKind; reels?: ("seven" | "bar" | "fire" | "skull")[]; stopped?: boolean[]; cascade?: StageSlotCascade; nativeClock?: StageSlotClock };
   seesaws?: StageSeesaw[];
   trolley?: StageTrolley;
   honey?: { x: number; y: number; takenBy?: string }[];

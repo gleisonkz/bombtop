@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FLAME_TICKS, MAX_PLAYERS, playerTile, TILE } from "../../src";
+import { FLAME_TICKS, MAX_PLAYERS, playerTile, SB4_STAGES, TILE } from "../../src";
 import { BattleSession, BOT_NAMES, BOT_PERSONAS, RESULTS_TICKS, WINS_TO_WIN } from "../../src";
 
 function lobby(n: number) {
@@ -103,8 +103,8 @@ describe("lobby", () => {
     expect(s.lobbyInfo("ROOM1")).toEqual({
       phase: "lobby",
       hostId: "c1",
-      stage: "classic",
-      stageRotation: [{ stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }],
+      stage: "sb4-01",
+      stageRotation: SB4_STAGES.map(stage => ({ stage })),
       winsToWin: WINS_TO_WIN,
       timeMinutes: null,
       suddenDeath: true,
@@ -332,18 +332,19 @@ describe("snapshots", () => {
 describe("stages", () => {
   it("the lobby announces the stage of the next match", () => {
     const s = readyLobby(2);
-    expect(s.lobbyInfo("X").stage).toBe("classic");
+    expect(s.lobbyInfo("X").stage).toBe("sb4-01");
     s.start("c1");
-    expect(s.lobbyInfo("X").stage).toBe("classic");
+    expect(s.lobbyInfo("X").stage).toBe("sb4-01");
     s.match!.players[1]!.alive = false;
     s.match!.revenge = false;
     s.tick();
     for (let i = 0; i < RESULTS_TICKS; i++) s.tick();
-    expect(s.lobbyInfo("X").stage).toBe("conveyor");
+    expect(s.lobbyInfo("X").stage).toBe("sb4-02");
   });
 
   it("rotate through classic, conveyor and warp in successive rounds", () => {
     const s = readyLobby(2);
+    expect(s.setRules("c1", { stageRotation: [{ stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }] })).toBe(true);
     const stages: string[] = [];
     for (let r = 0; r < 4; r++) {
       s.start("c1");

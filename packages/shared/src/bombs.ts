@@ -35,7 +35,7 @@ export function placeBomb(s: MatchState, playerId: string): boolean {
   if (active >= effectiveCapacity(p)) return false;
 
   const fuse = effectiveFuse(p, s.stage);
-  s.bombs.push({ ownerId: playerId, x, y, fuse, ...(fuse === SB4_NORMAL_FUSE_TICKS && { bornAt: s.tick }), range: effectiveRange(p), type: p.bombType, slide: null, offset: 0, air: null, heldBy: null });
+  s.bombs.push({ ownerId: playerId, x, y, fuse, ...(fuse === SB4_NORMAL_FUSE_TICKS && { bornAt: s.tick }), range: effectiveRange(p), type: p.bombType, ...(p.curse?.sb4Status === 37 && active === 0 ? { sb4SlotVariant: 10 as const } : {}), slide: null, offset: 0, air: null, heldBy: null });
   return true;
 }
 

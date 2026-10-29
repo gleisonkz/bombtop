@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import auraSheet from "../public/sprites/goku-ssj-aura.json";
 import { characterArt, characterMoves, CHARACTER_SHEETS } from "../src/ui/sheet-art";
 
 class PreviewElement extends EventTarget {
@@ -24,6 +26,16 @@ function preview(character: Parameters<typeof characterArt>[0], state: Parameter
 }
 
 describe("Goku menu aura", () => {
+  it("shares the cast background plane rather than painting over neighboring stacking contexts", () => {
+    const [aura, sprite] = preview("goku").children;
+    expect(Number(aura!.style.zIndex)).toBeLessThan(0);
+    expect(Number(sprite!.style.zIndex)).toBeGreaterThan(0);
+    const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+    expect(html).toContain(".mascot.sheet.goku:has(> .goku-aura-preview) { isolation: isolate; }");
+    expect(html).toContain(".cast .cast-member:has(> .mascot.sheet.goku > .goku-aura-preview),");
+    expect(html).toContain(".cast .mascot.sheet.goku:has(> .goku-aura-preview) { isolation: auto; z-index: auto; transform: none; translate: none; rotate: none; scale: none; filter: none; }");
+  });
+
   it("appears behind only the dedicated Goku lobby and victory strip", () => {
     expect(preview("goku").children).toHaveLength(2);
     expect(preview("goku", "win").children).toHaveLength(2);
@@ -57,7 +69,8 @@ describe("Goku menu aura", () => {
     const [aura, sprite] = preview("goku").children;
     expect(aura!.style["--s"]).toBe(sprite!.style["--s"]);
     expect(aura!.style.transformOrigin).toBe("160px 304px");
-    expect(aura!.style.transform).toContain("0.5275032794053345");
+    expect(aura!.style.transform).toBe(`scale(calc(var(--s) * ${auraSheet.nativeScaleForA1}))`);
+    expect(aura!.style.backgroundImage).toContain(auraSheet.image);
     expect(aura!.style.width).toBe("320px");
     expect(aura!.style.height).toBe("320px");
     expect(aura!.style.left).toContain("--cast-anchor-offset");

@@ -5,6 +5,20 @@ import { SHEETS, type SheetLayout } from "../src/render/sprites";
 import profiles from "../src/render/score-portraits.json";
 
 describe("scoreboard head portraits", () => {
+  it("uses one portrait envelope and neck baseline across the roster", () => {
+    for (const [name, profile] of Object.entries(profiles)) {
+      const sheet = SHEETS[name as keyof typeof SHEETS];
+      const pixels = new Uint8ClampedArray(sheet.width * sheet.frameH * 4);
+      const [x, y, width, height] = profile.crop;
+      const px = x! + Math.floor(width! / 2);
+      const py = y! + Math.floor(height! / 2);
+      pixels[(py * sheet.width + px) * 4 + 3] = 255;
+      const crop = scorePortraitCrop({ sheet, pixels });
+      expect(crop.box, name).toEqual([15.5, 15]);
+      expect(crop.bottom, name).toBe(15.5);
+    }
+  });
+
   it("covers the production roster with valid source-cell bounds", () => {
     expect(Object.keys(profiles)).toHaveLength(18);
     for (const [name, profile] of Object.entries(profiles)) {
@@ -28,18 +42,21 @@ describe("scoreboard head portraits", () => {
   it("fits both axes, keeps aspect ratio and leaves room before the win count", () => {
     for (const [width, height] of [[120, 50], [40, 100], [70, 70]]) {
       const scale = scorePortraitScale({ width: width!, height: height! });
-      expect(width! * scale).toBeLessThanOrEqual(13);
-      expect(height! * scale).toBeLessThanOrEqual(13);
-      expect(-5 + width! * scale / 2).toBeLessThan(3);
-      expect(14.5 - height! * scale).toBeGreaterThanOrEqual(1.5);
+      expect(width! * scale).toBeLessThanOrEqual(15.5 + 1e-9);
+      expect(height! * scale).toBeLessThanOrEqual(15 + 1e-9);
+      const offset = -5 - Math.max(0, (width! * scale - 13) / 2);
+      expect(3 - (offset + width! * scale / 2)).toBeGreaterThanOrEqual(1.5);
+      expect(15.5 - height! * scale).toBeGreaterThanOrEqual(0.5);
     }
   });
 
-  it("compensates tall ears and wide hair without cutting them or overlapping the score", () => {
-    const goku = scorePortraitScale({ width: 79, height: 63, box: [15.5, 13] });
-    const bugs = scorePortraitScale({ width: 60, height: 89, box: [13, 15] });
-    expect(goku / scorePortraitScale({ width: 79, height: 63 })).toBeGreaterThan(1.15);
-    expect(bugs / scorePortraitScale({ width: 60, height: 89 })).toBeGreaterThan(1.12);
+  it("fits tall ears and wide hair in the same envelope without distortion", () => {
+    const goku = scorePortraitScale({ width: 79, height: 63 });
+    const bugs = scorePortraitScale({ width: 60, height: 89 });
+    expect(goku).toBeCloseTo(15.5 / 79);
+    expect(bugs).toBeCloseTo(15 / 89);
+    expect((79 * goku) / (63 * goku)).toBeCloseTo(79 / 63);
+    expect((60 * bugs) / (89 * bugs)).toBeCloseTo(60 / 89);
     for (const width of [13, 15.5]) {
       const x = -5 - Math.max(0, (width - 13) / 2);
       expect(x - width / 2).toBeGreaterThanOrEqual(-14);

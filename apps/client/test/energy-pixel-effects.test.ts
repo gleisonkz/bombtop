@@ -28,12 +28,65 @@ import { EnergyPixelEffects } from "../src/render/energy-pixel-effects";
 beforeEach(() => { mocks.load.mockReset(); mocks.load.mockResolvedValue({ source: {} }); });
 
 describe("pixel energy effects", () => {
+  function cell(sprite: unknown) {
+    return (sprite as { texture: { options: { source: unknown; frame: { x: number; y: number; width: number; height: number } } } }).texture.options;
+  }
+
+  it("isolates native magnetic beam, impact and coils from Thor's base impact", async () => {
+    const base = { source: {} };
+    const native = { source: {} };
+    mocks.load.mockImplementation(async (url: string) => url.includes("static-electric-game") ? native : base);
+    const effect = new EnergyPixelEffects();
+    await effect.load();
+    const pose = { x0: 0, y0: 0, x1: 16, y1: 0, tick: 14, alpha: 1 };
+    effect.draw("magnet", pose);
+    const parts = effect.root.children;
+    for (const [index, row] of [[0, 0], [1, 1], [2, 2]] as const) {
+      expect(cell(parts[index])).toEqual({ source: native.source, frame: { x: 448, y: row * 64, width: 64, height: 64 } });
+    }
+    expect((parts[0] as Sprite).width).toBe(16);
+    expect((parts[0] as Sprite).height).toBe(18);
+    effect.beginFrame();
+    effect.draw("lightning", pose);
+    expect(cell(parts[1])).toEqual({ source: base.source, frame: { x: 0, y: 64, width: 64, height: 64 } });
+  });
+
+  it("uses all eight native charge phases in paired back/front layers", async () => {
+    const charge = { source: {} };
+    mocks.load.mockImplementation(async (url: string) => url.includes("static-electric-game") ? charge : { source: {} });
+    const effect = new EnergyPixelEffects();
+    await effect.load();
+    for (let phase = 0; phase < 8; phase++) {
+      effect.beginFrame();
+      effect.magnetAura({ x: 12, y: 24, tick: phase * 2, alpha: 0.5 });
+      for (const [row, layer] of [effect.behind, effect.root].entries()) {
+        expect(cell(layer.children[0])).toEqual({ source: charge.source, frame: { x: phase * 64, y: (row + 3) * 64, width: 64, height: 64 } });
+        expect(layer.children[0]).toMatchObject({ width: 44, height: 46, alpha: 0.5 });
+      }
+    }
+  });
+
+  it("keeps legacy magnetic and charge cells when optional native assets fail", async () => {
+    const base = { source: {} };
+    mocks.load.mockImplementation(async (url: string) => {
+      if (!url.includes("energy-effects-pixel")) throw new Error("missing optional art");
+      return base;
+    });
+    const effect = new EnergyPixelEffects();
+    await effect.load();
+    effect.draw("magnet", { x0: 0, y0: 0, x1: 16, y1: 0, tick: 3, alpha: 1 });
+    expect(cell(effect.root.children[0])).toEqual({ source: base.source, frame: { x: 64, y: 192, width: 64, height: 64 } });
+    effect.beginFrame();
+    effect.magnetAura({ x: 0, y: 0, tick: 21, alpha: 1 });
+    expect(cell(effect.behind.children[0])).toEqual({ source: base.source, frame: { x: 192, y: 512, width: 64, height: 64 } });
+  });
+
   it("falls back before load, shares concurrent loads and keeps nearest sampling", async () => {
     const effect = new EnergyPixelEffects();
     const pose = { x0: 0, y0: 0, x1: 32, y1: 0, tick: 9, alpha: 1 };
     expect(effect.draw("lightning", pose)).toBe(false);
     await Promise.all([effect.load(), effect.load()]);
-    expect(mocks.load).toHaveBeenCalledTimes(2);
+    expect(mocks.load).toHaveBeenCalledTimes(4);
     expect((await mocks.load.mock.results[0]!.value).source.scaleMode).toBe("nearest");
     expect(effect.draw("lightning", pose)).toBe(true);
   });
@@ -154,4 +207,111 @@ it.each(["aura", "magnetAura"] as const)("colors both layers of %s explicitly", 
   fx.beginFrame();
   fx[method]({ x: 0, y: 0, tick: 0, alpha: 1 });
   expect([front.texture, back.texture]).toEqual(originals);
+});
+
+it("isolates Pikachu's native thunder and paired aura from Flash shock and Thor", async () => {
+  const native = { source: {} };
+  const base = { source: {} };
+  mocks.load.mockImplementation(async (url: string) => url.includes("pikachu-electric-game") ? native : base);
+  const fx = new EnergyPixelEffects();
+  await fx.load();
+  const pose = { x0: 0, y0: 0, x1: 16, y1: 0, tick: 9, alpha: 1 };
+  fx.draw("thunder", pose);
+  const read = (sprite: unknown) => (sprite as { texture: { options: { source: unknown; frame: { width: number; y: number } } } }).texture.options;
+  expect(read(fx.root.children[0])).toMatchObject({ source: native.source, frame: { width: 64, y: 0 } });
+  expect(read(fx.root.children[1])).toMatchObject({ source: native.source, frame: { width: 64, y: 64 } });
+  fx.beginFrame(); fx.draw("shock", pose);
+  expect(read(fx.root.children[0])).toMatchObject({ source: base.source, frame: { width: 64, y: 128 } });
+  fx.beginFrame(); fx.aura({ x: 0, y: 0, tick: 9, alpha: 1 });
+  expect(read(fx.behind.children[0])).toMatchObject({ source: native.source, frame: { width: 64, y: 128 } });
+  expect(read(fx.root.children[0])).toMatchObject({ source: native.source, frame: { width: 64, y: 192 } });
+});
+
+
+it.each(["magnet", "thunder", "speedForce"] as const)("cycles all native phases for %s without changing Thor or legacy shock", async (kind) => {
+  const base = { source: {} };
+  const atlases = {
+    magnet: { source: {} }, thunder: { source: {} }, speedForce: { source: {} },
+  };
+  mocks.load.mockImplementation(async (url: string) => {
+    if (url.includes("static-electric-game")) return atlases.magnet;
+    if (url.includes("pikachu-electric-game")) return atlases.thunder;
+    if (url.includes("flash-speed-force")) return atlases.speedForce;
+    return base;
+  });
+  const fx = new EnergyPixelEffects();
+  await fx.load();
+  expect(mocks.load.mock.calls.map(([url]) => url)).toEqual([
+    expect.stringContaining("energy-effects-pixel.png?v=2"),
+    expect.stringContaining("static-electric-game.png?v=native-game-20261026"),
+    expect.stringContaining("pikachu-electric-game.png?v=native-game-20261026"),
+    expect.stringContaining("flash-speed-force.png?v=native-game-20261026"),
+  ]);
+  const read = (sprite: unknown) => (sprite as { texture: { options: { source: unknown; frame: { x: number; y: number; width: number; height: number } } } }).texture.options;
+  for (let tick = 0; tick < 18; tick++) {
+    fx.beginFrame();
+    const pose = { x0: 0, y0: 0, x1: 32, y1: 0, tick, alpha: 1 };
+    fx.draw(kind, pose);
+    const phase = Math.floor(tick / 2) % 8;
+    expect(read(fx.root.children[0]).source).toBe(atlases[kind].source);
+    expect(read(fx.root.children[0])).toEqual({ source: atlases[kind].source, frame: { x: phase * 64, y: 0, width: 64, height: 64 } });
+    expect(read(fx.root.children[1]).frame.x).toBe((phase + 1) % 8 * 64);
+    expect(read(fx.root.children[2])).toEqual({ source: atlases[kind].source, frame: { x: phase * 64, y: 64, width: 64, height: 64 } });
+    if (kind === "speedForce") {
+      expect(fx.root.children[0]).toMatchObject({ height: 12, width: 16 });
+      expect(fx.root.children[2]).toMatchObject({ height: 14, width: 14 });
+    }
+    for (const legacy of ["lightning", "shock", "ki"] as const) {
+      fx.beginFrame(); fx.draw(legacy, pose);
+      expect(read(fx.root.children[0]).source).toBe(base.source);
+      expect(read(fx.root.children[0]).frame.x).toBe(Math.floor(tick / 3) % 4 * 64);
+    }
+  }
+});
+
+it.each(["magnet", "thunder", "speedForce"] as const)("preserves four-phase fallback when %s optional load resolves null", async (kind) => {
+  const base = { source: {} };
+  mocks.load.mockImplementation(async (url: string) => url.includes("energy-effects-pixel") ? base : null);
+  const fx = new EnergyPixelEffects();
+  await fx.load();
+  const rows = { magnet: [3, 1], thunder: [2, 5], speedForce: [2, 5] };
+  for (let tick = 0; tick < 24; tick++) {
+    fx.beginFrame();
+    fx.draw(kind, { x0: 0, y0: 0, x1: 16, y1: 0, tick, alpha: 1 });
+    for (const [index, row] of rows[kind].entries()) {
+      const texture = (fx.root.children[index] as unknown as { texture: { options: unknown } }).texture.options;
+      expect(texture).toEqual({ source: base.source, frame: { x: Math.floor(tick / 3) % 4 * 64, y: row * 64, width: 64, height: 64 } });
+    }
+  }
+});
+
+
+it.each(["aura", "magnetAura"] as const)("uses every native phase and legacy cadence for paired %s layers", async (method) => {
+  for (const available of [true, false]) {
+    const base = { source: {} };
+    const native = { source: {} };
+    mocks.load.mockImplementation(async (url: string) => {
+      if (url.includes("energy-effects-pixel")) return base;
+      return available ? native : null;
+    });
+    const fx = new EnergyPixelEffects();
+    await fx.load();
+    const count = available ? 8 : 4;
+    const ticks = available ? 2 : 3;
+    const baseRow = method === "aura" ? 10 : 8;
+    const nativeRow = method === "aura" ? 2 : 3;
+    for (let tick = 0; tick <= count * ticks; tick++) {
+      fx.beginFrame();
+      fx[method]({ x: 12, y: 24, tick, alpha: 1 });
+      for (const [offset, layer] of [fx.behind, fx.root].entries()) {
+        const cell = (layer.children[0] as unknown as { texture: { options: { source: unknown; frame: unknown } } }).texture.options;
+        expect(cell.source).toBe(available ? native.source : base.source);
+        expect(cell.frame).toEqual({ x: Math.floor(tick / ticks) % count * 64,
+          y: ((available ? nativeRow : baseRow) + offset) * 64, width: 64, height: 64 });
+      }
+    }
+    fx.beginFrame();
+    fx[method]({ x: 0, y: 0, tick: 0, alpha: 0 });
+    expect([...fx.behind.children, ...fx.root.children].every(sprite => !(sprite as Sprite).visible)).toBe(true);
+  }
 });

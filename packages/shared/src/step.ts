@@ -24,6 +24,10 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   updateCarriedPlayers(s);
   for (const p of living) {
     if (p.curse?.kind !== "hiccups") continue;
+    if (p.curse.sb4Status === 43) {
+      if (s.tick % 32 === 0) scatterCurseItem(s, p);
+      continue;
+    }
     p.curse.elapsed = (p.curse.elapsed ?? 0) + 1;
     if (p.curse.elapsed >= 30) {
       p.curse.elapsed = 0;
