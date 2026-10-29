@@ -7,6 +7,7 @@ import {
   inputTick,
   MAX_PLAYERS,
   MAX_WATCHERS,
+  randomStageRotation,
   S2C,
   sanitizeInput,
   sanitizeName,
@@ -32,7 +33,8 @@ export interface RoomOutput {
  * offline (Wi-Fi) host both run one.
  */
 export class RoomCore {
-  readonly session = new BattleSession();
+  /** A new room plays a few SB4 stages drawn at random until the host picks others. */
+  readonly session = new BattleSession({ stageRotation: randomStageRotation() });
   private lastPhase: RoomPhase = "lobby";
   /** Whole snapshots now and then, differences in between. */
   private readonly stream = new SnapshotStream();

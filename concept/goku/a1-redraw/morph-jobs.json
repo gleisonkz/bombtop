@@ -1,0 +1,87 @@
+[
+  {
+    "row": 18,
+    "direction": "south",
+    "poses": [
+      "morph-c00",
+      "morph-c01",
+      "morph-c02",
+      "morph-c03",
+      "morph-c04",
+      "morph-c05",
+      "morph-c06",
+      "morph-c07",
+      "morph-c08"
+    ],
+    "job_id": "7b4ac683-a07b-4c64-8753-c461c8e7b1c8",
+    "request": "requests/fluid-black.json"
+  },
+  {
+    "row": 19,
+    "direction": "south",
+    "poses": [
+      "morph-c09",
+      "morph-c10",
+      "morph-c11"
+    ],
+    "job_id": "cfd72f7e-0c95-4b72-a6ed-b5b3bc91a291",
+    "request": "requests/morph-rise.json"
+  },
+  {
+    "row": 20,
+    "direction": "south",
+    "poses": [
+      "morph-c12",
+      "morph-c13",
+      "morph-c14"
+    ],
+    "job_id": "211b743c-4f83-4f92-900b-720ca1927fca",
+    "request": "requests/morph-half.json"
+  },
+  {
+    "row": 21,
+    "direction": "south",
+    "poses": [
+      "morph-c15",
+      "morph-c16",
+      "morph-c17"
+    ],
+    "job_id": "08d85fad-e220-44ae-b210-c2d38ab79e7d",
+    "request": "requests/morph-almost.json"
+  },
+  {
+    "row": 22,
+    "direction": "south",
+    "poses": [
+      "morph-c18",
+      "morph-c19",
+      "morph-c20",
+      "morph-c21",
+      "morph-c22",
+      "morph-c23",
+      "morph-c24",
+      "morph-c25",
+      "morph-c26"
+    ],
+    "job_id": "1153b961-5eae-498a-be09-de8b4f538cad",
+    "request": "requests/morph-final-gold.json",
+    "overrides": {
+      "morph-c18": {
+        "job_id": "6b3a7256-296f-4aa2-b61b-835e11cc1341",
+        "index": 0
+      },
+      "morph-c24": {
+        "job_id": "7f05c090-8271-4356-a44e-3cadee888b6a",
+        "index": 0
+      },
+      "morph-c25": {
+        "job_id": "174c1d7c-caa4-4ec7-a2aa-d583e1e26ffa",
+        "index": 0
+      },
+      "morph-c26": {
+        "job_id": "9be65c0b-8323-4e55-ace5-693c4dfaefca",
+        "index": 0
+      }
+    }
+  }
+]

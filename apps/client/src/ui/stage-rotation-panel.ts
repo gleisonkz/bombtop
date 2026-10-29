@@ -8,7 +8,7 @@ export class StageRotationPanel {
   readonly trigger: HTMLButtonElement;
   private readonly dialog = el("dialog", { class: "stage-dialog card" });
   private readonly list = el("ol", { class: "stage-rotation-list" });
-  private readonly summary = el("p", { class: "hint" });
+  private readonly summary = el("p", { class: "hint stage-summary" });
   private readonly save: HTMLButtonElement;
   private readonly sb4Preset: HTMLButtonElement;
   private readonly additions: HTMLButtonElement[];
@@ -41,10 +41,10 @@ export class StageRotationPanel {
       this.close();
     }, "primary");
     this.sb4Preset = button("12 fases SB4", () => {
-      if (!this.editable || !this.inLobby) return;
+      if (!this.editable || !this.inLobby || !this.dialog.open) return;
       this.draft = SB4_STAGES.map(stage => ({ stage }));
       this.render();
-    }, "ghost");
+    }, "stage-preset");
     const cancel = button("Fechar", () => this.close(), "ghost");
     cancel.dataset.padBack = "";
     cancel.autofocus = true;
@@ -57,7 +57,7 @@ export class StageRotationPanel {
       add.appendChild(stagePreview(stage));
       return add;
     });
-    this.dialog.append(title, el("p", { class: "hint", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens da partida mostram os 12 mapas SB4 no Bombtop, com regras locais em validação." }), this.sb4Preset,
+    this.dialog.append(title, el("p", { class: "hint stage-intro", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens da partida mostram os 12 mapas SB4 no Bombtop, com regras locais em validação." }), this.sb4Preset,
       this.list, el("div", { class: "stage-additions" }, this.additions), this.summary,
       el("div", { class: "stage-dialog-actions" }, [cancel, this.save]));
     parent.appendChild(this.dialog);

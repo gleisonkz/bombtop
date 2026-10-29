@@ -1,0 +1,17 @@
+{
+  "job_id": "15ba434a-a9a4-4228-887d-0ba5ef26d2fb",
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "style_references": [
+    "Captain America",
+    "Thor"
+  ],
+  "identity_reference": "canonical Goku only, no old Goku sprite input",
+  "effects": "none",
+  "status": "ready-for-approval",
+  "scope": "base concept approval only; no game replacement"
+}

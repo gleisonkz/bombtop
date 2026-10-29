@@ -10,6 +10,20 @@ export const DEFAULT_STAGE_ROTATION: readonly Readonly<StageRotationEntry>[] = O
   SB4_STAGES.map((stage) => Object.freeze({ stage })),
 );
 
+/** How many stages a new room's rotation draws. */
+export const DEFAULT_ROTATION_LENGTH = 5;
+
+/** A new room's rotation: DEFAULT_ROTATION_LENGTH different SB4 stages in a random order. */
+export function randomStageRotation(random: () => number = Math.random): StageRotationEntry[] {
+  const pool: StageId[] = [...SB4_STAGES];
+  const rotation: StageRotationEntry[] = [];
+  while (rotation.length < DEFAULT_ROTATION_LENGTH && pool.length > 0) {
+    const [stage] = pool.splice(Math.floor(random() * pool.length), 1);
+    rotation.push({ stage: stage! });
+  }
+  return rotation;
+}
+
 const stageIds = new Set<unknown>(SELECTABLE_STAGES);
 
 export function validateStageRotation(raw: unknown): StageRotationEntry[] | null {

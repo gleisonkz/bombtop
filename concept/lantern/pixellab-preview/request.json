@@ -1,0 +1,20 @@
+{
+  "jobs": {
+    "bald": "280acb5e-cb6b-4a10-a64d-99e5c79d63a2",
+    "short-hair": "27899b37-5b74-4b56-a58b-76209275baf0"
+  },
+  "model": "pro",
+  "size": [
+    128,
+    160
+  ],
+  "references": [
+    "user-supplied John Stewart portrait",
+    "Captain America art finish",
+    "Thor proportions"
+  ],
+  "candidates_per_version": 4,
+  "scope": "Concept preview only; production unchanged",
+  "status": "ready-for-approval",
+  "effects": "none"
+}

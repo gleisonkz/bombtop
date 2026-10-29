@@ -1,0 +1,24 @@
+{
+  "job_id": "1d28d407-abfc-4641-bfd0-cb5fe9f23f12",
+  "description": "A NEW ORIGINAL GAME SPRITE of adult Penelope Pitstop, NOT a baby or doll, matching EXACTLY the Captain America and Thor reference art style. One single full-body front standing female racer, about 2.3 heads tall like the reference heroes. Redesign her from the character description, do not copy the game's old Penelope. Defined adult stylized feminine face, visible small nose and mouth, MEDIUM SMALL almond-shaped BLUE eyes comparable to Captain America's eye size, normal white sclera and dark pupils, subtle lashes. Eyes must NOT dominate the face; no huge round anime eyes, no baby cheeks, no kawaii doll features. Athletic compact clean anatomy, defined shoulders, hands and boots, neither skinny nor muscular. Recognizable Penelope Pitstop: blonde side ponytail, blonde bangs, PINK racing helmet with white trim and a white center stripe, round chrome-framed dark pilot goggles resting ABOVE her forehead, pink fitted racing jumpsuit with short stand collar, white belt, white gloves, white mid-calf boots. Friendly confident half-smile. Same crisp sophisticated pixel-sprite outlines, controlled highlights and detailed light/shadow clusters as the reference heroes, with clear readable facial anatomy. Native128x160 PNG, full character around130px tall with transparent margins. Relaxed neutral arms down. NO effects, hearts, aura, sparkles, shadows, vehicle, flags, props, text or background.",
+  "width": 128,
+  "height": 160,
+  "no_background": true,
+  "seed": 202610321,
+  "style_image_url": "upload:e7d31197-f6a9-45f5-be43-9a7c6967d762",
+  "style_copy": [
+    "outline",
+    "detail",
+    "shading"
+  ],
+  "reference_images": [
+    {
+      "url": "upload:e7d31197-f6a9-45f5-be43-9a7c6967d762",
+      "usage": "Primary art-style reference. EXACT same face-detail level, restrained proportional eye size, nose definition, compact body/head proportions, crisp shading and pixel density. Design a DIFFERENT female racer, no shield or Captain costume."
+    },
+    {
+      "url": "upload:a09f93e6-64d0-4c5b-bb88-b8af99c35b31",
+      "usage": "Secondary art-style and anatomy reference, same compact hero scale and detailed game-sprite finish. Adult feminine Penelope instead of Thor, no beard hammer or armor."
+    }
+  ]
+}

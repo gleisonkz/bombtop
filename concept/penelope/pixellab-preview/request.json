@@ -1,0 +1,28 @@
+{
+  "job_id": "6f7458a4-f284-42b1-b216-7fb7afb34c7b",
+  "description": "Create one FULL BODY front-facing Penelope Pitstop game character per candidate, redesigned to match the Captain America and Thor reference sprites as one coherent cast. SAME crisp detailed pixel-sprite rendering, confident clean outlines, readable shading, clean facial features, compact balanced chibi proportions about 2.3 heads tall, clear hands and feet. Penelope is a blonde female racer: blonde side ponytail, pink racing helmet with white trim, round silver-framed dark goggles RESTING ABOVE her forehead, visible blue eyes with white sclera small pupils, blonde bangs, pink racing jumpsuit, white belt, white gloves and white boots. Soft confident friendly expression. Mature stylized face consistent with cast, NOT huge anime eyes or oversized baby face. Helmet proportionate, no huge ears. The Penelope reference defines identity and clothing ONLY; do NOT copy its oversized head/eyes or coarse simplified drawing. Captain and Thor define detail, shading, pixel density, body/head proportions. Neutral standing relaxed arms at sides, both feet visible, centered with clear margins, identical camera as references, no vehicle, weapons, hearts, effects, particles, aura, shadows, text, labels or backdrop. Transparent background. A single isolated sprite fills about 130px of this160px tall canvas.",
+  "width": 128,
+  "height": 160,
+  "no_background": true,
+  "seed": 202610320,
+  "style_image_url": "upload:e7d31197-f6a9-45f5-be43-9a7c6967d762",
+  "style_copy": [
+    "outline",
+    "detail",
+    "shading"
+  ],
+  "reference_images": [
+    {
+      "url": "upload:e7d31197-f6a9-45f5-be43-9a7c6967d762",
+      "usage": "PRIMARY game art STYLE reference ONLY: pixel detail, outlines, crisp face, compact proportions. Do NOT copy helmet/suit/shield."
+    },
+    {
+      "url": "upload:a09f93e6-64d0-4c5b-bb88-b8af99c35b31",
+      "usage": "SECOND art STYLE reference ONLY, same polished pixel detail, shading and clear anatomy. Do NOT copy beard, hammer or armor."
+    },
+    {
+      "url": "upload:4cd8441a-7470-4051-a755-257c280b4d91",
+      "usage": "Character identity ONLY: Penelope's blonde ponytail, pink racing helmet goggles above forehead, pink outfit white gloves belt boots. Redesign proportions and face to match the other two references."
+    }
+  ]
+}

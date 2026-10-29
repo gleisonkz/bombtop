@@ -1,0 +1,193 @@
+{
+  "sourceSha256": "47233ce7875fea38962017050b1f0ed312b69c1d8c8018086fd16bc393a75ed3",
+  "cell": 320,
+  "rows": {
+    "form": 4,
+    "loop": 8,
+    "pop": 4
+  },
+  "ticks": 4,
+  "anchor": [
+    160,
+    160
+  ],
+  "resampling": false,
+  "cells": [
+    {
+      "frame": 0,
+      "sourceBox": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "row": 0,
+      "col": 0
+    },
+    {
+      "frame": 1,
+      "sourceBox": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "row": 0,
+      "col": 1
+    },
+    {
+      "frame": 2,
+      "sourceBox": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "row": 0,
+      "col": 2
+    },
+    {
+      "frame": 3,
+      "sourceBox": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "row": 0,
+      "col": 3
+    },
+    {
+      "frame": 4,
+      "sourceBox": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "row": 1,
+      "col": 0
+    },
+    {
+      "frame": 5,
+      "sourceBox": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "row": 1,
+      "col": 1
+    },
+    {
+      "frame": 6,
+      "sourceBox": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "row": 1,
+      "col": 2
+    },
+    {
+      "frame": 7,
+      "sourceBox": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "row": 1,
+      "col": 3
+    },
+    {
+      "frame": 8,
+      "sourceBox": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "row": 1,
+      "col": 4
+    },
+    {
+      "frame": 9,
+      "sourceBox": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "row": 1,
+      "col": 5
+    },
+    {
+      "frame": 10,
+      "sourceBox": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "row": 1,
+      "col": 6
+    },
+    {
+      "frame": 11,
+      "sourceBox": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "row": 1,
+      "col": 7
+    },
+    {
+      "frame": 12,
+      "sourceBox": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "row": 2,
+      "col": 0
+    },
+    {
+      "frame": 13,
+      "sourceBox": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "row": 2,
+      "col": 1
+    },
+    {
+      "frame": 14,
+      "sourceBox": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "row": 2,
+      "col": 2
+    },
+    {
+      "frame": 15,
+      "sourceBox": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "row": 2,
+      "col": 3
+    }
+  ]
+}

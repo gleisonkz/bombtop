@@ -3,7 +3,8 @@
 Requires Pillow, numpy and scipy (same as pack-naruto-approved.py).
 Default writes concept/static/option4-redraw/static-candidate.png, report.json,
 and static-paint-regions.json (candidate metadata, never runtime JSON).
-Only --write promotes apps/client/public/sprites/static-final.png; runtime JSON
+Only --write promotes apps/client/public/sprites/static-final.png (rows 0-17) and
+static-victory.png (row 18, kept apart to stay under 4096 px); runtime JSON
 remains coordinator-owned. --contact/--gif produce optional review artifacts.
 
 Optional --manifest (defaults to source-dir/measurements.json when present)
@@ -231,7 +232,13 @@ def main(argv=None):
             (directory / 'report.json').write_text(json.dumps(failure, indent=2) + '\n', encoding='utf-8')
         parser.exit(1, f'Packing failed: {error}\n')
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(png_bytes(atlas))
+    if args.write:
+        # Phone GPUs cap a texture at 4096 px: the victory row (18) ships as its own image, static-victory.png.
+        cell_h = atlas.height // 19
+        output.write_bytes(png_bytes(atlas.crop((0, 0, atlas.width, 18 * cell_h))))
+        (output.parent / 'static-victory.png').write_bytes(png_bytes(atlas.crop((0, 18 * cell_h, atlas.width, atlas.height))))
+    else:
+        output.write_bytes(png_bytes(atlas))
     report['status'] = 'packed; requires coordinator visual QA'
     report['output'] = str(output)
     protection_path = directory / 'static-paint-regions.json'

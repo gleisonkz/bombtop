@@ -427,7 +427,7 @@ export class Renderer {
       text.text = String(wins);
       text.position.set(xs[k]! + 3, TILE_PX / 2);
       if (hp) {
-        hp.text = p?.hitPoints === undefined ? "" : `â™¥${p.hitPoints}`;
+        hp.text = p?.hitPoints === undefined ? "" : `♥${p.hitPoints}`;
         hp.visible = p?.hitPoints !== undefined;
         hp.position.set(xs[k]! + 3, TILE_PX / 2 + 7);
         hp.alpha = p?.alive ? 1 : 0.4;
@@ -1509,7 +1509,7 @@ export class Renderer {
     }
   }
 
-  /** Donatello's staff spin: his bo whirling round him with a blur trailing it, a whoosh ring swelling out. */
+  /** Donatello's whoosh rings; the cast sprite draws his gripped staff. */
   private drawSpin(g: Graphics, x: number, y: number, age: number): void {
     const { ring, alpha } = spinLook(age);
     if (alpha <= 0) return;

@@ -10,11 +10,16 @@ describe("supplied Super Choque", () => {
   it("registers the actual packed PNG and keeps the standing arena size", () => {
     const sheet = SHEETS.static;
     const png = readFileSync(new URL("../public/sprites/static-final.png", import.meta.url));
-    expect(sheet.url).toBe("sprites/static-final.png?v=20261026-option4-v1");
+    expect(sheet.url).toBe("sprites/static-final.png?v=20261028-4096");
     expect(png.readUInt32BE(16)).toBe(sheet.width);
     expect(png.readUInt32BE(20)).toBe(sheet.height);
-    expect(sheet).toMatchObject({ width: 2352, height: 4256, frameW: 168, frameH: 224, anchorX: 82, anchorY: 208, bodyH: 148 });
+    expect(sheet).toMatchObject({ width: 2352, height: 4032, frameW: 168, frameH: 224, anchorX: 82, anchorY: 208, bodyH: 148 });
     expect(sheet.bodyH * sheet.scale).toBeCloseTo(21.588);
+    const victory = sheet.victory.image;
+    const victoryPng = readFileSync(new URL("../public/sprites/static-victory.png", import.meta.url));
+    expect(victory.url).toBe("sprites/static-victory.png?v=20261028-4096");
+    expect([victoryPng.readUInt32BE(16), victoryPng.readUInt32BE(20)]).toEqual([victory.width, victory.height]);
+    expect(victory).toMatchObject({ frameW: 168, frameH: 224, anchorX: 82, anchorY: 208 });
   });
 
   it("finds visible heads in every gameplay row of the new atlas", () => {
@@ -34,7 +39,7 @@ describe("supplied Super Choque", () => {
 
   it("uses supplied disc travel in the lobby and gestures for victory", () => {
     expect(previewPose(SHEETS.static, "walk")).toMatchObject({ row: 17, frames: 10 });
-    expect(previewPose(SHEETS.static, "win")).toMatchObject({ row: 18, frames: 11 });
+    expect(previewPose(SHEETS.static, "win")).toMatchObject({ row: 0, frames: 11, sheet: { url: SHEETS.static.victory.image.url } });
   });
 
   it("plays each supplied directional walk sequence and mirrors left", () => {

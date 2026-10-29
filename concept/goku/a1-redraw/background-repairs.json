@@ -1,0 +1,50 @@
+[
+  {
+    "pose": "morph-c18",
+    "job_id": "6b3a7256-296f-4aa2-b61b-835e11cc1341",
+    "mask": [
+      20,
+      112,
+      12,
+      12
+    ],
+    "original_job": "1153b961-5eae-498a-be09-de8b4f538cad",
+    "original_index": 0
+  },
+  {
+    "pose": "morph-c24",
+    "job_id": "7f05c090-8271-4356-a44e-3cadee888b6a",
+    "mask": [
+      4,
+      42,
+      12,
+      12
+    ],
+    "original_job": "1153b961-5eae-498a-be09-de8b4f538cad",
+    "original_index": 6
+  },
+  {
+    "pose": "morph-c25",
+    "job_id": "174c1d7c-caa4-4ec7-a2aa-d583e1e26ffa",
+    "mask": [
+      4,
+      42,
+      12,
+      12
+    ],
+    "original_job": "1153b961-5eae-498a-be09-de8b4f538cad",
+    "original_index": 7
+  },
+  {
+    "pose": "morph-c26",
+    "job_id": "9be65c0b-8323-4e55-ace5-693c4dfaefca",
+    "mask": [
+      4,
+      42,
+      12,
+      12
+    ],
+    "original_job": "1153b961-5eae-498a-be09-de8b4f538cad",
+    "original_index": 8
+  }
+]

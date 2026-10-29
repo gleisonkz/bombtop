@@ -436,7 +436,12 @@ window.addEventListener("keyup", (e) => mode?.keyUp(e.code));
 window.addEventListener("blur", () => mode?.blur());
 window.addEventListener("resize", refit);
 // Big displays (a TV): the screens grow to use the room, the arena canvas outside them is fitted on its own.
-const zoomUi = () => (ui.style.zoom = String(uiZoom(window.innerWidth, window.innerHeight)));
+// Viewport units inside a zoomed element grow with it: --ui-zoom lets a screen fit the real height (100dvh / zoom).
+const zoomUi = () => {
+  const zoom = String(uiZoom(window.innerWidth, window.innerHeight));
+  ui.style.zoom = zoom;
+  ui.style.setProperty("--ui-zoom", zoom);
+};
 window.addEventListener("resize", zoomUi);
 window.visualViewport?.addEventListener("resize", refit);
 window.visualViewport?.addEventListener("resize", zoomUi);

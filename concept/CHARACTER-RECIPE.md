@@ -121,7 +121,7 @@ braços erguidos desenhou braços a mais.
 ## 4. Som — `scripts/build-sfx.mjs`
 
 - Fontes no The Sounds Resource, baixadas pelo Chrome do usuário (o site tem Cloudflare), com
-  permissão a cada download; ficam em `E:/sfx-src/<jogo>/` (fora do repo).
+  permissão a cada download; ficam em `E:/Projetos/bombtop-src/sfx/<jogo>/` (fora do repo).
 - Vozes obrigatórias: `<nome>-pick` (escolhido no lobby), `<nome>-death`, `<nome>-win`,
   `<nome>-special` (ou o grito dentro do som do especial). Mais os efeitos do especial.
 - Ouça antes de cortar (faster-whisper ajuda a achar a fala). Registre o id do asset no `build-sfx.mjs`.

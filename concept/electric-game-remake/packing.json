@@ -1,0 +1,2025 @@
+{
+  "cell": 64,
+  "phaseCount": 8,
+  "ticksPerFrame": 2,
+  "binaryAlpha": true,
+  "paletteLimit": 6,
+  "records": [
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        0,
+        222,
+        244
+      ],
+      "opaqueBox": [
+        0,
+        78,
+        222,
+        207
+      ],
+      "offset": [
+        0,
+        15
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        244,
+        222,
+        459
+      ],
+      "opaqueBox": [
+        32,
+        39,
+        202,
+        186
+      ],
+      "offset": [
+        9,
+        12
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        459,
+        222,
+        704
+      ],
+      "opaqueBox": [
+        7,
+        30,
+        217,
+        201
+      ],
+      "offset": [
+        4,
+        13
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        704,
+        222,
+        887
+      ],
+      "opaqueBox": [
+        48,
+        86,
+        174,
+        141
+      ],
+      "offset": [
+        15,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 1,
+      "sourceBox": [
+        222,
+        0,
+        444,
+        245
+      ],
+      "opaqueBox": [
+        0,
+        74,
+        222,
+        209
+      ],
+      "offset": [
+        0,
+        15
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 1,
+      "sourceBox": [
+        222,
+        245,
+        444,
+        465
+      ],
+      "opaqueBox": [
+        45,
+        37,
+        189,
+        189
+      ],
+      "offset": [
+        12,
+        11
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 1,
+      "sourceBox": [
+        222,
+        465,
+        444,
+        704
+      ],
+      "opaqueBox": [
+        6,
+        32,
+        220,
+        195
+      ],
+      "offset": [
+        4,
+        15
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 1,
+      "sourceBox": [
+        222,
+        704,
+        444,
+        887
+      ],
+      "opaqueBox": [
+        47,
+        86,
+        175,
+        141
+      ],
+      "offset": [
+        15,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 2,
+      "sourceBox": [
+        444,
+        0,
+        665,
+        247
+      ],
+      "opaqueBox": [
+        0,
+        85,
+        221,
+        207
+      ],
+      "offset": [
+        0,
+        18
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 2,
+      "sourceBox": [
+        444,
+        247,
+        665,
+        458
+      ],
+      "opaqueBox": [
+        32,
+        41,
+        187,
+        178
+      ],
+      "offset": [
+        11,
+        13
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 2,
+      "sourceBox": [
+        444,
+        458,
+        665,
+        704
+      ],
+      "opaqueBox": [
+        5,
+        35,
+        218,
+        200
+      ],
+      "offset": [
+        3,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 2,
+      "sourceBox": [
+        444,
+        704,
+        665,
+        887
+      ],
+      "opaqueBox": [
+        51,
+        86,
+        182,
+        141
+      ],
+      "offset": [
+        16,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 3,
+      "sourceBox": [
+        665,
+        0,
+        887,
+        240
+      ],
+      "opaqueBox": [
+        0,
+        91,
+        222,
+        200
+      ],
+      "offset": [
+        0,
+        20
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 3,
+      "sourceBox": [
+        665,
+        240,
+        887,
+        463
+      ],
+      "opaqueBox": [
+        33,
+        42,
+        194,
+        194
+      ],
+      "offset": [
+        10,
+        11
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 3,
+      "sourceBox": [
+        665,
+        463,
+        887,
+        704
+      ],
+      "opaqueBox": [
+        10,
+        30,
+        219,
+        195
+      ],
+      "offset": [
+        5,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 3,
+      "sourceBox": [
+        665,
+        704,
+        887,
+        887
+      ],
+      "opaqueBox": [
+        46,
+        86,
+        179,
+        141
+      ],
+      "offset": [
+        14,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 4,
+      "sourceBox": [
+        887,
+        0,
+        1109,
+        244
+      ],
+      "opaqueBox": [
+        0,
+        69,
+        222,
+        208
+      ],
+      "offset": [
+        0,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 4,
+      "sourceBox": [
+        887,
+        244,
+        1109,
+        464
+      ],
+      "opaqueBox": [
+        37,
+        38,
+        200,
+        190
+      ],
+      "offset": [
+        10,
+        11
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 4,
+      "sourceBox": [
+        887,
+        464,
+        1109,
+        704
+      ],
+      "opaqueBox": [
+        7,
+        30,
+        218,
+        195
+      ],
+      "offset": [
+        4,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 4,
+      "sourceBox": [
+        887,
+        704,
+        1109,
+        887
+      ],
+      "opaqueBox": [
+        50,
+        86,
+        184,
+        141
+      ],
+      "offset": [
+        16,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 5,
+      "sourceBox": [
+        1109,
+        0,
+        1330,
+        242
+      ],
+      "opaqueBox": [
+        0,
+        86,
+        221,
+        203
+      ],
+      "offset": [
+        0,
+        19
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 5,
+      "sourceBox": [
+        1109,
+        242,
+        1330,
+        460
+      ],
+      "opaqueBox": [
+        30,
+        39,
+        193,
+        187
+      ],
+      "offset": [
+        10,
+        12
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 5,
+      "sourceBox": [
+        1109,
+        460,
+        1330,
+        704
+      ],
+      "opaqueBox": [
+        9,
+        33,
+        216,
+        199
+      ],
+      "offset": [
+        4,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 5,
+      "sourceBox": [
+        1109,
+        704,
+        1330,
+        887
+      ],
+      "opaqueBox": [
+        49,
+        86,
+        178,
+        141
+      ],
+      "offset": [
+        15,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 6,
+      "sourceBox": [
+        1330,
+        0,
+        1552,
+        249
+      ],
+      "opaqueBox": [
+        0,
+        79,
+        222,
+        213
+      ],
+      "offset": [
+        0,
+        16
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 6,
+      "sourceBox": [
+        1330,
+        249,
+        1552,
+        466
+      ],
+      "opaqueBox": [
+        28,
+        37,
+        195,
+        190
+      ],
+      "offset": [
+        9,
+        11
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 6,
+      "sourceBox": [
+        1330,
+        466,
+        1552,
+        704
+      ],
+      "opaqueBox": [
+        5,
+        27,
+        222,
+        193
+      ],
+      "offset": [
+        3,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 6,
+      "sourceBox": [
+        1330,
+        704,
+        1552,
+        887
+      ],
+      "opaqueBox": [
+        52,
+        86,
+        175,
+        141
+      ],
+      "offset": [
+        16,
+        44
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 0,
+      "frame": 7,
+      "sourceBox": [
+        1552,
+        0,
+        1774,
+        250
+      ],
+      "opaqueBox": [
+        0,
+        101,
+        222,
+        214
+      ],
+      "offset": [
+        0,
+        23
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 1,
+      "frame": 7,
+      "sourceBox": [
+        1552,
+        250,
+        1774,
+        463
+      ],
+      "opaqueBox": [
+        43,
+        36,
+        195,
+        184
+      ],
+      "offset": [
+        11,
+        12
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 2,
+      "frame": 7,
+      "sourceBox": [
+        1552,
+        463,
+        1774,
+        704
+      ],
+      "opaqueBox": [
+        0,
+        30,
+        218,
+        196
+      ],
+      "offset": [
+        2,
+        14
+      ]
+    },
+    {
+      "family": "pikachu",
+      "row": 3,
+      "frame": 7,
+      "sourceBox": [
+        1552,
+        704,
+        1774,
+        887
+      ],
+      "opaqueBox": [
+        47,
+        86,
+        176,
+        141
+      ],
+      "offset": [
+        15,
+        44
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        0,
+        198,
+        192
+      ],
+      "opaqueBox": [
+        3,
+        56,
+        193,
+        143
+      ],
+      "offset": [
+        1,
+        18
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        192,
+        198,
+        384
+      ],
+      "opaqueBox": [
+        47,
+        50,
+        147,
+        157
+      ],
+      "offset": [
+        17,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        384,
+        198,
+        588
+      ],
+      "opaqueBox": [
+        47,
+        36,
+        151,
+        183
+      ],
+      "offset": [
+        16,
+        9
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        588,
+        198,
+        816
+      ],
+      "opaqueBox": [
+        16,
+        21,
+        181,
+        165
+      ],
+      "offset": [
+        7,
+        15
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        816,
+        198,
+        992
+      ],
+      "opaqueBox": [
+        23,
+        81,
+        175,
+        145
+      ],
+      "offset": [
+        9,
+        40
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 1,
+      "sourceBox": [
+        198,
+        0,
+        396,
+        188
+      ],
+      "opaqueBox": [
+        5,
+        64,
+        195,
+        143
+      ],
+      "offset": [
+        2,
+        19
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 1,
+      "sourceBox": [
+        198,
+        188,
+        396,
+        384
+      ],
+      "opaqueBox": [
+        47,
+        47,
+        152,
+        161
+      ],
+      "offset": [
+        16,
+        14
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 1,
+      "sourceBox": [
+        198,
+        384,
+        396,
+        587
+      ],
+      "opaqueBox": [
+        46,
+        36,
+        151,
+        183
+      ],
+      "offset": [
+        16,
+        9
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 1,
+      "sourceBox": [
+        198,
+        587,
+        396,
+        820
+      ],
+      "opaqueBox": [
+        11,
+        21,
+        184,
+        174
+      ],
+      "offset": [
+        5,
+        13
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 1,
+      "sourceBox": [
+        198,
+        820,
+        396,
+        992
+      ],
+      "opaqueBox": [
+        19,
+        70,
+        182,
+        140
+      ],
+      "offset": [
+        8,
+        38
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 2,
+      "sourceBox": [
+        396,
+        0,
+        595,
+        190
+      ],
+      "opaqueBox": [
+        6,
+        73,
+        195,
+        142
+      ],
+      "offset": [
+        2,
+        21
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 2,
+      "sourceBox": [
+        396,
+        190,
+        595,
+        380
+      ],
+      "opaqueBox": [
+        49,
+        50,
+        150,
+        152
+      ],
+      "offset": [
+        17,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 2,
+      "sourceBox": [
+        396,
+        380,
+        595,
+        590
+      ],
+      "opaqueBox": [
+        47,
+        40,
+        152,
+        186
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 2,
+      "sourceBox": [
+        396,
+        590,
+        595,
+        820
+      ],
+      "opaqueBox": [
+        14,
+        25,
+        187,
+        171
+      ],
+      "offset": [
+        6,
+        15
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 2,
+      "sourceBox": [
+        396,
+        820,
+        595,
+        992
+      ],
+      "opaqueBox": [
+        28,
+        75,
+        173,
+        143
+      ],
+      "offset": [
+        10,
+        38
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 3,
+      "sourceBox": [
+        595,
+        0,
+        793,
+        190
+      ],
+      "opaqueBox": [
+        5,
+        62,
+        193,
+        141
+      ],
+      "offset": [
+        2,
+        19
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 3,
+      "sourceBox": [
+        595,
+        190,
+        793,
+        382
+      ],
+      "opaqueBox": [
+        47,
+        51,
+        150,
+        155
+      ],
+      "offset": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 3,
+      "sourceBox": [
+        595,
+        382,
+        793,
+        586
+      ],
+      "opaqueBox": [
+        45,
+        38,
+        151,
+        184
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 3,
+      "sourceBox": [
+        595,
+        586,
+        793,
+        818
+      ],
+      "opaqueBox": [
+        15,
+        22,
+        182,
+        172
+      ],
+      "offset": [
+        7,
+        14
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 3,
+      "sourceBox": [
+        595,
+        818,
+        793,
+        992
+      ],
+      "opaqueBox": [
+        24,
+        75,
+        172,
+        146
+      ],
+      "offset": [
+        9,
+        37
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 4,
+      "sourceBox": [
+        793,
+        0,
+        991,
+        190
+      ],
+      "opaqueBox": [
+        5,
+        57,
+        192,
+        145
+      ],
+      "offset": [
+        2,
+        18
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 4,
+      "sourceBox": [
+        793,
+        190,
+        991,
+        380
+      ],
+      "opaqueBox": [
+        48,
+        47,
+        150,
+        152
+      ],
+      "offset": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 4,
+      "sourceBox": [
+        793,
+        380,
+        991,
+        586
+      ],
+      "opaqueBox": [
+        46,
+        40,
+        150,
+        186
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 4,
+      "sourceBox": [
+        793,
+        586,
+        991,
+        820
+      ],
+      "opaqueBox": [
+        14,
+        22,
+        185,
+        175
+      ],
+      "offset": [
+        6,
+        13
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 4,
+      "sourceBox": [
+        793,
+        820,
+        991,
+        992
+      ],
+      "opaqueBox": [
+        27,
+        71,
+        173,
+        138
+      ],
+      "offset": [
+        10,
+        39
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 5,
+      "sourceBox": [
+        991,
+        0,
+        1190,
+        191
+      ],
+      "opaqueBox": [
+        3,
+        64,
+        193,
+        144
+      ],
+      "offset": [
+        1,
+        19
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 5,
+      "sourceBox": [
+        991,
+        191,
+        1190,
+        381
+      ],
+      "opaqueBox": [
+        47,
+        48,
+        148,
+        152
+      ],
+      "offset": [
+        17,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 5,
+      "sourceBox": [
+        991,
+        381,
+        1190,
+        586
+      ],
+      "opaqueBox": [
+        46,
+        39,
+        152,
+        185
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 5,
+      "sourceBox": [
+        991,
+        586,
+        1190,
+        816
+      ],
+      "opaqueBox": [
+        14,
+        22,
+        183,
+        168
+      ],
+      "offset": [
+        6,
+        15
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 5,
+      "sourceBox": [
+        991,
+        816,
+        1190,
+        992
+      ],
+      "opaqueBox": [
+        31,
+        81,
+        174,
+        141
+      ],
+      "offset": [
+        11,
+        41
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 6,
+      "sourceBox": [
+        1190,
+        0,
+        1388,
+        190
+      ],
+      "opaqueBox": [
+        4,
+        63,
+        194,
+        143
+      ],
+      "offset": [
+        1,
+        19
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 6,
+      "sourceBox": [
+        1190,
+        190,
+        1388,
+        384
+      ],
+      "opaqueBox": [
+        46,
+        48,
+        150,
+        158
+      ],
+      "offset": [
+        16,
+        15
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 6,
+      "sourceBox": [
+        1190,
+        384,
+        1388,
+        588
+      ],
+      "opaqueBox": [
+        44,
+        36,
+        150,
+        182
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 6,
+      "sourceBox": [
+        1190,
+        588,
+        1388,
+        816
+      ],
+      "opaqueBox": [
+        12,
+        22,
+        185,
+        166
+      ],
+      "offset": [
+        6,
+        15
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 6,
+      "sourceBox": [
+        1190,
+        816,
+        1388,
+        992
+      ],
+      "opaqueBox": [
+        27,
+        81,
+        170,
+        143
+      ],
+      "offset": [
+        10,
+        40
+      ]
+    },
+    {
+      "family": "static",
+      "row": 0,
+      "frame": 7,
+      "sourceBox": [
+        1388,
+        0,
+        1586,
+        191
+      ],
+      "opaqueBox": [
+        5,
+        61,
+        193,
+        144
+      ],
+      "offset": [
+        2,
+        19
+      ]
+    },
+    {
+      "family": "static",
+      "row": 1,
+      "frame": 7,
+      "sourceBox": [
+        1388,
+        191,
+        1586,
+        382
+      ],
+      "opaqueBox": [
+        46,
+        48,
+        150,
+        153
+      ],
+      "offset": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 2,
+      "frame": 7,
+      "sourceBox": [
+        1388,
+        382,
+        1586,
+        590
+      ],
+      "opaqueBox": [
+        48,
+        39,
+        151,
+        184
+      ],
+      "offset": [
+        16,
+        10
+      ]
+    },
+    {
+      "family": "static",
+      "row": 3,
+      "frame": 7,
+      "sourceBox": [
+        1388,
+        590,
+        1586,
+        817
+      ],
+      "opaqueBox": [
+        19,
+        25,
+        181,
+        166
+      ],
+      "offset": [
+        8,
+        16
+      ]
+    },
+    {
+      "family": "static",
+      "row": 4,
+      "frame": 7,
+      "sourceBox": [
+        1388,
+        817,
+        1586,
+        992
+      ],
+      "opaqueBox": [
+        22,
+        80,
+        176,
+        142
+      ],
+      "offset": [
+        9,
+        40
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        0,
+        256,
+        291
+      ],
+      "opaqueBox": [
+        0,
+        69,
+        256,
+        253
+      ],
+      "offset": [
+        0,
+        8
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        291,
+        256,
+        540
+      ],
+      "opaqueBox": [
+        42,
+        39,
+        217,
+        205
+      ],
+      "offset": [
+        11,
+        12
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 0,
+      "sourceBox": [
+        0,
+        540,
+        256,
+        768
+      ],
+      "opaqueBox": [
+        24,
+        45,
+        245,
+        160
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 1,
+      "sourceBox": [
+        256,
+        0,
+        512,
+        293
+      ],
+      "opaqueBox": [
+        0,
+        79,
+        256,
+        257
+      ],
+      "offset": [
+        0,
+        10
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 1,
+      "sourceBox": [
+        256,
+        293,
+        512,
+        541
+      ],
+      "opaqueBox": [
+        30,
+        37,
+        230,
+        207
+      ],
+      "offset": [
+        8,
+        12
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 1,
+      "sourceBox": [
+        256,
+        541,
+        512,
+        768
+      ],
+      "opaqueBox": [
+        26,
+        42,
+        247,
+        156
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 2,
+      "sourceBox": [
+        512,
+        0,
+        768,
+        285
+      ],
+      "opaqueBox": [
+        0,
+        84,
+        256,
+        257
+      ],
+      "offset": [
+        0,
+        10
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 2,
+      "sourceBox": [
+        512,
+        285,
+        768,
+        538
+      ],
+      "opaqueBox": [
+        32,
+        29,
+        234,
+        211
+      ],
+      "offset": [
+        8,
+        10
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 2,
+      "sourceBox": [
+        512,
+        538,
+        768,
+        768
+      ],
+      "opaqueBox": [
+        25,
+        43,
+        249,
+        164
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 3,
+      "sourceBox": [
+        768,
+        0,
+        1024,
+        286
+      ],
+      "opaqueBox": [
+        0,
+        69,
+        256,
+        244
+      ],
+      "offset": [
+        0,
+        6
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 3,
+      "sourceBox": [
+        768,
+        286,
+        1024,
+        542
+      ],
+      "opaqueBox": [
+        29,
+        43,
+        229,
+        214
+      ],
+      "offset": [
+        8,
+        12
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 3,
+      "sourceBox": [
+        768,
+        542,
+        1024,
+        768
+      ],
+      "opaqueBox": [
+        26,
+        43,
+        247,
+        160
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 4,
+      "sourceBox": [
+        1024,
+        0,
+        1280,
+        290
+      ],
+      "opaqueBox": [
+        0,
+        79,
+        256,
+        253
+      ],
+      "offset": [
+        0,
+        10
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 4,
+      "sourceBox": [
+        1024,
+        290,
+        1280,
+        538
+      ],
+      "opaqueBox": [
+        32,
+        39,
+        232,
+        203
+      ],
+      "offset": [
+        8,
+        13
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 4,
+      "sourceBox": [
+        1024,
+        538,
+        1280,
+        768
+      ],
+      "opaqueBox": [
+        25,
+        46,
+        247,
+        164
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 5,
+      "sourceBox": [
+        1280,
+        0,
+        1536,
+        296
+      ],
+      "opaqueBox": [
+        0,
+        92,
+        256,
+        253
+      ],
+      "offset": [
+        0,
+        14
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 5,
+      "sourceBox": [
+        1280,
+        296,
+        1536,
+        537
+      ],
+      "opaqueBox": [
+        24,
+        44,
+        224,
+        195
+      ],
+      "offset": [
+        8,
+        14
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 5,
+      "sourceBox": [
+        1280,
+        537,
+        1536,
+        768
+      ],
+      "opaqueBox": [
+        24,
+        47,
+        247,
+        161
+      ],
+      "offset": [
+        6,
+        18
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 6,
+      "sourceBox": [
+        1536,
+        0,
+        1792,
+        298
+      ],
+      "opaqueBox": [
+        0,
+        70,
+        256,
+        257
+      ],
+      "offset": [
+        0,
+        9
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 6,
+      "sourceBox": [
+        1536,
+        298,
+        1792,
+        537
+      ],
+      "opaqueBox": [
+        32,
+        46,
+        229,
+        198
+      ],
+      "offset": [
+        9,
+        14
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 6,
+      "sourceBox": [
+        1536,
+        537,
+        1792,
+        768
+      ],
+      "opaqueBox": [
+        25,
+        42,
+        245,
+        166
+      ],
+      "offset": [
+        6,
+        17
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 0,
+      "frame": 7,
+      "sourceBox": [
+        1792,
+        0,
+        2048,
+        298
+      ],
+      "opaqueBox": [
+        0,
+        69,
+        256,
+        257
+      ],
+      "offset": [
+        0,
+        9
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 1,
+      "frame": 7,
+      "sourceBox": [
+        1792,
+        298,
+        2048,
+        533
+      ],
+      "opaqueBox": [
+        30,
+        47,
+        222,
+        190
+      ],
+      "offset": [
+        9,
+        15
+      ]
+    },
+    {
+      "family": "flash",
+      "row": 2,
+      "frame": 7,
+      "sourceBox": [
+        1792,
+        533,
+        2048,
+        768
+      ],
+      "opaqueBox": [
+        24,
+        46,
+        238,
+        170
+      ],
+      "offset": [
+        7,
+        17
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "row": 18,
+    "direction": "south",
+    "poses": [
+      "fluid-c00",
+      "fluid-c01",
+      "fluid-c02",
+      "fluid-c03",
+      "fluid-c04",
+      "fluid-c05",
+      "fluid-c06",
+      "fluid-c07",
+      "fluid-c08",
+      "fluid-c09",
+      "fluid-c10",
+      "fluid-c11"
+    ],
+    "job_id": "7b4ac683-a07b-4c64-8753-c461c8e7b1c8",
+    "response": "id: 7b4ac683-a07b-4c64-8753-c461c8e7b1c8\njob_id: 7b4ac683-a07b-4c64-8753-c461c8e7b1c8\ndescription: Goku A1, sharp determined brows, clenched fists, strained expression, plain orange gi with identical navy undershirt sash wristbands boots, solid isolated character\naction: stance\nframes: 12\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~5 min)\n\nhint: get_image(job_id=\"7b4ac683-a07b-4c64-8753-c461c8e7b1c8\")\nasset_id: 5d7eef66-030c-5f5b-a93d-b863cc56d7cb\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 19,
+    "direction": "south",
+    "poses": [
+      "fluid-c12",
+      "fluid-c13",
+      "fluid-c14",
+      "fluid-c15",
+      "fluid-c16",
+      "fluid-c17",
+      "fluid-c18",
+      "fluid-c19",
+      "fluid-c20",
+      "fluid-c21",
+      "fluid-c22",
+      "fluid-c23"
+    ],
+    "job_id": "c035a0d6-8c25-4b8f-a5e9-e539c6fad88b",
+    "response": "id: c035a0d6-8c25-4b8f-a5e9-e539c6fad88b\njob_id: c035a0d6-8c25-4b8f-a5e9-e539c6fad88b\ndescription: Goku A1 Super Saiyan 1, thick tall upright golden flame-shaped spikes exactly like the reference, turquoise eyes, sharp determined brows, clenched fists, identical plain orange gi and navy undershirt sash wristbands boots, solid isolated character\naction: stance\nframes: 12\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~5 min)\n\nhint: get_image(job_id=\"c035a0d6-8c25-4b8f-a5e9-e539c6fad88b\")\nasset_id: 50eaa863-8837-5944-909d-03ef2ee25c36\nasset_status: pending (saved to your gallery when generation completes)"
+  }
+]

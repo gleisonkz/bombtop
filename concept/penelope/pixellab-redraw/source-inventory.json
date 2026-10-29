@@ -1,0 +1,2688 @@
+{
+  "counts": {
+    "gameplay": 98,
+    "lobby": 16,
+    "victory": 16,
+    "total": 130,
+    "unique_poses": 111,
+    "duplicates": 19,
+    "empty_cells": 55,
+    "unique_by_sheet": {
+      "gameplay": 79,
+      "lobby": 16,
+      "victory": 16
+    }
+  },
+  "sheets": {
+    "gameplay": {
+      "path": "apps/client/public/sprites/penelope.png",
+      "width": 1656,
+      "height": 2686,
+      "frameW": 184,
+      "frameH": 158,
+      "anchorX": 87,
+      "anchorY": 156,
+      "rows": [
+        {
+          "row": 0,
+          "action": "idle",
+          "direction": "south",
+          "frames": 4
+        },
+        {
+          "row": 1,
+          "action": "idle",
+          "direction": "east",
+          "frames": 4
+        },
+        {
+          "row": 2,
+          "action": "idle",
+          "direction": "north",
+          "frames": 4
+        },
+        {
+          "row": 3,
+          "action": "walk",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 4,
+          "action": "walk",
+          "direction": "east",
+          "frames": 6
+        },
+        {
+          "row": 5,
+          "action": "walk",
+          "direction": "north",
+          "frames": 6
+        },
+        {
+          "row": 6,
+          "action": "stun",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 7,
+          "action": "death",
+          "direction": "south",
+          "frames": 5
+        },
+        {
+          "row": 8,
+          "action": "cast",
+          "direction": "south",
+          "frames": 9
+        },
+        {
+          "row": 9,
+          "action": "cast",
+          "direction": "east",
+          "frames": 9
+        },
+        {
+          "row": 10,
+          "action": "cast",
+          "direction": "north",
+          "frames": 9
+        },
+        {
+          "row": 11,
+          "action": "carryIdle",
+          "direction": "south",
+          "frames": 4
+        },
+        {
+          "row": 12,
+          "action": "carryIdle",
+          "direction": "east",
+          "frames": 4
+        },
+        {
+          "row": 13,
+          "action": "carryIdle",
+          "direction": "north",
+          "frames": 4
+        },
+        {
+          "row": 14,
+          "action": "carryWalk",
+          "direction": "south",
+          "frames": 6
+        },
+        {
+          "row": 15,
+          "action": "carryWalk",
+          "direction": "east",
+          "frames": 6
+        },
+        {
+          "row": 16,
+          "action": "carryWalk",
+          "direction": "north",
+          "frames": 6
+        }
+      ],
+      "occupied_cells": 98,
+      "unique_poses": 79,
+      "source_file_sha256": "b953627eb2cc59c73365400bae8e838bd7f50d20abd86728fe37a5c4ac8d7aea",
+      "decoded_rgba_sha256": "e35da1ebd9cd080e54be35ddf9615f56c177c72743259fef168ce02797bf7538"
+    },
+    "lobby": {
+      "path": "apps/client/public/sprites/penelope-lobby.png",
+      "width": 2208,
+      "height": 154,
+      "frameW": 138,
+      "frameH": 154,
+      "anchorX": 64,
+      "anchorY": 154,
+      "rows": [
+        {
+          "row": 0,
+          "action": "lobby",
+          "direction": "south",
+          "frames": 16
+        }
+      ],
+      "occupied_cells": 16,
+      "unique_poses": 16,
+      "source_file_sha256": "cdd6eca38b2d084438b96888945945a5ce27fdf8af327be68b482393417b6037",
+      "decoded_rgba_sha256": "73e5c8ab9929eb8005cdcfe3a347021e477a436aa9db2eedd323595f6e4b5e41"
+    },
+    "victory": {
+      "path": "apps/client/public/sprites/penelope-victory.png",
+      "width": 3200,
+      "height": 164,
+      "frameW": 200,
+      "frameH": 164,
+      "anchorX": 95,
+      "anchorY": 164,
+      "rows": [
+        {
+          "row": 0,
+          "action": "victory",
+          "direction": "south",
+          "frames": 16
+        }
+      ],
+      "occupied_cells": 16,
+      "unique_poses": 16,
+      "source_file_sha256": "37df107ac1229597762c29ccc8a8148503e0c616dd2a63d13c90c1147cc22ffa",
+      "decoded_rgba_sha256": "20acc6864e3515592deb6be898e3ed19d65064deffdf716d7e2f62e1e70b319f"
+    }
+  },
+  "cells": [
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 0,
+      "pose": "g-r00-c00",
+      "action": "idle",
+      "direction": "south",
+      "rgba_sha256": "12557e7bb24f78426752fa3161fa57211834e41579720759e4d39e726ad9d82b",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9752
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 1,
+      "pose": "g-r00-c00",
+      "action": "idle",
+      "direction": "south",
+      "rgba_sha256": "12557e7bb24f78426752fa3161fa57211834e41579720759e4d39e726ad9d82b",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9752
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 2,
+      "pose": "g-r00-c02",
+      "action": "idle",
+      "direction": "south",
+      "rgba_sha256": "2c3691f00d119956db355ee1c97214aba43d3fba48047e6f95453a33e20afc5a",
+      "alpha_bbox": [
+        37,
+        9,
+        137,
+        157
+      ],
+      "nontransparent_pixels": 9752
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 3,
+      "pose": "g-r00-c02",
+      "action": "idle",
+      "direction": "south",
+      "rgba_sha256": "2c3691f00d119956db355ee1c97214aba43d3fba48047e6f95453a33e20afc5a",
+      "alpha_bbox": [
+        37,
+        9,
+        137,
+        157
+      ],
+      "nontransparent_pixels": 9752
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 0,
+      "pose": "g-r01-c00",
+      "action": "idle",
+      "direction": "east",
+      "rgba_sha256": "65ddfab04c58e094d6508b7bcd295876c4f24a7ec54d425b291309c9797d318c",
+      "alpha_bbox": [
+        27,
+        10,
+        134,
+        156
+      ],
+      "nontransparent_pixels": 8885
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 1,
+      "pose": "g-r01-c01",
+      "action": "idle",
+      "direction": "east",
+      "rgba_sha256": "373d5b6593edce1f5efd34680be225df84c479fecd9926c810eae1427a7d93cc",
+      "alpha_bbox": [
+        30,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8885
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 2,
+      "pose": "g-r01-c02",
+      "action": "idle",
+      "direction": "east",
+      "rgba_sha256": "19a30397c535a5db6ed21426420a3a8f9386403aed2cc483eb85b1af93103ac8",
+      "alpha_bbox": [
+        32,
+        10,
+        140,
+        156
+      ],
+      "nontransparent_pixels": 8870
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 3,
+      "pose": "g-r01-c03",
+      "action": "idle",
+      "direction": "east",
+      "rgba_sha256": "3f206cdcf47b7932299829ec3efbce441370ba1b1d35fe917c6e5fcd9bdb57ec",
+      "alpha_bbox": [
+        30,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8889
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 0,
+      "pose": "g-r02-c00",
+      "action": "idle",
+      "direction": "north",
+      "rgba_sha256": "b5b1f018fe579962faf008db512d02de871a910f201da608d3357659aa7ced11",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8436
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 1,
+      "pose": "g-r02-c01",
+      "action": "idle",
+      "direction": "north",
+      "rgba_sha256": "b24f5bd41541da92cbf6ce97048acabb9c68446a7557524427de14952b93280c",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8300
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 2,
+      "pose": "g-r02-c02",
+      "action": "idle",
+      "direction": "north",
+      "rgba_sha256": "f67f8d0eb4fc8390029e4cca369aac0f0601ab7e5733c7c06d750f6b5b8e02ab",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8288
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 3,
+      "pose": "g-r02-c03",
+      "action": "idle",
+      "direction": "north",
+      "rgba_sha256": "9b73948c26e9df7d050820ca99b4d67f1ef6cff278bd59bcbfd15776f9f4fdb0",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8361
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 0,
+      "pose": "g-r03-c00",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "d3b9b688c0cfc39a37cc02c224ac1f54a47b5982eab76861c3fbbce6d4d62fe0",
+      "alpha_bbox": [
+        38,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9330
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 1,
+      "pose": "g-r03-c01",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "b4df2c4e229178d0327b291755f57b6ab5463c8307d19881aa33d8c6a1caf73f",
+      "alpha_bbox": [
+        36,
+        10,
+        136,
+        158
+      ],
+      "nontransparent_pixels": 9208
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 2,
+      "pose": "g-r03-c02",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "c6deaea6eefc0338d847c366cb119d31e238ed83deb429ea6fab6675ec6846ee",
+      "alpha_bbox": [
+        38,
+        8,
+        136,
+        156
+      ],
+      "nontransparent_pixels": 9009
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 3,
+      "pose": "g-r03-c03",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "0fc26596b0874b08eed8c76fd66778c1ee8f652492b416872a2a3968c19cca5e",
+      "alpha_bbox": [
+        38,
+        9,
+        136,
+        153
+      ],
+      "nontransparent_pixels": 9180
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 4,
+      "pose": "g-r03-c04",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "31dcb26de08ed0d3e206388c79e00f0666c503f1baca7aeae57e7491450dfb7b",
+      "alpha_bbox": [
+        36,
+        8,
+        137,
+        157
+      ],
+      "nontransparent_pixels": 9243
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 5,
+      "pose": "g-r03-c05",
+      "action": "walk",
+      "direction": "south",
+      "rgba_sha256": "9d8e7e4b16d7a9be262caba13a315afe69aa51132b91104191084acf46c52565",
+      "alpha_bbox": [
+        38,
+        8,
+        137,
+        157
+      ],
+      "nontransparent_pixels": 9051
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 0,
+      "pose": "g-r04-c00",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "b60b47ad8107439f705c9d4d8c93690b6a9b2590bdb8b765a15e83ca6a3e8780",
+      "alpha_bbox": [
+        32,
+        11,
+        141,
+        156
+      ],
+      "nontransparent_pixels": 8860
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 1,
+      "pose": "g-r04-c01",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "024e5406d0b9c71c03c48a049af5e4b7c158737989a160fded8c1bae86f45a4c",
+      "alpha_bbox": [
+        31,
+        10,
+        141,
+        154
+      ],
+      "nontransparent_pixels": 9739
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 2,
+      "pose": "g-r04-c02",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "2a35932758342bb7212a519c96aea1989361c9d16dc39684f6456d90cb904b8d",
+      "alpha_bbox": [
+        33,
+        8,
+        143,
+        151
+      ],
+      "nontransparent_pixels": 9430
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 3,
+      "pose": "g-r04-c03",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "4b967ea025833fb63c8ed826eeeb3544047978d8a6f54813d4e183181ad27d96",
+      "alpha_bbox": [
+        33,
+        8,
+        142,
+        149
+      ],
+      "nontransparent_pixels": 8643
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 4,
+      "pose": "g-r04-c04",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "ef11a9d424c199570340f271618feba5cf3eab7f7e3ea2a1376f8bec63fb9296",
+      "alpha_bbox": [
+        33,
+        7,
+        142,
+        152
+      ],
+      "nontransparent_pixels": 9587
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 5,
+      "pose": "g-r04-c05",
+      "action": "walk",
+      "direction": "east",
+      "rgba_sha256": "983677ea38191a0ffc44e2923b36dad3cefe412a0433ca442e9ef583e12cfc1b",
+      "alpha_bbox": [
+        33,
+        7,
+        141,
+        153
+      ],
+      "nontransparent_pixels": 9062
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 0,
+      "pose": "g-r05-c00",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "1e9cca6f33253c57d6825a6747041b9bfa04b3ccc0aaae699840e4c691d108fb",
+      "alpha_bbox": [
+        47,
+        9,
+        136,
+        156
+      ],
+      "nontransparent_pixels": 8430
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 1,
+      "pose": "g-r05-c01",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "87703c74f52a30d18ab9b3b580b783d08d07a568639173e72137ba1ae88784ec",
+      "alpha_bbox": [
+        48,
+        9,
+        137,
+        157
+      ],
+      "nontransparent_pixels": 7965
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 2,
+      "pose": "g-r05-c02",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "13ac1fd970e58b080bbc74cf6190cafc37da50b6fedcd047a0a41a274bd2f4fa",
+      "alpha_bbox": [
+        48,
+        9,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 7995
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 3,
+      "pose": "g-r05-c03",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "5beb96e714e0fa232967f14faf84d0131bf89294b1279413df634ff409de966e",
+      "alpha_bbox": [
+        47,
+        9,
+        137,
+        154
+      ],
+      "nontransparent_pixels": 8539
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 4,
+      "pose": "g-r05-c04",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "f2516801b716c24c52bb6aeca526071046200b7a74f91572ccbb07ac308a7ae1",
+      "alpha_bbox": [
+        47,
+        9,
+        136,
+        158
+      ],
+      "nontransparent_pixels": 8007
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 5,
+      "pose": "g-r05-c05",
+      "action": "walk",
+      "direction": "north",
+      "rgba_sha256": "fe6386a022e7106a1309f1eaf703cd638e050385433d4e41caf8991bd05a90a6",
+      "alpha_bbox": [
+        47,
+        9,
+        136,
+        155
+      ],
+      "nontransparent_pixels": 8147
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 0,
+      "pose": "g-r06-c00",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "381dbd8c1cd18e05d5e3248d4de0e3a2dc7cb5ea69bd915f781b59e24f9edfa5",
+      "alpha_bbox": [
+        41,
+        0,
+        124,
+        156
+      ],
+      "nontransparent_pixels": 7959
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 1,
+      "pose": "g-r06-c01",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "e2c4ea3286c7ebdc9d753f1128e8465161f21cc30f6474a7c66b1255c0aad38e",
+      "alpha_bbox": [
+        43,
+        10,
+        125,
+        157
+      ],
+      "nontransparent_pixels": 7537
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 2,
+      "pose": "g-r06-c02",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "36a052bca9eb2d96eaab180ea4895c9975d4eae5aa2a114dc8d613c4e8f41a66",
+      "alpha_bbox": [
+        47,
+        12,
+        135,
+        153
+      ],
+      "nontransparent_pixels": 7288
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 3,
+      "pose": "g-r06-c03",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "ff1aad100c23d68d9c53dbbf8713240dc534b67dd1da7035c9e6a59e0056ae9e",
+      "alpha_bbox": [
+        43,
+        11,
+        128,
+        154
+      ],
+      "nontransparent_pixels": 7378
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 4,
+      "pose": "g-r06-c04",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "f2064a13a277bee8cb8db5c9bff2f3a17c9564c19a0f6015dae2721ba444bd74",
+      "alpha_bbox": [
+        32,
+        14,
+        148,
+        156
+      ],
+      "nontransparent_pixels": 7828
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 5,
+      "pose": "g-r06-c05",
+      "action": "stun",
+      "direction": "south",
+      "rgba_sha256": "02260943179c9c2f38402065825042cea2353b84d390e959cb3068a25609574b",
+      "alpha_bbox": [
+        33,
+        6,
+        113,
+        156
+      ],
+      "nontransparent_pixels": 7582
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 0,
+      "pose": "g-r07-c00",
+      "action": "death",
+      "direction": "south",
+      "rgba_sha256": "a84fdad33b66391464b4740e003a0304f3f182789504e8e845ec4b19efaed926",
+      "alpha_bbox": [
+        15,
+        20,
+        122,
+        156
+      ],
+      "nontransparent_pixels": 8465
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 1,
+      "pose": "g-r07-c01",
+      "action": "death",
+      "direction": "south",
+      "rgba_sha256": "0ed7477ad9ea61aa3625bc584513218ed6332e36291f1ec7376e726b5e2af292",
+      "alpha_bbox": [
+        15,
+        20,
+        128,
+        153
+      ],
+      "nontransparent_pixels": 8284
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 2,
+      "pose": "g-r07-c02",
+      "action": "death",
+      "direction": "south",
+      "rgba_sha256": "a822f35b5f29efcd67135c1ee126d97afe678b5a2d86222efe6f1df81e55ada1",
+      "alpha_bbox": [
+        15,
+        26,
+        132,
+        144
+      ],
+      "nontransparent_pixels": 7709
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 3,
+      "pose": "g-r07-c03",
+      "action": "death",
+      "direction": "south",
+      "rgba_sha256": "a883147d536fd6c6a2c905047988b79e5807ad81e01f5ba60bec620ca3fd679e",
+      "alpha_bbox": [
+        20,
+        40,
+        136,
+        135
+      ],
+      "nontransparent_pixels": 6571
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 4,
+      "pose": "g-r07-c04",
+      "action": "death",
+      "direction": "south",
+      "rgba_sha256": "ecc7fe179b06efc2e28de23721507b9fd4e85b3d83c73f76a5f6ba647718cfc4",
+      "alpha_bbox": [
+        0,
+        65,
+        144,
+        136
+      ],
+      "nontransparent_pixels": 5542
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 0,
+      "pose": "g-r08-c00",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "906e96a4b583b1393b6e110b2b198286860b141ebea40b1e0e79f4a790e5e56c",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9714
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 1,
+      "pose": "g-r08-c01",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "f5a9804a67293962976ed3aebd369aa13930825c432f9b318db08970c20ae278",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9645
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 2,
+      "pose": "g-r08-c02",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "0e95df16e51e3146d04cf4f12ae56ac830493f4aa1312ff5616fe69468c1c8fc",
+      "alpha_bbox": [
+        37,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9479
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 3,
+      "pose": "g-r08-c03",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "d728ef9878dce55115a404b42d11d4726fe1f5b91d81b97b30a30d64fbf634b9",
+      "alpha_bbox": [
+        37,
+        9,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9500
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 4,
+      "pose": "g-r08-c04",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "2de94c9104bbfe9267d288ed204005825ed6b4225e343e1233f6796f2518c8ae",
+      "alpha_bbox": [
+        37,
+        10,
+        136,
+        156
+      ],
+      "nontransparent_pixels": 9472
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 5,
+      "pose": "g-r08-c05",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "c58aa5a31ca7661d9e327367aa5685d4da9ee517d07ceae8f3ca8b0cc8718cbf",
+      "alpha_bbox": [
+        36,
+        10,
+        136,
+        156
+      ],
+      "nontransparent_pixels": 9488
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 6,
+      "pose": "g-r08-c06",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "ef7e025f17767120a2a5725b482c5551d7b8d8f571acb7bb26d649d6df631b06",
+      "alpha_bbox": [
+        37,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9490
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 7,
+      "pose": "g-r08-c07",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "20550c25a43882e9516b499bb6ca061f8676139447393082eff24fa64691ff87",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9648
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 8,
+      "pose": "g-r08-c07",
+      "action": "cast",
+      "direction": "south",
+      "rgba_sha256": "20550c25a43882e9516b499bb6ca061f8676139447393082eff24fa64691ff87",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9648
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 0,
+      "pose": "g-r09-c00",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "4d7df85344d2e113627ac8da3ae176b47177dcd15ce8f0ba1382a2dface98376",
+      "alpha_bbox": [
+        36,
+        11,
+        141,
+        156
+      ],
+      "nontransparent_pixels": 8428
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 1,
+      "pose": "g-r09-c01",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "aca9d63216d1dad3b29c8b20dddbf6007c8a88d4281fdd269accac0f73f3a268",
+      "alpha_bbox": [
+        37,
+        11,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8681
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 2,
+      "pose": "g-r09-c02",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "3e15c5621978d13bbd6128608e55d4d0f0470d8acd135049de937d77653492aa",
+      "alpha_bbox": [
+        38,
+        13,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8590
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 3,
+      "pose": "g-r09-c03",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "c25e68f3b03b2178f234941eee78ab52cc7e9460c450915c81b90d4e79d9e7ea",
+      "alpha_bbox": [
+        37,
+        11,
+        145,
+        156
+      ],
+      "nontransparent_pixels": 8853
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 4,
+      "pose": "g-r09-c04",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "3d9c25d741cccc8fe0728ba6deac86bc26d24b9d354720f08749f469c8eccaa2",
+      "alpha_bbox": [
+        38,
+        13,
+        154,
+        156
+      ],
+      "nontransparent_pixels": 8830
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 5,
+      "pose": "g-r09-c04",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "3d9c25d741cccc8fe0728ba6deac86bc26d24b9d354720f08749f469c8eccaa2",
+      "alpha_bbox": [
+        38,
+        13,
+        154,
+        156
+      ],
+      "nontransparent_pixels": 8830
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 6,
+      "pose": "g-r09-c04",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "3d9c25d741cccc8fe0728ba6deac86bc26d24b9d354720f08749f469c8eccaa2",
+      "alpha_bbox": [
+        38,
+        13,
+        154,
+        156
+      ],
+      "nontransparent_pixels": 8830
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 7,
+      "pose": "g-r09-c07",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "be3f85d55191a33823853d468e2b075eb46e19d247cc78dfa38e69a71e15d89f",
+      "alpha_bbox": [
+        38,
+        11,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8891
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 8,
+      "pose": "g-r09-c07",
+      "action": "cast",
+      "direction": "east",
+      "rgba_sha256": "be3f85d55191a33823853d468e2b075eb46e19d247cc78dfa38e69a71e15d89f",
+      "alpha_bbox": [
+        38,
+        11,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8891
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 0,
+      "pose": "g-r10-c00",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "64741cc2ef6bbeff920b3cb98c94bd34d6dcf866eb0040287efa01404b611a48",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8799
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 1,
+      "pose": "g-r10-c01",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "1558af1269f1d865afff64aa926fd637dd672cad9273ac02df714cc3cadad941",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8618
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 2,
+      "pose": "g-r10-c02",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "dfd66a4f0f7c6fd1ec2f1918b2363fc8641951594c0477a5111960797d5310bc",
+      "alpha_bbox": [
+        48,
+        11,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8573
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 3,
+      "pose": "g-r10-c03",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "45856c5c26b75bb52a0eec6409a1b26cc21d11f6d817d2da2b4fa4b44dd38ae0",
+      "alpha_bbox": [
+        48,
+        10,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 8644
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 4,
+      "pose": "g-r10-c04",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "04c56ca4a5ba5c7dbe97d916d6d059d95b333480d552bed7fb68402daee1c955",
+      "alpha_bbox": [
+        48,
+        12,
+        149,
+        156
+      ],
+      "nontransparent_pixels": 8676
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 5,
+      "pose": "g-r10-c05",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "a1fcdd3b0818fc120417023e006f64876dba0bd5410954f58beeecae302dc63a",
+      "alpha_bbox": [
+        48,
+        12,
+        149,
+        156
+      ],
+      "nontransparent_pixels": 8688
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 6,
+      "pose": "g-r10-c06",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "c6a126466ecf0c9cae10419859b20a27e72407676b91acde6d11bdb86459f893",
+      "alpha_bbox": [
+        48,
+        10,
+        149,
+        156
+      ],
+      "nontransparent_pixels": 8790
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 7,
+      "pose": "g-r10-c07",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "551224644d8b43829f4e4e495c25de6aabc5b739bb2049319c7ee633137599f7",
+      "alpha_bbox": [
+        48,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8709
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 8,
+      "pose": "g-r10-c07",
+      "action": "cast",
+      "direction": "north",
+      "rgba_sha256": "551224644d8b43829f4e4e495c25de6aabc5b739bb2049319c7ee633137599f7",
+      "alpha_bbox": [
+        48,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8709
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 0,
+      "pose": "g-r11-c00",
+      "action": "carryIdle",
+      "direction": "south",
+      "rgba_sha256": "46002360da649d9a77b8a94a8264067b9de10cd03af2a8bc5b0251e5548fe340",
+      "alpha_bbox": [
+        36,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9416
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 1,
+      "pose": "g-r11-c00",
+      "action": "carryIdle",
+      "direction": "south",
+      "rgba_sha256": "46002360da649d9a77b8a94a8264067b9de10cd03af2a8bc5b0251e5548fe340",
+      "alpha_bbox": [
+        36,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9416
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 2,
+      "pose": "g-r11-c02",
+      "action": "carryIdle",
+      "direction": "south",
+      "rgba_sha256": "c0e07a5e140da0cfe592d82085d2f1a87a42947bac4c5abc5bf583be5c7bfee0",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9386
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 3,
+      "pose": "g-r11-c02",
+      "action": "carryIdle",
+      "direction": "south",
+      "rgba_sha256": "c0e07a5e140da0cfe592d82085d2f1a87a42947bac4c5abc5bf583be5c7bfee0",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9386
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 0,
+      "pose": "g-r12-c00",
+      "action": "carryIdle",
+      "direction": "east",
+      "rgba_sha256": "7abd8fccc98994560e9dfa22ebbfab85d6c0587a860d41aeb438d1d64b691949",
+      "alpha_bbox": [
+        38,
+        11,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8845
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 1,
+      "pose": "g-r12-c00",
+      "action": "carryIdle",
+      "direction": "east",
+      "rgba_sha256": "7abd8fccc98994560e9dfa22ebbfab85d6c0587a860d41aeb438d1d64b691949",
+      "alpha_bbox": [
+        38,
+        11,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8845
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 2,
+      "pose": "g-r12-c02",
+      "action": "carryIdle",
+      "direction": "east",
+      "rgba_sha256": "edc87f263074164af69a9eb3150161654f55d7fab80de405f74ce2595049d423",
+      "alpha_bbox": [
+        38,
+        12,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8928
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 3,
+      "pose": "g-r12-c02",
+      "action": "carryIdle",
+      "direction": "east",
+      "rgba_sha256": "edc87f263074164af69a9eb3150161654f55d7fab80de405f74ce2595049d423",
+      "alpha_bbox": [
+        38,
+        12,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8928
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 0,
+      "pose": "g-r13-c00",
+      "action": "carryIdle",
+      "direction": "north",
+      "rgba_sha256": "2cfe13165676aa69abe2dd6c5def84ada9a5d26cf39736a96e09266e1a039ab5",
+      "alpha_bbox": [
+        47,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8166
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 1,
+      "pose": "g-r13-c00",
+      "action": "carryIdle",
+      "direction": "north",
+      "rgba_sha256": "2cfe13165676aa69abe2dd6c5def84ada9a5d26cf39736a96e09266e1a039ab5",
+      "alpha_bbox": [
+        47,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8166
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 2,
+      "pose": "g-r13-c02",
+      "action": "carryIdle",
+      "direction": "north",
+      "rgba_sha256": "e8ba5d4542b62033e792a582f322961350d046b53afc8e2ff2c86780fd2cdc21",
+      "alpha_bbox": [
+        47,
+        11,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8111
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 3,
+      "pose": "g-r13-c02",
+      "action": "carryIdle",
+      "direction": "north",
+      "rgba_sha256": "e8ba5d4542b62033e792a582f322961350d046b53afc8e2ff2c86780fd2cdc21",
+      "alpha_bbox": [
+        47,
+        11,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8111
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 0,
+      "pose": "g-r11-c00",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "46002360da649d9a77b8a94a8264067b9de10cd03af2a8bc5b0251e5548fe340",
+      "alpha_bbox": [
+        36,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9416
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 1,
+      "pose": "g-r14-c01",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "af459e2c7497b080855ffbef6333874efa3a50068cb405b267a6d181de859ecc",
+      "alpha_bbox": [
+        37,
+        6,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9377
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 2,
+      "pose": "g-r14-c02",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "6adaf941551277461a35bf668335e07d06ba45a628bb7fb972719597ae26747f",
+      "alpha_bbox": [
+        36,
+        6,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9415
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 3,
+      "pose": "g-r11-c02",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "c0e07a5e140da0cfe592d82085d2f1a87a42947bac4c5abc5bf583be5c7bfee0",
+      "alpha_bbox": [
+        37,
+        8,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9386
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 4,
+      "pose": "g-r14-c04",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "d5cc92d297856192ff6110b9d9302c222da11d40b7ece03331204a5c604e7df1",
+      "alpha_bbox": [
+        37,
+        6,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9368
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 5,
+      "pose": "g-r14-c05",
+      "action": "carryWalk",
+      "direction": "south",
+      "rgba_sha256": "07abbbea4644ff22e55acc9e04554bbedb8e0fd91a5f9c79d66e941915a08a31",
+      "alpha_bbox": [
+        37,
+        6,
+        137,
+        156
+      ],
+      "nontransparent_pixels": 9391
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 0,
+      "pose": "g-r12-c00",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "7abd8fccc98994560e9dfa22ebbfab85d6c0587a860d41aeb438d1d64b691949",
+      "alpha_bbox": [
+        38,
+        11,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8845
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 1,
+      "pose": "g-r15-c01",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "5e91c47dc6f3de26cf73e4c6360b8f904d0a393a9801510c5acc733fbdf29514",
+      "alpha_bbox": [
+        38,
+        10,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8554
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 2,
+      "pose": "g-r15-c02",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "6d7d7dd822cd36a41e70e0a2b918aef2bfdf61b4d72ab669b9ebed8f8b5448a6",
+      "alpha_bbox": [
+        38,
+        10,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8735
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 3,
+      "pose": "g-r12-c02",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "edc87f263074164af69a9eb3150161654f55d7fab80de405f74ce2595049d423",
+      "alpha_bbox": [
+        38,
+        12,
+        144,
+        156
+      ],
+      "nontransparent_pixels": 8928
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 4,
+      "pose": "g-r15-c04",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "9a8bd4c3280a20cec6d3ef14bb16c6b1cfbef4f874bfa4ddece1f2d375dfc0b1",
+      "alpha_bbox": [
+        38,
+        10,
+        143,
+        154
+      ],
+      "nontransparent_pixels": 8676
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 5,
+      "pose": "g-r15-c05",
+      "action": "carryWalk",
+      "direction": "east",
+      "rgba_sha256": "847be26b8347deeea2e6b76d6c77bd9b4974ee11e298d4cb89137e6bdb29a3e4",
+      "alpha_bbox": [
+        38,
+        10,
+        143,
+        156
+      ],
+      "nontransparent_pixels": 8574
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 0,
+      "pose": "g-r13-c00",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "2cfe13165676aa69abe2dd6c5def84ada9a5d26cf39736a96e09266e1a039ab5",
+      "alpha_bbox": [
+        47,
+        10,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8166
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 1,
+      "pose": "g-r16-c01",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "10ea021771f1a949058ef1f71a4405166121a8a1cc296f970e966b2ad8b0aa22",
+      "alpha_bbox": [
+        47,
+        9,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8093
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 2,
+      "pose": "g-r16-c02",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "e3cb21c7f202d89c8b1e2b1d067fc97b3688580c5135929c8e6ea562a05be887",
+      "alpha_bbox": [
+        47,
+        9,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8098
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 3,
+      "pose": "g-r13-c02",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "e8ba5d4542b62033e792a582f322961350d046b53afc8e2ff2c86780fd2cdc21",
+      "alpha_bbox": [
+        47,
+        11,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8111
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 4,
+      "pose": "g-r16-c04",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "3fc99e42ddbf3b5e86999eef6f221190b2ffee57d66696f4fdfdced74434fa22",
+      "alpha_bbox": [
+        47,
+        9,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8105
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 5,
+      "pose": "g-r16-c05",
+      "action": "carryWalk",
+      "direction": "north",
+      "rgba_sha256": "97ed5ca445d175a586ed64fffab62e0ab235fc718ea0bd17b086a52cdf385140",
+      "alpha_bbox": [
+        47,
+        9,
+        138,
+        156
+      ],
+      "nontransparent_pixels": 8104
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 0,
+      "pose": "l-c00",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "8fc6ec189df64286358e4061d3334f0908264c87ae38fb3dd90e6ea854cbe54a",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9668
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 1,
+      "pose": "l-c01",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "f8fbde5b24d8e6c36c41da3cdd966a480739b5d895d458d49397f8ad2395c1d3",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9572
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 2,
+      "pose": "l-c02",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "e387f1fc8c89b21d4a52297265dea009a19393a50a0a665de2ff6b633e1ea527",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9380
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 3,
+      "pose": "l-c03",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "2678ae3a0a5ac953423f52ee2e9d376daa61cf8dd87e7bb3b3850118f82b6023",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9323
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 4,
+      "pose": "l-c04",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "c161ef90ce0893729da7d0f5868300e4d406d6002bf8ae4dc267b3edefa52959",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9359
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 5,
+      "pose": "l-c05",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "e09140c8736fa62f5e5bfbb473289535238738dca343b45b8a2650ff22ceba5b",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9263
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 6,
+      "pose": "l-c06",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "b6af7bd9c39dbd5cb8838642871d94747fd23f62f99fc3c9b85c4a0d74401b78",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9324
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 7,
+      "pose": "l-c07",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "e0e211c4d0b8f272956113e72cf1c8325dadabb389d573a29948b39181742654",
+      "alpha_bbox": [
+        14,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9555
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 8,
+      "pose": "l-c08",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "6ae76d7808b28f75861a07922255158d212ea06ad111d300673c695ef86f4913",
+      "alpha_bbox": [
+        11,
+        6,
+        115,
+        154
+      ],
+      "nontransparent_pixels": 9618
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 9,
+      "pose": "l-c09",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "1dd58264a7de1dd1c87f96ad47a7dece3898e0a00e6dd1f9ec7e7731a364fb85",
+      "alpha_bbox": [
+        6,
+        6,
+        115,
+        154
+      ],
+      "nontransparent_pixels": 9635
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 10,
+      "pose": "l-c10",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "4f5c17fddbbfe83b78f095a70aee31f7458ab9189533a68cb98d8f61a4de9682",
+      "alpha_bbox": [
+        13,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9670
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 11,
+      "pose": "l-c11",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "761f25f4ec77a26d70783aa260b28b8363cde1fe580bd87857e7c7545e18511a",
+      "alpha_bbox": [
+        13,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9669
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 12,
+      "pose": "l-c12",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "3f95a35a5050998aa772b5961f6658a6a9025b43893e3f8837d8731a17d817be",
+      "alpha_bbox": [
+        8,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 9839
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 13,
+      "pose": "l-c13",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "a0f8fe56447783117f195f94f95b0e0fdc72ba71cd19e0f6beeb2ff1000e0d48",
+      "alpha_bbox": [
+        0,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 10117
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 14,
+      "pose": "l-c14",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "63f2c6a2fb590e7b92a2594e3f0b92e24c7a010fb27dcc45ab4dc04f26b0a89c",
+      "alpha_bbox": [
+        3,
+        6,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 10113
+    },
+    {
+      "sheet": "lobby",
+      "row": 0,
+      "col": 15,
+      "pose": "l-c15",
+      "action": "lobby",
+      "direction": "south",
+      "rgba_sha256": "e163a7719155ea29d40709d4ac1e29ebfd1dd0394ae3957ffe1c822c78c2a299",
+      "alpha_bbox": [
+        6,
+        0,
+        114,
+        154
+      ],
+      "nontransparent_pixels": 10021
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 0,
+      "pose": "v-c00",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "d478ed256b92244b6631d080eeed0efd7937b05f8484bf952c52765a662d9b22",
+      "alpha_bbox": [
+        45,
+        19,
+        145,
+        164
+      ],
+      "nontransparent_pixels": 9667
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 1,
+      "pose": "v-c01",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "33020bbbdf3617651c33e853abf2d4567a789e213ea6772fd07565e80039e211",
+      "alpha_bbox": [
+        45,
+        23,
+        145,
+        164
+      ],
+      "nontransparent_pixels": 9690
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 2,
+      "pose": "v-c02",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "0a79c07a3f043e5002c035ac98e5ed254dbcd346dcf8aa9c32a11408ed4005c9",
+      "alpha_bbox": [
+        37,
+        5,
+        164,
+        153
+      ],
+      "nontransparent_pixels": 10129
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 3,
+      "pose": "v-c03",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "3e6906c69d027a48b3f1677f39610121d292828e38832def06cc8768c74f6db9",
+      "alpha_bbox": [
+        37,
+        0,
+        165,
+        149
+      ],
+      "nontransparent_pixels": 10138
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 4,
+      "pose": "v-c04",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "20fd3129d883a0c80eb69cf1d1f9a40942258dc261e3b8a96fa2fc29c41c2ec2",
+      "alpha_bbox": [
+        37,
+        8,
+        165,
+        157
+      ],
+      "nontransparent_pixels": 10153
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 5,
+      "pose": "v-c05",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "368f4537be965e0b995afab047526aa421e923e46f6ad86f3f01b55fc003a266",
+      "alpha_bbox": [
+        32,
+        20,
+        168,
+        164
+      ],
+      "nontransparent_pixels": 10014
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 6,
+      "pose": "v-c06",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "7901deb698c17204bacee6328aae619a08dafe4c8545f865b772449fbc54a0d7",
+      "alpha_bbox": [
+        0,
+        15,
+        168,
+        164
+      ],
+      "nontransparent_pixels": 11888
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 7,
+      "pose": "v-c07",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "b900ea21d03d65d15c9544661b62d4cc51d0cf8eeb3d12849ce7cf078cf3b921",
+      "alpha_bbox": [
+        2,
+        11,
+        167,
+        164
+      ],
+      "nontransparent_pixels": 11806
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 8,
+      "pose": "v-c08",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "794431254061107dd52b65038cc80d767469b759c700c9fba6b88764a3198c05",
+      "alpha_bbox": [
+        6,
+        1,
+        166,
+        164
+      ],
+      "nontransparent_pixels": 11607
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 9,
+      "pose": "v-c09",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "8d9b9402874ddfee3435f9976eb7258337ac3dd60cf980081015d99025ea72a8",
+      "alpha_bbox": [
+        3,
+        5,
+        165,
+        164
+      ],
+      "nontransparent_pixels": 11788
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 10,
+      "pose": "v-c10",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "a52072abde9b2597452a969cde76066611483fe1a5f6855b5e5318dc6eb5c5f6",
+      "alpha_bbox": [
+        0,
+        15,
+        164,
+        164
+      ],
+      "nontransparent_pixels": 11892
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 11,
+      "pose": "v-c11",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "68500d0087bca51a6de8234c38b718661436c40e5104136e98a2fbb4cd5fa6eb",
+      "alpha_bbox": [
+        3,
+        5,
+        163,
+        164
+      ],
+      "nontransparent_pixels": 11756
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 12,
+      "pose": "v-c12",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "39406a0b1a49cf0de24a9f6c13b3020a38693ec2b0790cc572ad36f059840feb",
+      "alpha_bbox": [
+        6,
+        12,
+        166,
+        164
+      ],
+      "nontransparent_pixels": 11590
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 13,
+      "pose": "v-c13",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "b8086c68d6e00b1bebf90c5ce3327c0a7361a3f2b7efc2d5b4e2ff653884a17b",
+      "alpha_bbox": [
+        3,
+        14,
+        165,
+        164
+      ],
+      "nontransparent_pixels": 11840
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 14,
+      "pose": "v-c14",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "5302a44fe9ad08e03d7d9d27fe1044869879085035900db8b91eb4f971e166f4",
+      "alpha_bbox": [
+        0,
+        9,
+        164,
+        164
+      ],
+      "nontransparent_pixels": 11904
+    },
+    {
+      "sheet": "victory",
+      "row": 0,
+      "col": 15,
+      "pose": "v-c15",
+      "action": "victory",
+      "direction": "south",
+      "rgba_sha256": "107bc1c29ff64c44c05b397c34b2d24d850aec20613b3ad30e720aa4fda003a8",
+      "alpha_bbox": [
+        0,
+        15,
+        168,
+        164
+      ],
+      "nontransparent_pixels": 11864
+    }
+  ],
+  "duplicate_cells": [
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 1,
+      "pose": "g-r00-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 3,
+      "pose": "g-r00-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 8,
+      "col": 8,
+      "pose": "g-r08-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 5,
+      "pose": "g-r09-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 6,
+      "pose": "g-r09-c04"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 9,
+      "col": 8,
+      "pose": "g-r09-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 10,
+      "col": 8,
+      "pose": "g-r10-c07"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 1,
+      "pose": "g-r11-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 3,
+      "pose": "g-r11-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 1,
+      "pose": "g-r12-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 3,
+      "pose": "g-r12-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 1,
+      "pose": "g-r13-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 3,
+      "pose": "g-r13-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 0,
+      "pose": "g-r11-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 3,
+      "pose": "g-r11-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 0,
+      "pose": "g-r12-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 3,
+      "pose": "g-r12-c02"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 0,
+      "pose": "g-r13-c00"
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 3,
+      "pose": "g-r13-c02"
+    }
+  ],
+  "empty_cells": [
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 0,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 1,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 2,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 3,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 4,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 5,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 6,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 7,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 11,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 12,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 4
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 5
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 13,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 14,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 15,
+      "col": 8
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 6
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 7
+    },
+    {
+      "sheet": "gameplay",
+      "row": 16,
+      "col": 8
+    }
+  ],
+  "policy": {
+    "source_use": "Old frames are pose estimation references only; never appearance references.",
+    "appearance_reference": "concept/penelope/pixellab-preview/base-3.png",
+    "appearance": "Keep approved base-3 identity, palette and proportions consistent across all sheets.",
+    "target_effects": "No FX; do not redraw baked hearts, powder, glints or sparkles.",
+    "extraction": "Full native cells, decoded RGBA unmodified, alpha preserved, no resize, no scripted FX removal.",
+    "deduplication": "SHA-256 of full decoded RGBA bytes within each sheet; first row-major occurrence is canonical. Transparent RGB participates."
+  },
+  "pose_estimation_risks": [
+    {
+      "sheet": "lobby",
+      "cells": "c01-c09,c12-c15",
+      "issue": "Baked glints, powder clouds, sparkles and kiss hearts can confuse COCO keypoints; compact mirror/powder puff are props, not joints. c00-c07 touch-up hands are close to face."
+    },
+    {
+      "sheet": "victory",
+      "cells": "c00-c15 (especially c06-c15)",
+      "issue": "Jump/crouch changes height; baked sparkles/hearts and checkered flag/pole from c06 may be mistaken for limbs. Do not use prop endpoints as wrists."
+    },
+    {
+      "sheet": "gameplay",
+      "cells": "r06,r07,r08-r10,r11-r16",
+      "issue": "Stun/death nonupright poses, kiss hand-face overlap, back views and raised carry hands may produce unreliable COCO skeletons; manually validate inferred joints."
+    },
+    {
+      "sheet": "gameplay",
+      "cells": "unoccupied row tails",
+      "issue": "55 fully transparent unused cells excluded from pose requests."
+    }
+  ],
+  "metadata_source": "apps/client/src/render/sprites.ts:SHEETS.penelope",
+  "directions": {
+    "down": "south",
+    "side": "east/right; west is runtime mirror",
+    "up": "north"
+  }
+}

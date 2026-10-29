@@ -9,6 +9,7 @@ import { updateSlides } from "./kick";
 import { stageTempoRate } from "./stage";
 import { playerElevated } from "./player-carry";
 import { stageSolid } from "./stage-obstacles";
+import { carriesStageFlag } from "./stage-flags";
 import {
   bombAt,
   DIR_VECTORS,
@@ -188,8 +189,10 @@ export class Bot {
     // Survival first, every tick, on every level: may cross tiles that burn later.
     if (!safe(here.x, here.y)) {
       this.goal = null;
+      const counter = this.counterattack(s, p, here);
+      if (counter) return counter;
       const preferred = reach(s, p, danger, this.tune.margin, false, true, this.facings);
-      let out = preferred.find((n) => safe(n.x, n.y));
+      let out = this.retreat(s, p, preferred, safe);
       if (!out) {
         const escape = reach(s, p, danger, this.tune.margin, false, false, this.facings);
         out = escape.find((n) => safe(n.x, n.y)) ?? latestToBurn(escape, danger, k);
@@ -238,6 +241,41 @@ export class Bot {
     return { dir: heading(p, route.first.x, route.first.y), bomb: false };
   }
 
+  /** Counter only when the new bomb still leaves a timely retreat. */
+  private counterattack(s: MatchState, p: Player, here: { x: number; y: number }): PlayerInput | null {
+    if (p.curse?.kind === "constipation" || bombAt(s, here.x, here.y) ||
+      s.bombs.some(b => b.heldBy === p.id) || s.players.some(other => other.heldBy === p.id)) return null;
+    const mine = s.bombs.filter(b => b.ownerId === p.id).length;
+    if (mine >= Math.min(effectiveCapacity(p), this.tune.bombs + this.heat) || bombValue(s, p, here.x, here.y) < 5) return null;
+    const possible = ownBomb(p, here, s.stage);
+    const after = dangerMap(s, p.id, possible, true);
+    const margin = this.tune.margin + this.traits.caution;
+    const clear = (2 * TILE) / Math.max(1, effectiveSpeed(p) * stageTempoRate(s)) + margin;
+    if ((after.get(here.y * s.grid.width + here.x) ?? Infinity) <= clear) return null;
+    const placed = { ...s, bombs: [...s.bombs, possible] };
+    const escape = reach(placed, p, after, margin, false, true, this.facings)
+      .find(n => n.steps > 0 && !after.has(n.y * s.grid.width + n.x));
+    const dir = escape && heading(p, escape.first.x, escape.first.y);
+    return dir ? { dir, bomb: true } : null;
+  }
+
+  private retreat(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
+    const candidates = nodes.filter(n => safe(n.x, n.y));
+    const nearest = candidates[0];
+    if (!nearest || this.heat < 2) return nearest;
+    let best = nearest;
+    let bestScore = Infinity;
+    for (const n of candidates) {
+      if (n.steps > nearest.steps + 2) break;
+      const score = n.steps - bombValue(s, p, n.x, n.y);
+      if (score < bestScore) {
+        best = n;
+        bestScore = score;
+      }
+    }
+    return best;
+  }
+
   /** Whether a step under way still has a safe, free tile center ahead to reach. */
   private striding(s: MatchState, p: Player, here: { x: number; y: number }, safe: (x: number, y: number) => boolean): boolean {
     const st = this.stride;
@@ -246,6 +284,8 @@ export class Bot {
     const ahead = dx ? (tileCenter(here.x) - p.px) * dx : (tileCenter(here.y) - p.py) * dy;
     if (ahead > 0) return true; // still short of this tile's center
     if (ahead === 0) return false; // on the center: free to turn
+    const previousAhead = dx ? (tileCenter(here.x) - st.px) * dx : (tileCenter(here.y) - st.py) * dy;
+    if (previousAhead > 0) return false;
     const x = here.x + dx;
     const y = here.y + dy;
     return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y) && safe(x, y);
@@ -329,7 +369,7 @@ export class Bot {
    * Attacks and defences wait for the bot to react (its level's `react`); plans come on thoughts, paced already.
    */
   private special(s: MatchState, p: Player, danger: Danger, hook: "attack" | "defend" | "plan", nodes: Node[] = []): PlayerInput | null {
-    if (p.specialCooldown > 0 || p.sneak > 0 || p.bubble > 0) return null;
+    if (p.mount || carriesStageFlag(s, p.id) || p.specialCooldown > 0 || p.sneak > 0 || p.bubble > 0) return null;
     const check = SPECIAL_PLANS[p.character]?.[hook];
     if (!check) return null;
     const w = s.grid.width;
@@ -388,17 +428,33 @@ export class Bot {
 
   private towardRival(s: MatchState, p: Player, nodes: Node[], safe: (x: number, y: number) => boolean): Node | undefined {
     const rivals = s.players.filter((o) => o.id !== p.id && o.alive && o.sneak === 0).map(playerTile);
+    const distances = new Map<number, number>();
+    const queue = [...rivals];
+    const key = (x: number, y: number) => y * s.grid.width + x;
+    for (const r of rivals) distances.set(key(r.x, r.y), 0);
+    for (let i = 0; i < queue.length; i++) {
+      const at = queue[i]!;
+      for (const f of this.facings) {
+        const [dx, dy] = DIR_VECTORS[f];
+        const x = at.x + dx;
+        const y = at.y + dy;
+        const k = key(x, y);
+        if (distances.has(k) || getTile(s, x, y) === Tile.Wall || stageSolid(s, x, y)) continue;
+        distances.set(k, distances.get(key(at.x, at.y))! + 1);
+        queue.push({ x, y });
+      }
+    }
     let best: Node | undefined;
     let bestDist = Infinity;
     for (const n of nodes) {
       if (!safe(n.x, n.y)) continue; // where we stand counts too: no point pacing between two tiles
-      const d = Math.min(...rivals.map((r) => Math.abs(r.x - n.x) + Math.abs(r.y - n.y)));
+      const d = distances.get(key(n.x, n.y)) ?? Infinity;
       if (d < bestDist || (d === bestDist && best && n.steps < best.steps)) {
         best = n;
         bestDist = d;
       }
     }
-    return best;
+    return best?.steps === 0 ? undefined : best;
   }
 }
 

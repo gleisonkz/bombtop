@@ -1,0 +1,32 @@
+{
+  "group_id": "9c4fa4e6-29d4-419d-be4c-8ab6e2e6059c",
+  "states": [
+    {
+      "character": {
+        "id": "a2190442-8767-46f0-a293-9a62cc83107c",
+        "name": "Idle",
+        "prompt": "GOKU A1. The supplied approved image is the ONLY appearance source. Preserve exact taller body/head proportions, black swept hair, black eyes, orange gi, navy blue undershirt sash wristbands and closed boots. Preserve EXACT orange garment areas, navy garment areas, shading ramps and silhouette in every direction. Plain gi without chest badge, no accessories. Front reference must remain unchanged. One consistent individual, neutral standing pose, empty hands, transparent background.",
+        "size": {
+          "width": 60,
+          "height": 104
+        },
+        "template_id": "mannequin",
+        "directions": 4,
+        "view": "side",
+        "created_at": "2026-10-26T22:35:15.911795+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "west": "Idle/rotations/west.png",
+          "east": "Idle/rotations/east.png",
+          "north": "Idle/rotations/north.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-26T22:37:14.676375"
+}

@@ -1,0 +1,358 @@
+{
+  "cell": 128,
+  "binaryAlpha": true,
+  "records": [
+    {
+      "kind": "pikachu",
+      "row": 0,
+      "col": 0,
+      "sourceBox": [
+        0,
+        0,
+        384,
+        235
+      ],
+      "offset": [
+        6,
+        40
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 1,
+      "col": 0,
+      "sourceBox": [
+        0,
+        235,
+        384,
+        505
+      ],
+      "offset": [
+        23,
+        26
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 2,
+      "col": 0,
+      "sourceBox": [
+        0,
+        505,
+        384,
+        822
+      ],
+      "offset": [
+        10,
+        20
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 3,
+      "col": 0,
+      "sourceBox": [
+        0,
+        822,
+        384,
+        1024
+      ],
+      "offset": [
+        17,
+        79
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 0,
+      "col": 1,
+      "sourceBox": [
+        384,
+        0,
+        768,
+        232
+      ],
+      "offset": [
+        7,
+        37
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 1,
+      "col": 1,
+      "sourceBox": [
+        384,
+        232,
+        768,
+        504
+      ],
+      "offset": [
+        21,
+        23
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 2,
+      "col": 1,
+      "sourceBox": [
+        384,
+        504,
+        768,
+        817
+      ],
+      "offset": [
+        10,
+        20
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 3,
+      "col": 1,
+      "sourceBox": [
+        384,
+        817,
+        768,
+        1024
+      ],
+      "offset": [
+        15,
+        76
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 0,
+      "col": 2,
+      "sourceBox": [
+        768,
+        0,
+        1152,
+        235
+      ],
+      "offset": [
+        7,
+        38
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 1,
+      "col": 2,
+      "sourceBox": [
+        768,
+        235,
+        1152,
+        500
+      ],
+      "offset": [
+        20,
+        26
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 2,
+      "col": 2,
+      "sourceBox": [
+        768,
+        500,
+        1152,
+        822
+      ],
+      "offset": [
+        9,
+        19
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 3,
+      "col": 2,
+      "sourceBox": [
+        768,
+        822,
+        1152,
+        1024
+      ],
+      "offset": [
+        13,
+        76
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 0,
+      "col": 3,
+      "sourceBox": [
+        1152,
+        0,
+        1536,
+        240
+      ],
+      "offset": [
+        6,
+        43
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 1,
+      "col": 3,
+      "sourceBox": [
+        1152,
+        240,
+        1536,
+        501
+      ],
+      "offset": [
+        15,
+        28
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 2,
+      "col": 3,
+      "sourceBox": [
+        1152,
+        501,
+        1536,
+        822
+      ],
+      "offset": [
+        13,
+        19
+      ]
+    },
+    {
+      "kind": "pikachu",
+      "row": 3,
+      "col": 3,
+      "sourceBox": [
+        1152,
+        822,
+        1536,
+        1024
+      ],
+      "offset": [
+        14,
+        76
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 0,
+      "sourceBox": [
+        0,
+        0,
+        444,
+        472
+      ],
+      "offset": [
+        8,
+        35
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 4,
+      "sourceBox": [
+        0,
+        472,
+        444,
+        887
+      ],
+      "offset": [
+        8,
+        36
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 1,
+      "sourceBox": [
+        444,
+        0,
+        887,
+        473
+      ],
+      "offset": [
+        9,
+        34
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 5,
+      "sourceBox": [
+        444,
+        473,
+        887,
+        887
+      ],
+      "offset": [
+        11,
+        35
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 2,
+      "sourceBox": [
+        887,
+        0,
+        1330,
+        472
+      ],
+      "offset": [
+        10,
+        34
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 6,
+      "sourceBox": [
+        887,
+        472,
+        1330,
+        887
+      ],
+      "offset": [
+        8,
+        33
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 3,
+      "sourceBox": [
+        1330,
+        0,
+        1774,
+        476
+      ],
+      "offset": [
+        7,
+        34
+      ]
+    },
+    {
+      "kind": "donatello",
+      "frame": 7,
+      "sourceBox": [
+        1330,
+        476,
+        1774,
+        887
+      ],
+      "offset": [
+        7,
+        35
+      ]
+    }
+  ]
+}

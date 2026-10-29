@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { paintSheet, SHEETS } from "../src/render/sprites";
 
 const path = fileURLToPath(new URL("../public/sprites/lantern.png", import.meta.url));
@@ -34,3 +34,23 @@ it.each([[58, 58, 72], [232, 74, 74], [61, 123, 242], [69, 194, 91]] as const)(
     expect(cropped.some((value, index) => value !== pixels[index])).toBe(false);
   },
 );
+
+describe("John Stewart approved appearance", () => {
+  it("uses the complete 18-row redraw", () => {
+    expect([SHEETS.lantern.width, SHEETS.lantern.height]).toEqual([1188, 2952]);
+    expect([SHEETS.lantern.frameW, SHEETS.lantern.frameH]).toEqual([132, 164]);
+    expect(SHEETS.lantern.lobby.frames).toBe(8);
+  });
+
+  it("keeps emerald eyes while recoloring the suit", () => {
+    const sheet = SHEETS.lantern;
+    const region = sheet.colorProtection.rows[0]![0]![0]!;
+    const pixels = new Uint8ClampedArray(sheet.width * sheet.frameH * 4);
+    const eye = (region.top * sheet.width + region.left) * 4;
+    pixels.set([12, 191, 92, 255], eye);
+    pixels.set([18, 120, 89, 255], 0);
+    paintSheet(pixels, sheet, [232, 74, 74]);
+    expect([...pixels.slice(eye, eye + 4)]).toEqual([12, 191, 92, 255]);
+    expect([...pixels.slice(0, 4)]).toEqual([232, 74, 74, 255]);
+  });
+});

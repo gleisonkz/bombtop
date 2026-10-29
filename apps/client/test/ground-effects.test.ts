@@ -101,11 +101,13 @@ describe("ground effects", () => {
       x: 6 * SHEETS.goku.frameW, y: SHEETS.goku.cast[view].row * SHEETS.goku.frameH, flip: dir === "left",
     });
   });
+  // Published A1 palm centers: concept/goku/a1-redraw/runtime-metadata.json, charge frames 0/1/4.
+  // Left-facing centers mirror the side drawing around the native feet anchor X = 66.
   it.each([
-    ["down", 20, 40, 113], ["down", 16, 38, 106], ["down", 4, 68, 116],
-    ["up", 20, 103, 95], ["up", 4, 108, 104],
-    ["right", 20, 63, 113], ["right", 4, 79, 112],
-    ["left", 20, 80, 113], ["left", 4, 64, 112],
+    ["down", 20, 51.582, 118.311], ["down", 16, 49.167, 117.653], ["down", 4, 65.399, 120.421],
+    ["up", 20, 66.219, 118.936], ["up", 4, 71.79, 117.641],
+    ["right", 20, 61.119, 120.142], ["right", 4, 67.404, 121.356],
+    ["left", 20, 70.881, 120.142], ["left", 4, 64.596, 121.356],
   ] as const)("attaches the %s charge sphere to the hands with %i ticks left", (facing, charge, handX, handY) => {
     const renderer = new Renderer(true);
     const state = createMatch({ seed: 1, playerIds: ["goku"], blockDensity: 0, characters: { goku: "goku" } });

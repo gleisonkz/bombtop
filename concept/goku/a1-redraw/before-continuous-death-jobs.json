@@ -1,0 +1,274 @@
+[
+  {
+    "row": 0,
+    "direction": "south",
+    "poses": [
+      "r00-c00",
+      "r00-c01",
+      "r00-c02",
+      "r00-c03"
+    ],
+    "job_id": "147187a6-43f1-4ece-b434-8ba969946a9f",
+    "response": "id: 147187a6-43f1-4ece-b434-8ba969946a9f\njob_id: 147187a6-43f1-4ece-b434-8ba969946a9f\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: idle\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"147187a6-43f1-4ece-b434-8ba969946a9f\")\nasset_id: 419fdd87-ac3e-573c-a40a-7422dd6f06ac\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 3,
+    "direction": "south",
+    "poses": [
+      "r03-c00",
+      "r03-c01",
+      "r03-c02",
+      "r03-c03",
+      "r03-c04",
+      "r03-c05"
+    ],
+    "job_id": "3b54eb63-b353-4b08-b333-769d74aba645",
+    "response": "id: 3b54eb63-b353-4b08-b333-769d74aba645\njob_id: 3b54eb63-b353-4b08-b333-769d74aba645\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"3b54eb63-b353-4b08-b333-769d74aba645\")\nasset_id: e500ee08-52e9-5442-b46d-ae857f453bf9\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 11,
+    "direction": "south",
+    "poses": [
+      "r11-c00",
+      "r11-c01",
+      "r11-c02",
+      "r11-c03"
+    ],
+    "job_id": "c3b961a3-9153-41e0-95df-933ed5382299",
+    "response": "id: c3b961a3-9153-41e0-95df-933ed5382299\njob_id: c3b961a3-9153-41e0-95df-933ed5382299\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held stance\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"c3b961a3-9153-41e0-95df-933ed5382299\")\nasset_id: b04e0d5d-86ac-5dac-a6a4-ab7097c91cf4\nasset_status: pending (saved to your gallery when generation completes)",
+    "holds": {
+      "r11-c01": "r11-c00",
+      "r11-c02": "r11-c00",
+      "r11-c03": "r11-c00"
+    }
+  },
+  {
+    "row": 1,
+    "direction": "east",
+    "poses": [
+      "r01-c00",
+      "r01-c01",
+      "r01-c02",
+      "r01-c03"
+    ],
+    "job_id": "c73bf50d-e74f-4632-954b-767530abed96",
+    "response": "id: c73bf50d-e74f-4632-954b-767530abed96\njob_id: c73bf50d-e74f-4632-954b-767530abed96\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: idle\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"c73bf50d-e74f-4632-954b-767530abed96\")\nasset_id: d0f1a86f-048e-5abe-81b2-513b8f5482a3\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 2,
+    "direction": "north",
+    "poses": [
+      "r02-c00",
+      "r02-c01",
+      "r02-c02",
+      "r02-c03"
+    ],
+    "job_id": "aebcb650-376e-455e-98a7-9c255b00925e",
+    "response": "id: aebcb650-376e-455e-98a7-9c255b00925e\njob_id: aebcb650-376e-455e-98a7-9c255b00925e\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: idle\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"aebcb650-376e-455e-98a7-9c255b00925e\")\nasset_id: 9742fa69-5f7f-5714-ab4f-f4731cf085f6\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 12,
+    "direction": "east",
+    "poses": [
+      "r12-c00",
+      "r12-c01",
+      "r12-c02",
+      "r12-c03"
+    ],
+    "job_id": "d5035fbb-3445-4ff0-93b5-d13150fbffb6",
+    "response": "id: d5035fbb-3445-4ff0-93b5-d13150fbffb6\njob_id: d5035fbb-3445-4ff0-93b5-d13150fbffb6\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held stance\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"d5035fbb-3445-4ff0-93b5-d13150fbffb6\")\nasset_id: be7c9c97-1d10-5051-a848-b9d80a6271aa\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 4,
+    "direction": "east",
+    "poses": [
+      "r04-c00",
+      "r04-c01",
+      "r04-c02",
+      "r04-c03",
+      "r04-c04",
+      "r04-c05"
+    ],
+    "job_id": "b66fdca3-daa0-4301-8846-7c0cdd08535d",
+    "response": "id: b66fdca3-daa0-4301-8846-7c0cdd08535d\njob_id: b66fdca3-daa0-4301-8846-7c0cdd08535d\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"b66fdca3-daa0-4301-8846-7c0cdd08535d\")\nasset_id: f6d23503-aa26-5caa-8627-17a6292e286d\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 5,
+    "direction": "north",
+    "poses": [
+      "r05-c00",
+      "r05-c01",
+      "r05-c02",
+      "r05-c03",
+      "r05-c04",
+      "r05-c05"
+    ],
+    "job_id": "4dae6aa8-a547-4af4-a9f3-1a77a91697ca",
+    "response": "id: 4dae6aa8-a547-4af4-a9f3-1a77a91697ca\njob_id: 4dae6aa8-a547-4af4-a9f3-1a77a91697ca\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"4dae6aa8-a547-4af4-a9f3-1a77a91697ca\")\nasset_id: a911ee99-31f1-5b54-b862-17c750b7e061\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 6,
+    "direction": "south",
+    "poses": [
+      "r06-c00",
+      "r06-c01",
+      "r06-c02",
+      "r06-c03",
+      "r06-c04",
+      "r06-c05"
+    ],
+    "job_id": "0694f11c-5de1-42e6-9397-8d3a36fce713",
+    "response": "id: 0694f11c-5de1-42e6-9397-8d3a36fce713\njob_id: 0694f11c-5de1-42e6-9397-8d3a36fce713\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: recoil\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"0694f11c-5de1-42e6-9397-8d3a36fce713\")\nasset_id: 678b797f-41ed-59e0-9af0-90919284cafd\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 7,
+    "direction": "south",
+    "poses": [
+      "r07-c00",
+      "r07-c01",
+      "r07-c02",
+      "r07-c03",
+      "r07-c04",
+      "r07-c05",
+      "r07-c06"
+    ],
+    "job_id": "f799158d-9bdf-4f4e-8937-3912a245a096",
+    "response": "id: f799158d-9bdf-4f4e-8937-3912a245a096\njob_id: f799158d-9bdf-4f4e-8937-3912a245a096\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: fall\nframes: 7\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"f799158d-9bdf-4f4e-8937-3912a245a096\")\nasset_id: c4e4db37-46e0-5d45-827e-e824c843399f\nasset_status: pending (saved to your gallery when generation completes)",
+    "overrides": {
+      "r07-c04": {
+        "job_id": "eac89c4e-5bb4-4a48-aec4-090c54140c94",
+        "index": 0
+      },
+      "r07-c05": {
+        "job_id": "eac89c4e-5bb4-4a48-aec4-090c54140c94",
+        "index": 1
+      },
+      "r07-c06": {
+        "job_id": "eac89c4e-5bb4-4a48-aec4-090c54140c94",
+        "index": 2
+      }
+    }
+  },
+  {
+    "row": 8,
+    "direction": "south",
+    "poses": [
+      "r08-c00",
+      "r08-c01",
+      "r08-c02",
+      "r08-c03",
+      "r08-c04",
+      "r08-c05",
+      "r08-c06",
+      "r08-c07",
+      "r08-c08"
+    ],
+    "job_id": "e883a912-e306-4724-a5ab-5018339da822",
+    "response": "id: e883a912-e306-4724-a5ab-5018339da822\njob_id: e883a912-e306-4724-a5ab-5018339da822\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: gesture\nframes: 9\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~5 min)\n\nhint: get_image(job_id=\"e883a912-e306-4724-a5ab-5018339da822\")\nasset_id: ecf92677-b0e2-517c-a560-60f7de099407\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 9,
+    "direction": "east",
+    "poses": [
+      "r09-c00",
+      "r09-c01",
+      "r09-c02",
+      "r09-c03",
+      "r09-c04",
+      "r09-c05",
+      "r09-c06",
+      "r09-c07",
+      "r09-c08"
+    ],
+    "job_id": "d28ff933-eeb1-465e-a1e9-aeb43460269f",
+    "response": "id: d28ff933-eeb1-465e-a1e9-aeb43460269f\njob_id: d28ff933-eeb1-465e-a1e9-aeb43460269f\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: gesture\nframes: 9\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~5 min)\n\nhint: get_image(job_id=\"d28ff933-eeb1-465e-a1e9-aeb43460269f\")\nasset_id: db378eaf-50b2-5075-a2e5-6333a8dde6d0\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 10,
+    "direction": "north",
+    "poses": [
+      "r10-c00",
+      "r10-c01",
+      "r10-c02",
+      "r10-c03",
+      "r10-c04",
+      "r10-c05",
+      "r10-c06",
+      "r10-c07",
+      "r10-c08"
+    ],
+    "job_id": "be7f11f2-1c78-4c90-9b65-186bfffdebcc",
+    "response": "id: be7f11f2-1c78-4c90-9b65-186bfffdebcc\njob_id: be7f11f2-1c78-4c90-9b65-186bfffdebcc\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: gesture\nframes: 9\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~5 min)\n\nhint: get_image(job_id=\"be7f11f2-1c78-4c90-9b65-186bfffdebcc\")\nasset_id: 6f3a1877-3b72-5d8f-9ab2-38ff167100ac\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 13,
+    "direction": "north",
+    "poses": [
+      "r13-c00",
+      "r13-c01",
+      "r13-c02",
+      "r13-c03"
+    ],
+    "job_id": "06b48d03-6791-4fe2-b0f2-5e846dcea94a",
+    "response": "id: 06b48d03-6791-4fe2-b0f2-5e846dcea94a\njob_id: 06b48d03-6791-4fe2-b0f2-5e846dcea94a\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held stance\nframes: 4\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"06b48d03-6791-4fe2-b0f2-5e846dcea94a\")\nasset_id: 758a0187-1a02-5e7d-957a-45de4f120dd8\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 14,
+    "direction": "south",
+    "poses": [
+      "r14-c00",
+      "r14-c01",
+      "r14-c02",
+      "r14-c03",
+      "r14-c04",
+      "r14-c05"
+    ],
+    "job_id": "e709f43b-fb92-4e0c-83af-2346f7244391",
+    "response": "id: fbc450ef-920d-48a4-bdb9-433c944195f9\njob_id: fbc450ef-920d-48a4-bdb9-433c944195f9\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"fbc450ef-920d-48a4-bdb9-433c944195f9\")\nasset_id: 00fc467e-4db3-5a9d-8ce1-cb55bb75526b\nasset_status: pending (saved to your gallery when generation completes)",
+    "request": "requests/carry-final.json"
+  },
+  {
+    "row": 15,
+    "direction": "east",
+    "poses": [
+      "r15-c00",
+      "r15-c01",
+      "r15-c02",
+      "r15-c03",
+      "r15-c04",
+      "r15-c05"
+    ],
+    "job_id": "d080eeb1-8bfd-433b-960f-e276190fc031",
+    "response": "id: d080eeb1-8bfd-433b-960f-e276190fc031\njob_id: d080eeb1-8bfd-433b-960f-e276190fc031\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"d080eeb1-8bfd-433b-960f-e276190fc031\")\nasset_id: a90f18c8-1e57-5ffd-9f6b-4d036af1f501\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 16,
+    "direction": "north",
+    "poses": [
+      "r16-c00",
+      "r16-c01",
+      "r16-c02",
+      "r16-c03",
+      "r16-c04",
+      "r16-c05"
+    ],
+    "job_id": "02d12fe9-ae54-4529-8ee0-554ddbbc9f9c",
+    "response": "id: 02d12fe9-ae54-4529-8ee0-554ddbbc9f9c\njob_id: 02d12fe9-ae54-4529-8ee0-554ddbbc9f9c\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: held walk\nframes: 6\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"02d12fe9-ae54-4529-8ee0-554ddbbc9f9c\")\nasset_id: d23dcda0-c492-5320-9248-b8d5008da220\nasset_status: pending (saved to your gallery when generation completes)"
+  },
+  {
+    "row": 17,
+    "direction": "south",
+    "poses": [
+      "r17-c00",
+      "r17-c01",
+      "r17-c02",
+      "r17-c03",
+      "r17-c04",
+      "r17-c05",
+      "r17-c06",
+      "r17-c07"
+    ],
+    "job_id": "9fabc61a-10db-4c3f-83e2-7ba573ce7764",
+    "response": "id: 9fabc61a-10db-4c3f-83e2-7ba573ce7764\njob_id: 9fabc61a-10db-4c3f-83e2-7ba573ce7764\ndescription: Goku A1, black swept hair, black eyes, plain orange gi with identical navy blue undershirt sash wristbands and boots, bare empty hands, single isolated character\naction: celebrate\nframes: 8\nsize: 128x160px\ntransparent: True\ncost: 3 generations\nstatus: processing (~4 min)\n\nhint: get_image(job_id=\"9fabc61a-10db-4c3f-83e2-7ba573ce7764\")\nasset_id: d4def34b-7a8e-57a3-9d20-ac8ec5e495d1\nasset_status: pending (saved to your gallery when generation completes)"
+  }
+]

@@ -1,0 +1,408 @@
+{
+  "contract": {
+    "image": "sprites/goku-ssj-aura-detailed.png",
+    "width": 1280,
+    "height": 1280,
+    "frameW": 320,
+    "frameH": 320,
+    "columns": 4,
+    "rows": 4,
+    "frames": 16,
+    "anchorX": 160,
+    "anchorY": 304,
+    "fps": 20,
+    "intro": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "loop": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "release": [
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      0
+    ],
+    "layer": "behind-character",
+    "blendMode": "add",
+    "referenceBodyH": 104,
+    "fullAuraHeight": 202.25,
+    "desiredAuraToBodyHeight": 1.45,
+    "nativeScaleForA1": 0.7456118665018541,
+    "containsCharacter": false,
+    "generator": "built-in image_gen; no PixelLab",
+    "sourceSha256": "c0f07e1f1ee6f117bd0f6ec30417ac6d68665975cdabeecea0a4cb75bde56d4e"
+  },
+  "frames": [
+    {
+      "frame": 0,
+      "source_box": [
+        49,
+        164,
+        197,
+        246
+      ],
+      "source_anchor": [
+        122.03129657228018,
+        240
+      ],
+      "offset": [
+        87,
+        228
+      ],
+      "core_size": [
+        136,
+        70
+      ],
+      "core_pixels": 3935
+    },
+    {
+      "frame": 1,
+      "source_box": [
+        301,
+        120,
+        454,
+        246
+      ],
+      "source_anchor": [
+        376.3328290468986,
+        240
+      ],
+      "offset": [
+        85,
+        184
+      ],
+      "core_size": [
+        141,
+        114
+      ],
+      "core_pixels": 5513
+    },
+    {
+      "frame": 2,
+      "source_box": [
+        551,
+        91,
+        701,
+        246
+      ],
+      "source_anchor": [
+        623.9759036144578,
+        240
+      ],
+      "offset": [
+        87,
+        155
+      ],
+      "core_size": [
+        138,
+        143
+      ],
+      "core_pixels": 7960
+    },
+    {
+      "frame": 3,
+      "source_box": [
+        799,
+        43,
+        964,
+        246
+      ],
+      "source_anchor": [
+        878.2456839309428,
+        240
+      ],
+      "offset": [
+        81,
+        107
+      ],
+      "core_size": [
+        153,
+        191
+      ],
+      "core_pixels": 12097
+    },
+    {
+      "frame": 4,
+      "source_box": [
+        36,
+        308,
+        213,
+        498
+      ],
+      "source_anchor": [
+        124.19440745672436,
+        492
+      ],
+      "offset": [
+        72,
+        120
+      ],
+      "core_size": [
+        165,
+        178
+      ],
+      "core_pixels": 12805
+    },
+    {
+      "frame": 5,
+      "source_box": [
+        285,
+        300,
+        468,
+        498
+      ],
+      "source_anchor": [
+        376.0598958333333,
+        492
+      ],
+      "offset": [
+        69,
+        112
+      ],
+      "core_size": [
+        171,
+        186
+      ],
+      "core_pixels": 14096
+    },
+    {
+      "frame": 6,
+      "source_box": [
+        534,
+        290,
+        722,
+        498
+      ],
+      "source_anchor": [
+        627.9429987608427,
+        492
+      ],
+      "offset": [
+        66,
+        102
+      ],
+      "core_size": [
+        176,
+        196
+      ],
+      "core_pixels": 15073
+    },
+    {
+      "frame": 7,
+      "source_box": [
+        790,
+        273,
+        975,
+        498
+      ],
+      "source_anchor": [
+        881.5186567164179,
+        492
+      ],
+      "offset": [
+        68,
+        85
+      ],
+      "core_size": [
+        173,
+        213
+      ],
+      "core_pixels": 17714
+    },
+    {
+      "frame": 8,
+      "source_box": [
+        30,
+        532,
+        219,
+        743
+      ],
+      "source_anchor": [
+        123.36306532663316,
+        737
+      ],
+      "offset": [
+        67,
+        99
+      ],
+      "core_size": [
+        177,
+        199
+      ],
+      "core_pixels": 16698
+    },
+    {
+      "frame": 9,
+      "source_box": [
+        284,
+        529,
+        468,
+        743
+      ],
+      "source_anchor": [
+        375.36962025316456,
+        737
+      ],
+      "offset": [
+        69,
+        96
+      ],
+      "core_size": [
+        172,
+        202
+      ],
+      "core_pixels": 17555
+    },
+    {
+      "frame": 10,
+      "source_box": [
+        535,
+        526,
+        719,
+        743
+      ],
+      "source_anchor": [
+        627.9261576971214,
+        737
+      ],
+      "offset": [
+        67,
+        93
+      ],
+      "core_size": [
+        172,
+        205
+      ],
+      "core_pixels": 17454
+    },
+    {
+      "frame": 11,
+      "source_box": [
+        787,
+        519,
+        972,
+        743
+      ],
+      "source_anchor": [
+        879.8002544529262,
+        737
+      ],
+      "offset": [
+        67,
+        86
+      ],
+      "core_size": [
+        173,
+        212
+      ],
+      "core_pixels": 17619
+    },
+    {
+      "frame": 12,
+      "source_box": [
+        33,
+        777,
+        216,
+        985
+      ],
+      "source_anchor": [
+        124.96962025316456,
+        979
+      ],
+      "offset": [
+        68,
+        102
+      ],
+      "core_size": [
+        171,
+        196
+      ],
+      "core_pixels": 17618
+    },
+    {
+      "frame": 13,
+      "source_box": [
+        284,
+        773,
+        470,
+        985
+      ],
+      "source_anchor": [
+        375.9700748129676,
+        979
+      ],
+      "offset": [
+        68,
+        98
+      ],
+      "core_size": [
+        174,
+        200
+      ],
+      "core_pixels": 17861
+    },
+    {
+      "frame": 14,
+      "source_box": [
+        535,
+        771,
+        722,
+        985
+      ],
+      "source_anchor": [
+        627.8220024721879,
+        979
+      ],
+      "offset": [
+        67,
+        96
+      ],
+      "core_size": [
+        175,
+        202
+      ],
+      "core_pixels": 18449
+    },
+    {
+      "frame": 15,
+      "source_box": [
+        787,
+        771,
+        975,
+        985
+      ],
+      "source_anchor": [
+        880.5074626865671,
+        979
+      ],
+      "offset": [
+        66,
+        96
+      ],
+      "core_size": [
+        176,
+        202
+      ],
+      "core_pixels": 17890
+    }
+  ]
+}

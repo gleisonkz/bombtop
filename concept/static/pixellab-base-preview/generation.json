@@ -1,0 +1,16 @@
+{
+  "job_id": "51aecc73-197d-4f61-a655-95839b624f0e",
+  "model": "PixelLab Pro",
+  "size": [
+    128,
+    160
+  ],
+  "candidates": 4,
+  "references": [
+    "concept/donatello/pixellab-preview/captain-style.png",
+    "concept/donatello/pixellab-preview/thor-style.png",
+    "outfit-reference.png"
+  ],
+  "prompt": "Create a NEW high-quality base GAME SPRITE of Static Shock / Super Choque, Virgil Hawkins, in the exact same game-cast art style as the supplied Captain America and Thor sprites. Match the two style references' sharp readable detailed sprite drawing, controlled dark outlines, clean cel-shaded color clusters, compact athletic anatomy with approximately 3 heads of total height, good hand and foot definition. Not an 8-bit coarse blocky caricature or a tall anime illustration. Recognizable Black teenage superhero, warm rich medium-dark brown skin and natural brown facial shadows, black thick short dreadlocks swept upward/back with individual clear loc shapes, confident subtle closed smile. White angular wraparound superhero goggles/eye mask with crisp symmetric shape and readable dark eyes, navy headband under hair. Classic outfit: long open deep navy-blue hooded coat with clean yellow trim, hood resting behind neck, white shirt with bold yellow lightning-bolt emblem, dark trousers, blue/black shoes with restrained yellow accents, yellow wrist/glove details. Use reference3 only for recognizable costume and identity, redraw a much clearer face and better-defined clothing. FRONT-facing neutral standing full-body idle pose with balanced symmetrical shoulders and arms relaxed slightly away from torso, coherent hands/fingers. Small game-ready sprite with polished cartoon-animation facial features and strong readable silhouette. Full body isolated centered, comfortable transparent padding, both soles visible. Preserve his brown skin; no pale face or white flecks on skin. Do NOT copy Captain's or Thor's costumes, mask helmet, armor, shield, hammer, beard or cape. Only ONE isolated character in each candidate. ABSOLUTELY NO electricity, lightning effects, energy balls, blue aura, glow, trails, particles, sparks, smoke, surfboard, flying metal disc, weapons, floating objects, floor shadow, backdrop, text, labels, grid or other characters. Transparent alpha background.",
+  "status": "preview for user approval; game assets unchanged"
+}

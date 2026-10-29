@@ -15,17 +15,17 @@ lightning, shockwave, dust and the struck hammer's head are drawn by `scripts/bu
 
 ## goku.png
 
-Fan art of Goku (Dragon Ball) for this non-commercial project. The original
-PixelLab artwork is retained as an appearance/pose reference. The current wider
-pixel-art gameplay family was redrawn with the built-in image generator using
-the actual Goku reference and the new Naruto family. `scripts/pack-goku.py`
-preserves 108 frames in the original 146 x 159 cells. Sources, prompts and
-measurements: `concept/goku/gameplay-redraw/`.
-The separate `goku-lobby.png` transformation is generated from the same new Goku;
-`scripts/pack-goku-lobby.py` registers eight key poses into 16 playback cells,
-including reverse power-down and resting holds. The resting pose uses the actual
-gameplay idle pixels. Earlier supplied/selected sources remain archived in
-`concept/goku/`. See its README for reproduction.
+Fan art of Goku (Dragon Ball) for this non-commercial project. The current family
+was generated in PixelLab from the approved GOKU A1 alone, with game poses supplied
+only as COCO-18 skeleton coordinates. The atlas contains 108 occupied cells:
+105 distinct drawings and three explicit idle holds. Native 128 x 160 images
+receive a two-pixel transparent border, without resampling or body compositing.
+The separate transformation uses 27 drawings, including rising black hair,
+mixed black/gold locks and the upright Super Saiyan crown, in 60 playback cells
+at 20 fps. PixelLab inpainting preserves unmasked character pixels when deriving
+hair references or removing isolated background marks. Sources, masks, job
+selection and reproduction: `concept/goku/a1-redraw/`. Rejected earlier families
+remain archived under `concept/goku/` and do not supply the current appearance.
 
 ## naruto.png
 
@@ -220,7 +220,7 @@ by the user. `concept/conveyors/conveyor-concept.png` retains the source.
 
 ## Supplied Super Choque replacement
 
-`static-final.png` is packed from the image supplied by the user in
+`static-final.png` (and its victory row, `static-victory.png`) is packed from the image supplied by the user in
 `Imagem do ChatGPT 25 de out. de 2026, 21_48_03.png`. The original image is retained in
 `concept/static/supplied-20261025-214803.png`; packing and fallback animation notes
 are in `concept/static/README.md`. No additional licensing grant was supplied.
@@ -228,3 +228,22 @@ are in `concept/static/README.md`. No additional licensing grant was supplied.
 ### Approved Super Choque option4 redraw
 
 The107 characterframes were regenerated from the user-approved PixelLab option4, using the previous spritesheet only for poses. The new168x224 cells retain full-size raised arms; electricity and aura remain separate runtime art. The menu retains its physical metaldisc. Actualreferences, generatedfamilies, measuredsourceboxes, palmpositions and reproduciblepacking are in concept/static/option4-redraw/; build with scripts/pack-static-approved.py.
+
+
+## Regenerated character ability effects
+
+`pikachu-electric-game.png`, `static-electric-game.png` and
+`flash-speed-force.png` were generated with the built-in image tool from the
+project's existing Thor and older electrical effect references. Native64px
+exports, exact prompts, source boards and packing records are retained in
+`concept/electric-game-remake/`. Each row contains8distinct generated phases.
+
+`donatello-spin-detailed.png` contains8generated motion-trail drawings; it does
+not include the character or staff. Source and packing records are retained in
+`concept/pikachu-donatello-effects/`.
+
+`lantern-construct-shield.png` uses the generated Thor/Captain sprite-family
+redraw archived in `concept/lantern/thor-captain-style/`.
+`goku-ssj-aura-detailed.png` is the separate generated transformation effect
+archived in `concept/goku/aura-thor-captain/`; it is used only in menu/victory
+previews. Earlier candidates remain archived for comparison.

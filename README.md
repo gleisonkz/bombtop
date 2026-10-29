@@ -211,4 +211,3 @@ Não há licença de distribuição definida em um arquivo `LICENSE` na raiz. C�
 [Voltar ao topo](#bombtop)
 
 </div>
-

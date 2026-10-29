@@ -1,0 +1,230 @@
+[
+  {
+    "row": 3,
+    "poses": [
+      "r03-c00",
+      "r03-c01",
+      "r03-c02",
+      "r03-c03",
+      "r03-c04",
+      "r03-c05"
+    ],
+    "job_id": "53b0c898-b4f3-40b6-a755-c2a9f7aaa7f5",
+    "direction": "south"
+  },
+  {
+    "row": 0,
+    "poses": [
+      "r00-c00",
+      "r00-c02"
+    ],
+    "output_count": 3,
+    "job_id": "e03451eb-71e8-4ead-8523-c4e3233a0b09",
+    "direction": "south"
+  },
+  {
+    "row": 6,
+    "poses": [
+      "r06-c00",
+      "r06-c01",
+      "r06-c02",
+      "r06-c03",
+      "r06-c04",
+      "r06-c05"
+    ],
+    "output_count": 6,
+    "job_id": "67c448a3-a73c-4507-b82b-1befc7ee83c5",
+    "direction": "south"
+  },
+  {
+    "row": 7,
+    "poses": [
+      "r07-c00",
+      "r07-c01",
+      "r07-c02",
+      "r07-c03"
+    ],
+    "output_count": 7,
+    "job_id": "07a1e9e7-0844-44d8-a049-5cd7bbdd5838",
+    "direction": "south"
+  },
+  {
+    "row": 17,
+    "poses": [
+      "r17-c00",
+      "r17-c01",
+      "r17-c02",
+      "r17-c03",
+      "r17-c04",
+      "r17-c05",
+      "r17-c06",
+      "r17-c07"
+    ],
+    "output_count": 8,
+    "job_id": "19790321-67f3-4d75-bd34-50e56b04ca4a",
+    "direction": "south"
+  },
+  {
+    "row": 1,
+    "poses": [
+      "r01-c00",
+      "r01-c01",
+      "r01-c02",
+      "r01-c03"
+    ],
+    "output_count": 4,
+    "job_id": "06dcd9cc-eaab-4086-b441-e56476ccb1d7",
+    "direction": "east"
+  },
+  {
+    "row": 4,
+    "poses": [
+      "r04-c00",
+      "r04-c01",
+      "r04-c02",
+      "r04-c03",
+      "r04-c04",
+      "r04-c05"
+    ],
+    "output_count": 6,
+    "job_id": "6ee5bebc-3197-435f-b3a9-d40792d828c3",
+    "direction": "east"
+  },
+  {
+    "row": 9,
+    "poses": [
+      "r09-c00",
+      "r09-c01",
+      "r09-c02",
+      "r09-c03",
+      "r09-c04",
+      "r09-c05"
+    ],
+    "output_count": 6,
+    "job_id": "09231e94-383f-4bca-8ad2-718e0cd99647",
+    "direction": "east"
+  },
+  {
+    "row": 12,
+    "poses": [
+      "r12-c00",
+      "r12-c02"
+    ],
+    "output_count": 3,
+    "job_id": "32651098-0e25-4c7d-96f8-f7c44a9be8a8",
+    "direction": "east"
+  },
+  {
+    "row": 13,
+    "poses": [
+      "r13-c00",
+      "r13-c02"
+    ],
+    "output_count": 3,
+    "job_id": "53530d7f-7180-4bea-8c57-81abd30ef0b8",
+    "direction": "north"
+  },
+  {
+    "row": 15,
+    "poses": [
+      "r15-c01",
+      "r15-c02",
+      "r15-c04",
+      "r15-c05"
+    ],
+    "output_count": 4,
+    "job_id": "25767df3-9a33-4142-811c-0514f866d3d0",
+    "direction": "east"
+  },
+  {
+    "row": 7,
+    "poses": [
+      "r07-c04",
+      "r07-c05",
+      "r07-c06"
+    ],
+    "output_count": 3,
+    "job_id": "3b4e22d5-32ad-40cf-ad70-cb53bfad3571",
+    "direction": "east",
+    "note": "Final grounded phases, corrected ankle skeleton, no image postprocessing"
+  },
+  {
+    "row": 2,
+    "poses": [
+      "r02-c00",
+      "r02-c01",
+      "r02-c02",
+      "r02-c03"
+    ],
+    "output_count": 4,
+    "job_id": "bd156364-07dd-4389-b4cc-4c6c18c05995",
+    "direction": "north"
+  },
+  {
+    "row": 8,
+    "poses": [
+      "r08-c00",
+      "r08-c01",
+      "r08-c02",
+      "r08-c03",
+      "r08-c04",
+      "r08-c05"
+    ],
+    "output_count": 6,
+    "job_id": "f83bccf8-60a2-4652-8d82-e210d8733e2e",
+    "direction": "south"
+  },
+  {
+    "row": 10,
+    "poses": [
+      "r10-c00",
+      "r10-c01",
+      "r10-c02",
+      "r10-c03",
+      "r10-c04"
+    ],
+    "output_count": 5,
+    "job_id": "47756db3-e92e-436b-b39a-e235b159c6dd",
+    "direction": "north"
+  },
+  {
+    "row": 16,
+    "poses": [
+      "r16-c01",
+      "r16-c02",
+      "r16-c04",
+      "r16-c05"
+    ],
+    "output_count": 4,
+    "job_id": "f3ed47d6-c30f-4cff-ac8b-1968610e1e9c",
+    "direction": "north"
+  },
+  {
+    "row": 14,
+    "poses": [
+      "r11-c00",
+      "r14-c01",
+      "r14-c02",
+      "r11-c02",
+      "r14-c04",
+      "r14-c05"
+    ],
+    "output_count": 6,
+    "job_id": "d8c3b8b5-6001-4eba-b50d-e52a5a2aa86a",
+    "direction": "south"
+  },
+  {
+    "row": 5,
+    "poses": [
+      "r05-c00",
+      "r05-c01",
+      "r05-c02",
+      "r05-c03",
+      "r05-c04",
+      "r05-c05"
+    ],
+    "output_count": 6,
+    "job_id": "d9a5f1ec-dac8-4190-bfdb-889abbb3b541",
+    "direction": "north"
+  }
+]

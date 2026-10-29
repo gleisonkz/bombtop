@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "source_root": ".",
+  "rows": [
+    {
+      "name": "idle.down",
+      "frames": [
+        "corrected/r00-f00.png",
+        "corrected/r00-f01.png",
+        "corrected/r00-f02.png",
+        "small-fixes/r00-f03.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "idle.side",
+      "frames": [
+        "corrected/r01-f00.png",
+        "corrected/r01-f01.png",
+        "corrected/r01-f02.png",
+        "corrected/r01-f03.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "idle.up",
+      "frames": [
+        "corrected/r02-f00.png",
+        "corrected/r02-f01.png",
+        "corrected/r02-f02.png",
+        "corrected/r02-f03.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "walk.down",
+      "frames": [
+        "corrected/r03-f00.png",
+        "corrected/r03-f01.png",
+        "corrected/r03-f02.png",
+        "corrected/r03-f03.png",
+        "corrected/r03-f04.png",
+        "corrected/r03-f05.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "walk.side",
+      "frames": [
+        "corrected/r04-f00.png",
+        "corrected/r04-f01.png",
+        "corrected/r04-f02.png",
+        "corrected/r04-f03.png",
+        "corrected/r04-f04.png",
+        "corrected/r04-f05.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "walk.up",
+      "frames": [
+        "source/Idle/animations/walk-back-consistent/north/frame_000.png",
+        "source/Idle/animations/walk-back-consistent/north/frame_001.png",
+        "source/Idle/animations/walk-back-consistent/north/frame_002.png",
+        "source/Idle/animations/walk-back-consistent/north/frame_003.png",
+        "source/Idle/animations/walk-back-consistent/north/frame_004.png",
+        "source/Idle/animations/walk-back-consistent/north/frame_005.png"
+      ],
+      "pivot": [
+        74,
+        126
+      ]
+    },
+    {
+      "name": "stun",
+      "frames": [
+        "corrected/r06-f00.png",
+        "corrected/r06-f01.png",
+        "corrected/r06-f02.png",
+        "corrected/r06-f03.png",
+        "corrected/r06-f04.png",
+        "corrected/r06-f05.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "death",
+      "frames": [
+        "corrected/r07-f00.png",
+        "corrected/r07-f01.png",
+        "corrected/r07-f02.png",
+        "corrected/r07-f03.png",
+        "corrected/r07-f04.png",
+        "corrected/r07-f05.png",
+        "corrected/r07-f06.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "cast.down",
+      "frames": [
+        "corrected/r08-f00.png",
+        "corrected/r08-f01.png",
+        "corrected/r08-f02.png",
+        "corrected/r08-f03.png",
+        "corrected/r08-f04.png",
+        "corrected/r08-f05.png",
+        "corrected/r08-f06.png",
+        "corrected/r08-f07.png",
+        "corrected/r08-f08.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "cast.side",
+      "frames": [
+        "corrected/r09-f00.png",
+        "corrected/r09-f01.png",
+        "corrected/r09-f02.png",
+        "corrected/r09-f03.png",
+        "corrected/r09-f04.png",
+        "corrected/r09-f05.png",
+        "corrected/r09-f06.png",
+        "corrected/r09-f07.png",
+        "corrected/r09-f08.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "cast.up",
+      "frames": [
+        "corrected/r10-f00.png",
+        "corrected/r10-f01.png",
+        "corrected/r10-f02.png",
+        "corrected/r10-f03.png",
+        "corrected/r10-f04.png",
+        "corrected/r10-f05.png",
+        "corrected/r10-f06.png",
+        "corrected/r10-f07.png",
+        "corrected/r10-f08.png"
+      ],
+      "pivot": [
+        63,
+        116
+      ]
+    },
+    {
+      "name": "carryIdle.down",
+      "frames": [
+        "carry-clean/carry-fixed-idle/south/frame_000.png",
+        "carry-clean/carry-fixed-idle/south/frame_001.png",
+        "carry-clean/carry-fixed-idle/south/frame_002.png",
+        "carry-clean/carry-fixed-idle/south/frame_003.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "carryIdle.side",
+      "frames": [
+        "carry-clean/carry-fixed-idle/east/frame_000.png",
+        "carry-clean/carry-fixed-idle/east/frame_001.png",
+        "carry-clean/carry-fixed-idle/east/frame_002.png",
+        "carry-clean/carry-fixed-idle/east/frame_003.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "carryIdle.up",
+      "frames": [
+        "carry-clean/carry-fixed-idle/north/frame_000.png",
+        "carry-clean/carry-fixed-idle/north/frame_001.png",
+        "carry-clean/carry-fixed-idle/north/frame_002.png",
+        "carry-clean/carry-fixed-idle/north/frame_003.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "carryWalk.down",
+      "frames": [
+        "carry-clean/carry-fixed-walk/south/frame_000.png",
+        "carry-clean/carry-fixed-walk/south/frame_001.png",
+        "carry-clean/carry-fixed-walk/south/frame_002.png",
+        "carry-clean/carry-fixed-walk/south/frame_003.png",
+        "carry-clean/carry-fixed-walk/south/frame_004.png",
+        "carry-clean/carry-fixed-walk/south/frame_005.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "carryWalk.side",
+      "frames": [
+        "carry-clean/carry-fixed-walk/east/frame_000.png",
+        "carry-clean/carry-fixed-walk/east/frame_001.png",
+        "carry-clean/carry-fixed-walk/east/frame_002.png",
+        "carry-clean/carry-fixed-walk/east/frame_003.png",
+        "carry-clean/carry-fixed-walk/east/frame_004.png",
+        "carry-clean/carry-fixed-walk/east/frame_005.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "carryWalk.up",
+      "frames": [
+        "carry-clean/carry-fixed-walk/north/frame_000.png",
+        "carry-clean/carry-fixed-walk/north/frame_001.png",
+        "carry-clean/carry-fixed-walk/north/frame_002.png",
+        "carry-clean/carry-fixed-walk/north/frame_003.png",
+        "carry-clean/carry-fixed-walk/north/frame_004.png",
+        "carry-clean/carry-fixed-walk/north/frame_005.png"
+      ],
+      "pivot": [
+        96,
+        164
+      ]
+    },
+    {
+      "name": "celebrate",
+      "frames": [
+        "source/Idle/animations/game-celebrate/south/frame_001.png",
+        "source/Idle/animations/game-celebrate/south/frame_002.png",
+        "source/Idle/animations/game-celebrate/south/frame_003.png",
+        "source/Idle/animations/game-celebrate/south/frame_004.png",
+        "source/Idle/animations/game-celebrate/south/frame_005.png",
+        "source/Idle/animations/game-celebrate/south/frame_006.png",
+        "source/Idle/animations/game-celebrate/south/frame_007.png",
+        "source/Idle/animations/game-celebrate/south/frame_008.png"
+      ],
+      "anchor_frame": "source/Idle/animations/game-celebrate/south/frame_000.png"
+    }
+  ],
+  "lobby": {
+    "frames": [
+      "source/Idle/animations/game-transform/south/frame_002.png",
+      "source/Idle/animations/game-transform/south/frame_003.png",
+      "source/Idle/animations/game-transform/south/frame_004.png",
+      "source/Idle/animations/game-transform/south/frame_005.png",
+      "source/Idle/animations/game-transform/south/frame_006.png",
+      "source/Idle/animations/game-transform/south/frame_007.png",
+      "source/Idle/animations/game-transform/south/frame_008.png"
+    ],
+    "anchor_frame": "source/Idle/animations/game-transform/south/frame_000.png"
+  }
+}

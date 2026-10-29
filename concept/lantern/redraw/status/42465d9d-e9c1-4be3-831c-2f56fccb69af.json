@@ -1,0 +1,20 @@
+{
+  "usage": {
+    "type": "usd",
+    "usd": 0.0
+  },
+  "id": "42465d9d-e9c1-4be3-831c-2f56fccb69af",
+  "status": "failed",
+  "created_at": "2026-10-26T18:18:44.543187+00:00",
+  "last_response": {
+    "code": 5000,
+    "type": "error",
+    "error": "Generation failed",
+    "trace": null,
+    "detail": "Generation failed. The model could not generate an image for this prompt. Try a different description or image.",
+    "progress": 0.5,
+    "limit_type": null,
+    "generation_mode": "transfer_outfit",
+    "generation_started_at": "2026-10-26T18:18:51.113437+00:00"
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "pose": "morph-c18",
+    "unmasked_RGBA_identical": true,
+    "masked_alpha_empty": true
+  },
+  {
+    "pose": "morph-c24",
+    "unmasked_RGBA_identical": true,
+    "masked_alpha_empty": true
+  },
+  {
+    "pose": "morph-c25",
+    "unmasked_RGBA_identical": true,
+    "masked_alpha_empty": true
+  },
+  {
+    "pose": "morph-c26",
+    "unmasked_RGBA_identical": true,
+    "masked_alpha_empty": true
+  }
+]

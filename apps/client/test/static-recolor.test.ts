@@ -1,10 +1,14 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
-import { paintSheet, SHEETS } from "../src/render/sprites";
+import { paintSheet, SHEETS, type SheetLayout } from "../src/render/sprites";
 
-const path = fileURLToPath(new URL("../public/sprites/static-final.png", import.meta.url));
-const raw = new Uint8ClampedArray(execFileSync("python", ["-c", "from PIL import Image; import sys; sys.stdout.buffer.write(Image.open(sys.argv[1]).convert('RGBA').tobytes())", path], { maxBuffer: 64 * 1024 * 1024 }));
+const pixelsOf = (file: string) => new Uint8ClampedArray(execFileSync("python", ["-c", "from PIL import Image; import sys; sys.stdout.buffer.write(Image.open(sys.argv[1]).convert('RGBA').tobytes())", fileURLToPath(new URL(`../public/sprites/${file}`, import.meta.url))], { maxBuffer: 64 * 1024 * 1024 }));
+// The sheet holds rows 0-17; the victory (row 18 of the poses) is an image of its own, painted as its own layout.
+const atlases = [
+  { raw: pixelsOf("static-final.png"), sheet: SHEETS.static as SheetLayout, first: 0, rows: 18 },
+  { raw: pixelsOf("static-victory.png"), sheet: { ...SHEETS.static, ...SHEETS.static.victory.image } as SheetLayout, first: 18, rows: 1 },
+];
 
 // Measured option4 pixels: row, column, hair RGBA, coat RGBA.
 const samples = [
@@ -118,23 +122,25 @@ const samples = [
 ] as const;
 
 it.each([false, true])("protects real hair and repaints real coat in all 107 poses (cropped: %s)", (cropped) => {
-  const sheet = SHEETS.static;
   expect(samples).toHaveLength(107);
-  for (const color of [[210, 40, 40], [40, 180, 80], [220, 190, 40]] as const) {
-    for (const firstRow of cropped ? Array.from({ length: 19 }, (_, row) => row) : [0]) {
-      const start = firstRow * sheet.frameH * sheet.width * 4;
-      const pixels = cropped ? raw.slice(start, start + sheet.frameH * sheet.width * 4) : raw.slice();
-      paintSheet(pixels, sheet, color, firstRow);
-      for (const [row, column, hair, coat] of samples) {
-        if (cropped && row !== firstRow) continue;
-        for (const [sample, preserved] of [[hair, true], [coat, false]] as const) {
-          const [x, y, ...rgba] = sample;
-          const absolute = ((row * sheet.frameH + y) * sheet.width + column * sheet.frameW + x) * 4;
-          const offset = absolute - (cropped ? start : 0);
-          expect([...raw.slice(absolute, absolute + 4)], `${row}/${column} source`).toEqual(rgba);
-          if (preserved) expect([...pixels.slice(offset, offset + 4)], `${row}/${column} hair`).toEqual(rgba);
-          else expect([...pixels.slice(offset, offset + 3)], `${row}/${column} coat`).not.toEqual(rgba.slice(0, 3));
-          expect(pixels[offset + 3]).toBe(rgba[3]);
+  for (const { raw, sheet, first, rows } of atlases) {
+    for (const color of [[210, 40, 40], [40, 180, 80], [220, 190, 40]] as const) {
+      for (const firstRow of cropped ? Array.from({ length: rows }, (_, row) => row) : [0]) {
+        const start = firstRow * sheet.frameH * sheet.width * 4;
+        const pixels = cropped ? raw.slice(start, start + sheet.frameH * sheet.width * 4) : raw.slice();
+        paintSheet(pixels, sheet, color, firstRow);
+        for (const [pose, column, hair, coat] of samples) {
+          const row = pose - first;
+          if (row < 0 || row >= rows || (cropped && row !== firstRow)) continue;
+          for (const [sample, preserved] of [[hair, true], [coat, false]] as const) {
+            const [x, y, ...rgba] = sample;
+            const absolute = ((row * sheet.frameH + y) * sheet.width + column * sheet.frameW + x) * 4;
+            const offset = absolute - (cropped ? start : 0);
+            expect([...raw.slice(absolute, absolute + 4)], `${pose}/${column} source`).toEqual(rgba);
+            if (preserved) expect([...pixels.slice(offset, offset + 4)], `${pose}/${column} hair`).toEqual(rgba);
+            else expect([...pixels.slice(offset, offset + 3)], `${pose}/${column} coat`).not.toEqual(rgba.slice(0, 3));
+            expect(pixels[offset + 3]).toBe(rgba[3]);
+          }
         }
       }
     }

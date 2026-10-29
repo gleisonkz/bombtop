@@ -1,0 +1,30 @@
+{
+  "reference": "naruto-user-sheet.png",
+  "front_crop": "naruto-front-reference.png",
+  "unzoom_job": "48578698-0e46-42ac-8147-fe15639675c4",
+  "size": [
+    192,
+    256
+  ],
+  "effects": "none",
+  "scope": "Concept only; no game edits",
+  "jobs": [
+    {
+      "option": 1,
+      "job_id": "d2d66dc7-ead9-4c15-9ed8-cefd15f5ce89"
+    },
+    {
+      "option": 2,
+      "job_id": "8f4f7392-1a37-4ac2-b514-47fabb9d238b"
+    },
+    {
+      "option": 3,
+      "job_id": "606a44bb-c60a-445f-96b9-74e7e8ae9902"
+    },
+    {
+      "option": 4,
+      "job_id": "5669779a-dbea-4dd2-af66-111002dd8e61"
+    }
+  ],
+  "status": "processing"
+}
