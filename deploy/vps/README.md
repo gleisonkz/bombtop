@@ -1,7 +1,9 @@
 # Game server on the VPS
 
 Hostinger KVM 1, Campinas (BR), Ubuntu; ~6 ms from São Paulo (Render's Oregon was ~196 ms).
-Public URL: `wss://187-127-63-110.sslip.io` (Caddy terminates TLS, proxies to `127.0.0.1:2567`).
+Public URL: https://bombtop.tech (Caddy terminates TLS). The client is served from `/srv/bombtop/current`
+(a release put there by GitHub Actions, `.github/workflows/deploy-client.yml`, as user `deploy`; the last 3 are kept)
+and the game server is proxied under `/colyseus` to `127.0.0.1:2567`. `wss://187-127-63-110.sslip.io` still reaches it.
 
 - `bombtop.service`: the Colyseus server (`tsx`), user `bombtop`, app in `/opt/bombtop/app`.
 - `bombtop-update.timer` runs `update.sh` every minute: when `origin/main` moved, it pulls,

@@ -1,4 +1,33 @@
-# TLS (Let's Encrypt) in front of the game server. sslip.io resolves to the IP in the name.
+# TLS (Let's Encrypt) in front of the game and its client.
+# The client (static PWA) is put in /srv/bombtop/current by .github/workflows/deploy-client.yml;
+# it reaches the game server on the same origin, under /colyseus (VITE_SERVER_URL=/colyseus).
+bombtop.tech {
+	encode zstd gzip
+
+	handle /colyseus* {
+		uri strip_prefix /colyseus
+		reverse_proxy 127.0.0.1:2567
+	}
+
+	handle {
+		root * /srv/bombtop/current
+		# Room pages, a TV watching a room, a friend's offline room and the guides are the same single-page app.
+		@spa path /sala/* /tv/* /wifi/* /itens /personagens
+		rewrite @spa /index.html
+		# Let the PWA pick up new deploys right away; hashed bundles never change.
+		header /sw.js Cache-Control no-cache
+		header /index.html Cache-Control no-cache
+		header /assets/* Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+}
+
+www.bombtop.tech {
+	redir https://bombtop.tech{uri} permanent
+}
+
+# The game server's old address (clients built before the move to bombtop.tech).
+# sslip.io resolves to the IP in the name.
 187-127-63-110.sslip.io {
 	reverse_proxy 127.0.0.1:2567
 }

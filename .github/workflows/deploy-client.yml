@@ -1,0 +1,49 @@
+# Builds the client (static PWA) and puts it on the VPS, served by Caddy at https://bombtop.tech.
+# Each deploy is its own release folder; /srv/bombtop/current is switched to it in one step.
+name: Deploy client
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/client/**
+      - packages/shared/**
+      - pnpm-lock.yaml
+      - .github/workflows/deploy-client.yml
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-client
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npx --yes pnpm@12.11.2 install --frozen-lockfile --filter @bombtop/client...
+
+      - name: Build
+        run: npx --yes pnpm@12.11.2 -C apps/client build
+        env:
+          VITE_SERVER_URL: /colyseus
+
+      - name: Upload
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+          release=/srv/bombtop/releases/$GITHUB_SHA
+          rsync -a --delete apps/client/dist/ deploy@187.127.63.110:$release/
+          ssh deploy@187.127.63.110 "ln -sfn $release /srv/bombtop/current.new && mv -T /srv/bombtop/current.new /srv/bombtop/current \
+            && cd /srv/bombtop/releases && ls -1t | tail -n +4 | xargs -r rm -rf"

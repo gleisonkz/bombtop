@@ -20,7 +20,7 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   fewer than two players left, goes back to the lobby. The score starts from zero on each match from the lobby. In the
   arena a score bar on the top wall shows each player's head and rounds won, either side of the clock
   (`render/score-bar.ts`, `Renderer.setScore`; a name on the top row goes under its player's feet).
-- **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Render rewrites `/sala/*` to `index.html` (`render.yaml`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in `render.yaml`), and so does the character guide at `/personagens` (`ui/character-guide.ts`: each character's story, special with tips, voice lines, every sheet animation via `characterMoves`, and their special played live in a small arena, `specialShowcase` in `game/showcase.ts`; heard through `audio/cues.ts`). A new character needs an entry there too (`test/character-guide.test.ts` fails otherwise).
+- **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Caddy rewrites `/sala/*` to `index.html` (`deploy/vps/Caddyfile`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in the Caddyfile), and so does the character guide at `/personagens` (`ui/character-guide.ts`: each character's story, special with tips, voice lines, every sheet animation via `characterMoves`, and their special played live in a small arena, `specialShowcase` in `game/showcase.ts`; heard through `audio/cues.ts`). A new character needs an entry there too (`test/character-guide.test.ts` fails otherwise).
 - **Anti-cheat:** server authority; client only sends inputs.
 - **Offline (Wi-Fi) play:** "Jogar offline" in the menu. One phone hosts: `LocalHost` (`net/local-host.ts`) runs `RoomCore`
   in the browser and the host plays through a loopback `RoomLink`; friends connect by WebRTC data channel (`net/rtc-pair.ts`,
@@ -36,7 +36,7 @@ QR codes stay for no internet ("Sem internet?" buttons). Which way the phones' c
 internet") shows with ?debug and goes in the 5 s connection reports, which an offline match sends over `POST /net`. `OnlineGame` plays any `RoomLink` (`net/room-link.ts`), Colyseus or local. The PWA precaches everything,
   so it opens without internet once visited.
 - **TV mode (watching):** the 📺 button next to "Entrar" in the menu watches the room of the typed code; the address
-  becomes `/tv/<code>` (`net/invite.ts`; rewritten in `render.yaml`, like `/wifi/*`), so a reload watches again. The TV joins with
+  becomes `/tv/<code>` (`net/invite.ts`; rewritten in the Caddyfile, like `/wifi/*`), so a reload watches again. The TV joins with
   `{ watch: true }`: `RoomCore.watch` gives it every broadcast but no seat (only `sync` is heard from it), up to
   `MAX_WATCHERS`, any time, even mid-match; lobbies show how many screens watch (`LobbyInfo.watchers`). For that the
   server never locks a room: one in a match or full is taken out of public matchmaking with `setPrivate` instead
@@ -95,10 +95,12 @@ internet") shows with ?debug and goes in the 5 s connection reports, which an of
 - phone testing (fixed URL, keeps an installed PWA working): `MSYS_NO_PATHCONV=1 PWA_DEV=1 VITE_SERVER_URL=/colyseus pnpm -C apps/client dev --port 5199 --strictPort` + `ngrok http 5199 --url=https://olive-telegnostic-softheartedly.ngrok-free.dev` (log `.agent/ngrok.log`). In Git Bash, `MSYS_NO_PATHCONV=1` stops `/colyseus` from being rewritten to a Windows path. `PWA_DEV=1` turns the service worker on in dev (only for this; plain `pnpm dev` runs without it so pages never go stale).
 - In dev, the latest server snapshot is exposed for debugging: `window.__snapshot`; the renderer as `window.__renderer`
   (leave to the menu, then `__renderer.draw(snapshot, new Map(), 1)` to inspect a still frame).
-- Deploy: client = Render static site (`render.yaml`), built with `VITE_SERVER_URL` = the game server URL.
-  Game server = Hostinger VPS in Brazil (`deploy/vps`, ~6 ms from São Paulo vs ~196 ms on Render's Oregon):
-  `wss://187-127-63-110.sslip.io`, auto-deployed from `main` within ~1-2 min by a systemd timer.
-  The old Render server (`bombtop-server`, free, sleeps when idle) is still in the Blueprint as a fallback.
+- Deploy: everything on the Hostinger VPS in Brazil (`deploy/vps`, ~6 ms from São Paulo), at https://bombtop.tech.
+  Client = static PWA built by GitHub Actions (`.github/workflows/deploy-client.yml`, `VITE_SERVER_URL=/colyseus`) and
+  rsynced to `/srv/bombtop/releases/<sha>` (user `deploy`, secrets `VPS_SSH_KEY`/`VPS_KNOWN_HOSTS`), `current` switched to it.
+  Game server = same origin under `/colyseus` (Caddy strips the prefix), auto-deployed from `main` within ~1-2 min by a
+  systemd timer; the old `wss://187-127-63-110.sslip.io` still reaches it. Render was dropped (Oct 2026): the free
+  plan's 5 GB/month ran out (the PWA precaches ~40 MB a new visitor).
 
 ## Mechanics (all in `packages/shared/src`)
 
@@ -371,4 +373,4 @@ TDD: write the failing test first (`packages/shared/test`, `apps/*/test`), then 
 then refactor. Atomic commits: one logical change per commit, every commit green.
 
 Work directly on `main` (no feature branches for now) and push to `origin/main`: every push to `main`
-auto-deploys both Render services (server and static client), so keep `main` green.
+auto-deploys the server and the client (VPS), so keep `main` green.
