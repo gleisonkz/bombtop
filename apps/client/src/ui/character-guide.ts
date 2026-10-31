@@ -313,7 +313,7 @@ const INFO: Record<CharacterId, Info> = {
     special: {
       name: "Promessa de picanha",
       recharge: "20 s",
-      text: "Deixa uma picanha na casa da frente. Ela parece um item como qualquer outro, mas quem pegar fica parado, decepcionado, por 2 s. O Lula passa por cima da própria picanha sem pegar, e o fogo queima ela como qualquer item. Só funciona numa casa livre: sem bloco, bomba, item ou jogador.",
+      text: "Deixa uma picanha na casa da frente. Ela parece um item como qualquer outro, mas quem pegar fica parado, decepcionado, por 2 s, e ainda perde um dos seus itens, sorteado, que cai em algum lugar da arena. O Lula passa por cima da própria picanha sem pegar, e o fogo queima ela como qualquer item. Só funciona numa casa livre: sem bloco, bomba, item ou jogador.",
       tips: [
         "Deixe a picanha no caminho do rival: quem vai atrás de item cai direitinho.",
         "Rival parado? Corra e solte uma bomba do lado dele: são 2 s sem sair do lugar.",

@@ -38,7 +38,10 @@ const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Skull]: (p, s) => applyRandomCurse(s, p),
   [ItemKind.FullFire]: (p) => (p.fireRange = MAX_FIRE_RANGE),
   [ItemKind.Egg]: (p, s) => giveRandomMount(s, p),
-  [ItemKind.Picanha]: (p) => (p.stun = SPECIAL_STUN_TICKS),
+  [ItemKind.Picanha]: (p, s) => {
+    p.stun = SPECIAL_STUN_TICKS;
+    scatterCurseItem(s, p);
+  },
 };
 
 /** Living players collect any exposed item on their tile. */

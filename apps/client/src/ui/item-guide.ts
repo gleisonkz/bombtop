@@ -84,7 +84,7 @@ const INFO: Record<ItemKind, { name: string; text: string; tips: string[] }> = {
   },
   [ItemKind.Picanha]: {
     name: "Picanha",
-    text: "A promessa do Lula: parece um item, mas quem pega fica parado, decepcionado, por 3 s. Só aparece quando o Lula usa o especial.",
+    text: "A promessa do Lula: parece um item, mas quem pega fica parado, decepcionado, por 2 s, e perde um dos seus itens, sorteado, que cai em algum lugar da arena. Só aparece quando o Lula usa o especial.",
     tips: ["O Lula passa por cima da própria picanha sem pegar.", "Fogo queima a picanha como qualquer item."],
   },
   [ItemKind.Egg]: {

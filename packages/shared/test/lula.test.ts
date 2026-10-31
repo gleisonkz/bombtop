@@ -52,6 +52,31 @@ describe("lula's promise of picanha", () => {
     expect(s.items.some((i) => i.kind === ItemKind.Picanha)).toBe(false);
   });
 
+  it("whoever picks it up also loses one of their power-ups at random, scattered onto open floor", () => {
+    const s = duel();
+    cast(s);
+    const p2 = player(s, "p2");
+    p2.fireRange += 2;
+    p2.canKick = true;
+    const fire = p2.fireRange;
+    placePlayerAt(s, "p2", 3, 5);
+    idle(s);
+    const lost = (fire - p2.fireRange) + (p2.canKick ? 0 : 1);
+    expect(lost).toBe(1);
+    const dropped = s.items.filter((i) => i.kind === ItemKind.Fire || i.kind === ItemKind.Kick);
+    expect(dropped).toHaveLength(1);
+    expect(dropped[0]!.kind).toBe(p2.canKick ? ItemKind.Fire : ItemKind.Kick);
+  });
+
+  it("with no power-ups to lose, it only stuns", () => {
+    const s = duel();
+    cast(s);
+    placePlayerAt(s, "p2", 3, 5);
+    idle(s);
+    expect(player(s, "p2").stun).toBeGreaterThan(0);
+    expect(s.items).toHaveLength(0);
+  });
+
   it("lula walks over his own picanha: it stays", () => {
     const s = duel();
     cast(s);

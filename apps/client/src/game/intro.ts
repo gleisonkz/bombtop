@@ -31,7 +31,7 @@ const CARDS: { from: number; to: number; card: IntroCard }[] = [
   { from: 1880, to: 2040, card: { name: "Harry Potter", line: "Expecto Patronum! O cervo prateado galopa e deixa tonto todo mundo no caminho." } },
   { from: 2040, to: 2210, card: { name: "Optimus Prime", line: "Autobots, rolar! Vira caminhão e leva no para-choque quem estiver na frente." } },
   { from: 2210, to: 2390, card: { name: "Pelé", line: "Chute de craque! A bola vai longe e derruba quem estiver na frente." } },
-  { from: 2390, to: 2570, card: { name: "Lula", line: "Promessa de picanha! Deixa uma picanha no chão, e quem pega fica parado, decepcionado." } },
+  { from: 2390, to: 2570, card: { name: "Lula", line: "Promessa de picanha! Deixa uma picanha no chão, e quem pega fica parado, decepcionado, e ainda perde um item." } },
 ];
 const LOGO_FROM = 2570;
 /** Ticks donatello waits after his spin before stepping down onto lula's picanha. */
