@@ -1,4 +1,4 @@
-import { FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
+import { CONVEYOR_SPEED, FLAME_TICKS, FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
 import { forecastStageBalls } from "./stage-balls";
 import { pressureOrder } from "./pressure";
 import { cursedDirection, effectiveCapacity, effectiveFuse, effectiveRange, effectiveSpeed } from "./curse";
@@ -518,7 +518,43 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
     }
   }
   for (const b of bombs) for (const [x, y] of blasts.get(b)!) mark(x, y, Math.max(0, when.get(b)!));
+  beltDrift(s, danger, occ, mark);
   return danger;
+}
+
+/**
+ * Standing on a belt is not standing still: it carries a player down the belt until it ends or
+ * something stops it. A belt tile that would carry a player into a tile while it burns is no
+ * place to stop (bots stopped on tiles they thought safe and drifted into the fire).
+ */
+function beltDrift(s: MatchState, danger: Danger, occ: Occupancy, mark: (x: number, y: number, t: number) => void): void {
+  if (!danger.size) return;
+  const w = s.grid.width;
+  const perTile = TILE / Math.max(1, CONVEYOR_SPEED * stageTempoRate(s));
+  let base: Danger | undefined;
+  for (let index = 0; index < s.grid.floor.length; index++) {
+    let dir = conveyorDirection(s.grid.floor[index]!);
+    if (!dir) continue;
+    base ??= new Map(danger);
+    let x = index % w;
+    let y = Math.floor(index / w);
+    let worst: number | undefined;
+    const seen = new Set([index]);
+    for (let i = 1; dir; i++) {
+      const [dx, dy] = DIR_VECTORS[dir];
+      const k = (y + dy) * w + x + dx;
+      if (seen.has(k) || getTile(s, x + dx, y + dy) !== Tile.Empty || occ.bombs.has(k) || stageSolid(s, x + dx, y + dy)) break;
+      seen.add(k);
+      x += dx;
+      y += dy;
+      const burns = base.get(k);
+      // Carried in from the tile's middle half a tile in: in by then, unless its fire is out. The mark
+      // is the fire's own time: walking across the belt is not riding it, so crossing stays as open.
+      if (burns !== undefined && (i - 0.5) * perTile <= burns + FLAME_TICKS) worst = Math.min(worst ?? Infinity, burns);
+      dir = conveyorDirection(getFloor(s, x, y));
+    }
+    if (worst !== undefined) mark(index % w, Math.floor(index / w), worst);
+  }
 }
 
 /** Keep every possible belt origin: obstruction or an early chain can stop transport short. */

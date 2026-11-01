@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Bot, Floor, FUSE_TICKS, placePlayerAt, Tile, TILE, CONVEYOR_SPEED } from "../src";
+import { Bot, Floor, FLAME_TICKS, FUSE_TICKS, placePlayerAt, playerTile, step, Tile, TILE, CONVEYOR_SPEED } from "../src";
 import * as slides from "../src/kick";
 import { emptyMatch } from "./helpers";
 
@@ -21,6 +21,25 @@ describe("bot conveyor threats", () => {
     expect(input.dir).not.toBeNull();
     expect(input.bomb).toBe(false);
     expect(s).toEqual(before);
+  });
+
+  it("gets off a belt that would carry it into a blast", () => {
+    const s = emptyMatch();
+    s.grid.tiles.fill(Tile.Wall);
+    const open = (x: number, y: number) => (s.grid.tiles[y * s.grid.width + x] = Tile.Empty);
+    for (let x = 1; x <= 6; x++) open(x, 5);
+    open(3, 4);
+    open(11, 9);
+    // The bot's tile is clear of the blast, but the belt carries it into it.
+    for (let x = 2; x <= 6; x++) s.grid.floor[5 * s.grid.width + x] = Floor.ConveyorLeft;
+    placePlayerAt(s, "p1", 5, 5);
+    placePlayerAt(s, "p2", 11, 9);
+    s.players[0]!.specialCooldown = FUSE_TICKS * 2;
+    s.bombs.push({ ownerId: "p2", x: 1, y: 5, fuse: FUSE_TICKS, range: 1, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
+    const bot = new Bot("p1", "hard");
+    for (let t = 0; t < FUSE_TICKS + FLAME_TICKS + 10; t++) step(s, { p1: bot.input(s) });
+    expect(s.players[0]!.alive).toBe(true);
+    expect(playerTile(s.players[0]!)).toEqual({ x: 3, y: 4 });
   });
 
   it.each([false, true])("checks transported origins of a proposed bomb (belt: %s)", (belt) => {
