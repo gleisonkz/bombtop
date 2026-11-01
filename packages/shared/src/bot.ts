@@ -682,7 +682,8 @@ function bombValue(s: MatchState, p: Player, x: number, y: number, range = effec
   const tiles = blast(s, { x, y, range, type });
   for (const [tx, ty] of tiles) {
     const flag = s.stageState?.flags?.find(f => !f.destroyed && f.x === tx && f.y === ty);
-    if (flag?.ownerId === p.id) return 0;
+    // Its own flag in its hands burns only with it, and escaping covers that.
+    if (flag?.ownerId === p.id && flag.carriedBy !== p.id) return 0;
     if (flag?.ownerId) value += 8;
     if (getTile(s, tx, ty) === Tile.Block) value += 1;
     if (s.players.some((o) => o.id !== p.id && o.alive && o.sneak === 0 && playerTile(o).x === tx && playerTile(o).y === ty)) value += 5;
