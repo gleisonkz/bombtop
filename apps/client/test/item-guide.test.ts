@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ItemKind } from "@bombtop/shared";
-import { ITEM_GUIDE } from "../src/ui/item-guide";
+import { ITEM_CATEGORIES, ITEM_GUIDE, ITEM_GROUPS } from "../src/ui/item-guide";
 import { ITEMS } from "../src/render/sprites";
 
 describe("item guide", () => {
@@ -29,5 +29,17 @@ describe("item guide", () => {
 
   it("points at the item's cell on the sheet", () => {
     expect(ITEM_GUIDE[2]!.cell).toBe(2 * ITEMS.size);
+  });
+
+  it("sorts every item into one of the tray's groups, each with a badge", () => {
+    expect(ITEM_CATEGORIES.map((c) => c.id)).toEqual(["power", "bomb", "defense", "danger"]);
+    for (const i of ITEM_GUIDE) {
+      expect(ITEM_CATEGORIES.map((c) => c.id), i.kind).toContain(i.cat);
+      expect(i.badge.length, i.kind).toBeGreaterThan(2);
+    }
+    const tray = ITEM_GROUPS.flatMap((g) => g.items.map((i) => i.kind));
+    expect([...tray].sort()).toEqual(ITEM_GUIDE.map((i) => i.kind).sort());
+    expect(ITEM_GROUPS.map((g) => g.id)).toEqual(ITEM_CATEGORIES.map((c) => c.id));
+    for (const g of ITEM_GROUPS) for (const i of g.items) expect(i.cat).toBe(g.id);
   });
 });
