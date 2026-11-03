@@ -338,6 +338,13 @@ Art is HD: everything else (bombs, items, flames, tiles) is also drawn by script
 - Front-end monitoring (`deploy/vps/README.md`): every player's match reports its connection to the server's log every
   5 s (`net-<date>.jsonl`), and every page reports opening, crashing (found on the next opening: `net/client-log.ts`
   `AliveMark`) and script errors over `POST /log` (`client-<date>.jsonl`).
+- Match replays (`packages/shared/src/replay.ts`): the sim is deterministic, so each round is kept as its `createMatch`
+  options plus every input fed to `step` (bots' moves included, kept only when they change; also who left and when
+  sudden death was moved up). `BattleSession` records them (`replay()`, `record` option), `RoomCore` hands each round's
+  over (`RoomOutput.replay`): the server saves them (`replay-log.ts`, see `deploy/vps/README.md`), a `LocalHost` posts
+  them to `POST /replay`. `pnpm -C packages/shared replay <file> [--tick N]` prints who played, the result and a
+  timeline (`replayEvents`: bombs, items, specials, stuns, lifts, deaths) and dumps the match at a tick. A replay plays
+  back exactly only on its `commit`: check that out first. A bug found in one becomes a test (`replayMatch`).
 - Telling a lag's cause apart: the connection reports (see `deploy/vps/README.md`) carry snapshot gaps, stalled frames, our own
   CPU time per frame (`work`) and the server's slowest tick (`tick`). Measured (Oct 2026): a server tick with 4 hard bots
   costs ~0.2 ms p99 of its 16.67 ms, so bots are not a lag source; look at the network and the phone first.

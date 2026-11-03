@@ -35,3 +35,4 @@ export * from "./room/input-queue";
 export * from "./room/snapshot-stream";
 export * from "./room/core";
 export * from "./tick-clock";
+export * from "./replay";

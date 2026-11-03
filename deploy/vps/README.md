@@ -20,6 +20,9 @@ and the game server is proxied under `/colyseus` to `127.0.0.1:2567`. `wss://187
   reports over HTTP when they have internet (`POST /net`, `offlineNetRoute`), logged as room `wifi:<code>` with
   `route`: `wifi` (the phones talk straight over the Wi-Fi or through its router) or `internet` (out and back: a phone on
   mobile data, or a Wi-Fi keeping its devices apart).
+- Match replays, every round played (`apps/server/src/replay-log.ts`): `/opt/bombtop/logs/replays/YYYY-MM-DD/<HHMMSS>-<room>-r<round>.json`,
+  kept 30 days. Rounds played in a browser (offline, couch play) are sent over `POST /replay` (room `offline`/`couch`,
+  `commit` = the client's build). Read one with `pnpm -C packages/shared replay <file> [--tick N]` (copy it over with scp).
 - Pages' own events, from every visitor (`POST /log`, `apps/server/src/client-log.ts`; at most 20 a minute an
   address): `/opt/bombtop/logs/client-YYYY-MM-DD.jsonl`. `boot` = a page opened (path, screen size, device
   memory, build `v`, user agent); `crash` = the last page died in front of the player without closing (what

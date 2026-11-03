@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { C2S, S2C, type LobbyInfo } from "@bombtop/shared";
+import { C2S, S2C, type LobbyInfo, type Replay } from "@bombtop/shared";
 import { LocalHost, PeerLink, type Wire } from "../src/net/local-host";
 
 /** Two connected in-memory wires (what a WebRTC data channel pair does). */
@@ -68,6 +68,21 @@ describe("LocalHost", () => {
     await pad.leave();
     await flush();
     expect(lobbies.at(-1)!.members.map((m) => m.name)).toEqual(["Ana"]);
+  });
+
+  it("hands each round's replay over when it ends (to send to the server)", async () => {
+    const got: Replay[] = [];
+    const host = new LocalHost((r) => got.push(r));
+    const me = host.hostLink("Ana", "bomb");
+    const pad = host.seat("Controle 2", "thor")!;
+    pad.send(C2S.ready, { ready: true });
+    me.send(C2S.start);
+    await flush();
+    host.tick();
+    await pad.leave();
+    await flush();
+    host.tick();
+    expect(got.map((r) => r.players.map((p) => p.name))).toEqual([["Ana", "Controle 2"]]);
   });
 
   it("does not seat a controller when the room is full", () => {

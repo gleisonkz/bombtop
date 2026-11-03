@@ -5,6 +5,7 @@ import { BattleRoom } from "./room";
 import { logRoute } from "./client-log";
 import { LanDirectory, lanRoute } from "./lan";
 import { NetLog, offlineNetRoute } from "./net-log";
+import { ReplayLog, replayRoute } from "./replay-log";
 
 const port = Number(process.env.PORT ?? 2567);
 /** Pages' own events (boots, crashes, script errors), beside the connection reports (deploy/vps/README.md). */
@@ -14,6 +15,8 @@ const clientLog = logRoute(new NetLog(process.env.LOG_DIR ?? "logs", undefined, 
 const lan = lanRoute(new LanDirectory());
 /** Offline (Wi-Fi) matches' connection reports, beside the online ones (net-<date>.jsonl). */
 const offlineNet = offlineNetRoute(new NetLog(process.env.LOG_DIR ?? "logs"));
+/** Rounds played in a browser (offline, couch play) send their replays here, beside the server's own. */
+const replays = replayRoute(new ReplayLog(process.env.LOG_DIR ?? "logs"));
 
 const server = defineServer({
   transport: new WebSocketTransport(),
@@ -22,6 +25,7 @@ const server = defineServer({
   express: (app) => {
     app.post("/log", (req: Parameters<typeof clientLog>[0], res: Parameters<typeof clientLog>[1]) => void clientLog(req, res));
     app.post("/net", (req: Parameters<typeof offlineNet>[0], res: Parameters<typeof offlineNet>[1]) => void offlineNet(req, res));
+    app.post("/replay", (req: Parameters<typeof replays>[0], res: Parameters<typeof replays>[1]) => void replays(req, res));
     app.post("/lan/:op", (req: Parameters<typeof lan>[0], res: Parameters<typeof lan>[1]) => void lan(req, res));
   },
 });

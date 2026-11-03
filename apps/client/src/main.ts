@@ -17,6 +17,7 @@ import { SideHud } from "./ui/side-hud";
 import { Pairing } from "./ui/pairing";
 import { CouchSeats } from "./input/couch";
 import { hidPads } from "./input/ds4-hid";
+import { replayUploader } from "./net/replay-upload";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
@@ -270,7 +271,7 @@ const menu = new Menu(ui, {
     const who = account?.name ?? name;
     pairing.choose(
       () => {
-        const host = new LocalHost();
+        const host = new LocalHost(replayUploader(SERVER_URL, __APP_VERSION__, "offline"));
         const link = host.hostLink(who, savedCharacter());
         const beacon = listOffline(host, who);
         playOffline(link, () => pairing.invite(beacon.id, host), null, offlineReports(() => beacon.id ?? "offline", who));
@@ -289,7 +290,7 @@ const menu = new Menu(ui, {
   couch: (name) => {
     // This screen hosts the room (no server); the first controller (or the keyboard) is player one and
     // every other controller joins with A. Friends' phones can still pair in over Wi-Fi.
-    const host = new LocalHost();
+    const host = new LocalHost(replayUploader(SERVER_URL, __APP_VERSION__, "couch"));
     const who = account?.name ?? name;
     const link = host.hostLink(who, savedCharacter());
     const beacon = listOffline(host, who);

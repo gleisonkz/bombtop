@@ -9,7 +9,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "bench": "tsx bench/ticks.ts"
+    "bench": "tsx bench/ticks.ts",
+    "replay": "tsx bench/replay.ts"
   },
   "devDependencies": {
     "tsx": "^4.23.15",

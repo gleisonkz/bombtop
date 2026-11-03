@@ -1,4 +1,4 @@
-import { MAX_PLAYERS, RoomCore, TICK_RATE } from "@bombtop/shared";
+import { MAX_PLAYERS, RoomCore, TICK_RATE, type Replay } from "@bombtop/shared";
 import type { LanRoomInfo } from "./lan";
 import { worstRoute, type Route } from "./rtc-route";
 import type { RoomLink } from "./room-link";
@@ -47,8 +47,10 @@ export class LocalHost {
   private closed = false;
   private closeListeners: (() => void)[] = [];
 
-  constructor() {
+  /** `onReplay`: each round's replay when it ends (no server ran it, so it is sent there to keep). */
+  constructor(onReplay?: (replay: Replay) => void) {
     this.core = new RoomCore(OFFLINE_CODE, {
+      ...(onReplay && { replay: onReplay }),
       send: (id, type, message) => this.links.get(id)?.(type, message),
       broadcast: (type, message) => {
         for (const deliver of this.links.values()) deliver(type, message);

@@ -2,9 +2,12 @@ import { Room, type Client } from "@colyseus/core";
 import { C2S, MAX_PLAYERS, MAX_WATCHERS, RoomCore, TickClock, TICK_RATE } from "@bombtop/shared";
 import { authConfigFromEnv, authenticate, type AuthUser } from "./auth";
 import { NetLog, netReport, TickCost } from "./net-log";
+import { ReplayLog } from "./replay-log";
 
 /** ?debug clients' connection reports, read over SSH (deploy/vps/README.md). */
 const netLog = new NetLog(process.env.LOG_DIR ?? "logs");
+/** Every round played, to play back when a bug turns up (`pnpm -C packages/shared replay <file>`). */
+const replayLog = new ReplayLog(process.env.LOG_DIR ?? "logs");
 
 const authConfig = authConfigFromEnv();
 
@@ -29,6 +32,13 @@ export class BattleRoom extends Room {
     broadcast: (type, message) => this.broadcast(type, message),
     phaseChanged: () => this.refreshListing(),
     seatsChanged: () => this.refreshListing(),
+    replay: (replay) => {
+      try {
+        replayLog.write(this.roomId, replay);
+      } catch (err) {
+        console.warn("[bombtop] replay", err);
+      }
+    },
   });
   /** Created private (a room with friends): never matched publicly. */
   private privateRoom = false;

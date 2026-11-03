@@ -30,6 +30,8 @@ import {
   type StageId,
 } from "../index";
 import { InputQueue } from "./input-queue";
+import type { MatchOptions } from "../arena";
+import { ReplayRecorder, type Replay } from "../replay";
 import { DEFAULT_STAGE_ROTATION, validateStageRotation, type StageRotationEntry } from "../stage-rotation";
 
 
@@ -74,6 +76,8 @@ export interface SessionOptions {
   suddenDeath?: boolean;
   /** The stages a new room plays in turn (DEFAULT_STAGE_ROTATION when left out). */
   stageRotation?: readonly Readonly<StageRotationEntry>[];
+  /** Each round's replay, handed over when the round ends (see `Replay`). */
+  record?: (replay: Replay) => void;
 }
 
 /**
@@ -84,6 +88,8 @@ export class BattleSession {
   phase: RoomPhase = "lobby";
   members: LobbyMember[] = [];
   match: MatchState | null = null;
+  /** Records the round being played. */
+  private recorder: ReplayRecorder | null = null;
   stage: StageId = DEFAULT_STAGE_ROTATION[0]!.stage;
   private winsToWin: number;
   private timeMinutes: BattleTimeMinutes;
@@ -166,6 +172,7 @@ export class BattleSession {
     this.pickedAt.delete(id);
     this.inputs.delete(id);
     const p = this.match?.players.find((p) => p.id === id);
+    if (p && this.phase === "playing") this.recorder?.leave(this.match!.tick, id);
     if (p) {
       p.alive = false;
       p.cart = null;
@@ -322,7 +329,7 @@ export class BattleSession {
     this.round++;
     const seed = this.opts.seed?.() ?? Math.floor(Math.random() * 2 ** 32);
     const maniac = this.battleMode === "maniac" ? this.currentManiac() : null;
-    this.match = createMatch({
+    const options: MatchOptions = {
       seed,
       playerIds: this.members.map((m) => m.id),
       characters: Object.fromEntries(this.members.map((m) => [m.id, m.character])),
@@ -333,7 +340,10 @@ export class BattleSession {
       revenge: !!maniac,
       ...(maniac && { maniacItems: maniac.items, startingHitPoints: maniac.hitPoints }),
       ...(this.opts.blockDensity !== undefined && { blockDensity: this.opts.blockDensity }),
-    });
+    };
+    this.match = createMatch(options);
+    const players = this.members.map((m) => ({ id: m.id, name: m.name, character: m.character, ...(m.bot && { bot: m.bot }) }));
+    this.recorder = new ReplayRecorder(options, players, this.round);
     this.inputs.clear();
     // Each bot gets its own dice for this match, from the match's seed: replays stay the same, matches don't.
     this.bots = new Map(this.members.filter((m) => m.bot).map((m) => [m.id, new Bot(m.id, m.bot, m.persona, seed ^ hashId(m.id))]));
@@ -346,6 +356,11 @@ export class BattleSession {
     const queue = this.inputs.get(id) ?? new InputQueue();
     queue.push(input, seq, clientTick, this.match.tick);
     this.inputs.set(id, queue);
+  }
+
+  /** The replay of the round being played (or the last one), so far. */
+  replay(): Replay | null {
+    return this.recorder?.replay ?? null;
   }
 
   private snapshot(match: MatchState): Snapshot {
@@ -372,8 +387,12 @@ export class BattleSession {
     for (const [id, queue] of this.inputs) inputs[id] = queue.take(this.match.tick);
     // once the humans are out, the bots go all out (botHeat): nobody waits out a long bots-only standoff
     const humansAlive = this.match.players.some((p) => p.alive && !this.bots.has(p.id));
-    if (!humansAlive && this.match.pressureAt > this.match.tick + BOTS_ONLY_HURRY) this.match.pressureAt = this.match.tick + BOTS_ONLY_HURRY;
+    if (!humansAlive && this.match.pressureAt > this.match.tick + BOTS_ONLY_HURRY) {
+      this.match.pressureAt = this.match.tick + BOTS_ONLY_HURRY;
+      this.recorder?.pressure(this.match.tick, this.match.pressureAt);
+    }
     for (const [id, bot] of this.bots) inputs[id] = bot.input(this.match, humansAlive);
+    this.recorder?.step(this.match.tick, inputs);
     step(this.match, inputs);
 
     const result = this.battleMode === "tag" ? this.tagResult() : matchResult(this.match);
@@ -387,6 +406,12 @@ export class BattleSession {
       const winner = winners[0];
       this.setOver = !!winner && winner.wins >= (this.battleMode === "maniac" ? 3 : this.winsToWin);
       out.result = { ...result, setOver: this.setOver };
+      if (this.recorder) {
+        const ended: NonNullable<Replay["result"]> = { over: true, winnerId: result.winnerId };
+        if (winnerTeam !== undefined) ended.winnerTeam = winnerTeam as BattleTeam | null;
+        this.recorder.replay.result = ended;
+        this.opts.record?.(this.recorder.replay);
+      }
       this.phase = "results";
       this.resultsLeft = RESULTS_TICKS;
     }

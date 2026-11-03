@@ -14,6 +14,7 @@ import {
   type CharacterId,
   type RoomPhase,
 } from "../index";
+import type { Replay } from "../replay";
 import { BattleSession } from "./session";
 import { SnapshotStream } from "./snapshot-stream";
 
@@ -25,6 +26,8 @@ export interface RoomOutput {
   phaseChanged?(phase: RoomPhase): void;
   /** Bots took or freed seats: `full` means no more people fit. */
   seatsChanged?(full: boolean): void;
+  /** A round ended: its replay, to keep (see `Replay`). */
+  replay?(replay: Replay): void;
 }
 
 /**
@@ -34,7 +37,7 @@ export interface RoomOutput {
  */
 export class RoomCore {
   /** A new room plays a few SB4 stages drawn at random until the host picks others. */
-  readonly session = new BattleSession({ stageRotation: randomStageRotation() });
+  readonly session = new BattleSession({ stageRotation: randomStageRotation(), record: (r) => this.out.replay?.(r) });
   private lastPhase: RoomPhase = "lobby";
   /** Whole snapshots now and then, differences in between. */
   private readonly stream = new SnapshotStream();
