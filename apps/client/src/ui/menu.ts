@@ -151,12 +151,15 @@ export class Menu {
         el("span", { class: "version", text: versionLabel(__APP_VERSION__) }),
       ]),
     ]);
-    const preview = new ItemPreview();
+    // Both guides' scenes are heard (bombs, items, specials), one scene at a time.
+    const preview = new ItemPreview((view) => handlers.hearScene(view));
     const items = itemGuide({
       close: () => handlers.guide(null),
-      show: (kind, stage) => void preview.play(kind, stage).catch((e) => console.error("item preview", e)),
+      show: (kind, stage) => {
+        handlers.stopPreviewAudio();
+        void preview.play(kind, stage).catch((e) => console.error("item preview", e));
+      },
     });
-    // The characters' scenes are heard (their specials' sounds); the items' play silent.
     const charPreview = new ItemPreview((view) => handlers.hearScene(view), { characterColors: true });
     const characters = characterGuide({
       close: () => handlers.guide(null),
@@ -177,10 +180,8 @@ export class Menu {
       this.root.classList.toggle("guiding", !!on);
       if (on) guides[on].open();
       if (on !== "items") preview.pause();
-      if (on !== "characters") {
-        charPreview.pause();
-        handlers.stopPreviewAudio();
-      }
+      if (on !== "characters") charPreview.pause();
+      if (!on) handlers.stopPreviewAudio();
     };
     items.root.hidden = characters.root.hidden = true;
     const lineup = cast();
