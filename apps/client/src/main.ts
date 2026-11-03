@@ -205,6 +205,7 @@ const route = new RoomRoute(browserAddress);
 const guideRoutes: Record<Guide, GuideRoute> = {
   items: new GuideRoute(browserAddress, "/itens"),
   characters: new GuideRoute(browserAddress, "/personagens"),
+  maps: new GuideRoute(browserAddress, "/mapas"),
 };
 /** The guide the address shows, if any. */
 const guideInAddress = (): Guide | null => (Object.keys(guideRoutes) as Guide[]).find((g) => guideRoutes[g].isOpen()) ?? null;

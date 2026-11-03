@@ -1,11 +1,19 @@
 import { Application } from "pixi.js";
-import { CHARACTERS, publicView, TICK_RATE, type ItemKind, type PublicView } from "@bombtop/shared";
+import { CHARACTERS, publicView, TICK_RATE, type ItemKind, type MatchState, type PublicView } from "@bombtop/shared";
 import { SHOWCASE_VIEW, Showcase } from "../game/showcase";
 import { FixedStep } from "../loop/fixed-step";
 import { Renderer, TILE_PX } from "../render/renderer";
 import { CHARACTER_SHEETS } from "./sheet-art";
 import { PLAYER_COLORS } from "./art";
 import { ORIGINAL } from "../render/per-color";
+
+/** Anything the preview can play: a showcase scene, or a map's bot match (`window`: the tiles in view). */
+export interface Playable {
+  state: MatchState;
+  colors: Map<string, number>;
+  advance(): void;
+  window?: { x: number; y: number; width: number; height: number };
+}
 
 /**
  * A small arena that plays a showcase scene (an item or a special in use), for the
@@ -14,7 +22,7 @@ import { ORIGINAL } from "../render/per-color";
 export class ItemPreview {
   private app: Application | null = null;
   private renderer: Renderer | null = null;
-  private show: Showcase | null = null;
+  private show: Playable | null = null;
   private readonly loop = new FixedStep(1000 / TICK_RATE);
   private prev = new Map<string, { px: number; py: number }>();
   private ready: Promise<void> | null = null;
@@ -39,14 +47,14 @@ export class ItemPreview {
   }
 
   /** Plays `scene` (an item's, or any showcase) in `host` (the canvas moves there if it was elsewhere). */
-  async play(scene: ItemKind | Showcase, host: HTMLElement): Promise<void> {
+  async play(scene: ItemKind | Playable, host: HTMLElement): Promise<void> {
     const playback = ++this.playback;
     this.app?.ticker.stop();
     await (this.ready ??= this.init());
     if (playback !== this.playback) return;
     const app = this.app!;
     if (app.canvas.parentElement !== host) host.appendChild(app.canvas);
-    const show = (this.show = scene instanceof Showcase ? scene : new Showcase(scene));
+    const show = (this.show = typeof scene === "object" ? scene : new Showcase(scene));
     this.renderer!.setCharacters(new Map(show.state.players.map((p) => [p.id, p.character])));
     this.applyColors();
     this.resize(host);
@@ -84,12 +92,13 @@ export class ItemPreview {
   /** Fits the scene's window of the arena to the host's width. */
   private resize(host: HTMLElement): void {
     const app = this.app!;
-    const w = SHOWCASE_VIEW.width * TILE_PX;
-    const h = SHOWCASE_VIEW.height * TILE_PX;
+    const view = this.show?.window ?? SHOWCASE_VIEW;
+    const w = view.width * TILE_PX;
+    const h = view.height * TILE_PX;
     const scale = Math.max(1, host.clientWidth) / w;
     app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
     app.stage.scale.set(scale);
-    app.stage.position.set(-SHOWCASE_VIEW.x * TILE_PX * scale, -SHOWCASE_VIEW.y * TILE_PX * scale);
+    app.stage.position.set(-view.x * TILE_PX * scale, -view.y * TILE_PX * scale);
   }
 
   private frame(deltaMs: number, emitAudio = true): void {

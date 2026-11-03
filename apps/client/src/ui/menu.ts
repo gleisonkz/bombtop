@@ -5,6 +5,8 @@ import { characterGuide } from "./character-guide";
 import { connectingText } from "./connecting";
 import { controlHint } from "./control-hint";
 import { itemGuide } from "./item-guide";
+import { mapGuide } from "./map-guide";
+import { MapShowcase } from "../game/map-showcase";
 import { ItemPreview } from "./item-preview";
 import { freshReload, liteOn, toggleDebug, toggleLite, versionLabel, debugOn } from "./dev-tools";
 import { button, el, storage } from "./dom";
@@ -34,7 +36,7 @@ export interface MenuHandlers {
   logout(): void;
 }
 
-export type Guide = "items" | "characters";
+export type Guide = "items" | "characters" | "maps";
 
 const NAME_KEY = "bombtop.name";
 
@@ -145,6 +147,7 @@ export class Menu {
       el("div", { class: "row extras" }, [
         button("Ver itens", () => handlers.guide("items"), "ghost"),
         button("Personagens", () => handlers.guide("characters"), "ghost"),
+        button("Mapas", () => handlers.guide("maps"), "ghost"),
       ]),
       controlHint(),
       el("div", { class: "menu-foot" }, [
@@ -171,7 +174,16 @@ export class Menu {
       colorChanged: (color) => charPreview.setCharacterColor(color),
       hear: (sound) => handlers.hear(sound),
     });
-    const guides = { items, characters };
+    // The maps' guide plays a bot match on each map, heard like the others.
+    const mapPreview = new ItemPreview((view) => handlers.hearScene(view));
+    const maps = mapGuide({
+      close: () => handlers.guide(null),
+      show: (stage, host) => {
+        handlers.stopPreviewAudio();
+        void mapPreview.play(new MapShowcase(stage), host).catch((e) => console.error("map preview", e));
+      },
+    });
+    const guides = { items, characters, maps };
     this.showGuide = (on: Guide | null) => {
       options.close();
       options.root.hidden = !!on;
@@ -181,9 +193,10 @@ export class Menu {
       if (on) guides[on].open();
       if (on !== "items") preview.pause();
       if (on !== "characters") charPreview.pause();
+      if (on !== "maps") mapPreview.pause();
       if (!on) handlers.stopPreviewAudio();
     };
-    items.root.hidden = characters.root.hidden = true;
+    items.root.hidden = characters.root.hidden = maps.root.hidden = true;
     const lineup = cast();
     const hero = el("div", { class: "hero" }, [
       logo,
@@ -202,6 +215,7 @@ export class Menu {
       card,
       items.root,
       characters.root,
+      maps.root,
     ]);
     parent.appendChild(this.root);
     this.fitCast = observeCast(lineup);

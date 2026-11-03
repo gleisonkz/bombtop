@@ -12,7 +12,7 @@ bombtop.tech {
 	handle {
 		root * /srv/bombtop/current
 		# Room pages, a TV watching a room, a friend's offline room and the guides are the same single-page app.
-		@spa path /sala/* /tv/* /wifi/* /itens /personagens
+		@spa path /sala/* /tv/* /wifi/* /itens /personagens /mapas
 		rewrite @spa /index.html
 		# Let the PWA pick up new deploys right away; hashed bundles never change.
 		header /sw.js Cache-Control no-cache
