@@ -21,7 +21,7 @@ export const CONTROL_ROWS: { what: string; keys: string[]; note?: string }[] = [
   { what: "Bomba", keys: ["Espaço", "Enter"], note: "com luva: segure para erguer, solte para jogar" },
   { what: "Ação", keys: ["Shift"], note: "soco, empurrão, detonar a remota" },
   { what: "Especial", keys: ["E", "Ctrl dir."] },
-  { what: "Firmar", keys: ["Q", "Num 0"], note: "segure: ninguém te empurra nem te ergue" },
+  { what: "Firmar", keys: ["Q", "Num 0"], note: "segure: ninguém te empurra nem te ergue; erguido, aperte várias vezes pra se soltar" },
   { what: "Parar chute", keys: ["R", "Num 1"], note: "freia a bomba que você chutou" },
   { what: "Sair", keys: ["Esc"] },
 ];
