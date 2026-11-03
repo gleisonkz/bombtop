@@ -38,6 +38,26 @@ export function playerCarryButton(s: MatchState, p: Player, input: PlayerInput, 
   return true;
 }
 
+/** Fresh brace presses a lifted player needs to wriggle free (SB4: mash B), landing on the carrier's tile. */
+export const ESCAPE_PRESSES = 5;
+
+export function wriggleFree(s: MatchState, inputs: Record<string, PlayerInput>): void {
+  for (const p of s.players) {
+    const brace = !!inputs[p.id]?.brace;
+    if (!p.heldBy) {
+      delete p.wriggle;
+      continue;
+    }
+    const w = (p.wriggle ??= { presses: 0, held: false });
+    if (brace && !w.held && ++w.presses >= ESCAPE_PRESSES) {
+      delete p.heldBy;
+      delete p.wriggle;
+      continue;
+    }
+    w.held = brace;
+  }
+}
+
 export function updateCarriedPlayers(s: MatchState): void {
   for (let pass = 0; pass < s.players.length; pass++) {
     for (const p of s.players) {

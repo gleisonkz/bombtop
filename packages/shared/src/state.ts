@@ -100,6 +100,8 @@ export interface Player {
   canPush?: boolean;
   canGlove: boolean;
   heldBy?: string;
+  /** While lifted: brace presses so far, and whether brace was down last tick (only fresh presses count). */
+  wriggle?: { presses: number; held: boolean };
   thrown?: AirState & { bounces?: number };
   shove?: { dir: Facing; ticks: number; pace: number };
   /** Ticks left being stunned (no movement or actions). */

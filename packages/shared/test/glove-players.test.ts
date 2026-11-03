@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { AIR_TICKS_PER_TILE, diff, FLAME_TICKS, Floor, ItemKind, patch, placeBomb, placePlayerAt, playerTile, publicView, setTile, step, Tile } from "../src";
+import { ESCAPE_PRESSES } from "../src/player-carry";
 import { emptyMatch, player, run } from "./helpers";
 
 function setup(ids = ["p1", "p2"]) {
@@ -160,5 +161,29 @@ describe("SB4 glove player transport", () => {
     grab(s);
     expect(s.bombs[0]!.heldBy).toBe("p1");
     expect(player(s, "p2").heldBy).toBeUndefined();
+  });
+
+  it("frees a lifted player who presses brace over and over (SB4: mash B), on the carrier's tile", () => {
+    const s = setup();
+    grab(s);
+    const carry = { dir: null, bomb: false, hold: true } as const;
+    for (let i = 0; i < ESCAPE_PRESSES - 1; i++) {
+      step(s, { p1: carry, p2: { dir: null, bomb: false, brace: true } });
+      step(s, { p1: carry, p2: { dir: null, bomb: false } });
+    }
+    expect(player(s, "p2").heldBy).toBe("p1");
+    step(s, { p1: carry, p2: { dir: null, bomb: false, brace: true } });
+    expect(player(s, "p2").heldBy).toBeUndefined();
+    expect(playerTile(player(s, "p2"))).toEqual(playerTile(player(s)));
+    // let go, the carrier throws no one
+    step(s, { p1: { dir: null, bomb: false } });
+    expect(player(s, "p2").thrown).toBeUndefined();
+  });
+
+  it("counts a held brace once: only fresh presses free", () => {
+    const s = setup();
+    grab(s);
+    run(s, 30, { p1: { dir: null, bomb: false, hold: true }, p2: { dir: null, bomb: false, brace: true } });
+    expect(player(s, "p2").heldBy).toBe("p1");
   });
 });

@@ -1,5 +1,5 @@
 import { bombButton, punch, updateHeldBombs } from "./air";
-import { playerElevated, updateCarriedPlayers, updateThrownPlayers } from "./player-carry";
+import { playerElevated, updateCarriedPlayers, updateThrownPlayers, wriggleFree } from "./player-carry";
 import { detonateRemote, placeBomb, updateBombs } from "./bombs";
 import { cursedDirection, updateCurses } from "./curse";
 import { applyFloor } from "./floor";
@@ -21,6 +21,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   s.tick++;
   advanceStageTempo(s);
   const living = s.players.filter((p) => p.alive);
+  wriggleFree(s, inputs);
   updateCarriedPlayers(s);
   for (const p of living) {
     if (p.curse?.kind !== "hiccups") continue;
