@@ -1225,6 +1225,52 @@
         .guide.items .ig-item.on { transform: none; }
         .guide.items .ig-item .guide-icon { --px: 30px; }
       }
+      .guide.items .ig-pills, .guide.items .ig-count, .guide.items .ig-shut, .guide.items .ig-item-name { display: none; }
+      /* Phone upright (layout I): filter pills, the items as a list by group, the item picked in a sheet from the bottom */
+      @media (orientation: portrait) and (max-width: 600px) {
+        .menu.guiding:has(.guide.items:not([hidden])) > .hero,
+        .menu.guiding:has(.guide.items:not([hidden])) > .cast { display: none; }
+        .screen.menu.guiding:has(.guide.items:not([hidden])) { padding-top: 58px; }
+        .screen.menu.guiding .card.guide.items { grid-template-rows: auto; gap: 10px; padding: 12px; }
+        .guide.items .ig-top > button { min-height: 40px; padding: 2px 12px; }
+        .guide.items .ig-pos { display: none; }
+        .guide.items .ig-count { display: block; margin-left: auto; font-weight: 800; font-size: 13px; color: var(--muted); white-space: nowrap; }
+        .guide.items .ig-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+        .guide.items .ig-pill { flex: none; min-height: 38px; min-width: 0; padding: 0 14px; border-radius: 999px; border: 2px solid var(--cat); background: #00000030; color: var(--text); font-family: inherit; font-weight: 800; font-size: 13px; box-shadow: none; }
+        .guide.items .ig-pill[aria-pressed="true"] { background: var(--cat); color: var(--ink); }
+        .guide.items .ig-pill:hover:not(:active) { transform: none; filter: none; box-shadow: none; }
+        .guide.items .ig-tray { display: grid; gap: 14px; background: none; padding: 0; border-radius: 0; }
+        .guide.items .ig-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+        .guide.items .ig-group-label { font-size: 11px; }
+        .guide.items .ig-item { width: auto; height: 88px; display: grid; grid-template-rows: 44px 26px; align-content: start; justify-items: center; gap: 4px; padding: 6px 2px 4px; border-radius: 14px; border: 3px solid #ffffff14; background: var(--panel); }
+        .guide.items .ig-item .guide-icon { --px: 44px; }
+        .guide.items .ig-item-name { display: grid; place-items: center; font-family: inherit; font-weight: 800; font-size: 10.5px; line-height: 1.15; color: var(--text); text-align: center; overflow-wrap: normal; word-break: normal; hyphens: auto; }
+        .guide.items .ig-item.on { transform: none; }
+        .guide.items[data-filter="power"] .ig-group:not([data-cat="power"]),
+        .guide.items[data-filter="bomb"] .ig-group:not([data-cat="bomb"]),
+        .guide.items[data-filter="defense"] .ig-group:not([data-cat="defense"]),
+        .guide.items[data-filter="danger"] .ig-group:not([data-cat="danger"]) { display: none; }
+        /* The sheet: hidden until an item is picked, the list kept reachable above it */
+        .guide.items .ig-main { display: none; }
+        .guide.items.sheet-open { padding-bottom: calc(min(62dvh, 470px) + 16px); }
+        .guide.items.sheet-open .ig-main { display: grid; position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; max-height: min(62dvh, 470px); overflow-y: auto; overscroll-behavior: contain; gap: 10px; padding: 22px 16px calc(16px + env(safe-area-inset-bottom)); background: var(--panel); border-radius: 24px 24px 0 0; box-shadow: 0 -12px 30px #0008; }
+        .guide.items.sheet-open .ig-main::before { content: ""; position: absolute; top: 8px; left: 50%; width: 44px; height: 5px; margin-left: -22px; border-radius: 99px; background: #ffffff4d; }
+        .guide.items .ig-arrow { display: none; }
+        .card.guide.items .ig-stage { border-width: 3px; border-radius: 14px; box-shadow: none; }
+        .guide.items .ig-detail { gap: 8px; }
+        .guide.items .ig-head { gap: 12px; }
+        .guide.items .ig-ring { width: 54px; height: 54px; border-width: 3px; }
+        .guide.items .ig-ring .guide-icon { --px: 40px; }
+        .guide.items .ig-titles { flex: 1; gap: 3px; }
+        .guide.items .ig-name { font-size: 24px; }
+        .guide.items .ig-cat { border: 0; padding: 0; font-size: 10px; }
+        .guide.items .ig-badge { padding: 2px 8px; font-size: 11px; }
+        .guide.items .ig-shut { display: grid; place-items: center; flex: none; width: 44px; height: 44px; min-height: 0; min-width: 0; padding: 0; border-radius: 50%; border: 0; background: #00000040; color: var(--text); font-size: 22px; line-height: 1; box-shadow: none; }
+        .guide.items .ig-text { font-size: 14px; }
+        .guide.items .ig-tipbox { background: none; padding: 0; }
+        .guide.items .ig-tips-title { display: none; }
+        .guide.items .ig-tips { font-size: 13px; gap: 5px; }
+      }
     </style>
   </head>
   <body>

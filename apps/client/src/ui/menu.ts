@@ -162,6 +162,10 @@ export class Menu {
         handlers.stopPreviewAudio();
         void preview.play(kind, stage).catch((e) => console.error("item preview", e));
       },
+      hide: () => {
+        preview.pause();
+        handlers.stopPreviewAudio();
+      },
     });
     const charPreview = new ItemPreview((view) => handlers.hearScene(view), { characterColors: true });
     const characters = characterGuide({

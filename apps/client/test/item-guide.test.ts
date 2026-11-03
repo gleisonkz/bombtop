@@ -42,4 +42,8 @@ describe("item guide", () => {
     expect(ITEM_GROUPS.map((g) => g.id)).toEqual(ITEM_CATEGORIES.map((c) => c.id));
     for (const g of ITEM_GROUPS) for (const i of g.items) expect(i.cat).toBe(g.id);
   });
+
+  it("gives each group a short name for the phone's filter pills", () => {
+    expect(ITEM_CATEGORIES.map((c) => c.short)).toEqual(["Poderes", "Bombas", "Defesa", "Perigo"]);
+  });
 });

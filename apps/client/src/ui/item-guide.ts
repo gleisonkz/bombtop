@@ -4,10 +4,10 @@ import { backButton, button, el } from "./dom";
 
 /** The tray's groups, in order, with the color of their ring. */
 export const ITEM_CATEGORIES = [
-  { id: "power", label: "PODERES", color: "#ffd23f" },
-  { id: "bomb", label: "TRUQUES COM BOMBA", color: "#7fd8ff" },
-  { id: "defense", label: "DEFESA E MOVIMENTO", color: "#39d98a" },
-  { id: "danger", label: "PERIGO", color: "#c78bff" },
+  { id: "power", label: "PODERES", short: "Poderes", color: "#ffd23f" },
+  { id: "bomb", label: "TRUQUES COM BOMBA", short: "Bombas", color: "#7fd8ff" },
+  { id: "defense", label: "DEFESA E MOVIMENTO", short: "Defesa", color: "#39d98a" },
+  { id: "danger", label: "PERIGO", short: "Perigo", color: "#c78bff" },
 ] as const;
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number]["id"];
 
@@ -159,11 +159,14 @@ export interface ItemGuideHooks {
   close(): void;
   /** The selected item changed: show it in use in `stage`. */
   show(kind: ItemKind, stage: HTMLElement): void;
+  /** The phone's sheet with the item in use was closed: stop it. */
+  hide(): void;
 }
 
 /**
  * The item guide from the menu, as a showcase: the item picked in the tray below, grouped by what it does, its details
- * on the left and in use on the right, arrows either side to step through them.
+ * on the left and in use on the right, arrows either side to step through them. On a phone upright it is a list with
+ * filter pills by group instead, the item picked coming up from the bottom in a sheet (layout I).
  */
 export function itemGuide(hooks: ItemGuideHooks): { root: HTMLElement; open(): void } {
   const stage = el("div", { class: "guide-stage ig-stage" });
@@ -192,11 +195,19 @@ export function itemGuide(hooks: ItemGuideHooks): { root: HTMLElement; open(): v
     badge.textContent = item.badge;
     text.textContent = item.text;
     tips.replaceChildren(...item.tips.map((t) => el("li", { text: t })));
+    root.classList.add("sheet-open");
     hooks.show(item.kind, stage);
   };
+  const closeSheet = () => {
+    root.classList.remove("sheet-open");
+    cards.forEach((c) => c.classList.remove("on"));
+    hooks.hide();
+  };
 
+  const shut = button("×", closeSheet, "ig-shut");
+  shut.setAttribute("aria-label", "Fechar detalhes");
   const detail = el("div", { class: "ig-detail" }, [
-    el("div", { class: "ig-head" }, [ring, el("div", { class: "ig-titles" }, [tag, name, badge])]),
+    el("div", { class: "ig-head" }, [ring, el("div", { class: "ig-titles" }, [tag, name, badge]), shut]),
     text,
     el("div", { class: "ig-tipbox" }, [el("strong", { class: "ig-tips-title", text: "Dicas" }), tips]),
   ]);
@@ -217,19 +228,43 @@ export function itemGuide(hooks: ItemGuideHooks): { root: HTMLElement; open(): v
         const card = button("", () => select(cards.indexOf(card)), "ig-item");
         card.setAttribute("aria-label", item.name);
         card.title = item.name;
-        card.append(icon(item.cell));
+        card.append(icon(item.cell), el("span", { class: "ig-item-name", text: item.name }));
         cards.push(card);
         row.append(card);
       }
       const group = el("div", { class: "ig-group" }, [el("span", { class: "ig-group-label", text: g.label }), row]);
+      group.dataset.cat = g.id;
       group.style.setProperty("--cat", g.color);
       return group;
     }),
   );
-  const root = el("div", { class: "card guide items" }, [
-    el("div", { class: "ig-top" }, [backButton("← Voltar", hooks.close, "primary"), el("h2", { text: "Itens" }), pos]),
+  const pills: HTMLButtonElement[] = [];
+  const filter = (id: ItemCategory | "all") => {
+    root.dataset.filter = id;
+    pills.forEach((p) => p.setAttribute("aria-pressed", String(p.dataset.cat === id)));
+  };
+  const pillBar = el(
+    "div",
+    { class: "ig-pills" },
+    [{ id: "all" as const, short: "Todos", color: "#ffffff" }, ...ITEM_CATEGORIES].map((c) => {
+      const pill = button(c.short, () => filter(c.id), "ig-pill");
+      pill.dataset.cat = c.id;
+      pill.style.setProperty("--cat", c.color);
+      pills.push(pill);
+      return pill;
+    }),
+  );
+  const root: HTMLElement = el("div", { class: "card guide items" }, [
+    el("div", { class: "ig-top" }, [
+      backButton("← Voltar", hooks.close, "primary"),
+      el("h2", { text: "Itens" }),
+      pos,
+      el("span", { class: "ig-count", text: `${TRAY.length} itens` }),
+    ]),
+    pillBar,
     el("div", { class: "ig-main" }, [detail, show]),
     tray,
   ]);
+  filter("all");
   return { root, open: () => select(current) };
 }
