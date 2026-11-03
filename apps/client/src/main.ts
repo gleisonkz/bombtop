@@ -104,7 +104,7 @@ function refit(): void {
   const h = height * TILE_PX;
   const scale = fitScale(window.innerWidth, window.innerHeight, w, h);
   app.renderer.resize(Math.floor(w * scale), Math.floor(h * scale));
-  sideHud.setRoom((window.innerWidth - Math.floor(w * scale)) / 2);
+  sideHud.setRoom((window.innerWidth - Math.floor(w * scale)) / 2, Math.floor(h * scale));
   app.stage.scale.set(scale);
   app.stage.position.set(-x * TILE_PX * scale, -y * TILE_PX * scale);
 }
@@ -177,6 +177,8 @@ document.body.appendChild(el("div", { class: "sound" }, [el("div", { class: "cor
 const ui = document.getElementById("ui")!;
 const touch = new TouchControls(document.body);
 const sideHud = new SideHud(document.body);
+/** Our own character's paint (seat color, or null: its own colors), for the special's portrait. */
+let myPaint: string | null = null;
 // Touch steering (setas or joystick), switchable mid-match from the ☰ menu, which also leaves the match.
 const CONTROLS_KEY = "bombtop.controls";
 touch.setStyle(controlStyle(storage.get(CONTROLS_KEY)));
@@ -216,7 +218,12 @@ const ctx: ModeContext = {
   touch: touch.input,
   specialCooldown: (ticks, character) => {
     touch.setSpecialCooldown(ticks);
-    sideHud.setSpecial(ticks, character);
+    sideHud.setSpecial(ticks, character, myPaint);
+  },
+  players: (rail) => {
+    myPaint = rail?.cards.find((c) => c.me)?.paint ?? null;
+    sideHud.setPlayers(rail);
+    return sideHud.shown;
   },
   fit,
   exit: (message) => {

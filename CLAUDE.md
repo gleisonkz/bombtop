@@ -20,6 +20,10 @@ Non-commercial fan project: characters may be fan art of existing franchises (e.
   fewer than two players left, goes back to the lobby. The score starts from zero on each match from the lobby. In the
   arena a score bar on the top wall shows each player's head and rounds won, either side of the clock
   (`render/score-bar.ts`, `Renderer.setScore`; a name on the top row goes under its player's feet).
+  On a computer with room beside the arena (`sideHudFits`) that bar steps aside for rails (`ui/side-hud.ts`, layout A):
+  each player's card at the corner they spawned in (`ui/player-rail.ts`: the same head, `ui/head-portrait.ts`, rounds
+  won, power-ups; a rival's hidden as "?" unless the screen is shared, a TV or couch play), the keys between the left
+  ones, our special recharging between the right ones.
 - **Rooms:** public matchmaking + private rooms by code. In a room the address is `/sala/<code>` (`net/room-route.ts`): it is the invite link, a reload takes the same seat back (reconnection token in sessionStorage, `net/seat.ts`), the back button leaves. Caddy rewrites `/sala/*` to `index.html` (`deploy/vps/Caddyfile`); old `?sala=` links still work. The item guide lives at `/itens` the same way (`net/guide-route.ts`; also rewritten in the Caddyfile), and so does the character guide at `/personagens` (`ui/character-guide.ts`: each character's story, special with tips, voice lines, every sheet animation via `characterMoves`, and their special played live in a small arena, `specialShowcase` in `game/showcase.ts`; heard through `audio/cues.ts`). A new character needs an entry there too (`test/character-guide.test.ts` fails otherwise).
 - **Anti-cheat:** server authority; client only sends inputs.
 - **Offline (Wi-Fi) play:** "Jogar offline" in the menu. One phone hosts: `LocalHost` (`net/local-host.ts`) runs `RoomCore`

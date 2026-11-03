@@ -961,31 +961,85 @@
       /* In-match menu (☰, top left): touch controls and leaving */
       .match-menu { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 3; display: grid; justify-items: start; gap: 8px; }
       body:has(.lobby:not([hidden])) .match-menu { display: none; }
-      /* Computers: the empty sides of a match show the keys (left) and our special recharging (right) */
-      .side-hud { position: fixed; top: 50%; transform: translateY(-50%); z-index: 2; width: var(--side-w, 240px); pointer-events: none; display: grid; gap: 8px; padding: 14px; color: var(--text);
-        background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--ink); }
+      /* Computers (layout A): a rail each side of the arena, as tall as it: every player's card at the corner they
+         spawned in, the keys between the left's, our special recharging between the right's */
+      /* as tall as the arena, clear of the ☰ and corner buttons at the top */
+      .side-rail { position: fixed; top: max(64px, calc((100dvh - var(--rail-h, 100dvh)) / 2)); bottom: max(10px, calc((100dvh - var(--rail-h, 100dvh)) / 2)); z-index: 2; width: var(--side-w, 240px); pointer-events: none;
+        display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px; color: var(--text); font-size: 14px; }
+      .side-rail.left { left: 16px; }
+      .side-rail.right { right: 16px; }
+      .rail-spot { display: grid; gap: 10px; align-content: start; min-height: 0; }
+      .rail-spot.middle { align-content: center; overflow: hidden; }
+      .rail-spot.bottom { align-content: end; }
+      .side-hud, .pcard { box-sizing: border-box; background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 5px 0 var(--ink); }
+      .side-hud { display: grid; gap: 6px; padding: 12px 14px; }
       .side-hud h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 20px; color: var(--accent); }
-      .side-keys { left: 16px; }
-      .side-special { right: 16px; text-align: center; justify-items: center; }
-      .side-special.none { display: none; }
+      .side-title { display: flex; justify-content: space-between; align-items: center; }
+      .side-more { pointer-events: auto; min-height: 30px; padding: 2px 10px; border: 0; border-radius: 8px; background: #00000040; color: var(--muted); font: 800 12px system-ui, sans-serif; box-shadow: none; cursor: pointer; }
       .side-row { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; row-gap: 2px; }
       .side-what { font-weight: 800; font-size: 14px; }
       .side-keys-list { display: flex; flex-wrap: wrap; justify-content: end; gap: 4px; }
       .side-hud kbd { font: 700 12px/1 system-ui, sans-serif; padding: 4px 6px; border-radius: 6px; background: #f7f7ff; color: var(--ink); border: 2px solid var(--ink); box-shadow: 0 2px 0 var(--ink); white-space: nowrap; }
-      .side-note { grid-column: 1 / -1; font-size: 11px; color: var(--muted); }
-      .side-pad { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
-      .side-who { font-size: 13px; color: var(--muted); font-weight: 700; }
-      .side-special-name { font-family: var(--display); font-weight: 400; font-size: 22px; line-height: 1.1; }
-      .side-bar { width: 100%; height: 16px; border-radius: 999px; background: #00000066; border: 2px solid var(--ink); overflow: hidden; }
-      .side-fill { height: 100%; background: linear-gradient(90deg, #4f8dff, #8fb8ff); transition: width 0.2s linear; }
-      .side-label { font-family: var(--display); font-size: 26px; line-height: 1; }
+      .side-note, .side-pad { display: none; }
+      .side-keys.full .side-note { display: block; grid-column: 1 / -1; font-size: 11px; color: var(--muted); }
+      .side-keys.full .side-pad { display: block; margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+      .side-special { justify-items: center; text-align: center; border-color: var(--ink); }
+      .side-special.none { display: none; }
+      .pc-label { font-weight: 800; font-size: 11px; letter-spacing: 1.5px; color: var(--muted); }
+      .side-ring { width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#8fb8ff var(--fill, 0deg), #ffffff1f 0); }
+      .side-special.ready .side-ring { background: conic-gradient(var(--accent) 360deg, #0000 0); }
+      .side-special-name { font-family: var(--display); font-weight: 400; font-size: 20px; line-height: 1.1; }
+      .side-label { font-family: var(--display); font-size: 28px; line-height: 1; }
       .side-hint { font-size: 12px; color: var(--muted); }
       .side-special.ready { border-color: var(--accent); animation: side-ready 1.2s ease-in-out infinite; }
-      .side-special.ready .side-fill { background: linear-gradient(90deg, var(--accent), #fff3b0); }
       .side-special.ready .side-label { color: var(--accent); }
       @keyframes side-ready { 50% { box-shadow: 0 5px 0 var(--ink), 0 0 18px #ffd23f88; } }
       html.lite .side-special.ready { animation: none; }
-      body:has(.lobby:not([hidden])) .side-hud, body:has(.screen.results:not([hidden])) .side-hud { display: none; }
+      /* A player's card: portrait, name and seat, rounds won, power-ups; faded and tagged once out */
+      .pcard { position: relative; display: grid; gap: 10px; padding: 12px; border-color: var(--pc, var(--ink)); transition: opacity 0.3s; }
+      .pcard.me { box-shadow: 0 5px 0 var(--ink), 0 0 0 3px #ffd23f55; }
+      .pcard.out { opacity: 0.45; }
+      .pc-head { display: flex; align-items: center; gap: 12px; }
+      .pcard.right .pc-head { flex-direction: row-reverse; text-align: right; }
+      .pc-av { flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; border: 3px solid #fff; background: var(--pc, #ffffff30); overflow: hidden; display: grid; place-items: center; }
+      /* the head the arena's score bar showed */
+      .head-portrait { width: 80%; height: 80%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 0 #0006); }
+      .pc-av.big { width: 90px; height: 90px; background: #00000040; border-color: var(--panel); }
+      .pc-id { display: grid; gap: 4px; min-width: 0; }
+      .pc-name { font-family: var(--display); font-size: 22px; line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .pc-tag { font-weight: 800; font-size: 11px; letter-spacing: 1px; color: var(--pc); }
+      .pc-score { display: flex; align-items: center; justify-content: space-between; }
+      .pcard.right .pc-score { flex-direction: row-reverse; }
+      .pc-won { display: grid; gap: 5px; }
+      .pcard.right .pc-won { justify-items: end; }
+      .pc-pips { display: flex; flex-wrap: wrap; gap: 5px; }
+      .pc-pips i { width: 15px; height: 15px; border-radius: 50%; background: #ffffff29; }
+      .pc-pips i.won { background: var(--accent); }
+      .pc-wins { font-family: var(--display); font-size: 40px; line-height: 1; color: var(--accent); }
+      .pc-stats { display: flex; gap: 6px; }
+      .pcard.right .pc-stats { justify-content: end; }
+      .pc-stat { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; background: #00000040; font-weight: 800; font-size: 14px; }
+      .pc-stat svg { width: 15px; height: 15px; }
+      .pc-stat.fire { color: #ff9d4a; }
+      .pc-stat.speed { color: #7fd8ff; }
+      .pcard.secret .pc-stat { opacity: 0.55; }
+      .pc-out { display: none; position: absolute; top: -13px; right: 14px; padding: 2px 11px; border-radius: 999px; background: var(--ink); border: 2px solid var(--muted); font-family: var(--display); font-size: 13px; }
+      .pcard.right .pc-out { right: auto; left: 14px; }
+      .pcard.out .pc-out { display: block; }
+      /* Short screens: smaller cards, the portrait and power-ups kept */
+      @media (max-height: 760px) {
+        .pcard { gap: 6px; padding: 8px 10px; }
+        .pc-av { width: 48px; height: 48px; }
+        .pc-name { font-size: 18px; }
+        .pc-wins { font-size: 30px; }
+        .side-ring { width: 84px; height: 84px; }
+        .pc-av.big { width: 70px; height: 70px; }
+        .side-row:nth-of-type(n + 5) { display: none; }
+        .side-keys.full .side-row { display: grid; }
+      }
+      /* a fifth card in the middle: the keys fold to their title */
+      .rail-spot.middle:has(.pcard) .side-keys:not(.full) .side-row { display: none; }
+      body:has(.lobby:not([hidden])) .side-rail, body:has(.screen.results:not([hidden])) .side-rail { display: none; }
       .match-menu-btn { width: 44px; height: 44px; min-height: 0; padding: 0; border-radius: 50%; font-size: 22px; line-height: 1; background: #ffffffd9; }
       .match-panel { background: linear-gradient(180deg, var(--panel-hi), var(--panel)); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; width: 210px; }
       .match-panel span { font-family: var(--display); font-size: 15px; }

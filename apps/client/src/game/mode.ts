@@ -2,6 +2,7 @@ import type { CharacterId } from "@bombtop/shared";
 import type { Sound } from "../audio/sound";
 import type { TouchInput } from "../input/touch";
 import type { Renderer } from "../render/renderer";
+import type { RailCard, RailPlace } from "../ui/player-rail";
 
 /** Something the main loop can run: an online match. */
 export interface GameMode {
@@ -22,6 +23,11 @@ export interface ModeContext {
   touch: TouchInput;
   /** Ticks our own special still recharges (0 = ready) and whose it is (none: watching), for the touch button and the side HUD. */
   specialCooldown?(ticks: number, character?: CharacterId): void;
+  /**
+   * Every player in the match, for the cards beside the arena, and where each card goes (null: no match).
+   * True while those cards are on screen: the arena's score bar then steps aside.
+   */
+  players?(rail: { cards: RailCard[]; places: Map<string, RailPlace> } | null): boolean;
   /**
    * Resizes the canvas to fit an arena of the given size in tiles, or only the window of it
    * that starts at tile (x, y) (0, 0 = the whole arena).

@@ -7,6 +7,7 @@ import { between } from "../render/sprites";
 import { RemoteMotion } from "../render/remote-motion";
 import { smoothBombSlides } from "../render/bomb-motion";
 import { Standings } from "./standings";
+import { railCards, railPlaces, type RailPlace } from "../ui/player-rail";
 import {
   C2S,
   ROOM_NAME,
@@ -88,6 +89,11 @@ export class OnlineGame implements GameMode {
   private latest: Snapshot | null = null;
   private latestAt = 0;
   private lobby: LobbyInfo | null = null;
+  /** Each player's card place beside the arena, from where they spawned this round. */
+  private places: Map<string, RailPlace> | null = null;
+  /** The score bar's rows, and whether the cards beside the arena show them instead. */
+  private score: { id: string; wins: number; team?: BattleTeam }[] = [];
+  private railed = false;
   /** Who went out when, for the results screen. */
   private readonly standings = new Standings();
   private result: ResultMessage | null = null;
@@ -157,7 +163,8 @@ export class OnlineGame implements GameMode {
       this.lobby = info;
       ctx.renderer.setCharacters(new Map(info.members.map((m) => [m.id, m.character])));
       ctx.renderer.setNames(nameTags(info.members, watching ? null : room.sessionId));
-      ctx.renderer.setScore(info.members.map((m) => ({ id: m.id, wins: m.wins, ...(info.battleMode === "tag" && { team: m.team }) })));
+      this.score = info.members.map((m) => ({ id: m.id, wins: m.wins, ...(info.battleMode === "tag" && { team: m.team }) }));
+      ctx.renderer.setScore(this.railed ? null : this.score);
       // One player's own screen: a sneaking rival is gone from it (a TV, or several players on one screen, see him faint).
       ctx.renderer.setViewer(watching || couch ? null : room.sessionId);
       panel.update(info, room.sessionId);
@@ -288,6 +295,15 @@ export class OnlineGame implements GameMode {
     }
     view = this.pickups.apply(view, nowMs);
     this.ctx.specialCooldown?.(me?.specialCooldown ?? 0, me?.character);
+    if (this.lobby && this.places) {
+      const players = me ? view.players.map((p) => (p.id === me.id ? me : p)) : view.players;
+      const mine = this.watching || this.couch ? null : this.room.sessionId;
+      const railed = this.ctx.players?.({ cards: railCards(this.lobby.members, players, mine, this.lobby.winsToWin), places: this.places }) ?? false;
+      if (railed !== this.railed) {
+        this.railed = railed;
+        this.ctx.renderer.setScore(railed ? null : this.score);
+      }
+    }
     if (!me) {
       this.measureJumps(view, prev, 1, null);
       return this.ctx.renderer.draw(view, prev, 1);
@@ -392,6 +408,10 @@ export class OnlineGame implements GameMode {
     this.delay.observe(now);
     this.buffer.delayMs = this.delay.ms;
     this.buffer.push(snap, now);
+    if (!this.places || snap.tick < (this.latest?.tick ?? 0)) {
+      const spawns = snap.players.map((p) => ({ id: p.id, x: Math.floor(p.px / TILE), y: Math.floor(p.py / TILE) }));
+      this.places = railPlaces(spawns, snap.grid.width, snap.grid.height);
+    }
     this.latest = snap;
     this.predictor.reconcile(snap);
     this.ghosts.reconcile(snap);
@@ -431,6 +451,7 @@ export class OnlineGame implements GameMode {
     this.ctx.renderer.setNames(new Map()); // the menus' scenes go untagged
     this.ctx.renderer.setScore(null);
     this.ctx.specialCooldown?.(0);
+    this.ctx.players?.(null);
     if (!this.leaving) {
       this.leaving = true;
       this.couch?.leaveAll();
