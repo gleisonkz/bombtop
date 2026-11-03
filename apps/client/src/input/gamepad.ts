@@ -1,4 +1,5 @@
 import type { Direction, PlayerInput } from "@bombtop/shared";
+import { connectedPads } from "./ds4-hid";
 
 /** The subset of the Gamepad API we read (standard mapping). */
 export interface PadState {
@@ -19,12 +20,9 @@ const SPECIAL_BUTTONS = [3]; // Y / Triangle
 const BRACE_BUTTONS = [4];
 const STOP_BUTTONS = [5];
 
-/** The n-th connected gamepad from the browser, if any. */
+/** The n-th connected controller (the browser's, then those read over WebHID), if any. */
 export function gamepadAt(n: number): () => PadState | null {
-  return () => {
-    if (typeof navigator === "undefined" || !navigator.getGamepads) return null;
-    return navigator.getGamepads().filter((p) => p?.connected)[n] ?? null;
-  };
+  return () => connectedPads()[n]?.state ?? null;
 }
 
 /** Polls a gamepad once per tick: d-pad or left stick to move, A = bomb, B/X = action, Y = special. */

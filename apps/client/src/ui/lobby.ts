@@ -45,6 +45,13 @@ export interface LobbyHandlers {
   pickBotCharacter(id: string, character: CharacterId): void;
 }
 
+/** An offline room: `pair` adds a friend (the host's phone); `couch`: on one screen; `hid` asks for PS4 controllers over WebHID. */
+export interface OfflineRoom {
+  pair: (() => void) | null;
+  couch?: boolean;
+  hid?: (() => void) | undefined;
+}
+
 /** Lobby overlay: room code and invite, a seat per player, and the host's start button. */
 export class LobbyPanel {
   private readonly root: HTMLElement;
@@ -74,7 +81,9 @@ export class LobbyPanel {
    * Offline (Wi-Fi) room: no code to share; the host pairs friends instead (null on a guest's phone).
    * `couch`: players also join on this same screen with their controllers.
    */
-  private offline: { pair: (() => void) | null; couch?: boolean } | null = null;
+  private offline: OfflineRoom | null = null;
+  /** Couch play: allows more PS4 controllers than the browser's 4 (WebHID). */
+  private readonly hidBtn: HTMLButtonElement;
   private watching = false;
 
   constructor(
@@ -113,6 +122,9 @@ export class LobbyPanel {
     ]);
     this.suddenDeathToggle = button("Morte súbita: ON", () => handlers.setSuddenDeath(!this.currentSuddenDeath), "lobby-rule-toggle");
     const invite = (this.inviteBtn = button("Convidar amigos", () => void this.invite(invite), "primary invite-btn"));
+    this.hidBtn = button("🎮 Controles PS4", () => this.offline?.hid?.(), "ghost hid-btn");
+    this.hidBtn.title = "Mais de 4 controles: escolha os controles PS4 na janela do navegador";
+    this.hidBtn.hidden = true;
     this.root = el("div", { class: "screen lobby" }, [
       el("div", { class: "lobby-shell" }, [
         el("header", { class: "lobby-head card" }, [
@@ -120,6 +132,7 @@ export class LobbyPanel {
           el("div", { class: "lobby-title" }, [el("h2", { text: "Sala" }), this.stage]),
           el("div", { class: "code-box" }, [this.codeLabel, this.code]),
           invite,
+          this.hidBtn,
         ]),
         this.seats,
         el("footer", { class: "lobby-foot" }, [
@@ -143,9 +156,10 @@ export class LobbyPanel {
     this.inviteBtn.hidden = watching || (!!this.offline && !this.offline.pair);
   }
 
-  /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen), or back to an online one (null). */
-  setOffline(offline: { pair: (() => void) | null; couch?: boolean } | null): void {
+  /** An offline room (`pair` adds a friend, on the host's phone; `couch` on one screen, `hid` allows more PS4 controllers), or back to an online one (null). */
+  setOffline(offline: OfflineRoom | null): void {
     this.offline = offline;
+    this.hidBtn.hidden = !offline?.couch || !offline.hid;
     this.codeLabel.textContent = offline?.couch ? "Mesma tela" : offline ? "Partida offline" : "Código da sala";
     this.inviteBtn.textContent = offline ? "Chamar amigos" : "Convidar amigos";
     this.inviteBtn.hidden = !!offline && !offline.pair;

@@ -1,12 +1,9 @@
 import { C2S, CHARACTERS, type CharacterId, type LobbyInfo, type PlayerInput } from "@bombtop/shared";
 import type { RoomLink } from "../net/room-link";
+import { connectedPads, type Pad } from "./ds4-hid";
 import { GamepadInput, type PadState } from "./gamepad";
 
-/** A connected controller: the browser's index for it (stable while plugged in) and its state. */
-export interface Pad {
-  index: number;
-  state: PadState;
-}
+export type { Pad };
 
 /** Where couch seats come from (LocalHost.seat). */
 export interface CouchHost {
@@ -17,12 +14,6 @@ const A = 0;
 const B = 1;
 const Y = 3;
 const START = 9;
-
-/** The connected controllers, in the browser's order. */
-export function connectedPads(): Pad[] {
-  if (typeof navigator === "undefined" || !navigator.getGamepads) return [];
-  return navigator.getGamepads().flatMap((p) => (p?.connected ? [{ index: p.index, state: p }] : []));
-}
 
 interface Seat {
   link: RoomLink;

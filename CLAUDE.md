@@ -49,7 +49,9 @@ internet") shows with ?debug and goes in the 5 s connection reports, which an of
   are player one, and every other controller gets its own local seat (`LocalHost.seat`) through `CouchSeats`
   (`input/couch.ts`): A joins in the lobby, Y changes its character, B leaves, Start on any controller starts the match; in a
   match each sends its own input. Friends' phones can still pair in over Wi-Fi. Meant for a PC on the TV (HDMI) with
-  Bluetooth controllers (the Gamepad API reads up to 4).
+  Bluetooth controllers. Chrome's Gamepad API reads only 4, so PS4 controllers can also be read straight over WebHID
+  (`input/ds4-hid.ts`: the lobby's "🎮 Controles PS4" button asks once which to allow, later visits get them back by
+  themselves; once any is read that way the browser's Sony pads are left out, none counts twice; `connectedPads` merges both).
 - **Big displays (a TV):** every screen under `#ui` grows with CSS `zoom` (`ui/ui-zoom.ts`): as far as both 1440 px of
   width and 820 px of height (the menu's tallest layout) allow, never below 1 (phones, tablets and laptops unchanged), at
   most 2x; 1.32x on a 1920x1080 TV. The arena canvas is outside `#ui` and fitted on its own. Media queries still see the

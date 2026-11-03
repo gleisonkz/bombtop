@@ -16,6 +16,7 @@ import { MatchMenu } from "./ui/match-menu";
 import { SideHud } from "./ui/side-hud";
 import { Pairing } from "./ui/pairing";
 import { CouchSeats } from "./input/couch";
+import { hidPads } from "./input/ds4-hid";
 import { LocalHost } from "./net/local-host";
 import type { RoomLink } from "./net/room-link";
 import { controlStyle } from "./input/control-style";
@@ -370,7 +371,9 @@ function offlineReports(code: () => string, player: string): (stats: object) => 
 }
 
 function playOffline(link: RoomLink, pair: (() => void) | null, couch: CouchSeats | null = null, report?: (stats: object) => void): void {
-  lobby.setOffline({ pair, couch: !!couch });
+  // Past the browser's 4 controllers: PS4 ones read over WebHID (Chrome asks once which to allow).
+  const hid = couch && hidPads.supported ? () => void hidPads.request().catch(() => {}) : undefined;
+  lobby.setOffline({ pair, couch: !!couch, hid });
   online = OnlineGame.over(link, ctx, lobby, couch, report);
   menu.hide();
   setMode(online);
@@ -466,5 +469,7 @@ app.ticker.add(() => {
 zoomUi();
 // A controller on a phone or tablet brings out the couch-play button (hidden on touch screens otherwise).
 window.addEventListener("gamepadconnected", () => document.documentElement.classList.add("has-pad"));
+// PS4 controllers allowed over WebHID on an earlier visit come back by themselves.
+void hidPads.restore().catch(() => {});
 
 refit();
