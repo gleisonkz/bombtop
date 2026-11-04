@@ -196,16 +196,16 @@ describe("stage rotation rules", () => {
     const session = lobby();
     const stageRotation: StageRotationEntry[] = [
       { stage: "warp" },
-      { stage: "warp" },
+      { stage: "sb4-01" },
       { stage: "classic" },
-      { stage: "warp" },
+      { stage: "sb4-03" },
       { stage: "conveyor" },
-      { stage: "conveyor" },
-      { stage: "conveyor" },
+      { stage: "sb4-05" },
+      { stage: "sb4-07" },
     ];
     session.setRules("host", { stageRotation });
     session.start("host");
-    const cycle = ["warp", "warp", "classic", "warp", "conveyor", "conveyor", "conveyor"];
+    const cycle = ["warp", "sb4-01", "classic", "sb4-03", "conveyor", "sb4-05", "sb4-07"];
     for (const stage of [...cycle, ...cycle, "warp"]) {
       expect(session.stage).toBe(stage);
       expect(session.lobbyInfo("CODE").stage).toBe(stage);
@@ -214,20 +214,16 @@ describe("stage rotation rules", () => {
     expect(session.members.map((member) => member.wins)).toEqual([0, 0]);
   });
 
-  it("keeps duplicate slots as separate rounds", () => {
+  it("refuses a rotation with the same stage twice, keeping the one it had", () => {
     const session = lobby();
+    const before = session.lobbyInfo("CODE").stageRotation;
     const stageRotation: StageRotationEntry[] = [
       { stage: "warp" },
       { stage: "warp" },
       { stage: "classic" },
     ];
-    expect(session.setRules("host", { stageRotation })).toBe(true);
-    expect(session.lobbyInfo("CODE").stageRotation).toEqual(stageRotation);
-    expect(session.start("host")).toBe(true);
-    for (const stage of ["warp", "warp", "classic", "warp"]) {
-      expect(session.stage).toBe(stage);
-      tieRound(session);
-    }
+    expect(session.setRules("host", { stageRotation })).toBe(false);
+    expect(session.lobbyInfo("CODE").stageRotation).toEqual(before);
   });
 
   it("keeps the current stage throughout results until the last results tick", () => {

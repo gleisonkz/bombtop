@@ -12,8 +12,8 @@ it("validates a whole playlist and returns detached entries", () => {
   expect(parsed).toEqual(input);
   expect(parsed).not.toBe(input);
   expect(parsed![0]).not.toBe(input[0]);
-  expect(validateStageRotation([{ stage: "warp", rounds: 9 }, { stage: "warp" }])).toEqual([
-    { stage: "warp" }, { stage: "warp" },
+  expect(validateStageRotation([{ stage: "warp", rounds: 9 }, { stage: "classic" }])).toEqual([
+    { stage: "warp" }, { stage: "classic" },
   ]);
   expect(MAX_STAGE_ROTATION).toBe(12);
   expect(DEFAULT_STAGE_ROTATION).toEqual(SB4_STAGES.map(stage => ({ stage })));
@@ -25,7 +25,12 @@ it("rejects malformed playlists without filtering or coercing entries", () => {
     [{ stage: "classic" }, { stage: "missing" }]]) {
     expect(validateStageRotation(bad)).toBeNull();
   }
-  expect(validateStageRotation(Array(12).fill({ stage: "conveyor" }))).toHaveLength(12);
+});
+
+it("rejects a playlist with the same stage twice", () => {
+  expect(validateStageRotation([{ stage: "warp" }, { stage: "warp" }])).toBeNull();
+  expect(validateStageRotation([{ stage: "sb4-12" }, { stage: "classic" }, { stage: "sb4-12" }])).toBeNull();
+  expect(validateStageRotation(Array(12).fill({ stage: "conveyor" }))).toBeNull();
 });
 
 it("draws five different SB4 stages at random for a new room's rotation", () => {

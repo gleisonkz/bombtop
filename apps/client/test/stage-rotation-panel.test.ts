@@ -98,7 +98,8 @@ describe("stage sequence editor", () => {
     const expected = ["classic", "conveyor", "warp", ...SB4_STAGES];
     const additions = f.dialog.all().filter(node => node.tag === "button" && node.textContent.startsWith("＋ "));
     expect(additions).toHaveLength(15);
-    expect(additions.every(node => !node.hidden && !node.disabled)).toBe(true);
+    expect(additions.every(node => !node.hidden)).toBe(true);
+    expect(additions.filter(node => node.disabled).map(node => node.textContent)).toEqual(["＋ Clássica", "＋ Esteiras", "＋ Teleportes"]);
     for (const select of f.dialog.all().filter(node => node.tag === "select")) {
       expect(select.children.filter(node => node.tag === "option").map(node => node.value)).toEqual(expected);
     }
@@ -123,16 +124,43 @@ describe("stage sequence editor", () => {
       { stage: "sb4-01" }, { stage: "sb4-02" },
     ]);
   });
-  it("saves pointer drag order, including repeated stages, only after confirmation", () => {
+  it("saves pointer drag order only after confirmation", () => {
     const f = fixture();
-    f.button("＋ Clássica").click();
+    f.button("＋ SB4 01 · Usual").click();
     const handle = f.control("Arrastar fase 1 para reordenar");
     handle.emit("pointerdown", { pointerType: "touch" });
     handle.emit("pointermove", { clientY: 275, pointerType: "touch" });
     handle.emit("pointerup", { clientY: 275, pointerType: "touch" });
     expect(f.commit).not.toHaveBeenCalled();
     f.button("Salvar sequência").click();
-    expect(f.commit).toHaveBeenCalledWith([{ stage: "conveyor" }, { stage: "warp" }, { stage: "classic" }, { stage: "classic" }]);
+    expect(f.commit).toHaveBeenCalledWith([{ stage: "conveyor" }, { stage: "warp" }, { stage: "classic" }, { stage: "sb4-01" }]);
+  });
+
+  it("never puts the same stage in twice: a stage already in the list can't be added or picked again", () => {
+    const f = fixture();
+    expect(f.button("＋ Clássica").disabled).toBe(true);
+    expect(f.button("＋ Teleportes").disabled).toBe(true);
+    expect(f.button("＋ SB4 01 · Usual").disabled).toBe(false);
+    f.button("＋ Clássica").emit("click");
+    expect(f.dialog.all().filter(node => node.tag === "select")).toHaveLength(3);
+    const options = (label: string) => f.control(label).children.filter(node => node.tag === "option");
+    const taken = (label: string) => options(label).filter(node => node.disabled).map(node => node.value);
+    expect(taken("Fase 1")).toEqual(["conveyor", "warp"]);
+    expect(taken("Fase 2")).toEqual(["classic", "warp"]);
+    f.control("Remover fase 3").click();
+    expect(f.button("＋ Teleportes").disabled).toBe(false);
+    expect(taken("Fase 1")).toEqual(["conveyor"]);
+  });
+
+  it("frees a stage for the others when a row switches away from it", () => {
+    const f = fixture();
+    const select = f.control("Fase 3");
+    select.value = "sb4-05";
+    select.emit("change");
+    expect(f.button("＋ Teleportes").disabled).toBe(false);
+    expect(f.button(`＋ ${STAGE_NAMES["sb4-05"]}`).disabled).toBe(true);
+    f.button("Salvar sequência").click();
+    expect(f.commit).toHaveBeenCalledWith([{ stage: "classic" }, { stage: "conveyor" }, { stage: "sb4-05" }]);
   });
 
   it("clears an active drag before closing or losing host permission", () => {
@@ -151,11 +179,11 @@ describe("stage sequence editor", () => {
   it("edits a draft, reorders and adds stages, then saves without changing the server snapshot", () => {
     const f = fixture();
     f.control("Descer fase 1").click();
-    f.button("＋ Teleportes").click();
+    f.button("＋ SB4 01 · Usual").click();
     f.control("Remover fase 3").click();
     expect(f.commit).not.toHaveBeenCalled();
     f.button("Salvar sequência").click();
-    expect(f.commit).toHaveBeenCalledWith([{ stage: "conveyor" }, { stage: "classic" }, { stage: "warp" }]);
+    expect(f.commit).toHaveBeenCalledWith([{ stage: "conveyor" }, { stage: "classic" }, { stage: "sb4-01" }]);
     expect(f.info.stageRotation).toEqual([{ stage: "classic" }, { stage: "conveyor" }, { stage: "warp" }]);
     expect(f.dialog.open).toBe(false);
   });
@@ -173,9 +201,9 @@ describe("stage sequence editor", () => {
 
   it("limits the number of selected stages and makes guest controls read-only", () => {
     const f = fixture();
-    for (let i = 0; i < 12; i++) f.button("＋ Clássica").click();
+    for (const stage of SB4_STAGES.slice(0, 9)) f.button(`＋ ${STAGE_NAMES[stage]}`).click();
     expect(f.dialog.all().filter(node => node.tag === "select")).toHaveLength(12);
-    expect(f.button("＋ Clássica").disabled).toBe(true);
+    expect(f.button(`＋ ${STAGE_NAMES["sb4-10"]}`).disabled).toBe(true);
     f.panel.update(f.info, false);
     expect(f.button("Salvar sequência").hidden).toBe(true);
     expect(f.dialog.all().filter(node => node.tag === "select").every(node => node.disabled)).toBe(true);

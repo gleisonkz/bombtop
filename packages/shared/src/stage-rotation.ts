@@ -26,13 +26,14 @@ export function randomStageRotation(random: () => number = Math.random): StageRo
 
 const stageIds = new Set<unknown>(SELECTABLE_STAGES);
 
+/** A room's playlist: 1 to MAX_STAGE_ROTATION selectable stages, each at most once. */
 export function validateStageRotation(raw: unknown): StageRotationEntry[] | null {
   if (!Array.isArray(raw) || raw.length < 1 || raw.length > MAX_STAGE_ROTATION) return null;
   const rotation: StageRotationEntry[] = [];
   for (const entry of raw) {
     if (!entry || typeof entry !== "object") return null;
     const { stage } = entry as Record<string, unknown>;
-    if (!stageIds.has(stage)) return null;
+    if (!stageIds.has(stage) || rotation.some((r) => r.stage === stage)) return null;
     rotation.push({ stage: stage as StageId });
   }
   return rotation;

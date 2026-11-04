@@ -50,7 +50,7 @@ export class StageRotationPanel {
     cancel.autofocus = true;
     this.additions = SELECTABLE_STAGES.map(stage => {
       const add = button(`＋ ${STAGE_NAMES[stage]}`, () => {
-        if (!this.editable || this.draft.length >= MAX_STAGE_ROTATION) return;
+        if (!this.editable || this.draft.length >= MAX_STAGE_ROTATION || this.draft.some(entry => entry.stage === stage)) return;
         this.draft.push({ stage });
         this.render();
       });
@@ -101,7 +101,8 @@ export class StageRotationPanel {
     this.summary.textContent = `${this.draft.length} de ${MAX_STAGE_ROTATION} fases na sequência${this.editable ? "" : " · Só o anfitrião pode alterar"}`;
     this.save.hidden = !this.editable;
     this.sb4Preset.disabled = !this.editable;
-    for (const add of this.additions) add.disabled = !this.editable || this.draft.length >= MAX_STAGE_ROTATION;
+    const used = new Set(this.draft.map(entry => entry.stage));
+    this.additions.forEach((add, i) => add.disabled = !this.editable || this.draft.length >= MAX_STAGE_ROTATION || used.has(SELECTABLE_STAGES[i]!));
   }
 
   private row(entry: StageRotationEntry, index: number): HTMLElement {
@@ -110,6 +111,7 @@ export class StageRotationPanel {
     for (const id of SELECTABLE_STAGES) {
       const option = el("option", { text: STAGE_NAMES[id] });
       option.value = id;
+      option.disabled = this.draft.some((other, i) => i !== index && other.stage === id); // each stage once in the list
       stage.appendChild(option);
     }
     stage.value = entry.stage;
@@ -117,8 +119,14 @@ export class StageRotationPanel {
     stage.setAttribute("aria-label", `Fase ${index + 1}`);
     stage.addEventListener("change", () => {
       if (!this.editable) return;
-      entry.stage = stage.value as StageId;
-      preview.replaceChildren(stagePreview(entry.stage));
+      const picked = stage.value as StageId;
+      if (this.draft.some((other, i) => i !== index && other.stage === picked)) {
+        stage.value = entry.stage;
+        return;
+      }
+      entry.stage = picked;
+      this.render();
+      this.list.children[index]?.querySelector<HTMLSelectElement>("select")?.focus();
     });
     const up = this.moveButton(index, -1);
     const down = this.moveButton(index, 1);
