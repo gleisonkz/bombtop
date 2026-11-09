@@ -2,6 +2,7 @@ import { CONVEYOR_SPEED, KICK_SPEED, TILE } from "./constants";
 import { conveyorDirection } from "./floor";
 import { playerElevated } from "./player-carry";
 import { stageSolid } from "./stage-obstacles";
+import { seesawBarrier } from "./stage-transport";
 import {
   bombAt,
   DIR_VECTORS,
@@ -47,7 +48,7 @@ export function stopKickedBombs(s: MatchState, p: Player): void {
 
 /** A sliding bomb may enter empty tiles with no bomb and no living player. */
 function freeForBomb(s: MatchState, bomb: Bomb, x: number, y: number): boolean {
-  if (getTile(s, x, y) !== Tile.Empty || bombAt(s, x, y) || stageSolid(s, x, y) || getFloor(s, x, y) === Floor.Slot) return false;
+  if (getTile(s, x, y) !== Tile.Empty || bombAt(s, x, y) || stageSolid(s, x, y) || seesawBarrier(s, x, y) || getFloor(s, x, y) === Floor.Slot) return false;
   if (s.bombs.some(other => {
     if (other === bomb || other.air || other.heldBy || !other.slide || other.offset === 0) return false;
     const [dx, dy] = DIR_VECTORS[other.slide];

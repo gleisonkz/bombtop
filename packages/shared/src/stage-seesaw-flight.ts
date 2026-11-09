@@ -83,13 +83,19 @@ export function startSeesawRebounds(s: MatchState, inputs: Record<string, Player
   const flights = stage.flights ??= {};
   for (const saw of stage.seesaws) {
     if (saw.dir !== "right") continue;
+    // The game's cell for the pivot runs a 16th of a tile behind ours: from the first pixel in from the left end
+    // to the last one before the right end. Whoever walks in hops on to the far end (C24AD8 -> C22026), however
+    // fast they came in: they are put back on the pixel they crossed in at, where the measured arc starts.
+    const enterFromLeft = tileCenter(saw.x - 1) + 9 * TILE / 16;
+    const enterFromRight = tileCenter(saw.x + 1) - 8 * TILE / 16;
     for (const p of s.players) {
       if (!p.alive || playerElevated(p) || p.jumpTicks || flights[p.id] || p.py !== tileCenter(saw.y)) continue;
+      if (p.px < enterFromLeft || p.px > enterFromRight) continue;
+      // Only walking gets anyone in (a player standing still on the threshold stays put).
       const direction = cursedDirection(p, inputs[p.id]?.dir ?? null);
-      const fromLeft = direction === "right" && p.px === tileCenter(saw.x - 1) + 9 * TILE / 16;
-      const fromRight = direction === "left" && p.px === tileCenter(saw.x + 1) - 8 * TILE / 16;
-      if (!fromLeft && !fromRight) continue;
-      const steering = fromLeft ? "right" : "left";
+      if (direction !== "left" && direction !== "right") continue;
+      const steering = direction;
+      p.px = steering === "right" ? enterFromLeft : enterFromRight;
       flights[p.id] = { kind: "seesawRebound", dir: steering, steering, ticks: 8, remaining: 8 };
     }
   }

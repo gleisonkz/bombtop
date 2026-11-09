@@ -10,6 +10,7 @@ import { hurt, updateMountMove, useMountAbility } from "./mount";
 import { steer } from "./movement";
 import { advanceStageTempo } from "./stage";
 import { carriesStageFlag, resolveStageHazards, stageInput, updateStageMechanics } from "./stage-mechanics";
+import { landedOffSeesaw } from "./stage-transport";
 import { moveSurprisePlayer } from "./stage-surprise";
 import { updatePressure } from "./pressure";
 import { driveCart, giveCart, revengeSwap } from "./revenge";
@@ -129,7 +130,7 @@ export function step(s: MatchState, inputs: Record<string, PlayerInput> = {}): v
   for (const p of s.players) {
     const { x, y } = playerTile(p);
     const flame = s.flames.find((f) => f.x === x && f.y === y);
-    if (!flame || playerElevated(p) || s.stageState?.trolley?.riderId === p.id || s.stageState?.flights?.[p.id] || p.bubble > 0 || (p.canBlockPass && getTile(s, x, y) === Tile.Block) || !hurt(p)) continue;
+    if (!flame || playerElevated(p) || s.stageState?.trolley?.riderId === p.id || s.stageState?.flights?.[p.id] || landedOffSeesaw(s, p) || p.bubble > 0 || (p.canBlockPass && getTile(s, x, y) === Tile.Block) || !hurt(p)) continue;
     if (s.revenge) giveCart(s, p);
     revengeSwap(s, p, flame.ownerId);
   }

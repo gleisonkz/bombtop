@@ -1,7 +1,7 @@
 import { launch } from "./air";
 import { TILE } from "./constants";
 import { playerElevated } from "./player-carry";
-import { bombAt, DIR_VECTORS, OPPOSITE_DIRECTIONS, Floor, getTile, hasFlame, playerTile, tileCenter, Tile, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
+import { bombAt, DIR_VECTORS, OPPOSITE_DIRECTIONS, Floor, getTile, playerTile, tileCenter, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 import type { StageSeesaw } from "./stage-state";
 import { initializeTrolley, updateTrolley } from "./stage-trolley";
 import { startSeesawFlight, startSeesawRebounds, updateSeesawFlights } from "./stage-seesaw-flight";
@@ -37,8 +37,9 @@ export function initializeStageTransport(s: MatchState): void {
   if (s.stage === "sb4-11") initializeTrolley(s);
 }
 
+// A flame is no reason to come down elsewhere: in SB4 whoever lands in one burns (e-fly-over-fire).
 function safeLanding(s: MatchState, x: number, y: number): boolean {
-  return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y) && !hasFlame(s, x, y) && s.grid.floor[y * s.grid.width + x] !== Floor.Pit;
+  return getTile(s, x, y) === Tile.Empty && !bombAt(s, x, y) && s.grid.floor[y * s.grid.width + x] !== Floor.Pit;
 }
 
 function finishFlight(s: MatchState, p: Player, dir: Facing): void {
@@ -83,10 +84,78 @@ function updateFlights(s: MatchState, inputs: Record<string, PlayerInput>): void
   }
 }
 
+/**
+ * Native frames a seesaw's ends stay shut to fire after it turns (e-fire-vs-flight): the turning tick and the next,
+ * while `cooldown` (SEESAW_COOLDOWN on the turn, one less a tick) is still at least this.
+ */
+const TURNING_COOLDOWN = SEESAW_COOLDOWN - 1;
+
+/**
+ * What stops fire and a sliding bomb on a seesaw (e-flame-into-end, e-flame-from-low-end; C13A63 for kicks): its
+ * pivot, the end that is up and, while it turns, both ends. The end that is down lets them in.
+ */
+export function seesawBarrier(s: Pick<MatchState, "stageState">, x: number, y: number): boolean {
+  for (const saw of s.stageState?.seesaws ?? []) {
+    if (saw.x === x && saw.y === y) return true;
+    const up = endpoint(saw, true);
+    const down = endpoint(saw, false);
+    if (up.x === x && up.y === y) return true;
+    if (down.x === x && down.y === y && (saw.cooldown ?? 0) >= TURNING_COOLDOWN) return true;
+  }
+  return false;
+}
+
 function endpoint(seesaw: StageSeesaw, low: boolean) {
   const sign = low === seesaw.raised ? 1 : -1;
   const [dx, dy] = DIR_VECTORS[seesaw.dir];
   return { x: seesaw.x + dx * sign, y: seesaw.y + dy * sign, dir: sign > 0 ? seesaw.dir : OPPOSITE_DIRECTIONS[seesaw.dir] };
+}
+
+/** A seesaw throws a resting bomb across itself: 6 tiles in 12 frames (e-bomb-on-launch-end). */
+const SEESAW_BOMB_TILES = 6;
+const SEESAW_BOMB_TICKS_PER_TILE = 2;
+/** Ticks a seesaw-thrown bomb takes for each tile it bounces on (e-bomb-launched-off-edge). */
+export const SEESAW_BOUNCE_TICKS = 8;
+
+function throwBomb(bomb: Bomb, dir: Facing): void {
+  launch(bomb, dir);
+  // It leaves on the frame after the turn: one tick more on the first tile.
+  bomb.air = { ...bomb.air!, span: SEESAW_BOMB_TILES, tilesLeft: SEESAW_BOMB_TILES, progress: -1,
+    ticksPerTile: SEESAW_BOMB_TICKS_PER_TILE, seesaw: true };
+}
+
+/** One tile on for a seesaw-thrown bomb, round a ring from one tile outside the arena's left (top) edge to one outside its right (bottom). */
+export function seesawHop(s: Pick<MatchState, "grid">, bomb: Bomb, dir: Facing): void {
+  const [dx, dy] = DIR_VECTORS[dir];
+  const ring = (value: number, size: number) => ((value + 1) % (size + 2) + size + 2) % (size + 2) - 1;
+  bomb.x = ring(bomb.x + dx, s.grid.width);
+  bomb.y = ring(bomb.y + dy, s.grid.height);
+}
+
+/** Every seesaw turns: whoever and whatever rests on the end that goes up is thrown. */
+function turnSeesaws(s: MatchState, inputs: Record<string, PlayerInput>): void {
+  for (const saw of s.stageState?.seesaws ?? []) {
+    const high = endpoint(saw, false);
+    for (const p of s.players) {
+      const tile = playerTile(p);
+      if (p.alive && !s.stageState?.flights?.[p.id] && tile.x === high.x && tile.y === high.y) startSeesawFlight(s, p, high.dir, inputs[p.id]);
+    }
+    // Only a resting bomb: a sliding one is left alone.
+    for (const bomb of s.bombs) if (!bomb.air && !bomb.heldBy && !bomb.slide && bomb.x === high.x && bomb.y === high.y) throwBomb(bomb, OPPOSITE_DIRECTIONS[high.dir]);
+    saw.raised = !saw.raised;
+    saw.cooldown = SEESAW_COOLDOWN;
+  }
+}
+
+/** A bomb coming down on a seesaw's end that is up tips it, as a player stepping on it does (C127AB -> C128D6). */
+export function bombLandedOnSeesaw(s: MatchState, bomb: Bomb): void {
+  const saws = s.stageState?.seesaws;
+  if (s.stage !== "sb4-09" || !saws?.length) return;
+  const tips = saws.some(saw => {
+    const up = endpoint(saw, true);
+    return !saw.cooldown && up.x === bomb.x && up.y === bomb.y;
+  });
+  if (tips) turnSeesaws(s, {});
 }
 
 function updateSeesaws(s: MatchState, inputs: Record<string, PlayerInput>): void {
@@ -101,23 +170,18 @@ function updateSeesaws(s: MatchState, inputs: Record<string, PlayerInput>): void
       return p.alive && !playerElevated(p) && !s.stageState?.flights?.[p.id] && s.stageState?.floorLocks?.[`seesaw:land:${p.id}`] !== s.tick && !p.jumpTicks && tile.x === low.x && tile.y === low.y;
     });
   });
-  if (!triggered) return;
-  for (const saw of seesaws) {
-    const high = endpoint(saw, false);
-    for (const p of s.players) {
-      const tile = playerTile(p);
-      if (p.alive && !s.stageState?.flights?.[p.id] && tile.x === high.x && tile.y === high.y) startSeesawFlight(s, p, high.dir, inputs[p.id]);
-    }
-    for (const bomb of s.bombs) if (!bomb.air && !bomb.heldBy && bomb.x === high.x && bomb.y === high.y) launch(bomb, high.dir);
-    saw.raised = !saw.raised;
-    saw.cooldown = SEESAW_COOLDOWN;
-  }
+  if (triggered) turnSeesaws(s, inputs);
 }
 
 
 export function updateStageTransport(s: MatchState, inputs: Record<string, PlayerInput> = {}): void {
   if (s.stage === "sb4-09") { updateFlights(s, inputs); startSeesawRebounds(s, inputs); updateSeesaws(s, inputs); }
   if (s.stage === "sb4-11") updateTrolley(s);
+}
+
+/** A player coming down off a seesaw is not burnt on the frame they land, only from the next (e-fly-over-fire). */
+export function landedOffSeesaw(s: Pick<MatchState, "stageState" | "tick">, p: Player): boolean {
+  return s.stageState?.floorLocks?.[`seesaw:land:${p.id}`] === s.tick;
 }
 
 export function stageTransportInput(s: MatchState, p: Player, _input?: PlayerInput): boolean {

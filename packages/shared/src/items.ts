@@ -13,7 +13,7 @@ import { applyRandomCurse } from "./curse";
 import { giveRandomMount } from "./mount";
 import { playerElevated } from "./player-carry";
 import { nextRandom } from "./rng";
-import { bombAt, getTile, hasFlame, ItemKind, playerTile, Tile, type MatchState, type Player } from "./state";
+import { bombAt, Floor, getFloor, getTile, hasFlame, ItemKind, playerTile, Tile, type MatchState, type Player } from "./state";
 
 const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
   [ItemKind.Fire]: (p) => (p.fireRange = Math.min(p.fireRange + 1, MAX_FIRE_RANGE)),
@@ -88,7 +88,8 @@ function openDropTiles(s: MatchState): { x: number; y: number }[] {
   const open: { x: number; y: number }[] = [];
   for (let y = 0; y < s.grid.height; y++)
     for (let x = 0; x < s.grid.width; x++)
-      if (getTile(s, x, y) === Tile.Empty && !hasFlame(s, x, y) && !bombAt(s, x, y) && !taken(x, y)) open.push({ x, y });
+      // SB4's random cell (C23922) leaves out every seesaw tile.
+      if (getTile(s, x, y) === Tile.Empty && getFloor(s, x, y) !== Floor.Seesaw && !hasFlame(s, x, y) && !bombAt(s, x, y) && !taken(x, y)) open.push({ x, y });
   return open;
 }
 

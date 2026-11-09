@@ -201,6 +201,13 @@ export interface AirState {
   tilesLeft: number;
   /** Ticks spent on the current tile hop (0..AIR_TICKS_PER_TILE). */
   progress: number;
+  /** Ticks to cross a tile, when not AIR_TICKS_PER_TILE. */
+  ticksPerTile?: number;
+  /**
+   * Thrown by a seesaw (SB4): it crosses a tile every 2 ticks, and bounces (a tile every 8) round a ring one tile
+   * wider than the arena on each side, coming down only on a free tile inside it.
+   */
+  seesaw?: true;
 }
 
 export enum ItemKind {

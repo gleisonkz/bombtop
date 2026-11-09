@@ -2,6 +2,7 @@ import { AIR_DISTANCE, AIR_TICKS_PER_TILE, STUN_TICKS } from "./constants";
 import { placeBomb } from "./bombs";
 import { playerCarryButton, playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
+import { bombLandedOnSeesaw, SEESAW_BOUNCE_TICKS, seesawHop } from "./stage-transport";
 
 /** Launches a grounded bomb into the air from its current tile. */
 export function launch(b: Bomb, dir: Facing): void {
@@ -82,10 +83,11 @@ export function updateAir(s: MatchState): void {
   for (const b of s.bombs) {
     const air = b.air;
     if (!air) continue;
-    if (++air.progress < AIR_TICKS_PER_TILE) continue;
+    if (++air.progress < (air.ticksPerTile ?? AIR_TICKS_PER_TILE)) continue;
     air.progress = 0;
+    if (air.seesaw) seesawHop(s, b, air.dir);
     // Coming in from across the arena, it comes down on the first tile (as in Super Bomberman 4).
-    if (hop(s, b, air.dir)) air.span = air.tilesLeft = 1;
+    else if (hop(s, b, air.dir)) air.span = air.tilesLeft = 1;
     if (--air.tilesLeft > 0) continue;
 
     const hit = s.players.find((p) => {
@@ -94,10 +96,13 @@ export function updateAir(s: MatchState): void {
     });
     // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned.
     if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) hit.stun = STUN_TICKS;
-    if (hit || getTile(s, b.x, b.y) !== Tile.Empty || bombAt(s, b.x, b.y)) {
+    const outside = b.x <= 0 || b.y <= 0 || b.x >= s.grid.width - 1 || b.y >= s.grid.height - 1;
+    if (hit || outside || getTile(s, b.x, b.y) !== Tile.Empty || bombAt(s, b.x, b.y)) {
       air.span = air.tilesLeft = 1;
+      if (air.seesaw) air.ticksPerTile = SEESAW_BOUNCE_TICKS;
       continue;
     }
     b.air = null;
+    bombLandedOnSeesaw(s, b);
   }
 }

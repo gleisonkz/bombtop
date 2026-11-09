@@ -2,7 +2,7 @@ import { TILE } from "./constants";
 import { nextRandom } from "./rng";
 import { playerElevated } from "./player-carry";
 import { activateStageBall, updateStageBalls } from "./stage-balls";
-import { initializeStageTransport, stageTransportInput, updateStageTransport } from "./stage-transport";
+import { initializeStageTransport, seesawBarrier, stageTransportInput, updateStageTransport } from "./stage-transport";
 import { igniteStageSlots, updateStageSlots } from "./stage-slots";
 import { igniteSurpriseFloor, initializeSurpriseSelection, stopStageStickyBombs } from "./stage-surprise";
 import { stageFlagInput, initializeStageFlags, updateStageFlags } from "./stage-flags";
@@ -35,6 +35,7 @@ export function stageInput(s: MatchState, p: Player, input?: PlayerInput): boole
 }
 
 export function stageFlame(s: MatchState, x: number, y: number, ownerId?: string, direction?: Facing, surpriseSample?: number | null): boolean {
+  if (direction && seesawBarrier(s, x, y)) return true;
   igniteSurpriseFloor(s, x, y, surpriseSample);
   igniteStageSlots(s, x, y);
   const ball = s.stageState?.balls?.find(b => Math.floor(b.px / TILE) === x && Math.floor(b.py / TILE) === y);

@@ -64,7 +64,7 @@ describe("SB4 stage transport", () => {
     expect({ px: trolley.px, py: trolley.py }).toEqual(position);
   });
 
-  it.each(["block", "flame", "bomb", "pit"] as const)("keeps the provisional safe-landing fallback for a new %s", hazard => {
+  it.each(["block", "bomb", "pit"] as const)("keeps the provisional safe-landing fallback for a new %s", hazard => {
     const s = arena("sb4-09");
     s.stageState = { seesaws: [{ x: 4, y: 3, dir: "right", raised: false }] };
     placePlayerAt(s, "a", 3, 3);
@@ -73,7 +73,6 @@ describe("SB4 stage transport", () => {
     expect(s.stageState.flights?.b).toBeDefined();
     for (let i = 0; i < 14; i++) updateStageTransport(s);
     if (hazard === "block") s.grid.tiles[3 * s.grid.width + 5] = Tile.Block;
-    if (hazard === "flame") s.flames.push({ x: 5, y: 3, ttl: 30 });
     if (hazard === "pit") s.grid.floor[3 * s.grid.width + 5] = Floor.Pit;
     if (hazard === "bomb") s.bombs.push({ x: 5, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
     updateStageTransport(s);
@@ -82,6 +81,18 @@ describe("SB4 stage transport", () => {
     expect(s.players[1]!.px).toBe(tileCenter(4));
     expect(s.players[1]!.alive).toBe(true);
     expect(s.players[1]!.jumpTicks).toBe(0);
+  });
+  it("lands a player in a new flame where they come down, as SB4 does (they burn from the next frame)", () => {
+    const s = arena("sb4-09");
+    s.stageState = { seesaws: [{ x: 4, y: 3, dir: "right", raised: false }] };
+    placePlayerAt(s, "a", 3, 3);
+    placePlayerAt(s, "b", 5, 3);
+    updateStageTransport(s);
+    for (let i = 0; i < 14; i++) updateStageTransport(s);
+    s.flames.push({ x: 5, y: 3, ttl: 30, ownerId: "a" });
+    updateStageTransport(s);
+    expect(s.stageState.flights?.b).toBeUndefined();
+    expect(playerTile(s.players[1]!)).toEqual({ x: 5, y: 3 });
   });
   it("reads the four horizontal pivots from the shared stage layout", () => {
     const s = arena("sb4-09");
@@ -135,15 +146,21 @@ describe("SB4 stage transport", () => {
     expect(stageTransportInput(s, s.players[1]!, input)).toBe(false);
   });
 
-  it("uses the existing airborne bomb contract", () => {
+  it("throws a resting bomb back across the seesaw on the airborne bomb contract, and leaves a sliding one alone", () => {
     const s = arena("sb4-09");
     s.stageState = { seesaws: [{ x: 4, y: 3, dir: "right", raised: false }] };
     placePlayerAt(s, "a", 3, 3);
-    s.bombs.push({ x: 5, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: "left", offset: 12, air: null, heldBy: null });
+    s.bombs.push({ x: 5, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: null, offset: 0, air: null, heldBy: null });
     updateStageTransport(s);
-    expect(s.bombs[0]!.air?.dir).toBe("right");
+    expect(s.bombs[0]!.air?.dir).toBe("left");
     expect(s.bombs[0]!.fuse).toBe(80);
-    expect(s.bombs[0]!.slide).toBeNull();
+    const sliding = arena("sb4-09");
+    sliding.stageState = { seesaws: [{ x: 4, y: 3, dir: "right", raised: false }] };
+    placePlayerAt(sliding, "a", 3, 3);
+    sliding.bombs.push({ x: 5, y: 3, ownerId: "a", fuse: 80, range: 2, type: "normal", slide: "left", offset: 12, air: null, heldBy: null });
+    updateStageTransport(sliding);
+    expect(sliding.bombs[0]!.air).toBeNull();
+    expect(sliding.bombs[0]!.slide).toBe("left");
   });
 
   it("boards without a button, crushes blocks, bombs and protected opponents, completes one lap", () => {
