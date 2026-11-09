@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createMatch, Floor, TILE, Tile } from "@bombtop/shared";
+import { createMatch, Floor, placePlayerAt, step, TILE, Tile } from "@bombtop/shared";
 const mocks = vi.hoisted(() => ({ load: vi.fn() }));
 vi.mock("pixi.js", () => {
   class Point { x = 0; y = 0; set(x: number, y = x) { this.x = x; this.y = y; } }
@@ -233,27 +233,42 @@ it("tilts only the plank, by raising one end, and flips it when the seesaw turns
   expect(flat.skew).not.toBe(0);
   expect(turned.planks[0]!.skew.y).toBeCloseTo(-flat.skew);
   expect(turned.bases[0]!.position).toEqual(flat.base);
-  // raised=false: the +dir (right) end is high, so the plank climbs to the right (screen y falls as x grows).
-  expect(flat.skew).toBeLessThan(0);
+  // raised=false: the +dir (right) end is down, so the plank falls to the right (screen y grows with x).
+  expect(flat.skew).toBeGreaterThan(0);
   effects.draw(seesawArena(false, "left"));
-  expect(seesawParts(effects).planks[0]!.skew.y).toBeGreaterThan(0);
+  expect(seesawParts(effects).planks[0]!.skew.y).toBeLessThan(0);
 });
 
 it("stands a player on the plank: the high end above the low one, nothing off it", () => {
-  const raised = seesawArena(false); // +dir (right, x 4) end high
+  const raised = seesawArena(false); // +dir (right, x 4) end down, left (x 2) up
   const at = (x: number) => seesawStandLift(raised, x * 16 + 8, 3 * 16 + 8);
-  expect(at(4)).toBeGreaterThan(at(3));
-  expect(at(3)).toBeGreaterThan(at(2));
-  expect(at(2)).toBeGreaterThan(0);
+  expect(at(2)).toBeGreaterThan(at(3));
+  expect(at(3)).toBeGreaterThan(at(4));
+  expect(at(4)).toBeGreaterThan(0);
   expect(at(5)).toBe(0);
   expect(seesawStandLift(raised, 4 * 16 + 8, 4 * 16 + 8)).toBe(0);
   const turned = seesawArena(true);
-  expect(seesawStandLift(turned, 2 * 16 + 8, 56)).toBe(at(4));
+  expect(seesawStandLift(turned, 4 * 16 + 8, 56)).toBe(at(2));
   expect(seesawStandLift(arena(), 56, 56)).toBe(0);
 });
 
+it("draws up the end a player steps on to tip the seesaw, as in Super Bomberman 4", () => {
+  for (const seed of [1, 2]) {
+    const state = createMatch({ seed, playerIds: ["qa"], stage: "sb4-09", revenge: false });
+    step(state, {});
+    for (const saw of state.stageState!.seesaws!) for (const dx of [-1, 0, 1]) state.grid.tiles[saw.y * state.grid.width + saw.x + dx] = Tile.Empty;
+    const saw = state.stageState!.seesaws![0]!;
+    const lift = (x: number) => seesawStandLift(state, x * 16 + 8, saw.y * 16 + 8);
+    const up = lift(saw.x - 1) > lift(saw.x + 1) ? saw.x - 1 : saw.x + 1;
+    const before = saw.raised;
+    placePlayerAt(state, "qa", up, saw.y);
+    for (let t = 0; t < 4; t++) step(state, {});
+    expect(saw.raised).not.toBe(before);
+  }
+});
+
 it("rests a bomb on the plank like a player, but not one in the air or in hand", () => {
-  const state = seesawArena(false); // right end (x 4) high
+  const state = seesawArena(true); // right end (x 4) up
   const high = { x: 4 * 16 + 8, y: 3 * 16 + 8 };
   expect(seesawBombLift(state, {}, high.x, high.y)).toBe(seesawStandLift(state, high.x, high.y));
   expect(seesawBombLift(state, {}, high.x, high.y)).toBeGreaterThan(0);

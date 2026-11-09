@@ -22,8 +22,9 @@ const SEESAW_THICK = 2;
 const SEESAW_PLANK_ART = 106; // plank's width in its 128 px cell
 type SeesawLike = { x: number; y: number; dir: Facing; raised: boolean };
 
-/** Height gained per tile toward the seesaw's +dir end: raised turns the +dir end down. */
-function seesawRise(saw: SeesawLike): number { return saw.raised ? -SEESAW_TILT : SEESAW_TILT; }
+/** Height gained per tile toward the seesaw's +dir end: raised has the +dir end up: the end the sim's
+ * `endpoint(saw, true)` names "low" is the one a player steps on to tip it down, so it is drawn up (as SB4 draws it). */
+function seesawRise(saw: SeesawLike): number { return saw.raised ? SEESAW_TILT : -SEESAW_TILT; }
 
 /** How far up a player standing at (px, py) (screen pixels, their tile's ground point) is lifted by a seesaw plank. */
 export function seesawStandLift(state: Pick<MatchState, "stageState">, px: number, py: number): number {
