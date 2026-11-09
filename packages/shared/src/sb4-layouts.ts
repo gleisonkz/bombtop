@@ -11,7 +11,9 @@ import { sb4TrolleyRoute } from "./sb4-trolley-route";
  * themselves are initialized by stage mechanics, independently of this floor.
  * Raised art and players obscure some cells: those cells and paths beneath
  * foliage are inferred from adjacent tiles, not measured ROM collision data.
- * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle.
+ * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle. Stages 1-4, 6, 9 and 10 are rolled
+ * each round as SB4 does (sb4-layout-roll.ts); their B/. letters only matter with a block density override.
+ * 04's pits and 06's open panels were checked against the emulator's grids (sb4-evidence/layout).
  * 03 clears the two ball anchors agreed with stage mechanics. 04's pit edges,
  * 07's concealed paths/directions, 09's pivots and
  * the other obscured cells are capture-based reconstructions. In these
@@ -45,9 +47,9 @@ const ROWS: readonly (readonly string[])[] = [
     ".#B#.#B#B#.#.", "..BBBB.BBBB..",
   ],
   [
-    "..BBBPPPBBB..", ".#B#BPPPB#B#.", "BBBBBPPPBBBBB",
+    "..BBBPPPBBB..", ".#B#BPPPB#B#.", "BBBBBBBBBBBBB",
     "B#B#B#B#B#B#B", "PPPPB...BPPPP", "PPPPB#.#BPPPP",
-    "PPPPB...BPPPP", "B#B#B#B#B#B#B", "BBBBBPPPBBBBB",
+    "BBBBB...BBBBB", "B#B#B#B#B#B#B", "BBBBBBBBBBBBB",
     ".#B#BPPPB#B#.", "..BBBPPPBBB..",
   ],
   [
@@ -57,10 +59,10 @@ const ROWS: readonly (readonly string[])[] = [
     ".#.#.#.#.#.#.", ".............",
   ],
   [
-    "S.BBBBSBBBB.S", ".#B#B#B#B#B#.", "BBBBBBBBBBBBB",
-    "B#B#B#B#B#B#B", "BBBBB...BBBBB", "S#B#B#S#B#B#S",
+    "..BBBBBBBBB..", ".#B#B#B#B#B#.", "BBBBBBBBBBBBB",
+    "B#B#B#B#B#B#B", "BBBBB...BBBBB", "B#B#B#.#B#B#B",
     "BBBBB...BBBBB", "B#B#B#B#B#B#B", "BBBBBBBBBBBBB",
-    ".#B#B#B#B#B#.", "S.BBBBSBBBB.S",
+    ".#B#B#B#B#B#.", "..BBBBBBBBB..",
   ],
   [
     "..BBBB.BBBB..", ".#B#B#F#B#B#.", "BBB.FFF.BBBBB",

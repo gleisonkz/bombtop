@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createMatch } from "../src/arena";
 import { buildStage } from "../src/stage";
-import { Tile } from "../src/state";
+import { Floor, Tile } from "../src/state";
 
 // Measured on Super Bomberman 4 in Snes9x (E:/Projetos/bombtop-src/sb4-evidence/layout): every cell that is not a wall
 // or a gimmick starts as a block, only the seats in play are cleared, then a few random blocks are taken out.
@@ -16,7 +16,12 @@ const ids = ["p1", "p2", "p3", "p4", "p5"];
 
 describe.each([
   { stage: "sb4-01", holes: 14, blocks: { 2: 93, 5: 80 } },
+  { stage: "sb4-02", holes: 14, blocks: { 2: 93, 5: 80 } },
+  { stage: "sb4-03", holes: 12, blocks: { 2: 93, 5: 80 } },
+  { stage: "sb4-04", holes: 4, blocks: { 2: 83, 5: 70 } },
+  { stage: "sb4-06", holes: 14, blocks: { 2: 93, 5: 80 } },
   { stage: "sb4-09", holes: 4, blocks: { 2: 91, 3: 88, 4: 85, 5: 78 } },
+  { stage: "sb4-10", holes: 14, blocks: { 2: 93, 5: 80 } },
 ] as const)("SB4 rolled layout of $stage", ({ stage, holes, blocks }) => {
   const layout = buildStage(stage, 15, 13);
 
@@ -55,5 +60,17 @@ describe.each([
     const s = createMatch({ stage, seed: 3, playerIds: ["p1", "p2"] });
     expect(s.items.length).toBeGreaterThan(0);
     for (const item of s.items) expect(s.grid.tiles[item.y * 15 + item.x]).toBe(Tile.Block);
+  });
+});
+
+describe("SB4 stage 4 (Push and Fall)", () => {
+  it("has its pits where the original has them: two rows deep at the top, bottom and sides", () => {
+    const layout = buildStage("sb4-04", 15, 13);
+    const pits = new Set<string>();
+    for (let index = 0; index < 195; index++) if (layout.floor![index] === Floor.Pit) pits.add(`${index % 15},${Math.floor(index / 15)}`);
+    const expected = new Set<string>();
+    for (const y of [1, 2, 10, 11]) for (const x of [6, 7, 8]) expected.add(`${x},${y}`);
+    for (const y of [5, 6]) for (const x of [1, 2, 3, 4, 10, 11, 12, 13]) expected.add(`${x},${y}`);
+    expect([...pits].sort()).toEqual([...expected].sort());
   });
 });
