@@ -16,7 +16,7 @@ vi.mock("pixi.js", () => {
   class Text { anchor = new Point(); position = new Point(); visible = true; text = ""; alpha = 1; }
   return { Assets: { load: mocks.load }, Container, Sprite, Graphics, Text };
 });
-import { Sb4StageEffects, seesawStandLift, stageFlightLift } from "../src/render/sb4-stage-effects";
+import { Sb4StageEffects, seesawBombLift, seesawStandLift, stageFlightLift } from "../src/render/sb4-stage-effects";
 import { Graphics } from "pixi.js";
 
 const PROP_COUNT = 13;
@@ -250,6 +250,16 @@ it("stands a player on the plank: the high end above the low one, nothing off it
   const turned = seesawArena(true);
   expect(seesawStandLift(turned, 2 * 16 + 8, 56)).toBe(at(4));
   expect(seesawStandLift(arena(), 56, 56)).toBe(0);
+});
+
+it("rests a bomb on the plank like a player, but not one in the air or in hand", () => {
+  const state = seesawArena(false); // right end (x 4) high
+  const high = { x: 4 * 16 + 8, y: 3 * 16 + 8 };
+  expect(seesawBombLift(state, {}, high.x, high.y)).toBe(seesawStandLift(state, high.x, high.y));
+  expect(seesawBombLift(state, {}, high.x, high.y)).toBeGreaterThan(0);
+  expect(seesawBombLift(state, { air: {} }, high.x, high.y)).toBe(0);
+  expect(seesawBombLift(state, { heldBy: "qa" }, high.x, high.y)).toBe(0);
+  expect(seesawBombLift(state, {}, 6 * 16 + 8, high.y)).toBe(0);
 });
 
 it("lifts stage flights on a 24-tick parabola without double-lifting carried players", () => {

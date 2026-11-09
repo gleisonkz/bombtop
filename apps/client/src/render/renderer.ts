@@ -22,7 +22,7 @@ import { loadPicanhaArt } from "./picanha-art";
 import { battleClockText, battleTempoText } from "./battle-clock";
 import { stageTileTint } from "./stage-art";
 import { StageTileArt } from "./stage-tile-art";
-import { Sb4StageEffects, seesawStandLift, stageFlightLift } from "./sb4-stage-effects";
+import { Sb4StageEffects, seesawBombLift, seesawStandLift, stageFlightLift } from "./sb4-stage-effects";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects, OPTIMUS_PIXEL_EFFECTS } from "./ability-pixel-effects";
@@ -1122,7 +1122,8 @@ export class Renderer {
       const t = b.air ? b.air.progress / AIR_TICKS_PER_TILE : b.offset / TILE;
       const lift = b.air ? airLift(b.air) : 0; // one high arc when punched or thrown, small hops when bouncing
       const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
-      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift;
+      const plankLift = seesawBombLift(s, b, cx, b.y * TILE_PX + TILE_PX / 2 + dy * t * TILE_PX); // resting on a seesaw's plank
+      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift - plankLift;
       const summon = this.summons.get(b);
       const color = b.mega ? this.specialColor(b.ownerId, s) : null;
       if (summon) {

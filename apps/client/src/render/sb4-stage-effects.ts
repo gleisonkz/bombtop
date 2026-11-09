@@ -38,6 +38,11 @@ export function seesawStandLift(state: Pick<MatchState, "stageState">, px: numbe
   return 0;
 }
 
+/** A bomb resting on a seesaw sits on the plank (screen point (px, py) is its ground centre); in the air or in hand it does not. */
+export function seesawBombLift(state: Pick<MatchState, "stageState">, bomb: { air?: unknown; heldBy?: string | null }, px: number, py: number): number {
+  return bomb.air || bomb.heldBy ? 0 : seesawStandLift(state, px, py);
+}
+
 export function stageFlightLift({ flight, y, bodyHeight, elevated }: {
   flight: { ticks: number; kind?: "seesaw" | "seesawRebound" } | undefined; y: number; bodyHeight: number; elevated: boolean;
 }): number {
