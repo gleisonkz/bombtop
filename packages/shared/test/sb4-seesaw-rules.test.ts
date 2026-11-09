@@ -150,6 +150,75 @@ describe("SB4 seesaw: landing", () => {
   });
 });
 
+describe("SB4 seesaw: a stunned player", () => {
+  function run(stun: number) {
+    const s = arena();
+    placePlayerAt(s, "a", 1, 1);
+    placePlayerAt(s, "b", 3, 3);
+    const b = s.players[1]!;
+    b.stun = stun;
+    const raised: boolean[] = [];
+    let freed = 0, hopped = 0, landed = 0;
+    for (let tick = 1; tick <= 120 && !landed; tick++) {
+      if (tick === 1) placePlayerAt(s, "a", 5, 9);
+      if (tick === 2) placePlayerAt(s, "a", 1, 1);
+      step(s);
+      raised.push(s.stageState!.seesaws![0]!.raised);
+      const flying = !!s.stageState!.flights?.b;
+      if (b.stun > 0) expect(flying, `tick ${tick}`).toBe(false);
+      if (!freed && b.stun === 0) freed = tick;
+      if (flying && !hopped) hopped = tick;
+      if (hopped && !flying) landed = tick;
+    }
+    return { s, b, raised, freed, hopped, landed };
+  }
+
+  it("on the end that goes up is thrown only once the stun is over, the tick after, where they stand (e-stunned-on-end-TT20)", () => {
+    const dry = run(0);
+    expect(dry.hopped).toBe(1);
+    const { b, raised, freed, hopped, landed } = run(40);
+    // Still on (3,3), which is now the end that tips it: the stunned player tips it back as soon as it can turn.
+    expect(raised.slice(0, 4)).toEqual([false, false, false, true]);
+    expect(hopped).toBe(freed + 1);
+    expect(landed - hopped).toBe(dry.landed - dry.hopped);
+    expect(b.alive).toBe(true);
+    expect(playerTile(b)).toEqual({ x: 3, y: 3 });
+  });
+});
+
+describe("SB4 seesaw: coming down on a bomb", () => {
+  it("bounces on a tile every 8 ticks, over the pivot, to the first free tile (e-player-landing-blocked)", () => {
+    const s = createMatch({ stage: "sb4-09", seed: 7, playerIds: ["a", "b", "c"], blockDensity: 0 });
+    placePlayerAt(s, "b", 3, 3);
+    placePlayerAt(s, "a", 5, 3);
+    placePlayerAt(s, "c", 1, 11);
+    const b = s.players[1]!;
+    const right = s.stageState!.seesaws![1]!;
+    let bomb: ReturnType<typeof bombOf> | undefined;
+    let bounced = 0;
+    let before = right.raised;
+    for (let tick = 1; tick <= 34; tick++) {
+      if (tick === 2) bomb = bombOf(s, "c", 9, 3);
+      before = right.raised;
+      step(s, tick >= 4 && tick <= 15 ? { b: { dir: "right", bomb: false } } : {});
+      if (!bounced && s.stageState!.flights?.b?.kind === "seesawRebound") bounced = tick;
+      if (tick === 24) expect(playerTile(b), "over the pivot").toEqual({ x: 10, y: 3 });
+      if (tick === 32) expect(s.stageState!.flights?.b, "tick 32").toBeTruthy();
+      if (tick === 33) {
+        expect(s.stageState!.flights?.b).toBeUndefined();
+        expect(b.alive).toBe(true);
+        expect(playerTile(b)).toEqual({ x: 11, y: 3 });
+        expect(Math.round(b.px / TILE * 16 + 7)).toBe(191);
+        expect(right.raised).toBe(before);
+      }
+    }
+    expect(bounced).toBe(16);
+    // Landed on (11,3), the end that tips the right seesaw: it turns the tick after and throws the bomb across.
+    expect(right.raised).not.toBe(before);
+    expect(bomb!.air?.dir).toBe("right");
+  });
+});
+
 describe("SB4 seesaw: the pivot", () => {
   it.each([16, 20, 32])("always hops a player walking into it, at speed %i (walk-into-pivot-from-left)", speed => {
     const s = arena();

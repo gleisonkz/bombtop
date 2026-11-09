@@ -4,7 +4,7 @@ import { playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, OPPOSITE_DIRECTIONS, Floor, getTile, playerTile, tileCenter, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 import type { StageSeesaw } from "./stage-state";
 import { initializeTrolley, updateTrolley } from "./stage-trolley";
-import { startSeesawFlight, startSeesawRebounds, updateSeesawFlights } from "./stage-seesaw-flight";
+import { startSeesawFlight, startSeesawRebounds, updateSeesawFlights, type SeesawLanding } from "./stage-seesaw-flight";
 
 const FLIGHT_TILES = 3;
 const SEESAW_COOLDOWN = 3;
@@ -57,8 +57,25 @@ function finishFlight(s: MatchState, p: Player, dir: Facing): void {
   p.alive = false;
 }
 
+/**
+ * Coming down on a bomb, a block or a pivot, a player hops on along the plank a tile at a time, 8 frames each and a
+ * frame's rest between hops, to the first tile they can stand on (C22026; e-player-landing-blocked). Another player
+ * is no obstacle.
+ */
+function bounceOn(s: MatchState, landing: SeesawLanding): boolean {
+  const { player: p, dir } = landing;
+  if (dir !== "left" && dir !== "right") return false;
+  const { x, y } = playerTile(p);
+  const pivot = s.stageState?.seesaws?.some(saw => saw.x === x && saw.y === y);
+  if (!pivot && getTile(s, x, y) !== Tile.Block && !bombAt(s, x, y)) return false;
+  if (getTile(s, x + DIR_VECTORS[dir][0], y) === Tile.Wall) return false;
+  delete s.stageState!.floorLocks?.[`seesaw:land:${p.id}`];
+  s.stageState!.flights![p.id] = { kind: "seesawRebound", dir, steering: dir, ticks: landing.rebound ? 9 : 8, remaining: 0 };
+  return true;
+}
+
 function updateFlights(s: MatchState, inputs: Record<string, PlayerInput>): void {
-  for (const landing of updateSeesawFlights(s, inputs)) finishFlight(s, landing.player, landing.dir);
+  for (const landing of updateSeesawFlights(s, inputs)) if (!bounceOn(s, landing)) finishFlight(s, landing.player, landing.dir);
   const flights = s.stageState?.flights;
   if (!flights) return;
   for (const [id, flight] of Object.entries(flights)) {
@@ -138,7 +155,10 @@ function turnSeesaws(s: MatchState, inputs: Record<string, PlayerInput>): void {
     const high = endpoint(saw, false);
     for (const p of s.players) {
       const tile = playerTile(p);
-      if (p.alive && !s.stageState?.flights?.[p.id] && tile.x === high.x && tile.y === high.y) startSeesawFlight(s, p, high.dir, inputs[p.id]);
+      if (!p.alive || s.stageState?.flights?.[p.id] || tile.x !== high.x || tile.y !== high.y) continue;
+      // Someone stunned is thrown only once the stun is over (e-stunned-on-end-TT20): see launchUnstunned.
+      if (p.stun > 0) (s.stageState!.floorLocks ??= {})[`${STUNNED}${p.id}`] = 0;
+      else startSeesawFlight(s, p, high.dir, inputs[p.id]);
     }
     // Only a resting bomb: a sliding one is left alone.
     for (const bomb of s.bombs) if (!bomb.air && !bomb.heldBy && !bomb.slide && bomb.x === high.x && bomb.y === high.y) throwBomb(bomb, OPPOSITE_DIRECTIONS[high.dir]);
@@ -158,9 +178,32 @@ export function bombLandedOnSeesaw(s: MatchState, bomb: Bomb): void {
   if (tips) turnSeesaws(s, {});
 }
 
+const STUNNED = "seesaw:stunned:";
+
+/**
+ * A player the seesaw tried to throw while stunned hops straight up where they stand on the tick after the stun is
+ * over, whichever way the seesaw has turned since (e-stunned-on-end-TT20).
+ */
+function launchUnstunned(s: MatchState, inputs: Record<string, PlayerInput>): void {
+  const locks = s.stageState?.floorLocks;
+  for (const p of s.players) {
+    const key = `${STUNNED}${p.id}`;
+    const freedAt = locks?.[key];
+    if (freedAt === undefined) continue;
+    if (!p.alive) { delete locks![key]; continue; }
+    if (p.stun > 0) continue;
+    if (!freedAt) { locks![key] = s.tick; continue; }
+    delete locks![key];
+    const tile = playerTile(p);
+    const saw = s.stageState!.seesaws!.find(saw => saw.y === tile.y && Math.abs(saw.x - tile.x) === 1);
+    startSeesawFlight(s, p, saw && tile.x < saw.x ? "left" : "right", inputs[p.id]);
+  }
+}
+
 function updateSeesaws(s: MatchState, inputs: Record<string, PlayerInput>): void {
   const seesaws = s.stageState?.seesaws;
   if (!seesaws?.length) return;
+  launchUnstunned(s, inputs);
   for (const saw of seesaws) saw.cooldown = Math.max(0, (saw.cooldown ?? 0) - 1);
   const triggered = seesaws.some(saw => {
     if (saw.cooldown) return false;

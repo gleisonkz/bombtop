@@ -26,8 +26,11 @@ export function startSeesawFlight(s: MatchState, p: Player, dir: Facing, input?:
     ...(steering ? { steering, preSteered: true as const } : {}) };
 }
 
-export function updateSeesawFlights(s: MatchState, inputs: Record<string, PlayerInput>): { player: Player; dir: Facing }[] {
-  const landed: { player: Player; dir: Facing }[] = [];
+/** Who came down this tick, which way they went and whether it was off a rebound (a hop along the plank). */
+export interface SeesawLanding { player: Player; dir: Facing; rebound: boolean }
+
+export function updateSeesawFlights(s: MatchState, inputs: Record<string, PlayerInput>): SeesawLanding[] {
+  const landed: SeesawLanding[] = [];
   for (const [id, flight] of Object.entries(s.stageState?.flights ?? {})) {
     if (flight.kind !== "seesaw" && flight.kind !== "seesawRebound") continue;
     const p = s.players.find(player => player.id === id);
@@ -40,7 +43,7 @@ export function updateSeesawFlights(s: MatchState, inputs: Record<string, Player
       p.px = tileCenter(x);
       delete s.stageState!.flights![id];
       (s.stageState!.floorLocks ??= {})[`seesaw:land:${id}`] = s.tick;
-      landed.push({ player: p, dir: flight.steering ?? flight.dir });
+      landed.push({ player: p, dir: flight.steering ?? flight.dir, rebound: true });
       continue;
     }
     const age = 16 - --flight.ticks;
@@ -72,7 +75,7 @@ export function updateSeesawFlights(s: MatchState, inputs: Record<string, Player
     p.px = tileCenter(x);
     delete s.stageState!.flights![id];
     (s.stageState!.floorLocks ??= {})[`seesaw:land:${id}`] = s.tick;
-    landed.push({ player: p, dir: flight.steering ?? flight.dir });
+    landed.push({ player: p, dir: flight.steering ?? flight.dir, rebound: false });
   }
   return landed;
 }
