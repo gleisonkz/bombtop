@@ -1,5 +1,6 @@
 import { AIR_DISTANCE, AIR_TICKS_PER_TILE, STUN_TICKS } from "./constants";
 import { placeBomb } from "./bombs";
+import { loseHitPowerUps } from "./items";
 import { playerCarryButton, playerElevated } from "./player-carry";
 import { bombAt, DIR_VECTORS, getTile, playerTile, Tile, type Bomb, type Facing, type MatchState, type Player, type PlayerInput } from "./state";
 import { bombLandedOnSeesaw, SEESAW_BOUNCE_TICKS, seesawHop } from "./stage-transport";
@@ -94,8 +95,12 @@ export function updateAir(s: MatchState): void {
       const t = playerTile(p);
       return p.alive && !playerElevated(p) && t.x === b.x && t.y === b.y;
     });
-    // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned.
-    if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) hit.stun = STUN_TICKS;
+    // Someone carrying a bomb overhead takes the hit on it: it bounces on, nobody is stunned. Anyone else is
+    // stunned and loses some of their power-ups.
+    if (hit && !s.bombs.some((o) => o.heldBy === hit.id)) {
+      hit.stun = STUN_TICKS;
+      loseHitPowerUps(s, hit);
+    }
     const outside = b.x <= 0 || b.y <= 0 || b.x >= s.grid.width - 1 || b.y >= s.grid.height - 1;
     if (hit || outside || getTile(s, b.x, b.y) !== Tile.Empty || bombAt(s, b.x, b.y)) {
       air.span = air.tilesLeft = 1;

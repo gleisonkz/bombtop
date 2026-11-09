@@ -93,12 +93,8 @@ function openDropTiles(s: MatchState): { x: number; y: number }[] {
   return open;
 }
 
-export function scatterCurseItem(s: MatchState, p: Player): boolean {
-  const items = carried(p);
-  if (!items.length) return false;
-  const open = openDropTiles(s);
-  if (!open.length) return false;
-  const kind = items[Math.floor(nextRandom(s) * items.length)]!;
+/** Takes one power-up of `kind` off a player's stats. Returns false for a kind that is not a power-up. */
+function removePowerUp(p: Player, kind: ItemKind): boolean {
   switch (kind) {
     case ItemKind.Fire:
       p.fireRange--;
@@ -137,6 +133,29 @@ export function scatterCurseItem(s: MatchState, p: Player): boolean {
     default:
       return false;
   }
+  return true;
+}
+
+/**
+ * A bomb coming down on a player knocks 1 to 4 of their power-ups out, each of a kind they still hold picked at
+ * random (not by how many of it), and they are gone (SB4, e-hit-item). Fire never drops below the starting range.
+ */
+export function loseHitPowerUps(s: MatchState, p: Player): void {
+  const startingFire = s.stage?.startsWith("sb4-") ? 2 : START_FIRE_RANGE;
+  for (let n = 1 + Math.floor(nextRandom(s) * 4); n > 0; n--) {
+    const kinds = [...new Set(carried(p))].filter(kind => kind !== ItemKind.Fire || p.fireRange > startingFire);
+    if (!kinds.length) return;
+    removePowerUp(p, kinds[Math.floor(nextRandom(s) * kinds.length)]!);
+  }
+}
+
+export function scatterCurseItem(s: MatchState, p: Player): boolean {
+  const items = carried(p);
+  if (!items.length) return false;
+  const open = openDropTiles(s);
+  if (!open.length) return false;
+  const kind = items[Math.floor(nextRandom(s) * items.length)]!;
+  if (!removePowerUp(p, kind)) return false;
   const spot = open[Math.floor(nextRandom(s) * open.length)]!;
   s.items.push({ ...spot, kind });
   return true;
