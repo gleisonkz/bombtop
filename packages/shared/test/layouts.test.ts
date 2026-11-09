@@ -27,7 +27,9 @@ describe("SB4 Group 1 layouts", () => {
     expect(layout.tiles).toHaveLength(195);
     expect(layout.floor).toHaveLength(195);
     const match = createMatch({ stage, seed: 17, playerIds: seats });
-    expect(match.grid).toEqual(createMatch({ stage, seed: 90, playerIds: seats }).grid);
+    // Stages 1 and 9 are rolled from the seed, as SB4 does (sb4-layout-roll.test.ts).
+    const rolled = number === 1 || number === 9;
+    if (!rolled) expect(match.grid).toEqual(createMatch({ stage, seed: 90, playerIds: seats }).grid);
     expect(match.players.map(playerTile)).toEqual([
       { x: 1, y: 1 }, { x: 13, y: 11 }, { x: 13, y: 1 }, { x: 1, y: 11 }, { x: 7, y: 6 },
     ]);
@@ -48,7 +50,7 @@ describe("SB4 Group 1 layouts", () => {
       expect(visited.has(y * 15 + x)).toBe(true);
       expect(match.grid.floor[y * 15 + x]).not.toBe(Floor.Pit);
     }
-    expect(match.grid.tiles.filter(tile => tile === Tile.Block)).toHaveLength(sb4Map(stage)!.softBlocks);
+    if (!rolled) expect(match.grid.tiles.filter(tile => tile === Tile.Block)).toHaveLength(sb4Map(stage)!.softBlocks);
   });
 
   it("marks the observable gimmicks in the floor contract", () => {

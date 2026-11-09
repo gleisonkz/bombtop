@@ -17,6 +17,7 @@ import { MANIAC_ITEM_KINDS, normalizeManiac, type ManiacItemKind } from "./mania
 import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
 import { buildStage, sb4Map, type StageId } from "./stage";
 import { firstPickers } from "./own-colors";
+import { rollSb4Blocks } from "./sb4-layout-roll";
 import { initializeStageMechanics } from "./stage-mechanics";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
@@ -71,6 +72,8 @@ export function createMatch(opts: MatchOptions): MatchState {
   const safe = new Set([...safeTiles(width, spawnPoints), ...layout.keepClear]);
   const tiles: Tile[] = layout.tiles?.slice() ?? [];
   const candidates: number[] = [];
+  // An SB4 map with no density override is rolled as the original does it, a new layout each round.
+  if (original && opts.blockDensity === undefined) rollSb4Blocks(original.number, tiles, layout.keepClear, width, height, playerIds.length, rng);
 
   for (let y = 0; y < height && !layout.tiles; y++) {
     for (let x = 0; x < width; x++) {
