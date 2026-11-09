@@ -21,7 +21,14 @@ PROPS = (
     ("costume-mask", 10, (395, 700, 715, 1050)),
     ("trolley", 11, (720, 705, 1085, 1050)),
     ("flag", 12, (1090, 695, 1448, 1050)),
+    # The seesaw in two pieces for the arena, which draws it from above: the plank with its axle hub
+    # (tilted by raising one end) and the pivot's post and foot (fixed on the floor). The whole
+    # "seesaw" above stays for the map previews.
+    ("seesaw-plank", 9, (0, 820, 390, 908)),
+    ("seesaw-base", 9, (130, 900, 270, 990)),
 )
+# Below the bar only the round axle hub belongs to the plank, not the post under it.
+HUB = {"seesaw-plank": {"below": 70, "center": (198, 61), "radius": 28}}
 
 
 def main():
@@ -29,10 +36,18 @@ def main():
     source = Image.open(path).convert("RGBA")
     if source.size != (1448, 1086) or source.getchannel("A").getextrema() != (0, 255):
         raise ValueError("Expected the reviewed 1448x1086 transparent prop source")
-    atlas = Image.new("RGBA", (128 * 12, 128))
+    atlas = Image.new("RGBA", (128 * len(PROPS), 128))
     entries = []
     for index, (name, stage, box) in enumerate(PROPS):
         region = source.crop(box)
+        hub = HUB.get(name)
+        if hub:
+            cx, cy = hub["center"]
+            pixels = region.load()
+            for y in range(hub["below"], region.height):
+                for x in range(region.width):
+                    if (x - cx) ** 2 + (y - cy) ** 2 > hub["radius"] ** 2:
+                        pixels[x, y] = (0, 0, 0, 0)
         bounds = region.getchannel("A").point(lambda alpha: 255 if alpha > 64 else 0).getbbox()
         if bounds is None:
             raise ValueError(f"Empty prop: {name}")
@@ -47,9 +62,9 @@ def main():
         atlas.paste(cell, (index * 128, 0))
         entries.append({"name": name, "stage": stage, "cell": index, "sourceRegion": list(box), "occupiedSourceBounds": list(bounds), "anchor": [64, 64], "frames": 1, "runtime": "not-integrated"})
     atlas.save(OUTPUT / "props.png", optimize=True)
-    manifest = {"cellSize": 128, "columns": 12, "rows": 1, "sourceSize": list(source.size), "sourceSha256": hashlib.sha256(path.read_bytes()).hexdigest(), "scale": "128/432 shared by all props", "props": entries}
+    manifest = {"cellSize": 128, "columns": len(PROPS), "rows": 1, "sourceSize": list(source.size), "sourceSha256": hashlib.sha256(path.read_bytes()).hexdigest(), "scale": "128/432 shared by all props", "props": entries}
     (ART / "props-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    print("Packed 12 transparent static props; no gameplay or animation implied")
+    print(f"Packed {len(PROPS)} transparent static props; no gameplay or animation implied")
 
 
 if __name__ == "__main__":

@@ -4,19 +4,22 @@ const mocks = vi.hoisted(() => ({ load: vi.fn() }));
 vi.mock("pixi.js", () => {
   class Point { x = 0; y = 0; set(x: number, y = x) { this.x = x; this.y = y; } }
   class Container { children: unknown[] = []; addChild(...nodes: unknown[]) { this.children.push(...nodes); } }
-  class Sprite { anchor = new Point(); position = new Point(); scale = new Point(); visible = true; texture: unknown; alpha = 1; rotation = 0; }
+  class Sprite { anchor = new Point(); position = new Point(); scale = new Point(); skew = new Point(); visible = true; texture: unknown; alpha = 1; rotation = 0; }
   class Graphics {
     clear = vi.fn(() => { this.moveTo.mockClear(); this.lineTo.mockClear(); this.stroke.mockClear(); return this; });
     moveTo = vi.fn((_x: number, _y: number) => this);
     lineTo = vi.fn((_x: number, _y: number) => this);
     stroke = vi.fn(() => this);
+    roundRect = vi.fn(() => this);
+    fill = vi.fn(() => this);
   }
   class Text { anchor = new Point(); position = new Point(); visible = true; text = ""; alpha = 1; }
   return { Assets: { load: mocks.load }, Container, Sprite, Graphics, Text };
 });
-import { Sb4StageEffects, stageFlightLift } from "../src/render/sb4-stage-effects";
+import { Sb4StageEffects, seesawStandLift, stageFlightLift } from "../src/render/sb4-stage-effects";
 import { Graphics } from "pixi.js";
 
+const PROP_COUNT = 13;
 beforeEach(() => {
   vi.spyOn(console, "warn").mockImplementation(() => {});
   mocks.load.mockReset().mockImplementation((url: string) => Promise.resolve({ width: 128, height: 128, url, source: {} }));
@@ -70,7 +73,7 @@ describe("SB4 prop presentation", () => {
     expect(rails.lineTo).toHaveBeenCalledWith(62, 62);
     expect(vi.mocked(rails.lineTo).mock.calls.every(([x, y]) => [[60, 56], [62, 58], [62, 62]].some(point => point[0] === x && point[1] === y))).toBe(true);
     effects.draw(state);
-    expect(mocks.load).toHaveBeenCalledTimes(12);
+    expect(mocks.load).toHaveBeenCalledTimes(PROP_COUNT);
     expect(JSON.stringify(state)).toBe(before);
   });
   it("keeps static floor rails as a fallback without a trolley", () => {
@@ -84,14 +87,14 @@ describe("SB4 prop presentation", () => {
   it("caches concurrent loads and draws synchronously without loading in frames", async () => {
     const effects = new Sb4StageEffects();
     await Promise.all([effects.load(), effects.load()]);
-    expect(mocks.load).toHaveBeenCalledTimes(12);
+    expect(mocks.load).toHaveBeenCalledTimes(PROP_COUNT);
     const state = arena();
     state.stageState = { balls: [{ px: TILE * 3.5, py: TILE * 2.5, dir: "right" }] };
     effects.draw(state);
     expect(visible(effects.ground).some(node => node.texture.url.includes("rolling-ball"))).toBe(true);
     expect(visible(effects.ground).find(node => node.texture.url.includes("rolling-ball"))!.position).toMatchObject({ x: 56, y: 40 });
     effects.draw(state);
-    expect(mocks.load).toHaveBeenCalledTimes(12);
+    expect(mocks.load).toHaveBeenCalledTimes(PROP_COUNT);
     state.stageState = {};
     effects.draw(state);
     expect(visible(effects.ground)).toHaveLength(0);
@@ -124,7 +127,7 @@ describe("SB4 prop presentation", () => {
   it("retries only failed assets and preserves the loaded ones", async () => {
     mocks.load.mockRejectedValueOnce(new Error("offline"));
     const effects = new Sb4StageEffects(); await effects.load(); await effects.load();
-    expect(mocks.load).toHaveBeenCalledTimes(13);
+    expect(mocks.load).toHaveBeenCalledTimes(PROP_COUNT + 1);
   });
 });
 
@@ -172,7 +175,20 @@ it("shows server reel symbols and stopped state without choosing a result", asyn
   expect(labels.every(label => !label.visible)).toBe(true);
 });
 
-it("draws four three-tile seesaws from pivots instead of repeating floor endpoints", async () => {
+type Drawn = { texture: { url: string }; position: { x: number; y: number }; rotation: number; scale: { x: number; y: number }; skew: { x: number; y: number }; anchor: { x: number; y: number } };
+function seesawParts(effects: Sb4StageEffects) {
+  const parts = visible(effects.ground) as unknown as Drawn[];
+  return { bases: parts.filter(node => node.texture.url.includes("seesaw-base")), planks: parts.filter(node => node.texture.url.includes("seesaw-plank")) };
+}
+function seesawArena(raised: boolean, dir: "right" | "left" = "right") {
+  const state = arena();
+  state.stage = "sb4-09";
+  for (const x of [2, 3, 4]) state.grid.floor[3 * state.grid.width + x] = Floor.Seesaw;
+  state.stageState = { seesaws: [{ x: 3, y: 3, dir, raised }] };
+  return state;
+}
+
+it("draws each seesaw once from its pivot: a fixed base and a three-tile plank", async () => {
   const effects = new Sb4StageEffects(); await effects.load();
   const state = arena();
   state.grid.floor.fill(Floor.Seesaw);
@@ -181,12 +197,60 @@ it("draws four three-tile seesaws from pivots instead of repeating floor endpoin
     { x: 3, y: 9, dir: "left", raised: false }, { x: 9, y: 9, dir: "up", raised: true },
   ] };
   effects.draw(state);
-  const seesaws = visible(effects.ground).filter(node => node.texture.url.includes("seesaw"));
-  expect(seesaws).toHaveLength(4);
-  expect(seesaws.every(node => (node as unknown as { scale: { x: number; y: number } }).scale.x === 48 / 128)).toBe(true);
-  expect(seesaws[0]!.position).toMatchObject({ x: 56, y: 56 });
+  const { bases, planks } = seesawParts(effects);
+  expect(bases).toHaveLength(4);
+  expect(planks).toHaveLength(4);
+  expect(visible(effects.ground).some(node => /seesaw(?!-)/.test(node.texture.url))).toBe(false);
+  expect(planks[0]!.position.x).toBe(56);
+  expect(planks[0]!.scale.x * 128).toBeGreaterThanOrEqual(48);
 });
 
+it("lays a horizontal plank flat in its own row, the right way up, never rotated", async () => {
+  const effects = new Sb4StageEffects(); await effects.load();
+  for (const dir of ["right", "left"] as const) for (const raised of [false, true]) {
+    effects.draw(seesawArena(raised, dir));
+    const { bases, planks } = seesawParts(effects);
+    const plank = planks[0]!;
+    expect(plank.rotation).toBe(0);
+    expect(plank.scale.y).toBeGreaterThan(0);
+    // The plank lies across the row its ends are walked on (tile row 3: y 48..64), not half a tile above it.
+    expect(plank.position.y).toBeGreaterThanOrEqual(48);
+    expect(plank.position.y).toBeLessThan(64);
+    // The base stands on the pivot tile and does not tilt with the plank.
+    expect(bases[0]!.rotation).toBe(0);
+    expect(bases[0]!.skew.y).toBe(0);
+    expect(bases[0]!.position.x).toBe(56);
+  }
+});
+
+it("tilts only the plank, by raising one end, and flips it when the seesaw turns", async () => {
+  const effects = new Sb4StageEffects(); await effects.load();
+  effects.draw(seesawArena(false));
+  const level = seesawParts(effects);
+  const flat = { skew: level.planks[0]!.skew.y, base: { ...level.bases[0]!.position } };
+  effects.draw(seesawArena(true));
+  const turned = seesawParts(effects);
+  expect(flat.skew).not.toBe(0);
+  expect(turned.planks[0]!.skew.y).toBeCloseTo(-flat.skew);
+  expect(turned.bases[0]!.position).toEqual(flat.base);
+  // raised=false: the +dir (right) end is high, so the plank climbs to the right (screen y falls as x grows).
+  expect(flat.skew).toBeLessThan(0);
+  effects.draw(seesawArena(false, "left"));
+  expect(seesawParts(effects).planks[0]!.skew.y).toBeGreaterThan(0);
+});
+
+it("stands a player on the plank: the high end above the low one, nothing off it", () => {
+  const raised = seesawArena(false); // +dir (right, x 4) end high
+  const at = (x: number) => seesawStandLift(raised, x * 16 + 8, 3 * 16 + 8);
+  expect(at(4)).toBeGreaterThan(at(3));
+  expect(at(3)).toBeGreaterThan(at(2));
+  expect(at(2)).toBeGreaterThan(0);
+  expect(at(5)).toBe(0);
+  expect(seesawStandLift(raised, 4 * 16 + 8, 4 * 16 + 8)).toBe(0);
+  const turned = seesawArena(true);
+  expect(seesawStandLift(turned, 2 * 16 + 8, 56)).toBe(at(4));
+  expect(seesawStandLift(arena(), 56, 56)).toBe(0);
+});
 
 it("lifts stage flights on a 24-tick parabola without double-lifting carried players", () => {
   const pose = { y: 100, bodyHeight: 24, elevated: false };

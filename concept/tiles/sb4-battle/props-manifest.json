@@ -1,6 +1,6 @@
 {
   "cellSize": 128,
-  "columns": 12,
+  "columns": 14,
   "rows": 1,
   "sourceSize": [
     1448,
@@ -277,6 +277,52 @@
         4,
         314,
         321
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "seesaw-plank",
+      "stage": 9,
+      "cell": 12,
+      "sourceRegion": [
+        0,
+        820,
+        390,
+        908
+      ],
+      "occupiedSourceBounds": [
+        20,
+        0,
+        379,
+        88
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "frames": 1,
+      "runtime": "not-integrated"
+    },
+    {
+      "name": "seesaw-base",
+      "stage": 9,
+      "cell": 13,
+      "sourceRegion": [
+        130,
+        900,
+        270,
+        990
+      ],
+      "occupiedSourceBounds": [
+        9,
+        0,
+        132,
+        86
       ],
       "anchor": [
         64,

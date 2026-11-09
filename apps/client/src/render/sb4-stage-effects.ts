@@ -2,14 +2,41 @@ import { Assets, Container, Graphics, Sprite, Text, type Texture } from "pixi.js
 import { Floor, TILE, Tile, getFloor, getTile, seesawHopLift, type Facing, type MatchState } from "@bombtop/shared";
 
 type Scene = Pick<MatchState, "grid" | "stageState" | "stage" | "tick">;
-const PROPS = ["clock", "rolling-ball", "forest-pit", "electric-fence", "direction-panel", "foliage", "slots", "slot-switch", "seesaw", "costume-mask", "trolley", "flag"] as const;
+const PROPS = ["clock", "rolling-ball", "forest-pit", "electric-fence", "direction-panel", "foliage", "slots", "slot-switch", "seesaw-plank", "seesaw-base", "costume-mask", "trolley", "flag"] as const;
 type Prop = typeof PROPS[number];
 const SURPRISE_COLORS = { normal: 0xffffff, ice: 0x9ee8ff, sticky: 0xd9a04c, reverse: 0xdb9cff };
 const FLOOR_PROPS = new Map<Floor, Prop>([
   [Floor.Pit, "forest-pit"], [Floor.Surprise, "direction-panel"], [Floor.Foliage, "foliage"],
-  [Floor.Slot, "slot-switch"], [Floor.Seesaw, "seesaw"], [Floor.Flag, "flag"],
+  [Floor.Slot, "slot-switch"], [Floor.Seesaw, "seesaw-plank"], [Floor.Flag, "flag"],
 ]);
 const ANGLES: Record<Facing, number> = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 };
+
+/**
+ * The seesaw seen from above, as the arena is: the plank lies along its row, its pivot SEESAW_PIVOT px off
+ * the floor, and tilting raises one end and lowers the other by SEESAW_TILT px a tile (the low tip, a tile
+ * and a half out, rests on the floor). Heights are screen pixels up from the floor.
+ */
+const SEESAW_PIVOT = 6;
+const SEESAW_TILT = 3;
+const SEESAW_THICK = 2;
+const SEESAW_PLANK_ART = 106; // plank's width in its 128 px cell
+type SeesawLike = { x: number; y: number; dir: Facing; raised: boolean };
+
+/** Height gained per tile toward the seesaw's +dir end: raised turns the +dir end down. */
+function seesawRise(saw: SeesawLike): number { return saw.raised ? -SEESAW_TILT : SEESAW_TILT; }
+
+/** How far up a player standing at (px, py) (screen pixels, their tile's ground point) is lifted by a seesaw plank. */
+export function seesawStandLift(state: Pick<MatchState, "stageState">, px: number, py: number): number {
+  for (const saw of state.stageState?.seesaws ?? []) {
+    const horizontal = saw.dir === "left" || saw.dir === "right";
+    const along = horizontal ? px / 16 - (saw.x + 0.5) : py / 16 - (saw.y + 0.5);
+    const across = horizontal ? Math.floor(py / 16) - saw.y : Math.floor(px / 16) - saw.x;
+    if (across !== 0 || Math.abs(along) > 1.5) continue;
+    const sign = saw.dir === "right" || saw.dir === "down" ? 1 : -1;
+    return SEESAW_THICK + Math.max(0, SEESAW_PIVOT + along * sign * seesawRise(saw));
+  }
+  return 0;
+}
 
 export function stageFlightLift({ flight, y, bodyHeight, elevated }: {
   flight: { ticks: number; kind?: "seesaw" | "seesawRebound" } | undefined; y: number; bodyHeight: number; elevated: boolean;
@@ -47,7 +74,7 @@ export class Sb4StageEffects {
     }));
   }
 
-  private place(prop: Prop, pose: { x: number; y: number; size?: number; rotation?: number; alpha?: number; above?: boolean; tint?: number }): void {
+  private place(prop: Prop, pose: { x: number; y: number; size?: number; rotation?: number; alpha?: number; above?: boolean; tint?: number; squash?: number; skewY?: number }): void {
     const texture = this.art.get(prop);
     if (!texture) return;
     const layer = pose.above ? this.above : this.ground;
@@ -60,7 +87,11 @@ export class Sb4StageEffects {
     const { sprite } = entry;
     sprite.texture = texture;
     sprite.position.set(pose.x, pose.y);
-    sprite.scale.set((pose.size ?? 16) / Math.max(texture.width, texture.height));
+    const scale = (pose.size ?? 16) / Math.max(texture.width, texture.height);
+    const skewY = pose.skewY ?? 0;
+    // A vertical shear (skew.y) also narrows the sprite by its cosine: widen it back so the plank keeps its length.
+    sprite.scale.set(scale / Math.cos(skewY), scale * (pose.squash ?? 1));
+    sprite.skew.set(0, skewY);
     sprite.rotation = pose.rotation ?? 0;
     sprite.alpha = pose.alpha ?? 1;
     sprite.tint = pose.tint ?? 0xffffff;
@@ -118,16 +149,29 @@ export class Sb4StageEffects {
       this.place("flag", { x: (flag.x + 0.5) * 16, y: (flag.y + 0.5) * 16,
         tint: (flag.ownerId ? ownerColor?.(flag.ownerId) : undefined) ?? 0xffffff });
     }
-    for (const seesaw of dynamic?.seesaws ?? []) this.place("seesaw", {
-      x: (seesaw.x + 0.5) * 16, y: (seesaw.y + 0.5) * 16, size: 48,
-      rotation: ANGLES[seesaw.dir] + (seesaw.raised ? -0.15 : 0),
-    });
+    for (const seesaw of dynamic?.seesaws ?? []) this.seesaw(seesaw);
     const trolley = dynamic?.trolley;
     if (trolley) this.place("trolley", { x: trolley.px / TILE * 16, y: trolley.py / TILE * 16, rotation: ANGLES[trolley.dir] });
     for (const honey of dynamic?.honey ?? []) {
       if (honey.takenBy || getTile(state, honey.x, honey.y) !== Tile.Empty) continue;
       this.place("costume-mask", { x: (honey.x + 0.5) * 16, y: (honey.y + 0.5) * 16, size: 12 });
     }
+  }
+
+  /**
+   * The pivot's foot stays put on the floor of the middle tile; the plank lies flat along the row, lifted to
+   * the pivot's height, and leans by a vertical shear: its high end drawn higher, never rotated.
+   */
+  private seesaw(saw: SeesawLike): void {
+    const cx = (saw.x + 0.5) * 16; const cy = (saw.y + 0.5) * 16;
+    const horizontal = saw.dir === "left" || saw.dir === "right";
+    const size = 48 * 128 / SEESAW_PLANK_ART;
+    if (horizontal) this.rails.roundRect(cx - 24, cy + 3, 48, 4, 2).fill({ color: 0x000000, alpha: 0.28 });
+    else this.rails.roundRect(cx - 3, cy - 22, 6, 46, 2).fill({ color: 0x000000, alpha: 0.28 });
+    this.place("seesaw-base", { x: cx, y: cy + 4, size, squash: 0.6 });
+    const sign = saw.dir === "left" ? -1 : 1;
+    if (horizontal) this.place("seesaw-plank", { x: cx, y: cy + 2 - SEESAW_PIVOT, size, skewY: Math.atan(-sign * seesawRise(saw) / 16) });
+    else this.place("seesaw-plank", { x: cx, y: cy - SEESAW_PIVOT, size, rotation: Math.PI / 2 });
   }
 
   private reels(state: Scene): void {

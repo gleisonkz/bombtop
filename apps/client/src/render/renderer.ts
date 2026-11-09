@@ -22,7 +22,7 @@ import { loadPicanhaArt } from "./picanha-art";
 import { battleClockText, battleTempoText } from "./battle-clock";
 import { stageTileTint } from "./stage-art";
 import { StageTileArt } from "./stage-tile-art";
-import { Sb4StageEffects, stageFlightLift } from "./sb4-stage-effects";
+import { Sb4StageEffects, seesawStandLift, stageFlightLift } from "./sb4-stage-effects";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
 import { AbilityPixelEffects, OPTIMUS_PIXEL_EFFECTS } from "./ability-pixel-effects";
@@ -1165,7 +1165,9 @@ export class Renderer {
       const stageLift = stageFlightLift({ flight: s.stageState?.flights?.[p.id], y: pose.y,
         bodyHeight: flightSheet ? flightSheet.bodyH * (flightSheet.scale ?? 1) : MASCOT.bodyH * MASCOT.scale,
         elevated: pose.elevated });
-      const cy = pose.y - stageLift;
+      // Standing on a seesaw plank: drawn on it, its shadow too, at the plank's height there.
+      const plankLift = stageLift || pose.elevated || p.heldBy ? 0 : seesawStandLift(s, pose.x, pose.groundY);
+      const cy = pose.y - stageLift - plankLift;
       const ux = cx / TILE_PX * TILE;
       const uy = pose.groundY / TILE_PX * TILE;
       this.lastSeen.set(p.id, { cx, cy, deadAt: null });
@@ -1178,7 +1180,7 @@ export class Renderer {
       const seen = sneakAlpha(p, this.viewer) * skullAlpha(p, s.tick);
       if (seen === 0) return;
       if (p.invuln > 0 && Math.floor(s.tick / 4) % 2 === 0) return; // blink while invulnerable
-      if (!p.heldBy) g.ellipse(cx, pose.groundY + 6, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
+      if (!p.heldBy) g.ellipse(cx, pose.groundY + 6 - plankLift, 5, 2).fill({ color: 0x000000, alpha: 0.3 * seen });
       if (p.mount && stageLift === 0 && !this.groundEffects.draw("protection", cx, cy + PLAYER_FEET_OFFSET, s.tick)) {
         g.ellipse(cx, cy + PLAYER_FEET_OFFSET, 7, 4).fill(COLORS.mounts[p.mount]).stroke({ color: 0x000000, width: 1 });
       }
