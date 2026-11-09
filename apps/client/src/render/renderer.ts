@@ -1,6 +1,6 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
-import { airLift } from "./air-arc";
+import { airLift, airStep } from "./air-arc";
 import { kameChargeOrigin } from "./sprites";
 import { Fx } from "./fx";
 import { loadFlameArt, type FlameArt } from "./flame-art";
@@ -1119,7 +1119,7 @@ export class Renderer {
       const pulse = Math.sin(((FUSE_TICKS - b.fuse) / 60) * Math.PI * 4) * 0.8;
       const moving = b.air?.dir ?? b.slide;
       const [dx, dy] = moving ? DIR_VECTORS[moving] : [0, 0];
-      const t = b.air ? b.air.progress / AIR_TICKS_PER_TILE : b.offset / TILE;
+      const t = b.air ? airStep(b.air) : b.offset / TILE;
       const lift = b.air ? airLift(b.air) : 0; // one high arc when punched or thrown, small hops when bouncing
       const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
       const plankLift = seesawBombLift(s, b, cx, b.y * TILE_PX + TILE_PX / 2 + dy * t * TILE_PX); // resting on a seesaw's plank
