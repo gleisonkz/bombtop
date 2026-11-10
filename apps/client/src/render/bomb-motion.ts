@@ -2,15 +2,17 @@ import { conveyorDirection, DIR_VECTORS, getFloor, TICK_RATE, TILE, updateSlides
 
 const MAX_LEAD_MS = 150;
 
-function position(bomb: Bomb): [number, number] {
+export function bombGroundOrigin(bomb: Bomb): [number, number] {
+  if (bomb.sb2Throw) return [(bomb.sb2Throw.flight.x - 16) * TILE / 16, (bomb.sb2Throw.flight.y - 32) * TILE / 16];
+  if (bomb.sb2Motion && !bomb.air && !bomb.heldBy) return [bomb.sb2Motion.px - TILE / 2, bomb.sb2Motion.py - TILE / 2];
   const [dx, dy] = bomb.slide ? DIR_VECTORS[bomb.slide] : [0, 0];
   return [bomb.x * TILE + dx * bomb.offset, bomb.y * TILE + dy * bomb.offset];
 }
 
 function interpolate(current: Bomb, future: Bomb, fraction: number): Bomb {
   if (fraction === 0) return current;
-  const [cx, cy] = position(current);
-  const [fx, fy] = position(future);
+  const [cx, cy] = bombGroundOrigin(current);
+  const [fx, fy] = bombGroundOrigin(future);
   const slide = current.offset > 0 ? current.slide : future.slide;
   if (!slide) return future;
   const [dx, dy] = DIR_VECTORS[slide];
@@ -25,7 +27,7 @@ function interpolate(current: Bomb, future: Bomb, fraction: number): Bomb {
 
 export function smoothBombSlides(authoritative: PublicView, predicted: PublicView, elapsedMs: number): PublicView {
   const ticks = Math.min(MAX_LEAD_MS, Math.max(0, elapsedMs)) * TICK_RATE / 1000;
-  const canMove = (b: Bomb) => !b.air && !b.heldBy && (b.slide || conveyorDirection(getFloor(authoritative, b.x, b.y)));
+  const canMove = (b: Bomb) => !b.air && !b.heldBy && !b.sb2Motion && (b.slide || conveyorDirection(getFloor(authoritative, b.x, b.y)));
   if (ticks <= 0 || !authoritative.bombs.some(canMove)) return predicted;
 
   const state = { ...authoritative, bombs: authoritative.bombs.map((b) => ({ ...b })) } as MatchState;

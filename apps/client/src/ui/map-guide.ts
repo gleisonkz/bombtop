@@ -16,6 +16,54 @@ const INFO: Record<string, { text: string; tips: string[] }> = {
     text: "Quatro teleportes, dois pares em cantos opostos: pisou em um, sai no outro do outro lado da arena. Só jogadores viajam; as bombas ficam.",
     tips: ["Encurralado? Um teleporte perto é a melhor saída.", "Cuidado com quem espera na saída do teleporte com uma bomba pronta."],
   },
+  "sb2-01": {
+    text: "A arena básica do Super Bomberman 2: blocos fixos, sempre no mesmo lugar, e itens sorteados de uma bolsa a cada rodada (nem todo bloco tem item). Aos 0:33 do relógio as paredes começam a fechar em espiral.",
+    tips: ["O mapa não muda: decore as rotas de fuga dos cantos.", "Fique de olho no relógio: aos 0:33 as bordas começam a fechar."],
+  },
+  "sb2-02": {
+    text: "O chão todo é gelo: você acelera aos poucos e demora a parar. Seis círculos de lançamento ficam ligados por um trilho: pise num círculo livre e você é levado pelo trilho até outro círculo, que te solta pelo ar. No caminho não dá pra controlar nem soltar bomba.",
+    tips: ["Comece a frear antes: no gelo você escorrega além do que quer.", "O trilho atravessa a arena rápido: bom pra fugir, mas você não escolhe onde sai.", "As bombas param o seu corpo: use-as como parede no gelo."],
+  },
+  "sb2-03": {
+    text: "Arena cercada de água, com quatro túneis nas bordas (colunas 3 e 11, em cima e embaixo): entre num deles e você sai do lado oposto da arena. Com só dois jogadores vivos na mesma coluna e colados, quem está embaixo e anda pra cima empurra o de cima.",
+    tips: ["Os túneis são a saída mais rápida de uma emboscada.", "Um túnel só deixa passar quando a saída está livre: não conte com ele com alguém do outro lado."],
+  },
+  "sb2-04": {
+    text: "Uma canaleta de pólvora forma um anel no meio da arena e todos começam dentro dele. Se uma explosão alcança qualquer casa da canaleta, o anel inteiro pega fogo de uma vez por um instante, e quem estiver em cima dele queima.",
+    tips: ["Nunca espere em cima da canaleta quando houver bomba perto dela.", "Uma bomba com o fogo chegando na canaleta acerta quem está do outro lado do anel."],
+  },
+  "sb2-05": {
+    text: "Placas vermelhas no chão, algumas escondidas sob blocos: uma bomba solta em cima de uma placa explode com fogo 10, cruzando a arena, sem mudar o seu fogo normal.",
+    tips: ["Leve o rival pra linha de uma placa e solte a bomba nela.", "Viu bomba numa placa? Saia da linha e da coluna inteiras."],
+  },
+  "sb2-06": {
+    text: "Dois pares de teleportes em cantos opostos do meio da arena: pisou em um, sai no outro. Só jogadores viajam (bombas e itens não), não dá pra soltar bomba em cima de um teleporte e ele não funciona enquanto há fogo nele.",
+    tips: ["Para usar de novo, saia da casa de chegada primeiro.", "Fogo no teleporte bloqueia a fuga: não conte com ele no meio da explosão."],
+  },
+  "sb2-07": {
+    text: "Quase sem blocos. No centro, um painel de pausa: quem pisa fica parado uns 2,5 segundos (o fogo ainda pega). Nas laterais, dois painéis com números de 1 a 5: pisar define a sua velocidade pelo número mostrado (1 bem lento, 5 muito rápido) e o painel sorteia outro número.",
+    tips: ["Olhe o número antes de pisar: um 1 pode te deixar lento a rodada toda.", "Não pise no painel do centro com bomba por perto."],
+  },
+  "sb2-08": {
+    text: "Uma esteira em anel no meio da arena, girando no sentido horário: leva quem está parado em cima e carrega as bombas, que param ao encontrar alguém. Dois botões no centro: um inverte o sentido da esteira, o outro alterna entre lenta e rápida.",
+    tips: ["Solte a bomba na esteira e deixe ela chegar no rival.", "Inverta a esteira quando uma bomba estiver indo na sua direção.", "Na velocidade rápida, a bomba atravessa o anel num instante."],
+  },
+  "sb2-09": {
+    text: "Setas no chão desviam as bombas chutadas: a bomba deslizando vira para onde a seta aponta. Só as setas dos cantos começam à vista; as outras estão sob blocos. Os jogadores passam por elas normalmente.",
+    tips: ["Pegue o chute cedo: aqui ele vale muito.", "Estude onde cada seta manda a bomba antes de chutar."],
+  },
+  "sb2-10": {
+    text: "O botão de ação faz pular: o pulo passa por cima de paredes e blocos (uma casa pro lado, ou ajustando pra cima e pra baixo) e no ar o fogo não te pega. Caiu em cima de algo, você escorrega até o chão livre; pulou pra fora da borda, aparece do outro lado.",
+    tips: ["Encurralado? Pule por cima da parede.", "Pular no ar escapa do fogo, mas veja onde vai cair."],
+  },
+  "sb2-11": {
+    text: "Arena aberta, sem blocos: todo mundo começa com 6 bombas, fogo 7, chute, luva e mais velocidade, e uma caveira no centro. Empurre contra a borda por um instante e você é lançado para dentro da arena, a salvo do fogo durante o voo. Bombas chutadas batem na borda e voltam.",
+    tips: ["O lançamento é a fuga mais rápida, mas durante a preparação o fogo ainda pega.", "Com fogo 7 e sem blocos, nenhuma linha é segura perto de uma bomba."],
+  },
+  "sb2-12": {
+    text: "Dois tipos de piso no meio da arena. As molas (azuis) te lançam na direção que você segura, por cima de tudo e sem levar fogo no ar. Os alçapões (dourados) prendem quem pisa no lugar, arrancam de 1 a 3 itens, que voam pela arena, e pegam fogo; cada um funciona uma vez.",
+    tips: ["Nunca pise num alçapão dourado.", "Use as molas para atravessar a arena e escapar de cercos."],
+  },
   "sb4-01": {
     text: "O mapa básico do Super Bomberman 4: blocos fixos, sempre no mesmo lugar, e 28 itens escondidos (bombas, fogo, chute, luva, soco, empurrão). Começa com 2 de fogo e as bombas explodem mais rápido.",
     tips: ["Como o mapa é sempre igual, decore por onde fugir.", "As bombas daqui estouram mais rápido: solte e já saia."],
@@ -69,8 +117,8 @@ const INFO: Record<string, { text: string; tips: string[] }> = {
 /** Every map a room can pick, in the lobby's order, with its name, what it does and tips. */
 export const MAP_GUIDE = SELECTABLE_STAGES.map((id) => ({ id, name: STAGE_NAMES[id], ...INFO[id]! }));
 
-/** The short label on a map's card: its number for the SB4 maps, a symbol for ours. */
-const badge = (id: StageId): string => (id.startsWith("sb4-") ? id.slice(4) : id === "classic" ? "★" : id === "conveyor" ? "⇄" : "◎");
+/** The short label on a map's card: its number for the SB4 and SB2 maps, a symbol for ours. */
+const badge = (id: StageId): string => (id.startsWith("sb4-") || id.startsWith("sb2-") ? id.slice(4) : id === "classic" ? "★" : id === "conveyor" ? "⇄" : "◎");
 
 export interface MapGuideHooks {
   close(): void;
@@ -102,7 +150,7 @@ export function mapGuide(hooks: MapGuideHooks): { root: HTMLElement; open(): voi
     { class: "guide-list" },
     MAP_GUIDE.map((map, i) => {
       const card = button("", () => select(i), "guide-card");
-      card.append(el("span", { class: "map-badge", text: badge(map.id) }), el("span", { text: map.name.replace(/^SB4 \d+ · /, "") }));
+      card.append(el("span", { class: "map-badge", text: badge(map.id) }), el("span", { text: map.name.replace(/^SB4 \d+ · /, "").replace(/^SB2 \d+ · /, "SB2 · ") }));
       cards.push(card);
       return card;
     }),

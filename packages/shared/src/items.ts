@@ -8,11 +8,14 @@ import {
   SPEED_STEP,
   START_BOMB_CAPACITY,
   START_FIRE_RANGE,
+  TILE,
 } from "./constants";
 import { applyRandomCurse } from "./curse";
 import { giveRandomMount } from "./mount";
 import { playerElevated } from "./player-carry";
 import { nextRandom } from "./rng";
+import { isSb2Stage } from "./sb2-stage";
+import { applySb2Item, SB2_ITEM_SPEEDS } from "./sb2-items";
 import { bombAt, Floor, getFloor, getTile, hasFlame, ItemKind, playerTile, Tile, type MatchState, type Player } from "./state";
 
 const EFFECTS: Record<ItemKind, (p: Player, s: MatchState) => void> = {
@@ -56,7 +59,7 @@ export function collectItems(s: MatchState): void {
     if (item.sb4Status === 36) p.curse = { kind: "constipation", sb4Status: 36 };
     else if (item.sb4Status === 43) p.curse = { kind: "hiccups", sb4Status: 43 };
     else if (item.sb4Status === 37) p.curse = { kind: "dangerBomb", sb4Status: 37 };
-    else {
+    else if (!(isSb2Stage(s.stage) && applySb2Item(s, p, item.kind))) {
       EFFECTS[item.kind](p, s);
     }
     s.items = s.items.filter((i) => i !== item);
@@ -66,10 +69,12 @@ export function collectItems(s: MatchState): void {
 /** The power-ups a player is carrying, read off their stats (full fire counts as plain fire). */
 function carried(p: Player): ItemKind[] {
   const n = (count: number, kind: ItemKind) => Array<ItemKind>(Math.max(0, count)).fill(kind);
+  const speedItems = p.sb2Coordinates ? SB2_ITEM_SPEEDS.findIndex(speed => speed * TILE / 16 === p.speed) - 1
+    : Math.floor((p.speed - BASE_SPEED) / SPEED_STEP);
   return [
-    ...n(p.fireRange - START_FIRE_RANGE, ItemKind.Fire),
+    ...n(p.fireRange - (p.sb2Coordinates ? 2 : START_FIRE_RANGE), ItemKind.Fire),
     ...n(p.bombCapacity - START_BOMB_CAPACITY, ItemKind.Bomb),
-    ...n(Math.floor((p.speed - BASE_SPEED) / SPEED_STEP), ItemKind.Speed),
+    ...n(speedItems, ItemKind.Speed),
     ...(p.canKick ? [ItemKind.Kick] : []),
     ...(p.canBombPass ? [ItemKind.BombPass] : []),
     ...(p.canBlockPass ? [ItemKind.BlockPass] : []),
@@ -168,9 +173,9 @@ export function scatterCurseItem(s: MatchState, p: Player): boolean {
 export function dropItems(s: MatchState, p: Player): void {
   const drops = carried(p);
   if (p.curse?.sb4Status) p.curse = null;
-  p.fireRange = START_FIRE_RANGE;
+  p.fireRange = p.sb2Coordinates ? 2 : START_FIRE_RANGE;
   p.bombCapacity = START_BOMB_CAPACITY;
-  p.speed = BASE_SPEED;
+  p.speed = p.sb2Coordinates ? SB2_ITEM_SPEEDS[1] * TILE / 16 : BASE_SPEED;
   p.canKick = p.canPunch = p.canGlove = false;
   p.canBombPass = p.canBlockPass = false;
   p.hasHeart = false;

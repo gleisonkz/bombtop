@@ -3,6 +3,7 @@ import { nextRandom } from "./rng";
 import { playerElevated } from "./player-carry";
 import { playerTile, type CurseKind, type Direction, type MatchState, type Player } from "./state";
 import type { StageId } from "./stage";
+import { isSb2Stage, SB2_NORMAL_FUSE_FRAMES } from "./sb2-stage";
 
 export const CURSES: readonly CurseKind[] = [
   "diarrhea", "weakFire", "hiccups", "fast", "shortFuse", "invisible",
@@ -17,7 +18,8 @@ export function applyRandomCurse(s: MatchState, p: Player): void {
 }
 
 export function effectiveSpeed(p: Player): number {
-  const speed = p.curse?.kind === "slow" ? SLOW_SPEED : p.curse?.kind === "fast" ? MAX_SPEED : p.speed;
+  const speed = p.curse?.sb2Status === 5 ? 8 : p.curse?.sb2Status === 4 ? 48
+    : p.curse?.kind === "slow" ? SLOW_SPEED : p.curse?.kind === "fast" ? MAX_SPEED : p.speed;
   return p.bubble > 0 ? speed / 2 : speed; // the green lantern's bubble is heavy going
 }
 
@@ -26,12 +28,14 @@ export function effectiveRange(p: Player): number {
 }
 
 export function effectiveCapacity(p: Player): number {
+  if (p.curse?.sb2Status === 3) return 0;
   return p.curse?.kind === "weakFire" ? 1 : p.bombCapacity;
 }
 
-export function effectiveFuse(p: Player, stage?: StageId): number {
+export function effectiveFuse(p: Player, stage?: StageId, nativeCounter = 0): number {
   if (p.curse?.kind === "shortFuse") return TICK_RATE;
   if (p.curse?.kind === "longFuse") return 4 * TICK_RATE;
+  if (p.bombType === "normal" && isSb2Stage(stage)) return SB2_NORMAL_FUSE_FRAMES + (nativeCounter & 1);
   if (p.bombType === "normal" && stage?.startsWith("sb4-")) return SB4_NORMAL_FUSE_TICKS;
   return FUSE_TICKS;
 }
@@ -62,7 +66,9 @@ export function updateCurses(s: MatchState): void {
     if (taker) passes.push([carrier, taker]);
   }
   for (const [carrier, taker] of passes) {
-    taker.curse = { kind: carrier.curse!.kind, from: carrier.id, ...(carrier.curse!.sb4Status ? { sb4Status: carrier.curse!.sb4Status } : {}) };
+    taker.curse = { kind: carrier.curse!.kind, from: carrier.id,
+      ...(carrier.curse!.sb2Status ? { sb2Status: carrier.curse!.sb2Status, elapsed: carrier.curse!.elapsed } : {}),
+      ...(carrier.curse!.sb4Status ? { sb4Status: carrier.curse!.sb4Status } : {}) };
     carrier.curse = null;
   }
 }

@@ -79,6 +79,8 @@ export interface PlayerInput {
 
 export interface Player {
   id: string;
+  /** O ponto de consulta do piso SB2 fica um pixel nativo acima de py. */
+  sb2Coordinates?: true;
   /** Center position in fixed-point units (see TILE). */
   px: number;
   py: number;
@@ -158,6 +160,7 @@ export type Sb4SlotStatus = 36 | 37 | 43;
 
 /** A skull's curse: it lasts until passed on by touch or cured by picking up another item. */
 export interface Curse {
+  sb2Status?: import("./sb2-items").Sb2SkullMode;
   kind: CurseKind;
   sb4Status?: Sb4SlotStatus;
   /** Who just passed it on: it cannot go back to them until the two have parted. */
@@ -174,9 +177,12 @@ export interface Bomb {
   fuse: number;
   /** SB4 normal bombs first count down on the tick following placement. */
   bornAt?: number;
+  /** Entrada nativa de bomba,retida enquanto suas chamas continuam vivas. */
+  sb2Slot?: number;
   range: number;
   type: BombType;
   sb4SlotVariant?: 10;
+  sb2MovingChain?: true;
   trolleyContactPending?: true;
   /** Direction of ground movement (kick or conveyor), or null when resting. */
   slide: Facing | null;
@@ -185,10 +191,16 @@ export interface Bomb {
   conveyor?: true;
   /** Units travelled from (x,y) toward the next tile while sliding. */
   offset: number;
-  /** Set while flying (punched/thrown); airborne bombs sit on no tile and their fuse pauses. */
+  /** Posição contínua da bomba transportada por correia SB2, em unidades do mundo. */
+  sb2Motion?: { px: number; py: number; startedAt?: number; arrowLatch?: number; reservationReady?: boolean; reservation?: { x: number; y: number }; occupied?: { x: number; y: number } };
+  /** Voo nativo da luva; coordenadas incluem a elevacao. */
+  sb2Throw?: { dir: Facing; path: number; throwerId: string; bornFrame: number; flight: import("./sb2-item-flight").Sb2ItemFlightSegment };
+  /** Voo fora da grade; SB4 pausa o fusivel, enquanto sb2Throw segue o temporizador nativo. */
   air: AirState | null;
   /** Id of the player carrying this bomb (glove), or null. Held bombs sit on no tile. */
   heldBy: string | null;
+  /** Fim do preparo nativo de levantamento; soltar antes aguarda a animacao. */
+  sb2LiftReadyAt?: number;
   /** The bomb mascot's special: a mega bomb, drawn bigger; it takes none of his bomb slots. */
   mega?: boolean;
 }
@@ -242,6 +254,13 @@ export interface Item {
 }
 
 export interface Flame {
+  sb2BombSlot?: number;
+  /** Efeito nativo separado da queima de item exposto SB2. */
+  sb2ItemBurn?: true;
+  /** Canaleta SB2: duração avançada antes da amostragem de dano do frame PAL. */
+  sb2Channel?: true;
+  /** Piso11 da arena12: duracao controlada pelo registro de efeito nativo. */
+  sb2Floor?: true;
   x: number;
   y: number;
   /** Ticks left until the flame disappears. */
@@ -317,7 +336,7 @@ export function hasFlame(s: Pick<MatchState, "flames">, x: number, y: number): b
 }
 
 export function playerTile(p: Player): { x: number; y: number } {
-  return { x: Math.floor(p.px / TILE), y: Math.floor(p.py / TILE) };
+  return { x: Math.floor(p.px / TILE), y: Math.floor((p.py - (p.sb2Coordinates ? TILE / 16 : 0)) / TILE) };
 }
 
 /** Center of tile `t` in fixed-point units. */
@@ -335,5 +354,5 @@ export function placePlayerAt(s: MatchState, playerId: string, x: number, y: num
 
 /** The grounded bomb on a tile (airborne and held bombs are not on any tile). */
 export function bombAt(s: Pick<MatchState, "bombs">, x: number, y: number): Bomb | undefined {
-  return s.bombs.find((b) => b.x === x && b.y === y && !b.air && !b.heldBy);
+  return s.bombs.find((b) => b.x === x && b.y === y && !b.air && !b.heldBy && !b.sb2Motion);
 }

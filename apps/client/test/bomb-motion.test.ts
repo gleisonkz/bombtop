@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CONVEYOR_SPEED, createMatch, DIR_VECTORS, Floor, FUSE_TICKS, KICK_SPEED, publicView, setTile, TILE, Tile, TICK_RATE, type Facing, type PublicView } from "@bombtop/shared";
-import { smoothBombSlides } from "../src/render/bomb-motion";
+import { bombGroundOrigin, smoothBombSlides } from "../src/render/bomb-motion";
+import { readFileSync } from "node:fs";
 
 const TICK_MS = 1000 / TICK_RATE;
 
@@ -12,6 +13,33 @@ function scene(blocked = false): PublicView {
 }
 
 describe("bomb motion", () => {
+  it("usa as coordenadas dos dois arremessos nativos da luva sem outra projecao", () => {
+    const native = JSON.parse(readFileSync(new URL("../../../docs/sb2/SB2-STAGE12-GLOVE-CONTROLS-REPLAY.json", import.meta.url), "utf8"));
+    for (const name of ["glove-repress", "glove-right-release"]) {
+      for (const sample of native.cases[name] as { proxies: { x: number; y: number }[] }[]) {
+        for (const point of sample.proxies) {
+          const view = scene(), bomb = view.bombs[0]!;
+          bomb.air = { dir: "right", span: 3, tilesLeft: 3, progress: 0 };
+          bomb.sb2Throw = { dir: "right", path: 0xc5ceb4, throwerId: "them", bornFrame: 0,
+            flight: { ...point, vx: 0, vy: 0, command: 0, ended: false } };
+          expect(bombGroundOrigin(bomb)).toEqual([(point.x - 16) * TILE / 16, (point.y - 32) * TILE / 16]);
+          expect(smoothBombSlides(view, view, TICK_MS * 4)).toBe(view);
+        }
+      }
+    }
+  });
+  it("draws native SB2 positions continuously across the bottom-left turn", () => {
+    const native = JSON.parse(readFileSync(new URL("../../../docs/sb2/SB2-CONVEYOR-BOMBS-NEUTRAL-STEP-REPLAY.json", import.meta.url), "utf8"));
+    const samples = native.cases[2].samples as { bomb: { x: number; y: number } }[];
+    for (const frame of [118, 119, 120, 121]) {
+      const point = samples[frame]!.bomb;
+      const view = scene(), bomb = view.bombs[0]!;
+      bomb.sb2Motion = { px: (point.x - 8) * TILE / 16, py: (point.y - 24) * TILE / 16 };
+      expect(bombGroundOrigin(bomb)).toEqual([(point.x - 16) * TILE / 16, (point.y - 32) * TILE / 16]);
+      expect(smoothBombSlides(view, view, TICK_MS * 4)).toBe(view);
+    }
+  });
+
   it("follows a perpendicular belt without projecting onto the original kick", () => {
     const view = scene();
     view.grid.floor[5 * view.grid.width + 3] = Floor.ConveyorDown;

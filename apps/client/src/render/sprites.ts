@@ -12,6 +12,7 @@ import captainPaintRegions from "./captain-paint-regions.json";
 import thorPaintRegions from "./thor-paint-regions.json";
 import thorLobbyPaintRegions from "./thor-lobby-paint-regions.json";
 import { sheetProtection, type ColorProtection } from "./color-protection";
+import { sb2SkullHidden } from "@bombtop/shared";
 
 type Rgb = readonly [number, number, number];
 
@@ -1070,6 +1071,7 @@ export function sneakAlpha(p: Pick<Player, "id" | "sneak">, viewer: string | nul
 }
 
 export function skullAlpha(p: Pick<Player, "curse">, tick: number): number {
+  if (p.curse?.sb2Status === 1) return sb2SkullHidden(p.curse.elapsed ?? 0) ? 0 : 1;
   return p.curse?.kind === "invisible" && Math.floor(tick / (TICK_RATE / 2)) % 2 === 1 ? 0 : 1;
 }
 

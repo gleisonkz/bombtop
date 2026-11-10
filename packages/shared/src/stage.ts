@@ -4,16 +4,19 @@ import { nextRandom } from "./rng";
 import type { MatchState, Tile } from "./state";
 import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
 import { buildSb4Layout, SB4_SOFT_BLOCK_COUNTS } from "./sb4-layouts";
+import { buildSb2Layout, isSb2Stage, SB2_STAGES, type Sb2StageId } from "./sb2-stage";
+
+export { SB2_STAGES, type Sb2StageId };
 
 export const SB4_STAGES = [
   "sb4-01", "sb4-02", "sb4-03", "sb4-04", "sb4-05", "sb4-06",
   "sb4-07", "sb4-08", "sb4-09", "sb4-10", "sb4-11", "sb4-12",
 ] as const;
 export type Sb4StageId = (typeof SB4_STAGES)[number];
-export type StageId = "classic" | "conveyor" | "warp" | Sb4StageId;
+export type StageId = "classic" | "conveyor" | "warp" | Sb4StageId | Sb2StageId;
 
 export const STAGES: readonly StageId[] = ["classic", "conveyor", "warp"];
-export const SELECTABLE_STAGES: readonly StageId[] = [...STAGES, ...SB4_STAGES];
+export const SELECTABLE_STAGES: readonly StageId[] = [...STAGES, ...SB4_STAGES, ...SB2_STAGES];
 
 export const SB4_MAP_PRESETS = Object.fromEntries(SB4_STAGES.map((id, index) => [id, {
   number: SB4_STAGE_DEFINITIONS[index]!.number,
@@ -57,6 +60,7 @@ export interface StageLayout {
 
 /** Floor gimmicks for a stage on a width x height arena. */
 export function buildStage(id: StageId, width: number, height: number): StageLayout {
+  if (isSb2Stage(id)) return buildSb2Layout(width, height, id);
   const original = sb4Map(id);
   if (original) return buildSb4Layout(original.number, width, height);
   const floor: Floor[] = new Array(width * height).fill(Floor.Normal);

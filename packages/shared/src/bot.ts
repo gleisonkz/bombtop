@@ -1,3 +1,4 @@
+import { SB2_CHANNEL_CELLS } from "./sb2-channel";
 import { CONVEYOR_SPEED, FLAME_TICKS, FUSE_TICKS, PRESSURE_INTERVAL, TICK_RATE, TILE } from "./constants";
 import { forecastStageBalls } from "./stage-balls";
 import { pressureOrder } from "./pressure";
@@ -518,8 +519,25 @@ function dangerMap(s: MatchState, me: string, extra?: Bomb, unblockedExtra = fal
     }
   }
   for (const b of bombs) for (const [x, y] of blasts.get(b)!) mark(x, y, Math.max(0, when.get(b)!));
+  sb2ChannelDanger(s, danger, mark);
   beltDrift(s, danger, occ, mark);
   return danger;
+}
+
+/** For tests: the bot's view of when each tile burns. */
+export const botDangerMap = (s: MatchState, me: string): Danger => dangerMap(s, me);
+
+/**
+ * SB2 arena 4: fire touching the channel lights all of it at once (`igniteSb2Stage4Channel`),
+ * so the whole channel burns as soon as the first of its cells does.
+ */
+function sb2ChannelDanger(s: MatchState, danger: Danger, mark: (x: number, y: number, t: number) => void): void {
+  if (s.stage !== "sb2-04") return;
+  const w = s.grid.width;
+  let first = (s.stageState?.sb2?.channel?.clock.index ?? -1) >= 0 ? 0 : Infinity;
+  for (const c of SB2_CHANNEL_CELLS) first = Math.min(first, danger.get(c.y * w + c.x) ?? Infinity);
+  if (first === Infinity) return;
+  for (const c of SB2_CHANNEL_CELLS) mark(c.x, c.y, first);
 }
 
 /**

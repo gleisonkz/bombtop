@@ -17,8 +17,12 @@ import { MANIAC_ITEM_KINDS, normalizeManiac, type ManiacItemKind } from "./mania
 import { SB4_STAGE_DEFINITIONS } from "./sb4-stage-definitions";
 import { buildStage, sb4Map, type StageId } from "./stage";
 import { firstPickers } from "./own-colors";
+import { isSb2Stage, sb2ArenaNumber } from "./sb2-stage";
+import { createSb2Items } from "./sb2-items";
+import { SB2_FIFTH_SPAWN, SB2_SPAWN_POINTS } from "./sb2-native-motion";
 import { rollSb4Blocks } from "./sb4-layout-roll";
 import { initializeStageMechanics } from "./stage-mechanics";
+import { startSb2ClosureClock } from "./sb2-battle-clock";
 import { DEFAULT_CHARACTER, ItemKind, tileCenter, Tile, type CharacterId, type Item, type MatchState } from "./state";
 
 export interface MatchOptions {
@@ -55,6 +59,7 @@ export function createMatch(opts: MatchOptions): MatchState {
   if (playerIds.length > MAX_PLAYERS) {
     throw new Error(`At most ${MAX_PLAYERS} players per match`);
   }
+  const sb2 = isSb2Stage(stage);
   const maniac = opts.maniacItems === undefined && opts.startingHitPoints === undefined
     ? null
     : normalizeManiac({ items: opts.maniacItems ?? {}, hitPoints: opts.startingHitPoints ?? {} }, playerIds);
@@ -65,12 +70,15 @@ export function createMatch(opts: MatchOptions): MatchState {
   const rng = createRng(seed);
   const layout = buildStage(stage, width, height);
   const original = sb4Map(stage);
-  const startingFireRange = original ? 2 : START_FIRE_RANGE;
-  const spawnPoints = original
+  const startingFireRange = original || sb2 ? 2 : START_FIRE_RANGE;
+  const fifth = sb2 ? SB2_FIFTH_SPAWN[sb2ArenaNumber(stage)] : null;
+  const spawnPoints = sb2 ? [...SB2_SPAWN_POINTS[sb2ArenaNumber(stage)], fifth!] : original
     ? [SPAWN_POINTS[0]!, SPAWN_POINTS[1]!, SPAWN_POINTS[2]!, SPAWN_POINTS[3]!, { x: 7, y: 6 }]
     : SPAWN_POINTS;
   const safe = new Set([...safeTiles(width, spawnPoints), ...layout.keepClear]);
   const tiles: Tile[] = layout.tiles?.slice() ?? [];
+  // SB2 grids are the original's; only a fifth player gets the blocks round their spot taken out.
+  if (fifth && playerIds.length > 4) for (const { x, y } of [fifth, ...fifth.clear]) if (tiles[y * width + x] === Tile.Block) tiles[y * width + x] = Tile.Empty;
   const candidates: number[] = [];
   // An SB4 map with no density override is rolled as the original does it, a new layout each round.
   if (original && opts.blockDensity === undefined) rollSb4Blocks(original.number, tiles, layout.keepClear, width, height, playerIds.length, rng);
@@ -101,32 +109,39 @@ export function createMatch(opts: MatchOptions): MatchState {
 
   const state: MatchState = {
     tick: 0,
-    ...(original && { stage, ...(original.timeFlow && { tempo: 1 as const }) }),
+    ...((original || sb2) && { stage, ...(original?.timeFlow && { tempo: 1 as const }) }),
+    ...(sb2 && { stageState: { sb2: { counterOffset: 0, pendingInputs: {},
+      battleClock: opts.timeLimitMinutes === null ? null : { minutes: timeLimitMinutes ?? 2, seconds: 0, frame: 0 },
+      closure: startSb2ClosureClock(opts.suddenDeath ?? false),
+      ...(opts.maniacItems === undefined ? createSb2Items(seed, sb2ArenaNumber(stage)) : {}) } } }),
     rng: (seed ^ 0x85ebca6b) >>> 0,
     pressure: 0,
     pressureAt: timeLimitMinutes === null ? ROUND_TICKS : Math.max(0, (timeLimitMinutes - 1) * 60 * TICK_RATE),
     ...(suddenDeath ? {} : { pressureLimit: 2 * (width - 2 + height - 2) - 4 }),
     ...(timeLimitMinutes === null ? {} : { roundEndsAt: timeLimitMinutes * 60 * TICK_RATE }),
     revenge,
-    items: hideItems(tiles, width, seed, stage, opts.maniacItems === undefined ? undefined : maniac!.items),
+    items: sb2 && opts.maniacItems === undefined
+      ? stage === "sb2-11" ? [{ x: 7, y: 6, kind: ItemKind.Skull }] : []
+      : hideItems(tiles, width, seed, stage, opts.maniacItems === undefined ? undefined : maniac!.items),
     grid: { width, height, tiles, floor: layout.floor, warps: layout.warps },
     players: playerIds.map((id, i) => ({
       id,
+      ...(sb2 && { sb2Coordinates: true as const }),
       px: tileCenter(spawnPoints[i]!.x),
       py: tileCenter(spawnPoints[i]!.y),
       alive: true,
       // ROM: normal reach table C11A77 starts at two; stage 05 starts at six.
-      bombCapacity: stage === "sb4-05" ? 5 : START_BOMB_CAPACITY,
-      fireRange: stage === "sb4-05" ? 6 : startingFireRange,
+      bombCapacity: stage === "sb2-11" ? 6 : stage === "sb4-05" ? 5 : START_BOMB_CAPACITY,
+      fireRange: stage === "sb2-11" ? 7 : stage === "sb4-05" ? 6 : startingFireRange,
       // Stage 05 native held-RIGHT replay advances one pixel per logic update.
-      speed: BASE_SPEED,
+      speed: stage === "sb2-11" ? 24 : sb2 ? 20 : BASE_SPEED,
       facing: "down" as const,
-      canKick: stage === "sb4-05",
+      canKick: stage === "sb4-05" || stage === "sb2-11",
       ...(maniac && { hitPoints: maniac.hitPoints[id] }),
       bombType: "normal" as const,
       canPunch: stage === "sb4-05",
       ...(stage === "sb4-05" && { canPush: true }),
-      canGlove: stage === "sb4-05",
+      canGlove: stage === "sb4-05" || stage === "sb2-11",
       stun: 0,
       character: character(id),
       ...(own.has(id) && { ownColors: true as const }),

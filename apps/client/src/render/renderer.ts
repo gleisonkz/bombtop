@@ -1,6 +1,8 @@
 import { Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { mascotSvg, PLAYER_COLORS, type MascotView, type Mood } from "../ui/art";
 import { airLift, airStep } from "./air-arc";
+import { bombGroundOrigin } from "./bomb-motion";
+import { presentedItems, type PresentedItem } from "./item-presentation";
 import { kameChargeOrigin } from "./sprites";
 import { Fx } from "./fx";
 import { loadFlameArt, type FlameArt } from "./flame-art";
@@ -22,6 +24,7 @@ import { loadPicanhaArt } from "./picanha-art";
 import { battleClockText, battleTempoText } from "./battle-clock";
 import { stageTileTint } from "./stage-art";
 import { StageTileArt } from "./stage-tile-art";
+import { Sb2FloorArt } from "./sb2-floor-art";
 import { Sb4StageEffects, seesawBombLift, seesawStandLift, stageFlightLift } from "./sb4-stage-effects";
 import { picanhaOutline } from "./picanha-outline";
 import { CompanionPixelEffects } from "./companion-pixel-effects";
@@ -198,6 +201,7 @@ export class Renderer {
   readonly root = new Container();
   private readonly world = new Graphics();
   private readonly groundEffects = new GroundEffects();
+  private readonly sb2Floors = new Sb2FloorArt();
   private readonly conveyors = new ConveyorArt();
   private readonly webCocoons = new WebEffects();
   private readonly stunEffects = new StunEffects();
@@ -451,7 +455,7 @@ export class Renderer {
     this.clock.anchor.set(0.5, 0);
     this.tempoLabel.anchor.set(0.5, 0);
     this.people.sortableChildren = true; // lower players overlap the ones above them
-    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.sb4Effects.ground, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.optimusEffects.root, this.people, this.sb4Effects.above, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
+    this.root.addChild(this.tileLayer, this.conveyors.root, this.world, this.groundEffects.root, this.sb2Floors.root, this.sb4Effects.ground, this.companionEffects.ground, this.summonGround, this.burnLayer, this.itemLayer, this.flameLayer, this.energyEffects.behind, this.optimusEffects.root, this.people, this.sb4Effects.above, this.beamLayer, this.overlay, this.energyEffects.root, this.companionEffects.root, this.abilityEffects.root, this.webCocoons.root, this.stunEffects.root, this.scoreLayer, this.tagLayer, this.banner, this.clock, this.tempoLabel);
   }
 
   /** Draws a character's players with a sheet instead of shapes. */
@@ -747,6 +751,7 @@ export class Renderer {
       this.sb4Effects.load(),
       this.conveyors.load(),
       this.groundEffects.load(),
+      this.sb2Floors.load(),
       this.webCocoons.load().catch((e) => console.error("web cocoon art", e)),
       this.stunEffects.load().catch((e) => console.error("stun art", e)),
       this.energyEffects.load().catch((e) => console.error("pixel energy art", e)),
@@ -823,12 +828,12 @@ export class Renderer {
     if (picanha) this.itemArt.set(ItemKind.Picanha, picanha);
   }
 
-  private drawItems(items: PublicView["items"], tick: number, visible: (x: number, y: number) => boolean, ownerColor: (id: string | undefined) => number | null): void {
+  private drawItems(items: PresentedItem[], tick: number, visible: (x: number, y: number) => boolean, ownerColor: (id: string | undefined) => number | null): void {
     for (const sprite of this.itemSprites) sprite.visible = false;
     const art = this.itemArt!;
     let n = 0;
     for (const item of items) {
-      if (!visible(item.x, item.y)) continue;
+      if (!item.airborne && !visible(item.x, item.y)) continue;
       let sprite = this.itemSprites[n];
       if (!sprite) {
         sprite = new Sprite();
@@ -839,7 +844,7 @@ export class Renderer {
       }
       n++;
       const picanha = item.kind === ItemKind.Picanha && this.pixelPicanha;
-      const frame = picanha ? Math.floor(tick / 10) % 4 : itemFrame(tick, item.x, item.y);
+      const frame = picanha ? Math.floor(tick / 10) % 4 : itemFrame(tick, item.airborne ? 0 : item.x, item.airborne ? 0 : item.y);
       const texture = art.get(item.kind)![frame]!;
       sprite.texture = item.kind === ItemKind.Picanha ? picanhaOutline(texture, ownerColor(item.owner)) : texture;
       sprite.scale.set(picanha ? 14 / 64 : ITEMS.scale);
@@ -1067,6 +1072,12 @@ export class Renderer {
     // A blown-up block burns away as its own art, in place of the flame on its tile.
     const burning = new Map(this.tileArt ? s.flames.filter((f) => f.block).map((f) => [f.y * width + f.x, f.ttl]) : []);
     if (this.tileArt) this.drawTiles(s, burning);
+    this.sb2Floors.draw(s, TILE_PX, (decal) => {
+      const px = decal.x * TILE_PX;
+      const py = decal.y * TILE_PX;
+      if (decal.cell === "warp") this.drawFloor(g, Floor.Warp, px, py, s.tick);
+      else if (decal.belt !== undefined) this.drawFloor(g, decal.belt as Floor, px, py, s.tick);
+    });
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const px = x * TILE_PX;
@@ -1089,9 +1100,10 @@ export class Renderer {
       }
     }
 
-    if (this.itemArt) this.drawItems(s.items, s.tick, (x, y) => getTile(s, x, y) === Tile.Empty, (id) => this.itemOwnerColor(id, s));
-    else for (const item of s.items) {
-      if (getTile(s, item.x, item.y) !== Tile.Empty) continue;
+    const items = presentedItems(s);
+    if (this.itemArt) this.drawItems(items, s.tick, (x, y) => getTile(s, x, y) === Tile.Empty, (id) => this.itemOwnerColor(id, s));
+    else for (const item of items) {
+      if (!item.airborne && getTile(s, item.x, item.y) !== Tile.Empty) continue;
       const cx = item.x * TILE_PX + TILE_PX / 2;
       const cy = item.y * TILE_PX + TILE_PX / 2;
       g.roundRect(cx - 6, cy - 6, 12, 12, 2).fill(0xf2e6c9);
@@ -1117,13 +1129,14 @@ export class Renderer {
     for (const b of s.bombs) {
       if (b.heldBy) continue; // drawn over its holder's head below
       const pulse = Math.sin(((FUSE_TICKS - b.fuse) / 60) * Math.PI * 4) * 0.8;
-      const moving = b.air?.dir ?? b.slide;
+      const moving = b.air?.dir;
       const [dx, dy] = moving ? DIR_VECTORS[moving] : [0, 0];
-      const t = b.air ? airStep(b.air) : b.offset / TILE;
-      const lift = b.air ? airLift(b.air) : 0; // one high arc when punched or thrown, small hops when bouncing
-      const cx = b.x * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
-      const plankLift = seesawBombLift(s, b, cx, b.y * TILE_PX + TILE_PX / 2 + dy * t * TILE_PX); // resting on a seesaw's plank
-      const cy = b.y * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift - plankLift;
+      const t = b.air ? airStep(b.air) : 0;
+      const lift = b.air && !b.sb2Throw ? airLift(b.air) : 0; // O voo nativo ja inclui a elevacao.
+      const [groundX, groundY] = bombGroundOrigin(b);
+      const cx = groundX / TILE * TILE_PX + TILE_PX / 2 + dx * t * TILE_PX;
+      const plankLift = seesawBombLift(s, b, cx, groundY / TILE * TILE_PX + TILE_PX / 2); // resting on a seesaw's plank
+      const cy = groundY / TILE * TILE_PX + TILE_PX / 2 + 1 + dy * t * TILE_PX - lift - plankLift;
       const summon = this.summons.get(b);
       const color = b.mega ? this.specialColor(b.ownerId, s) : null;
       if (summon) {

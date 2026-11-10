@@ -1,4 +1,4 @@
-import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SB4_STAGES, SELECTABLE_STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
+import { DEFAULT_STAGE_ROTATION, MAX_STAGE_ROTATION, SB2_STAGES, SB4_STAGES, SELECTABLE_STAGES, type LobbyInfo, type StageId, type StageRotationEntry } from "@bombtop/shared";
 import { button, el } from "./dom";
 import { STAGE_NAMES } from "./stage-names";
 import { stagePreview } from "./stage-preview";
@@ -11,6 +11,7 @@ export class StageRotationPanel {
   private readonly summary = el("p", { class: "hint stage-summary" });
   private readonly save: HTMLButtonElement;
   private readonly sb4Preset: HTMLButtonElement;
+  private readonly sb2Preset: HTMLButtonElement;
   private readonly additions: HTMLButtonElement[];
   private draft: StageRotationEntry[] = [];
   private current: StageRotationEntry[] = [];
@@ -45,6 +46,11 @@ export class StageRotationPanel {
       this.draft = SB4_STAGES.map(stage => ({ stage }));
       this.render();
     }, "stage-preset");
+    this.sb2Preset = button("12 arenas SB2", () => {
+      if (!this.editable || !this.inLobby || !this.dialog.open) return;
+      this.draft = SB2_STAGES.map(stage => ({ stage }));
+      this.render();
+    }, "stage-preset");
     const cancel = button("Fechar", () => this.close(), "ghost");
     cancel.dataset.padBack = "";
     cancel.autofocus = true;
@@ -57,7 +63,7 @@ export class StageRotationPanel {
       add.appendChild(stagePreview(stage));
       return add;
     });
-    this.dialog.append(title, el("p", { class: "hint stage-intro", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens da partida mostram os 12 mapas SB4 no Bombtop, com regras locais em validação." }), this.sb4Preset,
+    this.dialog.append(title, el("p", { class: "hint stage-intro", text: "Arraste pela alça ⠿ para mudar a ordem, com mouse ou toque. Cada rodada usa a próxima fase da lista; a sequência se repete até alguém atingir as vitórias para ganhar. As imagens da partida mostram os 12 mapas SB4 no Bombtop, com regras locais em validação." }), this.sb4Preset, this.sb2Preset,
       this.list, el("div", { class: "stage-additions" }, this.additions), this.summary,
       el("div", { class: "stage-dialog-actions" }, [cancel, this.save]));
     parent.appendChild(this.dialog);
@@ -73,6 +79,7 @@ export class StageRotationPanel {
     this.trigger.title = this.current.map(entry => STAGE_NAMES[entry.stage]).join(" → ");
     this.trigger.textContent += ` (${this.current.length})`;
     this.sb4Preset.disabled = !this.editable;
+    this.sb2Preset.disabled = !this.editable;
     if (!this.inLobby) {
       this.close();
       return;
@@ -101,6 +108,7 @@ export class StageRotationPanel {
     this.summary.textContent = `${this.draft.length} de ${MAX_STAGE_ROTATION} fases na sequência${this.editable ? "" : " · Só o anfitrião pode alterar"}`;
     this.save.hidden = !this.editable;
     this.sb4Preset.disabled = !this.editable;
+    this.sb2Preset.disabled = !this.editable;
     const used = new Set(this.draft.map(entry => entry.stage));
     this.additions.forEach((add, i) => add.disabled = !this.editable || this.draft.length >= MAX_STAGE_ROTATION || used.has(SELECTABLE_STAGES[i]!));
   }

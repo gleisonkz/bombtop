@@ -53,6 +53,8 @@ export function matchResult(s: MatchState): MatchResult {
   if (s.players.length < 2) return { over: false };
   const alive = s.players.filter((p) => p.alive);
   if (alive.length <= 1) return { over: true, winnerId: alive[0]?.id ?? null };
+  const nativeClock = s.stageState?.sb2?.battleClock;
+  if (nativeClock) return nativeClock.expired ? { over: true, winnerId: null } : { over: false };
   if (s.roundEndsAt !== undefined && s.tick >= s.roundEndsAt) return { over: true, winnerId: null };
   return { over: false };
 }

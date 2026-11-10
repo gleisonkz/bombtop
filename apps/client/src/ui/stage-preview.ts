@@ -1,7 +1,8 @@
-import { createMatch, Floor, getFloor, getTile, SB4_STAGES, TILE, Tile, type MatchState, type StageId } from "@bombtop/shared";
+import { createMatch, Floor, getFloor, getTile, TILE, Tile, type MatchState, type StageId } from "@bombtop/shared";
 import { TILES, tileCell } from "../render/sprites";
-import { sb4TileLayout } from "../render/stage-art";
+import { stageTileLayout } from "../render/stage-art";
 import { el } from "./dom";
+import { SB2_FLOOR_CELLS, sb2FloorDecals } from "../render/sb2-floor-decals";
 
 const previews = new Map<StageId, Promise<string>>();
 const assets = new Map<string, Promise<HTMLImageElement>>();
@@ -55,8 +56,7 @@ function loadImage(path: string): Promise<HTMLImageElement> {
 }
 
 async function renderPreview(stage: StageId): Promise<string> {
-  const number = SB4_STAGES.findIndex(id => id === stage) + 1;
-  const layout = sb4TileLayout(number) ?? TILES;
+  const layout = stageTileLayout(stage) ?? TILES;
   const state = createMatch({ seed: 14, stage, playerIds: ["preview1", "preview2"], blockDensity: 0.4 });
   const { grid } = state;
   const dynamicProps = runtimeProps(state);
@@ -94,6 +94,23 @@ async function renderPreview(stage: StageId): Promise<string> {
       if (floor === Floor.Flag && state.stageState?.flags) continue;
       if (floor === Floor.Seesaw && state.stageState?.seesaws) continue;
       if (prop) context.drawImage(prop, x * size, y * size, size, size);
+    }
+  }
+  const decals = sb2FloorDecals(state);
+  if (decals.length) {
+    const floors = await loadImage("sprites/sb2-floors.png");
+    for (const decal of decals) {
+      if (decal.cell === "warp") context.drawImage(portals, 0, 0, 128, 128, decal.x * size + 2, decal.y * size + 2, size - 4, size - 4);
+      else if (decal.cell === "belt") {
+        const row = beltRows.get(decal.belt);
+        if (row !== undefined) context.drawImage(belts, 0, row * 128, 128, 128, decal.x * size, decal.y * size, size, size);
+      } else {
+        context.save();
+        context.translate((decal.x + 0.5) * size, (decal.y + 0.5) * size);
+        context.rotate(decal.rotation * Math.PI / 2);
+        context.drawImage(floors, SB2_FLOOR_CELLS.indexOf(decal.cell) * 128, 0, 128, 128, -size / 2, -size / 2, size, size);
+        context.restore();
+      }
     }
   }
   for (const { prop, x, y } of dynamicProps) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createMatch } from "../src/arena";
-import { buildStage, sb4Map, SB4_STAGES, STAGES, SELECTABLE_STAGES } from "../src/stage";
+import { buildStage, sb4Map, SB4_STAGES, STAGES, SELECTABLE_STAGES, SB2_STAGES } from "../src/stage";
 import { SB4_STAGE_DEFINITIONS } from "../src/sb4-stage-definitions";
 import { BASE_SPEED, START_FIRE_RANGE } from "../src/constants";
 import { Floor, playerTile, Tile } from "../src/state";
@@ -11,7 +11,7 @@ describe("SB4 Group 1 layouts", () => {
   it("exposes all twelve ids, numeric lookups and catalog names without changing defaults", () => {
     expect(SB4_STAGES).toHaveLength(12);
     expect(STAGES).toEqual(["classic", "conveyor", "warp"]);
-    expect(SELECTABLE_STAGES).toEqual([...STAGES, ...SB4_STAGES]);
+    expect(SELECTABLE_STAGES).toEqual([...STAGES, ...SB4_STAGES, ...SB2_STAGES]);
     for (const definition of SB4_STAGE_DEFINITIONS) {
       const id = `sb4-${String(definition.number).padStart(2, "0")}`;
       expect(sb4Map(definition.number)).toEqual(sb4Map(id));

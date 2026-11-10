@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SB4_STAGES, type LobbyInfo } from "@bombtop/shared";
+import { SB2_STAGES, SB4_STAGES, type LobbyInfo } from "@bombtop/shared";
 import { STAGE_NAMES } from "../src/ui/stage-names";
 import { StageRotationPanel } from "../src/ui/stage-rotation-panel";
 
@@ -84,25 +84,31 @@ describe("stage sequence editor", () => {
     expect(hint).toContain("regras locais em validação");
     expect(hint).not.toContain("referências do SNES");
   });
-  it("renders a twelve-stage battle sequence with fifteen choices per row", () => {
+  it("renders a twelve-stage battle sequence with twenty-seven choices per row", () => {
     const f = fixture();
     f.panel.close();
     f.panel.update({ ...f.info, stageRotation: SB4_STAGES.map(stage => ({ stage })) }, true);
     (f.panel.trigger as unknown as Node).click();
     const selectors = f.dialog.all().filter(node => node.tag === "select");
     expect(selectors.map(node => node.value)).toEqual([...SB4_STAGES]);
-    expect(selectors.every(node => node.children.filter(child => child.tag === "option").length === 15)).toBe(true);
+    expect(selectors.every(node => node.children.filter(child => child.tag === "option").length === 27)).toBe(true);
   });
-  it("shows all fifteen stage choices in each selector and the visible additions", () => {
+  it("shows all twenty-seven stage choices in each selector and the visible additions", () => {
     const f = fixture();
-    const expected = ["classic", "conveyor", "warp", ...SB4_STAGES];
+    const expected = ["classic", "conveyor", "warp", ...SB4_STAGES, ...SB2_STAGES];
     const additions = f.dialog.all().filter(node => node.tag === "button" && node.textContent.startsWith("＋ "));
-    expect(additions).toHaveLength(15);
+    expect(additions).toHaveLength(27);
     expect(additions.every(node => !node.hidden)).toBe(true);
     expect(additions.filter(node => node.disabled).map(node => node.textContent)).toEqual(["＋ Clássica", "＋ Esteiras", "＋ Teleportes"]);
     for (const select of f.dialog.all().filter(node => node.tag === "select")) {
       expect(select.children.filter(node => node.tag === "option").map(node => node.value)).toEqual(expected);
     }
+  });
+  it("loads the twelve SB2 arenas as a preset", () => {
+    const f = fixture();
+    f.button("12 arenas SB2").click();
+    f.button("Salvar sequência").click();
+    expect(f.commit).toHaveBeenCalledWith(SB2_STAGES.map(stage => ({ stage })));
   });
   it.each(SB4_STAGES)("offers and saves %s from the full battle catalog", stage => {
     const f = fixture();

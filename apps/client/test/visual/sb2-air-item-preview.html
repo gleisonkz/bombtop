@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8"><title>SB2 — itens em voo</title>
+<style>body{margin:24px;background:#171b26;color:#eee;font:16px system-ui}main{display:flex;gap:24px}canvas{image-rendering:pixelated}pre{font-size:12px}</style>
+<h1>Arena 12 — sprites existentes em posições nativas</h1>
+<main></main><pre id="result">Carregando…</pre>
+<script type="module">
+import { Application } from 'pixi.js';
+import { createMatch, publicView, ItemKind, Tile, TILE } from '@bombtop/shared';
+import { Renderer } from '/src/render/renderer.ts';
+const fixtures = await (await fetch('./sb2-air-item-fixture.json')).json();
+const kinds = {5632:ItemKind.Bomb,5666:ItemKind.Speed,5668:ItemKind.Kick};
+try {
+ const results=[];
+ for(const fixture of fixtures){
+  const section=document.createElement('section');
+  const label=document.createElement('h2');label.textContent=fixture.name;section.append(label);
+  document.querySelector('main').append(section);
+  const app=new Application();await app.init({width:480,height:480,background:0x171b26});section.append(app.canvas);
+  const renderer=new Renderer();renderer.root.scale.set(2);renderer.root.y=48;app.stage.addChild(renderer.root);
+  await renderer.useItemArt();await renderer.useTileArt();
+  const state=createMatch({stage:'sb2-12',seed:1,playerIds:['p1','p2'],suddenDeath:false});
+  state.grid.tiles=fixture.grid.flat().map(value=>{const code=value&31;return code===2?Tile.Block:code===5||code===6?Tile.Wall:Tile.Empty});
+  for(const [i,p] of state.players.entries()){
+   const native=fixture.players[i];p.px=(native.x-8)*TILE/16;p.py=(native.y-24)*TILE/16;p.alive=native.state_word<0x9800;
+  }
+  state.items=[];
+  state.stageState.sb2.stage12AirItems=fixture.airborne_items.map(item=>({ownerId:'p1',kind:kinds[item.glyph],bornFrame:0,
+   motion:{path:0,direction:0,landed:false,flight:{x:item.x,y:item.y,vx:0,vy:0,command:0,ended:false}}}));
+  renderer.draw(publicView(state),new Map(),1);app.render();
+  const sprites=renderer.itemSprites.filter(sprite=>sprite.visible).map(sprite=>({x:sprite.x,y:sprite.y,width:sprite.width,height:sprite.height}));
+  results.push({name:fixture.name,expected:fixture.airborne_items.length,sprites});
+ }
+ document.querySelector('#result').textContent=JSON.stringify(results,null,2);document.body.dataset.ready='true';
+}catch(error){document.querySelector('#result').textContent=error.stack;document.body.dataset.ready='error';}
+</script></html>

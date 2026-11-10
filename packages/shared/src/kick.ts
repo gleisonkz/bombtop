@@ -3,6 +3,8 @@ import { conveyorDirection } from "./floor";
 import { playerElevated } from "./player-carry";
 import { stageSolid } from "./stage-obstacles";
 import { seesawBarrier } from "./stage-transport";
+import { kickSb2Stage9Bomb } from "./sb2-stage9-controller";
+import { sb2NativeCounter } from "./sb2-stage";
 import {
   bombAt,
   DIR_VECTORS,
@@ -25,6 +27,7 @@ import {
  */
 export function tryKick(s: MatchState, p: Player, dir: Direction): void {
   if (!dir || !p.alive || playerElevated(p) || p.stun > 0 || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
+  if (s.stage === "sb2-09") { kickSb2Stage9Bomb(s, p, dir); return; }
   const { x, y } = playerTile(p);
   const [dx, dy] = DIR_VECTORS[dir];
   const ahead = (p.px - tileCenter(x)) * dx + (p.py - tileCenter(y)) * dy;
@@ -41,6 +44,16 @@ export function stopKickedBombs(s: MatchState, p: Player): void {
   if (!p.alive || p.canBombPass || !(p.canKick || p.mount === "pusher")) return;
   for (const bomb of s.bombs) {
     if ((bomb.kickedBy ?? bomb.ownerId) !== p.id || !bomb.slide || bomb.conveyor) continue;
+    if (s.stage === "sb2-09" && bomb.sb2Motion) {
+      const motion = bomb.sb2Motion;
+      bomb.x = motion.occupied?.x ?? Math.floor(motion.px / TILE);
+      bomb.y = motion.occupied?.y ?? Math.floor((motion.py - TILE / 16) / TILE);
+      // O comando devolve a entrada antes da atualização estática. Na fase
+      // ímpar capturada perde-se uma atualização de dois frames do contador;
+      // na fase par o contador continua sem esse deslocamento.
+      if ((sb2NativeCounter(s) & 1) !== 0) bomb.fuse += 2;
+      delete bomb.sb2Motion;
+    }
     bomb.slide = null;
     bomb.offset = 0;
   }
@@ -84,8 +97,10 @@ export function updateSlides(s: MatchState): void {
       b.slide = null;
       b.offset = 0;
       delete b.conveyor;
+      delete b.sb2Motion;
       continue;
     }
+    if (b.sb2Motion) continue;
     followConveyor(s, b);
     if (!b.slide) continue;
     const [dx, dy] = DIR_VECTORS[b.slide];
