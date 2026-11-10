@@ -34,7 +34,7 @@ Ordem: **regra (shared) → sprite → código do cliente → som → telas → 
 
 | parâmetro | valor |
 |---|---|
-| `description` | da seção A do `PROMPT-BASE.md` |
+| `description` | seção 3 do `PROMPT-BASE.md` |
 | `size` | `128` (tela de 180 px) |
 | `n_directions` | `4` |
 | `view` | `low top-down` |

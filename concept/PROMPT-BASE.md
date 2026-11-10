@@ -1,37 +1,87 @@
-# Prompt-base — família Bombtop v1
+# Prompt-base — personagem novo no PixelLab
 
-Para integrar personagens, especiais, sons e telas, seguir o roteiro operacional de [CHARACTER-RECIPE.md](CHARACTER-RECIPE.md). A identidade e o acabamento aprovados abaixo governam o visual; os contratos de grade e as animações devem ser definidos para cada entrega.
+Todo personagem jogável desde o Capitão é feito no PixelLab (`create_character`) com as configurações abaixo; é o que
+mantém o elenco coerente na arena. O passo a passo inteiro (regra, animações, sheet, código, som, telas) está em
+[CHARACTER-RECIPE.md](CHARACTER-RECIPE.md). O Bomber (mascote) é exceção: arte própria gerada fora do PixelLab, regida
+por [CHARACTER-IDENTITY.md](CHARACTER-IDENTITY.md); não use aquele acabamento nem os traços dele (cabeça de bomba,
+olhos âmbar, pavio, armadura violeta, capa vermelha) nos outros.
 
-Fonte normativa: [identidade](CHARACTER-IDENTITY.md) e [contrato JSON](characters.identity.json). Anexar a imagem real [menu aprovado do Bomber](bomber/menu-flight-source.png) pelo mecanismo de referência/edição da ferramenta. Para personagens novos, anexar também seu conceito aprovado quando existir.
+## 1. Antes de escrever
 
-## Variáveis
+Preencha:
 
-- CHARACTER: nome e arquétipo original.
-- IDENTITY: cabeça/olhos, roupa, materiais, paleta, emblema, acessórios.
-- PERSONALITY: expressão e atitude.
-- DELIVERABLE: conceito isolado, quadros de uma ação, ou folha de produção com inventário explícito.
-- GRID: dimensões, células, direções, número de quadros, margens e âncoras do contrato aprovado. Não pedir folha de animação sem esse bloco.
+- **NOME**: como aparece no PixelLab: `"<Nome> HD"` (refações: `HD 2`, `HD v3`).
+- **ROSTO**: olhe uma imagem do personagem original e descreva: cor e forma dos olhos, sobrancelhas, nariz/focinho,
+  boca, orelhas, cabelo, pele. Só o nome dá um genérico (a Pantera saiu um gato fofo até dizer "big round yellow eyes
+  with black pupils, dark pink triangle nose, light pink muzzle and belly").
+- **ROUPA**: peças, cores e materiais, de cima para baixo; emblema; acessório na mão (cajado, varinha).
+- **ÁREA DA COR DO JOGADOR**: uma peça grande e de uma cor só (capa, cachecol, camisa, bandana, forro do casaco) que o
+  jogo recolore (`hues` em `SHEETS`). Sem peça assim, acrescente uma (Pikachu, Bugs e Pantera ganharam cachecol). Evite
+  que pele, boca ou rosto caiam na mesma faixa de matiz.
+- **ATITUDE**: expressão neutra e confiante, boca fechada, olhos abertos.
 
-## A. Descrição do PixelLab (`create_character`)
+## 2. Parâmetros fixos (`create_character`, modo padrão)
 
-Use the attached approved Bombtop Bomber menu-flight artwork as the actual visual reference for FAMILY STYLE and rendering quality. Create original character [CHARACTER], with [IDENTITY] and [PERSONALITY]. Do not transfer Bomber-specific bomb head, amber eyes, burning wick, violet armor, red cape or gold hexagonal chest emblem to other characters unless explicitly requested in their identity.
+| parâmetro | valor |
+|---|---|
+| `name` | `<Nome> HD` |
+| `size` | `128` (tela de 180 px) |
+| `n_directions` | `4` |
+| `view` | `low top-down` |
+| `outline` | `single color black outline` |
+| `shading` | `detailed shading` |
+| `detail` | `high detail` |
+| `proportions` | `{"type": "custom", "head_size": 1.8, "arms_length": 0.8, "legs_length": 0.75, "shoulder_width": 0.9, "hip_width": 0.9}` |
 
-Premium smoothly shaded 2D arcade illustration, compact rounded action-toy proportions: oversized head, short sturdy legs, compact torso, rounded shoulders, large rounded gloves and chunky boots. Neutral standing head height is approximately 40–45 percent of body height excluding flame and extended accessories; allow pose foreshortening without changing anatomy. Preserve the approved model across front, right and back views.
+## 3. Descrição (`description`)
 
-Continuous darker outer outlines, thinner clean inner separations, crisp antialiased curves. Smooth controlled gradients and clean highlights matching the attached approved image. Upper-left/front key light; polished shell, satin armor and softer cloth folds retain distinct material responses. Saturated curated color and readable small-scale silhouette. No pixel-art look. Do not flatten the approved rendering into a two- or three-value-only treatment.
+Em inglês, nesta ordem, uma frase por bloco:
 
-Deliver [DELIVERABLE] using [GRID]. True transparent RGBA, isolated complete poses, stable registered anchors and generous transparent margins. No scene, floor shadow, text, banners, watermark, baked checkerboard, matte, stray fragments, neighboring-frame contamination, clipped accessories, extra limbs or copied franchise costume. Real newly drawn action changes in every intended animation frame; no identical repeats disguised as animation and no fake upscale of old art.
+```
+Chibi [NOME / ARQUÉTIPO], big head, small sturdy body, standing straight, arms relaxed at the sides.
+Face: [ROSTO: olhos, sobrancelhas, nariz, boca, cabelo, pele], closed mouth, eyes open, confident look.
+Outfit: [ROUPA de cima para baixo, com cores e materiais], [EMBLEMA].
+[ÁREA DA COR DO JOGADOR] in solid [cor], clearly separate from skin and face.
+[ACESSÓRIO, se houver: "holding a short wooden staff in the right hand"].
+Clean shapes readable at small size, no background, no floor shadow, no text, no visual effects.
+```
 
-## Identidade Bomber pronta para uso
+Exemplo no formato (Pelé, montado a partir do que o `CLAUDE.md` descreve dele):
 
-CHARACTER: Bomber. IDENTITY: spherical black bomb head, two inward-slanted glowing amber slit eyes with pale cores, short lit wick with gold collar and yellow/orange flame, deep violet armor, red armored gloves, flowing red cape, chunky violet boots with gold trim, small original gold hexagonal chest emblem. Back views show only rear shell and cape, without front eyes/chest emblem. Carried bombs remain renderer-owned; carry poses hold both arms raised without a baked-in bomb.
+```
+Chibi Pele, legendary Brazilian football player, big head, small sturdy body, standing straight, arms relaxed.
+Face: dark brown skin, short black curly hair, friendly dark eyes, thick eyebrows, closed smile.
+Outfit: 1970 Brazil kit, yellow jersey with green collar and cuffs, blue shorts, white socks, black cleats.
+Blue shorts in solid blue, clearly separate from skin.
+Clean shapes readable at small size, no background, no floor shadow, no text, no visual effects.
+```
 
-## Grade refinada
+**Não escreva**:
 
-Master: células 208 × 288, 9 colunas × 19 linhas, total 1872 × 5472; âncora (104, 280), corpo nominal 200 px. Gameplay runtime: células 104 × 144, 9 × 18, total 936 × 2592; âncora (52, 140), corpo 100 px, escala 0,22. Recortar e reduzir cada quadro master separadamente com Lanczos antes de montar o runtime; não reduzir a folha inteira. Consultar inventário por linha no JSON. Linha 18 do master é inventário do voo, excluída do gameplay.
+- "bomb" em lugar nenhum (o filtro bloqueia; a bomba carregada é desenhada pelo jogo);
+- efeitos (raio, fogo, aura, teia, brilho): o PixelLab cola no sprite e eles mudam a cada quadro; o efeito é do
+  renderer ou de script de arte;
+- objeto solto na mão que precise ficar igual em toda animação (bandeira, bola): peça a mão vazia e desenhe por script;
+- "smiling with teeth", "breathing", "eyes closed": templates depois abrem a boca e fecham os olhos.
 
-Menu aprovado permanece em 1152 × 1152, 3 × 3 células de 384; runtime em 768 × 768, células de 256, mesmas nove poses. A grade especifica produção, não prova conclusão: validar o resultado real antes de integrar.
+## 4. Conferir antes de animar
 
-## Histórico v0.1
+Todas as animações herdam o corpo base: refaça agora se algo estiver errado.
 
-O piloto textual Bombtop Vanguard e o cartão histórico exploravam proporções. A referência aprovada atual governa o acabamento v1; as antigas restrições de sombreamento em dois/três valores deixam de valer. Preservar somente a intenção de personagens originais compactos e coerentes.
+- 4 direções com o mesmo rosto, roupa e proporção; costas sem rosto nem emblema.
+- Lado errado ou de costas virado para nós, frente boa: crie `"<Nome> HD v3"` com `mode: "v3"`,
+  `reference_image_url` = a frente boa e uma descrição do lado (perfil, um olho) e das costas (sem rosto).
+  Custa 4 gerações e gira o mesmo desenho.
+- Rosto ou cor errados num detalhe: repinte a frente e o lado e importe como v3 com todas as direções dadas (foi
+  assim com o Lanterna: olhos verdes, boca fechada).
+- Lados desenhados virados para a esquerda: tudo bem, o `build-character-sheet.py` espelha (Penélope).
+- Sombra no chão ou manchas cinza: limpe no script do sheet (`no_floor_shadow`, `no_blots`).
+
+## 5. Animações
+
+Sempre com esqueleto (`skeleton-v3` com template, ou `animate_with_skeleton_v3` com nossos pontos); os modos só de
+texto redesenham cada quadro e perdem detalhes. Tabela, quadros e problemas conhecidos em
+[CHARACTER-RECIPE.md](CHARACTER-RECIPE.md#animações-animate_character). Nas descrições de pose de costas, escreva
+"seen from behind, back view": sem isso o PixelLab vira o personagem para nós.
+
+Depois de pronto, apague no PixelLab as versões e animações não usadas.
