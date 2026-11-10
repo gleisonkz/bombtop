@@ -12,3 +12,6 @@ __pycache__/
 outputs/
 
 *.before
+
+# SB2 captures, too big for git: a junction to E:/Projetos/bombtop-src/sb2-evidence/docs
+docs/sb2
