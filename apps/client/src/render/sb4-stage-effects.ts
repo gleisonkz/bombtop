@@ -211,14 +211,15 @@ export class Sb4StageEffects {
 
   private trolleyRails(state: Scene): void {
     const trolley = state.stageState?.trolley;
-    if (!trolley?.phase || !trolley.route || trolley.route.length < 2) return;
+    // SB4 shows the route from boarding until the trolley stops back at its station: gone as the rider gets off.
+    if (!trolley?.phase || trolley.phase === "leaving" || !trolley.route || trolley.route.length < 2) return;
     const [start, ...points] = trolley.route;
     for (const style of [{ color: 0xbfc5ce, width: 7 }, { color: 0x34343e, width: 5 }]) {
       this.rails.moveTo((start!.x + 0.5) * 16, (start!.y + 0.5) * 16);
       for (const point of points) this.rails.lineTo((point.x + 0.5) * 16, (point.y + 0.5) * 16);
       this.rails.stroke(style);
     }
-    // The station the trip starts and ends at shows its turntable once someone boards (SB4, stage 11).
+    // The station the trip starts and ends at shows its turntable while the trip lasts (SB4, stage 11).
     const cx = (start!.x + 0.5) * 16; const cy = (start!.y + 0.5) * 16;
     this.rails.circle(cx, cy, 6.5).fill({ color: 0x3a2a18 }).circle(cx, cy, 6.5).stroke({ color: 0xbfc5ce, width: 1.5 });
     this.rails.circle(cx, cy, 3.5).stroke({ color: 0x8a7350, width: 1.5 }).circle(cx, cy, 1.5).fill({ color: 0xbfc5ce });

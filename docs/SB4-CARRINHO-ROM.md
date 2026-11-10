@@ -35,7 +35,7 @@ Medição sem comandos, a partir do frame 7985:
 - RIGHT, LEFT, DOWN, UP, A, B e X mantidos durante a viagem não alteraram as coordenadas do carrinho, comparadas frame a frame até o frame 400. DOWN permitiu novo embarque após o desembarque. Não há base para manter o cooldown arbitrário de 60 ticks após uma viagem normal.
 - Capturas mostram blocos destruídos e itens expostos no trajeto; o trilho não exige um corredor inicialmente vazio.
 
-Implementação: `sb4-trolley-route.ts`, `stage-trolley.ts`, fases serializáveis de transporte e teste `sb4-trolley-rom.test.ts`. O modelo preserva o mesmo deslocamento medido do carrinho, não a animação completa dos sprites SNES. O cliente desenha somente a trajetória selecionada durante boarding/riding/leaving e a oculta sem fase ativa; esse comportamento tem testes, mas a validação visual Bridge segue pendente.
+Implementação: `sb4-trolley-route.ts`, `stage-trolley.ts`, fases serializáveis de transporte e teste `sb4-trolley-rom.test.ts`. O modelo preserva o mesmo deslocamento medido do carrinho, não a animação completa dos sprites SNES. O cliente desenha somente a trajetória selecionada durante boarding/riding e a oculta em leaving e sem fase ativa; esse comportamento tem testes, mas a validação visual Bridge segue pendente.
 
 Controle complementar de colisão: na fixture original, o carrinho em movimento atingiu P2 em `(127,95)` no frame 8034, com carrinho em torno de `(128,102)`; a escrita de função em `C2:4BC0` mudou `$0400` de `C2:141C` para `C2:10F9`. Com o carrinho parado, a mesma posição não produziu essa transição. Uma bomba normal também iniciou explosão antecipada em t8039, ainda com 74 unidades no contador `$087A`, após a escrita de função `C1:3CC2` para `C1:3DB8`; com o carrinho parado, continuou contando normalmente. O REA leu a vizinhança de `C2:4BC0` (`ev_24532d8390ec84d676f957e0c8a5133fd4fd50e74b93fe2fbf379a4bbe5f4875`). O Bombtop já eliminava o oponente e zerava imediatamente o pavio em `trolleyHits` quando ocupavam o mesmo tile; os controles corroboravam **os efeitos**, mas não demonstravam a mesma caixa de colisão, proteção, ordem de resolução ou regra de danos completa.
 
@@ -161,3 +161,14 @@ O mapa 03 confirmou a inicialização 126 em quatro colocações reais. A integr
 ## Validação desta correção
 
 Nesta rodada, a suíte shared completa teve 848 passes e quatro falhas já observadas: três snapshots de partidas autorais e o teste de aquecimento da IA. Os 104 testes focados client, o typecheck shared/server/client e o build Vite/PWA passaram. Log: `.agent/sb4-latest-shared-tests.log`. Nenhum snapshot foi regravado para ocultar diferenças. A validação visual Bridge continua pendente da rodada anterior; nenhuma captura do cliente é alegada aqui. Sem commit/push por este agente.
+
+### Trilho e marca da estação na tela (10/11/2026)
+
+Snes9x, estado `s11f-2p.st` (mapa 11, dois jogadores), P1 posto em `(128,112)` sobre o carrinho, capturas a cada quadro
+(`sb4-evidence/seesaw/tq-*.png`, `tq-fine.png`, `tq-station.png`). Antes do embarque o chão não mostra trilho nenhum. No
+quadro em que começa a animação de embarque (P1 `(129,110)`, offset `(1,-2)` do tick3 acima) o trajeto sorteado aparece
+inteiro de uma vez, só nos tiles de chão livre (sob blocos fica escondido até o carrinho quebrá-los). Quando o carrinho
+sai, aparece na estação de partida um disco giratório (◎), que antes ficava sob o carrinho. Na volta, o carrinho para na
+estação (Y103 no quadro 351) e no quadro seguinte (352) trilho e disco somem, antes do arco de desembarque de P1 (Y103→75
+até o quadro 375). Implementado em `render/sb4-stage-effects.ts` (`trolleyRails`: fases boarding e riding, nunca leaving),
+com teste em `test/sb4-stage-effects.test.ts`.

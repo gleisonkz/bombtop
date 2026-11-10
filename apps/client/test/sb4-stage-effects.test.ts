@@ -55,7 +55,7 @@ describe("SB4 prop presentation", () => {
     effects.draw(state);
     expect(rails.stroke).not.toHaveBeenCalled();
   });
-  it.each(["boarding", "riding", "leaving"] as const)("draws only the selected fractional route while %s, synchronously", async phase => {
+  it.each(["boarding", "riding"] as const)("draws only the selected fractional route while %s, synchronously", async phase => {
     const effects = new Sb4StageEffects();
     await effects.load();
     const state = arena();
@@ -90,6 +90,17 @@ describe("SB4 prop presentation", () => {
     effects.draw(state);
     expect(vi.mocked(rails.circle).mock.calls.length).toBeGreaterThan(0);
     expect(vi.mocked(rails.circle).mock.calls.every(([x, y]) => x === 7.5 * 16 && y === 11.5 * 16)).toBe(true);
+  });
+  it("takes the rails and the station mark away once the trolley stops back at the station, as SB4 does (frame 352 of the ride)", () => {
+    const effects = new Sb4StageEffects();
+    const state = arena();
+    state.stage = "sb4-11";
+    state.stageState = { trolley: { px: TILE * 7.5, py: TILE * 11.5, dir: "up", phase: "leaving",
+      route: [{ x: 7, y: 11 }, { x: 7, y: 10 }, { x: 7, y: 11 }] } };
+    const rails = effects.ground.children[0] as Graphics;
+    effects.draw(state);
+    expect(rails.stroke).not.toHaveBeenCalled();
+    expect(rails.circle).not.toHaveBeenCalled();
   });
   it("keeps static floor rails as a fallback without a trolley", () => {
     const effects = new Sb4StageEffects();
