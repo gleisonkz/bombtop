@@ -23,6 +23,8 @@ describe.each([
   { stage: "sb4-07", holes: 4, blocks: { 2: 75, 5: 62 } },
   { stage: "sb4-09", holes: 4, blocks: { 2: 91, 3: 88, 4: 85, 5: 78 } },
   { stage: "sb4-10", holes: 14, blocks: { 2: 93, 5: 80 } },
+  { stage: "sb4-11", holes: 16, blocks: { 2: 77, 5: 68 } },
+  { stage: "sb4-12", holes: 14, blocks: { 2: 90, 5: 80 } },
 ] as const)("SB4 rolled layout of $stage", ({ stage, holes, blocks }) => {
   const layout = buildStage(stage, 15, 13);
 
@@ -48,7 +50,8 @@ describe.each([
       const s = createMatch({ stage, seed, playerIds: ["p1", "p2"] });
       filled += [...CLEARS[2], ...CLEARS[3]].filter(([x, y]) => s.grid.tiles[y * 15 + x] === Tile.Block).length;
     }
-    expect(filled).toBeGreaterThan(20 * 6 * 0.8);
+    const kept = [...CLEARS[2], ...CLEARS[3]].filter(([x, y]) => layout.keepClear.has(y * 15 + x)).length;
+    expect(filled).toBeGreaterThan(20 * (6 - kept) * 0.8);
   });
 
   it("rolls a new layout for each round's seed, the same for the same seed", () => {
@@ -103,5 +106,24 @@ describe("SB4 stage 7 (Ambush)", () => {
     expect(cells(layout, Floor.ConveyorDown)).toEqual(["11,3"]);
     expect(cells(layout, Floor.ConveyorLeft)).toEqual(["11,9"]);
     expect(cells(layout, Floor.ConveyorUp)).toEqual(["3,9"]);
+  });
+});
+
+describe("SB4 stages 11 (Trolley) and 12 (Flag Tag)", () => {
+  const open = (stage: "sb4-11" | "sb4-12") => {
+    const layout = buildStage(stage, 15, 13);
+    return [...layout.keepClear].map(index => `${index % 15},${Math.floor(index / 15)}`).sort();
+  };
+
+  it("keeps the cross round each of the trolley's three stations open, as the original", () => {
+    const expected: string[] = [];
+    for (const [x, y] of [[7, 5], [11, 7], [7, 11]]) {
+      for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) if (y! + dy! <= 11) expected.push(`${x! + dx!},${y! + dy!}`);
+    }
+    expect(open("sb4-11")).toEqual(expected.sort());
+  });
+
+  it("keeps each seat's flag post open, a seat in play or not", () => {
+    expect(open("sb4-12")).toEqual(["12,1", "12,11", "2,1", "2,11", "7,7"]);
   });
 });

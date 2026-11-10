@@ -2,6 +2,7 @@ import { Floor, Tile } from "./state";
 import type { StageLayout } from "./stage";
 import { SB4_FLAG_SPAWNS, type Sb4StageNumber } from "./sb4-stage-definitions";
 import { sb4TrolleyRoute } from "./sb4-trolley-route";
+import { SB4_TROLLEY_PATHS } from "./sb4-trolley-paths";
 
 /**
  * Group 1, concept/references/sb4-battle/stage-NN.png, 13x11 interior.
@@ -11,7 +12,7 @@ import { sb4TrolleyRoute } from "./sb4-trolley-route";
  * themselves are initialized by stage mechanics, independently of this floor.
  * Raised art and players obscure some cells: those cells and paths beneath
  * foliage are inferred from adjacent tiles, not measured ROM collision data.
- * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle. Stages 1-4, 6, 7, 9 and 10 are rolled
+ * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle. Stages 1-4, 6, 7 and 9-12 are rolled
  * each round as SB4 does (sb4-layout-roll.ts); their B/. letters only matter with a block density override.
  * 04's pits, 06's open panels and 07's foliage, paths and arrows were checked against the emulator's grids
  * (sb4-evidence/layout): 07's paths under the foliage and its arrows are always open, its pillars hide under it too.
@@ -20,8 +21,9 @@ import { sb4TrolleyRoute } from "./sb4-trolley-route";
  * stages the exact obscured soft-block cells still require ROM verification.
  * 05/08 visibly have no soft blocks; 10/12 use the dense visible block pattern.
  * Fixed captures establish this initial arrangement, not original RNG behavior.
- * Stage 11 now overlays the measured ROM trolley route A without clearing
- * blocks from its track. Block placement remains the provisional USUAL preset.
+ * Stage 11 overlays the measured ROM trolley route A without clearing blocks from its track; only the crosses round
+ * its three stations stay open. 12 keeps its five flag posts open. Both were reached in the emulator by poking the
+ * stage select's cursor past 10 (layout/tools/build_force.py). Whatever is kept clear starts with no block.
  */
 const USUAL = [
   "..BBBB.BBBB..",
@@ -143,7 +145,14 @@ export function buildSb4Layout(number: Sb4StageNumber, width: number, height: nu
       const index = Math.floor(point.y + 0.5) * width + Math.floor(point.x + 0.5);
       if (tiles[index] !== Tile.Wall) floor[index] = Floor.Rail;
     }
-    keepClear.add(5 * width + 7);
+    // SB4 keeps a cross open round each of the trolley's three stations, whichever it starts from (sb4-evidence/layout s11*).
+    for (const { position: [nx, ny] } of SB4_TROLLEY_PATHS) {
+      const x = nx / 16 - 1;
+      const y = ny / 16 - 2;
+      for (const [dx, dy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+        if (tiles[(y + dy) * width + x + dx] !== Tile.Wall) keepClear.add((y + dy) * width + x + dx);
+      }
+    }
   }
   for (let index = 0; index < floor.length; index++) {
     if (floor[index] !== Floor.Seesaw) continue;
@@ -155,5 +164,6 @@ export function buildSb4Layout(number: Sb4StageNumber, width: number, height: nu
     layout.rollingBalls = [{ x: 5, y: 5 }, { x: 9, y: 7 }];
     for (const { x, y } of layout.rollingBalls) keepClear.add(y * width + x);
   }
+  for (const index of keepClear) if (tiles[index] === Tile.Block) tiles[index] = Tile.Empty;
   return layout;
 }
