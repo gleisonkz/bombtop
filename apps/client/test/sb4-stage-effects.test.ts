@@ -6,7 +6,8 @@ vi.mock("pixi.js", () => {
   class Container { children: unknown[] = []; addChild(...nodes: unknown[]) { this.children.push(...nodes); } }
   class Sprite { anchor = new Point(); position = new Point(); scale = new Point(); skew = new Point(); visible = true; texture: unknown; alpha = 1; rotation = 0; }
   class Graphics {
-    clear = vi.fn(() => { this.moveTo.mockClear(); this.lineTo.mockClear(); this.stroke.mockClear(); return this; });
+    clear = vi.fn(() => { this.moveTo.mockClear(); this.lineTo.mockClear(); this.stroke.mockClear(); this.circle.mockClear(); return this; });
+    circle = vi.fn((_x: number, _y: number, _r: number) => this);
     moveTo = vi.fn((_x: number, _y: number) => this);
     lineTo = vi.fn((_x: number, _y: number) => this);
     stroke = vi.fn(() => this);
@@ -75,6 +76,20 @@ describe("SB4 prop presentation", () => {
     effects.draw(state);
     expect(mocks.load).toHaveBeenCalledTimes(PROP_COUNT);
     expect(JSON.stringify(state)).toBe(before);
+  });
+  it("marks the station the trip starts and ends at while someone rides, as SB4 does, and not before", () => {
+    const effects = new Sb4StageEffects();
+    const state = arena();
+    state.stage = "sb4-11";
+    state.stageState = { trolley: { px: TILE * 5.5, py: TILE * 1.5, dir: "left",
+      route: [{ x: 7, y: 11 }, { x: 7, y: 10 }, { x: 7, y: 11 }] } };
+    const rails = effects.ground.children[0] as Graphics;
+    effects.draw(state);
+    expect(rails.circle).not.toHaveBeenCalled();
+    state.stageState.trolley!.phase = "riding";
+    effects.draw(state);
+    expect(vi.mocked(rails.circle).mock.calls.length).toBeGreaterThan(0);
+    expect(vi.mocked(rails.circle).mock.calls.every(([x, y]) => x === 7.5 * 16 && y === 11.5 * 16)).toBe(true);
   });
   it("keeps static floor rails as a fallback without a trolley", () => {
     const effects = new Sb4StageEffects();

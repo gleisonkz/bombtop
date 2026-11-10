@@ -218,6 +218,10 @@ export class Sb4StageEffects {
       for (const point of points) this.rails.lineTo((point.x + 0.5) * 16, (point.y + 0.5) * 16);
       this.rails.stroke(style);
     }
+    // The station the trip starts and ends at shows its turntable once someone boards (SB4, stage 11).
+    const cx = (start!.x + 0.5) * 16; const cy = (start!.y + 0.5) * 16;
+    this.rails.circle(cx, cy, 6.5).fill({ color: 0x3a2a18 }).circle(cx, cy, 6.5).stroke({ color: 0xbfc5ce, width: 1.5 });
+    this.rails.circle(cx, cy, 3.5).stroke({ color: 0x8a7350, width: 1.5 }).circle(cx, cy, 1.5).fill({ color: 0xbfc5ce });
   }
 
   private fence(state: Scene): void {
