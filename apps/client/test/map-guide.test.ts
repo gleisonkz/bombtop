@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SELECTABLE_STAGES } from "@bombtop/shared";
-import { MAP_GUIDE } from "../src/ui/map-guide";
+import { MAP_GUIDE, stepMap } from "../src/ui/map-guide";
 import { STAGE_NAMES } from "../src/ui/stage-names";
 
 describe("map guide", () => {
@@ -11,5 +11,12 @@ describe("map guide", () => {
       expect(m.text.length, m.id).toBeGreaterThan(40);
       expect(m.tips.length, m.id).toBeGreaterThanOrEqual(2);
     }
+  });
+
+  it("steps through the maps with the arrows, round from the last to the first and back", () => {
+    const last = MAP_GUIDE.length - 1;
+    expect(stepMap(0, 1)).toBe(1);
+    expect(stepMap(last, 1)).toBe(0);
+    expect(stepMap(0, -1)).toBe(last);
   });
 });

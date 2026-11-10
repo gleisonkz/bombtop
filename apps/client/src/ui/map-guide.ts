@@ -117,6 +117,9 @@ const INFO: Record<string, { text: string; tips: string[] }> = {
 /** Every map a room can pick, in the lobby's order, with its name, what it does and tips. */
 export const MAP_GUIDE = SELECTABLE_STAGES.map((id) => ({ id, name: STAGE_NAMES[id], ...INFO[id]! }));
 
+/** The map `step` arrows away from `i`, round from the last to the first and back. */
+export const stepMap = (i: number, step: number): number => (i + step + MAP_GUIDE.length) % MAP_GUIDE.length;
+
 /** The short label on a map's card: its number for the SB4 and SB2 maps, a symbol for ours. */
 const badge = (id: StageId): string => (id.startsWith("sb4-") || id.startsWith("sb2-") ? id.slice(4) : id === "classic" ? "★" : id === "conveyor" ? "⇄" : "◎");
 
@@ -132,6 +135,7 @@ export function mapGuide(hooks: MapGuideHooks): { root: HTMLElement; open(): voi
   const head = el("div", { class: "guide-head" });
   const text = el("p", { class: "guide-text" });
   const tips = el("ul", { class: "guide-tips" });
+  const pos = el("span", { class: "map-pos" });
   const cards: HTMLButtonElement[] = [];
   let current = 0;
 
@@ -139,7 +143,8 @@ export function mapGuide(hooks: MapGuideHooks): { root: HTMLElement; open(): voi
     current = i;
     const map = MAP_GUIDE[i]!;
     cards.forEach((c, j) => c.classList.toggle("on", i === j));
-    head.replaceChildren(el("span", { class: "map-badge big", text: badge(map.id) }), el("h3", { text: map.name }));
+    pos.textContent = `${i + 1} / ${MAP_GUIDE.length}`;
+    head.replaceChildren(el("span", { class: "map-badge big", text: badge(map.id) }), el("h3", { text: map.name }), pos);
     text.textContent = map.text;
     tips.replaceChildren(...map.tips.map((t) => el("li", { text: t })));
     hooks.show(map.id, stage);
@@ -155,7 +160,14 @@ export function mapGuide(hooks: MapGuideHooks): { root: HTMLElement; open(): voi
       return card;
     }),
   );
-  const detail = el("div", { class: "guide-detail" }, [stage, head, text, el("strong", { class: "guide-tips-title", text: "Dicas" }), tips]);
+  const prev = button("‹", () => select(stepMap(current, -1)), "ig-arrow prev");
+  const next = button("›", () => select(stepMap(current, 1)), "ig-arrow next");
+  prev.setAttribute("aria-label", "Mapa anterior");
+  next.setAttribute("aria-label", "Próximo mapa");
+  prev.dataset.padPrev = "";
+  next.dataset.padNext = "";
+  const show = el("div", { class: "map-show" }, [stage, prev, next]);
+  const detail = el("div", { class: "guide-detail" }, [show, head, text, el("strong", { class: "guide-tips-title", text: "Dicas" }), tips]);
   const root = el("div", { class: "card guide maps" }, [
     el("h2", { text: "Mapas" }),
     el("div", { class: "guide-body" }, [list, detail]),
