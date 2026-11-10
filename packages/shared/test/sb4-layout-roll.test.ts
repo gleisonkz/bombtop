@@ -20,6 +20,7 @@ describe.each([
   { stage: "sb4-03", holes: 12, blocks: { 2: 93, 5: 80 } },
   { stage: "sb4-04", holes: 4, blocks: { 2: 83, 5: 70 } },
   { stage: "sb4-06", holes: 14, blocks: { 2: 93, 5: 80 } },
+  { stage: "sb4-07", holes: 4, blocks: { 2: 75, 5: 62 } },
   { stage: "sb4-09", holes: 4, blocks: { 2: 91, 3: 88, 4: 85, 5: 78 } },
   { stage: "sb4-10", holes: 14, blocks: { 2: 93, 5: 80 } },
 ] as const)("SB4 rolled layout of $stage", ({ stage, holes, blocks }) => {
@@ -72,5 +73,35 @@ describe("SB4 stage 4 (Push and Fall)", () => {
     for (const y of [1, 2, 10, 11]) for (const x of [6, 7, 8]) expected.add(`${x},${y}`);
     for (const y of [5, 6]) for (const x of [1, 2, 3, 4, 10, 11, 12, 13]) expected.add(`${x},${y}`);
     expect([...pits].sort()).toEqual([...expected].sort());
+  });
+});
+
+describe("SB4 stage 7 (Ambush)", () => {
+  const cells = (layout: ReturnType<typeof buildStage>, floor: Floor) => {
+    const out: string[] = [];
+    for (let index = 0; index < 195; index++) if (layout.floor![index] === floor) out.push(`${index % 15},${Math.floor(index / 15)}`);
+    return out.sort();
+  };
+
+  it("has its foliage where the original has it, over its paths and the pillars among them", () => {
+    const layout = buildStage("sb4-07", 15, 13);
+    const expected: string[] = [];
+    const add = (xs: number[], ys: number[]) => { for (const y of ys) for (const x of xs) expected.push(`${x},${y}`); };
+    add([6, 7, 8], [2, 3, 8, 9]);
+    add([7], [4, 10]);
+    add([2, 4, 10, 12], [4]);
+    add([2, 3, 4, 10, 11, 12], [5, 6, 7]);
+    expect(cells(layout, Floor.Foliage)).toEqual(expected.sort());
+    for (const [x, y] of [[6, 2], [8, 2], [6, 8], [8, 8], [2, 4], [4, 4], [2, 6], [4, 6], [10, 4], [12, 4], [10, 6], [12, 6]]) {
+      expect(layout.tiles![y! * 15 + x!], `${x},${y}`).toBe(Tile.Wall);
+    }
+  });
+
+  it("has its four arrows going round clockwise", () => {
+    const layout = buildStage("sb4-07", 15, 13);
+    expect(cells(layout, Floor.ConveyorRight)).toEqual(["3,3"]);
+    expect(cells(layout, Floor.ConveyorDown)).toEqual(["11,3"]);
+    expect(cells(layout, Floor.ConveyorLeft)).toEqual(["11,9"]);
+    expect(cells(layout, Floor.ConveyorUp)).toEqual(["3,9"]);
   });
 });

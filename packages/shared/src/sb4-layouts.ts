@@ -5,17 +5,17 @@ import { sb4TrolleyRoute } from "./sb4-trolley-route";
 
 /**
  * Group 1, concept/references/sb4-battle/stage-NN.png, 13x11 interior.
- * # hard wall, B soft block, . clear, P pit, F foliage, S surprise panel,
- * L slot button, T seesaw pivot, R rail, U/D directional floor.
+ * # hard wall, B soft block, . clear, P pit, F foliage, f foliage over a pillar, S surprise panel,
+ * L slot button, T seesaw pivot, R rail, >v<^ arrow panel.
  * Borders are hard walls. Flag posts follow the native constructor; the flags
  * themselves are initialized by stage mechanics, independently of this floor.
  * Raised art and players obscure some cells: those cells and paths beneath
  * foliage are inferred from adjacent tiles, not measured ROM collision data.
- * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle. Stages 1-4, 6, 9 and 10 are rolled
+ * 01/02 share the observed 80-block arrangement, rather than a seeded shuffle. Stages 1-4, 6, 7, 9 and 10 are rolled
  * each round as SB4 does (sb4-layout-roll.ts); their B/. letters only matter with a block density override.
- * 04's pits and 06's open panels were checked against the emulator's grids (sb4-evidence/layout).
- * 03 clears the two ball anchors agreed with stage mechanics. 04's pit edges,
- * 07's concealed paths/directions, 09's pivots and
+ * 04's pits, 06's open panels and 07's foliage, paths and arrows were checked against the emulator's grids
+ * (sb4-evidence/layout): 07's paths under the foliage and its arrows are always open, its pillars hide under it too.
+ * 03 clears the two ball anchors agreed with stage mechanics. 09's pivots and
  * the other obscured cells are capture-based reconstructions. In these
  * stages the exact obscured soft-block cells still require ROM verification.
  * 05/08 visibly have no soft blocks; 10/12 use the dense visible block pattern.
@@ -65,10 +65,10 @@ const ROWS: readonly (readonly string[])[] = [
     ".#B#B#B#B#B#.", "..BBBBBBBBB..",
   ],
   [
-    "..BBBB.BBBB..", ".#B#B#F#B#B#.", "BBB.FFF.BBBBB",
-    "B#F#F#D#B#B#B", "BFFFBB.BBFFFB", "B#F#B#.#B#F#B",
-    "BFFFBB.BBFFFB", "B#B#B#U#F#F#B", "BBBBB.FFF.BBB",
-    ".#B#B#F#B#B#.", "..BBBB.BBBB..",
+    "..BBBBBBBBB..", ".#B#BfFfB#B#.", "BB>BBFFFBBvBB",
+    "BfBfB#F#BfBfB", "BFFFB...BFFFB", "BfFfB#.#BfFfB",
+    "BFFFB...BFFFB", "B#B#BfFfB#B#B", "BB^BBFFFBB<BB",
+    ".#B#B#F#B#B#.", "..BBBBBBBBB..",
   ],
   [
     ".............", ".#.#.#.#.#.#.", ".............",
@@ -100,7 +100,7 @@ const ROWS: readonly (readonly string[])[] = [
 const FEATURES: Readonly<Record<string, Floor>> = {
   P: Floor.Pit, F: Floor.Foliage, S: Floor.Surprise, L: Floor.Slot,
   T: Floor.Seesaw, R: Floor.Rail,
-  U: Floor.ConveyorUp, D: Floor.ConveyorDown,
+  ">": Floor.ConveyorRight, v: Floor.ConveyorDown, "<": Floor.ConveyorLeft, "^": Floor.ConveyorUp,
 };
 
 export const SB4_SOFT_BLOCK_COUNTS: readonly number[] = ROWS.map(rows => rows.join("").split("B").length - 1);
@@ -114,10 +114,11 @@ export function buildSb4Layout(number: Sb4StageNumber, width: number, height: nu
   for (const row of rows) {
     if (row.length !== width) throw new Error(`Invalid SB4 ${number} layout row`);
     for (const cell of row) {
-      const feature = FEATURES[cell] ?? Floor.Normal;
+      const feature = cell === "f" ? Floor.Foliage : FEATURES[cell] ?? Floor.Normal;
+      const wall = cell === "#" || cell === "f";
       floor.push(feature);
-      if (feature !== Floor.Normal) keepClear.add(tiles.length);
-      tiles.push(cell === "#" ? Tile.Wall : Tile.Empty);
+      if (feature !== Floor.Normal && !wall) keepClear.add(tiles.length);
+      tiles.push(wall ? Tile.Wall : Tile.Empty);
       if (cell === "B") tiles[tiles.length - 1] = Tile.Block;
     }
   }

@@ -14,6 +14,11 @@ export function conveyorDirection(floor: Floor): Facing | undefined {
   return BELTS[floor];
 }
 
+/** The way a floor carries a player standing on it: SB4 stage 7's arrows only turn a kicked bomb (e_s7_arrow.py). */
+export function playerBelt(s: Pick<MatchState, "stage">, floor: Floor): Facing | undefined {
+  return s.stage === "sb4-07" ? undefined : conveyorDirection(floor);
+}
+
 /** Conveyor belts carry players; warps teleport them to the paired warp. */
 export function applyFloor(s: MatchState): void {
   for (const p of s.players) {
@@ -21,7 +26,7 @@ export function applyFloor(s: MatchState): void {
     const { x, y } = playerTile(p);
     const floor = getFloor(s, x, y);
 
-    const belt = conveyorDirection(floor);
+    const belt = playerBelt(s, floor);
     if (belt) movePlayer(s, p, belt, CONVEYOR_SPEED);
 
     if (floor !== Floor.Warp) {

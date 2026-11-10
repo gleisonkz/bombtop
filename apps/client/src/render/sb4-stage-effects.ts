@@ -122,8 +122,9 @@ export class Sb4StageEffects {
     const dynamic = state.stageState;
     for (let y = 0; y < state.grid.height; y++) {
       for (let x = 0; x < state.grid.width; x++) {
-        if (getTile(state, x, y) !== Tile.Empty) continue;
         const floor = getFloor(state, x, y);
+        // Foliage grows over some of SB4 stage 7's pillars too, hiding them.
+        if (getTile(state, x, y) !== Tile.Empty && !(floor === Floor.Foliage && getTile(state, x, y) === Tile.Wall)) continue;
         const pose = { x: (x + 0.5) * 16, y: (y + 0.5) * 16 };
         if (floor === Floor.Rail) {
           if (!dynamic?.trolley) this.rail(state, x, y);

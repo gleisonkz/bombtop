@@ -4,7 +4,7 @@ import { pressureOrder } from "./pressure";
 import { cursedDirection, effectiveCapacity, effectiveFuse, effectiveRange, effectiveSpeed } from "./curse";
 import { createRng } from "./rng";
 import { SPECIAL_PLANS, type SpecialContext } from "./bot-specials";
-import { conveyorDirection } from "./floor";
+import { conveyorDirection, playerBelt } from "./floor";
 import { updateSlides } from "./kick";
 import { stageTempoRate } from "./stage";
 import { playerElevated } from "./player-carry";
@@ -533,7 +533,7 @@ function beltDrift(s: MatchState, danger: Danger, occ: Occupancy, mark: (x: numb
   const perTile = TILE / Math.max(1, CONVEYOR_SPEED * stageTempoRate(s));
   let base: Danger | undefined;
   for (let index = 0; index < s.grid.floor.length; index++) {
-    let dir = conveyorDirection(s.grid.floor[index]!);
+    let dir = playerBelt(s, s.grid.floor[index]!);
     if (!dir) continue;
     base ??= new Map(danger);
     let x = index % w;
@@ -551,7 +551,7 @@ function beltDrift(s: MatchState, danger: Danger, occ: Occupancy, mark: (x: numb
       // Carried in from the tile's middle half a tile in: in by then, unless its fire is out. The mark
       // is the fire's own time: walking across the belt is not riding it, so crossing stays as open.
       if (burns !== undefined && (i - 0.5) * perTile <= burns + FLAME_TICKS) worst = Math.min(worst ?? Infinity, burns);
-      dir = conveyorDirection(getFloor(s, x, y));
+      dir = playerBelt(s, getFloor(s, x, y));
     }
     if (worst !== undefined) mark(index % w, Math.floor(index / w), worst);
   }

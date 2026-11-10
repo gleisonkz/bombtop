@@ -41,8 +41,8 @@ const INFO: Record<string, { text: string; tips: string[] }> = {
     tips: ["Depois de cada explosão olhe o chão antes de andar.", "Fuja da cola quando estiver fugindo de fogo; use ela pra frear bomba chutada."],
   },
   "sb4-07": {
-    text: "Um jardim cheio de folhagem que esconde quem passa por baixo, e duas esteiras no centro que levam para o meio da arena. Bom mapa pra emboscada.",
-    tips: ["Debaixo das folhas os rivais não te veem bem: arme a armadilha ali.", "Tem bastante chute (5): chute as bombas pelas passagens escondidas."],
+    text: "Um jardim cheio de folhagem que esconde quem passa por baixo, com caminhos escondidos sob ela, e quatro setas que desviam as bombas chutadas, girando em volta da arena. Bom mapa pra emboscada.",
+    tips: ["Debaixo das folhas os rivais não te veem bem: arme a armadilha ali.", "Tem bastante chute (5): chute uma bomba numa seta e ela vira pro lado que a seta aponta."],
   },
   "sb4-08": {
     text: "Sem blocos e sem itens no chão: três botões de caça-níquel na linha do meio. Acerte um com a explosão e as roletas giram; o resultado solta itens pela arena — ou uma caveira. Três setes dão o prêmio máximo, uma chuva de itens.",

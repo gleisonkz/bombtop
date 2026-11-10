@@ -112,6 +112,17 @@ describe("SB4 prop presentation", () => {
     expect(visible(effects.ground).filter(node => node.texture.url.includes("trolley"))).toHaveLength(1);
     expect(visible(effects.ground).some(node => node.texture.url.includes("forest-pit"))).toBe(true);
   });
+  it("draws foliage over a pillar it grows on, as SB4 stage 7 hides some", async () => {
+    const effects = new Sb4StageEffects(); await effects.load();
+    const state = arena();
+    state.grid.tiles[18] = Tile.Wall;
+    state.grid.floor[18] = Floor.Foliage;
+    state.grid.tiles[19] = Tile.Wall;
+    state.grid.floor[19] = Floor.Pit;
+    effects.draw(state);
+    expect(visible(effects.above).map(node => node.texture.url)).toEqual([expect.stringContaining("foliage")]);
+    expect(visible(effects.ground).some(node => node.texture.url.includes("forest-pit"))).toBe(false);
+  });
   it("renders only exposed unclaimed costumes without mutating state", async () => {
     const effects = new Sb4StageEffects(); await effects.load();
     const state = arena();

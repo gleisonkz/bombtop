@@ -64,6 +64,11 @@ function freeForBomb(s: MatchState, bomb: Bomb, x: number, y: number): boolean {
 function followConveyor(s: MatchState, b: Bomb): void {
   if (b.offset !== 0) return;
   const belt = conveyorDirection(getFloor(s, b.x, b.y));
+  // SB4 stage 7's arrows turn a kicked bomb their way and leave a resting one be (e_s7_arrow_kick.py).
+  if (s.stage === "sb4-07") {
+    if (belt && b.slide) b.slide = belt;
+    return;
+  }
   if (belt) {
     b.slide = belt;
     b.conveyor = true;

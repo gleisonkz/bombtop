@@ -27,8 +27,8 @@ describe("SB4 Group 1 layouts", () => {
     expect(layout.tiles).toHaveLength(195);
     expect(layout.floor).toHaveLength(195);
     const match = createMatch({ stage, seed: 17, playerIds: seats });
-    // Stages 1-4, 6, 9 and 10 are rolled from the seed, as SB4 does (sb4-layout-roll.test.ts).
-    const rolled = [1, 2, 3, 4, 6, 9, 10].includes(number);
+    // Stages 1-4, 6, 7, 9 and 10 are rolled from the seed, as SB4 does (sb4-layout-roll.test.ts).
+    const rolled = [1, 2, 3, 4, 6, 7, 9, 10].includes(number);
     if (!rolled) expect(match.grid).toEqual(createMatch({ stage, seed: 90, playerIds: seats }).grid);
     expect(match.players.map(playerTile)).toEqual([
       { x: 1, y: 1 }, { x: 13, y: 11 }, { x: 13, y: 1 }, { x: 1, y: 11 }, { x: 7, y: 6 },

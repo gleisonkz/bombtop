@@ -6,9 +6,9 @@ import { Tile } from "./state";
  * seat's corner keeps its blocks), then C4179C takes out a few random blocks: up to 15 tries at rand(13)+1,
  * rand(11)+1 each until one lands on a block. The draw goes on from round to round, so each round is new.
  * The hole counts are the ROM's stage table (C36233, byte 1E of each stage's header), checked against the emulator's
- * grids. 5 and 8 have no blocks; 7's open paths, 11 and 12 (locked in the emulator) are not rolled yet.
+ * grids. 5 and 8 have no blocks; 11 and 12 (locked in the emulator) are not rolled yet.
  */
-const HOLES: Readonly<Record<number, number>> = { 1: 14, 2: 14, 3: 12, 4: 4, 6: 14, 9: 4, 10: 14 };
+const HOLES: Readonly<Record<number, number>> = { 1: 14, 2: 14, 3: 12, 4: 4, 6: 14, 7: 4, 9: 4, 10: 14 };
 const HOLE_TRIES = 15;
 
 /** The cells cleared for each seat, in seat order (P1..P5). */
